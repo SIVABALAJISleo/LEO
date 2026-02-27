@@ -1,0 +1,35 @@
+# ── Core API ──────────────────────────────────────────────────────────────────
+fastapi
+uvicorn[standard]
+pydantic
+python-multipart
+aiofiles
+
+# ── Security / Auth ───────────────────────────────────────────────────────────
+passlib[bcrypt]
+bcrypt
+python-jose[cryptography]
+pydantic-settings
+
+# ── Database ──────────────────────────────────────────────────────────────────
+sqlalchemy
+
+# ── AI / Inference (CPU-only, no 2GB torch) ───────────────────────────────────
+--extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
+llama-cpp-python==0.2.77
+onnxruntime
+onnx
+
+# ── Embeddings (CPU-only sentence-transformers without full torch) ─────────────
+sentence-transformers
+faiss-cpu
+
+# ── Vision / Compute ──────────────────────────────────────────────────────────
+opencv-python-headless
+numba
+numpy
+
+# ── Observability ─────────────────────────────────────────────────────────────
+structlog
+psutil
+requests
