@@ -62,6 +62,30 @@ export const hyperClient = {
     },
 
     async getStatus(): Promise<BackendStatus> {
+        try {
+            const response = await fetch('http://localhost:8000/api/v1/compute/telemetry');
+            if (response.ok) {
+                const telemetry = await response.json();
+                return {
+                    version: '1.0.0-PROD',
+                    metrics: {
+                        requests: 0,
+                        errors: 0,
+                        latency_avg: 0.12
+                    },
+                    hardware: {
+                        cpu_load: telemetry.cpu.average_utilization,
+                        memory_percent: telemetry.memory.percent_used,
+                        disk_percent: 40,
+                        memory_available_gb: telemetry.memory.total_gb - telemetry.memory.used_gb
+                    },
+                    server_time: Date.now() / 1000
+                };
+            }
+        } catch (error) {
+            console.error("Telemetry fetch failed, falling back to basic health.", error);
+        }
+
         const health = await HealthMonitor.getInstance().getSystemHealth();
         return {
             version: '1.0.0-PROD',
@@ -76,7 +100,7 @@ export const hyperClient = {
                 disk_percent: 40,
                 memory_available_gb: (health.memory.total - health.memory.used) / (1024 * 1024 * 1024)
             },
-            server_time: Date.now()
+            server_time: Date.now() / 1000
         };
     },
 

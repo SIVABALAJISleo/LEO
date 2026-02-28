@@ -1,19 +1,5 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { auth, db } from "@/lib/firebase";
-
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut as firebaseSignOut,
-  onAuthStateChanged,
-  sendPasswordResetEmail,
-} from "firebase/auth";
-
-import {
-  doc,
-  setDoc,
-  getDoc,
-} from "firebase/firestore";
+import { supabase } from "@/integrations/supabase/client";
 
 /* ---------------- TYPES ---------------- */
 
@@ -31,14 +17,6 @@ interface AuthContextType {
   signUp: (username: string, email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error: Error | null }>;
-  // Compatibility placeholders for existing components if needed, or we remove them if unused.
-  // The user didn't include them in their snippet, but existing pages might call them.
-  // Let's see if we strictly need them. If `Login.tsx` calls `updatePassword` etc, we'll need to add them back or mock them.
-  // Based on the user's snippet, they only include `resetPassword`.
-  // I will add back the mocks for `updatePassword` etc to prevent build errors in other files, 
-  // but typed optionally or implemented as no-op if the interface definition allows.
-  // The user's interface definition REMOVED `updatePassword`, `sendResetOtp`, `verifyOtp`.
-  // So I will stick to the USER'S definition. If other pages break, I will fix those pages.
 }
 
 /* ---------------- CONTEXT ---------------- */
@@ -60,55 +38,71 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   /* -------- AUTH STATE SYNC (REAL PROFILE) -------- */
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, async (fbUser) => {
-      if (!fbUser) {
+    // Check active session on mount
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        fetchUserProfile(session.user.id, session.user.email || '');
+      } else {
+        setUser(null);
+        setLoading(false);
+      }
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (!session?.user) {
         setUser(null);
         setLoading(false);
         return;
       }
-
-      try {
-        const snap = await getDoc(doc(db, "users", fbUser.uid));
-
-        if (!snap.exists()) {
-          // If user exists in Auth but not in Firestore, we might want to create a profile or just sign out.
-          // For now, adhering to user's logic: sign out.
-          await firebaseSignOut(auth);
-          setUser(null);
-        } else {
-          setUser({ id: fbUser.uid, ...snap.data() } as User);
-        }
-      } catch {
-        setUser(null);
-      }
-
-      setLoading(false);
+      fetchUserProfile(session.user.id, session.user.email || '');
     });
 
-    return () => unsub();
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
-  /* -------- USERNAME → EMAIL LOOKUP -------- */
+  const fetchUserProfile = async (uid: string, email: string) => {
+    try {
+      // In a real Supabase setup, you'd have a 'profiles' table. 
+      // We will try to fetch the profile, or fallback to the auth metadata.
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', uid)
+        .single();
 
-  const getEmailFromUsername = async (username: string): Promise<string> => {
-    const ref = doc(db, "usernames", username.toLowerCase());
-    const snap = await getDoc(ref);
-    if (!snap.exists()) throw new Error("Invalid credentials");
-    return snap.data().email;
+      if (data) {
+        setUser({ id: uid, email, username: data.username, created_at: data.created_at } as User);
+      } else {
+        // Fallback for new users before their profile trigger fires
+        setUser({ id: uid, email, username: email.split('@')[0], created_at: new Date().toISOString() } as User);
+      }
+    } catch (err) {
+      console.error("Failed to load user profile:", err);
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
   };
+
 
   /* -------- SIGN IN -------- */
 
   const signIn = async (identifier: string, password: string) => {
     try {
-      const email = identifier.includes("@")
-        ? identifier
-        : await getEmailFromUsername(identifier);
+      // Supabase primarily uses email for login by default unless customized.
+      // We assume identifier is the email here.
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: identifier,
+        password,
+      });
 
-      await signInWithEmailAndPassword(auth, email, password);
+      if (error) throw error;
       return { error: null };
-    } catch {
-      return { error: new Error("Invalid credentials") };
+    } catch (error: any) {
+      return { error: new Error(error.message || "Invalid credentials") };
     }
   };
 
@@ -116,31 +110,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signUp = async (username: string, email: string, password: string) => {
     try {
-      username = username.toLowerCase();
-
-      // check username uniqueness
-      const usernameRef = doc(db, "usernames", username);
-      const usernameSnap = await getDoc(usernameRef);
-      if (usernameSnap.exists())
-        return { error: new Error("Username already taken") };
-
-      // create auth account
-      const cred = await createUserWithEmailAndPassword(auth, email, password);
-      const uid = cred.user.uid;
-
-      const profile: User = {
-        id: uid,
-        username,
+      const { data, error } = await supabase.auth.signUp({
         email,
-        created_at: new Date().toISOString(),
-      };
+        password,
+        options: {
+          data: {
+            username: username.toLowerCase(),
+          }
+        }
+      });
 
-      // save profile
-      await setDoc(doc(db, "users", uid), profile);
-
-      // reserve username
-      await setDoc(usernameRef, { uid, email });
-
+      if (error) throw error;
       return { error: null };
     } catch (err: any) {
       console.error("Registration error details:", err);
@@ -151,7 +131,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   /* -------- SIGN OUT -------- */
 
   const signOut = async () => {
-    await firebaseSignOut(auth);
+    await supabase.auth.signOut();
     setUser(null);
   };
 
@@ -159,10 +139,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const resetPassword = async (email: string) => {
     try {
-      await sendPasswordResetEmail(auth, email);
+      const { error } = await supabase.auth.resetPasswordForEmail(email);
+      if (error) throw error;
       return { error: null };
-    } catch {
-      return { error: new Error("Unable to send reset email") };
+    } catch (error: any) {
+      return { error: new Error(error.message || "Unable to send reset email") };
     }
   };
 

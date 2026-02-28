@@ -13,6 +13,9 @@ import SettingsPage from '@/pages/dashboard/SettingsPage';
 import OrchestrationExplorer from '@/pages/OrchestrationExplorer';
 import SystemDashboard from '@/pages/SystemDashboard';
 import GpuBypassDemo from '@/pages/GpuBypassDemo';
+import VisionPage from '@/pages/dashboard/VisionPage';
+import JepaPage from '@/pages/dashboard/JepaPage';
+import SotaPage from '@/pages/dashboard/SotaPage';
 
 import SecurityPage from '@/pages/advanced/SecurityPage';
 import CostAnalyticsPage from '@/pages/advanced/CostAnalyticsPage';
@@ -39,6 +42,9 @@ const Dashboard = () => {
               <Route path="results" element={<ResultsPage />} />
               <Route path="settings" element={<SettingsPage />} />
               <Route path="analytics" element={<MonitoringPage />} />
+              <Route path="vision" element={<VisionPage />} />
+              <Route path="jepa" element={<JepaPage />} />
+              <Route path="sota" element={<SotaPage />} />
 
               {/* Production Functional Routes */}
               <Route path="orchestration" element={<OrchestrationExplorer />} />

@@ -1,35 +1,20 @@
-# ── Core API ──────────────────────────────────────────────────────────────────
-fastapi
-uvicorn[standard]
-pydantic
+llama-cpp-python>=0.2.20
+fastapi>=0.111.0
+uvicorn>=0.30.1
+pydantic>=2.7.4
+pydantic-settings>=2.3.4
+firebase-admin>=6.5.0
+python-jose[cryptography]>=3.3.0
+psutil>=6.0.0
+ffmpeg-python>=0.2.0
+langgraph
+autogen
+ag2
+llama-index
+chromadb
+smolagents
+gitpython
+
+# Phase 9: Vision Pipeline
+ultralytics
 python-multipart
-aiofiles
-
-# ── Security / Auth ───────────────────────────────────────────────────────────
-passlib[bcrypt]
-bcrypt
-python-jose[cryptography]
-pydantic-settings
-
-# ── Database ──────────────────────────────────────────────────────────────────
-sqlalchemy
-
-# ── AI / Inference (CPU-only, no 2GB torch) ───────────────────────────────────
---extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
-llama-cpp-python==0.2.77
-onnxruntime
-onnx
-
-# ── Embeddings (CPU-only sentence-transformers without full torch) ─────────────
-sentence-transformers
-faiss-cpu
-
-# ── Vision / Compute ──────────────────────────────────────────────────────────
-opencv-python-headless
-numba
-numpy
-
-# ── Observability ─────────────────────────────────────────────────────────────
-structlog
-psutil
-requests

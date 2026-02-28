@@ -39,12 +39,17 @@ import {
   Store,
   Building2,
   AlertTriangle,
+  Eye,
+  Microscope
 
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const mainNavItems = [
   { title: 'Dashboard', url: '/dashboard/home', icon: LayoutDashboard },
+  { title: 'Vision Intelligence', url: '/dashboard/vision', icon: Eye },
+  { title: 'JEPA Architectures', url: '/dashboard/jepa', icon: Microscope },
+  { title: 'SOTA Models', url: '/dashboard/sota', icon: Cpu },
   { title: 'Orchestration', url: '/dashboard/orchestration', icon: Brain },
   { title: 'Telemetry', url: '/dashboard/telemetry', icon: Activity },
   { title: 'Inference', url: '/dashboard/inference', icon: Briefcase },

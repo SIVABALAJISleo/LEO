@@ -27,6 +27,7 @@ class Settings(BaseSettings):
 
     class Config:
         env_file = ".env"
+        extra = "ignore"
 
 settings = Settings()
 
@@ -122,10 +123,10 @@ except Exception:
         return {"status": "ok", "env": settings.app_env}
 
 try:
-    from backend.core.billing import router as billing_router
+    from backend.routers.billing import router as billing_router
     app.include_router(billing_router)
-except Exception:
-    logging.warning("Billing router not available — skipping.")
+except Exception as e:
+    logging.warning(f"Billing router not available — skipping. {e}")
 
 try:
     from backend.routers.cpu_compute import router as compute_router
@@ -133,6 +134,17 @@ try:
 except Exception as e:
     logging.warning(f"Compute CPU router not available — skipping: {e}")
 
+try:
+    from backend.routers.vision import router as vision_router
+    app.include_router(vision_router)
+except Exception as e:
+    logging.warning(f"Vision YOLO router not available — skipping: {e}")
+
+try:
+    from backend.routers.jepa import router as jepa_router
+    app.include_router(jepa_router)
+except Exception as e:
+    logging.warning(f"JEPA predictive router not available — skipping: {e}")
 
 # ── Request models ────────────────────────────────────────────────────────────
 class QueryRequest(BaseModel):

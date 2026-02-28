@@ -34,7 +34,7 @@ export class HealthMonitor {
 
     async getSystemHealth(): Promise<SystemHealth> {
         try {
-            const response = await fetch('http://localhost:8000/health/status');
+            const response = await fetch('http://localhost:8000/health');
             if (!response.ok) throw new Error('Status endpoint unreachable');
             const data = await response.json();
 
