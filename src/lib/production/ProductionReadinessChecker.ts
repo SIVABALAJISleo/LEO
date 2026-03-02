@@ -1,7 +1,7 @@
 // ProductionReadinessChecker - Unified production readiness assessment
 // Single source of truth for production readiness percentage
 
-import { supabase } from '@/integrations/supabase/client';
+import { firebaseClient as supabase } from '@/integrations/firebase/client';
 import { systemStatusService } from './SystemStatusContract';
 import { incidentAutoHandler } from './IncidentAutoHandler';
 

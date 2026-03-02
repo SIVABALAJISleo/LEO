@@ -16,7 +16,7 @@ import {
   Loader2,
   RefreshCw
 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { firebaseClient as supabase } from '@/integrations/firebase/client';
 import { useAuth } from "@/contexts/AuthContext";
 import { Navbar } from "@/components/Navbar";
 

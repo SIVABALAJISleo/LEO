@@ -1,7 +1,7 @@
 // LaunchVerification - Final pre-launch dry-run system
 // Runs all critical system tests before production deployment
 
-import { supabase } from '@/integrations/supabase/client';
+import { firebaseClient as supabase } from '@/integrations/firebase/client';
 import { backupVerification } from './BackupVerification';
 import { releaseRollback } from './ReleaseRollback';
 import { incidentAutoHandler } from './IncidentAutoHandler';

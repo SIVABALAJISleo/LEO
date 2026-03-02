@@ -1,7 +1,7 @@
 // IncidentAutoHandler - Automated incident classification and response
 // System protects itself before humans intervene
 
-import { supabase } from '@/integrations/supabase/client';
+import { firebaseClient as supabase } from '@/integrations/firebase/client';
 
 export type IncidentType = 
   | 'auth_failure'

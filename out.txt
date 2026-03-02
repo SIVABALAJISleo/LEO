@@ -1,0 +1,188 @@
+﻿node.exe : Browserslist: 
+browsers data 
+(caniuse-lite) is 9 
+months old. Please run:
+At C:\Program 
+Files\nodejs\npx.ps1:29 
+char:3
++   & $NODE_EXE 
+$NPX_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~
+    + CategoryInfo       
+       : NotSpecified:   
+  (Browserslist: b...l   
+ d. Please run::Strin    
+g) [], RemoteExcepti    
+on
+    + FullyQualifiedErro 
+   rId : NativeCommandE  
+  rror
+ 
+  npx update-browserslist
+-db@latest
+  Why you should do it 
+regularly: https://github
+.com/browserslist/update-
+db#readme
+
+[1m[33mwarn[39m[22m 
+- The class 
+`duration-[1500ms]` is 
+ambiguous and matches 
+multiple utilities.
+[1m[33mwarn[39m[22m 
+- If this is content and 
+not a class, replace it 
+with `duration-&lsqb;1500
+ms&rsqb;` to silence 
+this warning.
+[31mx[39m Build failed 
+in 5.71s
+[31merror during build:
+[31msrc/integrations/fir
+ebase/client.ts (3:18): 
+"signInWithPassword" is 
+not exported by "node_mod
+ules/firebase/auth/dist/e
+sm/index.esm.js", 
+imported by "src/integrat
+ions/firebase/client.ts".
+[31m
+file: [36mC:/Users/sivab
+/OneDrive/Documents/HYPER
+/remix-of-remix-of-remix-
+of-nvidia-inspired-design
+-main/remix-of-remix-of-r
+emix-of-nvidia-inspired-d
+esign-main/src/integratio
+ns/firebase/client.ts:3:1
+8[31m
+[33m
+1: import { 
+initializeApp } from 
+'firebase/app';
+2: import { 
+getFirestore, 
+collection, getDocs, 
+addDoc, updateDoc, 
+deleteDoc, doc, query, 
+where, orderBy, 
+onSnapshot, get...
+3: import { getAuth, 
+signInWithPassword, creat
+eUserWithEmailAndPassword
+, signOut, 
+onAuthStateChanged } 
+from 'firebase/au...
+                     ^
+4: 
+5: const firebaseConfig 
+= {
+[31m
+    at getRollupError (fi
+le:///C:/Users/sivab/OneD
+rive/Documents/HYPER/remi
+x-of-remix-of-remix-of-nv
+idia-inspired-design-main
+/remix-of-remix-of-remix-
+of-nvidia-inspired-design
+-main/node_modules/rollup
+/dist/es/shared/parseAst.
+js:400:41)
+    at error (file:///C:/
+Users/sivab/OneDrive/Docu
+ments/HYPER/remix-of-remi
+x-of-remix-of-nvidia-insp
+ired-design-main/remix-of
+-remix-of-remix-of-nvidia
+-inspired-design-main/nod
+e_modules/rollup/dist/es/
+shared/parseAst.js:396:42
+)
+    at Module.error (file
+:///C:/Users/sivab/OneDri
+ve/Documents/HYPER/remix-
+of-remix-of-remix-of-nvid
+ia-inspired-design-main/r
+emix-of-remix-of-remix-of
+-nvidia-inspired-design-m
+ain/node_modules/rollup/d
+ist/es/shared/node-entry.
+js:17036:16)
+    at 
+Module.traceVariable (fil
+e:///C:/Users/sivab/OneDr
+ive/Documents/HYPER/remix
+-of-remix-of-remix-of-nvi
+dia-inspired-design-main/
+remix-of-remix-of-remix-o
+f-nvidia-inspired-design-
+main/node_modules/rollup/
+dist/es/shared/node-entry
+.js:17448:29)
+    at 
+ModuleScope.findVariable 
+(file:///C:/Users/sivab/O
+neDrive/Documents/HYPER/r
+emix-of-remix-of-remix-of
+-nvidia-inspired-design-m
+ain/remix-of-remix-of-rem
+ix-of-nvidia-inspired-des
+ign-main/node_modules/rol
+lup/dist/es/shared/node-e
+ntry.js:15066:39)
+    at ReturnValueScope.f
+indVariable (file:///C:/U
+sers/sivab/OneDrive/Docum
+ents/HYPER/remix-of-remix
+-of-remix-of-nvidia-inspi
+red-design-main/remix-of-
+remix-of-remix-of-nvidia-
+inspired-design-main/node
+_modules/rollup/dist/es/s
+hared/node-entry.js:5673:
+38)
+    at FunctionBodyScope.
+findVariable (file:///C:/
+Users/sivab/OneDrive/Docu
+ments/HYPER/remix-of-remi
+x-of-remix-of-nvidia-insp
+ired-design-main/remix-of
+-remix-of-remix-of-nvidia
+-inspired-design-main/nod
+e_modules/rollup/dist/es/
+shared/node-entry.js:5673
+:38)
+    at 
+BlockScope.findVariable (
+file:///C:/Users/sivab/On
+eDrive/Documents/HYPER/re
+mix-of-remix-of-remix-of-
+nvidia-inspired-design-ma
+in/remix-of-remix-of-remi
+x-of-nvidia-inspired-desi
+gn-main/node_modules/roll
+up/dist/es/shared/node-en
+try.js:5673:38)
+    at Identifier.bind (f
+ile:///C:/Users/sivab/One
+Drive/Documents/HYPER/rem
+ix-of-remix-of-remix-of-n
+vidia-inspired-design-mai
+n/remix-of-remix-of-remix
+-of-nvidia-inspired-desig
+n-main/node_modules/rollu
+p/dist/es/shared/node-ent
+ry.js:5447:40)
+    at 
+CallExpression.bind (file
+:///C:/Users/sivab/OneDri
+ve/Documents/HYPER/remix-
+of-remix-of-remix-of-nvid
+ia-inspired-design-main/r
+emix-of-remix-of-remix-of
+-nvidia-inspired-design-m
+ain/node_modules/rollup/d
+ist/es/shared/node-entry.
+js:2829:23)[39m

@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { firebaseClient as supabase } from '@/integrations/firebase/client';
 
 /* ---------------- TYPES ---------------- */
 

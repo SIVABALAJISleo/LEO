@@ -1,7 +1,7 @@
 // BackupDrillAutomation - Automated restore testing and verification
 // Rule: A backup that was never restored is a lie
 
-import { supabase } from '@/integrations/supabase/client';
+import { firebaseClient as supabase } from '@/integrations/firebase/client';
 
 export interface BackupDrill {
   id: string;

@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { Alert } from '@/lib/types';
 import { useAuth } from './AuthContext';
-import { supabase } from '@/integrations/supabase/client';
+import { firebaseClient as supabase } from '@/integrations/firebase/client';
 
 interface NotificationContextType {
   notifications: Alert[];

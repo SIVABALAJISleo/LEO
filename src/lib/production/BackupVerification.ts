@@ -1,7 +1,7 @@
 // BackupVerification - Automated backup and restore testing
 // System must verify backups are actually restorable
 
-import { supabase } from '@/integrations/supabase/client';
+import { firebaseClient as supabase } from '@/integrations/firebase/client';
 
 export interface BackupRecord {
   id: string;

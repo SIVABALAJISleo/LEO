@@ -1,7 +1,7 @@
 // ReleaseRollback - Versioned deployments with auto-rollback
 // System protects itself from bad deploys
 
-import { supabase } from '@/integrations/supabase/client';
+import { firebaseClient as supabase } from '@/integrations/firebase/client';
 
 export interface Release {
   id: string;

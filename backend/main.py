@@ -89,6 +89,15 @@ verify_token = get_token_verifier()
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logging.info("HYPER backend starting up...")
+    
+    # Phase 12: Boot HPC Optimizations
+    try:
+        from backend.core.hardware_optimizer import HardwareOptimizer
+        from backend.core.hyper_config import config
+        HardwareOptimizer.setup(config.PERFORMANCE_MODE)
+    except Exception as e:
+        logging.warning(f"Failed to initialize HPC Hardware Optimizer: {e}")
+        
     yield
     logging.info("HYPER backend shutting down.")
 

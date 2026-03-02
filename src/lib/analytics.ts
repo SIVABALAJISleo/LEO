@@ -1,4 +1,4 @@
-import { supabase } from '@/integrations/supabase/client';
+import { firebaseClient as supabase } from '@/integrations/firebase/client';
 
 export type AnalyticsEventType =
   | 'page_view'

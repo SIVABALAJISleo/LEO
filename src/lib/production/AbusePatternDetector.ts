@@ -1,7 +1,7 @@
 // AbusePatternDetector - Real-time abuse pattern detection and auto-response
 // Rule: Every endpoint assumes attackers exist
 
-import { supabase } from '@/integrations/supabase/client';
+import { firebaseClient as supabase } from '@/integrations/firebase/client';
 
 export type AbusePattern = 
   | 'brute_force_auth'

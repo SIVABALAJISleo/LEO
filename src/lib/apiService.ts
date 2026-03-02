@@ -3,7 +3,7 @@
 // All backend operations with strongly typed functions
 // ============================================
 
-import { supabase } from '@/integrations/supabase/client';
+import { firebaseClient as supabase } from '@/integrations/firebase/client';
 import type {
   User,
   Profile,

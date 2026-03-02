@@ -1,7 +1,7 @@
 // ProductionHealthOrchestrator - Unified 24x7 autonomous system protection
 // Detect → React → Recover → Report - NO HUMAN DEPENDENCY
 
-import { supabase } from '@/integrations/supabase/client';
+import { firebaseClient as supabase } from '@/integrations/firebase/client';
 import { incidentAutoHandler, type IncidentType, type IncidentSeverity } from './IncidentAutoHandler';
 import { incidentStateMachine } from './IncidentStateMachine';
 import { systemStatusService } from './SystemStatusContract';

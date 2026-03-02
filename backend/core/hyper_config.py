@@ -20,7 +20,13 @@ class HyperConfig(BaseSettings):
     FFMPEG_PRESET: str = "fast"  # ultrafast, superfast, veryfast, faster, fast, medium, slow, slower, veryslow
     FFMPEG_CRF: int = 23
     
-    # Performance Features
+    # HPC Optimization Features
+    PERFORMANCE_MODE: str = os.getenv("PERFORMANCE_MODE", "Balanced")
+    ENABLE_ISPC_KERNELS: bool = os.getenv("ENABLE_ISPC_KERNELS", "true").lower() == "true"
+    ENABLE_TVM_AUTOTUNE: bool = os.getenv("ENABLE_TVM_AUTOTUNE", "true").lower() == "true"
+    QUANTIZATION_LEVEL: str = os.getenv("QUANTIZATION_LEVEL", "INT8")
+    SPARSE_MATRIX_KERNELS: bool = os.getenv("SPARSE_MATRIX_KERNELS", "true").lower() == "true"
+    WINOGRAD_CONV: bool = os.getenv("WINOGRAD_CONV", "true").lower() == "true"
     ENABLE_IGPU_ACCEL: bool = True
     
     class Config:
