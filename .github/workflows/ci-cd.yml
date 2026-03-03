@@ -52,9 +52,22 @@ jobs:
           ALLOWED_ORIGINS: http://localhost:5173
         run: |
           uvicorn backend.main:app --host 0.0.0.0 --port 8005 &
-          sleep 4
-          curl -f http://localhost:8005/health || exit 1
-          echo "Health check passed"
+          SERVER_PID=$!
+
+          # Wait up to 30 seconds for server to be ready (retry every 2s)
+          echo "Waiting for server to start..."
+          for i in $(seq 1 15); do
+            sleep 2
+            if curl -sf http://localhost:8005/health > /dev/null 2>&1; then
+              echo "✅ Health check passed on attempt $i"
+              exit 0
+            fi
+            echo "Attempt $i/15 — server not ready yet..."
+          done
+
+          echo "❌ Server did not start within 30 seconds"
+          kill $SERVER_PID 2>/dev/null
+          exit 1
 
   # ════════════════════════════════════════════════════════════════════════════
   # JOB 2 — Build frontend (Vite/React)
