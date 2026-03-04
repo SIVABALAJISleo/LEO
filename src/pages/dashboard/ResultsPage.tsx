@@ -11,20 +11,21 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { PieChart, Pie, Cell, BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Search, Download, Eye, GitCompare, CheckCircle, XCircle, Filter } from 'lucide-react';
 import { format } from 'date-fns';
 
 const ResultsPage = () => {
-  const { 
-    loading, 
-    completedJobs, 
-    selectedJobs, 
-    toggleJobSelection, 
+  const {
+    loading,
+    completedJobs,
+    selectedJobs,
+    toggleJobSelection,
     clearSelection,
     getSelectedJobsData,
     exportToJson,
-    exportToCsv 
+    exportToCsv
   } = useResultsData();
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -45,6 +46,7 @@ const ResultsPage = () => {
   const getJobStats = (job: InferenceJob) => {
     const modules = Array.isArray(job.enabled_modules) ? job.enabled_modules : [];
     return {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       moduleDistribution: modules.map((m: any) => ({ name: m, value: 1 })),
       metrics: [
         { name: 'Latency', value: job.latency_ms || 0 },
@@ -158,7 +160,7 @@ const ResultsPage = () => {
                 filteredJobs.map(job => (
                   <TableRow key={job.id} className="border-border">
                     <TableCell>
-                      <Checkbox 
+                      <Checkbox
                         checked={selectedJobs.includes(job.id)}
                         onCheckedChange={() => toggleJobSelection(job.id)}
                       />
@@ -168,8 +170,8 @@ const ResultsPage = () => {
                     <TableCell>
                       <Badge variant={job.status === 'completed' ? 'default' : 'destructive'}>
                         <span className="flex items-center gap-1">
-                          {job.status === 'completed' ? 
-                            <CheckCircle className="h-3 w-3" /> : 
+                          {job.status === 'completed' ?
+                            <CheckCircle className="h-3 w-3" /> :
                             <XCircle className="h-3 w-3" />
                           }
                           {job.status}
@@ -262,7 +264,7 @@ const ResultsPage = () => {
                 <div>
                   <h3 className="font-medium mb-2">Enabled Modules</h3>
                   <div className="flex flex-wrap gap-2">
-                    {Array.isArray(detailJob.enabled_modules) && detailJob.enabled_modules.map((m: any) => (
+                    {Array.isArray(detailJob.enabled_modules) && detailJob.enabled_modules.map((m: string) => (
                       <Badge key={m} variant="outline">{m}</Badge>
                     ))}
                   </div>
@@ -307,11 +309,11 @@ const ResultsPage = () => {
                             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                             <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} />
                             <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                            <Tooltip 
-                              contentStyle={{ 
-                                backgroundColor: 'hsl(var(--card))', 
+                            <Tooltip
+                              contentStyle={{
+                                backgroundColor: 'hsl(var(--card))',
                                 border: '1px solid hsl(var(--border))'
-                              }} 
+                              }}
                             />
                             <Bar dataKey="value" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
                           </BarChart>

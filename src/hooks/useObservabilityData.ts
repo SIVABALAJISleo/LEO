@@ -5,10 +5,15 @@ import { toast } from 'sonner';
 
 export function useObservabilityData() {
   const { user } = useAuth();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [metricsRaw, setMetricsRaw] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [metricsAggregated, setMetricsAggregated] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [traces, setTraces] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [anomalies, setAnomalies] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [correlations, setCorrelations] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -33,6 +38,7 @@ export function useObservabilityData() {
     setIsLoading(false);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const recordMetric = async (metricName: string, value: number, tags?: Record<string, any>) => {
     if (!user) return;
     const { error } = await supabase.from('metrics_raw').insert({ user_id: user.id, metric_name: metricName, metric_value: value, tags });

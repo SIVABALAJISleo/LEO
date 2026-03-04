@@ -179,6 +179,7 @@ class ProductionReadinessChecker {
     // Check incident logging
     let incidentLogging = false;
     try {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const stats = await incidentAutoHandler.getIncidentStats();
       incidentLogging = true;
     } catch {

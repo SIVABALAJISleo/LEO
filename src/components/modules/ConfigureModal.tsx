@@ -31,6 +31,7 @@ interface ConfigureModalProps {
 
 export function ConfigureModal({ module, open, onOpenChange }: ConfigureModalProps) {
   const { updateModuleSettings, resetModuleSettings, getDefaultSettings, fetchModuleStats } = useModulesData();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [settings, setSettings] = useState<Record<string, any>>({});
   const [saving, setSaving] = useState(false);
   const [stats, setStats] = useState<ModuleStats | null>(null);
@@ -39,8 +40,10 @@ export function ConfigureModal({ module, open, onOpenChange }: ConfigureModalPro
   useEffect(() => {
     if (module && open) {
       const currentSettings = module.config?.settings;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const defaults = getDefaultSettings(module.name) as Record<string, any>;
       const parsed = typeof currentSettings === 'object' && currentSettings !== null && !Array.isArray(currentSettings)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ? currentSettings as Record<string, any>
         : {};
       setSettings({ ...defaults, ...parsed });
@@ -52,6 +55,7 @@ export function ConfigureModal({ module, open, onOpenChange }: ConfigureModalPro
         setLoadingStats(false);
       });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [module, open]);
 
   const handleSave = async () => {
@@ -64,15 +68,18 @@ export function ConfigureModal({ module, open, onOpenChange }: ConfigureModalPro
 
   const handleReset = async () => {
     if (!module) return;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const defaults = getDefaultSettings(module.name) as Record<string, any>;
     setSettings(defaults);
     await resetModuleSettings(module.name);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const updateSetting = (key: string, value: any) => {
     setSettings(prev => ({ ...prev, [key]: value }));
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const renderSettingInput = (key: string, value: any) => {
     if (typeof value === 'boolean') {
       return (

@@ -1,6 +1,7 @@
 type BatchTask<T, R> = {
     payload: T;
     resolve: (value: R) => void;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     reject: (reason: any) => void;
 }
 
@@ -8,6 +9,7 @@ export class BatchProcessor<T, R> {
     private queue: BatchTask<T, R>[] = [];
     private readonly batchSize: number;
     private readonly waitTime: number;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private timeout: any = null;
     private processor: (items: T[]) => Promise<R[]>;
 

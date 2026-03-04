@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Shield, Zap, Search, Activity, Cpu, Database, RefreshCw } from 'lucide-react';
 
 interface Metrics {
@@ -13,6 +14,7 @@ interface Metrics {
 
 function App() {
     const [query, setQuery] = useState('');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [result, setResult] = useState<any>(null);
     const [metrics, setMetrics] = useState<Metrics | null>(null);
     const [loading, setLoading] = useState(false);

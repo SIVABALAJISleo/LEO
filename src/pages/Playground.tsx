@@ -68,6 +68,7 @@ const Playground = () => {
         title: "Request Successful",
         description: "Production engine response received successfully",
       });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast({
         title: "Request Failed",

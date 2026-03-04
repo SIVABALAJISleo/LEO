@@ -160,6 +160,7 @@ serve(async (req) => {
       statusCode = response.status;
       success = response.ok;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (fetchError: any) {
       clearTimeout(timeoutId);
       

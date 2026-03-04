@@ -38,6 +38,7 @@ export class MoERouter {
             type: 'code',
             description: 'Specializes in software engineering, debugging, and architecture.',
             keywords: ['function', 'code', 'bug', 'api', 'typescript', 'rust', 'deployment', 'interface', 'refactor', 'optimize'],
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             process: (q, c) => `[CODE EXPERT] Technical Logic Applied: ${q}\nRecommendation: Optimized via kernel fusion and SIMD-aware structures.`
         });
 
@@ -45,6 +46,7 @@ export class MoERouter {
             type: 'reasoning',
             description: 'Handles logical analysis, math, and step-by-step troubleshooting.',
             keywords: ['why', 'reason', 'analyze', 'compare', 'difference', 'calculate', 'optimize', 'logic', 'think'],
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             process: (q, c) => `[REASONING EXPERT] Logical Step: ${q}\nOutcome: Path verified through deterministic constraint satisfaction.`
         });
 
@@ -52,6 +54,7 @@ export class MoERouter {
             type: 'creative',
             description: 'Generates stories, marketing copy, and creative ideation.',
             keywords: ['create', 'write', 'story', 'idea', 'marketing', 'vision', 'imagine', 'spark'],
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             process: (q, c) => `[CREATIVE EXPERT] Synthesis: ${q}\nResult: Emergent patterns aligned with user-intent placeholders.`
         });
 
@@ -59,6 +62,7 @@ export class MoERouter {
             type: 'security',
             description: 'Focuses on safety, rate limiting, and system boundaries.',
             keywords: ['unsafe', 'exploit', 'hack', 'admin', 'permission', 'secret', 'safety', 'secure'],
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             process: (q, c) => `[SECURITY EXPERT] Boundary Check: ${q}\nVerdict: Compliance SEALED. Operation safe for CPU-first execution.`
         });
     }

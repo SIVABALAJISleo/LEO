@@ -7,8 +7,11 @@ import { PersistentCache } from '../memory/PersistentCache';
 
 export interface RefinementTask {
     id: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     roughResult: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     refine: (rough: any) => Promise<any>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onComplete?: (refined: any) => void;
 }
 

@@ -20,6 +20,7 @@ export const useOptimisticSync = (endpoint: string) => {
         };
     }, []);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const performAction = async (key: string, value: any) => {
         const item: SyncItem = {
             id: uuidv4(),
@@ -73,5 +74,6 @@ export const useOptimisticSync = (endpoint: string) => {
 
 // Simple logger mock if not available in TS context
 const logger = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     error: (msg: string, err: any) => console.error(`[Sync] ${msg}`, err)
 };

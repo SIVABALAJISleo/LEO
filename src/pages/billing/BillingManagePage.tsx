@@ -22,6 +22,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 export default function BillingManagePage() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { subscription, usageRecords, currentPlan, isLoading } = useBillingData();
   const { user } = useAuth();
   const navigate = useNavigate();

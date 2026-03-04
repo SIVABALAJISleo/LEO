@@ -2,6 +2,7 @@ import { SemanticCache } from '../intelligence/SemanticCache';
 
 export class MultiLevelCache {
     private static instance: MultiLevelCache;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private l1: Map<string, any> = new Map(); // Memory Cache
     private l2: SemanticCache; // Semantic L2
 
@@ -18,6 +19,7 @@ export class MultiLevelCache {
         return MultiLevelCache.instance;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async get(key: string, vector?: number[]): Promise<any | null> {
         // Check L1
         if (this.l1.has(key)) {
@@ -38,6 +40,7 @@ export class MultiLevelCache {
         return null;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     set(key: string, value: any, vector?: number[]) {
         this.setL1(key, value);
         if (vector) {
@@ -45,6 +48,7 @@ export class MultiLevelCache {
         }
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private setL1(key: string, value: any) {
         if (this.l1.size >= this.MAX_L1_SIZE) {
             const firstKey = this.l1.keys().next().value;

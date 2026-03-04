@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { RuntimeProfiler, TaskProfile } from './RuntimeProfiler';
 import { PerformanceController } from '../core/PerformanceController';
 
@@ -26,6 +27,7 @@ export class StrategySelector {
         return StrategySelector.instance;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     selectStrategy(taskType: string, payloadSize: number = 1): StrategyDecision {
         const profile = this.profiler.getProfile(taskType);
         const quality = this.perfController.getQuality();

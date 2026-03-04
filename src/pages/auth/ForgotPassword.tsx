@@ -58,6 +58,7 @@ const ForgotPassword = () => {
       // Navigate to OTP verification page
       navigate('/auth/verify-reset', { state: { email } });
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast({
         title: 'Error',

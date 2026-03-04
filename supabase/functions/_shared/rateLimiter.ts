@@ -27,6 +27,7 @@ export function getRateLimitKey(config: RateLimitConfig, identifier: string): st
 export async function checkRateLimit(
   config: RateLimitConfig,
   identifier: string,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   supabase?: ReturnType<typeof createClient>
 ): Promise<RateLimitResult> {
   const key = getRateLimitKey(config, identifier);

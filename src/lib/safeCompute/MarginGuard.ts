@@ -41,6 +41,7 @@ class MarginGuardSystem {
   evaluateMargin(
     revenue: number,
     costs: number,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     pendingJobs: number
   ): MarginPressureResponse {
     const margin = revenue > 0 ? (revenue - costs) / revenue : 1;

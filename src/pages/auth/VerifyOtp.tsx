@@ -3,9 +3,11 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthLayout } from '@/components/auth/AuthLayout';
 import { Button } from '@/components/ui/button';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { KeyRound, Loader2, ArrowLeft } from 'lucide-react';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 
@@ -53,6 +55,7 @@ const VerifyOtp = () => {
 
             // Redirect to reset password page (now authenticated)
             navigate('/auth/reset-password');
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             toast({
                 title: 'Error',

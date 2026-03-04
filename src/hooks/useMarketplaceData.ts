@@ -13,14 +13,19 @@ export const PLUGIN_CATEGORIES = [
 
 export function useMarketplaceData() {
   const { user } = useAuth();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [plugins, setPlugins] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [myPlugins, setMyPlugins] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [integrations, setIntegrations] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [transactions, setTransactions] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (user) fetchAll();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const fetchAll = async () => {

@@ -19,6 +19,7 @@ import {
   Server,
   Cpu,
   RefreshCw,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Filter
 } from 'lucide-react';
 import { firebaseClient as supabase } from '@/integrations/firebase/client';
@@ -32,6 +33,7 @@ interface ActivityItem {
   title: string;
   description: string;
   timestamp: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   metadata?: Record<string, any>;
 }
 

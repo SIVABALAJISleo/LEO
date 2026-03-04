@@ -2,6 +2,7 @@ import { LazyExecutor } from '../optimization/LazyExecutor';
 
 export interface MicroTask {
     id: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     run: () => Promise<any>;
 }
 

@@ -3,6 +3,7 @@ import { ReliabilityOrchestrator } from './ReliabilityOrchestrator';
 export interface Job {
     id: string;
     type: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     payload: any;
     priority: number;
     retries: number;
@@ -27,6 +28,7 @@ export class BackgroundJobQueue {
         return BackgroundJobQueue.instance;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     enqueue(type: string, payload: any, priority: number = 0) {
         const job: Job = {
             id: Math.random().toString(36).substr(2, 9),

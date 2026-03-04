@@ -73,6 +73,7 @@ class PerceivedRealtimeEngine {
       progressiveStages?: number;
     } = {}
   ): PerceivedRealtimeResult {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const maxPreviewLatencyMs = options.maxPreviewLatencyMs || 100;
     const targetQuality = options.targetQuality || 0.95;
     const stageCount = options.progressiveStages || 4;
@@ -110,6 +111,7 @@ class PerceivedRealtimeEngine {
   /**
    * Generate instant preview (must be < 100ms)
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private generateInstantPreview(workloadType: string, input: unknown): unknown {
     const type = workloadType.toLowerCase();
 

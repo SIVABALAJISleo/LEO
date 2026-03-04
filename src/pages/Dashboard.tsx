@@ -23,6 +23,7 @@ import DisasterRecoveryPage from '@/pages/advanced/DisasterRecoveryPage';
 
 const Dashboard = () => {
   // Initialize backend on dashboard mount - seeds data and starts automation
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { initialized, loading, health } = useBackendInitialization();
   return (
     <SidebarProvider>

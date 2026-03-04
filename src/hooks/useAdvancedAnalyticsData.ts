@@ -15,8 +15,11 @@ export const VISUALIZATION_TYPES = [
 
 export function useAdvancedAnalyticsData() {
   const { user } = useAuth();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [reports, setReports] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [dashboards, setDashboards] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [visualizations, setVisualizations] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 

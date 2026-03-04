@@ -1,0 +1,8 @@
+C:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\remix-of-remix-of-remix-of-nvidia-inspired-design-main\src\lib\observability\BenchmarkGenerator.ts
+L126: @typescript-eslint/no-explicit-any
+C:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\remix-of-remix-of-remix-of-nvidia-inspired-design-main\src\pages\dashboard\InferencePage.tsx
+L556: @typescript-eslint/no-explicit-any
+C:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\remix-of-remix-of-remix-of-nvidia-inspired-design-main\src\pages\dashboard\MonitoringPage.tsx
+L225: @typescript-eslint/no-explicit-any
+C:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\remix-of-remix-of-remix-of-nvidia-inspired-design-main\src\pages\dashboard\ResultsPage.tsx
+L268: @typescript-eslint/no-explicit-any

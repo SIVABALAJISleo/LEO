@@ -77,6 +77,7 @@ export function useSystemHealthCheck(autoRun = false, intervalMs = 300000) {
   }, []);
 
   const checkCriticalRoutes = useCallback((): HealthCheckResult => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const criticalRoutes = [
       '/dashboard/home',
       '/billing/pricing',

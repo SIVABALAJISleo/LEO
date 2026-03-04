@@ -9,9 +9,13 @@ export interface InferenceJob {
   status: string;
   priority: number;
   progress: number | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   input_data: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   output_data: any | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   enabled_modules: any | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   optimization_options: any | null;
   latency_ms: number | null;
   speedup: number | null;
@@ -38,8 +42,10 @@ export interface Model {
 export interface CreateJobInput {
   model_id: string;
   priority: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   input_data: Record<string, any>;
   enabled_modules: string[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   optimization_options: Record<string, any>;
 }
 
@@ -57,6 +63,7 @@ export function useJobsData() {
       // In a real local setup without persistent DB for jobs, we show the current orchestration session
       // or fetch from the backend if it has a jobs endpoint.
       // For demonstration, we use the jobs created in this session.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -72,6 +79,7 @@ export function useJobsData() {
         { id: 'vision-boundary', name: 'Vision Boundary Manager', model_type: 'Vision', status: 'active' },
         { id: 'rag-engine', name: 'Knowledge Retrieval Engine', model_type: 'RAG', status: 'active' }
       ]);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error('Error fetching models:', err);
     }
@@ -118,6 +126,7 @@ export function useJobsData() {
       });
 
       return newJob.id;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast({
         title: 'Error',

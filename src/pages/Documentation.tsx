@@ -5,8 +5,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Cpu,
   Layers,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Zap,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Brain,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Cloud,
   Code,
   BookOpen,

@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
@@ -23,6 +24,7 @@ export function useRealtimeNotifications(options: NotificationOptions = {}) {
   useEffect(() => {
     if (!user) return;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const channels: any[] = [];
 
     // Job status change notifications
@@ -37,6 +39,7 @@ export function useRealtimeNotifications(options: NotificationOptions = {}) {
             table: 'inference_jobs',
             filter: `user_id=eq.${user.id}`,
           },
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (payload: any) => {
             const newJob = payload.new as Record<string, unknown>;
             const oldJob = payload.old as Record<string, unknown>;
@@ -95,6 +98,7 @@ export function useRealtimeNotifications(options: NotificationOptions = {}) {
             table: 'alerts',
             filter: `user_id=eq.${user.id}`,
           },
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (payload: any) => {
             const alert = payload.new as Record<string, unknown>;
 
@@ -144,6 +148,7 @@ export function useRealtimeNotifications(options: NotificationOptions = {}) {
             table: 'system_metrics',
             filter: `user_id=eq.${user.id}`,
           },
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (payload: any) => {
             const metrics = payload.new as Record<string, unknown>;
 
@@ -172,6 +177,7 @@ export function useRealtimeNotifications(options: NotificationOptions = {}) {
     }
 
     return () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       channels.forEach((channel: any) => {
         if (channel && typeof channel.unsubscribe === 'function') {
           channel.unsubscribe();

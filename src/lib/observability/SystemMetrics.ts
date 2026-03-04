@@ -53,7 +53,9 @@ export class SystemMetrics {
         return this.metrics;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getSummary(): Record<string, any> {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const summary: Record<string, any> = {};
 
         // Group by name

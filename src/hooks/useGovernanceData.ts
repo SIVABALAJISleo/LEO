@@ -13,9 +13,13 @@ export const DEFAULT_PERMISSIONS = [
 
 export function useGovernanceData() {
   const { user } = useAuth();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [teams, setTeams] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [teamMembers, setTeamMembers] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [customRoles, setCustomRoles] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [workflows, setWorkflows] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -45,6 +49,7 @@ export function useGovernanceData() {
     else { toast.success('Team created'); fetchAll(); }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const createRole = async (teamId: string, data: { name: string; description?: string; permissions?: any[] }) => {
     const { error } = await supabase.from('custom_roles').insert({ ...data, team_id: teamId });
     if (error) toast.error('Failed to create role');

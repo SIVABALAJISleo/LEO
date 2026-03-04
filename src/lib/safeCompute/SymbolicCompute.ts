@@ -87,6 +87,7 @@ class SymbolicComputeEngine {
     data: ArrayBuffer | ImageData,
     options: { quality?: number; maxSymbols?: number } = {}
   ): Promise<SymbolicRepresentation> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { quality = 0.8, maxSymbols = 64 } = options;
 
     // Extract color groups
@@ -206,6 +207,7 @@ class SymbolicComputeEngine {
     return groups;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private async extractStructure(data: ArrayBuffer | ImageData): Promise<StructureMap> {
     // Simplified edge detection
     return {
@@ -215,6 +217,7 @@ class SymbolicComputeEngine {
     };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private async extractMotion(data: ArrayBuffer | ImageData): Promise<MotionVector[]> {
     // Motion detection for video frames
     return [];
@@ -307,10 +310,12 @@ class SymbolicComputeEngine {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private applyStructure(imageData: ImageData, structure: StructureMap): void {
     // Apply edge enhancement
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private applyMotionBlur(imageData: ImageData, motion: MotionVector[]): void {
     // Apply motion blur effect
   }

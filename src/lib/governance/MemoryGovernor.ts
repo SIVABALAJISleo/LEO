@@ -136,6 +136,7 @@ export class MemoryGovernor {
 
     private computeValueScore(entry: GovernedMemoryEntry): number {
         const now = Date.now();
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const ageHours = (now - entry.createdAt) / 3600000;
         const recencyHours = (now - entry.lastAccessedAt) / 3600000;
 

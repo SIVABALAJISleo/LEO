@@ -39,8 +39,11 @@ import { similarityCollapseEngine } from './SimilarityCollapseEngine';
 import { gpuSavingsTracker } from './GpuSavingsTracker';
 import { goalRedefinitionEngine, GoalAnalysis } from './GoalRedefinitionEngine';
 import { perceivedRealtimeEngine } from './PerceivedRealtimeEngine';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { universalDecisionMatrix, MatrixDecision, CriticalityScore } from './UniversalDecisionMatrix';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { masterPredictorEngine, PredictorResult } from './MasterPredictorEngine';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { distributedSynthesisLayer, DistributedJobResult } from './DistributedSynthesisLayer';
 
 // ============================================

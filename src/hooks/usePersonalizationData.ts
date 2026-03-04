@@ -5,8 +5,11 @@ import { toast } from 'sonner';
 
 export function usePersonalizationData() {
   const { user } = useAuth();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [behaviors, setBehaviors] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [settings, setSettings] = useState<any | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [recommendations, setRecommendations] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -27,11 +30,13 @@ export function usePersonalizationData() {
     setIsLoading(false);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const trackBehavior = async (behaviorType: string, action: string, target?: string, metadata?: any) => {
     if (!user) return;
     await supabase.from('user_behaviors').insert({ user_id: user.id, behavior_type: behaviorType, action, target, metadata });
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const updateSettings = async (data: Partial<any>) => {
     if (!user) return;
     if (settings) {

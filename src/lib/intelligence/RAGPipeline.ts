@@ -5,6 +5,7 @@ export interface RAGContext {
     text: string;
     source: string;
     score: number;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     metadata?: Record<string, any>;
 }
 
@@ -48,6 +49,7 @@ export class RAGPipeline {
         return RAGPipeline.instance;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async ingest(text: string, source: string, metadata: Record<string, any> = {}): Promise<string> {
         const chunks = text.match(/.{1,500}(\s|$)/g) || [text];
 
@@ -71,6 +73,7 @@ export class RAGPipeline {
                 score: r.score,
                 metadata: r.metadata
             }));
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         }) as any;
     }
 

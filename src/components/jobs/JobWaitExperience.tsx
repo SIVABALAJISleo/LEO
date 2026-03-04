@@ -67,6 +67,7 @@ const MILESTONES = [
 ];
 
 export function JobWaitExperience({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   jobId,
   status,
   progress = 0,

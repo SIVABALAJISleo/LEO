@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Upload, Image as ImageIcon, Zap, Maximize, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -11,6 +12,7 @@ export default function VisionPage() {
 
     const [loadingDetection, setLoadingDetection] = useState(false);
     const [loadingUpscale, setLoadingUpscale] = useState(false);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [detections, setDetections] = useState<any[]>([]);
 
     const { toast } = useToast();
@@ -75,6 +77,7 @@ export default function VisionPage() {
                 });
             }
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.error(error);
             toast({

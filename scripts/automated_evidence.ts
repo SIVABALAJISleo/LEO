@@ -1,4 +1,5 @@
 import { ChaosSuite } from '../tests/chaos_suite';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { AuditLogger } from '../src/lib/security/AuditLogger';
 import { HealthMonitor } from '../src/lib/core/HealthMonitor';
 import * as fs from 'fs';
@@ -13,6 +14,7 @@ async function runEvidencePipeline() {
     const chaos = new ChaosSuite();
     const health = HealthMonitor.getInstance();
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const report: any = {
         meta: {
             projectName: "HYPER-SaaS",

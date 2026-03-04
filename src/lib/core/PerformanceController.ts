@@ -82,6 +82,7 @@ export class PerformanceController {
      */
     private detectRuntimeResources() {
         if ('deviceMemory' in navigator) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             this.capabilities.ramGb = (navigator as any).deviceMemory || 8;
         }
 

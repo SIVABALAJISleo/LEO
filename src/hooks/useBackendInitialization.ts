@@ -79,11 +79,13 @@ export function useBackendInitialization() {
           initialized: true,
           loading: false,
           error: null,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           health: (health?.status as any) || 'unknown',
           lastCheck: new Date(),
         });
 
         console.log('[BackendInit] Backend initialization complete');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         console.error('[BackendInit] Initialization error:', error);
         setStatus({
@@ -109,6 +111,7 @@ export function useBackendInitialization() {
     const health = await runQuickHealthCheck();
     setStatus(prev => ({
       ...prev,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       health: (health?.status as any) || 'unknown',
       lastCheck: new Date(),
     }));

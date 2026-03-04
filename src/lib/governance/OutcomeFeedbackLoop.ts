@@ -7,9 +7,11 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { v4 as uuidv4 } from 'uuid';
 import {
     OutcomeFeedback,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     TerminalAction,
 } from './types';
 import { DomainRegistry } from './DomainRegistry';

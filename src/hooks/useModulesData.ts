@@ -119,8 +119,11 @@ export function useModulesData() {
       if (statusRes.error) throw statusRes.error;
       if (configRes.error) throw configRes.error;
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       setModuleStatuses((statusRes.data as any) || []);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       setModuleConfigs((configRes.data as any) || []);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message);
       console.error('Error fetching modules data:', err);
@@ -214,6 +217,7 @@ export function useModulesData() {
       });
 
       fetchData();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast({
         title: 'Error',
@@ -257,6 +261,7 @@ export function useModulesData() {
       });
 
       fetchData();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast({
         title: 'Error',
@@ -282,6 +287,7 @@ export function useModulesData() {
         title: 'Batch Update Complete',
         description: `${moduleNames.length} modules have been ${enabled ? 'enabled' : 'disabled'}.`
       });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast({
         title: 'Error',
@@ -303,6 +309,7 @@ export function useModulesData() {
         title: 'Template Applied',
         description: `Settings template applied to ${moduleNames.length} modules.`
       });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast({
         title: 'Error',
@@ -345,6 +352,7 @@ export function useModulesData() {
       const alerts = alertsRes.data || [];
 
       const totalRuns = metrics.length;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const successfulRuns = metrics.filter(m => (m.metadata as any)?.success !== false).length;
       const successRate = totalRuns > 0 ? (successfulRuns / totalRuns) * 100 : 0;
       const avgLatencyImpact = metrics.length > 0
@@ -353,7 +361,9 @@ export function useModulesData() {
 
       const performanceHistory = metrics.map(m => ({
         recorded_at: m.recorded_at,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         speedup: (m.metadata as any)?.speedup || 1,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         compression: (m.metadata as any)?.compression || 1
       }));
 

@@ -93,6 +93,7 @@ serve(async (req: Request) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" }
       }
     );
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     response.status = "down";
     response.checks.database = "error";

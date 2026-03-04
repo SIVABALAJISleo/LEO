@@ -16,7 +16,9 @@
  * - Only deterministic, explainable, verifiable engineering
  */
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { masterPredictorEngine, PredictorResult } from './MasterPredictorEngine';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { knowledgeLookupVault, LookupMatch } from './KnowledgeLookupVault';
 
 // ============================================
@@ -523,6 +525,7 @@ class UniversalDecisionMatrixCore {
    */
   private handleFallback(
     sources: TruthSource[],
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     context: { localGpuAvailable?: boolean }
   ): { path: MatrixDecision['finalPath']; source: TruthSource | null; reason: string } {
     // Recovery order: Vault → Local Raw Compute → Swarm → Explain

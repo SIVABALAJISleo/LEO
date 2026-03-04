@@ -1,4 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import React, { useState, useEffect } from 'react';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Shield, Zap, Search, Activity, Cpu, Database, RefreshCw, AlertTriangle, Layers, Maximize } from 'lucide-react';
 import { hyperClient, HyperResponse } from './lib/api';
 

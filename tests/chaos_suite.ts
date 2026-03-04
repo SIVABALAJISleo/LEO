@@ -19,6 +19,7 @@ export class ChaosSuite {
 
         try {
             await this.orchestrator.execute('chaos_db_operation', {}, { circuitThreshold: 2 });
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
             console.log('[ChaosSuite] Caught expected failure.');
         }
@@ -36,6 +37,7 @@ export class ChaosSuite {
 
         try {
             await this.orchestrator.execute('slow_network_op', {}, { timeoutMs: 1000, maxRetries: 0 });
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
             console.log('[ChaosSuite] Caught expected timeout.');
         }

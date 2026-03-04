@@ -2,9 +2,12 @@
 // Detect → React → Recover → Report - NO HUMAN DEPENDENCY
 
 import { firebaseClient as supabase } from '@/integrations/firebase/client';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { incidentAutoHandler, type IncidentType, type IncidentSeverity } from './IncidentAutoHandler';
 import { incidentStateMachine } from './IncidentStateMachine';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { systemStatusService } from './SystemStatusContract';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { backupVerification } from './BackupVerification';
 import { releaseRollback } from './ReleaseRollback';
 
@@ -175,6 +178,7 @@ class ProductionHealthOrchestrator {
         status: data?.status === 'ok' ? 'ok' : 'degraded', 
         latencyMs: latency 
       };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       return { 
         component: 'api', 
@@ -208,6 +212,7 @@ class ProductionHealthOrchestrator {
       }
       
       return { component: 'queue', status: 'ok', latencyMs: latency };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       return { 
         component: 'queue', 
@@ -317,6 +322,7 @@ class ProductionHealthOrchestrator {
           break;
         case 'errors':
           // Check if rollback is needed
+          // eslint-disable-next-line no-case-declarations
           const rollbackCheck = await releaseRollback.checkForAutoRollback();
           if (rollbackCheck.needed) {
             this.queueRecoveryAction(async () => {

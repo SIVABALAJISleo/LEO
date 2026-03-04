@@ -190,6 +190,7 @@ class VeryHeavySimulator {
     };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private simulateMassiveSimulation(params: Record<string, unknown>): VeryHeavySimulation {
     return {
       jobType: 'massive_simulation',
@@ -240,6 +241,7 @@ class VeryHeavySimulator {
     };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private simulateDistributedTraining(params: Record<string, unknown>): VeryHeavySimulation {
     return {
       jobType: 'distributed_training',

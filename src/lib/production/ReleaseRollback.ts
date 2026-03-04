@@ -167,6 +167,7 @@ class ReleaseRollbackService {
 
     // In a real implementation, this would fetch live metrics
     // For now, we simulate by checking stored health metrics
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const healthCheck = this.checkHealthMetrics(release.healthMetrics);
 
     return {

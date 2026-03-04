@@ -130,6 +130,7 @@ class AuthorityMinimizationRouter {
     }
 
     // Step 5: Generate cryptographic proof for audit trail
+    // eslint-disable-next-line prefer-const
     proof = await cryptographicProofPipeline.generateProof({
       type: 'decision',
       input: { taskId: params.taskId, type: params.taskType, scores },

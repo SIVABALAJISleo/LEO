@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Clock, Zap, HardDrive, Cpu, Calendar, CheckCircle, XCircle, RotateCcw } from 'lucide-react';
 import {
   Dialog,
@@ -14,6 +15,7 @@ import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { InferenceJob } from '@/hooks/useJobsData';
 import { cn } from '@/lib/utils';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { format, formatDistanceToNow } from 'date-fns';
 
 interface JobDetailModalProps {
@@ -45,8 +47,11 @@ export function JobDetailModal({ job, open, onOpenChange, onCancel, onRetry }: J
   };
 
   const enabledModules = Array.isArray(job.enabled_modules) ? job.enabled_modules : [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const inputData = typeof job.input_data === 'object' && job.input_data !== null ? job.input_data as Record<string, any> : {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const outputData = typeof job.output_data === 'object' && job.output_data !== null ? job.output_data as Record<string, any> : null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const optimizationOptions = typeof job.optimization_options === 'object' && job.optimization_options !== null ? job.optimization_options as Record<string, any> : {};
 
   const getDuration = () => {

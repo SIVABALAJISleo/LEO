@@ -55,6 +55,7 @@ const BOUNDARY_CONFIG: Record<AuthorityBoundaryType, {
 export const AuthorityBadge = ({ check, showDetails = false, size = 'md' }: AuthorityBadgeProps) => {
   const config = BOUNDARY_CONFIG[check.classification.boundaryType];
   const Icon = config.icon;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const uiDisplay = authorityBoundaryEngine.getUIDisplay(check);
 
   const sizeClasses = {

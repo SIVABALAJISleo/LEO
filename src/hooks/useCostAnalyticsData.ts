@@ -13,8 +13,11 @@ export const RESOURCE_TYPES = [
 
 export function useCostAnalyticsData() {
   const { user } = useAuth();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [transactions, setTransactions] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [predictions, setPredictions] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [budgets, setBudgets] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 

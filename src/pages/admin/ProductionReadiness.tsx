@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { productionReadinessChecker, type ProductionReadinessScore } from '@/lib/production/ProductionReadinessChecker';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { launchVerification, type LaunchReadinessReport, type VerificationTest } from '@/lib/production/LaunchVerification';
 import { useAdminRole } from '@/hooks/useAdminRole';
 

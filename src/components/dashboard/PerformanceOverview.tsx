@@ -41,9 +41,11 @@ export const PerformanceOverview = ({ metrics, activeJobs }: PerformanceOverview
     // Generate sparkline data - HONEST: only use real metrics, no random data
     const generateSparkline = (key: string) => {
       const filtered = recentMetrics.filter(m => 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         m.metric_name === key || (m as any)[key]
       ).slice(-20);
       return filtered.map((m, i) => ({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         value: (m as any)[key] || m.metric_value || 0, // Use 0 not random
         index: i,
       }));

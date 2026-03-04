@@ -91,6 +91,7 @@ export const useDistillationData = () => {
   const [models, setModels] = useState<DistilledModel[]>([]);
   const [jobs, setJobs] = useState<DistillationJob[]>([]);
   const [metrics, setMetrics] = useState<DistillationMetric[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [transferLogs, setTransferLogs] = useState<KnowledgeTransferLog[]>([]);
   const [teacherModels, setTeacherModels] = useState<{ id: string; name: string }[]>([]);
   const [isLoading, setIsLoading] = useState(true);

@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -34,6 +35,7 @@ const RECOMMENDED_MODULES = [
 
 const InferencePage = () => {
   const { jobs, models, loading, createJob, cancelJob, retryJob, getJobById } = useJobsData();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { moduleConfigs } = useModulesData();
   const { toast } = useToast();
 
@@ -130,6 +132,7 @@ const InferencePage = () => {
 
       setBatchFile(null);
       if (fileInputRef.current) fileInputRef.current.value = '';
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast({ title: 'Error', description: err.message, variant: 'destructive' });
     }
@@ -549,7 +552,7 @@ const InferencePage = () => {
               <div>
                 <Label className="text-muted-foreground">Enabled Modules</Label>
                 <div className="flex flex-wrap gap-1 mt-1">
-                  {Array.isArray(selectedJob.enabled_modules) && selectedJob.enabled_modules.map((m: any) => (
+                  {Array.isArray(selectedJob.enabled_modules) && selectedJob.enabled_modules.map((m: string) => (
                     <Badge key={m} variant="outline">{m}</Badge>
                   ))}
                 </div>

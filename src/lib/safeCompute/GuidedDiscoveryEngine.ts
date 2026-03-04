@@ -315,6 +315,7 @@ class GuidedDiscoveryEngine {
   private formulateStatement(
     observation: string,
     variables: Variable[],
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     predictions: string[]
   ): string {
     const independent = variables.find(v => v.type === 'independent');
@@ -423,6 +424,7 @@ class GuidedDiscoveryEngine {
 
   private assessRiskBounds(
     hypothesis: Hypothesis,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     scenario: { name: string; conditions: Record<string, unknown> }
   ): RiskBound[] {
     const risks: RiskBound[] = [];
@@ -667,6 +669,7 @@ class GuidedDiscoveryEngine {
 
   private assessExperimentSafety(
     hypothesis: Hypothesis,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     steps: ExperimentStep[]
   ): {
     rating: ExperimentPlan['safetyRating'];

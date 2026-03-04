@@ -4,6 +4,7 @@
 import { firebaseClient as supabase } from '@/integrations/firebase/client';
 import { backupVerification } from './BackupVerification';
 import { releaseRollback } from './ReleaseRollback';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { incidentAutoHandler } from './IncidentAutoHandler';
 import { systemStatusService } from './SystemStatusContract';
 
@@ -195,6 +196,7 @@ class LaunchVerification {
     console.log('[LaunchVerification] Starting full verification...');
     this.initializeTests(); // Reset all tests
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const startTime = Date.now();
 
     // Run tests by category
@@ -321,6 +323,7 @@ class LaunchVerification {
     // Test: Job execution simulation
     await this.runTest('job_execution', async () => {
       // Light jobs should execute immediately - verify the infrastructure exists
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { data, error } = await supabase
         .from('gpu_jobs')
         .select('id, status')

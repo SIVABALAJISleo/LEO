@@ -3,6 +3,7 @@ import Dexie, { Table } from 'dexie';
 export interface SyncItem {
     id: string;
     key: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     value: any;
     status: 'pending' | 'synced' | 'conflict';
     timestamp: number;

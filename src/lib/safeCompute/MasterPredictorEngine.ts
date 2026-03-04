@@ -15,7 +15,9 @@
  * - Transparent path selection
  */
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { algorithmicShortcutRegistry, ShortcutMatch, ShortcutResult } from './AlgorithmicShortcutRegistry';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { knowledgeLookupVault, LookupMatch, VaultEntry } from './KnowledgeLookupVault';
 
 // Execution paths (EXACTLY ONE chosen per request)

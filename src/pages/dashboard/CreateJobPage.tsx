@@ -78,6 +78,7 @@ export default function CreateJobPage() {
   const [error, setError] = useState<string | null>(null);
 
   const memoryReport = getMemoryReport();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const selectedJobType = JOB_TYPE_OPTIONS.find(j => j.value === jobType);
   const tierInfo = TIER_INFO[jobTier];
 

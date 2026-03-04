@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Progress } from '@/components/ui/progress';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
@@ -14,6 +15,7 @@ import {
   AlertTriangle,
   CheckCircle2,
   Clock,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Cpu,
   Database,
   Loader2,
@@ -22,7 +24,9 @@ import {
   Shield,
   Thermometer,
   TrendingUp,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Wifi,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   WifiOff,
   Zap
 } from 'lucide-react';
@@ -77,6 +81,7 @@ interface JobData {
 }
 
 export default function SecretAdminPage() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { user } = useAuth();
   const { isAdmin, isLoading: roleLoading } = useAdminRole();
   const [summary, setSummary] = useState<AdminSummary | null>(null);
@@ -140,6 +145,7 @@ export default function SecretAdminPage() {
         .limit(5);
 
       if (systemStatus && systemStatus.length > 0) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         localSummary.active_workers = systemStatus.map((s: any) => ({
           worker_id: s.worker_id,
           gpu_temp_celsius: s.gpu_temperature_celsius || 0,

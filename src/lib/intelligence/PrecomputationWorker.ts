@@ -41,6 +41,7 @@ export class PrecomputationWorker {
             try {
                 // We use the router to process, which will eventually hit the RAG pipeline
                 // The cache will be populated during the process or we can explicitly set it
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const response = await this.router.process(query);
 
                 // We simulate the embedding for the cache context

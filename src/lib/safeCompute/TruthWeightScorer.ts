@@ -68,6 +68,7 @@ const HIGH_RISK_DOMAINS: Record<string, { weight: number; reason: string }> = {
   'pharmaceutical': { weight: 0.9, reason: 'Drug safety and dosing' },
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const MEDIUM_RISK_DOMAINS: Record<string, { weight: number; reason: string }> = {
   'e_commerce': { weight: 0.4, reason: 'Financial transaction involved' },
   'content_moderation': { weight: 0.5, reason: 'Community safety impact' },

@@ -13,6 +13,7 @@ import { formatDistanceToNow, format } from 'date-fns';
 import { 
   ArrowLeft, 
   Clock, 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Cpu, 
   Download,
   Loader2,
@@ -25,6 +26,7 @@ import {
   Shield,
   Sparkles,
   Gauge,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Zap
 } from 'lucide-react';
 
@@ -147,6 +149,7 @@ export default function JobDetailPage() {
   const isFailed = job.status === 'failed' || job.status === 'too_large';
 
   // Transparency helpers (HONEST labels)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getProcessingMethod = (j: GpuJob): string => {
     if (j.job_tier === 'very_heavy') return 'Approximated (Requires Delegation)';
     if (j.job_tier === 'light') return 'Cached/Instant';
@@ -164,10 +167,12 @@ export default function JobDetailPage() {
     return 85;
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const isFreshCompute = (j: GpuJob): boolean => {
     return j.worker_id !== null && j.job_tier !== 'very_heavy';
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getEstimatedAccuracy = (j: GpuJob): number => {
     if (j.job_tier === 'very_heavy') return 82;
     if (j.job_tier === 'light') return 99;

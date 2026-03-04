@@ -105,6 +105,7 @@ export function useSettingsData() {
       toast({ title: 'Profile Updated', description: 'Your profile has been saved.' });
       await fetchProfile();
       return true;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast({ title: 'Error', description: err.message, variant: 'destructive' });
       return false;
@@ -133,6 +134,7 @@ export function useSettingsData() {
       await fetchApiKeys();
       // Return the plaintext key only once for the user to copy
       return data.key;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast({ title: 'Error', description: err.message, variant: 'destructive' });
       return null;
@@ -153,6 +155,7 @@ export function useSettingsData() {
 
       toast({ title: 'API Key Revoked', description: 'The API key has been deactivated.' });
       await fetchApiKeys();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast({ title: 'Error', description: err.message, variant: 'destructive' });
     }
@@ -172,6 +175,7 @@ export function useSettingsData() {
 
       toast({ title: 'API Key Deleted', description: 'The API key has been permanently deleted.' });
       await fetchApiKeys();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast({ title: 'Error', description: err.message, variant: 'destructive' });
     }

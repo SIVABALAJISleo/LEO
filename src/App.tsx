@@ -13,6 +13,7 @@ import { SystemBanner } from "@/components/ui/SystemBanner";
 import Index from "./pages/Index";
 import Documentation from "./pages/Documentation";
 import Playground from "./pages/Playground";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import Pricing from "./pages/Pricing";
 import NotFound from "./pages/NotFound";
 

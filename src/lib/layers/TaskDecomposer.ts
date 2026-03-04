@@ -13,6 +13,7 @@ export interface SubTask {
     description: string;
     required_capability: 'logic' | 'math' | 'retrieval' | 'creative';
     status: 'pending' | 'completed';
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     result?: any;
 }
 

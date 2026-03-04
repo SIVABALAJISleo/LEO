@@ -91,6 +91,7 @@ class ProbabilisticEngine {
         break;
       case 'cached':
         // More cache hits = higher confidence
+        // eslint-disable-next-line no-case-declarations
         const hits = source.cacheHits || 1;
         baseConfidence = Math.min(0.95, 0.85 + (hits * 0.02));
         break;

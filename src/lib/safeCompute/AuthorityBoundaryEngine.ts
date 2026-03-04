@@ -210,6 +210,7 @@ class AuthorityBoundaryEngine {
   private buildClassification(
     boundaryType: AuthorityBoundaryType,
     executionPath: ExecutionPath,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     searchText: string
   ): AuthorityClassification {
     const baseClassification: AuthorityClassification = {

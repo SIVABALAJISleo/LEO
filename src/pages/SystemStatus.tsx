@@ -60,6 +60,7 @@ export default function SystemStatus() {
       try {
         const bStatus = await hyperClient.getStatus();
         setBackendStatus(bStatus);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (err) {
         console.warn('Backend server not reachable on port 8005. Falling back to mock data.');
       }

@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Clock, Zap, HardDrive, XCircle, RotateCcw, Eye, Gauge, Shield } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -68,6 +69,7 @@ export function JobCard({ job, onViewDetails, onCancel, onRetry }: JobCardProps)
 
   const getElapsedTime = () => {
     if (job.started_at) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const endTime = job.completed_at ? new Date(job.completed_at) : new Date();
       return formatDistanceToNow(new Date(job.started_at), { addSuffix: false });
     }

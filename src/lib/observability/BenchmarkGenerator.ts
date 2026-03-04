@@ -6,6 +6,7 @@ import { PerformanceController } from '../core/PerformanceController';
 interface BenchmarkScenario {
     name: string;
     description: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     execute: () => Promise<any>;
 }
 
@@ -102,6 +103,7 @@ export class BenchmarkGenerator {
     }
 
     generateReport(): string {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const proof = this.exportProof() as any;
 
         return `# System Performance Report
@@ -120,7 +122,7 @@ ${proof.architecture.layers.map((l: string) => `- ${l}`).join('\n')}
 - **Success Rate**: ${((proof.auditSummary.successful / proof.auditSummary.total) * 100).toFixed(1)}%
 
 ## Task Performance Profiles
-${proof.taskProfiles.map((t: any) =>
+${proof.taskProfiles.map((t: { taskType: string; avgLatency: number; executionCount: number; }) =>
             `- **${t.taskType}**: ${t.avgLatency.toFixed(1)}ms avg (${t.executionCount} runs)`
         ).join('\n')}
 

@@ -183,6 +183,7 @@ class ComputeExecutor {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private selectNode(request: ExecutionRequest): ComputeNode | null {
     // For now, always use local node
     // Future: implement load balancing across multiple nodes

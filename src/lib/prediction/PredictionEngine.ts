@@ -1,5 +1,6 @@
 import { LazyExecutor } from '../optimization/LazyExecutor';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface ActionCount {
     action: string;
     count: number;

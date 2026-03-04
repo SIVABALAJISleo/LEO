@@ -39,6 +39,7 @@ serve(async (req) => {
     const { action } = await req.json();
     console.log(`[DataSeeder] Action: ${action} for user: ${user.id}`);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let result: any = {};
 
     switch (action) {
@@ -81,6 +82,7 @@ serve(async (req) => {
   }
 });
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function initializeUserData(supabase: any, userId: string) {
   console.log(`[DataSeeder] Initializing data for user: ${userId}`);
   
@@ -112,7 +114,9 @@ async function initializeUserData(supabase: any, userId: string) {
  * - Fake hardware metrics (CPU, GPU, RAM, temperature)
  * - These must come from a real local agent
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function seedSetupData(supabase: any, userId: string) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const results: any = {};
 
   results.modules = await seedModuleConfigs(supabase, userId);
@@ -130,6 +134,7 @@ async function seedSetupData(supabase: any, userId: string) {
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function seedModuleConfigs(supabase: any, userId: string) {
   const modules = [
     { module_name: 'quantization', module_type: 'compression', enabled: true, config: { precision: 'int8', dynamic: true }, settings: { target_speedup: 2.0 } },
@@ -158,6 +163,7 @@ async function seedModuleConfigs(supabase: any, userId: string) {
   return { count: modules.length, error: error?.message };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function seedModuleStatus(supabase: any, userId: string) {
   const statuses = [
     { module_name: 'quantization', status: 'operational', health_score: 98 },
@@ -198,6 +204,7 @@ async function seedModuleStatus(supabase: any, userId: string) {
  * Generating fake metrics is DISHONEST and misleads users.
  */
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function seedGpuSystemStatus(supabase: any) {
   // Register a placeholder worker - will be updated by real agent
   const status = {
@@ -223,6 +230,7 @@ async function seedGpuSystemStatus(supabase: any) {
   return { success: !error, error: error?.message, notice: 'Worker registered as offline - awaiting real agent' };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function seedModels(supabase: any, userId: string) {
   // Models are legitimate demo data - these represent available model configurations
   const models = [

@@ -16,6 +16,7 @@ import {
   AlertTriangle,
   HelpCircle,
   ChevronRight,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ExternalLink,
   Copy,
   Check,
@@ -70,6 +71,7 @@ const gpuModules: { id: ModuleId; name: string; description: string }[] = [
 
 const CodeBlock = ({
   code,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   language = 'bash',
   showPlayground = false,
   playgroundEndpoint = ''

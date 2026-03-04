@@ -107,6 +107,7 @@ export const hyperClient = {
     /**
      * BRIDGE: Execute on Python Core Backend
      */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async executeRemote(query: string, metadata: any = {}): Promise<OrchestrateResponse> {
         const response = await fetch('http://localhost:8005/api/orchestrate', {
             method: 'POST',
@@ -120,6 +121,7 @@ export const hyperClient = {
         return response.json();
     },
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async uploadFile(file: File): Promise<any> {
         const formData = new FormData();
         formData.append('file', file);
@@ -136,6 +138,7 @@ export const hyperClient = {
         return response.json();
     },
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async queryRag(query: string, payload: any = {}) {
         return await ReliabilityOrchestrator.getInstance().execute('ai_inference', { query, ...payload });
     },
@@ -144,6 +147,7 @@ export const hyperClient = {
         return await MoERouter.getInstance().process(query);
     },
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async orchestrate(action: string, payload: any = {}) {
         // Ensure action exists or default to ai_inference if payload suggests a query
         const targetAction = (action === 'chatbot' || !action) ? 'ai_inference' : action;
@@ -166,6 +170,7 @@ export const hyperClient = {
 
         // This is a "dry run" or fast-lookup that Pillar 7 requires
         // We'll use the orchestrator's LKG (Last-Known-Good) as the optimistic response
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const optimisticResult = (orchestrator as any).lkgData?.get(action);
 
         if (optimisticResult) {

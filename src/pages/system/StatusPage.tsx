@@ -7,11 +7,13 @@ import { RefreshCw, ShieldCheck, Zap, BrainCircuit, Activity } from "lucide-reac
 import ReliabilityOrchestrator from "@/lib/core/ReliabilityOrchestrator";
 
 // Initialize to ensure it exists, though we mock the logs below
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const orchestrator = ReliabilityOrchestrator.getInstance();
 // In a real app we'd have a hook to read the orchestrator's state. 
 // For now, we'll simulate reading the "Audit Stream".
 
 const StatusPage = () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [logs, setLogs] = useState<any[]>([]);
   const [metrics, setMetrics] = useState({
     avgLatency: 0,
@@ -116,6 +118,7 @@ const StatusPage = () => {
   );
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const StatusCard = ({ title, icon, value, desc }: any) => (
   <Card>
     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

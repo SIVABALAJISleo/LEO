@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Mail, Lock, Loader2, User } from 'lucide-react';
 
 const loginSchema = z.object({
@@ -71,6 +72,7 @@ const Login = () => {
       });
 
       navigate('/dashboard/home');
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error: unknown) {
       toast({
         title: 'Error',

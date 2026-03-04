@@ -101,6 +101,7 @@ class DigitalTwinVerifier {
     context: Record<string, unknown>;
     customConstraints?: FormalConstraint[];
   }): Promise<DigitalTwinResult> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const startTime = Date.now();
     const constraints = [...CORE_CONSTRAINTS, ...(params.customConstraints || [])];
     
@@ -253,6 +254,7 @@ class DigitalTwinVerifier {
   private checkConstraint(
     constraint: FormalConstraint, 
     scenario: string,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     context: Record<string, unknown>
   ): boolean {
     // Deterministic constraint checking based on scenario type
@@ -276,6 +278,7 @@ class DigitalTwinVerifier {
   }
 
   // Quick check for simple actions (no full simulation)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   quickCheck(actionType: string, context: Record<string, unknown>): {
     safeToAutoApprove: boolean;
     reason: string;

@@ -6,6 +6,7 @@
 export interface FallbackNode {
     id: string;
     quality: number; // 0-1
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     execute: (input: any) => Promise<any>;
     fallbacks: string[]; // Node IDs to try if this fails
 }
@@ -34,6 +35,7 @@ export class FallbackGraph {
     /**
      * Execute with automatic fallback on failure
      */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async execute(nodeId: string, input: any): Promise<{ result: any; path: string[] }> {
         const visited = new Set<string>();
         const path: string[] = [];
@@ -43,9 +45,11 @@ export class FallbackGraph {
 
     private async tryNode(
         nodeId: string,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         input: any,
         visited: Set<string>,
         path: string[]
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ): Promise<{ result: any; path: string[] }> {
         if (visited.has(nodeId)) {
             throw new Error(`Cycle detected: ${nodeId}`);
@@ -87,6 +91,7 @@ export class FallbackGraph {
     /**
      * Get recommended path based on history
      */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     getRecommendedPath(startNode: string): string[] {
         // Simple heuristic: find most successful path
         const successRate = new Map<string, number>();
@@ -106,8 +111,11 @@ export class FallbackGraph {
      * Build approximation chain: exact → fast → cached
      */
     buildApproximationChain(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         exact: () => Promise<any>,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         fast: () => Promise<any>,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         cached: () => Promise<any>
     ): void {
         this.registerNode({

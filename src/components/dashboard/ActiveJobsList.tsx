@@ -38,6 +38,7 @@ export const ActiveJobsList = ({ jobs }: ActiveJobsListProps) => {
           {jobs.map((job) => {
             const statusConfig = getStatusConfig(job.status);
             const StatusIcon = statusConfig.icon;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const modelName = (job as any).models?.name || 'Unknown Model';
             const modules = Array.isArray(job.enabled_modules) 
               ? job.enabled_modules 

@@ -99,6 +99,7 @@ class ProductionGuardrails {
   }
 
   // Check if request is allowed
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   checkRequest(userId?: string): { allowed: boolean; reason?: string; violation?: GuardrailViolation } {
     const now = Date.now();
 

@@ -14,8 +14,11 @@ export const REGIONS = ['us-east-1', 'us-west-2', 'eu-west-1', 'eu-central-1', '
 
 export function useDisasterRecoveryData() {
   const { user } = useAuth();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [backups, setBackups] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [failovers, setFailovers] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [incidents, setIncidents] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 

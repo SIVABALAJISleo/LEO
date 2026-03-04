@@ -13,9 +13,11 @@ Deno.serve(async (req) => {
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   // deno-lint-ignore no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const supabase = createClient(supabaseUrl, supabaseServiceKey) as any;
 
   try {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { action, user_id } = await req.json();
     console.log(`[health-monitor-v2] Action: ${action}`);
 

@@ -56,6 +56,7 @@ export class LearningRouter {
         this.successPatterns.set(pattern, expert);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     recordFailure(query: string, expert: string) {
         // Remove failing patterns
         const pattern = this.extractPattern(query);

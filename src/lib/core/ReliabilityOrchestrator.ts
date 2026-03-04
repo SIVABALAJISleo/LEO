@@ -3,6 +3,7 @@ import { PerformanceController } from './PerformanceController';
 import { SemanticCache } from '../intelligence/SemanticCache';
 import { ApproximationService } from '../optimization/ApproximationService';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ActionHandler<T = any, R = any> = (payload: T) => Promise<R>;
 
 type CircuitState = 'CLOSED' | 'OPEN' | 'HALF_OPEN';
@@ -40,6 +41,7 @@ export class ReliabilityOrchestrator {
     private approx: ApproximationService;
 
     private handlers = new Map<string, ActionHandler>();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private lkgData = new Map<string, any>(); // Last-Known-Good storage
     private activeExecutions = new Map<string, AbortController>();
     private auditLog: AuditEntry[] = [];
@@ -89,6 +91,7 @@ export class ReliabilityOrchestrator {
         actionType: string,
         payload: T,
         options?: Partial<ReliabilityConfig> & { queryVector?: number[], idempotencyKey?: string }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ): Promise<{ result: R, trace: any[] }> {
         const config = { ...this.defaultConfig, ...options };
         const startTime = performance.now();

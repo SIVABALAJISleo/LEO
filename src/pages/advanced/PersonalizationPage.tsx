@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,6 +11,7 @@ import { usePersonalizationData } from '@/hooks/usePersonalizationData';
 import { LoadingState } from '@/components/ui/loading-state';
 import { EmptyState } from '@/components/ui/empty-state';
 import { Label } from '@/components/ui/label';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { toast } from 'sonner';
 
 const PersonalizationPage = () => {

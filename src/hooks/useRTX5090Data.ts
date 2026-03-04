@@ -32,10 +32,15 @@ export interface TrainingJob {
 
 export function useRTX5090Data() {
   const { user } = useAuth();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [trainingJobs, setTrainingJobs] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [offlinePackages, setOfflinePackages] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [graphicsBenchmarks, setGraphicsBenchmarks] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [videoBenchmarks, setVideoBenchmarks] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [persistentJobs, setPersistentJobs] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 

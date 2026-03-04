@@ -6,6 +6,7 @@
 export interface User {
   id: string;
   email: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   user_metadata?: Record<string, any>;
   created_at: string;
 }

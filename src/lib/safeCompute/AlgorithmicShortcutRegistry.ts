@@ -326,6 +326,7 @@ class AlgorithmicShortcutRegistryEngine {
   /**
    * Execute the actual shortcut logic
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private executeShortcutLogic(shortcut: AlgorithmicShortcut, input: unknown): unknown {
     // Return a structured result indicating the shortcut was applied
     return {

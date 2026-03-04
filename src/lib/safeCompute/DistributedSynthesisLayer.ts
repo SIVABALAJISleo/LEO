@@ -286,6 +286,7 @@ class DistributedSynthesisLayerCore {
     
     // In a real implementation, these would be actual remote calls
     // Here we mark them as completed with placeholder results
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     for (const [_, slice] of assignments) {
       const node = this.nodes.get(slice.assignedNode || '');
       

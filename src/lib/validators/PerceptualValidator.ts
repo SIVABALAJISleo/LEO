@@ -33,7 +33,9 @@ export class PerceptualValidator {
     validate(
         reference: Float32Array,
         candidate: Float32Array,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         width: number,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         height: number
     ): ValidationResult {
         if (reference.length !== candidate.length) {
@@ -68,6 +70,7 @@ export class PerceptualValidator {
         for (let i = 0; i < a.length; i++) {
             const diff = Math.abs(a[i] - b[i]);
             sumDiff += diff * diff;
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             sumRef += a[i] * a[i];
         }
 

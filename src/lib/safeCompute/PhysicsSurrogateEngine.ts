@@ -321,6 +321,7 @@ class PhysicsSurrogateEngine {
 
   private checkInputOutOfDistribution(
     inputs: Record<string, number>,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     config: SurrogateConfig
   ): boolean {
     // Check for extreme values that might be outside training distribution

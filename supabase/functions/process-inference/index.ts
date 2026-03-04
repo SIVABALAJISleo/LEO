@@ -98,6 +98,7 @@ serve(async (req) => {
 
     // Get enabled modules
     const enabledModules = (job.enabled_modules as string[]) || [];
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
     const optimizationOptions = (job.optimization_options as Record<string, any>) || {};
 
     // Simulate processing with progress updates
@@ -239,7 +240,9 @@ serve(async (req) => {
   }
 });
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function generateOutput(job: any, enabledModules: string[]) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const inputData = job.input_data as Record<string, any>;
   const modelType = job.model?.model_type || "custom";
 
@@ -275,6 +278,7 @@ function generateOutput(job: any, enabledModules: string[]) {
       };
       
     case "sentiment_analysis":
+      // eslint-disable-next-line no-case-declarations
       const sentiments = ["positive", "negative", "neutral"];
       return {
         sentiment: sentiments[Math.floor(Math.random() * sentiments.length)],

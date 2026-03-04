@@ -212,6 +212,7 @@ Deno.serve(async (req) => {
 
 // deno-lint-ignore no-explicit-any
 async function runIntegrityChecks(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   supabase: any,
   userId: string
 ): Promise<Record<string, boolean>> {

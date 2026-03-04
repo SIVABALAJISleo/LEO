@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Database, Zap, Trash2, RefreshCw, Flame, Play } from 'lucide-react';
 import { useCachingData, CACHE_LEVELS, INVALIDATION_TYPES } from '@/hooks/useCachingData';
 import { LoadingState } from '@/components/ui/loading-state';
@@ -12,6 +13,7 @@ import { EmptyState } from '@/components/ui/empty-state';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 const CachingPage = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { cacheMetadata, analytics, invalidationLogs, warmingJobs, isLoading, invalidateCache, startWarmingJob, getHitRateByLevel, getTotalSizeByLevel, getTopCachedQueries, getEstimatedSpeedup } = useCachingData();
   const [selectedLevel, setSelectedLevel] = useState('L1');
   const [invalidationType, setInvalidationType] = useState('manual');

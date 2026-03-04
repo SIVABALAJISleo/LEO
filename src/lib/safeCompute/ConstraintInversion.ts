@@ -275,6 +275,7 @@ class ConstraintInversionEngine {
    * or hardware fragility, one inversion mode MUST be applied.
    * Returning "unsolvable" is forbidden.
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   mustInvert(constraint: BlockingConstraint): true {
     // This always returns true - unsolvable is forbidden
     return true;

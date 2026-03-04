@@ -11,20 +11,22 @@ import { Activity, Zap, Database, Cpu, RefreshCw, Download, CheckCircle, AlertTr
 import { format } from 'date-fns';
 
 const MonitoringPage = () => {
-  const { 
-    loading, 
-    performanceMetrics, 
-    systemMetrics, 
-    alerts, 
-    moduleConfigs, 
+  const {
+    loading,
+    performanceMetrics,
+    systemMetrics,
+    alerts,
+    moduleConfigs,
     kpis,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     dateRange,
     setDateRange,
     refreshAll,
-    resolveAlert 
+    resolveAlert
   } = useMonitoringData();
-  
+
   const [chartType, setChartType] = useState<'latency' | 'throughput' | 'system'>('latency');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [autoRefresh, setAutoRefresh] = useState(false);
 
   // Date range options
@@ -76,7 +78,7 @@ const MonitoringPage = () => {
 
   const exportData = (format: 'csv' | 'json') => {
     const data = { performanceMetrics, systemMetrics, alerts, kpis };
-    
+
     if (format === 'json') {
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
@@ -85,7 +87,7 @@ const MonitoringPage = () => {
       a.download = `monitoring-data-${new Date().toISOString().split('T')[0]}.json`;
       a.click();
     } else {
-      const rows = performanceMetrics.map(m => 
+      const rows = performanceMetrics.map(m =>
         `${m.recorded_at},${m.metric_name},${m.metric_value},${m.latency_ms || ''},${m.throughput_rps || ''}`
       );
       const csv = ['timestamp,metric_name,value,latency_ms,throughput_rps', ...rows].join('\n');
@@ -175,7 +177,7 @@ const MonitoringPage = () => {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card className="bg-card border-border">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
@@ -187,7 +189,7 @@ const MonitoringPage = () => {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card className="bg-card border-border">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
@@ -199,7 +201,7 @@ const MonitoringPage = () => {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card className="bg-card border-border">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
@@ -219,7 +221,7 @@ const MonitoringPage = () => {
         <Card className="bg-card border-border">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Performance Metrics</CardTitle>
-            <Select value={chartType} onValueChange={(v) => setChartType(v as any)}>
+            <Select value={chartType} onValueChange={(v) => setChartType(v as "latency" | "throughput" | "system")}>
               <SelectTrigger className="w-[130px]">
                 <SelectValue />
               </SelectTrigger>
@@ -238,12 +240,12 @@ const MonitoringPage = () => {
                     <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                     <XAxis dataKey="time" stroke="hsl(var(--muted-foreground))" fontSize={12} />
                     <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: 'hsl(var(--card))', 
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: 'hsl(var(--card))',
                         border: '1px solid hsl(var(--border))',
                         borderRadius: '8px'
-                      }} 
+                      }}
                     />
                     <Legend />
                     <Area type="monotone" dataKey="cpu" name="CPU %" stroke="hsl(var(--primary))" fill="hsl(var(--primary) / 0.2)" />
@@ -257,17 +259,17 @@ const MonitoringPage = () => {
                     <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                     <XAxis dataKey="time" stroke="hsl(var(--muted-foreground))" fontSize={12} />
                     <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: 'hsl(var(--card))', 
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: 'hsl(var(--card))',
                         border: '1px solid hsl(var(--border))',
                         borderRadius: '8px'
-                      }} 
+                      }}
                     />
-                    <Line 
-                      type="monotone" 
-                      dataKey={chartType} 
-                      stroke="hsl(var(--primary))" 
+                    <Line
+                      type="monotone"
+                      dataKey={chartType}
+                      stroke="hsl(var(--primary))"
                       strokeWidth={2}
                       dot={false}
                     />
@@ -290,12 +292,12 @@ const MonitoringPage = () => {
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis type="number" stroke="hsl(var(--muted-foreground))" fontSize={12} />
                   <YAxis dataKey="name" type="category" width={120} stroke="hsl(var(--muted-foreground))" fontSize={11} />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: 'hsl(var(--card))', 
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: 'hsl(var(--card))',
                       border: '1px solid hsl(var(--border))',
                       borderRadius: '8px'
-                    }} 
+                    }}
                   />
                   <Bar dataKey="speedup" name="Speedup x" fill="hsl(var(--primary))" radius={[0, 4, 4, 0]} />
                 </BarChart>
@@ -381,8 +383,8 @@ const MonitoringPage = () => {
                     </TableCell>
                     <TableCell>
                       {!alert.resolved && (
-                        <Button 
-                          variant="ghost" 
+                        <Button
+                          variant="ghost"
                           size="sm"
                           onClick={() => resolveAlert(alert.id)}
                         >

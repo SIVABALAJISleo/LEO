@@ -98,6 +98,7 @@ export class TemporalReconstructor {
     /**
      * Predict next frame based on history
      */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     predictNext(width: number, height: number): Frame | null {
         if (this.historyBuffer.length < 2) return null;
 

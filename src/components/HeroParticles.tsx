@@ -91,6 +91,7 @@ export const HeroParticles = () => {
       window.removeEventListener("mouseup", handleMouseUp);
       window.removeEventListener("dblclick", handleDoubleClick);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -115,6 +116,7 @@ export const HeroParticles = () => {
               switch (explosionPoint.type) {
                 case 'radial':
                   // Strong outward burst
+                  // eslint-disable-next-line no-case-declarations
                   const radialStrength = 10;
                   pushX = Math.cos(angle) * force * radialStrength;
                   pushY = Math.sin(angle) * force * radialStrength;
@@ -122,8 +124,11 @@ export const HeroParticles = () => {
                   
                 case 'spiral':
                   // Spiral outward with rotation
+                  // eslint-disable-next-line no-case-declarations
                   const spiralStrength = 7;
+                  // eslint-disable-next-line no-case-declarations
                   const rotationSpeed = 5;
+                  // eslint-disable-next-line no-case-declarations
                   const spiralAngle = angle + timeProgress * rotationSpeed;
                   pushX = Math.cos(spiralAngle) * force * spiralStrength;
                   pushY = Math.sin(spiralAngle) * force * spiralStrength;
@@ -131,8 +136,11 @@ export const HeroParticles = () => {
                   
                 case 'wave':
                   // Wave ripple effect - particles move in waves
+                  // eslint-disable-next-line no-case-declarations
                   const waveStrength = 6;
+                  // eslint-disable-next-line no-case-declarations
                   const waveFrequency = 3;
+                  // eslint-disable-next-line no-case-declarations
                   const waveFactor = Math.sin(distance * waveFrequency - timeProgress * 10);
                   pushX = Math.cos(angle) * force * waveStrength * waveFactor;
                   pushY = Math.sin(angle) * force * waveStrength * waveFactor;

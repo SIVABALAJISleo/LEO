@@ -18,6 +18,7 @@ import type {
 
 function createMockSubscription<T>(
   table: string,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   callback: (payload: RealtimePayload<T>) => void
 ): { unsubscribe: UnsubscribeFn } {
   console.log(`[Realtime Mock] Subscription created for ${table} - No backend connected`);
@@ -35,6 +36,7 @@ function createMockSubscription<T>(
 
 export function subscribeToJobs(
   callback: (payload: RealtimePayload<InferenceJob>) => void,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
   options: any = {}
 ): UnsubscribeFn {
   const { unsubscribe } = createMockSubscription<InferenceJob>(
@@ -46,6 +48,7 @@ export function subscribeToJobs(
 
 export function subscribeToJob(
   jobId: string,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   callback: (job: InferenceJob) => void
 ): UnsubscribeFn {
   console.log(`[Realtime Mock] Subscribed to job ${jobId}`);
@@ -60,6 +63,7 @@ export function subscribeToJob(
 
 export function subscribeToMetrics(
   callback: (payload: RealtimePayload<PerformanceMetric>) => void,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
   options: any = {}
 ): UnsubscribeFn {
   const { unsubscribe } = createMockSubscription<PerformanceMetric>(
@@ -71,6 +75,7 @@ export function subscribeToMetrics(
 
 export function subscribeToJobMetrics(
   jobId: string,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   callback: (metric: PerformanceMetric) => void
 ): UnsubscribeFn {
   console.log(`[Realtime Mock] Subscribed to metrics for job ${jobId}`);
@@ -85,6 +90,7 @@ export function subscribeToJobMetrics(
 
 export function subscribeToAlerts(
   callback: (payload: RealtimePayload<Alert>) => void,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
   options: any = {}
 ): UnsubscribeFn {
   const { unsubscribe } = createMockSubscription<Alert>(
@@ -112,6 +118,7 @@ export function subscribeToNewAlerts(
 
 export function subscribeToModuleStatus(
   callback: (payload: RealtimePayload<ModuleStatus>) => void,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
   options: any = {}
 ): UnsubscribeFn {
   const { unsubscribe } = createMockSubscription<ModuleStatus>(
@@ -123,6 +130,7 @@ export function subscribeToModuleStatus(
 
 export function subscribeToModuleByName(
   moduleName: string,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   callback: (status: ModuleStatus) => void
 ): UnsubscribeFn {
   console.log(`[Realtime Mock] Subscribed to module ${moduleName}`);
@@ -136,6 +144,7 @@ export function subscribeToModuleByName(
 // ============================================
 
 export function subscribeToSystemMetrics(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   callback: (payload: RealtimePayload<SystemMetrics>) => void
 ): UnsubscribeFn {
   console.log(`[Realtime Mock] Subscribed to system metrics`);

@@ -5,6 +5,7 @@ export interface AuditRecord {
     action: string;
     resource: string;
     status: 'success' | 'failure' | 'warning';
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     metadata: Record<string, any>;
 }
 
@@ -23,6 +24,7 @@ export class AuditLogger {
         return AuditLogger.instance;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async log(action: string, resource: string, status: AuditRecord['status'] = 'success', metadata: Record<string, any> = {}) {
         const record: AuditRecord = {
             id: crypto.randomUUID(),

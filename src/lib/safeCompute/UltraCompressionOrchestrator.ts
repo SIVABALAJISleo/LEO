@@ -4,7 +4,9 @@
 
 import { inputNormalizer } from './InputNormalizer';
 import { temporalBatcher } from './TemporalBatcher';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { resultCompressor } from './ResultCompressor';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { probabilisticEngine, type ProcessingMethod, type ConfidenceResult } from './ProbabilisticEngine';
 import { deviceCapabilityDetector, type ComputeRouting } from './DeviceCapabilityDetector';
 import { veryHeavySimulator, type VeryHeavySimulation } from './VeryHeavySimulator';

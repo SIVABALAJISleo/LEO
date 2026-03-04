@@ -81,6 +81,7 @@ class CeilingLockEngine {
   /**
    * Get terminal resolution for ceiling-bound requests
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getTerminalResolution(boundary: CeilingBoundary): {
     action: 'info_only' | 'preview_only' | 'planning_only';
     message: string;

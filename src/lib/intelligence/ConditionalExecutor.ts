@@ -63,7 +63,9 @@ export class ConditionalExecutor {
 
             case NoveltyState.SIMILAR:
                 // Lightweight reasoning with retrieved context
+                // eslint-disable-next-line no-case-declarations
                 const contextItems = await this.rag.retrieve(input, 3);
+                // eslint-disable-next-line no-case-declarations
                 const context = contextItems.map(c => `${c.text} (source: ${c.source}, score: ${c.score})`).join('\n');
 
                 if (lightInference) {
@@ -78,6 +80,7 @@ export class ConditionalExecutor {
                 console.log('[ConditionalExecutor] Lightweight reasoning');
 
                 // Store for future use
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 this.novelty.store(input, embedding, result as any);
                 break;
 
@@ -89,6 +92,7 @@ export class ConditionalExecutor {
                 console.log('[ConditionalExecutor] Full inference');
 
                 // Store in memory
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 this.novelty.store(input, embedding, result as any);
                 break;
         }

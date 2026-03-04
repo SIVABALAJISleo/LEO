@@ -3,6 +3,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import ForgotPassword from '@/pages/auth/ForgotPassword';
 import VerifyOtp from '@/pages/auth/VerifyOtp';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { AuthProvider } from '@/contexts/AuthContext';
 
 // Mock Supabase client
@@ -33,6 +34,7 @@ vi.mock('@/hooks/use-toast', () => ({
 
 // Mock expensive/third-party UI components
 vi.mock('@/components/ui/input-otp', () => ({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     InputOTP: ({ onChange, value }: any) => (
         <input
             data-testid="otp-input"
@@ -40,6 +42,7 @@ vi.mock('@/components/ui/input-otp', () => ({
             onChange={(e) => onChange(e.target.value)}
         />
     ),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     InputOTPGroup: ({ children }: any) => <div>{children}</div>,
     InputOTPSlot: () => <div />
 }));
@@ -58,6 +61,7 @@ vi.mock('@/contexts/AuthContext', async (importOriginal) => {
             sendResetOtp: mockSendResetOtp,
             verifyOtp: mockVerifyOtp,
         }),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         AuthProvider: ({ children }: any) => <div>{children}</div>
     };
 });

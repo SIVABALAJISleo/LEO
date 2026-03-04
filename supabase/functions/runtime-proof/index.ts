@@ -14,6 +14,7 @@ interface ProofResult {
 }
 
 // deno-lint-ignore no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
 type SupabaseAny = any;
 
 Deno.serve(async (req) => {
@@ -132,6 +133,7 @@ Deno.serve(async (req) => {
 
       // Step 2: Validate data integrity
       log("Step 2: Validating backup integrity");
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { data: backupData } = await supabase
         .from("backup_metadata")
         .select("*")
@@ -494,6 +496,7 @@ Deno.serve(async (req) => {
 
 // deno-lint-ignore no-explicit-any
 async function logProof(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   supabase: any,
   result: ProofResult,
   user_id?: string

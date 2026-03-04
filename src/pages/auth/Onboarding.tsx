@@ -123,6 +123,7 @@ const Onboarding = () => {
       });
 
       navigate('/dashboard/home');
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error: unknown) {
       toast({
         title: 'Error',

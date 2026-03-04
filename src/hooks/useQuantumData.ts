@@ -15,8 +15,11 @@ export const QUANTUM_GATES = ['H', 'X', 'Y', 'Z', 'CNOT', 'CZ', 'RX', 'RY', 'RZ'
 
 export function useQuantumData() {
   const { user } = useAuth();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [circuits, setCircuits] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [jobs, setJobs] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [benchmarks, setBenchmarks] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -37,6 +40,7 @@ export function useQuantumData() {
     setIsLoading(false);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const createCircuit = async (data: { name: string; algorithm_type: string; qubit_count: number; circuit_data?: any }) => {
     if (!user) return;
     const { error } = await supabase.from('quantum_circuits').insert({ ...data, user_id: user.id });

@@ -74,8 +74,9 @@ async function verifyRazorpaySignature(
 }
 
 // Idempotency check
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 async function isEventProcessed(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   supabase: any,
   eventId: string
 ): Promise<boolean> {

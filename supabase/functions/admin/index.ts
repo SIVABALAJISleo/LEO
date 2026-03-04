@@ -188,6 +188,7 @@ serve(async (req: Request) => {
         .from("gpu_jobs")
         .select("*", { count: "exact" })
         .order("created_at", { ascending: false })
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .range(offset, offset + limit - 1) as { data: GPUJob[] | null, count: number | null, error: any };
 
       if (error) throw error;

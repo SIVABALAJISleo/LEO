@@ -9,6 +9,7 @@ import { Bell, Check, Trash2, AlertCircle, AlertTriangle, Info, XCircle } from '
 import { useNotifications } from '@/contexts/NotificationContext';
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 

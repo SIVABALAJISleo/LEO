@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 
 interface ModuleCardsProps {
   statuses: ModuleStatus[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   configs: Record<string, any>;
 }
 

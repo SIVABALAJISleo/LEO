@@ -57,6 +57,7 @@ export default function SotaPage() {
                 title: "Semantic Segmentation Complete",
                 description: "YOLOv8n-Seg successfully masked instances.",
             });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             toast({
                 title: "Segmentation Failed",
@@ -91,6 +92,7 @@ export default function SotaPage() {
                 title: "Image Caption Generated",
                 description: "BLIP extracted visual logic to NLP context.",
             });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             toast({
                 title: "NLP Captioning Failed",

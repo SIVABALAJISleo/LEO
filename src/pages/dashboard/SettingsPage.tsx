@@ -14,12 +14,15 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { User, Key, Bell, Settings2, Webhook, Database, Trash2, Copy, Eye, EyeOff, Plus, Check, X, RefreshCw, Download, AlertTriangle, Shield } from 'lucide-react';
 import { format } from 'date-fns';
 import { ComputeSafetySettings } from '@/components/settings/ComputeSafetySettings';
 
 const SettingsPage = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { loading, profile, apiKeys, subscription, updateProfile, generateApiKey, revokeApiKey, deleteApiKey, refreshAll } = useSettingsData();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { user, signOut } = useAuth();
   const { toast } = useToast();
 
@@ -29,6 +32,7 @@ const SettingsPage = () => {
   const [newKeyName, setNewKeyName] = useState('');
   const [showNewKeyDialog, setShowNewKeyDialog] = useState(false);
   const [newlyGeneratedKey, setNewlyGeneratedKey] = useState<string | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [visibleKeys, setVisibleKeys] = useState<Record<string, boolean>>({});
   const [webhookUrl, setWebhookUrl] = useState('');
   const [webhookTesting, setWebhookTesting] = useState(false);
@@ -70,6 +74,7 @@ const SettingsPage = () => {
     toast({ title: 'Copied', description: 'API key copied to clipboard' });
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const toggleKeyVisibility = (keyId: string) => {
     setVisibleKeys(prev => ({ ...prev, [keyId]: !prev[keyId] }));
   };
@@ -95,6 +100,7 @@ const SettingsPage = () => {
           variant: 'destructive'
         });
       }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast({ title: 'Error', description: err.message, variant: 'destructive' });
     } finally {

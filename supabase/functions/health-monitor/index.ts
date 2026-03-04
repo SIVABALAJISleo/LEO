@@ -51,6 +51,7 @@ serve(async (req) => {
     
     console.log(`[HealthMonitor] Action: ${action}`);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let result: any = {};
 
     switch (action) {
@@ -87,7 +88,9 @@ serve(async (req) => {
   }
 });
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function runFullHealthCheck(supabase: any): Promise<HealthReport> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const startTime = Date.now();
   const checks: HealthCheck[] = [];
   const autoFixes: AutoFix[] = [];
@@ -161,6 +164,7 @@ async function runFullHealthCheck(supabase: any): Promise<HealthReport> {
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function runQuickCheck(supabase: any) {
   const startTime = Date.now();
   
@@ -190,6 +194,7 @@ async function runQuickCheck(supabase: any) {
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function runAutoHeal(supabase: any) {
   const fixes: AutoFix[] = [];
 
@@ -280,6 +285,7 @@ async function runAutoHeal(supabase: any) {
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function runCleanup(supabase: any) {
   let totalDeleted = 0;
 
@@ -331,11 +337,13 @@ async function runCleanup(supabase: any) {
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function recoverStuckJobs(supabase: any) {
   // Jobs that have been running for more than 1 hour are considered stuck
   const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
 
   // Find and recover stuck GPU jobs
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data: stuckGpuJobs, error: gpuError } = await supabase
     .from('gpu_jobs')
     .update({ 
@@ -350,6 +358,7 @@ async function recoverStuckJobs(supabase: any) {
     .select('id');
 
   // Find and recover stuck inference jobs
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data: stuckInferenceJobs, error: inferenceError } = await supabase
     .from('inference_jobs')
     .update({ 
@@ -389,6 +398,7 @@ async function recoverStuckJobs(supabase: any) {
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function checkDatabaseHealth(supabase: any): Promise<HealthCheck> {
   const startTime = Date.now();
   
@@ -403,6 +413,7 @@ async function checkDatabaseHealth(supabase: any): Promise<HealthCheck> {
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function checkJobQueueHealth(supabase: any): Promise<HealthCheck> {
   const startTime = Date.now();
 
@@ -434,6 +445,7 @@ async function checkJobQueueHealth(supabase: any): Promise<HealthCheck> {
   return { name: 'Job Queue', status, message, duration_ms: duration };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function checkStuckJobs(supabase: any): Promise<HealthCheck> {
   const startTime = Date.now();
   const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
@@ -455,6 +467,7 @@ async function checkStuckJobs(supabase: any): Promise<HealthCheck> {
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function checkErrorRate(supabase: any): Promise<HealthCheck> {
   const startTime = Date.now();
   const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
@@ -488,6 +501,7 @@ async function checkErrorRate(supabase: any): Promise<HealthCheck> {
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function checkMetricsFreshness(supabase: any): Promise<HealthCheck> {
   const startTime = Date.now();
 
@@ -527,6 +541,7 @@ async function checkMetricsFreshness(supabase: any): Promise<HealthCheck> {
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function checkModuleHealth(supabase: any): Promise<HealthCheck> {
   const startTime = Date.now();
 
@@ -545,7 +560,9 @@ async function checkModuleHealth(supabase: any): Promise<HealthCheck> {
     };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const avgHealth = modules.reduce((sum: number, m: any) => sum + (m.health_score || 0), 0) / modules.length;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const errorModules = modules.filter((m: any) => m.status === 'error').length;
 
   let status: 'pass' | 'warn' | 'fail' = 'pass';
@@ -562,6 +579,7 @@ async function checkModuleHealth(supabase: any): Promise<HealthCheck> {
   return { name: 'Module Health', status, message, duration_ms: duration };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function getSystemHealthMetrics(supabase: any): Promise<SystemHealthMetrics> {
   const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 

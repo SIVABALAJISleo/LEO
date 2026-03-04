@@ -269,6 +269,7 @@ class BoundaryDeclarationLayer {
     const actionLower = action.toLowerCase();
     
     for (const boundary of this.declaration.boundaries) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const neverDoLower = boundary.neverDo.toLowerCase();
       
       // Simple keyword matching (in production, use more sophisticated matching)

@@ -32,6 +32,7 @@ export class TileSolver {
     /**
      * Process large 2D data in tiles to manage memory
      */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async processTiled<T>(
         width: number,
         height: number,

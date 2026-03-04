@@ -18,6 +18,7 @@ import { ExecutionTransparencyPanel } from '@/components/dashboard/ExecutionTran
 import { RealityAuditMetrics } from '@/components/dashboard/RealityAuditMetrics';
 import { ProductionAuditDashboard } from '@/components/dashboard/ProductionAuditDashboard';
 import { Skeleton } from '@/components/ui/skeleton';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
 const DashboardHome = () => {

@@ -51,6 +51,7 @@ export const RecentAlerts = ({ alerts, onResolve }: RecentAlertsProps) => {
         title: 'Alert Resolved',
         description: 'The alert has been marked as resolved.',
       });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast({
         title: 'Error',

@@ -36,6 +36,7 @@ interface JobCreateFormProps {
 }
 
 export function JobCreateForm({ models, onSubmit }: JobCreateFormProps) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);

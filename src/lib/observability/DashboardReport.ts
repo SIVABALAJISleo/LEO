@@ -18,6 +18,7 @@ export class DashboardReport {
         return DashboardReport.instance;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     generateReport(): any {
         const metricsSummary = this.metrics.getSummary();
         const auditLog = this.orchestrator.getAuditLog(10); // Last 10 entries

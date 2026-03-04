@@ -4,6 +4,7 @@ export interface VectorDocument {
     id: string;
     text: string;
     vector: number[];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     metadata?: Record<string, any>;
 }
 
@@ -19,6 +20,7 @@ export class VectorDatabase {
         this.dimension = dimension;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     add(text: string, vector: number[], metadata?: Record<string, any>): string {
         if (vector.length !== this.dimension) {
             throw new Error(`Vector dimension mismatch. Expected ${this.dimension}, got ${vector.length}`);

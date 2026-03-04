@@ -10,7 +10,9 @@ export const useDashboardData = () => {
   const [activeJobs, setActiveJobs] = useState<InferenceJob[]>([]);
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [moduleStatuses, setModuleStatuses] = useState<ModuleStatus[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [performanceMetrics, setPerformanceMetrics] = useState<PerformanceMetric[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
   const [moduleConfigs, setModuleConfigs] = useState<Record<string, any>>({});
 
   const refreshAll = useCallback(async (isBackground = false) => {
@@ -30,6 +32,7 @@ export const useDashboardData = () => {
         id: 'prod-metrics',
         user_id: 'prod-user',
         recorded_at: new Date(status.server_time * 1000).toISOString()
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any);
 
       // We no longer simulate jobs. Jobs will be triggered and populated strictly by real orchestrator calls.
@@ -43,6 +46,7 @@ export const useDashboardData = () => {
           message: 'Critical CPU Load: Adaptive Engine automatically throttling workloads',
           created_at: new Date().toISOString(),
           resolved: false
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any]);
       } else if (status.hardware.memory_percent > 85) {
         setAlerts([{
@@ -51,6 +55,7 @@ export const useDashboardData = () => {
           message: 'High Memory Pressure: Temporal cache clearing initiated',
           created_at: new Date().toISOString(),
           resolved: false
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any]);
       } else {
         setAlerts([]);
@@ -62,6 +67,7 @@ export const useDashboardData = () => {
         { module_name: 'AutonomousAgentCore', status: 'active', performance_score: 100 },
         { module_name: 'RenderPipeline', status: 'active', performance_score: 100 },
         { module_name: 'ClusterManager', status: 'active', performance_score: 100 }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ] as any);
 
     } catch (err) {

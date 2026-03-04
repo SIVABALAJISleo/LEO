@@ -213,6 +213,7 @@ class RealityMinimizationEngineCore {
   ): { path: ExecutionPath; reasoning: string; confidence: number; gpuAvoided: boolean } {
     
     // CHECK 1: Authority-locked domains (non-negotiable)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (metadata.domain && AUTHORITY_DOMAINS.includes(metadata.domain as any)) {
       return {
         path: 'AUTHORITY_REQUIRED',
@@ -235,6 +236,7 @@ class RealityMinimizationEngineCore {
     }
 
     // CHECK 3: Exact compute requirements
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (EXACT_COMPUTE_REQUIRED.includes(taskType as any) || metadata.requiresExactPhysics) {
       return {
         path: 'EXACT_COMPUTE',

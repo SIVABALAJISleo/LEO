@@ -1,6 +1,7 @@
 export type StreamEvent = {
     type: 'chunk' | 'metadata' | 'done' | 'error';
     content?: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     data?: any;
 };
 
@@ -29,6 +30,7 @@ export class StreamingInference {
             }
 
             yield { type: 'done', data: { finishedAt: Date.now(), tokens: words.length } };
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             yield { type: 'error', content: error.message || 'Streaming failed' };
         }

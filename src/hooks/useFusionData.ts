@@ -19,8 +19,11 @@ export const CONFLICT_RESOLUTIONS = [
 
 export function useFusionData() {
   const { user } = useAuth();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [fusedModels, setFusedModels] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [strategies, setStrategies] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
   const [performanceLogs, setPerformanceLogs] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -59,6 +62,7 @@ export function useFusionData() {
     else { toast.success('Deleted'); fetchAll(); }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const updateFusedModel = async (id: string, data: Partial<any>) => {
     const { error } = await supabase.from('fused_models').update(data).eq('id', id);
     if (error) toast.error('Failed to update');

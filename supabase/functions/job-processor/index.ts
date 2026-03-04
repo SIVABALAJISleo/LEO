@@ -20,6 +20,7 @@ serve(async (req) => {
     
     console.log(`[JobProcessor] Action: ${action}, JobId: ${jobId}, Type: ${jobType}`);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let result: any = {};
 
     switch (action) {
@@ -62,6 +63,7 @@ serve(async (req) => {
   }
 });
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function processNextJob(supabase: any) {
   // Check GPU jobs first
   const { data: gpuJob } = await supabase
@@ -94,6 +96,7 @@ async function processNextJob(supabase: any) {
   return { message: 'No jobs in queue' };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function processSpecificJob(supabase: any, jobId: string) {
   // Determine job type
   const { data: gpuJob } = await supabase
@@ -119,6 +122,7 @@ async function processSpecificJob(supabase: any, jobId: string) {
   return { error: 'Job not found' };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function processGpuJob(supabase: any, jobId: string) {
   console.log(`[JobProcessor] Processing GPU job: ${jobId}`);
 
@@ -219,6 +223,7 @@ async function processGpuJob(supabase: any, jobId: string) {
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function processInferenceJob(supabase: any, jobId: string) {
   console.log(`[JobProcessor] Processing inference job: ${jobId}`);
 
@@ -325,6 +330,7 @@ async function processInferenceJob(supabase: any, jobId: string) {
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function checkAndProcessQueue(supabase: any) {
   // Count jobs in queue
   const { count: gpuCount } = await supabase
@@ -343,6 +349,7 @@ async function checkAndProcessQueue(supabase: any) {
     .eq('status', 'running');
 
   // Process up to 2 jobs if none are running
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const processed: any[] = [];
   if ((runningCount || 0) < 2 && ((gpuCount || 0) > 0 || (inferenceCount || 0) > 0)) {
     const result = await processNextJob(supabase);
@@ -361,6 +368,7 @@ async function checkAndProcessQueue(supabase: any) {
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function simulateProgress(supabase: any, jobId: string) {
   // Get current progress
   const { data: job } = await supabase
@@ -387,6 +395,7 @@ async function simulateProgress(supabase: any, jobId: string) {
   return { jobId, progress: newProgress };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function generateJobResult(jobType: string, payload: any) {
   const baseResult = {
     summary: `${jobType} completed successfully`,

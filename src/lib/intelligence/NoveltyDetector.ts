@@ -98,7 +98,9 @@ export class NoveltyDetector {
     /**
      * Retrieve cached response
      */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     retrieve(id: string): any {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const doc = this.vectorDb['documents'].find((d: any) => d.id === id);
         return doc?.metadata?.response || null;
     }

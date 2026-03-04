@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Upload, Image as ImageIcon, Sparkles, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -72,6 +73,7 @@ export default function JepaPage() {
                 description: `Similarity score mapped in ${data.embedding_dimension}D space.`,
             });
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             console.error(error);
             toast({

@@ -90,6 +90,7 @@ export function ExpectationGuardrail({
   open,
   onOpenChange,
   characteristics,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   jobType,
   estimatedTime,
   options = DEFAULT_OPTIONS,

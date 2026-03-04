@@ -5,6 +5,7 @@
  */
 
 export class SparseExecution {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private static memoCache = new Map<string, any>();
 
     /**

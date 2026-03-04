@@ -5,7 +5,9 @@
  */
 export class LogicSimulator {
     private static instance: LogicSimulator;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private state: Record<string, any> = {};
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private history: Array<{ timestamp: number, state: any }> = [];
 
     private constructor() { }
@@ -28,6 +30,7 @@ export class LogicSimulator {
     /**
      * Predicts the next state based on simple event-driven logic.
      */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     predictNextState(current: any, event: string): any {
         // Example: simple state machine transitions
         switch (event) {
@@ -43,11 +46,13 @@ export class LogicSimulator {
     /**
      * Records state for timeline replay and authority reconciliation.
      */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     snapshot(state: any): void {
         this.history.push({ timestamp: Date.now(), state: { ...state } });
         if (this.history.length > 100) this.history.shift();
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getHistory(): any[] {
         return this.history;
     }

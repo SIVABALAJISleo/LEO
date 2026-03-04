@@ -52,6 +52,7 @@ export class HealthMonitor {
                 },
                 lastCheck: new Date().toISOString()
             };
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
             return {
                 status: 'unhealthy',

@@ -1,12 +1,15 @@
 import { v4 as uuidv4 } from 'uuid';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Task<T = any> = () => Promise<T>;
 
 interface LazyTask {
     id: string;
     task: Task;
     priority: number; // Higher is more important
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolve: (value: any) => void;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     reject: (reason: any) => void;
     createdAt: number;
 }
@@ -50,6 +53,7 @@ export class LazyExecutor {
 
         // Use requestIdleCallback if available, otherwise setTimeout
         if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             window.requestIdleCallback((deadline) => {
                 this.processQueue(deadline);

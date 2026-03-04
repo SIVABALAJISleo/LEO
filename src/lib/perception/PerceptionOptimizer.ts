@@ -2,6 +2,7 @@ export type QualityLevel = 'draft' | 'preview' | 'final';
 
 export interface RefinementStep {
     level: QualityLevel;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     compute: () => Promise<any>;
     qualityScore: number;
 }
@@ -20,6 +21,7 @@ export class PerceptionOptimizer {
     }
 
     async progressiveCompute<T>(steps: RefinementStep[]): Promise<T> {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let result: any = null;
 
         for (const step of steps) {

@@ -74,7 +74,9 @@ export class ProgressivePipeline {
         // Wait for first stage to complete
         const firstResult = await stages[0].compute();
         currentResult = firstResult;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         currentQuality = stages[0].quality;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         currentStage = stages[0].name;
 
         return {

@@ -9,6 +9,7 @@ import {
   GpuSystemStatus,
   CreateGpuJobInput,
   MemoryReport,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ThermalStatus,
   GPU_MEMORY_LIMIT_MB
 } from '@/lib/gpuJobTypes';
@@ -19,6 +20,7 @@ export function useGpuJobs() {
   const [jobs, setJobs] = useState<GpuJob[]>([]);
   const [systemStatus, setSystemStatus] = useState<GpuSystemStatus | null>(null);
   const [loading, setLoading] = useState(true);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = useState<string | null>(null);
 
   const orchestrator = ReliabilityOrchestrator.getInstance();
@@ -109,6 +111,7 @@ export function useGpuJobs() {
             ...j,
             status: 'completed' as const,
             progress: 100,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             result_data: result as Record<string, any>
           } : j));
           toast({ title: 'Job Success', description: `Engine completed: ${newJob.job_name}` });

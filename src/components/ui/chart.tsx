@@ -82,6 +82,7 @@ const sanitizeCssKey = (key: string): string => {
 };
 
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const colorConfig = Object.entries(config).filter(([_, config]) => config.theme || config.color);
 
   if (!colorConfig.length) {

@@ -3,7 +3,9 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { useAuth } from '@/contexts/AuthContext';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';

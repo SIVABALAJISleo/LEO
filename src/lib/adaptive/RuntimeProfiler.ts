@@ -76,7 +76,9 @@ export class RuntimeProfiler {
     }
 
     private getMemoryUsage(): number {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if (typeof (performance as any).memory !== 'undefined') {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             return (performance as any).memory.usedJSHeapSize / (1024 * 1024);
         }
         return 0;

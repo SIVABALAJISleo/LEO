@@ -94,6 +94,7 @@ const Signup = () => {
       });
 
       navigate('/auth/onboarding');
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error: unknown) {
       toast({
         title: 'Error',

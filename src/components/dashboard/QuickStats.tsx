@@ -8,6 +8,7 @@ import {
   Zap, 
   Clock, 
   CheckCircle2, 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   AlertTriangle,
   TrendingUp,
   TrendingDown,
@@ -38,7 +39,9 @@ export const QuickStats = ({
   totalJobs, 
   completedJobs, 
   activeJobs, 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   failedJobs,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   avgLatency = 0,
   successRate,
   className 

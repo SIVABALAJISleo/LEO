@@ -2,7 +2,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Shield, Cpu, Brain, RefreshCw, ArrowRight, 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   AlertTriangle, CheckCircle2, Zap 
 } from "lucide-react";
 import { realityMinimizationEngine } from "@/lib/safeCompute";

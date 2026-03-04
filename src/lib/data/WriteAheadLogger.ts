@@ -2,6 +2,7 @@ export interface LogEntry {
     id: number;
     timestamp: number;
     operation: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     payload: any;
     synced: boolean;
 }
@@ -20,6 +21,7 @@ export class WriteAheadLogger {
         return WriteAheadLogger.instance;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     log(operation: string, payload: any): number {
         const entry: LogEntry = {
             id: ++this.currentId,

@@ -106,6 +106,7 @@ class PreDecisionCompressor {
 
   private assessActionRisk(
     action: string,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     context: Record<string, unknown>
   ): 'low' | 'medium' | 'high' | 'critical' {
     const actionLower = action.toLowerCase();
@@ -183,6 +184,7 @@ class PreDecisionCompressor {
 
   private generateExplanation(
     envelope: SafetyEnvelope,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     simulations: OutcomeSimulation[]
   ): string {
     if (envelope.safeActions.length === 1) {

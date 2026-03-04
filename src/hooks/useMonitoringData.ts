@@ -131,6 +131,7 @@ export function useMonitoringData() {
         fetchAlerts(),
         fetchModuleConfigs()
       ]);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message);
     } finally {
