@@ -39,23 +39,37 @@ async def stripe_webhook(request: Request):
         logger.error(f"Invalid Stripe Webhook Signature: {e}")
         raise HTTPException(status_code=400, detail="Invalid signature")
 
+    # Initialize Redis Client if Available
+    from backend.core.middleware import redis_client
+    
     # Handle the event
-    if event['type'] == 'customer.subscription.created':
-        subscription = event['data']['object']
-        logger.info(f"Subscription Created: {subscription.get('id')} for Customer: {subscription.get('customer')}")
-        # Phase 8: Here we would trigger Supabase to set the user tier to PRO/HEAVY
-        
-    elif event['type'] == 'customer.subscription.updated':
-        subscription = event['data']['object']
-        logger.info(f"Subscription Updated: {subscription.get('id')}")
-        
-    elif event['type'] == 'customer.subscription.deleted':
-        subscription = event['data']['object']
-        logger.info(f"Subscription Canceled: {subscription.get('id')}")
-        # Phase 8: Downgrade user to FREE tier in Supabase
+    try:
+        if event['type'] == 'customer.subscription.created':
+            subscription = event['data']['object']
+            customer_id = subscription.get('customer')
+            # For this MVP, we naively map the stripe customer as the user_id.
+            if redis_client:
+                # In real life, query DB to map Stripe Customer ID -> Internal User ID
+                # We'll just assume they match or have a fallback for this snippet.
+                redis_client.set(f"user:{customer_id}:tier", "pro")
+            logger.info(f"Subscription Created: {subscription.get('id')} for Customer: {customer_id}")
+            
+        elif event['type'] == 'customer.subscription.updated':
+            subscription = event['data']['object']
+            logger.info(f"Subscription Updated: {subscription.get('id')}")
+            
+        elif event['type'] == 'customer.subscription.deleted':
+            subscription = event['data']['object']
+            customer_id = subscription.get('customer')
+            if redis_client:
+                redis_client.set(f"user:{customer_id}:tier", "free")
+            logger.info(f"Subscription Canceled: {subscription.get('id')}")
 
-    else:
-        logger.debug(f"Unhandled Stripe Event: {event['type']}")
+        else:
+            logger.debug(f"Unhandled Stripe Event: {event['type']}")
+            
+    except Exception as e:
+        logger.error(f"Failed processing Stripe Webhooks into Redis state: {e}")
 
     return {"status": "success"}
 

@@ -9,6 +9,10 @@ class HyperConfig(BaseSettings):
     # Compute Nodes & Workers
     MAX_WORKERS: int = max(1, multiprocessing.cpu_count() - 1)
     
+    # Distributed Architecture Settings
+    REDIS_URL: str = os.getenv("REDIS_URL", "redis://localhost:6379/0")
+    S3_BUCKET: str = os.getenv("S3_BUCKET", "hyper-saas-bucket")
+    
     # LLM Settings
     LLM_MODEL_PATH: str = os.getenv("LLM_MODEL_PATH", "models/llama-2-7b-chat.Q4_K_M.gguf")
     LLM_THREADS: int = max(1, multiprocessing.cpu_count() // 2)

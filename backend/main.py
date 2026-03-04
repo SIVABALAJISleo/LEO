@@ -16,6 +16,8 @@ from fastapi import FastAPI, Depends, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings
+from backend.core.security import SecureHeadersMiddleware
+from backend.routers.system import PrometheusMiddleware
 
 
 # ── Config (reads from environment / .env file) ────────────────────────────────
@@ -74,10 +76,18 @@ def get_token_verifier():
             payload = jwt.decode(
                 credentials.credentials,
                 settings.secret_key,
-                algorithms=["HS256"]
+                algorithms=["HS256"],
+                options={"verify_exp": True, "verify_signature": True}
             )
+            
+            # Additional rigorous safety net
+            if "exp" in payload and payload["exp"] < time.time():
+                logger.warning(f"Expired token attempt rejected")
+                raise HTTPException(status_code=401, detail="Token officially expired")
+                
             return payload
-        except JWTError:
+        except JWTError as e:
+            logger.warning(f"JWT Validation Error: {e}")
             raise HTTPException(status_code=401, detail="Invalid token")
 
     return verify_local_jwt
@@ -113,6 +123,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Phase 9: Inject Enterprise Secure Headers
+app.add_middleware(SecureHeadersMiddleware)
+
+# Phase 3: Inject Prometheus Monitoring middleware to track latency and HTTP 500s 
+app.add_middleware(PrometheusMiddleware)
 
 # Optional telemetry middleware
 try:
@@ -155,6 +171,24 @@ try:
 except Exception as e:
     logging.warning(f"JEPA predictive router not available — skipping: {e}")
 
+try:
+    from backend.routers.jobs import router as jobs_router
+    app.include_router(jobs_router)
+except Exception as e:
+    logging.warning(f"Jobs router not available — skipping: {e}")
+
+try:
+    from backend.routers.system import router as system_router
+    app.include_router(system_router)
+except Exception as e:
+    logging.warning(f"System router not available — skipping: {e}")
+
+try:
+    from backend.routers.apikeys import router as apikeys_router
+    app.include_router(apikeys_router)
+except Exception as e:
+    logging.warning(f"API Keys router not available — skipping: {e}")
+
 # ── Request models ────────────────────────────────────────────────────────────
 class QueryRequest(BaseModel):
     query: str
@@ -185,11 +219,14 @@ async def orchestrate(
         raise HTTPException(status_code=500, detail="Orchestration failed")
 
 
+from backend.core.security import verify_upload_safety
+
 @app.post("/api/v1/ingest/upload")
 async def upload_file(
     file: UploadFile = File(...),
     token: dict = Depends(verify_token)
 ):
+    await verify_upload_safety(file)
     processor = _import_file_processor()
     if processor is None:
         raise HTTPException(status_code=503, detail="File processor unavailable")

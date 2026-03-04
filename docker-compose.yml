@@ -1,25 +1,71 @@
 version: '3.8'
 
 services:
-  app:
-    build: .
-    ports:
-      - "8080:8080"
-    environment:
-      - NODE_ENV=production
-    volumes:
-      - .:/app
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
   redis:
-    image: redis:alpine
+    image: redis:7-alpine
+    container_name: hyper_redis
     ports:
       - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hyper_api_gateway
+    ports:
+      - "8005:8000" # Expose gateway heavily
+    env_file: .env
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - APP_ENV=production
+    depends_on:
+      - redis
     restart: always
 
-  # Persistent Job Queue (Bull / Redis)
-  # Critical for MNC-grade reliability and failure survival.
+  worker-llm:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hyper_worker_llm
+    env_file: .env
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - MAX_WORKERS=2 # Control OOM closely on LLMs
+    command: celery -A backend.celery_app worker -Q celery -c 2 -l info --pool=prefork -n llm_worker@%h
+    depends_on:
+      - redis
+    volumes:
+      - ./models:/app/models # Mount local HF GGUF models
+
+  worker-vision:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hyper_worker_vision
+    env_file: .env
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - MAX_WORKERS=4
+    command: celery -A backend.celery_app worker -Q celery -c 4 -l info --pool=prefork -n vision_worker@%h
+    depends_on:
+      - redis
+
+  flower:
+    image: mher/flower:2.0
+    container_name: hyper_flower_monitor
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - FLOWER_PORT=5555
+    ports:
+      - "5555:5555"
+    depends_on:
+      - redis
+      - worker-llm
+      - worker-vision
+
+volumes:
+  redis_data:

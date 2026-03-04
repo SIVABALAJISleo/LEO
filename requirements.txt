@@ -18,3 +18,10 @@ gitpython
 # Phase 9: Vision Pipeline
 ultralytics
 python-multipart
+
+# Phase 18: Distributed SaaS Pipeline
+celery>=5.3.6
+redis>=5.0.2
+boto3>=1.34.50
+prometheus-client>=0.20.0
+flower>=2.0.1
