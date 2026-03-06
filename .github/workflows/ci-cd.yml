@@ -112,6 +112,7 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
       - uses: actions/checkout@v4
+<<<<<<< HEAD
       - name: Deployment to Railway
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
@@ -120,3 +121,10 @@ jobs:
         env:
           RAILWAY_PUBLIC_URL: ${{ secrets.RAILWAY_PUBLIC_URL }}
         run: sleep 30 && curl -f $RAILWAY_PUBLIC_URL/health
+=======
+      - run: npm install -g @railway/cli
+      - run: railway up --detach
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+      - run: sleep 30 && curl -f ${{ secrets.RAILWAY_PUBLIC_URL }}/health
+>>>>>>> dc87295 (fix: export api from hook, fix docker cache, extend server wait)
