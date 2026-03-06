@@ -112,8 +112,11 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
       - uses: actions/checkout@v4
-      - run: npm install -g @railway/cli
-      - run: railway up --detach
+      - name: Deployment to Railway
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-      - run: sleep 30 && curl -f ${{ secrets.RAILWAY_PUBLIC_URL }}/health
+        run: railway up --detach
+      - name: Verify deployment health
+        env:
+          RAILWAY_PUBLIC_URL: ${{ secrets.RAILWAY_PUBLIC_URL }}
+        run: sleep 30 && curl -f $RAILWAY_PUBLIC_URL/health
