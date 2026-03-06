@@ -1,35 +1,40 @@
-llama-cpp-python>=0.2.20
-fastapi>=0.111.0
-uvicorn>=0.30.1
-pydantic>=2.7.4
-pydantic-settings>=2.3.4
-firebase-admin>=6.5.0
-python-jose[cryptography]>=3.3.0
-psutil>=6.0.0
-ffmpeg-python>=0.2.0
-langgraph
-autogen
-ag2
-llama-index
-chromadb
-smolagents
-gitpython
+# ── Core API ──────────────────────────────────────────────────────────────────
+fastapi==0.111.0
+uvicorn[standard]==0.29.0
+pydantic==2.7.1
+pydantic-settings==2.2.1
+python-multipart==0.0.9
+aiofiles==23.2.1
 
-# Phase 9: Vision Pipeline
-ultralytics
-python-multipart
+# ── Security / Auth ───────────────────────────────────────────────────────────
+passlib[bcrypt]==1.7.4
+bcrypt==4.1.3
+python-jose[cryptography]==3.3.0
 
-# Phase 18: Distributed SaaS Pipeline
-celery>=5.3.6
-redis>=5.0.2
-boto3>=1.34.50
-prometheus-client>=0.20.0
-flower>=2.0.1
-sentry-sdk>=2.0.0
-httpx>=0.27.0
-tenacity>=8.3.0
-opentelemetry-api>=1.24.0
-opentelemetry-sdk>=1.24.0
-opentelemetry-instrumentation-fastapi>=0.45b0
-opentelemetry-instrumentation-celery>=0.45b0
-opentelemetry-exporter-otlp>=1.24.0
+# ── Database ──────────────────────────────────────────────────────────────────
+sqlalchemy==2.0.30
+
+# ── AI / Inference (CPU-only) ─────────────────────────────────────────────────
+--extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
+llama-cpp-python==0.2.77
+onnxruntime==1.18.0
+onnx==1.16.0
+
+# ── Embeddings ────────────────────────────────────────────────────────────────
+sentence-transformers==2.7.0
+faiss-cpu==1.8.0
+
+# ── Vision / Compute ──────────────────────────────────────────────────────────
+opencv-python-headless==4.9.0.80
+numba==0.59.1
+numpy==1.26.4
+
+# ── Observability ─────────────────────────────────────────────────────────────
+structlog==24.1.0
+psutil==5.9.8
+requests==2.31.0
+
+# ── REMOVED: hyper_sdk/ ───────────────────────────────────────────────────────
+# DO NOT add local folder paths here (e.g. hyper_sdk/).
+# They fail with: "Neither setup.py nor pyproject.toml found"
+# If you need hyper_sdk code, copy it into backend/ and import directly.
