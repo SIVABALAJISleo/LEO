@@ -14,9 +14,29 @@ import {
 } from '@/lib/backendService';
 import axios from 'axios';
 
-export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000',
-});
+export const api = {
+  get: async (endpoint: string) => {
+    const token = localStorage.getItem('auth_token');
+    const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8005'}${endpoint}`, {
+      headers: { 'Authorization': token ? `Bearer ${token}` : '' }
+    });
+    if (!res.ok) throw new Error(`API error: ${res.status}`);
+    return res.json();
+  },
+  post: async (endpoint: string, body: unknown) => {
+    const token = localStorage.getItem('auth_token');
+    const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8005'}${endpoint}`, {
+      method: 'POST',
+      headers: {
+        'Authorization': token ? `Bearer ${token}` : '',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) throw new Error(`API error: ${res.status}`);
+    return res.json();
+  }
+};
 
 interface BackendStatus {
   initialized: boolean;

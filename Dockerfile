@@ -15,7 +15,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     build-essential \
     python3-dev \
-    libgl1-mesa-glx \
+    libgl1 \
     libglib2.0-0 \
     wget \
     && rm -rf /var/lib/apt/lists/*
@@ -42,4 +42,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
 EXPOSE 8005
 
 # Start the unified engine
-CMD ["python", "backend/main.py"]
+CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8005"]
