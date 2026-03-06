@@ -1,6 +1,6 @@
 # Multi-stage build for HYPER Production Engine
 # Stage 1: Build the Frontend
-FROM node:20-alpine AS frontend-builder
+FROM node:20 AS frontend-builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
@@ -13,6 +13,8 @@ WORKDIR /app
 
 # Install system dependencies for OpenCV and MediaPipe
 RUN apt-get update && apt-get install -y \
+    build-essential \
+    python3-dev \
     libgl1-mesa-glx \
     libglib2.0-0 \
     wget \
