@@ -82,17 +82,20 @@ export class MoERouter {
         const parts = query.split(/ and | then | plus |;|,/).map(p => p.trim()).filter(p => p.length > 5);
 
         if (parts.length <= 1) {
-            return [{ id: '0', query, expertType: this.identifyExpert(query) }];
+            return [{ id: '0', query, expertType: this.route(query) }];
         }
 
         return parts.map((part, i) => ({
             id: i.toString(),
             query: part,
-            expertType: this.identifyExpert(part)
+            expertType: this.route(part)
         }));
     }
 
-    private identifyExpert(query: string): ExpertType {
+    /**
+     * Routes a query to the most appropriate expert (Pillar 1).
+     */
+    public route(query: string): ExpertType {
         const q = query.toLowerCase();
         for (const [type, expert] of this.experts) {
             if (expert.keywords.some(k => q.includes(k))) {

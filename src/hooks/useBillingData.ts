@@ -170,9 +170,9 @@ export function useBillingData() {
       supabase.from('billing_subscriptions').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(1),
       supabase.from('billing_usage_records').select('*').eq('user_id', user.id).order('month', { ascending: false }),
     ]);
-    if (subRes.data && subRes.data.length > 0) {
+    if (subRes.data && (subRes.data as any).length > 0) {
       // Safe cast if shape roughly matches
-      setSubscription(subRes.data[0] as unknown as BillingSubscription);
+      setSubscription((subRes.data as any)[0] as unknown as BillingSubscription);
     }
     if (usageRes.data) {
       setUsageRecords(usageRes.data as unknown as BillingUsageRecord[]);
@@ -191,8 +191,8 @@ export function useBillingData() {
         .eq('user_id', user.id)
         .limit(1);
 
-      if (existing && existing.length > 0) {
-        await supabase.from('billing_subscriptions').update({ plan, status: 'active' }).eq('id', existing[0].id);
+      if (existing && (existing as any).length > 0) {
+        await (supabase.from('billing_subscriptions').update({ plan, status: 'active' }) as any).eq('id', (existing as any)[0].id);
       } else {
         await supabase.from('billing_subscriptions').insert({ user_id: user.id, plan, status: 'active' });
       }

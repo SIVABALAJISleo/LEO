@@ -1,4 +1,5 @@
-import { serve } from "std/http/server.ts";
+// @ts-nocheck
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from "@supabase/supabase-js";
 
 const corsHeaders = {

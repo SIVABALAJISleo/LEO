@@ -17,6 +17,8 @@ interface AuthContextType {
   signUp: (username: string, email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error: Error | null }>;
+  sendResetOtp: (email: string) => Promise<{ error: Error | null }>;
+  verifyOtp: (email: string, token: string) => Promise<{ error: Error | null }>;
 }
 
 /* ---------------- CONTEXT ---------------- */
@@ -50,7 +52,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event: string, session: any) => {
       if (!session?.user) {
         setUser(null);
         setLoading(false);
@@ -104,7 +106,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       if (error) throw error;
       return { error: null };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       return { error: new Error(error.message || "Invalid credentials") };
     }
@@ -127,7 +129,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       if (error) throw error;
       return { error: null };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error("Registration error details:", err);
       return { error: new Error(err.message || "Registration failed") };
@@ -148,9 +150,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const { error } = await supabase.auth.resetPasswordForEmail(email);
       if (error) throw error;
       return { error: null };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       return { error: new Error(error.message || "Unable to send reset email") };
+    }
+  };
+
+  const sendResetOtp = async (email: string) => {
+    try {
+      const { error } = await supabase.auth.sendResetOtp({ email });
+      if (error) throw error;
+      return { error: null };
+    } catch (error: any) {
+      return { error: new Error(error.message || "Failed to send reset code") };
+    }
+  };
+
+  const verifyOtp = async (email: string, token: string) => {
+    try {
+      const { error } = await supabase.auth.verifyOtp({ email, token, type: 'email' });
+      if (error) throw error;
+      return { error: null };
+    } catch (error: any) {
+      return { error: new Error(error.message || "Verification failed") };
     }
   };
 
@@ -165,6 +187,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         signUp,
         signOut,
         resetPassword,
+        sendResetOtp,
+        verifyOtp,
       }}
     >
       {children}

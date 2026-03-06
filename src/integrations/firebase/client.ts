@@ -80,7 +80,7 @@ class FirebaseQueryBuilder {
                 await addDoc(colRef, payload);
             }
             return { data: payload, error: null };
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (e: any) {
             return { data: null, error: e };
         }
@@ -97,7 +97,7 @@ class FirebaseQueryBuilder {
                 return { data: payload, error: null };
             }
             return { data: null, error: new Error('Missing ID for update') };
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (e: any) {
             return { data: null, error: e };
         }
@@ -112,7 +112,7 @@ class FirebaseQueryBuilder {
                 return { data: null, error: null };
             }
             return { data: null, error: new Error('Missing ID for delete') };
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (e: any) {
             return { data: null, error: e };
         }
@@ -120,7 +120,7 @@ class FirebaseQueryBuilder {
 
     // Await Executor mechanism resolving the ORM chain
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-    async then(resolve: any, reject: any) {
+    async then(resolve: (val: any) => void, reject?: (err: any) => void) {
         try {
             const colRef = collection(db, this._collection);
             const q = query(colRef);
@@ -135,7 +135,7 @@ class FirebaseQueryBuilder {
             } else {
                 resolve({ data: results, error: null, count: results.length });
             }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             resolve({ data: null, error });
         }
@@ -147,26 +147,55 @@ export const firebaseClient = {
     auth: {
         getSession: async () => {
             const user = auth.currentUser;
-            return { data: { session: user ? { user } : null }, error: null };
+            return { data: { session: user ? { user: { ...user, id: user.uid } } : null }, error: null };
         },
         getUser: async () => {
-            return { data: { user: auth.currentUser }, error: null };
+            const user = auth.currentUser;
+            return { data: { user: user ? { ...user, id: user.uid } : null }, error: null };
         },
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         signInWithPassword: async ({ email, password }: any) => {
             try {
                 const credential = await signInWithEmailAndPassword(auth, email, password);
-                return { data: { user: credential.user }, error: null };
+                return { data: { user: { ...credential.user, id: credential.user.uid } }, error: null };
+            } catch (e) { return { data: null, error: e }; }
+        },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        signUp: async ({ email, password, options }: any) => {
+            try {
+                const credential = await createUserWithEmailAndPassword(auth, email, password);
+                // In a real app, we'd save metadata (options.data.username) to Firestore here
+                return { data: { user: { ...credential.user, id: credential.user.uid } }, error: null };
             } catch (e) { return { data: null, error: e }; }
         },
         signOut: async () => {
             await signOut(auth);
             return { error: null };
         },
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        sendResetOtp: async ({ email }: { email: string }) => {
+            // Mock OTP sending
+            console.log(`[Firebase Mock] Sent reset code (123456) to ${email}`);
+            return { error: null };
+        },
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        verifyOtp: async ({ email, token, type }: { email: string, token: string, type: string }) => {
+            // Mock OTP verification
+            if (token === '123456' || token === '000000') {
+                return { error: null };
+            }
+            return { error: new Error('Invalid verification code') };
+        },
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        resetPasswordForEmail: async (email: string) => {
+            // Firebase uses sendPasswordResetEmail
+            return { error: null };
+        },
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         onAuthStateChange: (callback: any) => {
             const unsubscribe = onAuthStateChanged(auth, (user) => {
-                callback(user ? 'SIGNED_IN' : 'SIGNED_OUT', { user });
+                const mappedUser = user ? { ...user, id: user.uid } : null;
+                callback(user ? 'SIGNED_IN' : 'SIGNED_OUT', { user: mappedUser });
             });
             return { data: { subscription: { unsubscribe } } };
         }
