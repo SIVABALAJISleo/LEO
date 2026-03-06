@@ -11,6 +11,30 @@ import time
 import os
 import logging
 from contextlib import asynccontextmanager
+import sentry_sdk
+
+from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
+from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
+from opentelemetry.sdk.resources import Resource
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+
+OTEL_ENDPOINT = os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT", "http://jaeger:4318/v1/traces")
+resource = Resource(attributes={"service.name": "hyper-api-gateway"})
+trace.set_tracer_provider(TracerProvider(resource=resource))
+otlp_exporter = OTLPSpanExporter(endpoint=OTEL_ENDPOINT)
+trace.get_tracer_provider().add_span_processor(BatchSpanProcessor(otlp_exporter))
+import logging
+from contextlib import asynccontextmanager
+import sentry_sdk
+
+SENTRY_DSN = os.getenv("SENTRY_DSN", "")
+if SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        traces_sample_rate=1.0
+    )
 
 from fastapi import FastAPI, Depends, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -115,6 +139,9 @@ async def lifespan(app: FastAPI):
 # ── App ───────────────────────────────────────────────────────────────────────
 app = FastAPI(title="Project HYPER SaaS", version="1.0.0", lifespan=lifespan)
 
+# Phase 18 [Enterprise Upgrade]: Instrument FastAPI with OpenTelemetry
+FastAPIInstrumentor.instrument_app(app)
+
 # CORS must be registered FIRST (outermost middleware)
 app.add_middleware(
     CORSMiddleware,
@@ -188,6 +215,18 @@ try:
     app.include_router(apikeys_router)
 except Exception as e:
     logging.warning(f"API Keys router not available — skipping: {e}")
+
+try:
+    from backend.routers.paypal import router as paypal_router
+    app.include_router(paypal_router)
+except Exception as e:
+    logging.warning(f"PayPal router not available — skipping: {e}")
+
+try:
+    from backend.routers.compliance import router as compliance_router
+    app.include_router(compliance_router)
+except Exception as e:
+    logging.warning(f"Compliance router not available — skipping: {e}")
 
 # ── Request models ────────────────────────────────────────────────────────────
 class QueryRequest(BaseModel):

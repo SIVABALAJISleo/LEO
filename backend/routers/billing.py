@@ -42,6 +42,16 @@ async def stripe_webhook(request: Request):
     # Initialize Redis Client if Available
     from backend.core.middleware import redis_client
     
+    event_id = event.get('id')
+    
+    # Duplicate Webhook Protection (Idempotency)
+    if redis_client and event_id:
+        is_new_event = redis_client.setnx(f"webhook_lock:{event_id}", "locked")
+        if not is_new_event:
+            logger.info(f"Duplicate Stripe Event Received and Ignored: {event_id}")
+            return {"status": "success", "reason": "Already processed"}
+        redis_client.expire(f"webhook_lock:{event_id}", 86400)
+    
     # Handle the event
     try:
         if event['type'] == 'customer.subscription.created':

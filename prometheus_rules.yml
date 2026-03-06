@@ -1,0 +1,43 @@
+groups:
+- name: hyper_saas_alerts
+  rules:
+  
+  # 1. High Worker Failure Rate
+  - alert: HighWorkerCrashRate
+    expr: rate(celery_task_failed_total[5m]) > 5
+    for: 2m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Critical failure rate in Celery Workers"
+      description: "Celery task failure rate exceeds 5 per second for >2m. Possible OOM or model serialization crash."
+      
+  # 2. High API Latency
+  - alert: HighFastApiLatency
+    expr: histogram_quantile(0.95, sum(rate(hyper_api_request_latency_seconds_bucket[5m])) by (le)) > 2.0
+    for: 1m
+    labels:
+      severity: warning
+    annotations:
+      summary: "API Latency degrading across Gateway"
+      description: "95th percentile latency is greater than 2 seconds, indicating backend saturation."
+
+  # 3. Queue Backlog Saturation
+  - alert: QueueSaturationDetected
+    expr: rabbitmq_queue_messages_ready > 1000  # Generic queue size metric proxy
+    for: 3m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Task queue depth crossed 1000 items"
+      description: "Worker nodes are severely overwhelmed. Auto-scaling rules should trigger or require manual intervention."
+      
+  # 4. CPU Utilization Spikes
+  - alert: PeakWorkerCPU
+    expr: hyper_system_cpu_usage_percent > 95
+    for: 3m
+    labels:
+      severity: warning
+    annotations:
+      summary: "CPU bound capacity reached 95% threshold"
+      description: "Host compute layer is entirely saturated."

@@ -1,5 +1,5 @@
 import logging
-from fastapi import Request, HTTPException, UploadFile
+from fastapi import Request, HTTPException, UploadFile, status
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import Response
 
@@ -23,6 +23,25 @@ class SecureHeadersMiddleware(BaseHTTPMiddleware):
         # In full production we'd configure a strict CSP
         # response.headers["Content-Security-Policy"] = "default-src 'self'"
         return response
+
+from backend.core.hsm import cloud_hsm
+
+def verify_token_locally(token: str):
+    """Passes cryptographic validation to the HSM boundary."""
+    return cloud_hsm.verify_jwt(token)
+
+def verify_jwt_token(token: str):
+    """
+    Simulates JWT Validation.
+    """
+    decoded = verify_token_locally(token)
+    if "error" in decoded:
+        logger.warning(f"JWT Validation Failed: {decoded['error']}")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f"Invalid authentication credentials: {decoded['error']}",
+        )
+    return decoded
 
 async def verify_upload_safety(file: UploadFile):
     """
@@ -70,5 +89,4 @@ async def verify_upload_safety(file: UploadFile):
         logger.error(f"Malware/Tampering Detection: IP Attempted to disguise file signature as {file.content_type}")
         raise HTTPException(status_code=415, detail="Invalid file signature (tampering detected)")
         
-    # Optional: Integration with clamd (ClamAV) could go right here.
     return True

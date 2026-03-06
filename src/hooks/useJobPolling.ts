@@ -5,9 +5,9 @@ export type JobStatus = 'queued' | 'running' | 'completed' | 'failed';
 
 export interface JobResult {
     job_id: string;
-    job_type: str;
+    job_type: string;
     status: JobStatus;
-    result?: any;
+    result?: unknown;
     error?: string;
 }
 
@@ -26,7 +26,7 @@ export function useJobPolling() {
     }, []);
 
     const startPolling = useCallback(
-        (jobId: string, onComplete: (result: JobResult) => void, onError: (err: any) => void) => {
+        (jobId: string, onComplete: (result: JobResult) => void, onError: (err: Error | unknown) => void) => {
             setCurrentJobId(jobId);
             setIsPolling(true);
 

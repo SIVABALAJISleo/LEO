@@ -5,13 +5,18 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { 
-  initializeUserData, 
+import {
+  initializeUserData,
   startBackgroundAutomation,
   stopBackgroundAutomation,
   runQuickHealthCheck,
   generateRealtimeMetrics
 } from '@/lib/backendService';
+import axios from 'axios';
+
+export const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000',
+});
 
 interface BackendStatus {
   initialized: boolean;
@@ -58,7 +63,7 @@ export function useBackendInitialization() {
         // Initialize user data
         console.log('[BackendInit] Initializing user data...');
         const initResult = await initializeUserData();
-        
+
         if (!initResult.success) {
           console.warn('[BackendInit] Initialization warning:', initResult.message);
           // Don't treat as error - user might already have data
@@ -67,7 +72,7 @@ export function useBackendInitialization() {
         // Run health check
         console.log('[BackendInit] Running health check...');
         const health = await runQuickHealthCheck();
-        
+
         // Generate fresh metrics
         console.log('[BackendInit] Generating initial metrics...');
         await generateRealtimeMetrics();
@@ -85,7 +90,7 @@ export function useBackendInitialization() {
         });
 
         console.log('[BackendInit] Backend initialization complete');
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         console.error('[BackendInit] Initialization error:', error);
         setStatus({
