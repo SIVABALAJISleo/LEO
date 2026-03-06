@@ -160,7 +160,7 @@ export function useBillingData() {
 
   useEffect(() => {
     if (user?.id) fetchBillingData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const fetchBillingData = async () => {
@@ -202,8 +202,8 @@ export function useBillingData() {
     }
 
     try {
-      // For paid plans, initiate Stripe Checkout via Backend
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/v1/billing/checkout`, {
+      // For paid plans, initiate PayPal Checkout via Backend
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/v1/paypal/checkout`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -217,7 +217,7 @@ export function useBillingData() {
       }
 
       const { url } = await response.json();
-      window.location.href = url; // Redirect to Stripe
+      window.location.href = url; // Redirect to PayPal approval URL
     } catch (error) {
       console.error('Checkout error:', error);
       toast.error('Failed to initiate checkout. Please try again.');

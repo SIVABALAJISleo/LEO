@@ -174,11 +174,7 @@ except Exception:
     async def health():
         return {"status": "ok", "env": settings.app_env}
 
-try:
-    from backend.routers.billing import router as billing_router
-    app.include_router(billing_router)
-except Exception as e:
-    logging.warning(f"Billing router not available — skipping. {e}")
+
 
 try:
     from backend.routers.cpu_compute import router as compute_router

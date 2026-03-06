@@ -14,7 +14,7 @@ try:
     TORCH_AVAILABLE = True
 except ImportError:
     TORCH_AVAILABLE = False
-    logging.warning("torch or transformers not installed. JEPA module disabled.")
+    logging.info("torch or transformers not installed. JEPA module disabled.")
 
 logger = logging.getLogger(__name__)
 

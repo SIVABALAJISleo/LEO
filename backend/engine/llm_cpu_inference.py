@@ -27,7 +27,7 @@ class LlmCpuInferenceEngine:
             return
 
         if not os.path.exists(self.model_path):
-            logger.warning(f"LLM model not found at {self.model_path}. CPU LLM disabled.")
+            logger.info(f"LLM model not found at {self.model_path}. CPU LLM disabled.")
             return
 
         logger.info(f"Loading LLM {self.model_path} with {config.LLM_THREADS} threads.")

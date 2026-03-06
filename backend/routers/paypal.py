@@ -2,8 +2,10 @@ import os
 import json
 import logging
 import httpx
-from fastapi import APIRouter, Request, HTTPException, Header
+from fastapi import APIRouter, Request, HTTPException, Header, Depends
 from typing import Dict, Any
+from pydantic import BaseModel
+from backend.main import verify_token
 
 logger = logging.getLogger(__name__)
 
@@ -29,6 +31,66 @@ async def get_paypal_access_token():
             logger.error(f"Failed to get PayPal access token: {response.text}")
             return None
         return response.json().get("access_token")
+
+class CheckoutRequest(BaseModel):
+    plan_id: str
+
+@router.post("/checkout")
+async def create_paypal_order(request: CheckoutRequest, token: dict = Depends(verify_token)):
+    """Creates a PayPal order and returns the approval link."""
+    user_id = token.get("uid") or token.get("sub", "anonymous")
+    
+    # Map plans to mocked values for now
+    plan_prices = {
+        "pro": "49.00",
+        "heavy": "249.00"
+    }
+    
+    price = plan_prices.get(request.plan_id, "49.00")
+    
+    access_token = await get_paypal_access_token()
+    if not access_token:
+        raise HTTPException(status_code=500, detail="PayPal config missing or auth failed")
+        
+    url = f"{PAYPAL_API_BASE}/v2/checkout/orders"
+    payload = {
+        "intent": "CAPTURE",
+        "purchase_units": [{
+            "custom_id": user_id,
+            "amount": {
+                "currency_code": "USD",
+                "value": price
+            }
+        }],
+        "application_context": {
+            "return_url": f"http://localhost:5173/dashboard?payment=success",
+            "cancel_url": f"http://localhost:5173/dashboard?payment=cancelled"
+        }
+    }
+    
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            url,
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {access_token}"
+            },
+            json=payload
+        )
+        
+        if response.status_code not in (200, 201):
+            logger.error(f"Failed to create PayPal order: {response.text}")
+            raise HTTPException(status_code=500, detail="Could not create payment session")
+            
+        data = response.json()
+        
+        # Find the 'approve' link from the HATEOAS links provided by PayPal
+        approval_url = next((link["href"] for link in data.get("links", []) if link["rel"] == "approve"), None)
+        
+        if not approval_url:
+            raise HTTPException(status_code=500, detail="Missing approval link from PayPal")
+            
+        return {"url": approval_url, "order_id": data.get("id")}
 
 @router.post("/webhook")
 async def paypal_webhook(
