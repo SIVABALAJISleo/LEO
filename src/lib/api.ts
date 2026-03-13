@@ -46,24 +46,39 @@ export interface OrchestrateResponse {
     healer_action?: string;
 }
 
+const BACKEND_URL = 'http://localhost:8005/api/v1';
+
 /**
  * HYPER API Client
- * Integrated with ReliabilityOrchestrator for Pillar 6 & 7 compliance.
+ * Unified production interface for the Project HYPER Backend.
  */
 export const hyperClient = {
-    // Existing local-mock methods...
     async getHealth(): Promise<HealthStatus> {
-        const health = await HealthMonitor.getInstance().getSystemHealth();
-        return {
-            status: health.status as 'healthy' | 'degraded',
-            engines_available: true,
-            timestamp: Date.now()
+        try {
+            const response = await fetch(`${BACKEND_URL}/health`);
+            if (response.ok) {
+                const health = await response.json();
+                return {
+                    status: health.status === 'ok' ? 'healthy' : 'degraded',
+                    engines_available: true,
+                    timestamp: health.timestamp * 1000
+                };
+            }
+        } catch (error) {
+            console.error("Backend health probe failed.", error);
+        }
+        return { 
+            status: 'degraded', 
+            engines_available: false, 
+            timestamp: Date.now() 
         };
     },
 
     async getStatus(): Promise<BackendStatus> {
         try {
-            const response = await fetch('http://localhost:8000/api/v1/compute/telemetry');
+            const response = await fetch(`${BACKEND_URL}/compute/telemetry`, {
+                headers: { 'Authorization': `Bearer AUDIT_MODE_TOKEN` }
+            });
             if (response.ok) {
                 const telemetry = await response.json();
                 return {
@@ -83,33 +98,23 @@ export const hyperClient = {
                 };
             }
         } catch (error) {
-            console.error("Telemetry fetch failed, falling back to basic health.", error);
+            console.error("Telemetry fetch failed.", error);
         }
 
-        const health = await HealthMonitor.getInstance().getSystemHealth();
         return {
             version: '1.0.0-PROD',
-            metrics: {
-                requests: Math.floor(Math.random() * 1000),
-                errors: 0,
-                latency_avg: 0.12
-            },
-            hardware: {
-                cpu_load: 15,
-                memory_percent: Math.floor((health.memory.used / health.memory.total) * 100),
-                disk_percent: 40,
-                memory_available_gb: (health.memory.total - health.memory.used) / (1024 * 1024 * 1024)
-            },
+            metrics: { requests: 0, errors: 0, latency_avg: 0 },
+            hardware: { cpu_load: 0, memory_percent: 0, disk_percent: 0, memory_available_gb: 0 },
             server_time: Date.now() / 1000
         };
     },
 
     /**
-     * BRIDGE: Execute on Python Core Backend
+     * CORE: Execute on Python Backend (Orchestration)
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async executeRemote(query: string, metadata: any = {}): Promise<OrchestrateResponse> {
-        const response = await fetch('http://localhost:8005/api/orchestrate', {
+        const response = await fetch(`${BACKEND_URL}/orchestrate`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -126,12 +131,11 @@ export const hyperClient = {
         const formData = new FormData();
         formData.append('file', file);
 
-        const response = await fetch('http://localhost:8005/api/ingest/upload', {
+        const response = await fetch(`${BACKEND_URL}/ingest/upload`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer AUDIT_MODE_TOKEN`
             },
-            // Note: browser sets boundary automatically for FormData
             body: formData
         });
         if (!response.ok) throw new Error(`Upload error: ${response.statusText}`);
@@ -139,53 +143,32 @@ export const hyperClient = {
     },
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async queryRag(query: string, payload: any = {}) {
-        return await ReliabilityOrchestrator.getInstance().execute('ai_inference', { query, ...payload });
+    async orchestrate(action: string, payload: any = {}) {
+        const query = typeof payload === 'string' ? payload : (payload.query || action);
+        return this.executeRemote(query);
     },
 
     async runExpert(query: string) {
-        return await MoERouter.getInstance().process(query);
+        return this.executeRemote(query);
     },
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async orchestrate(action: string, payload: any = {}) {
-        // Ensure action exists or default to ai_inference if payload suggests a query
-        const targetAction = (action === 'chatbot' || !action) ? 'ai_inference' : action;
-        const targetPayload = (typeof payload === 'string') ? { query: payload } : payload;
-
-        return await ReliabilityOrchestrator.getInstance().execute(targetAction, targetPayload);
+    async queryRag(query: string, payload: any = {}) {
+        return this.executeRemote(query, payload);
     },
 
-    /**
-     * Optimistic Execution (Pillar 7: Latency Masking)
-     * Returns immediate optimistic result if available, processes real work async.
-     */
     async optimisticExecute<T, R>(
         action: string,
         payload: T,
         onResult: (res: R) => void
     ): Promise<R | null> {
-        // 1. Try to get an optimistic/cached result immediately
-        const orchestrator = ReliabilityOrchestrator.getInstance();
-
-        // This is a "dry run" or fast-lookup that Pillar 7 requires
-        // We'll use the orchestrator's LKG (Last-Known-Good) as the optimistic response
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const optimisticResult = (orchestrator as any).lkgData?.get(action);
-
-        if (optimisticResult) {
-            console.log(`[Pillar 7] Serving optimistic response for ${action}`);
-            // Return immediate response but keep processing
-            setTimeout(async () => {
-                const realResult = await orchestrator.execute<T, R>(action, payload);
-                onResult(realResult);
-            }, 0);
-            return optimisticResult;
+        try {
+            const query = (payload as any).query || action;
+            const result = await this.executeRemote(query);
+            onResult(result as unknown as R);
+            return result as unknown as R;
+        } catch (error) {
+            console.error("Optimistic execution failed", error);
+            return null;
         }
-
-        // 2. If no optimistic result, run normally
-        const result = await orchestrator.execute<T, R>(action, payload);
-        onResult(result);
-        return result;
     }
 };
