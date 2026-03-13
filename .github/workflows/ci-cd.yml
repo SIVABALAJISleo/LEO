@@ -115,11 +115,11 @@ jobs:
       - uses: actions/checkout@v4
       - name: Deployment to Railway
         env:
-          RAILWAY_TOKEN: "${{secrets.RAILWAY_TOKEN}}"
+          RAILWAY_TOKEN: "${{ secrets['RAILWAY_TOKEN'] }}"
         run: |
           npm install -g @railway/cli
           railway up --detach
       - name: Verify deployment health
         env:
-          RAILWAY_PUBLIC_URL: "${{secrets.RAILWAY_PUBLIC_URL}}"
+          RAILWAY_PUBLIC_URL: "${{ secrets['RAILWAY_PUBLIC_URL'] }}"
         run: sleep 30 && curl -f $RAILWAY_PUBLIC_URL/health
