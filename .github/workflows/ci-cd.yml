@@ -15,6 +15,8 @@ jobs:
   test-backend:
     name: Test Backend (Python)
     runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: .
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -34,6 +36,7 @@ jobs:
           APP_ENV: test
           SECRET_KEY: test-secret-key-for-ci-only
           ALLOWED_ORIGINS: http://localhost:5173
+          PYTHONPATH: .
         run: |
           uvicorn backend.main:app --host 0.0.0.0 --port 8005 &
           SERVER_PID=$!
