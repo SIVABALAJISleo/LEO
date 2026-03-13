@@ -29,8 +29,11 @@ async def verify_firebase_token(auth_creds: HTTPAuthorizationCredentials = Secur
     """Verifies the Firebase ID Token. Fails back to mock if firebase-admin is missing or in DEV."""
     app_env = os.getenv("APP_ENV", "development")
     
-    if app_env == "development" or auth_creds.credentials == "AUDIT_MODE_TOKEN" or not FIREBASE_AVAILABLE:
-        # For development/debug or certified audit mode
+    is_dev = app_env == "development"
+    is_audit_token = auth_creds.credentials == "AUDIT_MODE_TOKEN"
+    
+    if (is_dev and is_audit_token) or (is_dev and not FIREBASE_AVAILABLE):
+        # Development bypass logic
         return {"uid": "dev_user", "email": "dev@hyper-saas.com", "role": "admin"}
     
     try:

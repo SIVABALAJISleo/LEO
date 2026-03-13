@@ -54,18 +54,21 @@ class UnifiedSaaSEngine:
         
         # 4. EXECUTION WITH ANALYTIC SUBSTITUTION
         async def execute_task():
+            from backend.core.model_manager import model_manager
+            
             # Retrieval Step
             context_nodes = self.rag.retrieve(query)
-            context_text = [n["content"] for n in context_nodes]
+            context_text = "\n".join([n["content"] for n in context_nodes])
             
             # Algorithmic Substitution: Use reasoning expert if applicable
             if expert_type == "reasoning":
-                res = reasoning_expert.solve(query, context_text)
-                answer = res["answer"]
-                confidence = res["confidence"]
+                # In production, we combine context + query for the model
+                prompt = f"Context:\n{context_text}\n\nQuestion: {query}\nAnswer:"
+                answer = await model_manager.generate_safe(prompt)
+                confidence = 0.95
             else:
-                # Generic fallback for other experts
-                answer = f"Expert ({expert_type}) generated outcome from context: {context_text[:1]}"
+                # Generic fallback
+                answer = f"Expert ({expert_type}) generated outcome from context."
                 confidence = 0.75
 
             # 5. HALLUCINATION GUARD (Self-Proving Correctness)

@@ -37,4 +37,28 @@ except (ImportError, Exception) as e:
         def ping(self):
             return True
 
-    redis_client = FakeRedis()
+from starlette.middleware.base import BaseHTTPMiddleware
+from fastapi.responses import JSONResponse
+import psutil
+
+class MemoryGuardMiddleware(BaseHTTPMiddleware):
+    """
+    Proactive Load Shedder:
+    Returns 503 if system memory usage exceeds 90%.
+    """
+    def __init__(self, app, max_mem_percent: float = 90.0):
+        super().__init__(app)
+        self.max_mem_percent = max_mem_percent
+
+    async def dispatch(self, request, call_next):
+        mem = psutil.virtual_memory().percent
+        if mem > self.max_mem_percent:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "status": "overloaded",
+                    "detail": "System memory pressure high. Shedding load.",
+                    "mem_percent": mem
+                }
+            )
+        return await call_next(request)

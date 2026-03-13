@@ -153,44 +153,61 @@ async def paypal_webhook(
 
     # SECTION 4: Process Valid Events
     from backend.core.middleware import redis_client
+    from backend.core.database import SessionLocal, User, Subscription
+    
     event_id = event.get("id")
     event_type = event.get("event_type")
     resource = event.get("resource", {})
     
-    # Duplicate Webhook Protection (Idempotency)
+    # Duplicate Webhook Protection (Idempotency via Redis)
     if redis_client and event_id:
         is_new_event = redis_client.setnx(f"webhook_lock:{event_id}", "locked")
         if not is_new_event:
             logger.info(f"Duplicate PayPal Event Received and Ignored: {event_id}")
             return {"status": "success", "reason": "Already processed"}
-        # Expire lock after 24 hours to prevent memory leak
         redis_client.expire(f"webhook_lock:{event_id}", 86400)
     
     logger.info(f"Verified PayPal Event Received: {event_type} [{event_id}]")
 
+    db = SessionLocal()
     try:
+        user_id_str = resource.get("custom_id") or resource.get("subscriber", {}).get("custom_id")
+        
+        if not user_id_str or user_id_str == "anonymous":
+            logger.warning(f"PayPal event {event_type} received but no valid user_id found")
+            return {"status": "success", "reason": "No user ID"}
+
+        # Sync with Database (Source of Truth)
+        user = db.query(User).filter(User.uid == user_id_str).first()
+        if not user:
+            # Create user if missing
+            user = User(uid=user_id_str, tier="free")
+            db.add(user)
+            db.flush()
+
         if event_type in ["PAYMENT.SALE.COMPLETED", "CHECKOUT.ORDER.APPROVED", "BILLING.SUBSCRIPTION.ACTIVATED"]:
-            # Extract user_id from 'custom_id' field passed during checkout/subscription creation
-            user_id = resource.get("custom_id")
+            user.tier = "pro"
+            # Record subscription
+            sub = Subscription(user_id=user.id, paypal_order_id=resource.get("id"), status="active")
+            db.add(sub)
+            logger.info(f"User {user_id_str} upgraded to PRO in Database")
             
-            if not user_id:
-                # Fallback check for different resource types
-                user_id = resource.get("subscriber", {}).get("custom_id")
-            
-            if redis_client and user_id and user_id != "anonymous":
-                redis_client.set(f"user:{user_id}:tier", "pro")
-                logger.info(f"User {user_id} upgraded to PRO via PayPal")
-            else:
-                logger.warning(f"PayPal event {event_type} received but no valid user_id found in custom_id")
+            # Sync to Redis (Caching Layer)
+            if redis_client:
+                redis_client.set(f"user:{user_id_str}:tier", "pro")
             
         elif event_type == "BILLING.SUBSCRIPTION.CANCELLED":
-            user_id = resource.get("custom_id", "anonymous")
-            if redis_client and user_id != "anonymous":
-                redis_client.set(f"user:{user_id}:tier", "free")
-                logger.info(f"User {user_id} downgraded to FREE via PayPal")
+            user.tier = "free"
+            logger.info(f"User {user_id_str} downgraded to FREE in Database")
+            if redis_client:
+                redis_client.set(f"user:{user_id_str}:tier", "free")
 
+        db.commit()
     except Exception as e:
+        db.rollback()
         # SECTION 5: Secure the Endpoint (Exception Handling)
-        logger.error(f"Failed processing PayPal Webhook into Redis state: {e}")
+        logger.error(f"Failed processing PayPal Webhook into Database state: {e}")
+    finally:
+        db.close()
 
     return {"status": "success"}

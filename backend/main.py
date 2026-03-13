@@ -1,30 +1,47 @@
 import time
-from fastapi import FastAPI, Depends, UploadFile, File
+from fastapi import FastAPI, Depends, UploadFile, File, Request
 from backend.observability.telemetry import TelemetryMiddleware
+from backend.core.middleware import MemoryGuardMiddleware
 from backend.core.health import router as health_router
 from backend.core.orchestrator import hyper_engine
-from backend.core.security import setup_cors, verify_firebase_token
+from backend.core.security import setup_cors, verify_token
 from backend.routers.paypal import router as paypal_router
 from backend.core.ingest import file_processor
-from pydantic import BaseModel
+from backend.core.database import init_db
 import psutil
 
-app = FastAPI(title="Project HYPER SaaS")
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 
-# Add Observability Middleware
+limiter = Limiter(key_func=get_remote_address)
+app = FastAPI(title="Project HYPER SaaS")
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+@app.on_event("startup")
+async def startup_event():
+    """Perform production startup routine."""
+    init_db()
+    print("Database initialized.")
+
+# Add Observability and Resilience Middleware
 app.add_middleware(TelemetryMiddleware)
+app.add_middleware(MemoryGuardMiddleware)
 
 # Setup CORS (Must be outermost to handle preflights correctly)
 setup_cors(app)
 
 # --- Standard Monitoring Endpoints ---
 @app.get("/health", tags=["health"])
-async def health():
+@limiter.limit("5/minute")
+async def health(request: Request):
     """Liveness probe for Docker/CI/CD."""
     return {"status": "ok", "timestamp": time.time()}
 
 @app.get("/api/v1/compute/telemetry", tags=["monitoring"])
-async def telemetry(token: dict = Depends(verify_token)):
+@limiter.limit("10/minute")
+async def telemetry(request: Request, token: dict = Depends(verify_token)):
     """System resource telemetry for the frontend dashboard."""
     return {
         "cpu": {
@@ -39,32 +56,54 @@ async def telemetry(token: dict = Depends(verify_token)):
         "status": "nominal"
     }
 
-# --- Shared Schemas ---
-class QueryRequest(BaseModel):
-    query: str
+from backend.core.tasks import process_ai_query_task, ingest_document_task, celery_app
+from celery.result import AsyncResult
 
-# --- Business Routes (Prefixed via Routers if possible, or direct) ---
+# --- Job Status API ---
+@app.get("/api/v1/jobs/{job_id}", tags=["jobs"])
+@limiter.limit("20/minute")
+async def get_job_status(request: Request, job_id: str, token: dict = Depends(verify_token)):
+    """Check the status of a background AI job."""
+    result = AsyncResult(job_id, app=celery_app)
+    return {
+        "job_id": job_id,
+        "status": result.status,
+        "result": result.result if result.ready() else None
+    }
+
+# --- Business Routes ---
 
 @app.post("/api/v1/orchestrate", tags=["ai"])
-async def orchestrate(request: QueryRequest, token: dict = Depends(verify_token)):
+@limiter.limit("5/minute")
+async def orchestrate(request: Request, query_req: QueryRequest, token: dict = Depends(verify_token)):
     user_id = token.get("uid")
-    return await hyper_engine.process(request.query, f"REQ_{user_id}_{int(time.time())}")
+    request_id = f"REQ_{user_id}_{int(time.time())}"
+    
+    # Offload to Celery for Job Isolation
+    task = process_ai_query_task.delay(query_req.query, request_id)
+    
+    return {
+        "status": "queued",
+        "job_id": task.id,
+        "request_id": request_id
+    }
 
 @app.post("/api/v1/ingest/upload", tags=["ingest"])
-async def upload_file(file: UploadFile = File(...), token: dict = Depends(verify_token)):
+@limiter.limit("3/minute")
+async def upload_file(request: Request, file: UploadFile = File(...), token: dict = Depends(verify_token)):
     user_id = token.get("uid")
     text = await file_processor.extract_text(file)
     
-    # Automatically index in RAG
     if len(text) > 5:
-        await hyper_engine.rag.add_documents([text])
-        
-    return {
-        "filename": file.filename,
-        "content_length": len(text),
-        "status": "ingested",
-        "user_id": user_id
-    }
+        # Offload ingestion to background
+        task = ingest_document_task.delay(text, file.filename, user_id)
+        return {
+            "filename": file.filename,
+            "status": "processing",
+            "job_id": task.id
+        }
+    
+    return {"filename": file.filename, "status": "skipped", "reason": "too_short"}
 
 # Include core routes with prefixes
 app.include_router(health_router, prefix="/api/v1/health")
