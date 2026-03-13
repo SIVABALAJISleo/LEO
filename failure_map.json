@@ -1,0 +1,64 @@
+{
+    "failure_clusters": [
+        {
+            "category": "reasoning failure",
+            "count": 10,
+            "symptom": "Logic questions returned generic 'heuristic optimization' messages instead of boolean or relational reasoning.",
+            "questions": [
+                1,
+                2,
+                3,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+            ],
+            "root_cause_prediction": "Lack of symbolic reasoning engine for syllogisms and transitive relations."
+        },
+        {
+            "category": "paraphrase failure",
+            "count": 10,
+            "symptom": "Paraphrase questions failed semantic match because system returned orchestration metadata.",
+            "questions": [
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20
+            ],
+            "root_cause_prediction": "Expert 'general' lacks a semantic echoing/rewriting policy."
+        },
+        {
+            "category": "calculation mismatch",
+            "count": 9,
+            "symptom": "Math calculations failed due to formatting (.0) or expert routing issues.",
+            "questions": [
+                22,
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30
+            ],
+            "root_cause_prediction": "Expert 'logic' was not consistently triggered for word-problem math."
+        }
+    ],
+    "failure_distribution": {
+        "reasoning failure": 10,
+        "paraphrase mismatch": 10,
+        "context misunderstanding": 0,
+        "knowledge gap": 4,
+        "language noise failure": 10,
+        "formatting_mismatch": 1
+    }
+}

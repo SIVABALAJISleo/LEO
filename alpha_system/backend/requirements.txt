@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+pydantic
+sqlalchemy
+psycopg2-binary
+redis
+celery
+faiss-cpu
+sentence-transformers
+python-multipart
+python-dotenv
+httpx
+numpy
+pandas
