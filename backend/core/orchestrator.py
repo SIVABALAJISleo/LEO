@@ -1,12 +1,12 @@
-from hyper_saas.backend.intelligence.router import MoERouter, SemanticCache, HallucinationGuard, TraceEngine
-from hyper_saas.backend.intelligence.rag import RAGEngine
-from hyper_saas.backend.intelligence.reasoning import reasoning_expert
-from hyper_saas.backend.performance.caching import MultiLevelCache, PredictiveEngine
-from hyper_saas.backend.performance.memo import global_memo
-from hyper_saas.backend.performance.scheduler import scheduler
-from hyper_saas.backend.core.reliability import CircuitBreaker, ReliabilityOrchestrator
-from hyper_saas.backend.data_efficiency.probabilistic import BloomFilter
-from hyper_saas.backend.observability.telemetry import logger
+from backend.intelligence.router import MoERouter, SemanticCache, HallucinationGuard, TraceEngine
+from backend.intelligence.rag import RAGEngine
+from backend.intelligence.reasoning import reasoning_expert
+from backend.performance.caching import MultiLevelCache, PredictiveEngine
+from backend.performance.memo import global_memo
+from backend.performance.scheduler import scheduler
+from backend.core.reliability import CircuitBreaker, ReliabilityOrchestrator
+from backend.data_efficiency.probabilistic import BloomFilter
+from backend.observability.telemetry import logger
 import time
 import asyncio
 

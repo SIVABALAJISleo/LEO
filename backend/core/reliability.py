@@ -1,7 +1,7 @@
 import asyncio
 import time
 from typing import Callable, Any, Dict, Optional
-from hyper_saas.backend.observability.telemetry import logger
+from backend.observability.telemetry import logger
 
 class CircuitBreaker:
     """Prevents system collapse by stopping requests to failing services."""

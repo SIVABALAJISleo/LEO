@@ -1,6 +1,6 @@
 import asyncio
 from typing import List, Callable, Dict, Any
-from hyper_saas.backend.observability.telemetry import logger
+from backend.observability.telemetry import logger
 
 class PrecomputationScheduler:
     """

@@ -1,7 +1,7 @@
 import asyncio
 import random
-from hyper_saas.backend.core.orchestrator import hyper_engine
-from hyper_saas.backend.observability.telemetry import logger
+from backend.core.orchestrator import hyper_engine
+from backend.observability.telemetry import logger
 
 class ChaosSuite:
     """

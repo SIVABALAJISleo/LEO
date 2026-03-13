@@ -1,6 +1,6 @@
 import os
 from typing import Dict, Any, List
-from hyper_saas.backend.observability.telemetry import logger
+from backend.observability.telemetry import logger
 
 class ProxyManager:
     """

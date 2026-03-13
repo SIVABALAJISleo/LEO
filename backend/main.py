@@ -1,11 +1,11 @@
 import time
 from fastapi import FastAPI, Depends, UploadFile, File
-from hyper_saas.backend.observability.telemetry import TelemetryMiddleware
-from hyper_saas.backend.core.health import router as health_router
-from hyper_saas.backend.core.orchestrator import hyper_engine
-from hyper_saas.backend.core.security import setup_cors, verify_firebase_token
-from hyper_saas.backend.core.billing import router as billing_router
-from hyper_saas.backend.core.ingest import file_processor
+from backend.observability.telemetry import TelemetryMiddleware
+from backend.core.health import router as health_router
+from backend.core.orchestrator import hyper_engine
+from backend.core.security import setup_cors, verify_firebase_token
+from backend.routers.paypal import router as paypal_router
+from backend.core.ingest import file_processor
 from pydantic import BaseModel
 
 app = FastAPI(title="Project HYPER SaaS")
@@ -43,7 +43,7 @@ async def upload_file(file: UploadFile = File(...), token: dict = Depends(verify
 
 # Include core routes
 app.include_router(health_router)
-app.include_router(billing_router)
+app.include_router(paypal_router, prefix="/api/v1/billing", tags=["billing"])
 
 @app.get("/")
 async def root():
