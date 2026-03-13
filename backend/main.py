@@ -8,7 +8,11 @@ from backend.core.security import setup_cors, verify_token
 from backend.routers.paypal import router as paypal_router
 from backend.core.ingest import file_processor
 from backend.core.database import init_db
+from pydantic import BaseModel
 import psutil
+
+class QueryRequest(BaseModel):
+    query: str
 
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
