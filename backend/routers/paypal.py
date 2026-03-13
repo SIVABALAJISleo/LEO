@@ -5,7 +5,7 @@ import httpx
 from fastapi import APIRouter, Request, HTTPException, Header, Depends
 from typing import Dict, Any
 from pydantic import BaseModel
-from backend.main import verify_token
+from backend.core.security import verify_token
 
 logger = logging.getLogger(__name__)
 

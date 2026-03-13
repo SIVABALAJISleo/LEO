@@ -57,3 +57,6 @@ def setup_cors(app):
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+# Standard alias for unified security checks
+verify_token = verify_firebase_token
