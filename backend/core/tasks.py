@@ -21,32 +21,29 @@ celery_app.conf.update(
 )
 
 @celery_app.task(name="process_ai_query")
-def process_ai_query_task(query: str, request_id: str):
+def process_ai_query_task(query: str, request_id: str, tenant_id: str = "default"):
     """
-    Background task for AI orchestration.
-    Runs the engine's process method in an async loop.
+    Background task for AI orchestration with tenant isolation.
     """
     loop = asyncio.get_event_loop()
     if loop.is_running():
-        # This shouldn't happen in a celery worker worker generally, 
-        # but handle just in case it's called in a thread with a loop
-        future = asyncio.run_coroutine_threadsafe(hyper_engine.process(query, request_id), loop)
+        future = asyncio.run_coroutine_threadsafe(hyper_engine.process(query, request_id, tenant_id), loop)
         return future.result()
     else:
-        return asyncio.run(hyper_engine.process(query, request_id))
+        return asyncio.run(hyper_engine.process(query, request_id, tenant_id))
 
 @celery_app.task(name="ingest_document")
-def ingest_document_task(text: str, filename: str, user_id: str):
+def ingest_document_task(text: str, filename: str, user_id: str, tenant_id: str = "default"):
     """
-    Background task for RAG ingestion.
+    Background task for RAG ingestion with tenant metadata.
     """
-    asyncio.run(hyper_engine.rag.add_documents([text]))
+    asyncio.run(hyper_engine.rag.add_documents([text], tenant_id=tenant_id))
     
     # Store metadata for durability
     db = SessionLocal()
     try:
-        # In a real app, user_id would be an integer link to users table
-        meta = DocumentMetadata(filename=filename, user_id=0, content_hash=str(hash(text)))
+        # Link metadata to the correct tenant
+        meta = DocumentMetadata(filename=filename, user_id=0, tenant_id=tenant_id, content_hash=str(hash(text)))
         db.add(meta)
         db.commit()
     except Exception as e:

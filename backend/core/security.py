@@ -34,10 +34,18 @@ async def verify_firebase_token(auth_creds: HTTPAuthorizationCredentials = Secur
     
     if (is_dev and is_audit_token) or (is_dev and not FIREBASE_AVAILABLE):
         # Development bypass logic
-        return {"uid": "dev_user", "email": "dev@hyper-saas.com", "role": "admin"}
+        return {
+            "uid": "dev_user", 
+            "email": "dev@hyper-saas.com", 
+            "role": "admin",
+            "tenant_id": "dev_tenant_1"
+        }
     
     try:
         decoded_token = auth.verify_id_token(auth_creds.credentials)
+        # Ensure tenant_id exists, fallback to uid if custom claim missing
+        if "tenant_id" not in decoded_token:
+            decoded_token["tenant_id"] = f"tenant_{decoded_token.get('uid')}"
         return decoded_token
     except Exception as e:
         raise HTTPException(

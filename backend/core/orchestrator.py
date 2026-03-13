@@ -6,7 +6,7 @@ from backend.performance.memo import global_memo
 from backend.performance.scheduler import scheduler
 from backend.core.reliability import CircuitBreaker, ReliabilityOrchestrator
 from backend.data_efficiency.probabilistic import BloomFilter
-from backend.observability.telemetry import logger
+from backend.core.logging import logger as struct_logger
 import time
 import asyncio
 
@@ -34,16 +34,18 @@ class UnifiedSaaSEngine:
         # Start background scheduler
         asyncio.create_task(self.scheduler.start())
         
-    async def process(self, query: str, request_id: str):
+    async def process(self, query: str, request_id: str, tenant_id: str = "default"):
         start_time = time.time()
-        self.trace_engine.add_step("Engine", "request_start", {"request_id": request_id, "query": query})
+        struct_logger.info("request_start", request_id=request_id, query=query, tenant_id=tenant_id)
+        self.trace_engine.add_step("Engine", "request_start", {"request_id": request_id, "query": query, "tenant_id": tenant_id})
         
         # 1. PROBABILISTIC CHECK
         if not self.bloom.contains(query):
             self.bloom.add(query)
 
-        # 2. SEMANTIC CACHE CHECK (Compute Bypass)
-        cached_data = self.semantic_cache.get(query)
+        # 2. SEMANTIC CACHE CHECK (Tenant-Isolated Compute Bypass)
+        cache_key = f"semantic_cache:{tenant_id}:{query}"
+        cached_data = self.semantic_cache.get(cache_key)
         if cached_data:
             self.trace_engine.add_step("Engine", "cache_hit", {"confidence": cached_data["confidence"]})
             return self._wrap_response(cached_data["result"], "SEMANTIC_CACHE", start_time, cached_data["confidence"])
@@ -56,18 +58,16 @@ class UnifiedSaaSEngine:
         async def execute_task():
             from backend.core.model_manager import model_manager
             
-            # Retrieval Step
-            context_nodes = self.rag.retrieve(query)
+            # Retrieval Step with Tenant Isolation
+            context_nodes = self.rag.retrieve(query, tenant_id=tenant_id)
             context_text = "\n".join([n["content"] for n in context_nodes])
             
             # Algorithmic Substitution: Use reasoning expert if applicable
             if expert_type == "reasoning":
-                # In production, we combine context + query for the model
                 prompt = f"Context:\n{context_text}\n\nQuestion: {query}\nAnswer:"
                 answer = await model_manager.generate_safe(prompt)
                 confidence = 0.95
             else:
-                # Generic fallback
                 answer = f"Expert ({expert_type}) generated outcome from context."
                 confidence = 0.75
 
@@ -77,7 +77,8 @@ class UnifiedSaaSEngine:
             
             self.trace_engine.add_step("Expert", expert_type, {
                 "grounding_score": grounding_score,
-                "base_confidence": confidence
+                "base_confidence": confidence,
+                "tenant_id": tenant_id
             })
             
             return {
@@ -89,11 +90,11 @@ class UnifiedSaaSEngine:
 
         result = await self.reliability.execute(f"expert_{expert_type}", execute_task)
 
-        # 6. BG PRECOMPUTATION (Anticipating next state)
+        # 6. BG PRECOMPUTATION
         await self.scheduler.schedule(f"pre_{request_id}", self.predictor.precompute, expert_type, query)
 
-        # 7. CACHE FOR REUSE
-        self.semantic_cache.set(query, result)
+        # 7. CACHE FOR REUSE (Tenant-Isolated)
+        self.semantic_cache.set(cache_key, result)
         
         return self._wrap_response(result, "COMPUTE_BYPASS", start_time, result.get("confidence", 0.9))
 

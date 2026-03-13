@@ -97,18 +97,22 @@ class RAGEngine:
         # Auto-load if exists
         self.load()
 
-    async def add_documents(self, docs: List[str]):
-        """Ingests and indexes documents, with basic chunking for large texts."""
+    async def add_documents(self, docs: List[str], tenant_id: str = "default"):
+        """Ingests and indexes documents with tenant isolation and chunking."""
         processed_docs = []
         for doc in docs:
             # Simple chunking for documents > 2000 chars
             if len(doc) > 2000:
                 chunks = [doc[i:i+2000] for i in range(0, len(doc), 1500)] # 500 char overlap
-                processed_docs.extend(chunks)
+                for chunk in chunks:
+                    processed_docs.append({"content": chunk, "tenant_id": tenant_id})
             else:
-                processed_docs.append(doc)
+                processed_docs.append({"content": doc, "tenant_id": tenant_id})
 
-        embeddings = self.model.encode(processed_docs)
+        embeddings = self.model.encode([d["content"] for d in processed_docs])
+        from backend.core.logging import logger as struct_logger
+        struct_logger.info("documents_indexed", count=len(docs), tenant_id=tenant_id)
+        
         if HAS_FAISS:
             faiss.normalize_L2(embeddings)
             self.index.add(embeddings.astype('float32'))
@@ -121,18 +125,15 @@ class RAGEngine:
         self.save()
 
     def save(self):
-        """Persists the index and documents to disk."""
+        """Persists the index and documents to disk with tenant metadata."""
         if not os.path.exists(self.persist_dir):
             os.makedirs(self.persist_dir)
             
         import json
         if HAS_FAISS:
             faiss.write_index(self.index, self.index_path)
-        else:
-            # For NumpyIndex, we'd need a custom save logic if we really wanted to persist it,
-            # but for production we assume FAISS.
-            pass
-            
+        
+        # Consistent JSON storage for documents across all tenants
         with open(self.docs_path, "w", encoding="utf-8") as f:
             json.dump(self.documents, f)
 
@@ -149,7 +150,8 @@ class RAGEngine:
             except Exception as e:
                 print(f"Error loading RAG persistence: {e}")
 
-    def retrieve(self, query: str, k: int = 3) -> List[Dict[str, Any]]:
+    def retrieve(self, query: str, tenant_id: str = "default", k: int = 3) -> List[Dict[str, Any]]:
+        """Retrieves documents for a specific query, strictly filtered by tenant_id."""
         if self.index.ntotal == 0:
             return []
         
@@ -157,9 +159,9 @@ class RAGEngine:
         import json
         import numpy as np
         
-        # 1. Check Embedding Cache (Compute Bypass)
+        # 1. Check Embedding Cache (Compute Bypass - Cache per Tenant for security)
         query_hash = str(hash(query))
-        cache_key = f"embed_cache:{query_hash}"
+        cache_key = f"embed_cache:{tenant_id}:{query_hash}"
         cached_vec = redis_client.get(cache_key) if redis_client else None
         
         if cached_vec:
@@ -175,16 +177,23 @@ class RAGEngine:
             if redis_client:
                 redis_client.set(cache_key, json.dumps(query_vec.tolist()), ex=3600)
             
-        distances, indices = self.index.search(query_vec, k)
+        # We search for k*3 to allow for filtering of non-tenant documents
+        # In a massive scale scenario, we'd use partitioned indices or FAISS ID tags.
+        search_k = min(self.index.ntotal, k * 5)
+        distances, indices = self.index.search(query_vec, search_k)
         
         results = []
         for i, idx in enumerate(indices[0]):
             if idx != -1 and idx < len(self.documents):
-                # For Inner Product, higher distance is better.
-                # Assuming vectors are normalized, score [0, 1]
-                score = float(distances[0][i])
-                results.append({
-                    "content": self.documents[idx],
-                    "score": score
-                })
+                doc_meta = self.documents[idx]
+                
+                # STRICT TENANT ISOLATION CHECK
+                if doc_meta.get("tenant_id") == tenant_id:
+                    score = float(distances[0][i])
+                    results.append({
+                        "content": doc_meta["content"],
+                        "score": score
+                    })
+                    if len(results) >= k:
+                        break
         return results

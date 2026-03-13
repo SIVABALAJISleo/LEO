@@ -24,7 +24,11 @@ jobs:
           python-version: "3.11"
           cache: "pip"
       - name: Install dependencies
-        run: pip install --upgrade pip && pip install -r requirements.txt
+        run: pip install --upgrade pip && pip install -r requirements.txt pytest pytest-asyncio bandit flake8
+      - name: Security Scan (Bandit)
+        run: bandit -r backend/ -ll
+      - name: Linting (Flake8)
+        run: flake8 backend/ --count --select=E9,F63,F7,F82 --show-source --statistics
       - name: Run backend tests
         env:
           APP_ENV: test

@@ -14,6 +14,7 @@ class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
     uid = Column(String, unique=True, index=True) # Firebase UID
+    tenant_id = Column(String, index=True) # Multi-tenant isolation ID
     email = Column(String, unique=True, index=True)
     tier = Column(String, default="free") # free, pro, enterprise
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
@@ -22,6 +23,7 @@ class Subscription(Base):
     __tablename__ = "subscriptions"
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer)
+    tenant_id = Column(String, index=True)
     paypal_order_id = Column(String, unique=True)
     status = Column(String) # active, cancelled, expired
     updated_at = Column(DateTime, default=datetime.datetime.utcnow)
@@ -31,6 +33,7 @@ class DocumentMetadata(Base):
     id = Column(Integer, primary_key=True, index=True)
     filename = Column(String)
     user_id = Column(Integer)
+    tenant_id = Column(String, index=True)
     content_hash = Column(String)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 

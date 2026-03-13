@@ -7,18 +7,29 @@ from backend.core.orchestrator import hyper_engine
 from backend.core.security import setup_cors, verify_token
 from backend.routers.paypal import router as paypal_router
 from backend.core.ingest import file_processor
+from backend.core.logging import setup_logging, logger as struct_logger
 from backend.core.database import init_db
-from pydantic import BaseModel
+from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+import os
 import psutil
-
-class QueryRequest(BaseModel):
-    query: str
-
+from pydantic import BaseModel
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 
+# Initialize Observability Stack
+setup_logging()
+trace.set_tracer_provider(TracerProvider())
+tracer = trace.get_tracer(__name__)
+
+# Initialize Rate Limiter
 limiter = Limiter(key_func=get_remote_address)
+
+class QueryRequest(BaseModel):
+    query: str
+
 app = FastAPI(title="Project HYPER SaaS")
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
@@ -27,7 +38,10 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 async def startup_event():
     """Perform production startup routine."""
     init_db()
-    print("Database initialized.")
+    struct_logger.info("system_startup", status="ready", env=os.getenv("APP_ENV", "development"))
+
+# Instrument FastAPI for Tracing
+FastAPIInstrumentor.instrument_app(app)
 
 # Add Observability and Resilience Middleware
 app.add_middleware(TelemetryMiddleware)
@@ -81,30 +95,34 @@ async def get_job_status(request: Request, job_id: str, token: dict = Depends(ve
 @limiter.limit("5/minute")
 async def orchestrate(request: Request, query_req: QueryRequest, token: dict = Depends(verify_token)):
     user_id = token.get("uid")
+    tenant_id = token.get("tenant_id", "default")
     request_id = f"REQ_{user_id}_{int(time.time())}"
     
-    # Offload to Celery for Job Isolation
-    task = process_ai_query_task.delay(query_req.query, request_id)
+    # Offload to Celery with Tenant Isolation
+    task = process_ai_query_task.delay(query_req.query, request_id, tenant_id=tenant_id)
     
     return {
         "status": "queued",
         "job_id": task.id,
-        "request_id": request_id
+        "request_id": request_id,
+        "tenant_id": tenant_id
     }
 
 @app.post("/api/v1/ingest/upload", tags=["ingest"])
 @limiter.limit("3/minute")
 async def upload_file(request: Request, file: UploadFile = File(...), token: dict = Depends(verify_token)):
     user_id = token.get("uid")
+    tenant_id = token.get("tenant_id", "default")
     text = await file_processor.extract_text(file)
     
     if len(text) > 5:
-        # Offload ingestion to background
-        task = ingest_document_task.delay(text, file.filename, user_id)
+        # Offload ingestion to background with tenant metadata
+        task = ingest_document_task.delay(text, file.filename, user_id, tenant_id=tenant_id)
         return {
             "filename": file.filename,
             "status": "processing",
-            "job_id": task.id
+            "job_id": task.id,
+            "tenant_id": tenant_id
         }
     
     return {"filename": file.filename, "status": "skipped", "reason": "too_short"}

@@ -22,24 +22,34 @@ class ModelManager:
             cls._instance.initialized = False
         return cls._instance
 
-    async def get_model(self):
+    async def get_model(self, version: str = "v1"):
         async with self._lock:
             if not self.initialized:
-                logger.info("initializing_model_manager")
+                logger.info("initializing_model_manager", version=version)
                 from rag.inference import LocalInference
+                # In a real system, version would map to a specific path
                 self.model = LocalInference()
                 self.initialized = True
+                self.current_version = version
         return self.model
 
     async def generate_safe(self, prompt: str, max_tokens: int = 512):
         """
-        Gated inference to prevent CPU spikes and OOM.
+        Gated inference with version tracking and telemetry.
         """
         model = await self.get_model()
+        start = time.time()
         async with self._semaphore:
-            # Run inference in a threadpool to prevent blocking the event loop
-            loop = asyncio.get_event_loop()
-            result = await loop.run_in_executor(None, model.generate, prompt, max_tokens)
-            return result
+            try:
+                loop = asyncio.get_event_loop()
+                result = await loop.run_in_executor(None, model.generate, prompt, max_tokens)
+                duration = time.time() - start
+                logger.info("inference_success", 
+                            version=getattr(self, 'current_version', 'unknown'), 
+                            latency_ms=round(duration*1000, 2))
+                return result
+            except Exception as e:
+                logger.error("inference_failure", error=str(e), version=getattr(self, 'current_version', 'unknown'))
+                raise
 
 model_manager = ModelManager()
