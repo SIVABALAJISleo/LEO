@@ -25,7 +25,7 @@ if FIREBASE_AVAILABLE:
 
 security = HTTPBearer()
 
-async def verify_firebase_token(auth_creds: HTTPAuthorizationCredentials = Security(security)):
+async def verify_firebase_token(request: Request, auth_creds: HTTPAuthorizationCredentials = Security(security)):
     """Verifies the Firebase ID Token. Fails back to mock if firebase-admin is missing or in DEV."""
     app_env = os.getenv("APP_ENV", "development")
     
@@ -46,6 +46,9 @@ async def verify_firebase_token(auth_creds: HTTPAuthorizationCredentials = Secur
         # Ensure tenant_id exists, fallback to uid if custom claim missing
         if "tenant_id" not in decoded_token:
             decoded_token["tenant_id"] = f"tenant_{decoded_token.get('uid')}"
+        
+        # Attach to request state for middleware access
+        request.state.user = decoded_token
         return decoded_token
     except Exception as e:
         raise HTTPException(

@@ -17,18 +17,31 @@ class LocalInference:
         else:
             logger.warning("model_not_found_or_llama_cpp_missing", path=self.model_path)
 
-    def generate(self, prompt: str, max_tokens: int = 512):
+    def generate(self, prompt: str, max_tokens: int = 512, stream: bool = False):
         if not self.llm:
-            return "Error: Local inference model not loaded. Please check model path and llama-cpp-python installation."
+            error_msg = "Error: Local inference model not loaded."
+            if stream:
+                def error_gen(): yield error_msg
+                return error_gen()
+            return error_msg
         
-        logger.info("generating_response", prompt_length=len(prompt))
-        output = self.llm(
-            prompt,
-            max_tokens=max_tokens,
-            stop=["<|user|>", "\n\n"],
-            echo=False
-        )
-        return output['choices'][0]['text']
+        logger.info("generating_response", prompt_length=len(prompt), stream=stream)
+        if stream:
+            return self.llm(
+                prompt,
+                max_tokens=max_tokens,
+                stop=["<|user|>", "\n\n"],
+                echo=False,
+                stream=True
+            )
+        else:
+            output = self.llm(
+                prompt,
+                max_tokens=max_tokens,
+                stop=["<|user|>", "\n\n"],
+                echo=False
+            )
+            return output['choices'][0]['text']
 
 if __name__ == "__main__":
     # Mock generation if model doesn't exist

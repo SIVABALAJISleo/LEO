@@ -1,3 +1,4 @@
+import time
 import numpy as np
 import re
 from collections import Counter
@@ -126,43 +127,78 @@ class TraceEngine:
         return self.trace
 
 class SemanticCache:
-    def __init__(self, dimension: int = 384, threshold: float = 0.95):
+    def __init__(self, dimension: int = 384, threshold: float = 0.98):
+        from backend.core.logging import logger as struct_logger
+        self.logger = struct_logger
         self.model = SentenceTransformer('all-MiniLM-L6-v2') if HAS_TRANSFORMERS else TFIDFLite(dimension)
         if HAS_FAISS:
              self.index = faiss.IndexFlatL2(dimension)
         else:
              self.index = NumpyIndexL2(dimension)
-        self.cache_data: List[Dict[str, Any]] = []
         self.threshold = threshold
+        # Redis-backed persistent storage for cache results
+        from backend.core.middleware import redis_client
+        self.redis = redis_client
 
-    def get(self, query: str) -> Optional[Dict[str, Any]]:
+    def get(self, cache_key: str) -> Optional[Dict[str, Any]]:
+        """
+        Retrieves result from cache using tenant-aware key.
+        Checks for exact hash hit first (fast), then semantic similarity (robust).
+        """
+        if not self.redis:
+            return None
+
+        # 1. Exact Hash Hit (Prompt Cache Bypass)
+        exact_hit = self.redis.get(f"exact_cache:{cache_key}")
+        if exact_hit:
+            import json
+            self.logger.info("semantic_cache_exact_hit", key=cache_key)
+            return {"result": json.loads(exact_hit), "confidence": 1.0}
+
+        # 2. Semantic Similarity Bypass
         if self.index.ntotal == 0:
             return None
         
-        query_vec = self.model.encode([query]).astype('float32')
+        # We use a sub-string or hash for the actual vector storage reference
+        query_vec = self.model.encode([cache_key]).astype('float32')
         distances, indices = self.index.search(query_vec, 1)
         
         distance = float(distances[0][0])
         if distance < (1 - self.threshold):
             idx = indices[0][0]
-            if idx < len(self.cache_data):
-                cached = self.cache_data[idx]
-                # Calculate confidence based on distance
+            # Retrieve from Redis using index as pointer
+            result_json = self.redis.get(f"semantic_val:{idx}")
+            if result_json:
+                import json
                 scorer = ConfidenceScorer()
                 confidence = scorer.calculate(distance, self.threshold)
+                self.logger.info("semantic_cache_similarity_hit", distance=distance, confidence=confidence)
                 
                 return {
-                    "result": cached["result"],
+                    "result": json.loads(result_json),
                     "confidence": confidence,
-                    "distance": distance,
-                    "cached_query": cached["query"]
+                    "distance": distance
                 }
         return None
 
-    def set(self, query: str, result: Any):
-        query_vec = self.model.encode([query]).astype('float32')
+    def set(self, cache_key: str, result: Any):
+        """Stores result with exact and semantic indexing."""
+        if not self.redis:
+            return
+
+        import json
+        result_json = json.dumps(result)
+        
+        # 1. Store exact hash
+        self.redis.set(f"exact_cache:{cache_key}", result_json, ex=86400) # 24h
+
+        # 2. Add to semantic index
+        query_vec = self.model.encode([cache_key]).astype('float32')
+        idx = self.index.ntotal
         self.index.add(query_vec)
-        self.cache_data.append({"query": query, "result": result})
+        self.redis.set(f"semantic_val:{idx}", result_json, ex=86400)
+        
+        self.logger.info("semantic_cache_stored", key=cache_key, index_size=self.index.ntotal)
 
 class MoERouter:
     """Mixture of Experts Router to dispatch tasks based on intent."""
@@ -180,9 +216,15 @@ class MoERouter:
         intent = "reasoning" # Default
         confidence = 0.8
         
-        if any(w in q for w in ["python", "js", "code", "function", "api"]):
+        if any(w in q for w in ["calculate", "math", "+", "-", "*", "/", "sqrt"]):
+            intent = "reasoning" # In a real system, this would route to a PythonInterpreterExpert
+            confidence = 1.0
+        elif any(w in q for w in ["document", "file", "search", "find", "paper"]):
+            intent = "reasoning" # Trigger RAG context
+            confidence = 0.9
+        elif any(w in q for w in ["python", "js", "code", "function", "api"]):
             intent = "code"
-        elif any(w in q for w in ["why", "how", "solve", "math", "logic"]):
+        elif any(w in q for w in ["why", "how", "solve", "logic"]):
             intent = "reasoning"
         elif any(w in q for w in ["write", "story", "poem", "imagine"]):
             intent = "creative"

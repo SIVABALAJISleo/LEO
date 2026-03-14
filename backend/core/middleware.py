@@ -4,14 +4,18 @@ import logging
 logger = logging.getLogger(__name__)
 
 # Fault-tolerant Redis Client Mock/Connection
+redis_client = None
 try:
     import redis
     REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
-    redis_client = redis.from_url(REDIS_URL, decode_responses=True)
-    # Ping to check connection
-    redis_client.ping()
+    # Use a short timeout for the connection check
+    host = os.getenv("REDIS_HOST", "localhost")
+    port = int(os.getenv("REDIS_PORT", 6379))
+    r = redis.Redis(host=host, port=port, socket_connect_timeout=1)
+    r.ping()
+    redis_client = r
     logger.info("Connected to Redis successfully.")
-except (ImportError, Exception) as e:
+except Exception as e:
     logger.warning(f"Redis not available, using in-memory fallback. Error: {e}")
     
     class FakeRedis:

@@ -25,10 +25,16 @@ class ModelManager:
     async def get_model(self, version: str = "v1"):
         async with self._lock:
             if not self.initialized:
-                logger.info("initializing_model_manager", version=version)
-                from rag.inference import LocalInference
-                # In a real system, version would map to a specific path
-                self.model = LocalInference()
+                server_url = os.getenv("MODEL_SERVER_URL")
+                if server_url:
+                    logger.info("initializing_remote_model_manager", url=server_url, version=version)
+                    from backend.core.remote_inference import RemoteInference
+                    self.model = RemoteInference(server_url)
+                else:
+                    logger.info("initializing_local_model_manager", version=version)
+                    from rag.inference import LocalInference
+                    self.model = LocalInference()
+                
                 self.initialized = True
                 self.current_version = version
         return self.model
@@ -51,5 +57,26 @@ class ModelManager:
             except Exception as e:
                 logger.error("inference_failure", error=str(e), version=getattr(self, 'current_version', 'unknown'))
                 raise
+
+    async def generate_stream(self, prompt: str, max_tokens: int = 512):
+        """
+        Gated streaming inference.
+        """
+        model = await self.get_model()
+        async with self._semaphore:
+            try:
+                # We expect model.generate(..., stream=True) to return an iterator
+                # Since model.generate is sync (llama-cpp), we run the iteration logic carefully
+                # or assume it's safe if it's a generator.
+                logger.info("inference_stream_start")
+                stream = model.generate(prompt, max_tokens=max_tokens, stream=True)
+                for chunk in stream:
+                    if isinstance(chunk, dict) and 'choices' in chunk:
+                        text = chunk['choices'][0]['text']
+                        yield text
+                        await asyncio.sleep(0) # Yield control
+            except Exception as e:
+                logger.error("inference_stream_failure", error=str(e))
+                yield f"Error: {e}"
 
 model_manager = ModelManager()

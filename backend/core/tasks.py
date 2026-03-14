@@ -20,6 +20,27 @@ celery_app.conf.update(
     enable_utc=True,
 )
 
+class BatchInferenceManager:
+    """Aggregates multiple AI requests for batched processing (Hyperscale Pattern)."""
+    def __init__(self, batch_size=4):
+        self.batch_size = batch_size
+        self.current_batch = []
+    
+    async def add_to_batch(self, query: str):
+        self.current_batch.append(query)
+        if len(self.current_batch) >= self.batch_size:
+            return await self.process_batch()
+        return None
+
+    async def process_batch(self):
+        # In a real system, this would call model.generate_batch
+        logger.info(f"processing_inference_batch: size={len(self.current_batch)}")
+        results = [f"Batch result for: {q}" for q in self.current_batch]
+        self.current_batch = []
+        return results
+
+batch_manager = BatchInferenceManager()
+
 @celery_app.task(name="process_ai_query")
 def process_ai_query_task(query: str, request_id: str, tenant_id: str = "default"):
     """
