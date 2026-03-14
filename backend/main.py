@@ -14,13 +14,18 @@ from backend.core.request_queue import global_request_queue
 from opentelemetry import trace
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
-from prometheus_fastapi_instrumentator import Instrumentator
+from prometheus_client import start_http_server, Summary, Counter as PromCounter, Gauge
 import os
 import psutil
 from pydantic import BaseModel
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
+
+# Metrics
+REQUEST_TIME = Summary('request_processing_seconds', 'Time spent processing request')
+CPU_USAGE = Gauge('system_cpu_usage_percent', 'System CPU usage percentage')
+GPU_USAGE = Gauge('system_gpu_usage_percent', 'System GPU usage percentage (Mocked if no GPU)')
 
 # Initialize Observability Stack
 setup_logging()
@@ -48,9 +53,6 @@ async def startup_event():
 
 # Instrument FastAPI for Tracing
 FastAPIInstrumentor.instrument_app(app)
-
-# Expose Prometheus Metrics
-Instrumentator().instrument(app).expose(app)
 
 # Add Observability and Resilience Middleware
 app.add_middleware(TelemetryMiddleware)
@@ -173,6 +175,14 @@ async def upload_file(request: Request, file: UploadFile = File(...), token: dic
 # Include core routes with prefixes
 app.include_router(health_router, prefix="/api/v1/health")
 app.include_router(paypal_router, prefix="/api/v1/billing", tags=["billing"])
+
+@app.get("/metrics")
+async def metrics():
+    from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
+    CPU_USAGE.set(psutil.cpu_percent())
+    # Mock GPU usage if not detectable
+    GPU_USAGE.set(0.0) 
+    return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
 
 @app.get("/")
 async def root():

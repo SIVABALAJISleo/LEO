@@ -4,6 +4,7 @@ import logging
 from typing import Dict, Any, List, Optional
 from backend.core.tools import global_tools
 from backend.core.memory import global_memory
+from backend.data_efficiency.graph import global_graph
 
 logger = logging.getLogger(__name__)
 
@@ -55,6 +56,21 @@ class ReasoningExpert:
         history = global_memory.get_history(session_id, tenant_id)
         context_str = " ".join(context) if context else ""
         history_str = "\n".join([f"{m['role']}: {m['content']}" for m in history])
+        
+        # 1b. KNOWLEDGE GRAPH LOOKUP (Layer 6)
+        # Attempt to find entities in the query and lookup relations
+        graph_context = []
+        words = re.findall(r'\b[A-Z][a-z]+\b', query) # Simple entity heuristic
+        for word in words:
+            relations = global_graph.query_relations(word, tenant_id)
+            if relations:
+                graph_context.extend([f"{word} {r['relation']} {r.get('target', r.get('source'))}" for r in relations])
+        
+        if graph_context:
+            logger.info("knowledge_graph_hit", count=len(graph_context))
+            # If we found a direct answer in the graph, we could potentially bypass here.
+            # For now, we add it to context.
+            context = (context or []) + graph_context
         
         # 2. PLANNING
         steps = await self.planner.plan(query)
