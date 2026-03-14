@@ -71,39 +71,50 @@ class ReasoningExpert:
             # If we found a direct answer in the graph, we could potentially bypass here.
             # For now, we add it to context.
             context = (context or []) + graph_context
+
+        # 1c. DIGITAL TWIN REASONING (Layer 9: Cheap Simulation)
+        from backend.twin.twin_engine import global_twin_engine
+        twin_result = await global_twin_engine.reason(query, context=context, tenant_id=tenant_id)
+        if twin_result and twin_result["confidence"] > 0.85:
+            logger.info("digital_twin_bypass_active")
+            from backend.main import TWIN_HITS
+            TWIN_HITS.inc()
+            answer = twin_result["answer"]
+            confidence = twin_result["confidence"]
         
-        # 2. PLANNING
-        steps = await self.planner.plan(query)
-        logger.info(f"reasoning_steps_planned: count={len(steps)}")
-        
-        # 3. EXECUTION WITH MODEL LADDER (tiny -> small -> large)
-        if "Execute mathematical tool" in steps:
-            nums = re.findall(r'\d+', query)
-            if len(nums) >= 2:
-                tool_result = await global_tools.execute("calculator", {"expression": f"{nums[0]} + {nums[1]}"})
-                answer = f"Based on calculation: {tool_result}"
-                confidence = 1.0 # Tool results are deterministic
-            else:
-                answer = "Required operands for calculation not found."
-                confidence = 0.5
+        # 2. PLANNING (If no twin bypass)
         else:
-            full_prompt = f"History:\n{history_str}\n\nContext:\n{context_str}\n\nQuestion: {query}\nAnswer:"
+            steps = await self.planner.plan(query)
+            logger.info(f"reasoning_steps_planned: count={len(steps)}")
             
-            # Tier 1: Tiny (Ultra fast)
-            answer = await self.model_manager.generate_safe(full_prompt, tier="tiny")
-            confidence = self.evaluator.evaluate(answer, query)
-            
-            # Tier 2: Small (Escalate if needed)
-            if confidence < 0.7:
-                logger.info(f"escalating_to_small_model: confidence={confidence}")
-                answer = await self.model_manager.generate_safe(full_prompt, tier="small")
+            # 3. EXECUTION WITH MODEL LADDER (tiny -> small -> large)
+            if "Execute mathematical tool" in steps:
+                nums = re.findall(r'\d+', query)
+                if len(nums) >= 2:
+                    tool_result = await global_tools.execute("calculator", {"expression": f"{nums[0]} + {nums[1]}"})
+                    answer = f"Based on calculation: {tool_result}"
+                    confidence = 1.0 # Tool results are deterministic
+                else:
+                    answer = "Required operands for calculation not found."
+                    confidence = 0.5
+            else:
+                full_prompt = f"History:\n{history_str}\n\nContext:\n{context_str}\n\nQuestion: {query}\nAnswer:"
+                
+                # Tier 1: Tiny (Ultra fast)
+                answer = await self.model_manager.generate_safe(full_prompt, tier="tiny")
                 confidence = self.evaluator.evaluate(answer, query)
-            
-            # Tier 3: Large (Last resort)
-            if confidence < 0.8:
-                logger.info(f"escalating_to_large_model: confidence={confidence}")
-                answer = await self.model_manager.generate_safe(full_prompt, tier="large")
-                confidence = self.evaluator.evaluate(answer, query)
+                
+                # Tier 2: Small (Escalate if needed)
+                if confidence < 0.7:
+                    logger.info(f"escalating_to_small_model: confidence={confidence}")
+                    answer = await self.model_manager.generate_safe(full_prompt, tier="small")
+                    confidence = self.evaluator.evaluate(answer, query)
+                
+                # Tier 3: Large (Last resort)
+                if confidence < 0.8:
+                    logger.info(f"escalating_to_large_model: confidence={confidence}")
+                    answer = await self.model_manager.generate_safe(full_prompt, tier="large")
+                    confidence = self.evaluator.evaluate(answer, query)
 
         # 4. UPDATE MEMORY
         global_memory.add_message(session_id, tenant_id, "user", query)

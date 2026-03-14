@@ -11,6 +11,12 @@ import time
 import asyncio
 import psutil
 from backend.core.prompt_cache import check_cache, save_cache
+from backend.predictive.answer_store import global_predictive_store
+from backend.predictive.predictor import global_predictor
+from backend.shadow.shadow_store import global_shadow_store
+from backend.shadow.shadow_worker import global_shadow_worker
+from backend.shadow.conversation_tracker import global_tracker
+from backend.main import PPE_HITS, SHADOW_HITS, MODEL_INVOCATIONS
 
 logger = logging.getLogger(__name__)
 
@@ -38,8 +44,9 @@ class UnifiedSaaSEngine:
         # 5. In-flight Request Deduplication
         self.processing: Dict[str, asyncio.Task] = {}
 
-        # Start background scheduler (Moved to lazy start or startup event)
-        # asyncio.create_task(self.scheduler.start())
+        # 6. START PREDICTIVE WORKERS (Phase 9)
+        from backend.predictive.precompute_worker import global_precompute_worker
+        asyncio.create_task(global_precompute_worker.run())
         
     async def _check_persistent_cluster(self, query: str, tenant_id: str) -> Optional[Dict[str, Any]]:
         """Layer 2: SQL-backed Canonical Answer Reuse."""
@@ -113,32 +120,49 @@ class UnifiedSaaSEngine:
         user_id = request_id.split("_")[1] if "_" in request_id else "default"
         session_id = user_id # Using user_id as session_id for continuity
 
-        # 2. PROMPT HASH CACHE (Exact match bypass)
+        # 1. SHADOW ANSWER STORE (Layer 0: Predicted Match)
+        shadow_hit = global_shadow_store.lookup(query, session_id, tenant_id=tenant_id)
+        if shadow_hit:
+            SHADOW_HITS.inc()
+            self.trace_engine.add_step("Engine", "layer_0_shadow_hit", {"confidence": shadow_hit["confidence"]})
+            return self._wrap_response(shadow_hit["answer"], "SHADOW_STORE", start_time, shadow_hit["confidence"])
+
+        # 2. PREDICTIVE ANSWER STORE (Layer 1: PPE Bypass)
+        predictive_hit = global_predictive_store.lookup(query, tenant_id=tenant_id)
+        if predictive_hit:
+            PPE_HITS.inc()
+            self.trace_engine.add_step("Engine", "layer_1_predictive_hit", {"confidence": predictive_hit["confidence"]})
+            return self._wrap_response(predictive_hit["answer"], "PREDICTIVE_STORE", start_time, predictive_hit["confidence"])
+        
+        # 3. PROMPT HASH CACHE (Layer 2: Exact match bypass)
         cached_response = check_cache(query, tenant_id=tenant_id)
         if cached_response:
              import json
              try:
                  result = json.loads(cached_response)
-                 self.trace_engine.add_step("Engine", "prompt_cache_hit", {})
+                 self.trace_engine.add_step("Engine", "layer_2_prompt_cache_hit", {})
                  return self._wrap_response(result, "PROMPT_CACHE", start_time, 1.0)
              except:
                  pass
+
+        # 4. LOG QUERY FOR PPE PATTERN MINING
+        global_predictor.log_query(query)
 
         # 3. PROBABILISTIC CHECK
         if not self.bloom.contains(query):
             self.bloom.add(query)
 
-        # 4. SEMANTIC CACHE CHECK (Layer 1: Fast Redis Bypass)
+        # 5. SEMANTIC CACHE CHECK (Layer 3: Fast Redis Bypass)
         cache_key = f"semantic_cache:{tenant_id}:{query}"
         cached_data = self.semantic_cache.get(cache_key)
         if cached_data:
-            self.trace_engine.add_step("Engine", "cache_hit", {"confidence": cached_data["confidence"]})
+            self.trace_engine.add_step("Engine", "layer_3_semantic_cache_hit", {"confidence": cached_data["confidence"]})
             return self._wrap_response(cached_data["result"], "SEMANTIC_CACHE", start_time, cached_data["confidence"])
 
-        # 4b. PERSISTENT CLUSTER CHECK (Layer 2: Canonical Bypass)
+        # 6. PERSISTENT CLUSTER CHECK (Layer 4: Canonical Bypass)
         cluster_data = await self._check_persistent_cluster(query, tenant_id)
         if cluster_data:
-            self.trace_engine.add_step("Engine", "cluster_hit", {"confidence": 0.95})
+            self.trace_engine.add_step("Engine", "layer_4_cluster_hit", {"confidence": 0.95})
             return self._wrap_response(cluster_data["answer"], "CANONICAL_CLUSTER", start_time, 0.95)
 
         # 5. EXPERT ROUTING & THOUGHT TRACE
@@ -200,6 +224,7 @@ class UnifiedSaaSEngine:
                 "trace": self.trace_engine.get_full_trace()
             }
 
+        MODEL_INVOCATIONS.inc()
         result = await self.reliability.execute(f"expert_{expert_type}", execute_task)
 
         # 6. BG PRECOMPUTATION
@@ -241,6 +266,10 @@ class UnifiedSaaSEngine:
             tenant_id=tenant_id,
             metadata={"expert": str(result.get("expert")), "mode": "FULL_CALC", "confidence": result.get("confidence")}
         )
+
+        # 11. SHADOW PREDICTION (Accelerate future turns)
+        asyncio.create_task(global_shadow_worker.precompute_next_turns(query, session_id, tenant_id))
+        global_tracker.track(session_id, query)
 
         return self._wrap_response(result, "FULL_CALC", start_time, result.get("confidence", 0.9))
 
