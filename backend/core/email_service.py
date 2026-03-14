@@ -36,7 +36,7 @@ class EmailService:
             "subject": subject,
             "html": html_content
         }
-        response = requests.post(url, headers=headers, json=data)
+        response = requests.post(url, headers=headers, json=data, timeout=10)
         if response.status_code != 200:
             raise HTTPException(status_code=response.status_code, detail=response.text)
         return response.json()
@@ -54,7 +54,7 @@ class EmailService:
             "subject": subject,
             "content": [{"type": "text/html", "value": html_content}]
         }
-        response = requests.post(url, headers=headers, json=data)
+        response = requests.post(url, headers=headers, json=data, timeout=10)
         if response.status_code not in [200, 201, 202]:
             raise HTTPException(status_code=response.status_code, detail=response.text)
         return {"status": "sent"}

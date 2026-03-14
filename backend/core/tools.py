@@ -29,14 +29,37 @@ class ToolFramework:
         expression = args.get("expression", "")
         if not expression:
             return "Error: No expression provided."
-        # Safe eval-like behavior for basic math
+        
+        # Use AST to safely evaluate basic math without eval()
+        import ast
+        import operator as op
+
+        operators = {
+            ast.Add: op.add, ast.Sub: op.sub, ast.Mult: op.mul,
+            ast.Div: op.truediv, ast.Pow: op.pow, ast.BitXor: op.xor,
+            ast.USub: op.neg
+        }
+
+        def eval_expr(node):
+            if isinstance(node, ast.Num): # <3.8
+                return node.n
+            elif isinstance(node, ast.Constant): # 3.8+
+                return node.value
+            elif isinstance(node, ast.BinOp):
+                return operators[type(node.op)](eval_expr(node.left), eval_expr(node.right))
+            elif isinstance(node, ast.UnaryOp):
+                return operators[type(node.op)](eval_expr(node.operand))
+            else:
+                raise TypeError(node)
+
         try:
-            # Replacing common words with math equivalents for robustness
-            clean_expr = expression.replace("sqrt", "math.sqrt").replace("pow", "math.pow")
-            result = eval(clean_expr, {"math": math, "__builtins__": {}})
+            # Basic sanitization of the expression string
+            clean_expr = expression.replace(" ", "")
+            tree = ast.parse(clean_expr, mode='eval')
+            result = eval_expr(tree.body)
             return f"Result: {result}"
         except Exception as e:
-            return f"Math Error: {e}"
+            return f"Math Security Error: {e}"
 
     async def _time_service(self, args: Dict[str, Any]) -> str:
         now = datetime.datetime.now()
