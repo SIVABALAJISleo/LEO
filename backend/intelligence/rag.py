@@ -274,7 +274,16 @@ class RAGEngine:
                      "metadata": {"hybrid_rank": final_score}
                  })
 
-        # 5. PRECISION RERANKING
+        # Sort combined results by score
+        combined_results.sort(key=lambda x: x['score'], reverse=True)
+
+        # 5. FAST-PATH: Skip reranking if initial match is extremely strong (>0.95)
+        top_score = combined_results[0]['score'] if combined_results else 0
+        if top_score > 0.95:
+            logger.info("rag_fast_path_triggered", score=top_score)
+            return combined_results[:k]
+
+        # 6. PRECISION RERANKING (Final Pass)
         from backend.intelligence.reranker import global_reranker
         reranked_results = global_reranker.rerank(query, combined_results, top_k=k)
         

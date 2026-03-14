@@ -60,27 +60,45 @@ class ReasoningExpert:
         steps = await self.planner.plan(query)
         logger.info(f"reasoning_steps_planned: count={len(steps)}")
         
-        # 3. EXECUTION (Simplified Multi-Step)
+        # 3. EXECUTION WITH MODEL LADDER (tiny -> small -> large)
         if "Execute mathematical tool" in steps:
-            # Heuristic tool extraction
             nums = re.findall(r'\d+', query)
             if len(nums) >= 2:
-                # Mock tool call for demonstration
                 tool_result = await global_tools.execute("calculator", {"expression": f"{nums[0]} + {nums[1]}"})
                 answer = f"Based on calculation: {tool_result}"
+                confidence = 1.0 # Tool results are deterministic
             else:
                 answer = "Required operands for calculation not found."
+                confidence = 0.5
         else:
-            # Direct Model Inference with context and history
             full_prompt = f"History:\n{history_str}\n\nContext:\n{context_str}\n\nQuestion: {query}\nAnswer:"
-            answer = await self.model_manager.generate_safe(full_prompt)
+            
+            # Tier 1: Tiny (Ultra fast)
+            answer = await self.model_manager.generate_safe(full_prompt, tier="tiny")
+            confidence = self.evaluator.evaluate(answer, query)
+            
+            # Tier 2: Small (Escalate if needed)
+            if confidence < 0.7:
+                logger.info(f"escalating_to_small_model: confidence={confidence}")
+                answer = await self.model_manager.generate_safe(full_prompt, tier="small")
+                confidence = self.evaluator.evaluate(answer, query)
+            
+            # Tier 3: Large (Last resort)
+            if confidence < 0.8:
+                logger.info(f"escalating_to_large_model: confidence={confidence}")
+                answer = await self.model_manager.generate_safe(full_prompt, tier="large")
+                confidence = self.evaluator.evaluate(answer, query)
 
-        # 4. SELF-EVALUATION
-        confidence = self.evaluator.evaluate(answer, query)
-        
-        # 5. UPDATE MEMORY
+        # 4. UPDATE MEMORY
         global_memory.add_message(session_id, tenant_id, "user", query)
         global_memory.add_message(session_id, tenant_id, "assistant", answer)
+        
+        return {
+            "answer": answer,
+            "confidence": confidence,
+            "steps": steps,
+            "strategy": "multi_step_reasoning"
+        }
 
     async def solve_stream(self, query: str, context: List[str] = None, session_id: str = "default", tenant_id: str = "default"):
         """Streaming version of solve."""

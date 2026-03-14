@@ -41,6 +41,47 @@ class UnifiedSaaSEngine:
         # Start background scheduler (Moved to lazy start or startup event)
         # asyncio.create_task(self.scheduler.start())
         
+    async def _check_persistent_cluster(self, query: str, tenant_id: str) -> Optional[Dict[str, Any]]:
+        """Layer 2: SQL-backed Canonical Answer Reuse."""
+        from backend.core.database import SessionLocal, QueryCluster
+        from sqlalchemy import text
+        db = SessionLocal()
+        try:
+            # Simple hash check for direct hits; in a real scale, we'd use pgvector
+            import hashlib
+            h = hashlib.sha256(query.lower().strip().encode()).hexdigest()
+            cluster = db.query(QueryCluster).filter(QueryCluster.cluster_hash == h, QueryCluster.tenant_id == tenant_id).first()
+            if cluster:
+                cluster.use_count += 1
+                db.commit()
+                return {"answer": cluster.canonical_answer, "confidence": 0.95, "canonical": True}
+        except Exception as e:
+            logger.error(f"persistent_cluster_error: {e}")
+        finally:
+            db.close()
+        return None
+
+    def _save_canonical_cluster(self, query: str, answer: str, tenant_id: str):
+        """Saves a high-confidence result as a canonical cluster."""
+        from backend.core.database import SessionLocal, QueryCluster
+        import hashlib
+        db = SessionLocal()
+        try:
+            h = hashlib.sha256(query.lower().strip().encode()).hexdigest()
+            exists = db.query(QueryCluster).filter(QueryCluster.cluster_hash == h).first()
+            if not exists:
+                new_c = QueryCluster(
+                    cluster_hash=h,
+                    canonical_query=query,
+                    canonical_answer=answer,
+                    tenant_id=tenant_id
+                )
+                db.add(new_c)
+                db.commit()
+        except Exception as e:
+             logger.error(f"save_cluster_error: {e}")
+        finally:
+            db.close()
     async def process(self, query: str, request_id: str, tenant_id: str = "default"):
         start_time = time.time()
         
@@ -87,12 +128,18 @@ class UnifiedSaaSEngine:
         if not self.bloom.contains(query):
             self.bloom.add(query)
 
-        # 4. SEMANTIC CACHE CHECK (Tenant-Isolated Compute Bypass)
+        # 4. SEMANTIC CACHE CHECK (Layer 1: Fast Redis Bypass)
         cache_key = f"semantic_cache:{tenant_id}:{query}"
         cached_data = self.semantic_cache.get(cache_key)
         if cached_data:
             self.trace_engine.add_step("Engine", "cache_hit", {"confidence": cached_data["confidence"]})
             return self._wrap_response(cached_data["result"], "SEMANTIC_CACHE", start_time, cached_data["confidence"])
+
+        # 4b. PERSISTENT CLUSTER CHECK (Layer 2: Canonical Bypass)
+        cluster_data = await self._check_persistent_cluster(query, tenant_id)
+        if cluster_data:
+            self.trace_engine.add_step("Engine", "cluster_hit", {"confidence": 0.95})
+            return self._wrap_response(cluster_data["answer"], "CANONICAL_CLUSTER", start_time, 0.95)
 
         # 5. EXPERT ROUTING & THOUGHT TRACE
         route_start = time.time()
@@ -176,12 +223,15 @@ class UnifiedSaaSEngine:
 
         # 9. AUTONOMOUS LEARNING (Phase 18 Feedback Loop)
         if result.get("confidence", 0) > 0.92:
+            # Save to Knowledge Graph / RAG
             await self.scheduler.schedule(
                 f"learn_{request_id}", 
                 self.rag.add_documents, 
                 [f"Q: {query}\nA: {result['answer']}"], 
                 tenant_id
             )
+            # Save as Canonical Cluster (Layer 2 Persistence)
+            self._save_canonical_cluster(query, result["answer"], tenant_id)
 
         # 10. AUDIT LOG (Phase 12 Compliance)
         from backend.core.audit import audit

@@ -50,6 +50,16 @@ class UsageMetric(Base):
     value = Column(Integer, default=0)
     timestamp = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc))
 
+class QueryCluster(Base):
+    """Layer 2: Canonical query clustering for answer reuse."""
+    __tablename__ = "query_clusters"
+    id = Column(Integer, primary_key=True, index=True)
+    cluster_hash = Column(String, unique=True, index=True)
+    canonical_query = Column(String)
+    canonical_answer = Column(Text)
+    tenant_id = Column(String, index=True)
+    use_count = Column(Integer, default=1)
+
 def init_db():
     Base.metadata.create_all(bind=engine)
 

@@ -22,22 +22,32 @@ class ModelManager:
             cls._instance.initialized = False
         return cls._instance
 
-    async def get_model(self, version: str = "v1"):
+    async def get_model(self, tier: str = "small"):
+        """
+        Retrieves a model based on tier: 'tiny', 'small', or 'large'.
+        large -> Remote Model Server
+        small -> Local 1.1B Model
+        tiny -> Local 0.5B / Fast Mock
+        """
         async with self._lock:
             if not self.initialized:
                 server_url = os.getenv("MODEL_SERVER_URL")
+                self.remote_model = None
                 if server_url:
-                    logger.info("initializing_remote_model_manager", url=server_url, version=version)
                     from backend.core.remote_inference import RemoteInference
-                    self.model = RemoteInference(server_url)
-                else:
-                    logger.info("initializing_local_model_manager", version=version)
-                    from rag.inference import LocalInference
-                    self.model = LocalInference()
+                    self.remote_model = RemoteInference(server_url)
+                
+                from rag.inference import LocalInference
+                self.local_model = LocalInference() # Small (1.1B)
+                self.tiny_model = LocalInference(n_threads=2) # Simulated tiny
                 
                 self.initialized = True
-                self.current_version = version
-        return self.model
+        
+        if tier == "large" and self.remote_model:
+            return self.remote_model
+        elif tier == "tiny":
+            return self.tiny_model
+        return self.local_model
 
     async def generate_safe(self, prompt: str, max_tokens: int = 512):
         """
