@@ -77,7 +77,7 @@ class ReasoningExpert:
         twin_result = await global_twin_engine.reason(query, context=context, tenant_id=tenant_id)
         if twin_result and twin_result["confidence"] > 0.85:
             logger.info("digital_twin_bypass_active")
-            from backend.main import TWIN_HITS
+            from backend.core.metrics import TWIN_HITS
             TWIN_HITS.inc()
             answer = twin_result["answer"]
             confidence = twin_result["confidence"]

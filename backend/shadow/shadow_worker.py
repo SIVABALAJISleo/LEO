@@ -15,7 +15,7 @@ class ShadowWorker:
         self.shadow_store = shadow_store
         self.active_tasks = {}
 
-    async def precompute_next_turns(self, query: str, session_id: str, tenant_id: str):
+    async def precompute_next_turns(self, query: str, session_id: str, tenant_id: str, workspace_id: str = "default"):
         """
         Background task triggered after a primary response is delivered.
         """
@@ -24,7 +24,7 @@ class ShadowWorker:
             predictions = global_shadow_predictor.predict_next(query)
             
             for p_query in predictions:
-                logger.info(f"shadow_predictive_inference: {p_query} [session={session_id}]")
+                logger.info(f"shadow_predictive_inference: {p_query} [session={session_id}, workspace={workspace_id}]")
                 # 2. GENERATE ANSWER (Layer 0 Shadow Inference)
                 result = await reasoning_expert.solve(p_query, tenant_id=tenant_id, session_id=session_id)
                 
@@ -35,7 +35,8 @@ class ShadowWorker:
                         answer=result["answer"],
                         confidence=result.get("confidence", 0.9),
                         session_id=session_id,
-                        tenant_id=tenant_id
+                        tenant_id=tenant_id,
+                        workspace_id=workspace_id
                     )
         except Exception as e:
             logger.error(f"shadow_worker_error: {e}")

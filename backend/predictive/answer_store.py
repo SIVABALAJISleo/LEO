@@ -15,7 +15,7 @@ class PredictiveAnswerStore:
     def __init__(self):
         self.semantic_cache = SemanticCache()
 
-    def save_answer(self, question: str, answer: str, confidence: float, cluster_id: int = 0, tenant_id: str = "default"):
+    def save_answer(self, question: str, answer: str, confidence: float, cluster_id: int = 0, tenant_id: str = "default", workspace_id: str = "default"):
         db = SessionLocal()
         try:
             # Generate embedding for vector lookup
@@ -27,7 +27,8 @@ class PredictiveAnswerStore:
                 embedding=embedding.tobytes(),
                 confidence=confidence,
                 cluster_id=cluster_id,
-                tenant_id=tenant_id
+                tenant_id=tenant_id,
+                workspace_id=workspace_id
             )
             db.add(new_ans)
             db.commit()
@@ -38,14 +39,17 @@ class PredictiveAnswerStore:
         finally:
             db.close()
 
-    def lookup(self, query: str, tenant_id: str = "default") -> Optional[Dict[str, Any]]:
+    def lookup(self, query: str, tenant_id: str = "default", workspace_id: str = "default") -> Optional[Dict[str, Any]]:
         """
         Fast lookup using vector similarity on precomputed answers.
         """
         db = SessionLocal()
         try:
-            # 1. Broad fetch for the tenant
-            candidates = db.query(PrecomputedAnswer).filter(PrecomputedAnswer.tenant_id == tenant_id).all()
+            # 1. Broad fetch for the workspace/tenant
+            candidates = db.query(PrecomputedAnswer).filter(
+                PrecomputedAnswer.tenant_id == tenant_id,
+                PrecomputedAnswer.workspace_id == workspace_id
+            ).all()
             if not candidates:
                 return None
                 

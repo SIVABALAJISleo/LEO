@@ -1,118 +1,41 @@
 version: '3.8'
 
 services:
+  api:
+    build: .
+    ports:
+      - "8005:8005"
+    environment:
+      - APP_ENV=production
+      - REDIS_URL=redis://redis:6379/0
+      - DATABASE_URL=postgresql://user:pass@postgres:5432/hyper
+    depends_on:
+      - redis
+      - postgres
+
+  worker:
+    build: .
+    command: python -m backend.predictive.precompute_worker
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - DATABASE_URL=postgresql://user:pass@postgres:5432/hyper
+    depends_on:
+      - redis
+      - postgres
+
   redis:
-    image: redis:7-alpine
-    container_name: hyper_redis
+    image: redis:alpine
     ports:
       - "6379:6379"
-    volumes:
-      - redis_data:/data
-    restart: unless-stopped
-    command: redis-server --appendonly yes
 
-  api:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: hyper_api_gateway
-    ports:
-      - "8005:8000" # Expose gateway heavily
-    env_file: .env
+  postgres:
+    image: postgres:alpine
     environment:
-      - REDIS_URL=redis://redis:6379/0
-      - APP_ENV=production
-    depends_on:
-      - redis
-    restart: always
-
-  worker-llm:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: hyper_worker_llm
-    env_file: .env
-    environment:
-      - REDIS_URL=redis://redis:6379/0
-      - MAX_WORKERS=2 # Control OOM closely on LLMs
-    command: celery -A backend.celery_app worker -Q celery -c 2 -l info --pool=prefork -n llm_worker@%h
-    depends_on:
-      - redis
-    volumes:
-      - ./models:/app/models # Mount local HF GGUF models
-
-  worker-vision:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: hyper_worker_vision
-    env_file: .env
-    environment:
-      - REDIS_URL=redis://redis:6379/0
-      - MAX_WORKERS=4
-    command: celery -A backend.celery_app worker -Q celery -c 4 -l info --pool=prefork -n vision_worker@%h
-    depends_on:
-      - redis
-
-  flower:
-    image: mher/flower:2.0
-    container_name: hyper_flower_monitor
-    environment:
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - FLOWER_PORT=5555
-    ports:
-      - "5555:5555"
-    depends_on:
-      - redis
-      - worker-llm
-      - worker-vision
-
-  jaeger:
-    image: jaegertracing/all-in-one:latest
-    container_name: hyper_jaeger
-    ports:
-      - "16686:16686" # Web UI
-      - "4317:4317"   # OTLP gRPC
-      - "4318:4318"   # OTLP HTTP
-    environment:
-      - COLLECTOR_OTLP_ENABLED=true
-
-
-  db:
-    image: postgres:15-alpine
-    container_name: hyper_db
-    environment:
-      POSTGRES_USER: hyper_admin
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-hyper_secret}
-      POSTGRES_DB: hyper_saas
-    ports:
-      - "5432:5432"
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=hyper
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    restart: always
-
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: hyper_prometheus
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-    ports:
-      - "9090:9090"
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-    depends_on:
-      - api
-
-  grafana:
-    image: grafana/grafana:latest
-    container_name: hyper_grafana
-    ports:
-      - "3000:3000"
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
-    depends_on:
-      - prometheus
 
 volumes:
-  redis_data:
   postgres_data:

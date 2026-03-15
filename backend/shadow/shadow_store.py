@@ -15,7 +15,7 @@ class ShadowAnswerStore:
     def __init__(self):
         self.semantic_cache = SemanticCache()
 
-    def save_shadow(self, question: str, answer: str, confidence: float, session_id: str, tenant_id: str = "default"):
+    def save_shadow(self, question: str, answer: str, confidence: float, session_id: str, tenant_id: str = "default", workspace_id: str = "default"):
         db = SessionLocal()
         try:
             # Generate embedding for vector lookup
@@ -27,7 +27,8 @@ class ShadowAnswerStore:
                 embedding=embedding.tobytes(),
                 confidence=confidence,
                 session_id=session_id,
-                tenant_id=tenant_id
+                tenant_id=tenant_id,
+                workspace_id=workspace_id
             )
             db.add(new_ans)
             db.commit()
@@ -38,15 +39,16 @@ class ShadowAnswerStore:
         finally:
             db.close()
 
-    def lookup(self, query: str, session_id: str, tenant_id: str = "default") -> Optional[Dict[str, Any]]:
+    def lookup(self, query: str, session_id: str, tenant_id: str = "default", workspace_id: str = "default") -> Optional[Dict[str, Any]]:
         """
-        Ultra-fast lookup scoped to the active session.
+        Ultra-fast lookup scoped to the active session and workspace.
         """
         db = SessionLocal()
         try:
             # 1. Broad fetch for the session (limiting search space to active turn context)
             candidates = db.query(ShadowAnswer).filter(
                 ShadowAnswer.tenant_id == tenant_id,
+                ShadowAnswer.workspace_id == workspace_id,
                 ShadowAnswer.session_id == session_id
             ).all()
             

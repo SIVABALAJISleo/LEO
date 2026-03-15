@@ -40,7 +40,8 @@ class PrecomputeWorker:
                             question=v_query,
                             answer=result["answer"],
                             confidence=result.get("confidence", 0.9),
-                            tenant_id="default" # Real system would partition by tenant
+                            tenant_id="default", # Real system would partition by tenant
+                            workspace_id="default"
                         )
                         
                 await asyncio.sleep(60) # Interval for mining
