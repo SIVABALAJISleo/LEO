@@ -1,0 +1,11 @@
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    ignore:
+      # starlette is a transitive dependency of fastapi.
+      # Pinning it directly causes version conflicts. Let fastapi manage it.
+      - dependency-name: "starlette"
+    open-pull-requests-limit: 5
