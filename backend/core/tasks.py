@@ -1,8 +1,11 @@
 import os
+import logging
 from celery import Celery
 import asyncio
 from backend.core.orchestrator import hyper_engine
 from backend.core.database import SessionLocal, DocumentMetadata
+
+logger = logging.getLogger(__name__)
 
 REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 
