@@ -46,7 +46,7 @@ redis==5.0.3
 python-docx==1.1.0
 pypdf==6.8.0
 python-magic==0.4.27
-python-dotenv==1.1.0
+python-dotenv==1.2.1
 pyyaml==6.0.1
 tenacity==8.2.3
 ujson==5.9.0
