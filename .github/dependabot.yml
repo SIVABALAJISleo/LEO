@@ -8,4 +8,7 @@ updates:
       # starlette is a transitive dependency of fastapi.
       # Pinning it directly causes version conflicts. Let fastapi manage it.
       - dependency-name: "starlette"
+      # onnx.hub.load() is NOT used in this codebase. No patched version exists
+      # for the hub.load() supply-chain advisory (CVE). Ignoring to silence false alert.
+      - dependency-name: "onnx"
     open-pull-requests-limit: 5
