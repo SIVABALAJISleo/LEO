@@ -17,10 +17,13 @@ from backend.predictive.predictor import global_predictor
 from backend.shadow.shadow_store import global_shadow_store
 from backend.shadow.shadow_worker import global_shadow_worker
 from backend.shadow.conversation_tracker import global_tracker
-from backend.core.metrics import PPE_HITS, SHADOW_HITS, MODEL_INVOCATIONS, RAG_HITS, MICRO_MODEL_HITS, CACHE_HITS
+from backend.core.metrics import (
+    PPE_HITS, SHADOW_HITS, MODEL_INVOCATIONS, RAG_HITS, MICRO_MODEL_HITS, CACHE_HITS,
+    GRAPH_HITS, TEMPLATE_HITS, ENHANCEMENT_USAGE, MODEL_CALLS_TOTAL,
+    REASONING_REUSES, EARLY_EXIT_TOTAL, TOKEN_SAVINGS
+)
 from backend.analytics.query_logger import global_query_logger
 
-# Phase 2-4 Optimization Imports
 from backend.inference.kv_cache import global_kv_cache
 from backend.inference.speculative_decoder import global_speculative_decoder
 from backend.rag.context_compression import global_compressor
@@ -28,6 +31,17 @@ from backend.reasoning.query_planner import global_query_planner
 from backend.micro_models.router import global_micro_router
 from backend.learning.answer_store import global_learning_engine
 from backend.inference.distributed_router import global_inference_controller
+
+# Next-Gen 10-Layer Pipeline Imports
+from backend.normalization.normalizer import global_normalizer
+from backend.graph.answer_graph_engine import global_age
+from backend.templates.template_engine import global_template_engine
+from backend.router.query_complexity import global_complexity_estimator
+from backend.memory.reasoning_store import global_reasoning_store
+from backend.optimization.token_optimizer import global_token_optimizer
+from backend.inference.early_exit import global_early_exit
+from backend.planner.execution_planner import global_execution_planner
+from backend.enhancement.enhancer import global_enhancer
 
 logger = logging.getLogger(__name__)
 
@@ -150,7 +164,53 @@ class UnifiedSaaSEngine:
         
         # User ID extraction for session memory
         user_id = request_id.split("_")[1] if "_" in request_id else "default"
-        session_id = user_id # Using user_id as session_id for continuity
+        session_id = user_id  # Using user_id as session_id for continuity
+
+        # ============================================================
+        # NEXT-GEN LAYER 0: QUERY NORMALIZATION + EXECUTION PLANNING
+        # ============================================================
+        normalized = global_normalizer.normalize(query)
+        complexity = global_complexity_estimator.estimate(query, normalized)
+        execution_plan = global_execution_planner.plan({**normalized, "complexity": complexity})
+        self.trace_engine.add_step("Normalizer", "query_normalized", {
+            "intent": normalized["intent"],
+            "entity": normalized["entity"],
+            "complexity": complexity,
+            "plan": execution_plan[:4],  # Log first 4 layers
+        })
+
+        # ============================================================
+        # NEXT-GEN LAYER 1: ANSWER GRAPH ENGINE (Reasoning Reuse)
+        # ============================================================
+        if "answer_graph" in execution_plan:
+            age_result = global_age.lookup(normalized, tenant_id)
+            if age_result:
+                GRAPH_HITS.inc()
+                EARLY_EXIT_TOTAL.inc()
+                self.trace_engine.add_step("AGE", "graph_hit", {"entity": normalized["entity"]})
+                return self._wrap_response(age_result, "ANSWER_GRAPH", start_time, age_result["confidence"])
+
+        # ============================================================
+        # NEXT-GEN LAYER 1b: REASONING MEMORY (Step Reuse)
+        # ============================================================
+        reasoning_memory = global_reasoning_store.lookup(query)
+        if reasoning_memory:
+            REASONING_REUSES.inc()
+            EARLY_EXIT_TOTAL.inc()
+            return self._wrap_response(reasoning_memory["answer"], "REASONING_MEMORY", start_time, reasoning_memory["confidence"])
+
+        # ============================================================
+        # NEXT-GEN LAYER 1c: TEMPLATE COMPILER (Zero-Cost Answers)
+        # ============================================================
+        if "template" in execution_plan:
+            template_answer = global_template_engine.render(normalized)
+            if template_answer:
+                TEMPLATE_HITS.inc()
+                EARLY_EXIT_TOTAL.inc()
+                self.trace_engine.add_step("Template", "template_hit", {"intent": normalized["intent"]})
+                # Register in graph for future reuse
+                global_age.register_answer(normalized, template_answer, confidence=0.95, tenant_id=tenant_id)
+                return self._wrap_response(template_answer, "TEMPLATE", start_time, 0.95)
 
         # 1. SHADOW ANSWER STORE (Layer 0: Predicted Match)
         shadow_hit = global_shadow_store.lookup(query, session_id, tenant_id=tenant_id, workspace_id=workspace_id)
@@ -320,6 +380,36 @@ class UnifiedSaaSEngine:
                 tenant_id=tenant_id, 
                 workspace_id=workspace_id
             )
+            # NEXT-GEN: Register high-confidence results into Answer Graph for future reuse
+            global_age.register_answer(
+                normalized_query=normalized,
+                answer=result["answer"],
+                confidence=result.get("confidence", 0.9),
+                steps=result.get("trace", {}).get("steps", []),
+                tenant_id=tenant_id,
+            )
+            # NEXT-GEN: Store reasoning steps for future path reuse
+            global_reasoning_store.store(
+                query=query,
+                steps=result.get("trace", {}).get("steps", []),
+                answer=result["answer"],
+                confidence=result.get("confidence", 0.9),
+            )
+
+        # NEXT-GEN: POST-INFERENCE ANSWER ENHANCEMENT (DLSS Layer)
+        raw_answer = result.get("answer", "")
+        if raw_answer:
+            context_docs = [n.get("content", "") for n in self.rag.retrieve(query, tenant_id=tenant_id)] if result.get("mode") == "FULL_CALC" else []
+            enhanced = global_enhancer.enhance(raw_answer, query, context_docs)
+            if enhanced.get("enhanced"):
+                ENHANCEMENT_USAGE.inc()
+                result["answer"] = enhanced["answer"]
+                result["quality_score"] = enhanced.get("quality_score", 0.9)
+
+        # NEXT-GEN: Token savings telemetry
+        MODEL_CALLS_TOTAL.inc()
+        opt_result = global_token_optimizer.optimize(query)
+        TOKEN_SAVINGS.set(opt_result["token_reduction"])
 
         # 6. BG PRECOMPUTATION
         # Use scheduler for non-critical path
