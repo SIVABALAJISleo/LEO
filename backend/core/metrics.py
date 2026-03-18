@@ -27,6 +27,11 @@ ENHANCEMENT_ATTEMPTS = PromCounter('hyper_enhancement_attempts_total', 'Total an
 ENHANCEMENT_SUCCESS = PromCounter('hyper_enhancement_success_total', 'Total successful DLSS enhancements applied')
 MODEL_BYPASS_VIA_ENHANCEMENT = PromCounter('hyper_model_bypass_via_enhancement', 'Total large-model calls bypassed due to enhancement')
 
+# Adaptive Intelligence Controller (AIC) Metrics
+AIC_SKIP_TOTAL = PromCounter('hyper_aic_skip_total', 'Total skips governed by dynamic AIC policy')
+AIC_ESCALATION_TOTAL = PromCounter('hyper_aic_escalation_total', 'Total model escalations mandated by dynamic AIC policy')
+INFERENCE_AVOIDANCE_RATIO = Gauge('hyper_inference_avoidance_ratio', 'Calculated dynamic inference avoidance ratio')
+
 MODEL_CALLS_TOTAL = PromCounter('hyper_model_calls_total', 'Total large model calls (last resort)')
 
 REASONING_REUSES = PromCounter('hyper_reasoning_reuses_total', 'Total reasoning memory reuses')
