@@ -353,6 +353,26 @@ class UnifiedSaaSEngine:
             compressed_context = global_compressor.compress(raw_context)
             self.trace_engine.add_step("RAG", "context_compressed", {"original_len": len(" ".join(raw_context))})
 
+            # DLSS INTERCEPTION: Attempt to enhance raw RAG context into a final answer
+            from backend.enhancement.enhancement_pipeline import global_enhancement_pipeline
+            from backend.core.metrics import ENHANCEMENT_ATTEMPTS, ENHANCEMENT_SUCCESS, MODEL_BYPASS_VIA_ENHANCEMENT
+
+            ENHANCEMENT_ATTEMPTS.inc()
+            # We treat the fast compressed context as the "raw answer"
+            intent = normalized.get("intent", "general") if 'normalized' in locals() else "general"
+            enhanced, status = global_enhancement_pipeline.run(compressed_context, query, raw_context, intent)
+            
+            if status == "enhancement_success":
+                ENHANCEMENT_SUCCESS.inc()
+                MODEL_BYPASS_VIA_ENHANCEMENT.inc()
+                self.trace_engine.add_step("DLSS_Enhancer", "model_bypassed", {"status": "success"})
+                return {
+                    "answer": enhanced, 
+                    "expert": "DLSS_Answer_Reconstruction", 
+                    "confidence": 0.88,
+                    "metrics": {"total_ms": round((time.time() - start_time) * 1000, 2)}
+                }
+
             # D. MICRO-MODEL SPECIALIZATION
             specialty = global_micro_router.route(query)
             if specialty:

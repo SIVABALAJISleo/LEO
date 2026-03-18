@@ -21,8 +21,14 @@ CACHE_HITS = PromCounter('hyper_cache_hits_total', 'Total prompt/semantic cache 
 # Next-Gen Layer Metrics (10-Layer Pipeline)
 GRAPH_HITS = PromCounter('hyper_graph_hits_total', 'Total Answer Graph Engine hits (Layer 1 bypass)')
 TEMPLATE_HITS = PromCounter('hyper_template_hits_total', 'Total template compiler hits (zero model cost)')
-ENHANCEMENT_USAGE = PromCounter('hyper_enhancement_usage_total', 'Total answer enhancement calls (DLSS layer)')
+
+# Enhancement Engine DLSS Metrics
+ENHANCEMENT_ATTEMPTS = PromCounter('hyper_enhancement_attempts_total', 'Total answered evaluated for enhancement')
+ENHANCEMENT_SUCCESS = PromCounter('hyper_enhancement_success_total', 'Total successful DLSS enhancements applied')
+MODEL_BYPASS_VIA_ENHANCEMENT = PromCounter('hyper_model_bypass_via_enhancement', 'Total large-model calls bypassed due to enhancement')
+
 MODEL_CALLS_TOTAL = PromCounter('hyper_model_calls_total', 'Total large model calls (last resort)')
+
 REASONING_REUSES = PromCounter('hyper_reasoning_reuses_total', 'Total reasoning memory reuses')
 EARLY_EXIT_TOTAL = PromCounter('hyper_early_exit_total', 'Total early-exit events from pipeline')
 TOKEN_SAVINGS = Gauge('hyper_token_savings_ratio', 'Average token reduction ratio from optimizer')

@@ -1,77 +1,57 @@
 """
-Answer Enhancement Engine (DLSS-style)
-Orchestrates the full enhancement pipeline:
-rough answer → quality check → expand → refine → return
-
-CRITICAL: Enhancement must NOT call any large models.
-All improvements are lightweight, deterministic, and sub-millisecond.
+Enhancer Module
+The core engine that transforms raw text through a cleaning, formatting,
+and structurally adaptive expansion pipeline.
 """
-import logging
-from typing import List, Optional, Dict, Any
-
-logger = logging.getLogger(__name__)
-
+from typing import List, Optional
+from backend.enhancement.formatter import Formatter
+from backend.enhancement.context_expander import ContextExpander
+from backend.enhancement.templates import Templates
 
 class AnswerEnhancer:
     """
-    Master enhancer that orchestrates quality estimation, expansion, and refinement.
-    Analogous to GPU DLSS: takes a "low-res" answer and upscales it without re-rendering.
+    Applies the actual textual transformations to reconstruct a better answer.
     """
 
     def __init__(self):
-        from backend.enhancement.quality_estimator import global_quality_estimator
-        from backend.enhancement.expander import global_expander
-        from backend.enhancement.refiner import global_refiner
-        self.quality = global_quality_estimator
-        self.expander = global_expander
-        self.refiner = global_refiner
+        self.formatter = Formatter()
+        self.expander = ContextExpander()
+        self.templates = Templates()
 
-    def enhance(
-        self,
-        answer: str,
-        query: str = "",
-        context_docs: Optional[List[str]] = None,
-    ) -> Dict[str, Any]:
+    def enhance(self, answer: str, query: str, context_docs: Optional[List[str]] = None, intent: str = "general") -> str:
         """
-        Full enhancement pipeline. Returns enhanced answer and quality metadata.
+        Executes the multi-stage enhancement sequence.
+         RAW -> CLEAN -> STRUCTURE/TEMPLATE -> EXPAND -> FORMAT -> FINAL
         """
-        # Step 1: Estimate quality
-        quality_report = self.quality.estimate(answer, query)
+        if not answer:
+            return ""
 
-        if not quality_report["needs_enhancement"]:
-            logger.debug("enhancement_skipped: quality sufficient")
-            return {
-                "answer": answer,
-                "enhanced": False,
-                "quality_score": quality_report["score"],
-            }
+        # 1. Clean
+        text = self.clean(answer)
 
-        issues = quality_report["issues"]
-        enhanced = answer
+        # 2. Template / Structure (Adaptive Enhancement)
+        text = self.structure(text, query, intent)
 
-        # Step 2: Expand if too short or vague
-        if context_docs and ("too_short" in issues or "vague" in issues):
-            enhanced = self.expander.expand(enhanced, context_docs, issues)
+        # 3. Context Expansion (Context-Aware Expansion)
+        text = self.expand(text, query, context_docs)
 
-        # Step 3: Refine for grammar and clarity
-        enhanced = self.refiner.refine(enhanced, issues)
+        # 4. Final Format
+        text = self.format(text)
 
-        # Step 4: Re-estimate quality post-enhancement
-        final_quality = self.quality.estimate(enhanced, query)
+        return text
 
-        logger.info(
-            f"enhancement_complete: "
-            f"score_before={quality_report['score']} "
-            f"score_after={final_quality['score']} "
-            f"issues={issues}"
-        )
+    def clean(self, text: str) -> str:
+        """Basic garbage removal."""
+        return str(text).strip()
 
-        return {
-            "answer": enhanced,
-            "enhanced": True,
-            "quality_score": final_quality["score"],
-            "issues_fixed": issues,
-        }
+    def structure(self, text: str, query: str, intent: str) -> str:
+        """Applies adaptive intent-based structural templates."""
+        return self.templates.apply_template(text, query, intent)
 
+    def expand(self, text: str, query: str, context_docs: Optional[List[str]] = None) -> str:
+        """Injects contextual elaboration if the answer is too short."""
+        return self.expander.expand(text, query, context_docs)
 
-global_enhancer = AnswerEnhancer()
+    def format(self, text: str) -> str:
+        """Applies professional typography formatting."""
+        return self.formatter.format(text)
