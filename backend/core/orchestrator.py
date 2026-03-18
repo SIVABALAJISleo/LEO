@@ -20,7 +20,9 @@ from backend.shadow.conversation_tracker import global_tracker
 from backend.core.metrics import (
     PPE_HITS, SHADOW_HITS, MODEL_INVOCATIONS, RAG_HITS, MICRO_MODEL_HITS, CACHE_HITS,
     GRAPH_HITS, TEMPLATE_HITS, ENHANCEMENT_USAGE, MODEL_CALLS_TOTAL,
-    REASONING_REUSES, EARLY_EXIT_TOTAL, TOKEN_SAVINGS
+    REASONING_REUSES, EARLY_EXIT_TOTAL, TOKEN_SAVINGS,
+    CANONICAL_HITS, PRECOMPUTE_HITS, FAILURE_RATE, DOMAIN_REJECTIONS,
+    COST_FORCED_SAVES, LATENCY_SKIPS
 )
 from backend.analytics.query_logger import global_query_logger
 
@@ -42,6 +44,19 @@ from backend.optimization.token_optimizer import global_token_optimizer
 from backend.inference.early_exit import global_early_exit
 from backend.planner.execution_planner import global_execution_planner
 from backend.enhancement.enhancer import global_enhancer
+
+# Compute-Controlled System Imports (12-Module Architecture)
+from backend.domain.domain_guard import global_domain_guard
+from backend.normalization.query_shaper import global_query_shaper
+from backend.answers.canonical_store import global_canonical_store
+from backend.answers.diff_engine import global_diff_engine
+from backend.memory.global_memory import global_memory
+from backend.memory.failure_store import global_failure_store
+from backend.core.confidence import global_confidence_gate
+from backend.core.cost_controller import global_cost_controller
+from backend.core.latency_controller import global_latency_controller
+from backend.predictive.precompute_expander import global_precompute_expander
+from backend.predictive.user_profiler import global_user_profiler
 
 logger = logging.getLogger(__name__)
 
@@ -161,10 +176,55 @@ class UnifiedSaaSEngine:
     async def _process_core(self, query: str, request_id: str, tenant_id: str, workspace_id: str, start_time: float):
         logger.info(f"request_start: id={request_id} query={query} tenant={tenant_id}")
         self.trace_engine.add_step("Engine", "request_start", {"request_id": request_id, "query": query, "tenant_id": tenant_id})
-        
+
         # User ID extraction for session memory
         user_id = request_id.split("_")[1] if "_" in request_id else "default"
-        session_id = user_id  # Using user_id as session_id for continuity
+        session_id = user_id
+
+        # ============================================================
+        # COMPUTE-CTRL GATE 0: DOMAIN CONSTRAINT CHECK
+        # ============================================================
+        domain_result = global_domain_guard.enforce(query)
+        if not domain_result["allowed"]:
+            DOMAIN_REJECTIONS.inc()
+            redirect = domain_result.get("redirect", "Query outside supported domain.")
+            return self._wrap_response(redirect, "DOMAIN_REJECTED", start_time, 1.0)
+        # Use simplified query if domain guard simplified it
+        query = domain_result.get("simplified_query") or query
+
+        # ============================================================
+        # COMPUTE-CTRL GATE 1: QUERY SHAPING (collapse variations)
+        # ============================================================
+        shaped = global_query_shaper.shape(query)
+        shape_key = shaped["shape_key"]
+        global_user_profiler.record(user_id, query, shaped)
+
+        # ============================================================
+        # COMPUTE-CTRL GATE 2: COST + LATENCY CONTROL
+        # ============================================================
+        global_latency_controller.start_timer(request_id)
+        if global_cost_controller.should_force_cheap_path(shaped["complexity"]):
+            COST_FORCED_SAVES.inc()
+            logger.info(f"cost_forced_cheap: shape={shape_key}")
+
+        # ============================================================
+        # COMPUTE-CTRL GATE 3: CANONICAL STORE (HIGHEST PRIORITY)
+        # ============================================================
+        canonical_answer = global_canonical_store.lookup(shape_key)
+        if canonical_answer:
+            CANONICAL_HITS.inc()
+            global_cost_controller.record("canonical", request_id)
+            global_memory.log(query, canonical_answer, "CANONICAL", shape_key, 1.0,
+                              global_latency_controller.elapsed_ms(request_id))
+            return self._wrap_response(canonical_answer, "CANONICAL", start_time, 1.0)
+
+        # ============================================================
+        # COMPUTE-CTRL GATE 4: GLOBAL MEMORY LOOKUP (exact query reuse)
+        # ============================================================
+        mem_hit = global_memory.lookup(query)
+        if mem_hit:
+            global_cost_controller.record("canonical", request_id)
+            return self._wrap_response(mem_hit["answer"], "GLOBAL_MEMORY", start_time, mem_hit["confidence"])
 
         # ============================================================
         # NEXT-GEN LAYER 0: QUERY NORMALIZATION + EXECUTION PLANNING
@@ -172,11 +232,15 @@ class UnifiedSaaSEngine:
         normalized = global_normalizer.normalize(query)
         complexity = global_complexity_estimator.estimate(query, normalized)
         execution_plan = global_execution_planner.plan({**normalized, "complexity": complexity})
+        # Apply latency/cost filtering to plan
+        execution_plan = global_latency_controller.filter_plan(execution_plan, complexity)
+        if global_cost_controller.should_force_cheap_path(complexity):
+            execution_plan = global_cost_controller.force_skip_layers(execution_plan)
         self.trace_engine.add_step("Normalizer", "query_normalized", {
             "intent": normalized["intent"],
             "entity": normalized["entity"],
             "complexity": complexity,
-            "plan": execution_plan[:4],  # Log first 4 layers
+            "plan": execution_plan[:4],
         })
 
         # ============================================================

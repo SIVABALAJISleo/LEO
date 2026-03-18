@@ -26,3 +26,11 @@ MODEL_CALLS_TOTAL = PromCounter('hyper_model_calls_total', 'Total large model ca
 REASONING_REUSES = PromCounter('hyper_reasoning_reuses_total', 'Total reasoning memory reuses')
 EARLY_EXIT_TOTAL = PromCounter('hyper_early_exit_total', 'Total early-exit events from pipeline')
 TOKEN_SAVINGS = Gauge('hyper_token_savings_ratio', 'Average token reduction ratio from optimizer')
+
+# Compute-Controlled System Metrics (12-Module Architecture)
+CANONICAL_HITS = PromCounter('hyper_canonical_hits_total', 'Total canonical answer store hits (highest priority)')
+PRECOMPUTE_HITS = PromCounter('hyper_precompute_hits_total', 'Total precomputed answer hits')
+FAILURE_RATE = Gauge('hyper_failure_rate', 'Rate of pipeline failures falling through to large model')
+DOMAIN_REJECTIONS = PromCounter('hyper_domain_rejections_total', 'Total out-of-domain query rejections')
+COST_FORCED_SAVES = PromCounter('hyper_cost_forced_saves_total', 'Total savings forced by cost controller')
+LATENCY_SKIPS = PromCounter('hyper_latency_skips_total', 'Total layer skips by latency controller')
