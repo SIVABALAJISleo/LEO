@@ -17,9 +17,8 @@ from backend.core.security import setup_cors, verify_token
 from backend.core.logging import setup_logging, logger as struct_logger
 from backend.core.request_queue import global_request_queue
 from backend.core.metrics import (
-    REQUEST_TIME, CPU_USAGE, GPU_USAGE, PPE_HITS, SHADOW_HITS, TWIN_HITS,
     MODEL_INVOCATIONS, AVOIDANCE_RATIO, GPU_COST_SAVED, RAG_HITS,
-    MICRO_MODEL_HITS, CACHE_HITS
+    MICRO_MODEL_HITS, CACHE_HITS, COST_SAVED_TOTAL, ENHANCEMENT_HITS
 )
 
 # Initialize
@@ -49,6 +48,13 @@ class StartupQuery(BaseModel):
 async def api_query(request: Request, data: StartupQuery, token: dict = Depends(verify_token)):
     user_id = token.get("uid")
     tenant_id = token.get("tenant_id", "default")
+    
+    from backend.core.usage_metering import global_usage_meter
+    if not global_usage_meter.check_limit(user_id, "free"): # Default to free for legacy
+        from fastapi import HTTPException
+        raise HTTPException(status_code=429, detail="API Limit Exceeded. Upgrade to SaaS Pro.")
+        
+    start_time = time.time()
     request_id = f"API_{user_id}_{uuid.uuid4().hex[:8]}"
     
     result = await hyper_engine.process(
@@ -57,13 +63,53 @@ async def api_query(request: Request, data: StartupQuery, token: dict = Depends(
         tenant_id=tenant_id, 
         workspace_id=data.workspace_id
     )
+    
+    global_usage_meter.record_usage(user_id)
+    
     return {
-        "answer": result["result"],
-        "source": result["mode"],
-        "confidence": result["confidence"],
-        "latency_ms": result["latency_ms"],
-        "compute_cost_avoided": result["compute_cost_avoided"]
+        "answer": result.get("answer") or result.get("result"),
+        "source": result.get("source") or result.get("mode"),
+        "confidence": result.get("confidence", 0.0),
+        "latency_ms": int((time.time() - start_time) * 1000),
+        "cost_saved": result.get("cost_saved", 0.0)
     }
+
+# --- SaaS Optimization API (Phase 8) ---
+
+class OptimizeRequest(BaseModel):
+    query: str
+    tier: str = "free"
+
+@app.post("/api/v1/optimize", tags=["product"])
+async def api_optimize(request: Request, data: OptimizeRequest, token: dict = Depends(verify_token)):
+    user_id = token.get("uid")
+    tenant_id = token.get("tenant_id", "default")
+    
+    from backend.core.usage_metering import global_usage_meter
+    if not global_usage_meter.check_limit(user_id, data.tier):
+        from fastapi import HTTPException
+        raise HTTPException(status_code=429, detail="SaaS Tier Limit Exceeded")
+    
+    start_time = time.time()
+    request_id = f"OPT_{user_id}_{uuid.uuid4().hex[:8]}"
+    
+    result = await hyper_engine.process(
+        data.query, 
+        request_id, 
+        tenant_id=tenant_id
+    )
+    
+    global_usage_meter.record_usage(user_id)
+    
+    return {
+        "answer": result.get("answer") or result.get("result"),
+        "confidence": result.get("confidence", 0.0),
+        "latency_ms": int((time.time() - start_time) * 1000),
+        "source": result.get("source", "MODEL_LADDER"),
+        "model_used": "hyper_optimization" if result.get("cost_saved") else "large_model_fallback",
+        "cost_saved": result.get("cost_saved", 0.0)
+    }
+
 
 @app.get("/api/v1/analytics/{workspace_id}", tags=["product"])
 async def get_analytics(workspace_id: str, token: dict = Depends(verify_token)):

@@ -30,7 +30,13 @@ MODEL_BYPASS_VIA_ENHANCEMENT = PromCounter('hyper_model_bypass_via_enhancement',
 # Adaptive Intelligence Controller (AIC) Metrics
 AIC_SKIP_TOTAL = PromCounter('hyper_aic_skip_total', 'Total skips governed by dynamic AIC policy')
 AIC_ESCALATION_TOTAL = PromCounter('hyper_aic_escalation_total', 'Total model escalations mandated by dynamic AIC policy')
-INFERENCE_AVOIDANCE_RATIO = Gauge('hyper_inference_avoidance_ratio', 'Calculated dynamic inference avoidance ratio')
+INFERENCE_AVOIDANCE_RATIO = Gauge('hyper_inference_avoidance_ratio_v2', 'Calculated dynamic inference avoidance ratio')
+
+# SaaS Optimization Metrics
+COST_SAVED_TOTAL = PromCounter('hyper_cost_saved_total', 'Total cumulative cost saved in USD')
+ENHANCEMENT_HITS = PromCounter('hyper_enhancement_hits_total', 'Total successful AEE enhancements')
+FUSION_HITS = PromCounter('hyper_fusion_hits_total', 'Total successful multi-source a-fusion events')
+CONFIDENCE_BYPASS_RATE = Gauge('hyper_confidence_bypass_rate', 'Real-time rate of confidence-based model bypasses')
 
 MODEL_CALLS_TOTAL = PromCounter('hyper_model_calls_total', 'Total large model calls (last resort)')
 

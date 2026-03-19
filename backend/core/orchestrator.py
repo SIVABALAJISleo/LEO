@@ -19,10 +19,12 @@ from backend.shadow.shadow_worker import global_shadow_worker
 from backend.shadow.conversation_tracker import global_tracker
 from backend.core.metrics import (
     PPE_HITS, SHADOW_HITS, MODEL_INVOCATIONS, RAG_HITS, MICRO_MODEL_HITS, CACHE_HITS,
-    GRAPH_HITS, TEMPLATE_HITS, ENHANCEMENT_USAGE, MODEL_CALLS_TOTAL,
+    GRAPH_HITS, TEMPLATE_HITS, MODEL_CALLS_TOTAL,
     REASONING_REUSES, EARLY_EXIT_TOTAL, TOKEN_SAVINGS,
     CANONICAL_HITS, PRECOMPUTE_HITS, FAILURE_RATE, DOMAIN_REJECTIONS,
-    COST_FORCED_SAVES, LATENCY_SKIPS
+    COST_FORCED_SAVES, LATENCY_SKIPS, AVOIDANCE_RATIO, GPU_COST_SAVED,
+    COST_SAVED_TOTAL, ENHANCEMENT_HITS, FUSION_HITS, CONFIDENCE_BYPASS_RATE,
+    AIC_ESCALATION_TOTAL, ENHANCEMENT_ATTEMPTS, ENHANCEMENT_SUCCESS, MODEL_BYPASS_VIA_ENHANCEMENT
 )
 from backend.analytics.query_logger import global_query_logger
 
@@ -57,6 +59,15 @@ from backend.core.cost_controller import global_cost_controller
 from backend.core.latency_controller import global_latency_controller
 from backend.predictive.precompute_expander import global_precompute_expander
 from backend.predictive.user_profiler import global_user_profiler
+
+# SaaS Optimization Engine Imports (Phase 8-10)
+from backend.enhancement.answer_fusion import global_answer_fusion
+from backend.enhancement.answer_enhancer import global_aee
+from backend.enhancement.temporal_memory import global_temporal_memory
+from backend.intelligence.confidence_engine import global_acce
+from backend.intelligence.feedback_store import global_feedback_store
+from backend.core.cost_tracker import global_cost_tracker
+from backend.core.usage_metering import global_usage_meter
 
 logger = logging.getLogger(__name__)
 
@@ -342,70 +353,82 @@ class UnifiedSaaSEngine:
             if planned_ans:
                 return {"answer": planned_ans, "expert": "planner", "confidence": 0.95}
 
-            # B. Retrieval Step with Tenant Isolation & Timing
+            # ============================================================
+            # SAAS OPTIMIZATION PIPELINE: Multi-source -> Fusion -> Enhancement -> ACCE
+            # ============================================================
+            
+            # 1. Multi-source Retrieval
             retrieval_start = time.time()
             context_nodes = self.rag.retrieve(query, tenant_id=tenant_id)
-            RAG_HITS.inc()
             retrieval_time = time.time() - retrieval_start
-            
-            # C. CONTEXT COMPRESSION
             raw_context = [n["content"] for n in context_nodes]
+            from backend.rag.context_compression import global_compressor
             compressed_context = global_compressor.compress(raw_context)
-            self.trace_engine.add_step("RAG", "context_compressed", {"original_len": len(" ".join(raw_context))})
 
-            # DLSS + AIC INTERCEPTION: Dynamic routing vs standard model escalation
-            from backend.enhancement.enhancement_pipeline import global_enhancement_pipeline
-            from backend.intelligence.controller import global_adaptive_controller
-            from backend.enhancement.quality_scorer import QualityScorer
-            from backend.enhancement.confidence_estimator import ConfidenceEstimator
-            from backend.core.metrics import ENHANCEMENT_ATTEMPTS, ENHANCEMENT_SUCCESS, MODEL_BYPASS_VIA_ENHANCEMENT
-            from backend.core.metrics import AIC_SKIP_TOTAL, AIC_ESCALATION_TOTAL, INFERENCE_AVOIDANCE_RATIO
-            
-            ENHANCEMENT_ATTEMPTS.inc()
-            
-            intent = normalized.get("intent", "general") if 'normalized' in locals() else "general"
-            enhanced_answer, status = global_enhancement_pipeline.run(compressed_context, query, raw_context, intent)
-            
-            features = {
-                "quality": QualityScorer().score(compressed_context),
-                "confidence": ConfidenceEstimator().estimate(compressed_context),
-                "cache_hit": 1  # We consider a successful RAG extraction a 'hit'
+            sources = {
+                "cache": self.semantic_cache.get(f"sem:{query}")["result"] if self.semantic_cache.get(f"sem:{query}") else None,
+                "rag": compressed_context,
+                "graph": global_age.lookup(normalized, tenant_id) or ""
             }
             
-            decision = global_adaptive_controller.route(features)
+            # 2. Answer Fusion
+            fused_base = global_answer_fusion.fuse(sources)
+            if fused_base: FUSION_HITS.inc()
+
+            # 3. Answer Enhancement (with Temporal Memory context)
+            user_context = global_temporal_memory.get_context(user_id)
+            enhanced = global_aee.enhance(fused_base, query, user_context)
+            ENHANCEMENT_HITS.inc()
+            ENHANCEMENT_ATTEMPTS.inc()
             
-            if decision in ["SKIP_MODEL", "ENHANCE"]:
+            # 4. Adaptive Confidence Calibration (ACCE)
+            conf_score = global_acce.compute_score(
+                source_weight=0.9 if sources["cache"] else 0.6,
+                answer_quality=0.8,
+                structure_score=0.9
+            )
+            CONFIDENCE_BYPASS_RATE.set(conf_score)
+            
+            threshold = global_feedback_store.get_threshold()
+            
+            if not global_acce.should_escalate(conf_score, threshold):
+                # SUCCESS: Bypass Model Ladder
+                savings = global_cost_tracker.estimate_savings(enhanced, "hyper_optimization")
+                COST_SAVED_TOTAL.inc(savings)
                 ENHANCEMENT_SUCCESS.inc()
                 MODEL_BYPASS_VIA_ENHANCEMENT.inc()
-                AIC_SKIP_TOTAL.inc()
                 
-                # Update moving average telemetry (roughly 95%) 
-                INFERENCE_AVOIDANCE_RATIO.set(0.95)
+                # Update temporal memory and feedback
+                global_temporal_memory.store(user_id, enhanced)
+                global_feedback_store.log_event(query, conf_score, success=True)
                 
-                self.trace_engine.add_step("AIC_Router", decision, {"status": "model_bypassed"})
-                
-                # Collect feedback simulating immediate success from the user
-                global_adaptive_controller.process_feedback(query, enhanced_answer, success=True, fallback_triggered=False)
+                self.trace_engine.add_step("SaaS_Optimizer", "bypass_success", {"savings": savings})
                 
                 return {
-                    "answer": enhanced_answer, 
-                    "expert": f"AIC_Bypass_{decision}", 
-                    "confidence": 0.88 if decision == "ENHANCE" else 0.95,
-                    "metrics": {"total_ms": round((time.time() - start_time) * 1000, 2)}
+                    "answer": enhanced,
+                    "confidence": conf_score,
+                    "expert": "SaaS_Optimization_Engine",
+                    "cost_saved": savings,
+                    "source": "AEE_Enhancement_Bypass"
                 }
-                
+
+            # FAIL: Escalate to Model Ladder
+            global_feedback_store.log_event(query, conf_score, success=False)
             AIC_ESCALATION_TOTAL.inc()
-            INFERENCE_AVOIDANCE_RATIO.set(0.88) # Drop if we hit escalation
-            
-            # Simulate negative feedback for the tight coupling
-            global_adaptive_controller.process_feedback(query, compressed_context, success=False, fallback_triggered=True)
 
             # D. MICRO-MODEL SPECIALIZATION
             specialty = global_micro_router.route(query)
             if specialty:
                 MICRO_MODEL_HITS.inc()
                 ans = await global_micro_router.execute(query, specialty)
-                return {"answer": ans, "expert": specialty, "confidence": 0.98}
+                savings = global_cost_tracker.estimate_savings(ans, "tiny_model")
+                COST_SAVED_TOTAL.inc(savings)
+                return {
+                    "answer": ans, 
+                    "expert": specialty, 
+                    "confidence": 0.98,
+                    "cost_saved": savings
+                }
             
             # E. SPECULATIVE DECODING with DIGITAL TWIN
             reasoning_start = time.time()
@@ -439,21 +462,27 @@ class UnifiedSaaSEngine:
                 "tenant_id": tenant_id,
                 "steps": result_data.get("steps", []),
                 "metrics": {
-                    "retrieval_ms": round(retrieval_time * 1000, 2),
-                    "reasoning_ms": round(reasoning_time * 1000, 2),
-                    "guard_ms": round(guard_time * 1000, 2)
+                    "retrieval_ms": round(float(retrieval_time) * 1000, 2),
+                    "reasoning_ms": round(float(reasoning_time) * 1000, 2),
+                    "guard_ms": round(float(guard_time) * 1000, 2)
                 }
             })
             
+            final_savings = global_cost_tracker.estimate_savings(result_data["answer"], "small_model")
+            COST_SAVED_TOTAL.inc(final_savings)
+
             return {
                 "answer": result_data["answer"],
-                "confidence": final_confidence,
-                "expert": expert_type,
+                "confidence": grounding_score,
+                "latency_ms": int((time.time() - start_time) * 1000),
+                "expert": "reasoning_expert",
+                "cost_saved": final_savings,
+                "source": "Model_Ladder_Escalation",
                 "metrics": {
-                    "route_ms": round(route_time * 1000, 2),
-                    "retrieval_ms": round(retrieval_time * 1000, 2),
-                    "reasoning_ms": round(reasoning_time * 1000, 2),
-                    "guard_ms": round(guard_time * 1000, 2),
+                    "route_ms": round(float(route_time) * 1000, 2),
+                    "retrieval_ms": round(float(retrieval_time) * 1000, 2),
+                    "reasoning_ms": round(float(reasoning_time) * 1000, 2),
+                    "guard_ms": round(float(guard_time) * 1000, 2),
                     "total_ms": round((time.time() - start_time) * 1000, 2)
                 },
                 "trace": self.trace_engine.get_full_trace()
@@ -483,7 +512,8 @@ class UnifiedSaaSEngine:
             }
 
         # G. CONTINUOUS LEARNING
-        if result.get("confidence", 0) > 0.9:
+        confidence = float(result.get("confidence", 0))
+        if confidence > 0.9:
             await global_learning_engine.learn(
                 query, 
                 result["answer"], 
@@ -492,19 +522,21 @@ class UnifiedSaaSEngine:
                 workspace_id=workspace_id
             )
             # NEXT-GEN: Register high-confidence results into Answer Graph for future reuse
+            trace_data = result.get("trace", {})
+            steps = trace_data.get("steps", []) if isinstance(trace_data, dict) else []
             global_age.register_answer(
                 normalized_query=normalized,
                 answer=result["answer"],
-                confidence=result.get("confidence", 0.9),
-                steps=result.get("trace", {}).get("steps", []),
+                confidence=float(result.get("confidence", 0.9)),
+                steps=steps,
                 tenant_id=tenant_id,
             )
             # NEXT-GEN: Store reasoning steps for future path reuse
             global_reasoning_store.store(
                 query=query,
-                steps=result.get("trace", {}).get("steps", []),
+                steps=steps,
                 answer=result["answer"],
-                confidence=result.get("confidence", 0.9),
+                confidence=float(result.get("confidence", 0.9)),
             )
 
         # NEXT-GEN: POST-INFERENCE ANSWER ENHANCEMENT (DLSS Layer)
@@ -513,7 +545,7 @@ class UnifiedSaaSEngine:
             context_docs = [n.get("content", "") for n in self.rag.retrieve(query, tenant_id=tenant_id)] if result.get("mode") == "FULL_CALC" else []
             enhanced = global_enhancer.enhance(raw_answer, query, context_docs)
             if enhanced.get("enhanced"):
-                ENHANCEMENT_USAGE.inc()
+                ENHANCEMENT_SUCCESS.inc()
                 result["answer"] = enhanced["answer"]
                 result["quality_score"] = enhanced.get("quality_score", 0.9)
 
@@ -536,14 +568,14 @@ class UnifiedSaaSEngine:
         from backend.core.metering import record_ai_usage
         db = SessionLocal()
         try:
-            tokens = (len(query) + len(result.get("answer", ""))) // 4
+            tokens = (len(str(query)) + len(str(result.get("answer", "")))) // 4
             latency_ms = int((time.time() - start_time) * 1000)
             record_ai_usage(db, tenant_id, user_id, tokens, latency_ms)
         finally:
             db.close()
 
         # 9. AUTONOMOUS LEARNING (Phase 18 Feedback Loop)
-        if result.get("confidence", 0) > 0.92:
+        if float(result.get("confidence", 0)) > 0.92:
             # Save to Knowledge Graph / RAG
             await self.scheduler.schedule(
                 f"learn_{request_id}", 
