@@ -1,8 +1,9 @@
 {
     "cmake.sourceDirectory": "C:/Users/sivab/OneDrive/Documents/HYPER/remix-of-remix-of-remix-of-nvidia-inspired-design-main/remix-of-remix-of-remix-of-nvidia-inspired-design-main/backend/native",
+    "python.defaultInterpreterPath": "${workspaceFolder}/venv/Scripts/python.exe",
     "python.analysis.extraPaths": [
-        "./backend",
-        "."
+        ".",
+        "./backend"
     ],
     "python.analysis.autoSearchPaths": true,
     "python.analysis.diagnosticMode": "workspace",
