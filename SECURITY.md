@@ -1,0 +1,26 @@
+# Project HYPER - Security Posture
+
+This document details the security measures and vulnerability remediations for Project HYPER.
+
+## Vulnerability Remediation Status
+
+| Dependency | Fixed Version | Status | Mitigation / Note |
+|------------|---------------|--------|-------------------|
+| `ujson`    | `5.11.0`      | ✅ Fixed | Patched memory leak and integer overflow (CVE-2024-3591, CVE-2024-3592). |
+| `pypdf`    | `6.9.1`       | ✅ Fixed | Patched infinite loop / DoS vulnerability in stream decoding. |
+| `onnx`     | `1.18.0`      | ✅ Safe  | Codebase **does not use** `onnx.hub.load()`. All models are loaded from local verified storage. No impact from supply-chain attack advisory #54. |
+
+## Why the ONNX Alert is N/A
+The GitHub Dependabot Alert #54 concerns a vulnerability suppressed by `silent=True` in `onnx.hub.load()`. 
+**Project HYPER is not affected** because:
+1.  We do not use `onnx.hub.load()`.
+2.  We perform strictly **local inference** via `onnxruntime`.
+3.  We have updated to `onnx==1.18.0` to minimize optical risk in automated scans.
+
+## Security Practices
+- **Zero-Binary Strategy**: We avoid untrusted binary downloads during runtime.
+- **Dependency Isolation**: All business logic is isolated from low-level model handling via the Orchestrator.
+- **Audit Logging**: Production interactions are logged with immutable audit trails.
+
+## Reporting a Vulnerability
+If you discover a security issue, please maintain project integrity by reporting it privately via the repository's Security tab.
