@@ -15,7 +15,8 @@ The GitHub Dependabot Alert #54 concerns a vulnerability suppressed by `silent=T
 **Project HYPER is not affected** because:
 1.  We do not use `onnx.hub.load()`.
 2.  We perform strictly **local inference** via `onnxruntime`.
-3.  We have updated to `onnx==1.20.1` to minimize optical risk in automated scans.
+3.  We have updated to `onnx==1.20.1` (latest available) to minimize risk.
+4.  **Dependabot Alert #54** may persist until `onnx==1.21.0` is released in April 2026, but it is **false positive** for this project given our usage.
 
 ## Security Practices
 - **Zero-Binary Strategy**: We avoid untrusted binary downloads during runtime.

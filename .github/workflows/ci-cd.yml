@@ -122,8 +122,8 @@ jobs:
     needs: [test-backend, build-frontend, build-docker]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     env:
-      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-      RAILWAY_PUBLIC_URL: ${{ secrets.RAILWAY_PUBLIC_URL }}
+      RAILWAY_TOKEN: ${{ secrets['RAILWAY_TOKEN'] }}
+      RAILWAY_PUBLIC_URL: ${{ secrets['RAILWAY_PUBLIC_URL'] }}
     steps:
       - uses: actions/checkout@v4
       - name: Deployment to Railway
