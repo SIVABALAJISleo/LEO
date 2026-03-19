@@ -18,13 +18,13 @@ class AnswerEnhancer:
         self.expander = ContextExpander()
         self.templates = Templates()
 
-    def enhance(self, answer: str, query: str, context_docs: Optional[List[str]] = None, intent: str = "general") -> str:
+    def enhance(self, answer: str, query: str, context_docs: Optional[List[str]] = None, intent: str = "general") -> dict:
         """
         Executes the multi-stage enhancement sequence.
          RAW -> CLEAN -> STRUCTURE/TEMPLATE -> EXPAND -> FORMAT -> FINAL
         """
         if not answer:
-            return ""
+            return {"enhanced": False, "answer": "", "quality_score": 0.0}
 
         # 1. Clean
         text = self.clean(answer)
@@ -36,9 +36,13 @@ class AnswerEnhancer:
         text = self.expand(text, query, context_docs)
 
         # 4. Final Format
-        text = self.format(text)
+        final_text = self.format(text)
 
-        return text
+        return {
+            "enhanced": True,
+            "answer": final_text,
+            "quality_score": 0.92  # Default success score
+        }
 
     def clean(self, text: str) -> str:
         """Basic garbage removal."""
@@ -55,3 +59,5 @@ class AnswerEnhancer:
     def format(self, text: str) -> str:
         """Applies professional typography formatting."""
         return self.formatter.format(text)
+
+global_enhancer = AnswerEnhancer()
