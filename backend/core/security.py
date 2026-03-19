@@ -82,3 +82,23 @@ def setup_cors(app):
 
 # Standard alias for unified security checks
 verify_token = verify_firebase_token
+
+def patch_onnx_security():
+    """
+    CVE-2026-28500 Mitigation: 
+    Monkey-patches onnx.hub.load to prevent untrusted model loading via silent=True.
+    Project HYPER policy is strictly local inference only.
+    """
+    try:
+        import onnx.hub
+        def secure_load(*args, **kwargs):
+            raise RuntimeError(
+                "CRITICAL SECURITY BLOCK: onnx.hub.load() is disabled to prevent "
+                "supply-chain attacks (CVE-2026-28500). Use local models instead."
+            )
+        onnx.hub.load = secure_load
+    except (ImportError, AttributeError):
+        pass
+
+# Activate hardening and security guards
+patch_onnx_security()
