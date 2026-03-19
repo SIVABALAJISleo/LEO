@@ -18,7 +18,8 @@ from backend.core.logging import setup_logging, logger as struct_logger
 from backend.core.request_queue import global_request_queue
 from backend.core.metrics import (
     MODEL_INVOCATIONS, AVOIDANCE_RATIO, GPU_COST_SAVED, RAG_HITS,
-    MICRO_MODEL_HITS, CACHE_HITS, COST_SAVED_TOTAL, ENHANCEMENT_HITS
+    MICRO_MODEL_HITS, CACHE_HITS, COST_SAVED_TOTAL, ENHANCEMENT_HITS,
+    CPU_USAGE
 )
 
 # Initialize
