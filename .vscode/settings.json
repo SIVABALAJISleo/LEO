@@ -1,3 +1,10 @@
 {
-    "cmake.sourceDirectory": "C:/Users/sivab/OneDrive/Documents/HYPER/remix-of-remix-of-remix-of-nvidia-inspired-design-main/remix-of-remix-of-remix-of-nvidia-inspired-design-main/backend/native"
+    "cmake.sourceDirectory": "C:/Users/sivab/OneDrive/Documents/HYPER/remix-of-remix-of-remix-of-nvidia-inspired-design-main/remix-of-remix-of-remix-of-nvidia-inspired-design-main/backend/native",
+    "python.analysis.extraPaths": [
+        "./backend",
+        "."
+    ],
+    "python.analysis.autoSearchPaths": true,
+    "python.analysis.diagnosticMode": "workspace",
+    "python.analysis.typeCheckingMode": "basic"
 }
