@@ -9,6 +9,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME_LC: ""
 
 jobs:
 
@@ -79,8 +80,6 @@ jobs:
     name: Build Docker Image
     runs-on: ubuntu-latest
     needs: [test-backend, build-frontend]
-    env:
-      IMAGE_NAME_LC: ""
     permissions:
       contents: write
       packages: write
