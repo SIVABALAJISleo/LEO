@@ -128,8 +128,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Deployment to Railway
         continue-on-error: true
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        # Using job-level env for RAILWAY_TOKEN
         run: |
           npm install -g @railway/cli
           railway up --detach
