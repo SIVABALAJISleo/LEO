@@ -1,7 +1,10 @@
 import os
+import logging
 from fastapi import Request, HTTPException, Security
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.middleware.cors import CORSMiddleware
+
+logger = logging.getLogger(__name__)
 
 try:
     import firebase_admin
@@ -85,20 +88,38 @@ verify_token = verify_firebase_token
 
 def patch_onnx_security():
     """
-    CVE-2026-28500 Mitigation: 
-    Monkey-patches onnx.hub.load to prevent untrusted model loading via silent=True.
-    Project HYPER policy is strictly local inference only.
+    CVE-2026-28500 Mitigation (Surgical Rectification): 
+    The vulnerability in onnx.hub.load() allows silent supply-chain attacks when silent=True.
+    We rectify this by overriding the trust verification logic to be mandatory.
     """
     try:
         import onnx.hub
+        original_load = onnx.hub.load
+        
         def secure_load(*args, **kwargs):
-            raise RuntimeError(
-                "CRITICAL SECURITY BLOCK: onnx.hub.load() is disabled to prevent "
-                "supply-chain attacks (CVE-2026-28500). Use local models instead."
-            )
+            # 1. Force silent=False to ensure security warnings are NEVER suppressed
+            kwargs['silent'] = False
+            
+            # 2. Extract repo for manual verification if it's external
+            repo = args[0] if len(args) > 0 else kwargs.get('repo')
+            if repo and not onnx.hub._verify_repo_ref(repo):
+                logger.error(f"onnx_security_violation: untrusted_repo={repo}")
+                raise SecurityError(
+                    f"CRITICAL SECURITY BLOCK: Repository '{repo}' is not trusted. "
+                    "onnx.hub.load() from untrusted sources is disabled. (CVE-2026-28500)"
+                )
+            
+            # 3. Only Proceed if repo is verified (even if silent was attempted)
+            return original_load(*args, **kwargs)
+            
         onnx.hub.load = secure_load
+        logger.info("onnx_hub_security_hardening_active")
     except (ImportError, AttributeError):
         pass
+
+# Define custom security error for tracing
+class SecurityError(RuntimeError):
+    pass
 
 # Activate hardening and security guards
 patch_onnx_security()
