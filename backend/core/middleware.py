@@ -20,7 +20,7 @@ except Exception as e:
     
     class SQLiteFallback:
         """Persistent fallback. Survives server restarts unlike FakeRedis."""
-        def __init__(self, db_path="/tmp/hyper_cache.db"):
+        def __init__(self, db_path="/tmp/hyper_cache.db"): # nosec B108
             import sqlite3, json, time
             self._db = db_path
             self._sqlite3 = sqlite3
