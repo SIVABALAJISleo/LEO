@@ -48,39 +48,53 @@ class ConfidenceGate:
         self.weights = WEIGHTS.copy()
         self.source_scores = SOURCE_SCORES.copy()
 
-    def score(
-        self,
-        answer: str,
-        source: str = "RETRIEVAL",
-        intent: str = "default",
-        retrieval_sim: float = 0.7,
-        graph_match: float = 0.0,
-        historical_acc: float = 0.8,
-    ) -> Dict[str, Any]:
-        """
-        Returns weighted confidence score and routing decision.
-        Adjusts scoring logic based on intent (e.g., 'fact' vs 'opinion').
-        """
-        # 1. Answer Completeness Proxy
-        words = answer.split()
-        answer_len = min(len(words) / 30.0, 1.0) if intent != "definition" else min(len(words) / 15.0, 1.0)
-        
-        # 2. Source Reliability
-        source_rel = self.source_scores.get(source, 0.5)
-        
-        # 3. Dynamic Weight Adjustment (Focus more on retrieval for facts)
-        current_weights = self.weights.copy()
-        if intent in ["definition", "instruction"]:
-            current_weights["retrieval_similarity"] += 0.1
-            current_weights["graph_match_score"] -= 0.1
+    def record_feedback(self, source: str, was_correct: bool):
+        """Update source score using exponential moving average."""
+        import json, os
+        weights_path = "/tmp/confidence_weights.json"
+        try:
+            if os.path.exists(weights_path):
+                with open(weights_path) as f:
+                    data = json.load(f)
+            else:
+                data = {"source_scores": SOURCE_SCORES.copy(), "count": 0}
 
-        weighted = (
-            retrieval_sim * current_weights["retrieval_similarity"] +
-            graph_match   * current_weights["graph_match_score"] +
-            historical_acc * current_weights["historical_accuracy"] +
-            answer_len    * current_weights["answer_length_score"] +
-            source_rel    * current_weights["source_reliability"]
+            current = data["source_scores"].get(source, 0.7)
+            alpha = 0.1  # conservative learning rate
+            updated = (1 - alpha) * current + alpha * (1.0 if was_correct else 0.0)
+            data["source_scores"][source] = round(updated, 4)
+            data["count"] = data.get("count", 0) + 1
+
+            with open(weights_path, "w") as f:
+                json.dump(data, f)
+        except Exception as e:
+            import logging
+            logging.getLogger(__name__).warning(f"Could not update weights: {e}")
+
+    def score(self, answer, source="FULL_CALC", retrieval_similarity=0.5,
+              graph_match_score=0.0, historical_accuracy=0.5):
+        import json, os
+        weights_path = "/tmp/confidence_weights.json"
+        source_scores = SOURCE_SCORES.copy()
+        try:
+            if os.path.exists(weights_path):
+                with open(weights_path) as f:
+                    data = json.load(f)
+                    source_scores.update(data.get("source_scores", {}))
+        except Exception:
+            pass  # use defaults
+
+        answer_length_score = min(len(answer.split()) / 50.0, 1.0) if answer else 0.0
+        source_reliability = source_scores.get(source, 0.5)
+
+        raw = (
+            WEIGHTS["retrieval_similarity"] * retrieval_similarity +
+            WEIGHTS["graph_match_score"]    * graph_match_score +
+            WEIGHTS["historical_accuracy"]  * historical_accuracy +
+            WEIGHTS["answer_length_score"]  * answer_length_score +
+            WEIGHTS["source_reliability"]   * source_reliability
         )
+        return max(0.0, min(1.0, raw))
 
         decision = self._decide(weighted)
 

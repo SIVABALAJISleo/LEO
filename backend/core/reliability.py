@@ -61,18 +61,32 @@ class ReliabilityOrchestrator:
             logger.error(f"reliability_event: action={action_name} error={e}")
             return self._get_dynamic_fallback(action_name, query_metadata)
 
-    def _get_dynamic_fallback(self, action_name: str, metadata: Dict[str, Any]) -> Any:
-        """Returns a context-aware fallback based on query intent."""
-        intent = metadata.get("intent", "default")
-        entity = metadata.get("entity", "the requested item")
-        
-        # 1. Try Last Known Good if available and recently updated
-        if action_name in self.lkg_data:
-            return self.lkg_data[action_name]
-            
-        # 2. Apply Rule-based template
-        template = self.rules.get(intent, self.rules["default"])
-        try:
-            return template.format(entity=entity)
-        except:
-            return self.rules["default"]
+    async def _get_fallback(self, action_name: str, kwargs: dict) -> dict:
+        # Tier 1: Last Known Good (if < 5 minutes old)
+        lkg = self.lkg_data.get(action_name)
+        if lkg:
+            import time
+            age = time.time() - lkg.get("timestamp", 0) # Handle potential missing timestamp
+            if age < 300:
+                result = lkg.copy() if isinstance(lkg, dict) else {"result": lkg}
+                result["_fallback"] = "lkg"
+                return result
+
+        # Tier 2: Rule-based answer
+        query = kwargs.get("query", "") or kwargs.get("question", "")
+        if query:
+            return {
+                "answer": f"System is under high load. Your question '{query[:50]}...' has been queued.",
+                "source": "RULE_BASED_FALLBACK",
+                "confidence": 0.3,
+                "_fallback": "rule_based",
+            }
+
+        # Tier 3: Structured error (never a bare string)
+        return {
+            "answer": "Service temporarily unavailable. Please retry in 30 seconds.",
+            "source": "SYSTEM_FALLBACK",
+            "confidence": 0.0,
+            "_fallback": "system",
+            "retry_after": 30,
+        }

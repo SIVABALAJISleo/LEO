@@ -18,28 +18,50 @@ try:
 except Exception as e:
     logger.warning(f"Redis not available, using in-memory fallback. Error: {e}")
     
-    class FakeRedis:
-        def __init__(self):
-            self._storage = {}
-        
+    class SQLiteFallback:
+        """Persistent fallback. Survives server restarts unlike FakeRedis."""
+        def __init__(self, db_path="/tmp/hyper_cache.db"):
+            import sqlite3, json, time
+            self._db = db_path
+            self._sqlite3 = sqlite3
+            self._json = json
+            self._time = time
+            with sqlite3.connect(db_path) as c:
+                c.execute("CREATE TABLE IF NOT EXISTS cache (key TEXT PRIMARY KEY, value TEXT, expires_at REAL)")
+                c.commit()
+
         def set(self, key, value, ex=None):
-            self._storage[key] = value
+            import sqlite3, json, time
+            exp = (time.time() + ex) if ex else None
+            with sqlite3.connect(self._db) as c:
+                c.execute("INSERT OR REPLACE INTO cache VALUES (?,?,?)", (key, json.dumps(value), exp))
             return True
-        
+
         def setnx(self, key, value):
-            if key in self._storage:
+            if self.get(key) is not None:
                 return False
-            self._storage[key] = value
+            self.set(key, value)
             return True
-            
+
         def get(self, key):
-            return self._storage.get(key)
-            
+            import sqlite3, json, time
+            with sqlite3.connect(self._db) as c:
+                row = c.execute("SELECT value, expires_at FROM cache WHERE key=?", (key,)).fetchone()
+            if not row: return None
+            val, exp = row
+            if exp and time.time() > exp:
+                return None
+            return json.loads(val)
+
         def expire(self, key, seconds):
+            import sqlite3, time
+            with sqlite3.connect(self._db) as c:
+                c.execute("UPDATE cache SET expires_at=? WHERE key=?", (time.time()+seconds, key))
             return True
-            
-        def ping(self):
-            return True
+
+        def ping(self): return True
+
+    redis_client = SQLiteFallback()
 
 from starlette.middleware.base import BaseHTTPMiddleware
 from fastapi.responses import JSONResponse

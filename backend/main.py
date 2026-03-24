@@ -30,8 +30,8 @@ limiter = Limiter(key_func=get_remote_address)
 app = FastAPI(title="Project HYPER: Startup Edition")
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_middleware(MemoryGuardMiddleware, max_mem_percent=90.0)
 setup_cors(app)
-app.add_middleware(MemoryGuardMiddleware)
 
 @app.on_event("startup")
 async def startup_event():

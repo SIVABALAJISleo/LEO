@@ -27,7 +27,7 @@ class SemanticCanonicalEngine:
                 self.index = faiss.read_index(self.db_path)
                 if os.path.exists(self.metadata_path):
                     with open(self.metadata_path, "rb") as f:
-                        self.ids = pickle.load(f) # nosec B301 - trusted internal file, not user input
+                        self.ids = pickle.load(f) # nosec B301 - trusted internal file only
                 elif os.path.exists(self.metadata_path.replace(".json", ".pkl")):
                     # Migration: try to load old pickle if present (Safe since we created it locally)
                     import pickle # nosec B403
