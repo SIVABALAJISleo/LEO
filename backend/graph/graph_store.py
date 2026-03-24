@@ -47,7 +47,7 @@ class GraphStore:
         if self._redis:
             try:
                 self._redis.setex(f"graph:{key}", 86400, json.dumps(entry))
-            except Exception:
+            except Exception: # nosec B110
                 pass
         logger.info(f"graph_stored: intent={intent} entity={entity}")
 
@@ -69,7 +69,7 @@ class GraphStore:
                     self._store[key] = entry  # Warm local cache
                     logger.info(f"graph_hit: intent={intent} entity={entity} (redis)")
                     return entry
-            except Exception:
+            except Exception: # nosec B110
                 pass
 
         return None

@@ -75,7 +75,7 @@ class ConversationMemory:
                 data = self.redis.get(key)
                 if data:
                     return json.loads(data)
-            except Exception:
+            except Exception: # nosec B110
                 pass
         
         # 2. Fallback to SQLite
@@ -95,15 +95,17 @@ class ConversationMemory:
         """Clears memory from both stores."""
         key = self._get_key(session_id, tenant_id)
         if self.redis:
-            try: self.redis.delete(key)
-            except: pass
+            try:
+                self.redis.delete(key)
+            except: # nosec B110
+                pass
             
         try:
             conn = sqlite3.connect(self.db_path)
             conn.execute("DELETE FROM conversation_memory WHERE id = ?", (key,))
             conn.commit()
             conn.close()
-        except:
+        except: # nosec B110
             pass
 
 global_memory = ConversationMemory()

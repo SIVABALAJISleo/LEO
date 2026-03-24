@@ -54,7 +54,7 @@ class TFIDFLite:
                 
             for token in tokens:
                 seed = sum(ord(c) for c in token)
-                rs = np.random.RandomState(seed % 4294967295)
+                rs = np.random.RandomState(seed % 4294967295) # nosec B311
                 # Inplace addition to leverage memory locality
                 embeddings[i] += rs.normal(0, 0.1, self.dimension)
         

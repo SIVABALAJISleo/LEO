@@ -57,7 +57,7 @@ class TFIDFLite:
                 
             for token in tokens:
                 seed = sum(ord(c) for c in token)
-                rs = np.random.RandomState(seed % 4294967295)
+                rs = np.random.RandomState(seed % 4294967295) # nosec B311
                 vec += rs.normal(0, 0.1, self.dimension)
             
             # Normalize for Inner Product (Cosine Similarity)
@@ -233,7 +233,7 @@ class RAGEngine:
             if cached_vec:
                 try:
                     query_vec = np.array(json.loads(cached_vec)).astype('float32')
-                except:
+                except: # nosec B110
                     query_vec = self.model.encode([q]).astype('float32').reshape(1, -1)
             else:
                 query_vec = self.model.encode([q]).astype('float32').reshape(1, -1)

@@ -8,7 +8,7 @@ class ChaosEngine:
 
     def trigger(self):
         """Randomly raises an exception based on probability."""
-        if random.random() < self.failure_probability:
+        if random.random() < self.failure_probability: # nosec B311
             raise Exception("Simulated Chaos Failure")
 
 class IdempotencyManager:

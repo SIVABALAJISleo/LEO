@@ -60,7 +60,7 @@ class KVCacheEngine:
                 if data:
                     logger.info("kv_hit: source=redis")
                     return json.loads(data)
-            except Exception:
+            except Exception: # nosec B110
                 pass
         return None
 

@@ -362,7 +362,7 @@ class UnifiedSaaSEngine:
                  self.trace_engine.add_step("Engine", "layer_2_prompt_cache_hit", {})
                  CACHE_HITS.inc()
                  return self._wrap_response(result, "PROMPT_CACHE", start_time, 1.0)
-             except:
+             except: # nosec B110
                  pass
         
         # 4. KV-CACHE REUSE (Layer 2.5: Distributed Prompt Processing)

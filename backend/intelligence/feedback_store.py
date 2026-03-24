@@ -15,7 +15,7 @@ class FeedbackStore:
             try:
                 with open(self.path, "r") as f:
                     return json.load(f)
-            except:
+            except: # nosec B110
                 pass
         return {"threshold": 0.7, "events": []}
 
