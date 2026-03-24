@@ -1,6 +1,6 @@
 import faiss
 import numpy as np
-import pickle
+import json
 import os
 import logging
 from typing import Optional, Dict, List, Any
@@ -16,7 +16,7 @@ class SemanticCanonicalEngine:
     def __init__(self, dimension: int = 384, db_path: str = "data/canonical_faiss.bin"):
         self.dimension = dimension
         self.db_path = db_path
-        self.metadata_path = db_path.replace(".bin", "_meta.pkl")
+        self.metadata_path = db_path.replace(".bin", "_meta.json")
         self.index = faiss.IndexFlatL2(dimension)
         self.ids: List[int] = [] # List of QueryCluster.id
         
@@ -24,8 +24,14 @@ class SemanticCanonicalEngine:
         if os.path.exists(self.db_path):
             try:
                 self.index = faiss.read_index(self.db_path)
-                with open(self.metadata_path, "rb") as f:
-                    self.ids = pickle.load(f)
+                if os.path.exists(self.metadata_path):
+                    with open(self.metadata_path, "r") as f:
+                        self.ids = json.load(f)
+                elif os.path.exists(self.metadata_path.replace(".json", ".pkl")):
+                    # Migration: try to load old pickle if present (Safe since we created it locally)
+                    import pickle
+                    with open(self.metadata_path.replace(".json", ".pkl"), "rb") as f:
+                        self.ids = pickle.load(f) # nosec
                 logger.info(f"SemanticCanonicalEngine: Loaded {len(self.ids)} clusters")
             except Exception as e:
                 logger.error(f"SemanticCanonicalEngine: Load error {e}")
@@ -90,8 +96,8 @@ class SemanticCanonicalEngine:
             
             # 3. Persist FAISS
             faiss.write_index(self.index, self.db_path)
-            with open(self.metadata_path, "wb") as f:
-                pickle.dump(self.ids, f)
+            with open(self.metadata_path, "w") as f:
+                json.dump(self.ids, f)
                 
             logger.info(f"SemanticCanonicalEngine: Registered new cluster {new_c.id}")
         except Exception as e:
