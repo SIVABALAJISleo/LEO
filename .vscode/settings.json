@@ -3,7 +3,9 @@
     "python.defaultInterpreterPath": "${workspaceFolder}/venv/Scripts/python.exe",
     "python.analysis.extraPaths": [
         ".",
-        "./backend"
+        "./backend",
+        "./venv/Lib/site-packages",
+        "./venv_py311/Lib/site-packages"
     ],
     "python.analysis.autoSearchPaths": true,
     "python.analysis.diagnosticMode": "workspace",

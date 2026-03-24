@@ -5,13 +5,14 @@
     "extraPaths": [
         ".",
         "./backend",
-        "./venv/Lib/site-packages"
+        "./venv/Lib/site-packages",
+        "./venv_py311/Lib/site-packages"
     ],
     "executionEnvironments": [
         {
             "root": ".",
             "pythonPlatform": "Windows",
-            "extraPaths": ["."]
+            "extraPaths": [".", "./backend"]
         }
     ],
     "venvPath": ".",
