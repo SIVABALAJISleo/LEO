@@ -4,13 +4,15 @@ from backend.intelligence.rag import RAGEngine
 from backend.intelligence.reasoning import reasoning_expert
 from backend.performance.caching import MultiLevelCache, PredictiveEngine
 from backend.performance.memo import global_memo
-from backend.performance.scheduler import scheduler
+from backend.performance.scheduler import global_scheduler as scheduler
+from backend.performance.embedding_cache import global_embedding_cache
 from backend.core.reliability import CircuitBreaker, ReliabilityOrchestrator
 from backend.data_efficiency.probabilistic import BloomFilter
 import logging
 import time
 import asyncio
 import psutil
+import numpy as np
 from backend.core.prompt_cache import check_cache, save_cache
 from backend.predictive.answer_store import global_predictive_store
 from backend.predictive.predictor import global_predictor
@@ -22,8 +24,9 @@ from backend.core.metrics import (
     GRAPH_HITS, TEMPLATE_HITS, MODEL_CALLS_TOTAL,
     REASONING_REUSES, EARLY_EXIT_TOTAL, TOKEN_SAVINGS,
     CANONICAL_HITS, PRECOMPUTE_HITS, FAILURE_RATE, DOMAIN_REJECTIONS,
-    COST_FORCED_SAVES, LATENCY_SKIPS, AVOIDANCE_RATIO, GPU_COST_SAVED,
-    COST_SAVED_TOTAL, ENHANCEMENT_HITS, FUSION_HITS, CONFIDENCE_BYPASS_RATE,
+    COST_FORCED_SAVES, LATENCY_SKIPS, AVOIDANCE_RATIO,    MICRO_MODEL_HITS, CACHE_HITS, COST_SAVED_TOTAL, ENHANCEMENT_HITS,
+    CPU_USAGE, EMBEDDING_CACHE_HITS, TINY_MODEL_SUCCESS, LAST_RESORT_MODEL_USAGE,
+    MODEL_CALLS_TOTAL, MODEL_INVOCATIONS, FUSION_HITS, CONFIDENCE_BYPASS_RATE,
     AIC_ESCALATION_TOTAL, ENHANCEMENT_ATTEMPTS, ENHANCEMENT_SUCCESS, MODEL_BYPASS_VIA_ENHANCEMENT
 )
 from backend.analytics.query_logger import global_query_logger
@@ -59,6 +62,9 @@ from backend.core.cost_controller import global_cost_controller
 from backend.core.latency_controller import global_latency_controller
 from backend.predictive.precompute_expander import global_precompute_expander
 from backend.predictive.user_profiler import global_user_profiler
+from backend.intelligence.reasoning_templates import global_templates
+from backend.intelligence.delta_engine import global_delta_engine
+from backend.intelligence.tiny_model_guard import global_tiny_guard
 
 # SaaS Optimization Engine Imports (Phase 8-10)
 from backend.enhancement.answer_fusion import global_answer_fusion
@@ -68,6 +74,17 @@ from backend.intelligence.confidence_engine import global_acce
 from backend.intelligence.feedback_store import global_feedback_store
 from backend.core.cost_tracker import global_cost_tracker
 from backend.core.usage_metering import global_usage_meter
+
+# Phase 3: High-Avoidance Core
+try:
+    from backend.answers.semantic_canonical import global_semantic_canonical
+    from backend.answers.fragment_engine import global_fragment_composer
+    from backend.answers.delta_engine import global_delta_engine
+except ImportError:
+    # Handle if running from different root
+    from answers.semantic_canonical import global_semantic_canonical
+    from answers.fragment_engine import global_fragment_composer
+    from answers.delta_engine import global_delta_engine
 
 logger = logging.getLogger(__name__)
 
@@ -106,47 +123,53 @@ class UnifiedSaaSEngine:
             self.precompute_worker_started = True
             logger.info("orchestrator_background_workers_started")
         
-    async def _check_persistent_cluster(self, query: str, tenant_id: str) -> Optional[Dict[str, Any]]:
-        """Layer 2: SQL-backed Canonical Answer Reuse."""
-        from backend.core.database import SessionLocal, QueryCluster
-        from sqlalchemy import text
-        db = SessionLocal()
-        try:
-            # Simple hash check for direct hits; in a real scale, we'd use pgvector
-            import hashlib
-            h = hashlib.sha256(query.lower().strip().encode()).hexdigest()
-            cluster = db.query(QueryCluster).filter(QueryCluster.cluster_hash == h, QueryCluster.tenant_id == tenant_id).first()
-            if cluster:
-                cluster.use_count += 1
-                db.commit()
-                return {"answer": cluster.canonical_answer, "confidence": 0.95, "canonical": True}
-        except Exception as e:
-            logger.error(f"persistent_cluster_error: {e}")
-        finally:
-            db.close()
-        return None
+    async def _check_persistent_cluster(self, query: str, tenant_id: str, query_emb: Optional[np.ndarray] = None) -> Optional[Dict[str, Any]]:
+        """Layer 2: Semantic Canonical Answer Reuse."""
+        if query_emb is None:
+            # Fallback to hash if no embedding (should be rare in new pipeline)
+            return await self._check_legacy_hash_cluster(query, tenant_id)
+            
+        return global_semantic_canonical.lookup(query_emb)
 
-    def _save_canonical_cluster(self, query: str, answer: str, tenant_id: str):
-        """Saves a high-confidence result as a canonical cluster."""
+    async def _check_legacy_hash_cluster(self, query: str, tenant_id: str) -> Optional[Dict[str, Any]]:
+        """Legacy hash-based lookup for backward compatibility."""
         from backend.core.database import SessionLocal, QueryCluster
         import hashlib
         db = SessionLocal()
         try:
             h = hashlib.sha256(query.lower().strip().encode()).hexdigest()
-            exists = db.query(QueryCluster).filter(QueryCluster.cluster_hash == h).first()
-            if not exists:
-                new_c = QueryCluster(
-                    cluster_hash=h,
-                    canonical_query=query,
-                    canonical_answer=answer,
-                    tenant_id=tenant_id
-                )
-                db.add(new_c)
+            cluster = db.query(QueryCluster).filter(QueryCluster.cluster_hash == h, QueryCluster.tenant_id == tenant_id).first()
+            if cluster:
+                cluster.use_count += 1
                 db.commit()
-        except Exception as e:
-             logger.error(f"save_cluster_error: {e}")
+                return {"answer": cluster.canonical_answer, "confidence": 0.98, "canonical": True}
         finally:
             db.close()
+        return None
+
+    def _save_canonical_cluster(self, query: str, answer: str, tenant_id: str, query_emb: Optional[np.ndarray] = None):
+        """Saves a high-confidence result as a canonical cluster."""
+        if query_emb is not None:
+             global_semantic_canonical.register(query, answer, query_emb, tenant_id)
+        else:
+             # Legacy fallback
+             from backend.core.database import SessionLocal, QueryCluster
+             import hashlib
+             db = SessionLocal()
+             try:
+                 h = hashlib.sha256(query.lower().strip().encode()).hexdigest()
+                 exists = db.query(QueryCluster).filter(QueryCluster.cluster_hash == h).first()
+                 if not exists:
+                     new_c = QueryCluster(
+                         cluster_hash=h,
+                         canonical_query=query,
+                         canonical_answer=answer,
+                         tenant_id=tenant_id
+                     )
+                     db.add(new_c)
+                     db.commit()
+             finally:
+                 db.close()
     async def process(self, query: str, request_id: str, tenant_id: str = "default", workspace_id: str = "default"):
         """Standard entry point with multi-tenant workspace isolation."""
         start_time = time.time()
@@ -187,6 +210,12 @@ class UnifiedSaaSEngine:
     async def _process_core(self, query: str, request_id: str, tenant_id: str, workspace_id: str, start_time: float):
         logger.info(f"request_start: id={request_id} query={query} tenant={tenant_id}")
         self.trace_engine.add_step("Engine", "request_start", {"request_id": request_id, "query": query, "tenant_id": tenant_id})
+
+        # --- OPTIMIZED EMBEDDING GENERATION (With Caching) ---
+        query_emb = global_embedding_cache.get(query)
+        if query_emb is None:
+            query_emb = self.rag.model.encode([query]).astype('float32')
+            global_embedding_cache.set(query, query_emb)
 
         # User ID extraction for session memory
         user_id = request_id.split("_")[1] if "_" in request_id else "default"
@@ -275,6 +304,29 @@ class UnifiedSaaSEngine:
             return self._wrap_response(reasoning_memory["answer"], "REASONING_MEMORY", start_time, reasoning_memory["confidence"])
 
         # ============================================================
+        # HYPERSCALER LAYER 1c: REASONING TEMPLATES (Zero-Cost Facts)
+        # ============================================================
+        # Attempt to fill templates using retrieved facts early
+        context_nodes = self.rag.retrieve(query, tenant_id=tenant_id)
+        raw_facts = [n["content"] for n in context_nodes[:2]]
+        template_answer = global_templates.fill(normalized["intent"], normalized["entity"], raw_facts)
+        if template_answer:
+            TEMPLATE_HITS.inc()
+            EARLY_EXIT_TOTAL.inc()
+            return self._wrap_response(template_answer, "REASONING_TEMPLATE", start_time, 0.90)
+
+        # ============================================================
+        # HYPERSCALER LAYER 1d: SEMANTIC DELTA (Partial Generation Bypass)
+        # ============================================================
+        # Check if we have a similar query that we can 'patch' instead of re-generating
+        similar_query = global_memory.find_similar(query, threshold=0.85)
+        if similar_query:
+            delta = global_delta_engine.calculate_delta(query_emb, similar_query["embedding"], similar_query["answer"])
+            if delta and delta["mode"] == "FULL_MATCH":
+                return self._wrap_response(delta["base_answer"], "SEMANTIC_DELTA_MATCH", start_time, 0.95)
+            # If partial, we continue but mark it for the execution phase to do a 'patch'
+
+        # ============================================================
         # NEXT-GEN LAYER 1c: TEMPLATE COMPILER (Zero-Cost Answers)
         # ============================================================
         if "template" in execution_plan:
@@ -334,11 +386,13 @@ class UnifiedSaaSEngine:
             CACHE_HITS.inc()
             return self._wrap_response(cached_data["result"], "SEMANTIC_CACHE", start_time, cached_data["confidence"])
 
-        # 6. PERSISTENT CLUSTER CHECK (Layer 4: Canonical Bypass)
-        cluster_data = await self._check_persistent_cluster(query, tenant_id)
-        if cluster_data:
-            self.trace_engine.add_step("Engine", "layer_4_cluster_hit", {"confidence": 0.95})
-            return self._wrap_response(cluster_data["answer"], "CANONICAL_CLUSTER", start_time, 0.95)
+        # ============================================================
+        # HYPERSCALER LAYER 2: TINY MODEL GUARD (First-Line CPU Defense)
+        # ============================================================
+        tiny_result = await global_tiny_guard.evaluate(query, self.model_manager, context=str(raw_facts))
+        if tiny_result:
+            MICRO_MODEL_HITS.inc()
+            return self._wrap_response(tiny_result["answer"], "TINY_MODEL_BYPASS", start_time, tiny_result["confidence"])
 
         # 5. EXPERT ROUTING & THOUGHT TRACE
         route_start = time.time()
@@ -374,6 +428,13 @@ class UnifiedSaaSEngine:
             # 2. Answer Fusion
             fused_base = global_answer_fusion.fuse(sources)
             if fused_base: FUSION_HITS.inc()
+
+            # PHASE 3: Fragment-Based Assembly (If base answer is weak or needs structure)
+            if not fused_base or len(fused_base.split()) < 20:
+                fragments = global_fragment_composer.compose({"definition": query, "examples": sources.get("rag") or ""})
+                if fragments:
+                    fused_base = fragments
+                    logger.info("fragment_composer_assembly_used")
 
             # 3. Answer Enhancement (with Temporal Memory context)
             user_context = global_temporal_memory.get_context(user_id)
@@ -457,14 +518,23 @@ class UnifiedSaaSEngine:
             
             final_confidence = (result_data.get("confidence", 0.5) + grounding_score) / 2
             
+            # PHASE 3: Store reasoning for future reuse
+            if final_confidence > 0.85:
+                global_reasoning_store.store(
+                    query, 
+                    result_data.get("steps", []), 
+                    result_data["answer"], 
+                    float(final_confidence)
+                )
+
             self.trace_engine.add_step("Expert", expert_type, {
                 "grounding_score": grounding_score,
                 "tenant_id": tenant_id,
                 "steps": result_data.get("steps", []),
                 "metrics": {
-                    "retrieval_ms": round(float(retrieval_time) * 1000, 2),
-                    "reasoning_ms": round(float(reasoning_time) * 1000, 2),
-                    "guard_ms": round(float(guard_time) * 1000, 2)
+                    "retrieval_ms": float(f"{float(retrieval_time) * 1000.0:.2f}"),
+                    "reasoning_ms": float(f"{float(reasoning_time) * 1000.0:.2f}"),
+                    "guard_ms": float(f"{float(guard_time) * 1000.0:.2f}")
                 }
             })
             
@@ -479,11 +549,11 @@ class UnifiedSaaSEngine:
                 "cost_saved": final_savings,
                 "source": "Model_Ladder_Escalation",
                 "metrics": {
-                    "route_ms": round(float(route_time) * 1000, 2),
-                    "retrieval_ms": round(float(retrieval_time) * 1000, 2),
-                    "reasoning_ms": round(float(reasoning_time) * 1000, 2),
-                    "guard_ms": round(float(guard_time) * 1000, 2),
-                    "total_ms": round((time.time() - start_time) * 1000, 2)
+                    "route_ms": float(f"{float(route_time) * 1000.0:.2f}"),
+                    "retrieval_ms": float(f"{float(retrieval_time) * 1000.0:.2f}"),
+                    "reasoning_ms": float(f"{float(reasoning_time) * 1000.0:.2f}"),
+                    "guard_ms": float(f"{float(guard_time) * 1000.0:.2f}"),
+                    "total_ms": float(f"{(float(time.time()) - float(start_time)) * 1000.0:.2f}")
                 },
                 "trace": self.trace_engine.get_full_trace()
             }
@@ -498,7 +568,7 @@ class UnifiedSaaSEngine:
         MODEL_INVOCATIONS.inc()
         # F. DISTRIBUTED INFERENCE ROUTING
         result = await global_inference_controller.route_job(
-            self.reliability.execute, f"expert_{expert_type}", execute_task_with_logging
+            self.reliability.execute, f"expert_{expert_type}", execute_task_with_logging, normalized
         )
 
         # Ensure result is a dictionary (handle reliability fallback string)
@@ -513,7 +583,7 @@ class UnifiedSaaSEngine:
 
         # G. CONTINUOUS LEARNING
         confidence = float(result.get("confidence", 0))
-        if confidence > 0.9:
+        if confidence > 0.7:
             await global_learning_engine.learn(
                 query, 
                 result["answer"], 
@@ -538,6 +608,8 @@ class UnifiedSaaSEngine:
                 answer=result["answer"],
                 confidence=float(result.get("confidence", 0.9)),
             )
+            # PHASE 3: Register in Semantic Canonical Engine
+            self._save_canonical_cluster(query, result["answer"], tenant_id, query_emb=query_emb)
 
         # NEXT-GEN: POST-INFERENCE ANSWER ENHANCEMENT (DLSS Layer)
         raw_answer = result.get("answer", "")
@@ -602,15 +674,18 @@ class UnifiedSaaSEngine:
         return self._wrap_response(result, "FULL_CALC", start_time, result.get("confidence", 0.9))
 
     async def process_stream(self, query: str, request_id: str, tenant_id: str = "default"):
-        """Streaming version of the orchestration process."""
+        """Streaming version that follows the full optimization pipeline."""
         start_time = time.time()
         
-        # 0. ADAPTIVE LOAD SHEDDING
-        cpu_usage = psutil.cpu_percent()
-        if cpu_usage > 90:
-            yield f"Error: System under heavy load ({cpu_usage}%)."
+        # 1. ATTEMPT FULL RESULT PRE-DETECTION (Bypass stream if possible)
+        # This is the 'holy grail' of avoidance: stream an already fully computed result instantly.
+        result = await self.process(query, request_id, tenant_id)
+        if result.get("compute_cost_avoided"):
+            logger.info("stream_fully_avoided")
+            yield result["result"]
             return
 
+        # 2. IF NOT AVOIDED, FALLBACK TO STREAMING REASONING
         user_id = request_id.split("_")[1] if "_" in request_id else "default"
         
         # 1. RETRIEVAL
@@ -650,8 +725,37 @@ class UnifiedSaaSEngine:
             "confidence": float(confidence),
             "trace": trace,
             "compute_cost_avoided": mode != "FULL_CALC",
-            "latency_ms": float(round((time.time() - start_time) * 1000, 2)),
+            "latency_ms": float(f"{(float(time.time()) - float(start_time)) * 1000.0:.2f}"),
             "timestamp": float(time.time())
         }
+
+    def get_telemetry(self) -> dict:
+        """
+        PHASE 5: Returns real-time inference avoidance telemetry.
+        Aggregates data from all optimization layers.
+        """
+        avoidance = global_memory.avoidance_stats()
+        reasoning_stats = global_reasoning_store.stats()
+        
+        total = avoidance.get("total", 0)
+        avoidance_ratio = avoidance.get("avoidance_ratio", 0.0)
+        
+        # Calculate real-time last-resort usage
+        total_calls = MODEL_INVOCATIONS._value.get() if hasattr(MODEL_INVOCATIONS, '_value') else 1
+        large_calls = MODEL_CALLS_TOTAL._value.get() if hasattr(MODEL_CALLS_TOTAL, '_value') else 0
+        usage_pct = (large_calls / total_calls) * 100 if total_calls > 0 else 0
+        LAST_RESORT_MODEL_USAGE.set(usage_pct)
+
+        return {
+            "inference_avoidance_ratio": avoidance_ratio,
+            "total_requests": total,
+            "avoidance_pct": float(f"{avoidance_ratio * 100.0:.1f}"),
+            "last_resort_usage_pct": float(f"{usage_pct:.2f}"),
+            "reasoning_cache_size": reasoning_stats.get("total_stored", 0),
+            "reasoning_reuses": reasoning_stats.get("total_reuses", 0),
+            "embedding_cache_hits": EMBEDDING_CACHE_HITS._value.get() if hasattr(EMBEDDING_CACHE_HITS, '_value') else 0,
+            "tiny_model_success_rate": TINY_MODEL_SUCCESS._value.get() / total if total > 0 else 0,
+        }
+
 
 hyper_engine = UnifiedSaaSEngine()

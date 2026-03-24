@@ -26,9 +26,12 @@ class ModelManager:
         """
         Retrieves a model based on tier: 'tiny', 'small', or 'large'.
         large -> Remote Model Server
-        small -> Local 1.1B Model
-        tiny -> Local 0.5B / Fast Mock
+        small -> Local 1.1B Model (TinyLlama)
+        tiny -> Local 0.5B Model (e.g., Qwen-0.5B) or super-fast quantization
         """
+        import psutil
+        total_cores = psutil.cpu_count(logical=False) or 4
+        
         async with self._lock:
             if not self.initialized:
                 server_url = os.getenv("MODEL_SERVER_URL")
@@ -38,34 +41,60 @@ class ModelManager:
                     self.remote_model = RemoteInference(server_url)
                 
                 from rag.inference import LocalInference
-                self.local_model = LocalInference() # Small (1.1B)
-                self.tiny_model = LocalInference(n_threads=2) # Simulated tiny
+                # Small: Use more threads and larger context
+                self.local_model = LocalInference(n_threads=max(total_cores - 2, 4))
+                
+                # Tiny: Sub-1B model or extreme quantization
+                # For now, we use the same model but with a 1-thread 'hyper-fast' profile
+                self.tiny_model = LocalInference(
+                    model_path=os.getenv("TINY_MODEL_PATH", "models/qwen-0.5b-chat.Q4_K_M.gguf"),
+                    n_threads=2
+                )
                 
                 self.initialized = True
         
         if tier == "large" and self.remote_model:
             return self.remote_model
         elif tier == "tiny":
+            # Fallback to local_model if tiny_model path doesn't exist yet
+            if not self.tiny_model.llm:
+                return self.local_model
             return self.tiny_model
         return self.local_model
 
-    async def generate_safe(self, prompt: str, max_tokens: int = 512):
+    async def generate_safe(self, prompt: str, max_tokens: int = 512, tier: str = "small", context: Optional[str] = None):
         """
-        Gated inference with version tracking and telemetry.
+        Gated inference with confidence estimation and tier-routing.
+        Returns: {"answer": str, "confidence": float, "tier": str}
         """
-        model = await self.get_model()
+        model = await self.get_model(tier=tier)
         start = time.time()
+        
+        # Inject context if provided
+        full_prompt = f"Context: {context}\n\nTask: {prompt}" if context else prompt
+        
         async with self._semaphore:
             try:
                 loop = asyncio.get_event_loop()
-                result = await loop.run_in_executor(None, model.generate, prompt, max_tokens)
+                raw_answer = await loop.run_in_executor(None, model.generate, full_prompt, max_tokens)
                 duration = time.time() - start
-                logger.info("inference_success", 
-                            version=getattr(self, 'current_version', 'unknown'), 
-                            latency_ms=round(duration*1000, 2))
-                return result
+                
+                # Simple Confidence Hack: Shorter, more assertive answers in tiny/small = higher confidence
+                # In a real system, we'd use logprobs
+                confidence = 0.75 if tier == "tiny" else 0.85
+                if "I don't know" in raw_answer or "not sure" in raw_answer:
+                    confidence = 0.3
+                
+                logger.info("inference_success", tier=tier, latency_ms=int(duration*1000), confidence=confidence)
+                
+                return {
+                    "answer": str(raw_answer),
+                    "confidence": confidence,
+                    "tier": tier,
+                    "latency_ms": int(duration*1000)
+                }
             except Exception as e:
-                logger.error("inference_failure", error=str(e), version=getattr(self, 'current_version', 'unknown'))
+                logger.error("inference_failure", error=str(e), tier=tier)
                 raise
 
     async def generate_stream(self, prompt: str, max_tokens: int = 512):

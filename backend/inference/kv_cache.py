@@ -13,25 +13,27 @@ class KVCacheEngine:
     Uses JSON serialization instead of pickle to prevent security vulnerabilities (B301).
     """
     def __init__(self, redis_url: str = "redis://localhost:6379/0"):
+        self._local_fallback: Dict[str, Any] = {}
         try:
             import redis as redis_lib
             self.redis = redis_lib.from_url(redis_url)
+            # Test connection
+            self.redis.ping()
         except Exception:
             self.redis = None
-            logger.warning("kv_cache: Redis unavailable, cache disabled.")
+            logger.warning("kv_cache: Redis unavailable, using local fallback.")
         self.semantic_cache = SemanticCache()
         self.ttl = 3600  # 1 hour TTL for KV states
 
     def store_kv_state(self, prompt: str, kv_state: Any, metadata: Optional[Dict[str, Any]] = None):
-        """
-        Stores KV states in Redis keyed by prompt hash.
-        Uses JSON serialization for security (avoids pickle).
-        """
+        prompt_hash = self._get_hash(prompt)
+        
+        # Always store in local fallback as a safety
+        self._local_fallback[f"kv_cache:{prompt_hash}"] = kv_state
+
         if not self.redis:
             return
         try:
-            # Serialize KV state safely using JSON
-            # numpy arrays are converted to lists for JSON compatibility
             if isinstance(kv_state, np.ndarray):
                 serialized_kv = json.dumps(kv_state.tolist())
             elif hasattr(kv_state, '__dict__'):
@@ -39,28 +41,30 @@ class KVCacheEngine:
             else:
                 serialized_kv = json.dumps(kv_state)
 
-            prompt_hash = self._get_hash(prompt)
             self.redis.setex(f"kv_cache:{prompt_hash}", self.ttl, serialized_kv)
-
             logger.info(f"kv_cache_stored: prompt_len={len(prompt)}")
         except Exception as e:
-            logger.error(f"kv_cache_store_failed: {e}")
+            logger.warning(f"kv_cache_store_failed (falling back to local): {e}")
 
     def lookup_kv_state(self, prompt: str) -> Optional[Any]:
-        """
-        Attempts to find a reusable KV state for the given prompt.
-        Uses JSON deserialization for security (avoids pickle).
-        """
-        if not self.redis:
-            return None
-        try:
-            prompt_hash = self._get_hash(prompt)
-            data = self.redis.get(f"kv_cache:{prompt_hash}")
-            if data:
-                logger.info("kv_cache_hit: prefix_reuse_active")
-                return json.loads(data)  # nosec - safe JSON deserialization
-        except Exception as e:
-            logger.error(f"kv_cache_lookup_failed: {e}")
+        prompt_hash = self._get_hash(prompt)
+        
+        # Check Redis if available
+        if self.redis:
+            try:
+                data = self.redis.get(f"kv_cache:{prompt_hash}")
+                if data:
+                    logger.info("kv_cache_hit: prefix_reuse_active (Redis)")
+                    return json.loads(data)
+            except Exception as e:
+                logger.warning(f"kv_cache_lookup_failed: {e}")
+        
+        # Check local fallback
+        local_data = self._local_fallback.get(f"kv_cache:{prompt_hash}")
+        if local_data is not None:
+            logger.info("kv_cache_hit: prefix_reuse_active (Local Fallback)")
+            return local_data
+
         return None
 
     def _get_hash(self, text: str) -> str:

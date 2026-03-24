@@ -38,22 +38,41 @@ class CircuitBreaker:
             self.state = "OPEN"
 
 class ReliabilityOrchestrator:
-    """Manages fallback strategies and recovery logic."""
+    """
+    Manages fallback strategies and recovery logic.
+    Supports 'Dynamic Graceful Degradation' using rule-based templates.
+    """
     def __init__(self, circuit_breaker: CircuitBreaker):
         self.cb = circuit_breaker
-        self.fallback_data = {}
+        self.lkg_data = {} # Last Known Good
+        self.rules = {
+            "definition": "Information about {entity} is currently being updated. Please try again in 30 seconds.",
+            "comparison": "The comparison between {entity} elements is temporarily unavailable.",
+            "default": "Service is under heavy load. Returning cached/simplified result."
+        }
 
-    async def execute(self, action_name: str, func: Callable, *args, **kwargs):
-        """Executes action with circuit breaking and fallback."""
+    async def execute(self, action_name: str, func: Callable, query_metadata: Dict[str, Any], *args, **kwargs):
+        """Executes action with circuit breaking and rule-based fallback."""
         try:
             result = await self.cb.call(func, *args, **kwargs)
-            # Store as Last Known Good (LKG)
-            self.fallback_data[action_name] = result
+            self.lkg_data[action_name] = result
             return result
         except Exception as e:
-            logger.error(f"Action '{action_name}' failed. Falling back.", {"error": str(e)})
-            return self._get_fallback(action_name)
+            logger.error(f"reliability_event: action={action_name} error={e}")
+            return self._get_dynamic_fallback(action_name, query_metadata)
 
-    def _get_fallback(self, action_name: str) -> Any:
-        """Returns LKG or a bounded estimation."""
-        return self.fallback_data.get(action_name, "Fallback: Service Temporarily Unavailable")
+    def _get_dynamic_fallback(self, action_name: str, metadata: Dict[str, Any]) -> Any:
+        """Returns a context-aware fallback based on query intent."""
+        intent = metadata.get("intent", "default")
+        entity = metadata.get("entity", "the requested item")
+        
+        # 1. Try Last Known Good if available and recently updated
+        if action_name in self.lkg_data:
+            return self.lkg_data[action_name]
+            
+        # 2. Apply Rule-based template
+        template = self.rules.get(intent, self.rules["default"])
+        try:
+            return template.format(entity=entity)
+        except:
+            return self.rules["default"]

@@ -51,3 +51,8 @@ FAILURE_RATE = Gauge('hyper_failure_rate', 'Rate of pipeline failures falling th
 DOMAIN_REJECTIONS = PromCounter('hyper_domain_rejections_total', 'Total out-of-domain query rejections')
 COST_FORCED_SAVES = PromCounter('hyper_cost_forced_saves_total', 'Total savings forced by cost controller')
 LATENCY_SKIPS = PromCounter('hyper_latency_skips_total', 'Total layer skips by latency controller')
+
+# Hyperscaler Performance Refinement
+EMBEDDING_CACHE_HITS = PromCounter('hyper_embedding_cache_hits_total', 'Total redundant encoding bypasses')
+TINY_MODEL_SUCCESS = PromCounter('hyper_tiny_model_success_total', 'Total queries resolved by CPU-first tiny models')
+LAST_RESORT_MODEL_USAGE = Gauge('hyper_last_resort_usage_percent', 'Current large model reliance percentage')

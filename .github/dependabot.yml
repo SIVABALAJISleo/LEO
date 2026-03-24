@@ -11,4 +11,7 @@ updates:
       # onnx.hub.load() is NOT used in this codebase. No patched version exists
       # for the hub.load() supply-chain advisory (CVE). Ignoring to silence false alert.
       - dependency-name: "onnx"
+      # opencv-python-headless 4.10+ depends on numpy 2.0, which causes massive conflicts
+      # with other ML libraries (llama-cpp, onnxruntime, etc.) pinned to numpy 1.26.
+      - dependency-name: "opencv-python-headless"
     open-pull-requests-limit: 5

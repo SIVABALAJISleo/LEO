@@ -8,12 +8,14 @@ except ImportError:
 logger = structlog.get_logger()
 
 class LocalInference:
-    def __init__(self, model_path: str = None):
+    def __init__(self, model_path: str = None, **kwargs):
         self.model_path = model_path or os.getenv("MODEL_PATH", "models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf")
         self.llm = None
         if Llama and os.path.exists(self.model_path):
             logger.info("loading_local_model", path=self.model_path)
-            self.llm = Llama(model_path=self.model_path, n_ctx=2048, n_threads=4)
+            # Use n_threads from kwargs if provided, else default to 4
+            n_threads = kwargs.get("n_threads", 4)
+            self.llm = Llama(model_path=self.model_path, n_ctx=2048, n_threads=n_threads)
         else:
             logger.warning("model_not_found_or_llama_cpp_missing", path=self.model_path)
 

@@ -16,6 +16,7 @@ from backend.core.orchestrator import hyper_engine
 from backend.core.security import setup_cors, verify_token
 from backend.core.logging import setup_logging, logger as struct_logger
 from backend.core.request_queue import global_request_queue
+from backend.core.middleware import MemoryGuardMiddleware
 from backend.core.metrics import (
     MODEL_INVOCATIONS, AVOIDANCE_RATIO, GPU_COST_SAVED, RAG_HITS,
     MICRO_MODEL_HITS, CACHE_HITS, COST_SAVED_TOTAL, ENHANCEMENT_HITS,
@@ -30,6 +31,7 @@ app = FastAPI(title="Project HYPER: Startup Edition")
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 setup_cors(app)
+app.add_middleware(MemoryGuardMiddleware)
 
 @app.on_event("startup")
 async def startup_event():
@@ -136,14 +138,18 @@ async def metrics():
     CPU_USAGE.set(psutil.cpu_percent())
     from backend.analytics.cost_monitor import global_cost_monitor
     stats = global_cost_monitor.calculate_savings("default")
-    AVOIDANCE_RATIO.set(stats.get("avoidance_ratio", 0))
+    
+    # Phase 5: Update Prometheus gauges with real avoidance data
+    telemetry = hyper_engine.get_telemetry()
+    AVOIDANCE_RATIO.set(telemetry.get("inference_avoidance_ratio", 0))
     GPU_COST_SAVED.set(stats.get("estimated_gpu_cost_saved", 0))
     
-    # Global Patterns Analysis (Phase 7)
-    from backend.analytics.query_patterns import global_pattern_engine
-    # Pattern detection logic would go here
-    
     return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
+
+@app.get("/api/v1/telemetry", tags=["observability"])
+async def get_telemetry():
+    """Phase 5: Real-time inference avoidance telemetry."""
+    return hyper_engine.get_telemetry()
 
 @app.get("/")
 async def root():

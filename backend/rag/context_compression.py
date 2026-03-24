@@ -41,7 +41,8 @@ class ContextCompressor:
             else:
                 break
                 
-        logger.info(f"context_compression_complete: reduction={1.0 - (len(compressed_text)/len(all_text)):.2%}")
+        reduction = 1.0 - (len(compressed_text)/len(all_text)) if all_text else 0.0
+        logger.info(f"context_compression_complete: reduction={reduction:.2%}")
         return compressed_text.strip()
 
 global_compressor = ContextCompressor()

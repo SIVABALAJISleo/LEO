@@ -57,6 +57,7 @@ class QueryCluster(Base):
     cluster_hash = Column(String, unique=True, index=True)
     canonical_query = Column(String)
     canonical_answer = Column(Text)
+    embedding = Column(LargeBinary) # Semantic vector for O(1) clustering
     tenant_id = Column(String, index=True)
     use_count = Column(Integer, default=1)
 

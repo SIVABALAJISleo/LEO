@@ -2,11 +2,19 @@
     "include": [
         "."
     ],
+    "extraPaths": [
+        ".",
+        "./backend",
+        "./venv/Lib/site-packages"
+    ],
     "executionEnvironments": [
         {
-            "root": "."
+            "root": ".",
+            "pythonPlatform": "Windows",
+            "extraPaths": ["."]
         }
     ],
     "venvPath": ".",
-    "venv": "venv"
+    "venv": "venv",
+    "pythonVersion": "3.11"
 }
