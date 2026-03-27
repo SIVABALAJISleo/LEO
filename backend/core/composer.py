@@ -61,8 +61,9 @@ class VideoCompositionEngine:
             bg = ColorClip(size=(1280, 720), color=(0, 0, 40), duration=duration)
             txt = TextClip(title, fontsize=70, color='white', font='Arial', duration=duration).set_position('center')
             
+            import tempfile
             video = CompositeVideoClip([bg, txt])
-            output_path = f"/tmp/composed_video_{hash(title)}.mp4"
+            output_path = os.path.join(tempfile.gettempdir(), f"composed_video_{hash(title)}.mp4")
             video.write_videofile(output_path, fps=24, codec="libx264", logger=None)
             
             with open(output_path, "rb") as f:

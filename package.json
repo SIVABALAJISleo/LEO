@@ -11,6 +11,10 @@
     "preview": "vite preview",
     "test": "vitest"
   },
+  "overrides": {
+    "picomatch": "^4.0.4",
+    "brace-expansion": "^5.0.5"
+  },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "^1.2.11",

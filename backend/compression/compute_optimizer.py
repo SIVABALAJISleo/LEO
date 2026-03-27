@@ -17,7 +17,7 @@ class ComputeOptimizer:
         """
         import hashlib
         # Hash query + context to uniquely identify computation
-        ctx_hash = hashlib.md5("".join(context).encode()).hexdigest()[:8]
+        ctx_hash = hashlib.sha256("".join(context).encode()).hexdigest()[:8]
         q_hash = hashlib.sha256(f"{query}_{ctx_hash}".encode()).hexdigest()
         
         if q_hash in self._execution_cache:

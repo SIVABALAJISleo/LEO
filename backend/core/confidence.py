@@ -96,23 +96,6 @@ class ConfidenceGate:
         )
         return max(0.0, min(1.0, raw))
 
-        decision = self._decide(weighted)
-
-        result = {
-            "score": float(f"{weighted:.3f}"),
-            "decision": decision,
-            "source": source,
-            "components": {
-                "retrieval_sim": retrieval_sim,
-                "graph_match": graph_match,
-                "historical_acc": historical_acc,
-                "answer_len": float(f"{answer_len:.2f}"),
-                "source_rel": source_rel,
-            },
-        }
-        logger.debug(f"confidence_gate: score={weighted:.3f} decision={decision} intent={intent}")
-        return result
-
     def _decide(self, score: float) -> str:
         if score >= MODEL_ESCALATION_THRESHOLD:
             return "ACCEPT"
