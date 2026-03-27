@@ -11,10 +11,11 @@ from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 
-from backend.core.database import init_db
-from backend.core.orchestrator import hyper_engine
-from backend.core.security import setup_cors, verify_token
-from backend.core.logging import setup_logging, logger as struct_logger
+# SECURITY: patch_onnx_security MUST be called before any other import that
+# might transitively load onnx.hub. This is the permanent mitigation for the
+# onnx.hub.load() silent supply-chain bypass (onnx <= 1.20.1, no upstream patch).
+from backend.core.security import setup_cors, verify_token, patch_onnx_security
+patch_onnx_security()  # Idempotent — safe to call multiple times
 from backend.core.request_queue import global_request_queue
 from backend.core.middleware import MemoryGuardMiddleware
 from backend.core.metrics import (

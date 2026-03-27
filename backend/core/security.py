@@ -86,40 +86,87 @@ def setup_cors(app):
 # Standard alias for unified security checks
 verify_token = verify_firebase_token
 
+
 def patch_onnx_security():
     """
-    CVE-2026-28500 Mitigation (Surgical Rectification): 
-    The vulnerability in onnx.hub.load() allows silent supply-chain attacks when silent=True.
-    We rectify this by overriding the trust verification logic to be mandatory.
+    PERMANENT CVE Mitigation — onnx.hub.load() silent supply-chain bypass.
+
+    Root cause: `if not _verify_repo_ref(repo) and not silent` means that
+    passing `silent=True` completely skips trust verification AND the SHA-256
+    manifest check (because manifest is attacker-controlled).
+
+    Fix strategy (defense-in-depth):
+      1. Monkey-patch `onnx.hub.load` to ALWAYS block untrusted repos, regardless
+         of the `silent` argument value. `silent` is stripped entirely.
+      2. Replace `onnx.hub._verify_repo_ref` with a strict allowlist so the
+         internal trust check cannot be influenced by manipulated manifests.
+      3. Log every call at WARNING level for audit trails.
+
+    Since no upstream patched version exists (onnx <= 1.20.1 affected),
+    this patch MUST run before any other module imports onnx.hub.
     """
     try:
-        import onnx.hub
-        original_load = onnx.hub.load
-        
-        def secure_load(*args, **kwargs):
-            # 1. Force silent=False to ensure security warnings are NEVER suppressed
-            kwargs['silent'] = False
-            
-            # 2. Extract repo for manual verification if it's external
-            repo = args[0] if len(args) > 0 else kwargs.get('repo')
-            if repo and not onnx.hub._verify_repo_ref(repo):
-                logger.error(f"onnx_security_violation: untrusted_repo={repo}")
-                raise SecurityError(
-                    f"CRITICAL SECURITY BLOCK: Repository '{repo}' is not trusted. "
-                    "onnx.hub.load() from untrusted sources is disabled. (CVE-2026-28500)"
-                )
-            
-            # 3. Only Proceed if repo is verified (even if silent was attempted)
-            return original_load(*args, **kwargs)
-            
-        onnx.hub.load = secure_load
-        logger.info("onnx_hub_security_hardening_active")
-    except (ImportError, AttributeError):
-        pass
+        import onnx.hub as _onnx_hub
 
-# Define custom security error for tracing
+        # --- (a) Allowlist-based repo verifier (replaces the broken one) ---
+        _OFFICIAL_REPOS = frozenset({
+            "onnx/models",
+        })
+
+        def _strict_verify_repo(repo: str) -> bool:
+            """Returns True only for repos on the official allowlist."""
+            clean = (repo or "").strip().lower().rstrip("/")
+            return clean in _OFFICIAL_REPOS
+
+        _onnx_hub._verify_repo_ref = _strict_verify_repo  # nosec B010 - intentional hardening
+
+        # --- (b) Replacement load() that enforces trust unconditionally ---
+        _original_load = _onnx_hub.load  # keep reference for official-repo use
+
+        def _secure_onnx_hub_load(*args, **kwargs):
+            # Strip `silent` entirely — security warnings must never be silenced.
+            kwargs.pop("silent", None)
+
+            # Determine repo from args signature: load(model, repo=...) or positional
+            repo = None
+            if len(args) >= 2:
+                repo = args[1]
+            elif "repo" in kwargs:
+                repo = kwargs["repo"]
+
+            if repo and not _strict_verify_repo(repo):
+                logger.error(
+                    "onnx_hub_load_blocked: untrusted repo=%s args=%s kwargs=%s",
+                    repo, args, {k: v for k, v in kwargs.items() if k != "silent"},
+                )
+                raise SecurityError(
+                    f"SECURITY BLOCK: onnx.hub.load() from untrusted repository "
+                    f"'{repo}' is permanently disabled. "
+                    f"Only repos in the official allowlist are permitted. "
+                    f"(Mitigation for onnx.hub silent supply-chain bypass, onnx <= 1.20.1)"
+                )
+
+            logger.warning(
+                "onnx_hub_load_called: repo=%s — allowed (official repo)", repo
+            )
+            return _original_load(*args, **kwargs)
+
+        _onnx_hub.load = _secure_onnx_hub_load
+        logger.info("onnx_hub_security_hardening_active: patch applied successfully")
+
+    except ImportError:
+        # onnx not installed — nothing to patch
+        pass
+    except AttributeError as exc:
+        # onnx version changed internal structure — log and continue safely
+        logger.warning("onnx_hub_security_hardening_skipped: %s", exc)
+
+
 class SecurityError(RuntimeError):
+    """Raised when a security policy is violated."""
     pass
 
-# Activate hardening and security guards
+
+# Apply the patch at import time so it takes effect before any other code
+# that might call onnx.hub.load().
 patch_onnx_security()

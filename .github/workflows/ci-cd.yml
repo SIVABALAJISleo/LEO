@@ -27,7 +27,26 @@ jobs:
       - name: Install dependencies
         run: pip install --upgrade pip && pip install -r requirements.txt pytest pytest-asyncio bandit flake8
       - name: Security Scan (Bandit)
-        run: bandit -r backend/ -ll
+        # bandit.toml in the repo root documents all skip rules with justification.
+        run: bandit -r backend/ -ll -c bandit.toml
+      - name: ONNX Supply-Chain Enforcement Check
+        # Permanent mitigation for onnx.hub.load() silent supply-chain bypass
+        # (onnx <= 1.20.1, no upstream patch available).
+        # Fails the build if raw onnx.hub.load() is called outside the approved
+        # security wrapper in backend/core/security.py.
+        run: |
+          VIOLATIONS=$(grep -rn "onnx\.hub\.load" backend/ \
+            --include="*.py" \
+            | grep -v "backend/core/security.py" || true)
+          if [ -n "$VIOLATIONS" ]; then
+            echo "SECURITY VIOLATION: Raw onnx.hub.load() call found outside the approved wrapper:"
+            echo "$VIOLATIONS"
+            echo ""
+            echo "All onnx.hub.load() calls MUST go through the secure wrapper in"
+            echo "backend/core/security.py::patch_onnx_security(). See SECURITY.md."
+            exit 1
+          fi
+          echo "ONNX supply-chain check PASSED — no raw onnx.hub.load() calls detected."
       - name: Linting (Flake8)
         run: flake8 backend/ --count --select=E9,F63,F7,F82 --show-source --statistics
       - name: Run backend tests

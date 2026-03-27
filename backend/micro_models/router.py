@@ -1,50 +1,43 @@
+﻿"""
+backend/micro_models/router.py
+Real micro-model router using llm_loader (no fake imports).
+"""
 import logging
-from typing import Optional, Dict, Any
+import asyncio
+from typing import Optional
+from backend.models.llm_loader import generate_response
 
 logger = logging.getLogger(__name__)
 
+
 class MicroModelRouter:
     """
-    Routes specialized intents (math, code, summary) to tiny, optimized models.
-    Avoids escalating to large models for simple specialized tasks.
+    Routes specialized intents (math, code, summary) to optimized generation.
+    Uses the real llm_loader (TinyLlama or fallback) instead of mocked models.
     """
-    def __init__(self):
-        # In a real system, these would be local llama-cpp or onnx models
-        self.specialties = {
-            "math": "MathBERT-Tiny",
-            "code": "CodeLlama-1b-Int8",
-            "summarization": "BART-Base-Distilled",
-            "classification": "BERT-Tiny"
-        }
-
     def route(self, query: str) -> Optional[str]:
-        query_lower = query.lower()
-        if any(w in query_lower for w in ["calculate", "math", "+", "-", "*", "/", "="]):
+        q = query.lower()
+        if any(w in q for w in ["calculate", "math", "solve", "+", "-", "*", "/", " = ", "sum of", "percentage"]):
             return "math"
-        if any(w in query_lower for w in ["summarize", "tl;dr", "shorten"]):
+        if any(w in q for w in ["summarize", "tl;dr", "shorten", "brief", "summary"]):
             return "summarization"
-        if any(w in query_lower for w in ["python", "javascript", "code", "function", "class"]):
+        if any(w in q for w in ["python", "javascript", "typescript", "code", "function", "class", "debug", "script"]):
             return "code"
         return None
 
     async def execute(self, query: str, specialty: str) -> str:
-        model_name = self.specialties.get(specialty)
-        logger.info(f"micro_model_execution: type={specialty} model={model_name}")
-        
-        # Use LocalInference for real CPU-first execution
-        from rag.inference import LocalInference
-        # We use a dedicated threads count for micro-models to keep them ultra-fast
-        inference = LocalInference() 
-        
-        # Specialized prompting for micro-tasks
-        prompt = f"<|system|>\nYou are a specialized {specialty} assistant. Output ONLY the result.\n<|user|>\n{query}\n<|assistant|>\n"
-        
-        result = await asyncio.get_event_loop().run_in_executor(
-            None, 
-            inference.generate, 
-            prompt, 
-            128 # Micro-models use fewer tokens for speed
+        system_prompts = {
+            "math": "You are a precise math assistant. Show working steps and give the final answer clearly.",
+            "summarization": "You are a summarization expert. Produce a concise TL;DR in 3-5 bullet points.",
+            "code": "You are a senior software engineer. Provide clean, commented code with brief explanation.",
+        }
+        system_prompt = system_prompts.get(specialty, "You are a helpful, concise AI assistant.")
+        logger.info("micro_model: routing specialty=%s", specialty)
+        loop = asyncio.get_event_loop()
+        result = await loop.run_in_executor(
+            None, generate_response, query, 256, 0.5, system_prompt
         )
-        return str(result)
+        return result
+
 
 global_micro_router = MicroModelRouter()

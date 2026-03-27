@@ -57,3 +57,5 @@ pytest-asyncio
 bandit
 flake8
 slowapi
+Pillow==10.3.0
+moviepy==1.0.3

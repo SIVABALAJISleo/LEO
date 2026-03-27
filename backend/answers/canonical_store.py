@@ -31,6 +31,8 @@ SEED_CANONICALS = {
 }
 
 
+import numpy as np
+
 class CanonicalStore:
     """
     Stores exactly ONE optimized answer per `shape_key` (intent#entity).
@@ -40,6 +42,7 @@ class CanonicalStore:
     def __init__(self):
         self._store: Dict[str, str] = dict(SEED_CANONICALS)
         self._hit_count: Dict[str, int] = {k: 0 for k in SEED_CANONICALS}
+        self._embeddings: Dict[str, np.ndarray] = {}
 
     def lookup(self, shape_key: str) -> Optional[str]:
         """Returns the canonical answer for a shape_key, or None."""
@@ -48,14 +51,26 @@ class CanonicalStore:
             self._hit_count[shape_key] = self._hit_count.get(shape_key, 0) + 1
             logger.info(f"canonical_hit: key={shape_key} hits={self._hit_count[shape_key]}")
         return answer
+        
+    def find_similar(self, query_emb: np.ndarray, threshold: float = 0.92) -> Optional[str]:
+        """Query Compression: Finds existing canonical ID via cosine similarity."""
+        for key, emb in self._embeddings.items():
+            sim = np.dot(query_emb, emb) / (np.linalg.norm(query_emb) * np.linalg.norm(emb))
+            if sim > threshold:
+                logger.info(f"query_compression: Mapped new query to existing canonical_id={key} (sim={sim:.3f})")
+                self._hit_count[key] = self._hit_count.get(key, 0) + 1
+                return key
+        return None
 
-    def store(self, shape_key: str, answer: str, overwrite: bool = False):
-        """Stores a canonical answer. Overwrites only if explicitly requested."""
+    def store(self, shape_key: str, answer: str, overwrite: bool = False, embedding: Optional[np.ndarray] = None):
+        """Stores a canonical answer and its embedding for future compressed queries."""
         if shape_key in self._store and not overwrite:
             logger.debug(f"canonical_exists: key={shape_key} (skipping)")
             return
         self._store[shape_key] = answer
         self._hit_count[shape_key] = 0
+        if embedding is not None:
+            self._embeddings[shape_key] = embedding
         logger.info(f"canonical_stored: key={shape_key}")
 
     def stats(self) -> Dict[str, Any]:
@@ -63,7 +78,7 @@ class CanonicalStore:
         return {
             "total_concepts": len(self._store),
             "total_hits": total_hits,
-            "top_concepts": sorted(self._hit_count.items(), key=lambda x: -x[1])[:10],
+            "top_concepts": list(sorted(self._hit_count.items(), key=lambda x: -x[1]))[:10],
         }
 
     def size(self) -> int:

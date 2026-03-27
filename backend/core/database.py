@@ -105,6 +105,24 @@ class ShadowAnswer(Base):
     tenant_id = Column(String, index=True)
     created_at = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc))
 
+class CompressedFragment(Base):
+    """Compressed, reusable units of knowledge (fragments)."""
+    __tablename__ = "compressed_fragments"
+    id = Column(String, primary_key=True) # Hash-based ID
+    content = Column(Text)
+    created_at = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc))
+
+class CompressedKnowledge(Base):
+    """Structured knowledge extracted from answers, linking fragments."""
+    __tablename__ = "compressed_knowledge"
+    id = Column(String, primary_key=True) # Canonical ID (intent#entity)
+    concept = Column(String)
+    intent = Column(String)
+    key_points_json = Column(Text) # JSON list of extracted points
+    fragment_ids_json = Column(Text) # JSON list of links to CompressedFragment
+    tenant_id = Column(String, index=True)
+    created_at = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc))
+
 class UsageLog(Base):
     """Audit trail for billing and pattern mining."""
     __tablename__ = "usage_logs"
