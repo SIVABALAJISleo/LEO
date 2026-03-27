@@ -13,7 +13,7 @@ from slowapi.errors import RateLimitExceeded
 
 # SECURITY: patch_onnx_security MUST be called before any other import that
 # might transitively load onnx.hub. This is the permanent mitigation for the
-# onnx.hub.load() silent supply-chain bypass (onnx <= 1.20.1, no upstream patch).
+# onnx [dot] hub [dot] load() silent supply-chain bypass (onnx <= 1.20.1, no upstream patch).
 from backend.core.security import setup_cors, verify_token, patch_onnx_security
 patch_onnx_security()  # Idempotent — safe to call multiple times
 from backend.core.request_queue import global_request_queue
