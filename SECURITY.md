@@ -1,27 +1,19 @@
-# Project HYPER - Security Posture
+# Security Policy
 
-This document details the security measures and vulnerability remediations for Project HYPER.
+## ONNX Supply-Chain Advisory (CVE-2026-28500 / Dependabot #54)
 
-## Vulnerability Remediation Status
+**Vulnerability**: onnx.hub.load() with silent=True suppresses
+trust warnings allowing silent model download from untrusted repos.
 
-| Dependency | Fixed Version | Status | Mitigation / Note |
-|------------|---------------|--------|-------------------|
-| `ujson`    | `5.12.0`      | ✅ Fixed | Patched memory leak and integer overflow (CVE-2026-32874, CVE-2026-32875). |
-| `pypdf`    | `6.9.1`       | ✅ Fixed | Patched infinite loop / DoS vulnerability in stream decoding. |
-| `onnx`     | `1.20.1`      | ✅ Safe  | Codebase **does not use** `onnx.hub.load()`. All models loaded locally. |
+**Our mitigation**:
+1. onnx.hub.load() is NEVER called anywhere in this codebase
+2. All model loading uses onnxruntime.InferenceSession(local_path)
+3. patch_onnx_security() in backend/core/security.py enforces this
+4. CI grep check blocks any future addition of hub.load() calls
 
-## Why the ONNX Alert is N/A
-The GitHub Dependabot Alert #54 concerns a vulnerability suppressed by `silent=True` in `onnx.hub.load()`. 
-**Project HYPER is not affected** because:
-1.  We do not use `onnx.hub.load()`.
-2.  We perform strictly **local inference** via `onnxruntime`.
-3.  We have updated to `onnx==1.20.1` (latest available) to minimize risk.
-4.  **Dependabot Alert #54** may persist until `onnx==1.21.0` is released in April 2026, but it is **false positive** for this project given our usage.
+**Why we do not upgrade onnx**:
+No patched version exists. The onnx team removed the feature
+in the next major version. Our non-usage is the correct mitigation.
 
-## Security Practices
-- **Zero-Binary Strategy**: We avoid untrusted binary downloads during runtime.
-- **Dependency Isolation**: All business logic is isolated from low-level model handling via the Orchestrator.
-- **Audit Logging**: Production interactions are logged with immutable audit trails.
-
-## Reporting a Vulnerability
-If you discover a security issue, please maintain project integrity by reporting it privately via the repository's Security tab.
+**Status**: Mitigated by architectural choice. Alert dismissed as
+"Vulnerable code is not actually called".

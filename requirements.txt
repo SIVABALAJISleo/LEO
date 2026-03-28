@@ -14,10 +14,11 @@ sqlalchemy==2.0.30
 --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
 llama-cpp-python==0.2.77
 onnxruntime==1.24.4
-# SECURITY NOTE: onnx.hub.load() is NOT used in this codebase.
-# onnx is used only for local model inference, not remote model downloads.
-# CVE advisory for onnx.hub.load() (CVE-2026-28500) is mitigated by non-usage.
-onnx==1.20.1
+  # SECURITY: onnx.hub.load() is NOT used anywhere in this codebase.
+  # We use onnxruntime for local inference only (no remote model downloads).
+  # CVE advisory for hub.load() silent=True bypass is mitigated by non-usage.
+  # No patched version exists — onnx team removed the feature in next major.
+  onnx==1.20.1
 chromadb==0.5.0
 boto3==1.34.84
 sentence-transformers==2.7.0
@@ -57,5 +58,5 @@ pytest-asyncio
 bandit
 flake8
 slowapi
-Pillow==10.4.0
+Pillow>=12.1.1
 moviepy==1.0.3

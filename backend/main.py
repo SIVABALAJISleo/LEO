@@ -13,7 +13,7 @@ from slowapi.errors import RateLimitExceeded
 
 from backend.core.database import init_db
 from backend.core.orchestrator import hyper_engine
-from backend.core.security import setup_cors, verify_token
+from backend.core.security import setup_cors, verify_token, patch_onnx_security
 from backend.core.logging import setup_logging, logger as struct_logger
 from backend.core.request_queue import global_request_queue
 from backend.core.metrics import (
@@ -36,6 +36,7 @@ setup_cors(app)
 
 @app.on_event("startup")
 async def startup_event():
+    patch_onnx_security()
     init_db()
     await hyper_engine.start()
     asyncio.create_task(global_request_queue.start())
