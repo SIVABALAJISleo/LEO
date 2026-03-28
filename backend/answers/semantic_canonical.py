@@ -32,7 +32,7 @@ class SemanticCanonicalEngine:
                     # Migration: try to load old pickle if present (Safe since we created it locally)
                     import pickle # nosec B403
                     with open(self.metadata_path.replace(".json", ".pkl"), "rb") as f:
-                        self.ids = pickle.load(f) # nosec
+                        self.ids = pickle.load(f) # nosec B301 - trusted internal file only
                 logger.info(f"SemanticCanonicalEngine: Loaded {len(self.ids)} clusters")
             except Exception as e:
                 logger.error(f"SemanticCanonicalEngine: Load error {e}")

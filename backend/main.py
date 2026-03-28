@@ -11,27 +11,27 @@ from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 
-# SECURITY: patch_onnx_security MUST be called before any other import that
-# might transitively load onnx.hub. This is the permanent mitigation for the
-# onnx [dot] hub [dot] load() silent supply-chain bypass (onnx <= 1.20.1, no upstream patch).
-from backend.core.security import setup_cors, verify_token, patch_onnx_security
-patch_onnx_security()  # Idempotent — safe to call multiple times
+from backend.core.database import init_db
+from backend.core.orchestrator import hyper_engine
+from backend.core.security import setup_cors, verify_token
+from backend.core.logging import setup_logging, logger as struct_logger
 from backend.core.request_queue import global_request_queue
-from backend.core.middleware import MemoryGuardMiddleware
 from backend.core.metrics import (
     MODEL_INVOCATIONS, AVOIDANCE_RATIO, GPU_COST_SAVED, RAG_HITS,
     MICRO_MODEL_HITS, CACHE_HITS, COST_SAVED_TOTAL, ENHANCEMENT_HITS,
     CPU_USAGE
 )
+from fastapi import HTTPException
+from backend.core.usage_metering import global_usage_meter
+from backend.analytics.cost_monitor import global_cost_monitor
+from backend.ingest.document_indexer import global_document_indexer
 
-# Initialize
 setup_logging()
-limiter = Limiter(key_func=get_remote_address)
 
+limiter = Limiter(key_func=get_remote_address)
 app = FastAPI(title="Project HYPER: Startup Edition")
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
-app.add_middleware(MemoryGuardMiddleware, max_mem_percent=90.0)
 setup_cors(app)
 
 @app.on_event("startup")
@@ -53,9 +53,7 @@ async def api_query(request: Request, data: StartupQuery, token: dict = Depends(
     user_id = token.get("uid")
     tenant_id = token.get("tenant_id", "default")
     
-    from backend.core.usage_metering import global_usage_meter
     if not global_usage_meter.check_limit(user_id, "free"): # Default to free for legacy
-        from fastapi import HTTPException
         raise HTTPException(status_code=429, detail="API Limit Exceeded. Upgrade to SaaS Pro.")
         
     start_time = time.time()
@@ -89,9 +87,7 @@ async def api_optimize(request: Request, data: OptimizeRequest, token: dict = De
     user_id = token.get("uid")
     tenant_id = token.get("tenant_id", "default")
     
-    from backend.core.usage_metering import global_usage_meter
     if not global_usage_meter.check_limit(user_id, data.tier):
-        from fastapi import HTTPException
         raise HTTPException(status_code=429, detail="SaaS Tier Limit Exceeded")
     
     start_time = time.time()
@@ -117,7 +113,6 @@ async def api_optimize(request: Request, data: OptimizeRequest, token: dict = De
 
 @app.get("/api/v1/analytics/{workspace_id}", tags=["product"])
 async def get_analytics(workspace_id: str, token: dict = Depends(verify_token)):
-    from backend.analytics.cost_monitor import global_cost_monitor
     return global_cost_monitor.calculate_savings(workspace_id)
 
 @app.get("/api/v1/workspaces", tags=["product"])
@@ -126,7 +121,6 @@ async def list_workspaces(token: dict = Depends(verify_token)):
 
 @app.post("/api/v1/documents", tags=["product"])
 async def upload_document(file: UploadFile = File(...), workspace_id: str = "default", token: dict = Depends(verify_token)):
-    from backend.ingest.document_indexer import global_document_indexer
     # In a real environment, we'd save the file first
     return {"status": "success", "message": f"Document {file.filename} is being indexed."}
 
@@ -137,7 +131,6 @@ async def health():
 @app.get("/metrics")
 async def metrics():
     CPU_USAGE.set(psutil.cpu_percent())
-    from backend.analytics.cost_monitor import global_cost_monitor
     stats = global_cost_monitor.calculate_savings("default")
     
     # Phase 5: Update Prometheus gauges with real avoidance data

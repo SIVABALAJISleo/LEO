@@ -1,3 +1,6 @@
+import logging
+logger = logging.getLogger(__name__)
+
 from typing import Optional, Dict, List, Any
 from backend.intelligence.router import MoERouter, SemanticCache, HallucinationGuard, TraceEngine
 from backend.intelligence.rag import RAGEngine
@@ -8,7 +11,6 @@ from backend.performance.scheduler import scheduler
 from backend.performance.embedding_cache import global_embedding_cache
 from backend.core.reliability import CircuitBreaker, ReliabilityOrchestrator
 from backend.data_efficiency.probabilistic import BloomFilter
-import logging
 import time
 import asyncio
 import psutil
@@ -111,8 +113,6 @@ except ImportError:
 # Phase 20: Unified Zero-Runtime Control Layer
 from backend.core.zero_compute import global_zero_control
 from backend.optimization.batcher import global_query_batcher
-
-logger = logging.getLogger(__name__)
 
 class UnifiedSaaSEngine:
     """
