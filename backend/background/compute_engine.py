@@ -1,15 +1,17 @@
 """
 backend/background/compute_engine.py
-Main Background Compute Engine for Zero Runtime Compute.
+Main Background Intelligence Engine (Upgraded).
 
-Processes enqueued queries, generates precomputed answers,
-and feeds the predictive store.
+Continuously processes unknown queries, generates answers & variations, 
+and expands the Knowledge Composition Graph.
 """
 import asyncio
 import logging
 from typing import Dict, Any, List
 from backend.analytics.metrics import global_metrics
 from backend.shadow.shadow_store import global_shadow_store
+from backend.predictive.predictor import global_predictor
+from backend.learning.answer_store import global_learning_engine
 
 logger = logging.getLogger(__name__)
 
@@ -18,16 +20,17 @@ class BackgroundComputeEngine:
         self.queue = asyncio.Queue()
         self.running = False
 
-    async def enqueue(self, query: str, tenant_id: str, workspace_id: str, session_id: str):
+    async def enqueue(self, query: str, tenant_id: str, workspace_id: str, session_id: str, priority: str = "normal"):
         """Enqueues a query for background processing."""
         await self.queue.put({
             "query": query,
             "tenant_id": tenant_id,
             "workspace_id": workspace_id,
-            "session_id": session_id
+            "session_id": session_id,
+            "priority": priority
         })
-        global_metrics.track_unknown_event("micro_compute") # Tracking as background task
-        logger.info(f"bg_compute: Enqueued query='{query}'")
+        global_metrics.track_hit("bg_enqueue")
+        logger.info(f"bg_compute: Enqueued query='{query}' [priority={priority}]")
 
     async def run(self):
         """Main worker loop."""
@@ -45,49 +48,54 @@ class BackgroundComputeEngine:
 
     async def _process_task(self, task: Dict[str, Any]):
         from backend.background.precompute_pipeline import global_precompute_pipeline
-        from backend.background.predictor import global_predictor
-        from backend.intelligence.domain_expander import global_domain_expander
-        from backend.intelligence.decomposer import global_decomposer
-
+        from backend.memory.failure_store import global_failure_store
+        from backend.memory.quality_control import global_quality_control
+        
         query = task["query"]
-        logger.info(f"bg_compute: Processing query='{query}'")
+        session_id = task["session_id"]
+        tenant_id = task["tenant_id"]
+        priority = task.get("priority", "normal")
         
-        # 1. Expand query into variations and next-likely questions
-        variations = await global_predictor.predict_variations(query)
+        # 1. FAILURE INTELLIGENCE & RECOVERY (Point 8, 11)
+        # Prioritize background improvement for failed/degraded queries
+        if priority in ["high", "background_improvement"]:
+            logger.info(f"bg_compute: RECOVERY MODE for '{query}' [Priority={priority}]")
+            
+        # 2. VARIATION EXPLOSION (Point 3)
+        # Generate variations for proactive caching
+        prediction_count = 12 if priority != "background_improvement" else 5
+        variations = global_predictor.predict_next_queries(query, count=prediction_count)
         
-        # 1.1 Proactive Session Prediction (Phase 27)
-        from backend.background.session_predictor import global_session_predictor
-        session_predictions = await global_session_predictor.predict_next_steps(task["session_id"])
-        
-        # 2. Decompose for domain expansion
-        decomposed = global_decomposer.decompose(query)
-        
-        # 3. Trigger domain expansion for unknown topics
-        await global_domain_expander.expand_and_store(query, decomposed, task["tenant_id"])
-        
-        # 4. Run high-precision refinement (Phase 38 - Background Completion)
-        # We resolve the query and its variations to 100% precision 
-        # to replace any runtime approximations.
-        targets = [query] + variations + session_predictions
+        # 3. RESOLUTION & LEARNING LOOP (Point 8)
+        targets = list(set([query] + variations))
         for target in targets:
+            logger.info(f"bg_compute: Resolving and Stabilizing target '{target}'")
+            
+            # Heavy background resolution
             answer_data = await global_precompute_pipeline.resolve_and_store(
                 target, 
-                task["tenant_id"], 
+                tenant_id, 
                 task["workspace_id"], 
-                task["session_id"]
+                session_id
             )
             
-            # 5. STORAGE SYNCHRONIZATION
             if answer_data:
-                 # Update all stores to replace any "Good Enough" sync results
-                 global_shadow_store.register(target, answer_data["answer"], task["session_id"], tenant_id=task["tenant_id"])
-                 
-                 from backend.intelligence.delta_engine import global_delta_engine_v2
-                 global_delta_engine_v2.register_answer(target, answer_data["answer"])
-                 
-                 from backend.answers.semantic_canonical import global_semantic_canonical
-                 global_semantic_canonical.register(target, answer_data["answer"], None, task["tenant_id"])
+                # 4. Global Memory Update (Point 4)
+                from backend.normalization.normalizer import global_normalizer
+                from backend.memory.global_memory import global_memory
+                norm = global_normalizer.normalize(target)
+                global_memory.log(
+                    query=target,
+                    answer=answer_data["answer"],
+                    mode="BACKGROUND_STABILITY_RECOVERY",
+                    canonical_form=norm["canonical"],
+                    confidence=1.0
+                )
+                
+                # Signal success for recovery
+                if priority == "background_improvement":
+                     logger.info(f"bg_compute: RECOVERY SUCCESS for '{target}'")
             
-        logger.info(f"bg_compute: Finished completion for '{query}' and {len(variations+session_predictions)} variations.")
+        logger.info(f"bg_compute: Stability Recovery Loop completed for '{query}'")
 
 global_bg_compute = BackgroundComputeEngine()

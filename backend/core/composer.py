@@ -8,19 +8,32 @@ from PIL import Image, ImageDraw, ImageFont
 logger = logging.getLogger(__name__)
 
 class TextCompositionEngine:
-    """Assembles text from fragments and templates."""
+    """Assembles text from fragments and templates. Point 3 (Knowledge Composition)"""
     TEMPLATES = {
-        "definition": "Definition: {entity}\n\n{text}\n\nKey Characteristics:\n{fragments}",
-        "step_by_step": "Guide: {entity}\n\n{text}\n\nSteps:\n{fragments}",
-        "comparison": "Comparison: {entity}\n\n{text}\n\nAnalysis:\n{fragments}",
+        "definition": "# Definition: {entity}\n\n{text}\n\n## Key Characteristics\n{fragments}",
+        "steps": "# Actionable Steps: {entity}\n\n{text}\n\n## Workflow\n{fragments}",
+        "examples": "# Practical Examples: {entity}\n\n{text}\n\n## Contextual Instances\n{fragments}",
+        "advantages": "# Strategic Advantages: {entity}\n\n{text}\n\n## Benefits\n{fragments}",
     }
 
     def compose(self, intent: str, entity: str, base_text: str, fragments: List[str]) -> str:
+        """Standard assembly from base text and list of strings."""
         from backend.core.refiner import global_refiner
-        template = self.TEMPLATES.get(intent, "Analysis: {entity}\n\n{text}\n\nDetails:\n{fragments}")
+        template_key = "definition" if intent not in self.TEMPLATES else intent
+        template = self.TEMPLATES.get(template_key)
         fragment_str = "\n".join([f"- {f}" for f in fragments])
         raw_composed = template.format(entity=entity, text=base_text, fragments=fragment_str)
         return global_refiner.refine(raw_composed)
+
+    def compose_from_fragments(self, entity: str, fragment_data: Dict[str, str]) -> str:
+        """AI Systems Architect (Point 3): Build graph of reusable fragments."""
+        parts = []
+        for key in ["definition", "steps", "examples", "advantages"]:
+            if key in fragment_data:
+                template = self.TEMPLATES[key]
+                parts.append(template.format(entity=entity, text=fragment_data[key], fragments=""))
+        
+        return "\n\n---\n\n".join(parts)
 
 class ImageCompositionEngine:
     """Procedural image rendering using Pillow. NO DIFFUSION."""

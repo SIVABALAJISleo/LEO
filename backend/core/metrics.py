@@ -55,4 +55,9 @@ LATENCY_SKIPS = PromCounter('hyper_latency_skips_total', 'Total layer skips by l
 # Hyperscaler Performance Refinement
 EMBEDDING_CACHE_HITS = PromCounter('hyper_embedding_cache_hits_total', 'Total redundant encoding bypasses')
 TINY_MODEL_SUCCESS = PromCounter('hyper_tiny_model_success_total', 'Total queries resolved by CPU-first tiny models')
-LAST_RESORT_MODEL_USAGE = Gauge('hyper_last_resort_usage_percent', 'Current large model reliance percentage')
+# Final System Strength Layer Metrics (Phase 30)
+REUSE_RATE = Gauge('hyper_reuse_rate_pct', 'Percentage of queries resolved via Global Memory or Graph')
+PREDICTION_HIT_RATE = Gauge('hyper_prediction_hit_rate_pct', 'Percentage of queries resolved via Shadow Store predictions')
+LEARNING_RATE = PromCounter('hyper_learning_events_total', 'Total high-confidence learning events processed')
+RUNTIME_COMPUTE_CALLS = PromCounter('hyper_runtime_compute_calls_total', 'Total synchronous compute calls (Target: 0)')
+APPROXIMATION_RATE = Gauge('hyper_approximation_rate_pct', 'Percentage of queries resolved via Adaptive Approximation')

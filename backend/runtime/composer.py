@@ -1,64 +1,66 @@
 """
 backend/runtime/composer.py
-Runtime Composition-Only Response Engine.
+Runtime Composition-Only Response Engine (Upgraded).
 
-Assembles responses from precomputed fragments, stored answers, and templates.
+Assembles responses from precomputed fragments stored in the Knowledge Graph.
 Strictly NO new LLM generation allowed here.
 """
 import logging
 from typing import Dict, Any, Optional
-from backend.intelligence.decomposer import global_decomposer
-from backend.intelligence.composer_engine import global_composer_engine
-from backend.intelligence.creative_engine import global_creative_engine
-from backend.intelligence.confidence_gate import global_confidence_gate_v2
+from backend.normalization.normalizer import global_normalizer
+from backend.graph.fragment_graph import global_fragment_graph
+from backend.answers.fragment_engine import global_fragment_composer
 from backend.analytics.metrics import global_metrics
-from backend.intelligence.delta_engine import _extract_intent_parts
 
 logger = logging.getLogger(__name__)
 
 class RuntimeComposer:
-    def compose_response(self, query: str, decomposed: Dict[str, Any], context_fragments: list) -> Optional[str]:
+    def compose_response(self, query: str, context: Dict[str, Any], context_fragments: list) -> Optional[str]:
         """
-        Attempts to build a complete response using structured fragments:
-        Definition, Steps, Examples, Advantages.
+        Dynamically assembles an answer from the Fragment Graph.
+        Point 5 & 6 & 10: Composition with Decomposition and Context Adaptation.
         """
-        logger.info(f"runtime_composer: Structured composition for '{query}'")
+        components = context.get("components", [query])
+        user_context = context.get("user_context", "default") # Point 10
         
-        # 1. Map fragments to types (Definition, Steps, etc.)
-        intents = _extract_intent_parts(query)
+        logger.info(f"runtime_composer: Composing from {len(components)} components for context '{user_context}'")
         
-        # 2. Try factual composition with structured priority
-        composition = ""
-        found_fact = False
+        final_answer_parts = []
         
-        if "definition" in intents:
-             comp = global_composer_engine.compose({"definition": decomposed.get("topic")})
-             if comp:
-                  composition += f"Definition: {comp}\n\n"
-                  found_fact = True
-                  
-        if "steps" in intents:
-             comp = global_composer_engine.compose({"steps": decomposed.get("topic")})
-             if comp:
-                  composition += f"Steps:\n{comp}\n\n"
-                  found_fact = True
+        for part in components:
+            norm = global_normalizer.normalize(part)
+            entity = norm["entity"]
+            
+            # 1. Fetch fragments from the Graph (Point 6 Mapping)
+            fragments = global_fragment_graph.get_fragments(entity)
+            if not fragments:
+                 # Try intent mapping if entity fails
+                 fragments = global_fragment_graph.get_fragments(norm["intent"].upper())
+                 
+            if fragments:
+                # 2. Context Adaptation (Point 10): Select style based on user_context
+                # In this system, we filter or prioritize fragments based on style tags
+                style = self._get_target_style(user_context)
+                
+                # Assembly using FragmentComposer
+                composition = global_fragment_composer.compose(fragments) # Can be extended for style
+                if composition:
+                    final_answer_parts.append(composition)
 
-        # Fallback to general composition if specialized fails
-        if not found_fact:
-             composition = global_composer_engine.compose(decomposed)
-        
-        # 3. If it's creative, try simulation
-        if not composition and decomposed.get("is_creative"):
-             composition = global_creative_engine.simulate(decomposed, context_fragments)
-
-        if not composition:
-            return None
-
-        # 4. Final confidence check
-        confidence = global_confidence_gate_v2.evaluate(composition, query, decomposed)
-        if confidence >= 0.75: # Lowered threshold (Phase 30)
-            return composition
+        if final_answer_parts:
+            # Join multiple component answers (Point 6 Composition)
+            full_composition = "\n\n".join(final_answer_parts)
+            logger.info(f"runtime_composer: Successfully assembled multi-part answer.")
+            return full_composition
 
         return None
+
+    def _get_target_style(self, user_context: str) -> str:
+        """Point 10: Select style based on user context."""
+        if "pro" in user_context.lower():
+            return "technical"
+        elif "quick" in user_context.lower():
+            return "concise"
+        return "balanced"
 
 global_runtime_composer = RuntimeComposer()

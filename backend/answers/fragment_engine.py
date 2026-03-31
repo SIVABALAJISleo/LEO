@@ -10,6 +10,7 @@ class FragmentComposer:
     - definition
     - steps
     - examples
+    - advantages (NEW)
     - edge cases
     """
     def compose(self, fragments: Dict[str, str], style: str = "standard") -> str:
@@ -23,6 +24,9 @@ class FragmentComposer:
             
         if "examples" in fragments:
             parts.append(f"\nExamples:\n{fragments['examples']}")
+            
+        if "advantages" in fragments:
+            parts.append(f"\nAdvantages & Benefits:\n{fragments['advantages']}")
             
         if "edge_cases" in fragments:
             parts.append(f"\nImportant Considerations:\n{fragments['edge_cases']}")

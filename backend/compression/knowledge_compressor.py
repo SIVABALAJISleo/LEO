@@ -12,8 +12,8 @@ class KnowledgeCompressor:
     
     def compress(self, query: str, full_answer: str) -> Dict[str, Any]:
         """
-        Compresses an answer into a structured dictionary.
-        In a full implementation, a small LLM or NLP heuristics would extract this.
+        AI Architect (Point 13): Knowledge Compression.
+        Merge similar fragments, remove duplicates, and streamline retrieval.
         """
         # Determine intent heuristically
         intent = "explanation"
@@ -24,18 +24,39 @@ class KnowledgeCompressor:
             
         # Basic structural compression (splitting logic)
         lines = [line.strip() for line in full_answer.split('\n') if line.strip()]
-        key_points = [line for line in lines if line.startswith('-') or line.startswith('*') or len(line) > 20]
+        
+        # Point 13: Merge similar fragments & remove duplicates
+        unique_points = list(set([line for line in lines if len(line) > 15]))
+        key_points = self._merge_fragments(unique_points)
         
         compressed = {
             "concept": query,
             "intent": intent,
-            "key_points": key_points[:5], # Keep top 5
+            "key_points": key_points[:8], # Expanded for better composition
             "entities": self._extract_entities(query),
-            "relationships": [] # Populated in advanced versions
+            "relationships": []
         }
         
         logger.info(f"knowledge_compressed: {query} -> {len(json.dumps(compressed))} bytes")
         return compressed
+
+    def _merge_fragments(self, fragments: List[str]) -> List[str]:
+        """Point 13: Merging similar fragments to optimize retrieval speed."""
+        if not fragments: return []
+        
+        merged = []
+        seen = set()
+        
+        for f in sorted(fragments, key=len, reverse=True):
+            # Check for high overlap with already merged fragments
+            is_sub = False
+            for m in merged:
+                if f in m or (len(set(f.split()) & set(m.split())) / max(len(f.split()), 1) > 0.8):
+                    is_sub = True
+                    break
+            if not is_sub:
+                merged.append(f)
+        return merged
 
     def _extract_entities(self, text: str) -> list:
         # Simple extraction

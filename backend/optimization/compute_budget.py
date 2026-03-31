@@ -1,10 +1,4 @@
-"""
-backend/optimization/compute_budget.py
-Compute Budget Controller for Controlled Logic.
-
-Tracks 'compute units' and enforces a strict 2-5% CPU limit per request 
-to maintain system stability.
-"""
+from backend.core.metrics import RUNTIME_COMPUTE_CALLS
 import logging
 import psutil
 import time
@@ -13,35 +7,40 @@ from typing import Dict, Any
 logger = logging.getLogger(__name__)
 
 class ComputeBudgetController:
-    def __init__(self, max_cpu_delta: float = 5.0):
-        # Max additional CPU load allowed per request
+    """
+    Final System Strength Budget Controller.
+    Enforces a 'Near-Zero' runtime compute target (<2% CPU delta).
+    """
+    def __init__(self, max_cpu_delta: float = 2.0): # Lowered to 2.0 (Near-Zero Target)
         self.max_cpu_delta = max_cpu_delta
-        self.request_units: Dict[str, int] = {} # request_id -> units used
+        self.request_units: Dict[str, int] = {} 
 
     def has_capacity(self) -> bool:
         """
-        Returns True if the system has capacity for synchronous compute.
+        Near-Zero capacity check: Blocks if base load > 60% to prevent any spikes.
         """
         current_load = psutil.cpu_percent(interval=None)
-        if current_load > 70.0: # Hard throttle (Phase 39)
-             logger.warning(f"compute_budget: System load too high ({current_load}%). Throttling.")
+        if current_load > 60.0: 
+             logger.warning(f"compute_budget: Near-Zero Target breach risk ({current_load}%). Blocking sync compute.")
              return False
         return True
 
     def start_tracking(self, request_id: str):
         self.request_units[request_id] = 0
+        # Track every attempt at runtime compute
+        RUNTIME_COMPUTE_CALLS.inc()
 
     def consume_unit(self, request_id: str, units: int = 1):
         """
-        Increments unit count and checks if limit (e.g. 50 units) is exceeded.
+        Strict budget enforcement. Target is <10 units (micro-tasks only).
         """
         if request_id not in self.request_units:
             self.start_tracking(request_id)
         
         self.request_units[request_id] += units
-        if self.request_units[request_id] > 50: # Example limit: 50 micro-units
-             logger.warning(f"compute_budget: Request '{request_id}' exceeded sync budget.")
-             raise TimeoutError("Compute Budget Exceeded")
+        if self.request_units[request_id] > 10: # Strict Limit: 10 micro-units
+             logger.error(f"compute_budget: Request '{request_id}' exceeded Near-Zero budget.")
+             raise TimeoutError("Compute Budget Breach: Target is Near-Zero Runtime.")
 
     def end_tracking(self, request_id: str):
         if request_id in self.request_units:
