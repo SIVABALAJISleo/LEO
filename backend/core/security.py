@@ -89,29 +89,22 @@ verify_token = verify_firebase_token
 
 def patch_onnx_security():
     """
-    Zero-trust overlay for onnx.hub.load().
-    Forces silent=False and blocks untrusted repos.
-    Called at application startup as a defence-in-depth measure.
+    Zero-trust overlay for onnx module load.
+    Completes the mitigation for the unpatched onnx.hub.load CVE.
+    Upstream resolved this by removing the feature entirely. We mimic that here.
     """
     try:
         import onnx.hub as _hub
-        _original_load = _hub.load
-
-        def _secure_load(model, repo=None, silent=False, **kwargs):
-            import logging
-            _log = logging.getLogger("hyper.security.onnx")
-            # Force trust verification regardless of caller's silent flag
-            if repo and repo != "onnx/models":
-                raise SecurityError(
-                    f"Untrusted onnx model repo blocked: '{repo}'. "
-                    "Only 'onnx/models' is permitted. "
-                    "Use onnxruntime.InferenceSession() for local models."
-                )
-            _log.info(f"onnx.hub.load called with repo={repo} — trust verified")
-            return _original_load(model, repo=repo, silent=False, **kwargs)
-
-        _hub.load = _secure_load
-        logging.getLogger("hyper.security").info("onnx.hub.load patched — zero-trust active")
+        def _removed_feature(*args, **kwargs):
+            raise SecurityError(
+                "onnx.hub.load() has been permanently disabled due to a critical "
+                "supply-chain vulnerability (Silent execution via silent=True). "
+                "This feature was removed to enforce zero-trust architecture."
+            )
+        _hub.load = _removed_feature
+        
+        import logging
+        logging.getLogger("hyper.security").info("onnx load module patched — feature removed (CVE mitigation)")
     except ImportError:
         pass  # onnx not installed, nothing to patch
 
@@ -120,5 +113,5 @@ class SecurityError(Exception):
 
 
 # Apply the patch at import time so it takes effect before any other code
-# that might call onnx.hub.load().
+# that might call the onnx module load.
 patch_onnx_security()

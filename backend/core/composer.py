@@ -5,6 +5,14 @@ import io
 from typing import List, Dict, Any, Optional
 from PIL import Image, ImageDraw, ImageFont
 
+# SECURITY WORKAROUND: Prevent Pillow out-of-bounds write vulnerability
+# As Dependabot is currently unable to upgrade Pillow to 12.1.1 due to constraints,
+# we apply the recommended workaround by removing PSD capability dynamically.
+if hasattr(Image, 'init'):
+    Image.init()
+if 'PSD' in Image.OPEN:
+    del Image.OPEN['PSD']
+
 logger = logging.getLogger(__name__)
 
 class TextCompositionEngine:
@@ -68,11 +76,15 @@ class VideoCompositionEngine:
     def compose_quick(self, title: str, duration: int = 3) -> str:
         """Assembles a simple MP4/GIF from procedural frames."""
         try:
-            from moviepy.editor import ColorClip, TextClip, CompositeVideoClip
-            
-            # Simple 3-second clip
-            bg = ColorClip(size=(1280, 720), color=(0, 0, 40), duration=duration)
-            txt = TextClip(title, fontsize=70, color='white', font='Arial', duration=duration).set_position('center')
+            try:
+                from moviepy.editor import ColorClip, TextClip, CompositeVideoClip
+                bg = ColorClip(size=(1280, 720), color=(0, 0, 40), duration=duration)
+                txt = TextClip(title, fontsize=70, color='white', font='Arial', duration=duration).set_position('center')
+            except ImportError:
+                # MoviePy 2.x API
+                from moviepy import ColorClip, TextClip, CompositeVideoClip
+                bg = ColorClip(size=(1280, 720), color=(0, 0, 40)).with_duration(duration)
+                txt = TextClip(text=title, font_size=70, color='white', font='Arial').with_duration(duration).with_position('center')
             
             import tempfile
             video = CompositeVideoClip([bg, txt])
