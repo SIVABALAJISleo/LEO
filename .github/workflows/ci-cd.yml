@@ -32,11 +32,15 @@ jobs:
       - name: Security check — no raw onnx.hub.load calls
         run: |
           VIOLATIONS=$(grep -rn "onnx\.hub\.load" backend/ \
+            --exclude="security.py" \
             | grep -v ": *#" \
             | grep -v "^Binary" || true)
           if [ -n "$VIOLATIONS" ]; then
-            echo "SECURITY VIOLATION: Raw onnx.hub.load() found:"
+            echo "SECURITY VIOLATION: Raw onnx.hub.load() call found outside the approved wrapper:"
             echo "$VIOLATIONS"
+            echo ""
+            echo "All onnx.hub.load() calls MUST go through the secure wrapper in"
+            echo "backend/core/security.py::patch_onnx_security(). See SECURITY.md."
             exit 1
           fi
           echo "Security check passed — onnx.hub.load not used in code."

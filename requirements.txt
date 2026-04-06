@@ -8,7 +8,7 @@ aiofiles==23.2.1
 # Dependabot bumping starlette independently breaks fastapi's version constraint
 passlib[bcrypt]==1.7.4
 bcrypt==4.1.3
-PyJWT==2.12.0
+PyJWT==2.12.1
 cryptography==46.0.6
 sqlalchemy==2.0.30
 --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
@@ -21,7 +21,7 @@ onnxruntime==1.24.4
   onnx>=1.21.0
 chromadb==0.5.0
 boto3==1.34.84
-sentence-transformers==2.7.0
+sentence-transformers==5.1.2
 faiss-cpu==1.13.0
 opencv-python-headless==4.9.0.80
 numba==0.60.0
@@ -43,7 +43,7 @@ opentelemetry-instrumentation-celery==0.61b0
 opentelemetry-instrumentation-requests==0.61b0
 firebase-admin==6.5.0
 celery==5.3.6
-redis==5.0.3
+redis==7.0.1
 python-docx==1.1.0
 pypdf==6.9.2
 python-magic==0.4.27
@@ -59,4 +59,4 @@ bandit
 flake8
 slowapi
 Pillow>=12.1.1
-moviepy>=2.0.0
+moviepy>=1.0.3
