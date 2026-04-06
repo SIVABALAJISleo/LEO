@@ -149,8 +149,10 @@ class UnifiedSaaSEngine:
         if not self.precompute_worker_started:
             from backend.predictive.precompute_worker import global_precompute_worker
             from backend.background.compute_engine import global_bg_compute
+            from backend.core.health_monitor import global_health_monitor
             asyncio.create_task(global_precompute_worker.run())
             asyncio.create_task(global_bg_compute.run())
+            asyncio.create_task(global_health_monitor.run())  # Point 4 & 9: Health & CPU loop
             self.precompute_worker_started = True
             logger.info("orchestrator_background_workers_started")
         

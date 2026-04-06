@@ -100,16 +100,25 @@ class ZeroComputeControl:
         # 7. EXTREME LATENCY GUARD: FINAL STOP (Point 3, 12)
         # Never allow the pipeline to exceed 45ms. Force 80% response.
         logger.info(f"zero_compute: TOTAL MISS. Forcibly Return Simplified Response.")
+        
+        from backend.core.chaos_controller import global_chaos_controller
+        global_chaos_controller.record_miss()
+        
         await global_bg_compute.enqueue(query, tenant_id, workspace_id, session_id, priority="background_improvement")
         
         fallback_msg = "Optimizing the answer graph. Instant response processing..."
         return self._wrap(fallback_msg, "FAIL_FAST_FALLBACK", start_time, 0.5)
 
     def _emergency_simplify(self, query: str, start_time: float, reason: str):
-        """Point 2, 5: Proactive Graceful Degradation."""
-        logger.warning(f"zero_compute: EMERGENCY_DEGRADATION ({reason}). Simplfying...")
+        """Point 2, 5: Proactive Graceful Degradation Engine."""
+        logger.warning(f"zero_compute: GRACEFUL_DEGRADATION ({reason}). Simplfying...")
         simple_ans = f"Returning adaptive core reference for '{query}' due to system stress/latency."
         return self._wrap(simple_ans, f"STABILITY_{reason}", start_time, 0.4)
+
+    def _decompose(self, query: str) -> list:
+        """Point 6: Simple lightweight decomposition without external blocking/NLP."""
+        parts = [p.strip() for p in query.replace(" and ", ",").split(",") if p.strip()]
+        return parts if parts else [query]
 
     def _wrap(self, answer: str, mode: str, start_time: float, confidence: float):
         latency = (time.time() - start_time) * 1000
