@@ -1,6 +1,6 @@
 import json
 import logging
-from typing import Dict, Any
+from typing import Dict, Any, List
 
 logger = logging.getLogger(__name__)
 
@@ -58,7 +58,7 @@ class KnowledgeCompressor:
                 merged.append(f)
         return merged
 
-    def _extract_entities(self, text: str) -> list:
+    def _extract_entities(self, text: str) -> List[str]:
         # Simple extraction
         words = text.split()
         return [w for w in words if w.istitle() and len(w) > 3]
