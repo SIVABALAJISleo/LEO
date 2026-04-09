@@ -1,3 +1,1 @@
-This is a sample document for testing the universal file ingestion system of Project HYPER.
-It contains technical information about the CPU-first orchestration engine and its RAG capabilities.
-The goal is to ensure that non-CSV files are correctly indexed and chunked for knowledge retrieval.
+This is a dummy test document.
