@@ -26,6 +26,7 @@ from backend.core.usage_metering import global_usage_meter
 from backend.analytics.cost_monitor import global_cost_monitor
 from backend.ingest.document_indexer import global_document_indexer
 from backend.core.chaos_controller import global_chaos_controller, ChaosMode
+from backend.core.stability_layer import global_stability_layer
 
 setup_logging()
 
@@ -79,11 +80,12 @@ async def api_query(request: Request, data: StartupQuery, token: dict = Depends(
     start_time = time.time()
     request_id = f"API_{user_id}_{uuid.uuid4().hex[:8]}"
     
-    result = await hyper_engine.process(
+    # Secure invocation via Stability and Chaos Control Layer
+    result = await global_stability_layer.secure_invoke(
         data.question, 
         request_id, 
-        tenant_id=tenant_id, 
-        workspace_id=data.workspace_id
+        tenant_id, 
+        data.workspace_id
     )
     
     global_usage_meter.record_usage(user_id)
