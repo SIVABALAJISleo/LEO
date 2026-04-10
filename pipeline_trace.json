@@ -1,0 +1,32 @@
+{
+  "client": {
+    "reached": true,
+    "start": 1771592584.5131934,
+    "end": null,
+    "exception": null
+  },
+  "api": {
+    "reached": true,
+    "start": 1771592584.513195,
+    "end": 1771592584.5140135,
+    "exception": null
+  },
+  "router": {
+    "reached": true,
+    "start": 1771592584.5140452,
+    "end": 1771592584.5160387,
+    "exception": null
+  },
+  "orchestrator": {
+    "reached": true,
+    "start": 1771592584.5160747,
+    "end": 1771592584.5163083,
+    "exception": null
+  },
+  "engine": {
+    "reached": true,
+    "start": 1771592584.5160763,
+    "end": 1771592584.516307,
+    "exception": null
+  }
+}

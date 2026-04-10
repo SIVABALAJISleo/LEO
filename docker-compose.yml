@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    ports:
+      - "8005:8005"
+    environment:
+      - APP_ENV=production
+      - REDIS_URL=redis://redis:6379/0
+      - DATABASE_URL=postgresql://user:pass@postgres:5432/hyper
+    depends_on:
+      - redis
+      - postgres
+
+  worker:
+    build: .
+    command: python -m backend.predictive.precompute_worker
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - DATABASE_URL=postgresql://user:pass@postgres:5432/hyper
+    depends_on:
+      - redis
+      - postgres
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+  postgres:
+    image: postgres:alpine
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=hyper
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

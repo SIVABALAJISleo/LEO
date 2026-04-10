@@ -1,3 +1,13 @@
 {
-    "cmake.sourceDirectory": "C:/Users/sivab/OneDrive/Documents/HYPER/remix-of-remix-of-remix-of-nvidia-inspired-design-main/remix-of-remix-of-remix-of-nvidia-inspired-design-main/backend/native"
+    "cmake.sourceDirectory": "C:/Users/sivab/OneDrive/Documents/HYPER/remix-of-remix-of-remix-of-nvidia-inspired-design-main/remix-of-remix-of-remix-of-nvidia-inspired-design-main/backend/native",
+    "python.defaultInterpreterPath": "${workspaceFolder}/venv/Scripts/python.exe",
+    "python.analysis.extraPaths": [
+        ".",
+        "./backend",
+        "./venv/Lib/site-packages",
+        "./venv_py311/Lib/site-packages"
+    ],
+    "python.analysis.autoSearchPaths": true,
+    "python.analysis.diagnosticMode": "workspace",
+    "python.analysis.typeCheckingMode": "basic"
 }

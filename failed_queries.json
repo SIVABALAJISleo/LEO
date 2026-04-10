@@ -1,0 +1,44 @@
+[
+  {
+    "id": 11,
+    "question": "The meeting was postponed until tomorrow.",
+    "category": "paraphrase",
+    "failure": "partial_match",
+    "note": "postponed -> delayed, but missing the move_date logic."
+  },
+  {
+    "id": 12,
+    "question": "She decided to purchase a new vehicle.",
+    "category": "paraphrase",
+    "failure": "mismatch",
+    "note": "vehicle vs car mapping failed."
+  },
+  {
+    "id": 14,
+    "question": "It is essential to follow the safety protocols.",
+    "category": "paraphrase",
+    "failure": "fallback",
+    "note": "failed to extract 'must' constraint."
+  },
+  {
+    "id": 23,
+    "question": "A train travels at 60 mph. How far will it travel in 2.5 hours?",
+    "category": "math",
+    "failure": "logic_collision",
+    "note": "Triggered WWII knowledge instead of distance calculation."
+  },
+  {
+    "id": 26,
+    "question": "Average of 10, 20, 30, 40, 50.",
+    "category": "math",
+    "failure": "extraction_fail",
+    "note": "Failed to parse list of numbers for average."
+  },
+  {
+    "id": 31,
+    "question": "wen r u gonna finsh d project?",
+    "category": "noisy",
+    "failure": "fallback",
+    "note": "Normalization failed to trigger the project status response."
+  }
+]

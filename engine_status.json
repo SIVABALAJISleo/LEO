@@ -1,0 +1,42 @@
+{
+  "status": "success",
+  "moe": {
+    "query": "hello",
+    "expert": "general",
+    "confidence": 0.5,
+    "routing_logic": "HeuristicKeywordDensity",
+    "subtasks": [
+      "context_retrieval",
+      "logic_merge"
+    ]
+  },
+  "rag": {
+    "query": "hello",
+    "results": [
+      {
+        "score": 0.0,
+        "text": "HYPER uses Software-First Compute Substitution to achieve GPU-level results on CPU.",
+        "metadata": {
+          "source": "core_docs"
+        }
+      },
+      {
+        "score": 0.0,
+        "text": "Semantic Cache reduces redundant computation by mapping queries to previous results.",
+        "metadata": {
+          "source": "opt_docs"
+        }
+      },
+      {
+        "score": 0.0,
+        "text": "Probabilistic structures like Bloom Filters and HLL manage state at O(1) space.",
+        "metadata": {
+          "source": "prob_docs"
+        }
+      }
+    ],
+    "engine": "PurePython-VectorSearch",
+    "latency_type": "O(N)_linear_scan"
+  },
+  "timestamp": 1771592818.0812688
+}

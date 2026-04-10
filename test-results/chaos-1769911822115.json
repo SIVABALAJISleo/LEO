@@ -1,0 +1,7 @@
+{
+  "event": "DB_FAILURE_SIMULATION",
+  "timestamp": "2026-02-01T02:10:22.115Z",
+  "status": "DEGRADED",
+  "recovery": "AUTOMATIC_RETRY_SUCCESS",
+  "real_time_recovery_ms": 1200
+}

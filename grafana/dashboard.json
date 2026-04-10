@@ -1,0 +1,73 @@
+{
+    "title": "HYPER Cluster Health",
+    "tags": [
+        "hyper",
+        "system"
+    ],
+    "timezone": "browser",
+    "refresh": "5s",
+    "panels": [
+        {
+            "title": "API Request Latency",
+            "type": "heatmap",
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 0
+            },
+            "targets": [
+                {
+                    "expr": "rate(hyper_api_request_latency_seconds_bucket[5m])",
+                    "format": "heatmap"
+                }
+            ]
+        },
+        {
+            "title": "Active Celery Workers",
+            "type": "stat",
+            "gridPos": {
+                "h": 4,
+                "w": 6,
+                "x": 12,
+                "y": 0
+            },
+            "targets": [
+                {
+                    "expr": "hyper_active_celery_workers",
+                    "instant": true
+                }
+            ]
+        },
+        {
+            "title": "API Error Rate (5xx)",
+            "type": "timeseries",
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 8
+            },
+            "targets": [
+                {
+                    "expr": "rate(hyper_api_request_count{http_status=~\"5..\"}[5m])"
+                }
+            ]
+        },
+        {
+            "title": "Queue Wait Time",
+            "type": "timeseries",
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 12,
+                "y": 8
+            },
+            "targets": [
+                {
+                    "expr": "rate(hyper_api_request_latency_seconds_sum[5m]) / rate(hyper_api_request_latency_seconds_count[5m])"
+                }
+            ]
+        }
+    ]
+}
