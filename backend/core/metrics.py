@@ -39,6 +39,7 @@ FUSION_HITS = PromCounter('hyper_fusion_hits_total', 'Total successful multi-sou
 CONFIDENCE_BYPASS_RATE = Gauge('hyper_confidence_bypass_rate', 'Real-time rate of confidence-based model bypasses')
 
 MODEL_CALLS_TOTAL = PromCounter('hyper_model_calls_total', 'Total large model calls (last resort)')
+LAST_RESORT_MODEL_USAGE = Gauge('hyper_last_resort_model_usage_pct', 'Percentage of large model calls as a last resort')
 
 REASONING_REUSES = PromCounter('hyper_reasoning_reuses_total', 'Total reasoning memory reuses')
 EARLY_EXIT_TOTAL = PromCounter('hyper_early_exit_total', 'Total early-exit events from pipeline')
