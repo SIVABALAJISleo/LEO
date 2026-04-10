@@ -1,21 +1,29 @@
 {
     "include": [
-        "."
+        "backend",
+        "orchestration",
+        "tests"
+    ],
+    "exclude": [
+        "**/node_modules",
+        "**/__pycache__",
+        "venv",
+        "venv_py311"
     ],
     "extraPaths": [
-        ".",
-        "./backend",
-        "./venv/Lib/site-packages",
-        "./venv_py311/Lib/site-packages"
+        "."
     ],
     "executionEnvironments": [
         {
             "root": ".",
             "pythonPlatform": "Windows",
-            "extraPaths": [".", "./backend"]
+            "extraPaths": ["."]
         }
     ],
-    "venvPath": ".",
-    "venv": "venv",
-    "pythonVersion": "3.11"
+    "venvPath": "c:\\Users\\sivab\\OneDrive\\Documents\\HYPER\\remix-of-remix-of-remix-of-nvidia-inspired-design-main",
+    "venv": "venv_py311",
+    "pythonVersion": "3.11",
+    "typeCheckingMode": "basic",
+    "reportMissingImports": "warning",
+    "reportMissingTypeStubs": false
 }

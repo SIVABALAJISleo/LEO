@@ -52,7 +52,7 @@ async def stability_middleware(request: Request, call_next):
         if mode == ChaosMode.MINIMAL:
             # Under extreme stress, we only allow health checks or cached status
             if "/status" not in request.url.path and "/health" not in request.url.path:
-                logger.warning(f"stability_middleware: Rejecting {request.url.path} due to MINIMAL mode.")
+                struct_logger.warning(f"stability_middleware: Rejecting {request.url.path} due to MINIMAL mode.")
                 return Response(
                     content='{"error": "System under extreme stress. Only critical services available.", "mode": "MINIMAL"}',
                     media_type="application/json",
