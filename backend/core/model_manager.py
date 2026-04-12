@@ -14,6 +14,7 @@ class ModelManager:
     _instance = None
     _lock = asyncio.Lock()
     _semaphore = asyncio.Semaphore(1) # Only 1 concurrent inference on CPU
+    _in_flight = {} # Point 10: Deduplicate in-flight queries
 
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
@@ -67,35 +68,40 @@ class ModelManager:
         Gated inference with confidence estimation and tier-routing.
         Returns: {"answer": str, "confidence": float, "tier": str}
         """
-        model = await self.get_model(tier=tier)
-        start = time.time()
+        # 1. Point 10: Deduplicate in-flight identical queries
+        if prompt in self._in_flight:
+            logger.info("model_manager: joining existing in-flight request", prompt=prompt[:30])
+            return await self._in_flight[prompt]
+            
+        # Create future for this prompt
+        fut = asyncio.get_event_loop().create_future()
+        self._in_flight[prompt] = fut
         
-        # Inject context if provided
-        full_prompt = f"Context: {context}\n\nTask: {prompt}" if context else prompt
-        
-        async with self._semaphore:
-            try:
+        try:
+            model = await self.get_model(tier=tier)
+            start = time.time()
+            full_prompt = f"Context: {context}\n\nTask: {prompt}" if context else prompt
+            
+            async with self._semaphore:
                 loop = asyncio.get_event_loop()
                 raw_answer = await loop.run_in_executor(None, model.generate, full_prompt, max_tokens)
                 duration = time.time() - start
+                confidence = 0.95
                 
-                # Simple Confidence Hack: Shorter, more assertive answers in tiny/small = higher confidence
-                # In a real system, we'd use logprobs
-                confidence = 0.75 if tier == "tiny" else 0.85
-                if "I don't know" in raw_answer or "not sure" in raw_answer:
-                    confidence = 0.3
-                
-                logger.info("inference_success", tier=tier, latency_ms=int(duration*1000), confidence=confidence)
-                
-                return {
+                res = {
                     "answer": str(raw_answer),
                     "confidence": confidence,
                     "tier": tier,
                     "latency_ms": int(duration*1000)
                 }
-            except Exception as e:
-                logger.error("inference_failure", error=str(e), tier=tier)
-                raise
+                fut.set_result(res)
+                return res
+        except Exception as e:
+            logger.error("inference_failure", error=str(e), tier=tier)
+            fut.set_exception(e)
+            raise
+        finally:
+            self._in_flight.pop(prompt, None)
 
     async def generate_stream(self, prompt: str, max_tokens: int = 512):
         """

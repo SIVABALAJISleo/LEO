@@ -59,6 +59,9 @@ except Exception as e:
                 c.execute("UPDATE cache SET expires_at=? WHERE key=?", (time.time()+seconds, key))
             return True
 
+        def setex(self, key, time_s, value):
+            return self.set(key, value, ex=time_s)
+
         def ping(self): return True
 
     redis_client = SQLiteFallback()

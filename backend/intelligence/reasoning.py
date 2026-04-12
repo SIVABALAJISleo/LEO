@@ -101,20 +101,23 @@ class ReasoningExpert:
                 full_prompt = f"History:\n{history_str}\n\nContext:\n{context_str}\n\nQuestion: {query}\nAnswer:"
                 
                 # Tier 1: Tiny (Ultra fast)
-                answer = await self.model_manager.generate_safe(full_prompt, tier="tiny")
-                confidence = self.evaluator.evaluate(answer, query)
+                res = await self.model_manager.generate_safe(full_prompt, tier="tiny")
+                answer = res.get("answer") if isinstance(res, dict) else res
+                confidence = res.get("confidence", self.evaluator.evaluate(answer, query)) if isinstance(res, dict) else self.evaluator.evaluate(answer, query)
                 
                 # Tier 2: Small (Escalate if needed)
                 if confidence < 0.7:
                     logger.info(f"escalating_to_small_model: confidence={confidence}")
-                    answer = await self.model_manager.generate_safe(full_prompt, tier="small")
-                    confidence = self.evaluator.evaluate(answer, query)
+                    res = await self.model_manager.generate_safe(full_prompt, tier="small")
+                    answer = res.get("answer") if isinstance(res, dict) else res
+                    confidence = res.get("confidence", self.evaluator.evaluate(answer, query)) if isinstance(res, dict) else self.evaluator.evaluate(answer, query)
                 
                 # Tier 3: Large (Last resort)
                 if confidence < 0.8:
                     logger.info(f"escalating_to_large_model: confidence={confidence}")
-                    answer = await self.model_manager.generate_safe(full_prompt, tier="large")
-                    confidence = self.evaluator.evaluate(answer, query)
+                    res = await self.model_manager.generate_safe(full_prompt, tier="large")
+                    answer = res.get("answer") if isinstance(res, dict) else res
+                    confidence = res.get("confidence", self.evaluator.evaluate(answer, query)) if isinstance(res, dict) else self.evaluator.evaluate(answer, query)
 
         # 4. UPDATE MEMORY
         global_memory.add_message(session_id, tenant_id, "user", query)

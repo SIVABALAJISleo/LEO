@@ -113,16 +113,22 @@ export const hyperClient = {
      * CORE: Execute on Python Backend (Orchestration)
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async executeRemote(query: string, metadata: any = {}): Promise<OrchestrateResponse> {
-        const response = await fetch(`${BACKEND_URL}/orchestrate`, {
+    async executeRemote(query: string, metadata: any = {}): Promise<any> {
+        const response = await fetch(`${BACKEND_URL}/query`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer AUDIT_MODE_TOKEN`
             },
-            body: JSON.stringify({ query, metadata })
+            body: JSON.stringify({ 
+                question: query, 
+                workspace_id: metadata.workspace_id || "default" 
+            })
         });
-        if (!response.ok) throw new Error(`Backend error: ${response.statusText}`);
+        if (!response.ok) {
+            const err = await response.json().catch(() => ({ detail: response.statusText }));
+            throw new Error(err.detail || `Backend error: ${response.statusText}`);
+        }
         return response.json();
     },
 
@@ -131,7 +137,7 @@ export const hyperClient = {
         const formData = new FormData();
         formData.append('file', file);
 
-        const response = await fetch(`${BACKEND_URL}/ingest/upload`, {
+        const response = await fetch(`${BACKEND_URL}/documents`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer AUDIT_MODE_TOKEN`

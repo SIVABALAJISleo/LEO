@@ -11,13 +11,24 @@ class LocalInference:
     def __init__(self, model_path: str = None, **kwargs):
         self.model_path = model_path or os.getenv("MODEL_PATH", "models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf")
         self.llm = None
+        
+        # Ensure models directory exists
+        models_dir = os.path.dirname(self.model_path)
+        if models_dir and not os.path.exists(models_dir):
+            os.makedirs(models_dir, exist_ok=True)
+
         if Llama and os.path.exists(self.model_path):
             logger.info("loading_local_model", path=self.model_path)
             # Use n_threads from kwargs if provided, else default to 4
             n_threads = kwargs.get("n_threads", 4)
             self.llm = Llama(model_path=self.model_path, n_ctx=2048, n_threads=n_threads)
         else:
-            logger.warning("model_not_found_or_llama_cpp_missing", path=self.model_path)
+            download_url = "https://huggingface.co/TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF/resolve/main/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf"
+            error_msg = f"ERROR: Model matching '{self.model_path}' not found! System requires a GGUF model for inference."
+            logger.error("model_not_found", path=self.model_path, download_url=download_url)
+            print(f"\n{'-'*50}\n{error_msg}")
+            print(f"Please download the model from: {download_url}")
+            print(f"And place it at: {os.path.abspath(self.model_path)}\n{'-'*50}\n")
 
     def generate(self, prompt: str, max_tokens: int = 512, stream: bool = False):
         if not self.llm:

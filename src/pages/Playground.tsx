@@ -38,35 +38,15 @@ const Playground = () => {
     try {
       let result;
       const parsedBody = JSON.parse(requestBody);
-      const queryText = parsedBody.input || parsedBody.text || "Hello Hyper";
+      const queryText = parsedBody.input || parsedBody.question || parsedBody.text || "Hello Hyper";
 
-      if (endpoint === 'infer') {
-        result = await hyperClient.runExpert(queryText);
-      } else if (endpoint === 'render') {
-        // Map to orchestrate as render is a specific expert task
-        result = await hyperClient.orchestrate(`Render: ${queryText}`);
-      } else if (endpoint === 'train') {
-        result = await hyperClient.orchestrate(`Train: ${queryText}`);
-      } else {
-        result = await hyperClient.orchestrate(queryText);
-      }
+      result = await hyperClient.runExpert(queryText);
 
-      const enrichedResponse = {
-        status: "success",
-        endpoint: `/api/v1/${endpoint}`,
-        result: result,
-        performance: {
-          gpu_equivalent: "HYPER CPU Engine",
-          efficiency: "100%",
-          latency_optimized: true
-        }
-      };
-
-      setResponse(JSON.stringify(enrichedResponse, null, 2));
+      setResponse(JSON.stringify(result, null, 2));
 
       toast({
         title: "Request Successful",
-        description: "Production engine response received successfully",
+        description: `Source: ${result.source} | Latency: ${result.latency_ms}ms`,
       });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {

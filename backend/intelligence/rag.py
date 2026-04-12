@@ -211,7 +211,7 @@ class RAGEngine:
             except Exception as e:
                 print(f"Error loading RAG persistence: {e}")
 
-    def retrieve(self, query: str, tenant_id: str = "default", k: int = 3) -> List[Dict[str, Any]]:
+    def retrieve(self, query: str, tenant_id: str = "default", k: int = 3, runtime_fast: bool = False) -> List[Dict[str, Any]]:
         """Retrieves and filters by tenant using Hybrid Search (BM25 + Vector)."""
         if not self.documents:
             return []
@@ -220,8 +220,8 @@ class RAGEngine:
         import json
         import numpy as np
         
-        # 1. QUERY EXPANSION
-        queries = self.expand_query(query)
+        # 1. QUERY EXPANSION (Conditional)
+        queries = [query] if runtime_fast else self.expand_query(query)
         
         # 2. VECTOR SEARCH (Multi-query fusion)
         all_vec_hits = {}
@@ -284,7 +284,11 @@ class RAGEngine:
             return combined_results[:k]
 
         # 6. PRECISION RERANKING (Final Pass)
+        if runtime_fast:
+             return combined_results[:k]
+
         from backend.intelligence.reranker import global_reranker
         reranked_results = global_reranker.rerank(query, combined_results, top_k=k)
         
         return reranked_results
+global_rag_engine = RAGEngine()

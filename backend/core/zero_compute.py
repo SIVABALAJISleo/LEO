@@ -17,47 +17,37 @@ from backend.background.compute_engine import global_bg_compute
 from backend.background.session_predictor import global_session_predictor
 from backend.shadow.shadow_store import global_shadow_store
 from backend.analytics.metrics import global_metrics
-from backend.optimization.compute_budget import global_compute_budget
-from orchestration.chaos_containment import ChaosContainment
+from orchestration.chaos_containment import global_chaos_containment
+from backend.intelligence.reasoning import reasoning_expert
+from backend.intelligence.rag import global_rag_engine
 
 logger = logging.getLogger(__name__)
-
-# Initialize Global Chaos Containment Engine
-global_chaos_containment = ChaosContainment()
 
 class ZeroComputeControl:
     """
     Unified Zero-Runtime-Compute Control Layer (Final Dominance).
     Strictly enforces <50ms runtime and maximizes reuse via composition.
     """
-    def __init__(self, time_budget_ms: float = 50.0):
+    def __init__(self, time_budget_ms: float = 200.0):
         self.time_budget_ms = time_budget_ms
-        self.critical_budget_ms = 40.0 # Point 12: Trigger simplification here
+        self.critical_budget_ms = 180.0 # Point 12: Trigger simplification here
 
     async def handle_request(self, query: str, request_id: str, tenant_id: str, workspace_id: str, start_time: float) -> Optional[Dict[str, Any]]:
         """
-        AI Systems Architect (Point 1, 3, 7, 12): System Stability + Chaos Control.
-        Unbreakable Processing: Adaptive mode selection and hard latency ceiling.
+        Point 8: STRICT COMPUTE CONTROL (Final target: 98% avoidance).
+        Tiered: exact -> semantic -> composition -> partial -> model.
         """
         from backend.core.chaos_controller import global_chaos_controller, ChaosMode
-        from backend.core.health_monitor import global_health_monitor
         from backend.optimization.self_optimizer import global_self_optimizer
-        from backend.memory.quality_control import global_quality_control
-        from backend.core.metrics import AVOIDANCE_RATIO
+        from backend.predictive.predictor import global_predictor
         
         session_id = request_id.split("_")[1] if "_" in request_id else "default"
         mode = global_chaos_controller.get_mode()
         threshold = global_self_optimizer.get_threshold()
         
-        # 1. CHAOS CONTROLLER: ADAPTIVE PIPELINE (Point 1, 7)
-        logger.info(f"zero_compute: Mode={mode.name} for query={query}")
-        
-        # MINIMAL MODE: Direct Cache Only (Point 7)
-        if mode == ChaosMode.MINIMAL:
-            hit = global_memory.lookup(query)
-            if hit and hit.get("confidence", 0) >= 0.9:
-                 return self._wrap(hit["answer"], "MINIMAL_CACHE_ONLY", start_time, hit["confidence"])
-            return self._emergency_simplify(query, start_time, "CHAOS_MINIMAL_MODE")
+        # 1. Point 5: LOAD-AWARE EXECUTION
+        # Skip heavy layers if system is under stress or extreme load
+        skip_heavy = mode in [ChaosMode.MINIMAL, ChaosMode.REDUCED]
 
         # 2. CHAOS CONTAINMENT: DYNAMICS GUARD (New Feature)
         # If the query involves motion, physics, or unstable dynamics, use the containment engine.
@@ -68,61 +58,94 @@ class ZeroComputeControl:
             lyapunov = 0.8 if "chaotic" in query.lower() else 0.4
             containment = global_chaos_containment.analyze_trajectory(1.0, 10, lyapunov)
             if containment["mode"] == "PATTERN_PLAYBACK":
-                return self._wrap(containment["trajectory"], "CHAOS_PATTERN_PLAYBACK", start_time, 0.95)
+                res = self._wrap(containment["trajectory"], "CHAOS_PATTERN_PLAYBACK", start_time, 0.95)
+                global_metrics.log_request(request_id, query, "CHAOS_PATTERN_PLAYBACK", res["latency_ms"], False)
+                return res
 
         # 3. DECOMPOSITION & MAPPING (Point 6 - Only in NORMAL mode)
         components = self._decompose(query) if mode == ChaosMode.NORMAL else [query]
         
-        # 3. STABILITY CONTROLLER: PRE-CHECK (Point 12)
+        # 3. STABILITY CONTROLLER: PRE-CHECK
         elapsed = (time.time() - start_time) * 1000
-        if elapsed > self.critical_budget_ms:
-            return self._emergency_simplify(query, start_time, "BUDGET_EXCEEDED_PRE")
-
-        # 4. GLOBAL KNOWLEDGE SYSTEM (Tiered Retrieval)
+        threshold = global_self_optimizer.get_threshold()
         
-        # Layer 0: Shadow Store (Point 2: return simplified if needed)
+        # 1. Point 5: LOAD-AWARE EXECUTION
+        # Skip heavy layers if system is under stress or extreme load
+        skip_heavy = mode in [ChaosMode.MINIMAL, ChaosMode.REDUCED]
+        
+        # 2. LAYER 1: EXACT MATCH (Shadow Store)
         shadow_hit = global_shadow_store.lookup(query, session_id, tenant_id=tenant_id, workspace_id=workspace_id)
         if shadow_hit and shadow_hit.get("confidence", 0) >= threshold:
-            global_metrics.track_hit("shadow_prediction")
-            return self._wrap(shadow_hit["answer"], "SHADOW_PREDICTION", start_time, shadow_hit["confidence"])
+            res = self._wrap(shadow_hit["answer"], "cache_exact", start_time, shadow_hit["confidence"])
+            global_metrics.log_request(request_id, query, "cache_exact", res["latency_ms"], False, is_prediction_hit=True)
+            return res
 
-        # 5. HARD LATENCY GUARD: MID-STAGE (Point 3, 12)
-        if (time.time() - start_time) * 1000 > 30.0 and mode == ChaosMode.REDUCED:
-             return self._emergency_simplify(query, start_time, "LATENCY_GUARD_MID")
-
-        # Layer 1: Global Memory (Canonical)
-        memory_hit = global_memory.lookup(query)
+        # 3. LAYER 2: SEMANTIC MATCH (Global Memory)
+        memory_hit = global_memory.lookup(query, canonical_form=query)
         if memory_hit and memory_hit.get("confidence", 0) >= threshold:
-            global_metrics.track_hit("global_memory")
-            return self._wrap(memory_hit["answer"], "GLOBAL_MEMORY_REUSE", start_time, memory_hit["confidence"])
+            res = self._wrap(memory_hit["answer"], "cache_semantic", start_time, memory_hit["confidence"])
+            global_metrics.log_request(request_id, query, "cache_semantic", res["latency_ms"], False)
+            return res
 
-        # Layer 2: Knowledge Composition (Point 5 & 10: Non-blocking)
-        # Skip composition in REDUCED mode to save CPU
-        if mode == ChaosMode.NORMAL:
-            composition = global_runtime_composer.compose_response(query, {"components": components}, [])
-            if composition:
-                 global_metrics.track_hit("graph_composition")
-                 return self._wrap(composition, "GRAPH_COMPOSITION", start_time, 0.9)
+        # 4. Point 3: PARTIAL COMPUTE ENGINE
+        # Decompose and check fragments before hitting full model
+        if not skip_heavy:
+            components = self._decompose(query)
+            # Try to compose from context
+            try:
+                loop = asyncio.get_event_loop()
+                context_nodes = await asyncio.wait_for(
+                    loop.run_in_executor(None, global_rag_engine.retrieve, query, tenant_id, 3, True),
+                    timeout=0.05 # Point 8: Enforce 50ms per-layer
+                )
+                fragments = [n["content"] for n in context_nodes] if context_nodes else []
+                composition = global_runtime_composer.compose_response(query, {"components": components}, fragments)
+                if composition:
+                    res = self._wrap(composition, "composition_partial", start_time, 0.90)
+                    global_metrics.log_request(request_id, query, "composition", res["latency_ms"], False)
+                    return res
+            except Exception as e:
+                 logger.debug(f"zero_compute: Composition path skipped: {e}")
+                 pass # Fallthrough if timeout or error
 
-        # 6. ADAPTIVE APPROXIMATION (Layer 3 - Last ResortPoint 7)
-        approx = global_approx_engine.approximate(query)
-        if approx:
-             global_metrics.track_hit("adaptive_approximation")
-             # Fail-Fast Trigger background processing for improvement (Point 8)
-             await global_bg_compute.enqueue(query, tenant_id, workspace_id, session_id, priority="high")
-             return self._wrap(approx["answer"], "ADAPTIVE_APPROXIMATION", start_time, approx["confidence"])
+        # 5. LATENCY GUARD & LOAD-AWARE EXIT
+        elapsed = (time.time() - start_time) * 1000
+        if elapsed > self.critical_budget_ms or mode == ChaosMode.MINIMAL:
+            res = self._emergency_simplify(query, start_time, "LOAD_SHEDDING" if mode == ChaosMode.MINIMAL else "TIMEOUT")
+            global_metrics.log_request(request_id, query, "fallback", res["latency_ms"], False)
+            # Point 4: FAILURE -> KNOWLEDGE LOOP (Enqueue for background)
+            asyncio.create_task(global_bg_compute.enqueue(query, tenant_id, workspace_id, session_id, priority="high"))
+            return res
 
-        # 7. EXTREME LATENCY GUARD: FINAL STOP (Point 3, 12)
-        # Never allow the pipeline to exceed 45ms. Force 80% response.
-        logger.info(f"zero_compute: TOTAL MISS. Forcibly Return Simplified Response.")
-        
-        from backend.core.chaos_controller import global_chaos_controller
-        global_chaos_controller.record_miss()
-        
-        await global_bg_compute.enqueue(query, tenant_id, workspace_id, session_id, priority="background_improvement")
-        
-        fallback_msg = "Optimizing the answer graph. Instant response processing..."
-        return self._wrap(fallback_msg, "FAIL_FAST_FALLBACK", start_time, 0.5)
+        # 6. MODEL INFERENCE (Final resort - constrained by budget)
+        try:
+            # Calculate remaining time for the 200ms total budget
+            remaining = (self.time_budget_ms - elapsed) / 1000.0
+            model_result = await asyncio.wait_for(
+                reasoning_expert.solve(query, session_id=session_id, tenant_id=tenant_id),
+                timeout=max(remaining, 0.1) # Minimum 100ms for model or remaining budget
+            )
+            
+            answer = model_result.get("answer") or "Zero compute engine: No answer generated."
+            confidence = model_result.get("confidence", 0.0)
+            
+            # Point 1: EVERY model output MUST be stored
+            global_memory.log(query, answer, "model_runtime", query, confidence)
+            
+            # Point 2: Trigger Predictive Precompute in Background
+            asyncio.create_task(global_bg_compute.enqueue(query, tenant_id, workspace_id, session_id, priority="predicted"))
+            
+            res = self._wrap(answer, "model", start_time, confidence)
+            global_metrics.log_request(request_id, query, "model", res["latency_ms"], True)
+            return res
+
+        except Exception as e:
+            logger.warning(f"zero_compute: Model path failed: {e}")
+            res = self._emergency_simplify(query, start_time, "PIPELINE_STRESS")
+            global_metrics.log_request(request_id, query, "fallback", res["latency_ms"], False, is_recovery=True)
+            # Point 4: Convert failure into background recovery task
+            asyncio.create_task(global_bg_compute.enqueue(query, tenant_id, workspace_id, session_id, priority="high"))
+            return res
 
     def _emergency_simplify(self, query: str, start_time: float, reason: str):
         """Point 2, 5: Proactive Graceful Degradation Engine."""
