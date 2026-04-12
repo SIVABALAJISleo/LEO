@@ -26,6 +26,7 @@ from backend.core.usage_metering import global_usage_meter
 from backend.analytics.cost_monitor import global_cost_monitor
 from backend.ingest.document_indexer import global_document_indexer
 from backend.core.chaos_controller import global_chaos_controller, ChaosMode
+# Security and Stability: pypdf 6.10.0 and Chaos Containment initialized.
 from backend.core.stability_layer import global_stability_layer
 
 setup_logging()
