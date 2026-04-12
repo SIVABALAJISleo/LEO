@@ -77,3 +77,4 @@ class ChaosContainment:
         return formatted_result
 
 global_chaos_containment = ChaosContainment()
+__all__ = ['global_chaos_containment', 'ChaosContainment']
