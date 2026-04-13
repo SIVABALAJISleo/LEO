@@ -26,6 +26,7 @@ class RuntimeComposer:
         logger.info(f"runtime_composer: Composing from {len(components)} components for context '{user_context}'")
         
         final_answer_parts = []
+        missing_components = []
         
         for part in components:
             norm = global_normalizer.normalize(part)
@@ -46,14 +47,18 @@ class RuntimeComposer:
                 composition = global_fragment_composer.compose(fragments) # Can be extended for style
                 if composition:
                     final_answer_parts.append(composition)
+                else:
+                    missing_components.append(part)
+            else:
+                missing_components.append(part)
 
         if final_answer_parts:
             # Join multiple component answers (Point 6 Composition)
             full_composition = "\n\n".join(final_answer_parts)
-            logger.info(f"runtime_composer: Successfully assembled multi-part answer.")
-            return full_composition
+            logger.info(f"runtime_composer: Assembled answer from {len(final_answer_parts)} parts. Missing: {len(missing_components)}")
+            return full_composition, missing_components
 
-        return None
+        return None, components
 
     def _get_target_style(self, user_context: str) -> str:
         """Point 10: Select style based on user context."""

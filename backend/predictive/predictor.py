@@ -1,97 +1,73 @@
 import logging
 import hashlib
+import asyncio
 from typing import List, Dict, Any, Optional
 import numpy as np
-from backend.intelligence.router import SemanticCache
 from backend.normalization.normalizer import global_normalizer
 
 logger = logging.getLogger(__name__)
 
+HOT_QUERIES = ["what is ai", "explain hyper architecture", "leo system status", "api reference"]
+
 class PredictivePredictor:
     """
     Advanced Prediction Engine (Layer 0).
-    Points 2 & 3: Predict next 5–15 queries based on intent, variations, and session history.
+    Context-aware variation generation based on session + trends.
     """
     def __init__(self):
-        self.semantic_cache = SemanticCache()
-        self.session_history: Dict[str, List[str]] = {} # session_id -> list of queries
-        self.global_history: List[str] = []
+        self.session_history: Dict[str, List[str]] = {}
 
     def log_query(self, session_id: str, query: str):
         """Unified logging for session and global history."""
         if session_id not in self.session_history:
             self.session_history[session_id] = []
         self.session_history[session_id].append(query)
-        self.global_history.append(query)
         
         # Buffer management
         if len(self.session_history[session_id]) > 20: self.session_history[session_id].pop(0)
-        if len(self.global_history) > 100: self.global_history.pop(0)
 
     def predict_next_queries(self, query: str, session_id: str = "default") -> Dict[str, List[str]]:
-        """
-        Point 2: Predict 5–10 variations and 3–5 follow-ups.
-        Enables 98% compute avoidance by resolving user journey stages ahead of time.
-        """
+        """Adaptive prediction based on session context."""
+        if session_id not in self.session_history: self.session_history[session_id] = []
+        self.session_history[session_id].append(query)
+        
         norm = global_normalizer.normalize(query)
         entity = norm.get("entity", "system")
         
-        # 1. Semantic Variations (5-10 queries)
-        variations = [
-            f"what is {entity}",
-            f"usage examples for {entity}",
-            f"how does {entity} work",
-            f"best practices using {entity}",
-            f"troubleshooting {entity} issues",
-            f"optimizing {entity} performance",
-            f"security considerations for {entity}",
-            f"scaling {entity}",
-            f"setup guide for {entity}",
-            f"how to automate {entity}"
-        ][:10]
+        # 1. Trending & Hot Dominance (Point 5)
+        variations = [q for q in HOT_QUERIES if entity.lower() in q]
         
-        # 2. Contextual follow-ups (3-5 queries)
-        follow_ups = []
-        q_lower = query.lower()
-        if "database" in q_lower or "sql" in q_lower:
-            follow_ups = ["how to scale databases", "backup strategies", "migration guide", "query optimization"]
-        elif "api" in q_lower or "rest" in q_lower:
-            follow_ups = ["api security", "rate limiting setup", "documentation best practices", "sdk generation"]
-        elif "deploy" in q_lower or "cloud" in q_lower:
-            follow_ups = ["ci/cd pipeline setup", "container orchestration", "cost optimization", "monitoring alerts"]
-        else:
-            follow_ups = [f"advanced {entity} concepts", f"integrating {entity}", f"future of {entity}"]
+        # 2. Session Context (Point 6)
+        history = self.session_history[session_id]
+        if len(history) > 1:
+            # Predict based on transition
+            variations += [f"how to implement {entity}", f"advanced {entity} tutorial"]
+        
+        # 3. Mass Paraphrases
+        variations += [f"definition of {entity}", f"simple {entity} explanation", f"troubleshoot {entity}"]
 
-        # Ensure counts
         return {
-            "variations": variations[:10],
-            "follow_ups": follow_ups[:5]
+            "variations": list(set(variations[:20])),
+            "follow_ups": [f"next steps for {entity}", f"scaling {entity} in production"]
         }
 
-    def mine_patterns(self) -> List[str]:
-        """Global pattern mining for background precomputation."""
-        all_queries = [q for history in self.session_history.values() for q in history]
-        if not all_queries:
-            return []
-            
-        embeddings = self.semantic_cache.model.encode(all_queries)
-        canonical_queries = []
-        processed = set()
+    async def preload(self, partial_query: str, session_id: str, tenant_id: str):
+        """
+        Point 10: CONTEXT PRELOADING.
+        Start processing before request completes (predict while typing).
+        """
+        if len(partial_query) < 4: return
         
-        for i, query in enumerate(all_queries):
-            if i in processed: continue
-            sim_indices = []
-            for j in range(i + 1, len(all_queries)):
-                if j in processed: continue
-                sim = np.dot(embeddings[i], embeddings[j])
-                if sim > 0.85: # Aligned with Phase 30 threshold
-                    sim_indices.append(j)
-                    processed.add(j)
+        # Predict candidate full queries
+        norm = global_normalizer.normalize(partial_query)
+        entity = norm.get("entity", "GENERIC")
+        candidates = [f"what is {entity}", f"how to use {entity}"]
+        
+        from backend.background.compute_engine import global_bg_compute
+        for q in candidates:
+            # Heat up the cache for likely candidates
+            asyncio.create_task(global_bg_compute.enqueue(q, tenant_id, "SYSTEM", session_id, priority="predicted"))
             
-            if len(sim_indices) >= 2:
-                canonical_queries.append(query)
-                processed.add(i)
-                
-        return canonical_queries
+        logger.info(f"cis_preload: Context pre-warmed for '{partial_query}'")
 
 global_predictor = PredictivePredictor()

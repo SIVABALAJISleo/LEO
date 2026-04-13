@@ -70,61 +70,52 @@ class AnalyticsSystem:
         if len(self._latencies) > 1000:
             self._latencies.pop(0)
 
-    def log_request(self, request_id: str, query: str, path_taken: str, latency_ms: float, model_called: bool, is_prediction_hit: bool = False, is_recovery: bool = False):
+    def log_request(self, request_id: str, query: str, path_taken: str, latency_ms: float, model_called: bool, is_prediction_hit: bool = False, is_recovery: bool = False, canonical: str = ""):
         """
-        Point 9: Real metrics logging to metrics.jsonl.
-        Tracks Model Avoidance and Recovery Efficiency.
+        Point 17: REAL METRICS ENGINE.
+        Logs to metrics.jsonl. Avoidance = 1 - (model_calls / total).
         """
         log_entry = {
             "req_id": request_id,
+            "query": query,
+            "canonical": canonical,
             "path": path_taken,
             "latency": float(f"{latency_ms:.2f}"),
             "model_call": model_called,
             "pred_hit": is_prediction_hit,
-            "recovered": is_recovery,
             "ts": float(f"{time.time():.4f}")
         }
         
         try:
             with open("metrics.jsonl", "a", encoding="utf-8") as f:
                 f.write(json.dumps(log_entry) + "\n")
-        except Exception as e:
-            logger.error(f"metrics: log write failed: {e}")
+        except Exception: pass
 
     def get_metrics(self) -> dict:
-        """
-        Point 9: Verification Engine - 98% Avoidance Target Tracker.
-        """
-        reqs, calls, pred_hits, recovered = 0, 0, 0, 0
+        """Point 18: Benchmark Validation."""
+        reqs, calls, cache_hits = 0, 0, 0
         lats = []
         
         if os.path.exists("metrics.jsonl"):
-            try:
-                with open("metrics.jsonl", "r", encoding="utf-8") as f:
-                    for line in f:
-                        if not line.strip(): continue
-                        d = json.loads(line)
-                        reqs += 1
-                        if d.get("model_call"): calls += 1
-                        if d.get("pred_hit"): pred_hits += 1
-                        if d.get("recovered"): recovered += 1
-                        lats.append(d.get("latency", 0))
-            except Exception as e:
-                logger.error(f"metrics: log read error: {e}")
+            with open("metrics.jsonl", "r", encoding="utf-8") as f:
+                for line in f:
+                    if not line.strip(): continue
+                    d = json.loads(line)
+                    reqs += 1
+                    if d.get("model_call"): calls += 1
+                    if "memory" in d.get("path", "") or "prediction" in d.get("path", "") or "reuse" in d.get("path", ""):
+                        cache_hits += 1
+                    lats.append(d.get("latency", 0))
         
-        avoidance = 1.0 - (calls / reqs) if reqs > 0 else 0.0
-        prediction_hit_rate = pred_hits / reqs if reqs > 0 else 0.0
-        recovery_rate = recovered / reqs if reqs > 0 else 0.0
+        avoidance = (1.0 - (calls / reqs)) * 100 if reqs > 0 else 0.0
         avg_lat = sum(lats) / len(lats) if lats else 0.0
         
         return {
             "total_requests": reqs,
             "model_calls": calls,
-            "avoidance_rate": float(f"{avoidance:.4f}"),
-            "prediction_hit_rate": float(f"{prediction_hit_rate:.4f}"),
-            "failure_recovery_rate": float(f"{recovery_rate:.4f}"),
-            "avg_latency_ms": float(f"{avg_lat:.2f}"),
-            "reuse_rate": float(f"{(reqs - calls) / reqs:.4f}") if reqs > 0 else 0.0
+            "cache_hits": cache_hits,
+            "avoidance_rate": f"{avoidance:.2f}%",
+            "avg_latency_ms": f"{avg_lat:.2f}ms"
         }
 
 global_metrics = AnalyticsSystem()

@@ -17,7 +17,7 @@ MEMORY_DB_PATH = os.path.join(os.getcwd(), "data", "global_memory_faiss.idx")
 LOG_PATH = os.path.join(os.getcwd(), "data", "global_memory_log.json")
 DIMENSION = 384
 MEMORY_CAP = 50_000
-REUSE_THRESHOLD = 0.85  # Lowered from 0.97 for Phase 30
+REUSE_THRESHOLD = 0.90  # Raised to 0.90 for TRIATTENTION requirements
 
 class GlobalMemory:
     """
@@ -91,15 +91,15 @@ class GlobalMemory:
             
             if indices[0][0] != -1:
                 similarity = 1.0 - (dist[0][0] / 2.0)
-                # Lower threshold to 0.85 as requested by AI Architect (Point 4/6)
-                if similarity >= 0.85: 
+                # Enforce REUSE_THRESHOLD (Point 2: Semantic similarity >= 0.90)
+                if similarity >= REUSE_THRESHOLD: 
                     match_hash = self._id_map[indices[0][0]]
                     entry = self._log[match_hash]
                     entry["reuses"] += 1
                     logger.info(f"memory_semantic_hit: sim={similarity:.4f} (canonical={entry.get('canonical')})")
                     return entry
 
-        logger.debug(f"global_memory: No knowledge found for '{query}' (score < 0.85)")
+        logger.debug(f"global_memory: No knowledge found for '{query}' (score < {REUSE_THRESHOLD})")
         return None
 
     def save(self):

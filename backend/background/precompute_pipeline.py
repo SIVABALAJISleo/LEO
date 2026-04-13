@@ -54,8 +54,10 @@ class PrecomputePipeline:
             global_fragment_compressor.fragmentize_and_store(answer)
             
             logger.info(f"bg_precompute: Successfully pre-cached result for '{query}'")
+            return {"answer": answer, "source": "BG_PRECOMPUTE"}
             
         except Exception as e:
             logger.error(f"bg_precompute: Resolution error for '{query}' - {e}")
+            return None
 
 global_precompute_pipeline = PrecomputePipeline()
