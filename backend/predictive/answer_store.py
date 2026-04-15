@@ -60,7 +60,7 @@ class PredictiveAnswerStore:
             max_sim = 0
             
             for c in candidates:
-                c_emb = np.frombuffer(c.embedding, dtype='float32')
+                c_emb = np.frombuffer(bytes(c.embedding), dtype='float32')
                 sim = np.dot(query_embedding, c_emb)
                 if sim > max_sim:
                     max_sim = sim

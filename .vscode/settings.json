@@ -4,7 +4,7 @@
         "c:\\Users\\sivab\\OneDrive\\Documents\\HYPER\\remix-of-remix-of-remix-of-nvidia-inspired-design-main",
         "c:\\Users\\sivab\\OneDrive\\Documents\\HYPER\\remix-of-remix-of-remix-of-nvidia-inspired-design-main\\backend"
     ],
-    "python.analysis.autoSearchPaths": false,
+    "python.analysis.autoSearchPaths": true,
     "python.analysis.useLibraryCodeForTypes": true,
     "python.analysis.diagnosticMode": "workspace",
     "python.analysis.typeCheckingMode": "basic"

@@ -1,0 +1,16 @@
+{
+    "include": ["backend", "orchestration", "scripts", "tests"],
+    "exclude": ["src", "**/node_modules", "**/__pycache__"],
+    "venvPath": ".",
+    "venv": "venv",
+    "pythonVersion": "3.13",
+    "pythonPlatform": "Windows",
+    "typeCheckingMode": "basic",
+    "extraPaths": [".", "backend"],
+    "executionEnvironments": [
+        {
+            "root": ".",
+            "extraPaths": [".", "backend"]
+        }
+    ]
+}

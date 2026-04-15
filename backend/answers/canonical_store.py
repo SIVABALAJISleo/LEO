@@ -62,6 +62,9 @@ class CanonicalStore:
                 return key
         return None
 
+    def register(self, shape_key: str, answer: str, overwrite: bool = False, embedding: Optional[np.ndarray] = None):
+        return self.store(shape_key, answer, overwrite, embedding)
+
     def store(self, shape_key: str, answer: str, overwrite: bool = False, embedding: Optional[np.ndarray] = None):
         """Stores a canonical answer and its embedding for future compressed queries."""
         if shape_key in self._store and not overwrite:

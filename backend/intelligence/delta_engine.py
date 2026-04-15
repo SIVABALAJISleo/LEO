@@ -112,7 +112,13 @@ def _generate_delta_text(query: str, missing_parts: List[str]) -> str:
     return " ".join(parts_text)
 
 
-global_delta_engine_v2 = type("DeltaEngineV2", (), {
-    "register_answer": staticmethod(register_answer),
-    "find_delta": staticmethod(find_delta),
-})()
+class DeltaEngineV2:
+    @staticmethod
+    def register_answer(query: str, answer: str) -> None:
+        return register_answer(query, answer)
+
+    @staticmethod
+    def find_delta(query: str, threshold_full: float = 0.85, threshold_partial: float = 0.75) -> Optional[Dict[str, Any]]:
+        return find_delta(query, threshold_full, threshold_partial)
+
+global_delta_engine_v2 = DeltaEngineV2()

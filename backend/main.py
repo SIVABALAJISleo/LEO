@@ -43,6 +43,33 @@ async def startup_event():
     init_db()
     await hyper_engine.start()
     asyncio.create_task(global_request_queue.start())
+
+    # ── AIS++ Continuous Background Workers ──────────────────────────────── #
+    try:
+        from backend.intelligence.knowledge_field import global_knowledge_field
+        from backend.predictive.probability_engine import global_probability_engine
+        from backend.background.compute_engine import global_bg_compute
+        from backend.memory.global_memory import global_memory
+
+        # Knowledge Field: continuously scans and fills domain coverage gaps
+        asyncio.create_task(
+            global_knowledge_field.run_continuous(
+                global_bg_compute, tenant_id="default",
+                interval_sec=90.0, batch_size=15
+            )
+        )
+        # Probability Engine: continuously precomputes high-probability queries
+        asyncio.create_task(
+            global_probability_engine.run_continuous(
+                global_bg_compute, global_memory,
+                tenant_id="default", interval_sec=8.0, batch_size=12
+            )
+        )
+        struct_logger.info("ais_workers", status="started",
+                           workers=["knowledge_field", "probability_engine"])
+    except Exception as _ais_err:
+        struct_logger.warning("ais_workers_start_failed", error=str(_ais_err))
+
     struct_logger.info("startup", status="ready")
 
 @app.middleware("http")
@@ -168,6 +195,163 @@ async def get_telemetry():
     """Phase 5: Real-time inference avoidance telemetry."""
     return hyper_engine.get_telemetry()
 
+@app.get("/api/v1/metrics/avoidance", tags=["observability"])
+async def get_avoidance_metrics():
+    """
+    Real-time compute avoidance metrics.
+    avoidance_rate = 1 - (model_calls / total_requests)
+    All numbers are REAL — no simulated values.
+    """
+    from backend.analytics.avoidance_tracker import global_avoidance_tracker
+    from backend.core.zero_repeat_store import global_zero_repeat_store
+    from backend.predictive.massive_prediction_engine import global_massive_predictor
+    from backend.core.delta_compute_engine import global_delta_engine
+    from backend.core.failure_recovery_engine import global_failure_recovery
+
+    return {
+        "avoidance_metrics":   global_avoidance_tracker.get_live_metrics(),
+        "zero_repeat_store":   global_zero_repeat_store.stats(),
+        "massive_predictor":   global_massive_predictor.stats(),
+        "delta_engine":        global_delta_engine.stats(),
+        "failure_recovery":    global_failure_recovery.stats(),
+        "violation_log":       global_avoidance_tracker.get_violation_log(),
+        "timestamp":           time.time(),
+    }
+
+# ═══════════════════════════════════════════════════════════════════════ #
+# AIS++ Endpoints                                                         #
+# ═══════════════════════════════════════════════════════════════════════ #
+
+@app.get("/api/v1/ais/status", tags=["ais"])
+async def ais_status():
+    """
+    Full AIS++ system status.
+    Real-time avoidance rate, module health, path distribution.
+    All numbers are measured — none are simulated.
+    """
+    from backend.analytics.avoidance_tracker   import global_avoidance_tracker
+    from backend.core.zero_repeat_store        import global_zero_repeat_store
+    from backend.core.global_dedup_cache       import global_dedup_cache
+    from backend.core.delta_compute_engine     import global_delta_engine
+    from backend.core.micro_parallel_processor import global_micro_parallel
+    from backend.core.experience_optimizer     import global_experience_optimizer
+    from backend.core.compute_deferral         import global_compute_deferral
+    from backend.intelligence.approximation_engine import global_approximation_engine
+    from backend.predictive.speculative_executor   import global_speculative_executor
+    from backend.predictive.probability_engine     import global_probability_engine
+    from backend.predictive.massive_prediction_engine import global_massive_predictor
+    from backend.intelligence.intent_trajectory    import global_intent_trajectory
+    from backend.intelligence.knowledge_field      import global_knowledge_field
+    from backend.graph.query_graph                 import global_query_graph
+    from backend.memory.contextual_memory_stack    import global_memory_stack
+    from backend.core.zero_compute                 import global_zero_control
+
+    metrics = global_avoidance_tracker.get_live_metrics()
+    return {
+        "system":              "AIS++ v3",
+        "avoidance_rate":      metrics.get("avoidance_rate", "0.00%"),
+        "model_call_rate":     metrics.get("model_call_rate", "0.00%"),
+        "avg_latency_ms":      metrics.get("avg_latency_ms", "0.00ms"),
+        "p95_latency_ms":      metrics.get("p95_latency_ms", "0.00ms"),
+        "all_criteria_met":    metrics.get("all_criteria_met", False),
+        "success_criteria":    metrics.get("success_criteria", {}),
+        "violations":          metrics.get("violations", 0),
+        "path_distribution":   metrics.get("path_distribution", {}),
+        "pipeline_stats":      global_zero_control.pipeline_stats(),
+        "modules": {
+            "global_dedup":      global_dedup_cache.stats(),
+            "memory_stack":      global_memory_stack.stats(),
+            "query_graph":       global_query_graph.stats(),
+            "speculative":       global_speculative_executor.stats(),
+            "probability":       global_probability_engine.stats(),
+            "micro_parallel":    global_micro_parallel.stats(),
+            "delta_engine":      global_delta_engine.stats(),
+            "zero_repeat":       global_zero_repeat_store.stats(),
+            "approximation":     global_approximation_engine.stats(),
+            "compute_deferral":  global_compute_deferral.stats(),
+            "experience":        global_experience_optimizer.stats(),
+            "massive_predictor": global_massive_predictor.stats(),
+            "intent_trajectory": global_intent_trajectory.stats(),
+            "knowledge_field":   global_knowledge_field.stats(),
+        },
+        "timestamp": time.time(),
+    }
+
+
+class SpeculateRequest(BaseModel):
+    prefix: str
+    session_id: str = "default"
+
+
+@app.post("/api/v1/ais/speculate", tags=["ais"])
+async def ais_speculate(request: Request, data: SpeculateRequest,
+                        token: dict = Depends(verify_token)):
+    """
+    Speculative pre-warming endpoint.
+    Call with partial query prefix while user is still typing.
+    System predicts and precomputes likely completions in background.
+    Response is instant (<5ms).
+    """
+    from backend.predictive.speculative_executor import global_speculative_executor
+    from backend.background.compute_engine      import global_bg_compute
+
+    tenant_id = token.get("tenant_id", "default")
+    candidates = global_speculative_executor.predict_completions(data.prefix)
+
+    asyncio.create_task(
+        global_speculative_executor.speculate(
+            data.prefix, data.session_id, tenant_id, global_bg_compute
+        )
+    )
+    return {
+        "prefix":          data.prefix,
+        "candidates":      candidates,
+        "precompute_triggered": True,
+        "latency_ms":      0,
+    }
+
+
+@app.get("/api/v1/updates/{request_id}", tags=["ais"])
+async def get_deferred_update(request_id: str,
+                               token: dict = Depends(verify_token)):
+    """
+    Poll for deferred compute updates.
+    When a skeleton was returned, call this to get the full answer.
+    Returns 'pending' status if not yet ready.
+    """
+    from backend.core.compute_deferral import global_compute_deferral
+    entry = global_compute_deferral.update_store.get(request_id)
+    if not entry:
+        raise HTTPException(status_code=404, detail="Request ID not found")
+    return {
+        "request_id":  request_id,
+        "status":      entry["status"],
+        "answer":      entry.get("full_answer") or entry.get("skeleton"),
+        "confidence":  entry.get("confidence", 0.0),
+        "mode":        entry.get("mode", "pending"),
+        "resolved_at": entry.get("resolved_at"),
+    }
+
+
+@app.get("/api/v1/ais/pipeline", tags=["ais"])
+async def ais_pipeline_stats():
+    """
+    Detailed per-path latency report from the experience optimizer.
+    Shows which pipeline stages are fastest for adaptive routing.
+    """
+    from backend.core.experience_optimizer    import global_experience_optimizer
+    from backend.core.zero_compute            import global_zero_control
+    from backend.analytics.avoidance_tracker  import global_avoidance_tracker
+
+    return {
+        "pipeline_stats":    global_zero_control.pipeline_stats(),
+        "avoidance_metrics": global_avoidance_tracker.get_live_metrics(),
+        "path_priorities":   global_experience_optimizer.get_path_report(),
+        "violation_log":     global_avoidance_tracker.get_violation_log(),
+        "timestamp":         time.time(),
+    }
+
+
 @app.get("/")
 async def root():
-    return {"message": "Project HYPER Startup Platform Active"}
+    return {"message": "Project HYPER — AIS++ Maximum Avoidance Active"}

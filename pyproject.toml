@@ -6,7 +6,11 @@ venv = "venv"
 pythonVersion = "3.13"
 pythonPlatform = "Windows"
 typeCheckingMode = "basic"
-extraPaths = ["."]
+extraPaths = [".", "backend"]
+
+[[tool.pyright.executionEnvironments]]
+root = "."
+extraPaths = [".", "backend"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

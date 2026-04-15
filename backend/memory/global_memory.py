@@ -141,6 +141,49 @@ class GlobalMemory:
         logger.info(f"memory_compressed: remaining={len(self._log)}")
         self.save()
 
+    def search(self, query: str, k: int = 3, threshold: float = 0.88) -> List[Dict[str, Any]]:
+        """
+        Top-K semantic search for TriAttention Tier 2.
+        Returns list of hits with similarity >= threshold, sorted best-first.
+        Each hit contains: answer, confidence, similarity, canonical.
+        """
+        results = []
+        if self._index.ntotal == 0:
+            return results
+
+        try:
+            emb = global_embedding_pipeline.get_embeddings([query])[0].astype(np.float32)
+            actual_k = min(k, self._index.ntotal)
+            dists, indices = self._index.search(np.array([emb]), actual_k)
+
+            for dist, idx in zip(dists[0], indices[0]):
+                if idx == -1:
+                    continue
+                similarity = 1.0 - (dist / 2.0)
+                if similarity < threshold:
+                    continue
+                if idx >= len(self._id_map):
+                    continue
+                qhash = self._id_map[idx]
+                entry = self._log.get(qhash)
+                if entry is None:
+                    continue
+                results.append({
+                    "answer":     entry.get("answer", ""),
+                    "confidence": max(entry.get("confidence", similarity), similarity),
+                    "similarity": round(similarity, 4),
+                    "canonical":  entry.get("canonical", ""),
+                    "mode":       entry.get("mode", "memory"),
+                })
+
+            # Sort by similarity descending
+            results.sort(key=lambda x: x["similarity"], reverse=True)
+            logger.debug(f"global_memory.search: k={k} threshold={threshold} found={len(results)}")
+        except Exception as exc:
+            logger.warning(f"global_memory.search_error: {exc}")
+
+        return results
+
     def avoidance_stats(self) -> Dict[str, Any]:
         total = len(self._log)
         if total == 0: return {"total": 0, "avoidance_ratio": 0.0}
