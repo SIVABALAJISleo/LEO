@@ -1,0 +1,300 @@
+﻿c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\analytics\avoidance_tracker.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\analytics\avoidance_tracker.py:130:29 - error: Expression of type "None" cannot be assigned to parameter of type "float"
+  ┬á┬á"None" is not assignable to "float" (reportArgumentType)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\analytics\avoidance_tracker.py:131:32 - error: Expression of type "None" cannot be assigned to parameter of type "float"
+  ┬á┬á"None" is not assignable to "float" (reportArgumentType)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\analytics\cost_monitor.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\analytics\cost_monitor.py:22:61 - error: Invalid conditional operand of type "Column[bool]"
+  ┬á┬áMethod __bool__ for type "Column[bool]" returns type "NoReturn" rather than "bool" (reportGeneralTypeIssues)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\answers\global_knowledge.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\answers\global_knowledge.py:44:25 - error: Arguments missing for parameters "k", "distances", "labels" (reportCallIssue)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\answers\global_knowledge.py:56:9 - error: Argument missing for parameter "x" (reportCallIssue)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\answers\semantic_canonical.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\answers\semantic_canonical.py:30:36 - error: "pickle" is unbound (reportUnboundVariable)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\answers\semantic_canonical.py:30:43 - error: Cannot access attribute "load" for class "Unbound" (reportAttributeAccessIssue)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\answers\semantic_canonical.py:50:30 - error: Arguments missing for parameters "k", "distances", "labels" (reportCallIssue)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\answers\semantic_canonical.py:63:29 - error: Cannot assign to attribute "use_count" for class "QueryCluster"
+  ┬á┬áExpression of type "ColumnElement[int]" cannot be assigned to attribute "use_count" of class "QueryCluster"
+  ┬á┬á┬á┬á"ColumnElement[int]" is not assignable to "Column[int]" (reportAttributeAccessIssue)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\answers\semantic_canonical.py:95:13 - error: Argument missing for parameter "x" (reportCallIssue)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\answers\semantic_canonical.py:96:29 - error: Argument of type "Column[int]" cannot be assigned to parameter "object" of type "int" in function "append"
+  ┬á┬á"Column[int]" is not assignable to "int" (reportArgumentType)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\background\precompute_pipeline.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\background\precompute_pipeline.py:25:44 - error: Cannot access attribute "find_delta" for class "DeltaEngineV2"
+  ┬á┬áAttribute "find_delta" is unknown (reportAttributeAccessIssue)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\background\precompute_pipeline.py:48:33 - error: Cannot access attribute "register" for class "ShadowAnswerStore"
+  ┬á┬áAttribute "register" is unknown (reportAttributeAccessIssue)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\background\precompute_pipeline.py:51:36 - error: Cannot access attribute "register_answer" for class "DeltaEngineV2"
+  ┬á┬áAttribute "register_answer" is unknown (reportAttributeAccessIssue)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\background\session_predictor.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\background\session_predictor.py:40:67 - error: No parameter named "count" (reportCallIssue)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\compression\embedding_optimizer.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\compression\embedding_optimizer.py:37:16 - error: Type "dict[str, ndarray[_AnyShape, dtype[signedinteger[_8Bit]]] | float | Any]" is not assignable to return type "ndarray[_AnyShape, dtype[Any]]" (reportReturnType)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\compression\storage_optimizer.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\compression\storage_optimizer.py:38:27 - error: Cannot assign to attribute "key_points_json" for class "CompressedKnowledge"
+  ┬á┬áExpression of type "str" cannot be assigned to attribute "key_points_json" of class "CompressedKnowledge"
+  ┬á┬á┬á┬á"str" is not assignable to "Column[str]" (reportAttributeAccessIssue)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\compression\storage_optimizer.py:39:27 - error: Cannot assign to attribute "fragment_ids_json" for class "CompressedKnowledge"
+  ┬á┬áExpression of type "str" cannot be assigned to attribute "fragment_ids_json" of class "CompressedKnowledge"
+  ┬á┬á┬á┬á"str" is not assignable to "Column[str]" (reportAttributeAccessIssue)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\compression\storage_optimizer.py:59:50 - error: Argument of type "Column[str]" cannot be assigned to parameter "s" of type "str | bytes | bytearray" in function "loads"
+  ┬á┬áType "Column[str]" is not assignable to type "str | bytes | bytearray"
+  ┬á┬á┬á┬á"Column[str]" is not assignable to "str"
+  ┬á┬á┬á┬á"Column[str]" is not assignable to "bytes"
+  ┬á┬á┬á┬á"Column[str]" is not assignable to "bytearray" (reportArgumentType)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\compression\storage_optimizer.py:61:45 - error: Argument of type "Column[str]" cannot be assigned to parameter "s" of type "str | bytes | bytearray" in function "loads"
+  ┬á┬áType "Column[str]" is not assignable to type "str | bytes | bytearray"
+  ┬á┬á┬á┬á"Column[str]" is not assignable to "str"
+  ┬á┬á┬á┬á"Column[str]" is not assignable to "bytes"
+  ┬á┬á┬á┬á"Column[str]" is not assignable to "bytearray" (reportArgumentType)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\compression\storage_optimizer.py:65:16 - error: Type "None" is not assignable to return type "Dict[str, Any]"
+  ┬á┬á"None" is not assignable to "Dict[str, Any]" (reportReturnType)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\ais_pipeline.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\ais_pipeline.py:430:20 - error: Type "Dict[str, Any] | str" is not assignable to return type "str"
+  ┬á┬áType "Dict[str, Any] | str" is not assignable to type "str"
+  ┬á┬á┬á┬á"Dict[str, Any]" is not assignable to "str" (reportReturnType)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\chaos.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\chaos.py:12:16 - error: Cannot access attribute "warning" for class "StructuredLogger"
+  ┬á┬áAttribute "warning" is unknown (reportAttributeAccessIssue)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\chaos.py:18:16 - error: Cannot access attribute "warning" for class "StructuredLogger"
+  ┬á┬áAttribute "warning" is unknown (reportAttributeAccessIssue)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\composer.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\composer.py:6:6 - error: Import "PIL" could not be resolved (reportMissingImports)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\composer.py:33:33 - error: "format" is not a known attribute of "None" (reportOptionalMemberAccess)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\composer.py:80:22 - error: Import "moviepy.editor" could not be resolved (reportMissingImports)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\composer.py:85:22 - error: Import "moviepy" could not be resolved (reportMissingImports)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\compute_deferral.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\compute_deferral.py:60:33 - error: No parameter named "last" (reportCallIssue)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\compute_deferral.py:185:25 - error: Argument of type "str | float" cannot be assigned to parameter "confidence" of type "float" in function "resolve"
+  ┬á┬áType "str | float" is not assignable to type "float"
+  ┬á┬á┬á┬á"str" is not assignable to "float" (reportArgumentType)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\ingest.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\ingest.py:14:10 - error: Import "docx" could not be resolved (reportMissingImports)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\ingest.py:23:34 - error: "lower" is not a known attribute of "None" (reportOptionalMemberAccess)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\memory.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\memory.py:77:39 - error: Argument of type "ResponseT" cannot be assigned to parameter "s" of type "str | bytes | bytearray" in function "loads"
+  ┬á┬áType "ResponseT" is not assignable to type "str | bytes | bytearray"
+  ┬á┬á┬á┬áType "Awaitable[Any]" is not assignable to type "str | bytes | bytearray"
+  ┬á┬á┬á┬á┬á┬á"Awaitable[Any]" is not assignable to "str"
+  ┬á┬á┬á┬á┬á┬á"Awaitable[Any]" is not assignable to "bytes"
+  ┬á┬á┬á┬á┬á┬á"Awaitable[Any]" is not assignable to "bytearray" (reportArgumentType)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\model_manager.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\model_manager.py:22:27 - error: Cannot assign to attribute "model" for class "ModelManager*"
+  ┬á┬áAttribute "model" is unknown (reportAttributeAccessIssue)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\model_manager.py:117:72 - error: No parameter named "stream" (reportCallIssue)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\orchestrator.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\orchestrator.py:180:25 - error: Cannot assign to attribute "use_count" for class "QueryCluster"
+  ┬á┬áExpression of type "ColumnElement[int]" cannot be assigned to attribute "use_count" of class "QueryCluster"
+  ┬á┬á┬á┬á"ColumnElement[int]" is not assignable to "Column[int]" (reportAttributeAccessIssue)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\prompt_cache.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\prompt_cache.py:25:33 - error: Cannot access attribute "decode" for class "Awaitable[Any]"
+  ┬á┬áAttribute "decode" is unknown (reportAttributeAccessIssue)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\prompt_cache.py:27:20 - error: Type "ResponseT | Unknown" is not assignable to return type "str | None"
+  ┬á┬áType "ResponseT | Unknown" is not assignable to type "str | None"
+  ┬á┬á┬á┬áType "Awaitable[Any]" is not assignable to type "str | None"
+  ┬á┬á┬á┬á┬á┬á"Awaitable[Any]" is not assignable to "str"
+  ┬á┬á┬á┬á┬á┬á"Awaitable[Any]" is not assignable to "None" (reportReturnType)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\refiner.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\refiner.py:3:20 - error: "str" is unknown import symbol (reportAttributeAccessIssue)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\reliability.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\reliability.py:62:25 - error: Cannot access attribute "_get_dynamic_fallback" for class "ReliabilityOrchestrator*"
+  ┬á┬áAttribute "_get_dynamic_fallback" is unknown (reportAttributeAccessIssue)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\security.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\security.py:10:12 - error: Import "firebase_admin" could not be resolved (reportMissingImports)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\security.py:11:10 - error: Import "firebase_admin" could not be resolved (reportMissingImports)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\security.py:97:16 - error: Import "onnx.hub" could not be resolved (reportMissingImports)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\tasks.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\tasks.py:3:6 - error: Import "celery" could not be resolved (reportMissingImports)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\enhancement\context_expander.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\enhancement\context_expander.py:8:66 - error: Expression of type "None" cannot be assigned to parameter of type "list[Unknown]"
+  ┬á┬á"None" is not assignable to "list[Unknown]" (reportArgumentType)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\enhancement\enhancement_router.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\enhancement\enhancement_router.py:35:20 - error: Type "tuple[dict[Unknown, Unknown], Literal['enhanced']]" is not assignable to return type "Tuple[str | None, str]"
+  ┬á┬áType "dict[Unknown, Unknown]" is not assignable to type "str | None"
+  ┬á┬á┬á┬á"dict[Unknown, Unknown]" is not assignable to "str"
+  ┬á┬á┬á┬á"dict[Unknown, Unknown]" is not assignable to "None" (reportReturnType)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\enhancement\enhancer.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\enhancement\enhancer.py:55:50 - error: Argument of type "List[str] | None" cannot be assigned to parameter "context_docs" of type "list[Unknown]" in function "expand"
+  ┬á┬áType "List[str] | None" is not assignable to type "list[Unknown]"
+  ┬á┬á┬á┬á"None" is not assignable to "list[Unknown]" (reportArgumentType)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\graph\graph_store.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\graph\graph_store.py:68:40 - error: Argument of type "ResponseT" cannot be assigned to parameter "s" of type "str | bytes | bytearray" in function "loads"
+  ┬á┬áType "ResponseT" is not assignable to type "str | bytes | bytearray"
+  ┬á┬á┬á┬áType "Awaitable[Any]" is not assignable to type "str | bytes | bytearray"
+  ┬á┬á┬á┬á┬á┬á"Awaitable[Any]" is not assignable to "str"
+  ┬á┬á┬á┬á┬á┬á"Awaitable[Any]" is not assignable to "bytes"
+  ┬á┬á┬á┬á┬á┬á"Awaitable[Any]" is not assignable to "bytearray" (reportArgumentType)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\inference\kv_cache.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\inference\kv_cache.py:58:39 - error: Argument of type "ResponseT" cannot be assigned to parameter "s" of type "str | bytes | bytearray" in function "loads"
+  ┬á┬áType "ResponseT" is not assignable to type "str | bytes | bytearray"
+  ┬á┬á┬á┬áType "Awaitable[Any]" is not assignable to type "str | bytes | bytearray"
+  ┬á┬á┬á┬á┬á┬á"Awaitable[Any]" is not assignable to "str"
+  ┬á┬á┬á┬á┬á┬á"Awaitable[Any]" is not assignable to "bytes"
+  ┬á┬á┬á┬á┬á┬á"Awaitable[Any]" is not assignable to "bytearray" (reportArgumentType)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\inference\kv_cache_engine.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\inference\kv_cache_engine.py:62:39 - error: Argument of type "ResponseT" cannot be assigned to parameter "s" of type "str | bytes | bytearray" in function "loads"
+  ┬á┬áType "ResponseT" is not assignable to type "str | bytes | bytearray"
+  ┬á┬á┬á┬áType "Awaitable[Any]" is not assignable to type "str | bytes | bytearray"
+  ┬á┬á┬á┬á┬á┬á"Awaitable[Any]" is not assignable to "str"
+  ┬á┬á┬á┬á┬á┬á"Awaitable[Any]" is not assignable to "bytes"
+  ┬á┬á┬á┬á┬á┬á"Awaitable[Any]" is not assignable to "bytearray" (reportArgumentType)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\ingest\document_loader.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\ingest\document_loader.py:24:16 - error: Import "pypdf" could not be resolved (reportMissingImports)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\ingest\embedding_pipeline.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\ingest\embedding_pipeline.py:4:59 - error: "SentenceTransformer" is unknown import symbol (reportAttributeAccessIssue)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\intelligence\domain_expander.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\intelligence\domain_expander.py:44:36 - error: Cannot access attribute "register_answer" for class "DeltaEngineV2"
+  ┬á┬áAttribute "register_answer" is unknown (reportAttributeAccessIssue)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\intelligence\rag.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\intelligence\rag.py:7:10 - error: Import "rank_bm25" could not be resolved (reportMissingImports)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\intelligence\rag.py:79:10 - error: Import "sentence_transformers" could not be resolved (reportMissingImports)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\intelligence\rag.py:113:13 - error: Argument missing for parameter "x" (reportCallIssue)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\intelligence\rag.py:113:24 - error: "add" is not a known attribute of "None" (reportOptionalMemberAccess)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\intelligence\rag.py:120:20 - error: Arguments missing for parameters "k", "distances", "labels" (reportCallIssue)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\intelligence\rag.py:120:31 - error: "search" is not a known attribute of "None" (reportOptionalMemberAccess)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\intelligence\rag.py:139:42 - error: Argument of type "Literal['all-MiniLM-L6-v2']" cannot be assigned to parameter "dimension" of type "int" in function "__init__"
+  ┬á┬á"Literal['all-MiniLM-L6-v2']" is not assignable to "int" (reportArgumentType)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\intelligence\rag.py:235:53 - error: Argument of type "ResponseT" cannot be assigned to parameter "s" of type "str | bytes | bytearray" in function "loads"
+  ┬á┬áType "ResponseT" is not assignable to type "str | bytes | bytearray"
+  ┬á┬á┬á┬áType "Awaitable[Any]" is not assignable to type "str | bytes | bytearray"
+  ┬á┬á┬á┬á┬á┬á"Awaitable[Any]" is not assignable to "str"
+  ┬á┬á┬á┬á┬á┬á"Awaitable[Any]" is not assignable to "bytes"
+  ┬á┬á┬á┬á┬á┬á"Awaitable[Any]" is not assignable to "bytearray" (reportArgumentType)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\intelligence\rag.py:283:52 - error: No parameter named "score" (reportCallIssue)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\intelligence\reasoning.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\intelligence\reasoning.py:52:60 - error: Expression of type "None" cannot be assigned to parameter of type "List[str]"
+  ┬á┬á"None" is not assignable to "List[str]" (reportArgumentType)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\intelligence\reasoning.py:70:48 - error: No parameter named "count" (reportCallIssue)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\intelligence\reasoning.py:106:76 - error: Argument of type "Unknown | None" cannot be assigned to parameter "answer" of type "str" in function "evaluate"
+  ┬á┬áType "Unknown | None" is not assignable to type "str"
+  ┬á┬á┬á┬á"None" is not assignable to "str" (reportArgumentType)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\intelligence\reasoning.py:106:146 - error: Argument of type "Unknown | None" cannot be assigned to parameter "answer" of type "str" in function "evaluate"
+  ┬á┬áType "Unknown | None" is not assignable to type "str"
+  ┬á┬á┬á┬á"None" is not assignable to "str" (reportArgumentType)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\intelligence\reasoning.py:113:80 - error: Argument of type "Unknown | None" cannot be assigned to parameter "answer" of type "str" in function "evaluate"
+  ┬á┬áType "Unknown | None" is not assignable to type "str"
+  ┬á┬á┬á┬á"None" is not assignable to "str" (reportArgumentType)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\intelligence\reasoning.py:113:150 - error: Argument of type "Unknown | None" cannot be assigned to parameter "answer" of type "str" in function "evaluate"
+  ┬á┬áType "Unknown | None" is not assignable to type "str"
+  ┬á┬á┬á┬á"None" is not assignable to "str" (reportArgumentType)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\intelligence\reasoning.py:120:80 - error: Argument of type "Unknown | None" cannot be assigned to parameter "answer" of type "str" in function "evaluate"
+  ┬á┬áType "Unknown | None" is not assignable to type "str"
+  ┬á┬á┬á┬á"None" is not assignable to "str" (reportArgumentType)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\intelligence\reasoning.py:120:150 - error: Argument of type "Unknown | None" cannot be assigned to parameter "answer" of type "str" in function "evaluate"
+  ┬á┬áType "Unknown | None" is not assignable to type "str"
+  ┬á┬á┬á┬á"None" is not assignable to "str" (reportArgumentType)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\intelligence\reasoning.py:124:71 - error: Argument of type "Any | str | Unknown | None" cannot be assigned to parameter "content" of type "str" in function "add_message"
+  ┬á┬áType "Any | str | Unknown | None" is not assignable to type "str"
+  ┬á┬á┬á┬á"None" is not assignable to "str" (reportArgumentType)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\intelligence\reasoning.py:133:67 - error: Expression of type "None" cannot be assigned to parameter of type "List[str]"
+  ┬á┬á"None" is not assignable to "List[str]" (reportArgumentType)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\intelligence\reranker.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\intelligence\reranker.py:7:10 - error: Import "sentence_transformers" could not be resolved (reportMissingImports)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\intelligence\router.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\intelligence\router.py:70:10 - error: Import "sentence_transformers" could not be resolved (reportMissingImports)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\intelligence\router.py:133:42 - error: Argument of type "Literal['all-MiniLM-L6-v2']" cannot be assigned to parameter "dimension" of type "int" in function "__init__"
+  ┬á┬á"Literal['all-MiniLM-L6-v2']" is not assignable to "int" (reportArgumentType)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\intelligence\router.py:156:42 - error: Argument of type "ResponseT" cannot be assigned to parameter "s" of type "str | bytes | bytearray" in function "loads"
+  ┬á┬áType "ResponseT" is not assignable to type "str | bytes | bytearray"
+  ┬á┬á┬á┬áType "Awaitable[Any]" is not assignable to type "str | bytes | bytearray"
+  ┬á┬á┬á┬á┬á┬á"Awaitable[Any]" is not assignable to "str"
+  ┬á┬á┬á┬á┬á┬á"Awaitable[Any]" is not assignable to "bytes"
+  ┬á┬á┬á┬á┬á┬á"Awaitable[Any]" is not assignable to "bytearray" (reportArgumentType)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\intelligence\router.py:164:30 - error: Arguments missing for parameters "k", "distances", "labels" (reportCallIssue)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\intelligence\router.py:178:42 - error: Argument of type "ResponseT" cannot be assigned to parameter "s" of type "str | bytes | bytearray" in function "loads"
+  ┬á┬áType "ResponseT" is not assignable to type "str | bytes | bytearray"
+  ┬á┬á┬á┬áType "Awaitable[Any]" is not assignable to type "str | bytes | bytearray"
+  ┬á┬á┬á┬á┬á┬á"Awaitable[Any]" is not assignable to "str"
+  ┬á┬á┬á┬á┬á┬á"Awaitable[Any]" is not assignable to "bytes"
+  ┬á┬á┬á┬á┬á┬á"Awaitable[Any]" is not assignable to "bytearray" (reportArgumentType)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\intelligence\router.py:198:9 - error: Argument missing for parameter "x" (reportCallIssue)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\learning\answer_store.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\learning\answer_store.py:30:9 - error: Argument missing for parameter "confidence" (reportCallIssue)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\main.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\main.py:37:46 - error: Argument of type "(request: Request[State], exc: RateLimitExceeded) -> Response" cannot be assigned to parameter "handler" of type "ExceptionHandler" in function "add_exception_handler"
+  ┬á┬áType "(request: Request[State], exc: RateLimitExceeded) -> Response" is not assignable to type "ExceptionHandler"
+  ┬á┬á┬á┬áType "(request: Request[State], exc: RateLimitExceeded) -> Response" is not assignable to type "HTTPExceptionHandler"
+  ┬á┬á┬á┬á┬á┬áParameter 2: type "Exception" is incompatible with type "RateLimitExceeded"
+  ┬á┬á┬á┬á┬á┬á┬á┬á"Exception" is not assignable to "RateLimitExceeded"
+  ┬á┬á┬á┬áType "(request: Request[State], exc: RateLimitExceeded) -> Response" is not assignable to type "WebSocketExceptionHandler"
+  ┬á┬á┬á┬á┬á┬áParameter 1: type "WebSocket" is incompatible with type "Request[State]"
+  ┬á┬á┬á┬á┬á┬á┬á┬á"WebSocket" is not assignable to "Request[State]"
+  ┬á┬á┬á┬á┬á┬áParameter 2: type "Exception" is incompatible with type "RateLimitExceeded"
+    ... (reportArgumentType)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\main.py:105:43 - error: Argument of type "Unknown | None" cannot be assigned to parameter "user_id" of type "str" in function "check_limit"
+  ┬á┬áType "Unknown | None" is not assignable to type "str"
+  ┬á┬á┬á┬á"None" is not assignable to "str" (reportArgumentType)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\main.py:119:37 - error: Argument of type "Unknown | None" cannot be assigned to parameter "user_id" of type "str" in function "record_usage"
+  ┬á┬áType "Unknown | None" is not assignable to type "str"
+  ┬á┬á┬á┬á"None" is not assignable to "str" (reportArgumentType)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\main.py:140:43 - error: Argument of type "Unknown | None" cannot be assigned to parameter "user_id" of type "str" in function "check_limit"
+  ┬á┬áType "Unknown | None" is not assignable to type "str"
+  ┬á┬á┬á┬á"None" is not assignable to "str" (reportArgumentType)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\main.py:152:37 - error: Argument of type "Unknown | None" cannot be assigned to parameter "user_id" of type "str" in function "record_usage"
+  ┬á┬áType "Unknown | None" is not assignable to type "str"
+  ┬á┬á┬á┬á"None" is not assignable to "str" (reportArgumentType)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\memory\global_memory.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\memory\global_memory.py:72:9 - error: Argument missing for parameter "x" (reportCallIssue)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\memory\global_memory.py:90:29 - error: Arguments missing for parameters "k", "distances", "labels" (reportCallIssue)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\memory\global_memory.py:157:30 - error: Arguments missing for parameters "k", "distances", "labels" (reportCallIssue)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\memory\reasoning_store.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\memory\reasoning_store.py:73:13 - error: Argument missing for parameter "x" (reportCallIssue)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\memory\reasoning_store.py:97:9 - error: Argument missing for parameter "x" (reportCallIssue)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\memory\reasoning_store.py:127:30 - error: Arguments missing for parameters "k", "distances", "labels" (reportCallIssue)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\observability\telemetry.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\observability\telemetry.py:17:58 - error: Expression of type "None" cannot be assigned to parameter of type "Dict[str, Any]"
+  ┬á┬á"None" is not assignable to "Dict[str, Any]" (reportArgumentType)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\observability\telemetry.py:26:59 - error: Expression of type "None" cannot be assigned to parameter of type "Dict[str, Any]"
+  ┬á┬á"None" is not assignable to "Dict[str, Any]" (reportArgumentType)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\optimization\soft_match.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\optimization\soft_match.py:26:40 - error: Cannot access attribute "find_delta" for class "DeltaEngineV2"
+  ┬á┬áAttribute "find_delta" is unknown (reportAttributeAccessIssue)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\optimization\token_optimizer.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\optimization\token_optimizer.py:27:62 - error: Expression of type "None" cannot be assigned to parameter of type "List[str]"
+  ┬á┬á"None" is not assignable to "List[str]" (reportArgumentType)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\predictive\answer_store.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\predictive\answer_store.py:63:25 - error: No overloads for "frombuffer" match the provided arguments (reportCallIssue)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\predictive\answer_store.py:63:39 - error: Argument of type "Column[bytes]" cannot be assigned to parameter "buffer" of type "Buffer" in function "frombuffer"
+  ┬á┬á"Column[bytes]" is incompatible with protocol "Buffer"
+  ┬á┬á┬á┬á"__buffer__" is not present (reportArgumentType)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\predictive\answer_store.py:72:42 - error: "answer" is not a known attribute of "None" (reportOptionalMemberAccess)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\predictive\knowledge_expansion.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\predictive\knowledge_expansion.py:35:36 - error: Cannot access attribute "register" for class "CanonicalStore"
+  ┬á┬áAttribute "register" is unknown (reportAttributeAccessIssue)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\predictive\massive_prediction_engine.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\predictive\massive_prediction_engine.py:138:22 - error: Type "dict[str, list[str] | int]" is not assignable to return type "Dict[str, List[str]]"
+  ┬á┬á"int" is not assignable to "List[str]" (reportReturnType)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\predictive\precompute_worker.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\predictive\precompute_worker.py:23:45 - error: Cannot access attribute "mine_patterns" for class "PredictivePredictor"
+  ┬á┬áAttribute "mine_patterns" is unknown (reportAttributeAccessIssue)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\rag\embedding_model.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\rag\embedding_model.py:12:10 - error: Import "sentence_transformers" could not be resolved (reportMissingImports)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\reasoning\query_planner.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\reasoning\query_planner.py:39:20 - error: Type "None" is not assignable to return type "str"
+  ┬á┬á"None" is not assignable to "str" (reportReturnType)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\router\query_complexity.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\router\query_complexity.py:34:65 - error: Expression of type "None" cannot be assigned to parameter of type "Dict[str, Any]"
+  ┬á┬á"None" is not assignable to "Dict[str, Any]" (reportArgumentType)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\routers\paypal.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\routers\paypal.py:189:18 - error: Cannot assign to attribute "tier" for class "User"
+  ┬á┬áExpression of type "Literal['pro']" cannot be assigned to attribute "tier" of class "User"
+  ┬á┬á┬á┬á"Literal['pro']" is not assignable to "Column[str]" (reportAttributeAccessIssue)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\routers\paypal.py:200:18 - error: Cannot assign to attribute "tier" for class "User"
+  ┬á┬áExpression of type "Literal['free']" cannot be assigned to attribute "tier" of class "User"
+  ┬á┬á┬á┬á"Literal['free']" is not assignable to "Column[str]" (reportAttributeAccessIssue)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\runtime\composer.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\runtime\composer.py:59:20 - error: Type "tuple[LiteralString, list[Unknown]]" is not assignable to return type "str | None"
+  ┬á┬áType "tuple[LiteralString, list[Unknown]]" is not assignable to type "str | None"
+  ┬á┬á┬á┬á"tuple[LiteralString, list[Unknown]]" is not assignable to "str"
+  ┬á┬á┬á┬á"tuple[LiteralString, list[Unknown]]" is not assignable to "None" (reportReturnType)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\runtime\composer.py:61:16 - error: Type "tuple[None, Any]" is not assignable to return type "str | None"
+  ┬á┬áType "tuple[None, Any]" is not assignable to type "str | None"
+  ┬á┬á┬á┬á"tuple[None, Any]" is not assignable to "str"
+  ┬á┬á┬á┬á"tuple[None, Any]" is not assignable to "None" (reportReturnType)
+c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\shadow\shadow_store.py
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\shadow\shadow_store.py:98:25 - error: No overloads for "frombuffer" match the provided arguments (reportCallIssue)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\shadow\shadow_store.py:98:39 - error: Argument of type "Column[bytes]" cannot be assigned to parameter "buffer" of type "Buffer" in function "frombuffer"
+  ┬á┬á"Column[bytes]" is incompatible with protocol "Buffer"
+  ┬á┬á┬á┬á"__buffer__" is not present (reportArgumentType)
+  c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\shadow\shadow_store.py:107:42 - error: "answer" is not a known attribute of "None" (reportOptionalMemberAccess)
+111 errors, 0 warnings, 0 informations

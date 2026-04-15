@@ -15,7 +15,7 @@ from backend.analytics.metrics import global_metrics
 logger = logging.getLogger(__name__)
 
 class RuntimeComposer:
-    def compose_response(self, query: str, context: Dict[str, Any], context_fragments: list) -> Optional[str]:
+    def compose_response(self, query: str, context: Dict[str, Any], context_fragments: list) -> tuple[Optional[str], list[str]]:
         """
         Dynamically assembles an answer from the Fragment Graph.
         Point 5 & 6 & 10: Composition with Decomposition and Context Adaptation.

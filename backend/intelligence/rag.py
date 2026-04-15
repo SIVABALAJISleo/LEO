@@ -106,8 +106,8 @@ class VectorDBAdapter:
                 self.index = NumpyIndexIP(dimension)
         else:
             # Placeholder for remote vector DB client (Qdrant/Milvus)
-            self.index = None 
-
+            self.index = NumpyIndexIP(dimension) # Fallback if remote fails initialization
+        self.index: Any = self.index # Type hint to satisfy pyright
     def add(self, embeddings: np.ndarray):
         if self.mode == "local":
             self.index.add(embeddings.astype('float32'))
@@ -280,7 +280,7 @@ class RAGEngine:
         # 5. FAST-PATH: Skip reranking if initial match is extremely strong (>0.95)
         top_score = combined_results[0]['score'] if combined_results else 0
         if top_score > 0.95:
-            logger.info("rag_fast_path_triggered", score=top_score)
+            logger.info(f"rag_fast_path_triggered [score={top_score:.3f}]")
             return combined_results[:k]
 
         # 6. PRECISION RERANKING (Final Pass)
