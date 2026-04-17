@@ -28,17 +28,14 @@
     "pythonPlatform": "Windows",
     "typeCheckingMode": "basic",
     "extraPaths": [
-        ".",
-        "backend",
-        "orchestration",
-        "rag"
+        "c:\\Users\\sivab\\OneDrive\\Documents\\HYPER\\remix-of-remix-of-remix-of-nvidia-inspired-design-main",
+        "c:\\Users\\sivab\\OneDrive\\Documents\\HYPER\\remix-of-remix-of-remix-of-nvidia-inspired-design-main\\backend",
+        "c:\\Users\\sivab\\OneDrive\\Documents\\HYPER\\remix-of-remix-of-remix-of-nvidia-inspired-design-main\\orchestration"
     ],
     "executionEnvironments": [
         {
             "root": ".",
-            "extraPaths": [
-                "."
-            ]
+            "extraPaths": ["."]
         }
     ]
 }

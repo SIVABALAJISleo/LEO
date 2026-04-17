@@ -30,7 +30,6 @@ extraPaths = ["."]
 
 [[tool.pyright.executionEnvironments]]
 root = "."
-extraPaths = ["."]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
