@@ -29,18 +29,6 @@ typeCheckingMode = "basic"
 extraPaths = ["."]
 
 [[tool.pyright.executionEnvironments]]
-root = "backend"
-extraPaths = [".."]
-
-[[tool.pyright.executionEnvironments]]
-root = "orchestration"
-extraPaths = [".."]
-
-[[tool.pyright.executionEnvironments]]
-root = "rag"
-extraPaths = [".."]
-
-[[tool.pyright.executionEnvironments]]
 root = "."
 extraPaths = ["."]
 

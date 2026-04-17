@@ -35,20 +35,10 @@
     ],
     "executionEnvironments": [
         {
-            "root": "backend",
-            "extraPaths": [".."]
-        },
-        {
-            "root": "orchestration",
-            "extraPaths": [".."]
-        },
-        {
-            "root": "rag",
-            "extraPaths": [".."]
-        },
-        {
             "root": ".",
-            "extraPaths": ["."]
+            "extraPaths": [
+                "."
+            ]
         }
     ]
 }
