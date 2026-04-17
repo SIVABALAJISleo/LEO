@@ -28,9 +28,7 @@
     "pythonPlatform": "Windows",
     "typeCheckingMode": "basic",
     "extraPaths": [
-        "c:\\Users\\sivab\\OneDrive\\Documents\\HYPER\\remix-of-remix-of-remix-of-nvidia-inspired-design-main",
-        "c:\\Users\\sivab\\OneDrive\\Documents\\HYPER\\remix-of-remix-of-remix-of-nvidia-inspired-design-main\\backend",
-        "c:\\Users\\sivab\\OneDrive\\Documents\\HYPER\\remix-of-remix-of-remix-of-nvidia-inspired-design-main\\orchestration"
+        "."
     ],
     "executionEnvironments": [
         {
