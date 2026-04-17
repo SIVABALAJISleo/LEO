@@ -1,6 +1,5 @@
 import faiss
 import numpy as np
-import pickle # nosec B403
 import json
 import os
 import logging
@@ -26,12 +25,8 @@ class SemanticCanonicalEngine:
             try:
                 self.index = faiss.read_index(self.db_path)
                 if os.path.exists(self.metadata_path):
-                    with open(self.metadata_path, "rb") as f:
-                        self.ids = pickle.load(f)
-                elif os.path.exists(self.metadata_path.replace(".json", ".pkl")):
-                    # Migration: try to load old pickle if present
-                    with open(self.metadata_path.replace(".json", ".pkl"), "rb") as f:
-                        self.ids = pickle.load(f)
+                    with open(self.metadata_path, "r") as f:
+                        self.ids = json.load(f)
                 logger.info(f"SemanticCanonicalEngine: Loaded {len(self.ids)} clusters")
             except Exception as e:
                 logger.error(f"SemanticCanonicalEngine: Load error {e}")
@@ -94,10 +89,10 @@ class SemanticCanonicalEngine:
             self.index.add(embedding.astype("float32").reshape(1, -1)) # type: ignore
             self.ids.append(new_c.id) # type: ignore
             
-            # 3. Persist FAISS
+            # 3. Persist FAISS and metadata (JSON for security)
             faiss.write_index(self.index, self.db_path)
-            with open(self.metadata_path.replace(".json", ".pkl"), "wb") as f:
-                pickle.dump(self.ids, f)
+            with open(self.metadata_path, "w") as f:
+                json.dump(self.ids, f)
                 
             logger.info(f"SemanticCanonicalEngine: Registered new cluster {new_c.id}")
         except Exception as e:
