@@ -23,6 +23,37 @@ import asyncio
 import uuid
 from typing import Optional, Dict, Any, Set
 
+# Elite Architecture Imports (Top-level for static analysis and immediate pre-warm)
+from backend.router.query_family_mapper import global_query_family_mapper
+from backend.memory.global_memory import global_memory
+from backend.memory.contextual_memory_stack import global_memory_stack
+from backend.graph.query_graph import global_query_graph
+from backend.predictive.speculative_executor import global_speculative_executor
+from backend.predictive.probability_engine import global_probability_engine
+from backend.core.micro_parallel_processor import global_micro_parallel
+from backend.core.delta_compute_engine import global_delta_engine
+from backend.core.global_dedup_cache import global_dedup_cache
+from backend.core.failure_recovery_engine import global_failure_recovery
+from backend.core.zero_repeat_store import global_zero_repeat_store
+from backend.core.compute_deferral import global_compute_deferral
+from backend.intelligence.approximation_engine import global_approximation_engine
+from backend.core.experience_optimizer import global_experience_optimizer
+from backend.analytics.avoidance_tracker import global_avoidance_tracker
+from backend.analytics.metrics import global_metrics
+from backend.background.compute_engine import global_bg_compute
+from backend.shadow.shadow_store import global_shadow_store
+from backend.intelligence.intent_trajectory import global_intent_trajectory
+from backend.intelligence.knowledge_field import global_knowledge_field
+from backend.predictive.massive_prediction_engine import global_massive_predictor
+from orchestration.chaos_containment import global_chaos_containment
+from backend.micro_models.router import global_micro_router
+from backend.intelligence.rag import global_rag_engine
+from backend.intelligence.reasoning import reasoning_expert
+from backend.core.constraint_filter import global_constraint_filter
+from backend.core.address_router import global_address_router
+from backend.core.hdc_engine import global_hdc_engine
+from backend.core.atomic_parser import global_atomic_parser
+
 logger = logging.getLogger(__name__)
 
 # ── Hard thresholds ──────────────────────────────────────────────────────── #
@@ -48,35 +79,6 @@ class ZeroComputeControl:
     def _pre_warm(self):
         """Elite optimization: Load all modules once and cache them. (O(1) lookup)"""
         if self._pre_warmed: return
-        from backend.router.query_family_mapper        import global_query_family_mapper
-        from backend.memory.global_memory             import global_memory
-        from backend.memory.contextual_memory_stack   import global_memory_stack
-        from backend.graph.query_graph                import global_query_graph
-        from backend.predictive.speculative_executor  import global_speculative_executor
-        from backend.predictive.probability_engine    import global_probability_engine
-        from backend.core.micro_parallel_processor    import global_micro_parallel
-        from backend.core.delta_compute_engine        import global_delta_engine
-        from backend.core.global_dedup_cache          import global_dedup_cache
-        from backend.core.failure_recovery_engine     import global_failure_recovery
-        from backend.core.zero_repeat_store           import global_zero_repeat_store
-        from backend.core.compute_deferral            import global_compute_deferral
-        from backend.intelligence.approximation_engine import global_approximation_engine
-        from backend.core.experience_optimizer        import global_experience_optimizer
-        from backend.analytics.avoidance_tracker      import global_avoidance_tracker
-        from backend.analytics.metrics                import global_metrics
-        from backend.background.compute_engine        import global_bg_compute
-        from backend.shadow.shadow_store              import global_shadow_store
-        from backend.intelligence.intent_trajectory   import global_intent_trajectory
-        from backend.intelligence.knowledge_field     import global_knowledge_field
-        from backend.predictive.massive_prediction_engine import global_massive_predictor
-        from orchestration.chaos_containment          import global_chaos_containment
-        from backend.micro_models.router              import global_micro_router
-        from backend.intelligence.rag                 import global_rag_engine, RAGEngine
-        from backend.intelligence.reasoning           import reasoning_expert
-        from backend.core.constraint_filter           import global_constraint_filter
-        from backend.core.address_router              import global_address_router
-        from backend.core.hdc_engine                   import global_hdc_engine
-        from backend.core.atomic_parser               import global_atomic_parser
         
         self.qfm = global_query_family_mapper
         self.gm  = global_memory
@@ -95,7 +97,7 @@ class ZeroComputeControl:
         self.at  = global_avoidance_tracker
         self.met = global_metrics
         self.bc  = global_bg_compute
-        self.ss  = shadow_store # type: ignore
+        self.ss  = global_shadow_store
         self.it  = global_intent_trajectory
         self.kf  = global_knowledge_field
         self.mpred = global_massive_predictor
