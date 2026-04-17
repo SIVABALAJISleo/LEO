@@ -53,6 +53,11 @@ from backend.core.constraint_filter import global_constraint_filter
 from backend.core.address_router import global_address_router
 from backend.core.hdc_engine import global_hdc_engine
 from backend.core.atomic_parser import global_atomic_parser
+from backend.core.mmap_logic_engine import global_mmap_engine
+from backend.core.bit_topology_engine import global_bit_topology, global_automaton
+from backend.core.symbolic_logic_engine import global_symbolic_engine
+from backend.core.atomic_stitcher import global_atomic_stitcher
+from backend.core.health_monitor import global_health_monitor
 
 logger = logging.getLogger(__name__)
 
@@ -140,6 +145,10 @@ class ZeroComputeControl:
         def elapsed() -> float:
             return (time.time() - start_time) * 1000
 
+        def remaining(limit_ms: float) -> float:
+            rem = (limit_ms - elapsed()) / 1000.0
+            return max(0.01, rem)
+
         # 0. NORMALIZE (Deterministic Entry)
         global_intent_trajectory.log_query(session_id, query)
 
@@ -164,13 +173,12 @@ class ZeroComputeControl:
         # ─────────────────────────────────────────────────────────────────── #
         # TRIATTENTION GATE 1 — EXACT (MMAP/DFA/BIT-OPS)                      #
         # ─────────────────────────────────────────────────────────────────── #
-        from backend.core.mmap_logic_engine import global_mmap_engine
-        mmap_hit = global_mmap_engine.direct_lookup(query)
+        mmap_res = await global_mmap_engine.lookup(query)
         dedup_hit = global_dedup_cache.check(family_id, query)
         
-        hit = mmap_hit or dedup_hit
+        hit = mmap_res or dedup_hit
         if hit and hit.get("confidence", 0) >= CONFIDENCE_FLOOR:
-            result = self._wrap(hit["answer"], "MMAP" if mmap_hit else "CACHE",
+            result = self._wrap(hit["answer"], "MMAP" if mmap_res else "CACHE",
                                 start_time, hit["confidence"], clean)
             global_experience_optimizer.record("MMAP", result["latency_ms"])
             self._track(request_id, clean, family_id, result, False, True, global_avoidance_tracker)
@@ -181,7 +189,6 @@ class ZeroComputeControl:
         # STAGE 2 — AUTOMATON ADDRESSING (GATE 1b: DFA O(len))                #
         # ─────────────────────────────────────────────────────────────────── #
         try:
-            from backend.core.bit_topology_engine import global_automaton, global_bit_topology
             topo_addr = global_automaton.transition_lookup(query)
             if topo_addr is not None:
                 topo_hit = global_bit_topology.resolve_address(topo_addr)
@@ -196,8 +203,7 @@ class ZeroComputeControl:
         # STAGE 3 — BIT-OP IDENTITY (GATE 1c: XOR/BITMASK)                    #
         # ─────────────────────────────────────────────────────────────────── #
         try:
-            from backend.core.mmap_logic_engine import global_mmap_engine
-            from backend.core.symbolic_logic_engine import global_symbolic_engine
+            sym_res = await global_symbolic_engine.resolve(query)
             atom_list = query.lower().split()[:5]
             
             # 1. Bitmask 
@@ -270,7 +276,6 @@ class ZeroComputeControl:
                 return await self._persist_and_return(
                     result, query, family_id, user_id, session_id, intent, entity,
                     tenant_id, False, False, True, request_id, clean,
-                    # ... rest of args
                     inflight_fut, global_dedup_cache, global_memory_stack,
                     global_zero_repeat_store, global_shadow_store, global_memory,
                     global_avoidance_tracker, global_metrics, global_intent_trajectory,
@@ -282,7 +287,7 @@ class ZeroComputeControl:
             # TRIATTENTION GATE 4 — ASSEMBLY (ATOMIC STITCH)                      #
             # ─────────────────────────────────────────────────────────────────── #
             try:
-                from backend.core.atomic_stitcher import global_atomic_stitcher
+                stitch_res = await global_atomic_stitcher.stitch(query)
                 assembly = global_atomic_stitcher.assemble(query, entity, intent)
                 if assembly:
                     result = self._wrap(assembly, "ASSEMBLY", start_time, 0.88, clean)
@@ -318,7 +323,6 @@ class ZeroComputeControl:
             # STAGE 7 — PARTIAL EVALUATION (GATE 5: LOGIC SPECIALIZE)             #
             # ─────────────────────────────────────────────────────────────────── #
             try:
-                from backend.core.symbolic_logic_engine import global_symbolic_engine
                 logic_res = global_symbolic_engine.partial_evaluate(entity, "interact", "context", intent)
                 if logic_res and len(logic_res) > 20:
                     result = self._wrap(logic_res, "SYMBOLIC", start_time, 0.88, clean)
@@ -336,9 +340,6 @@ class ZeroComputeControl:
 
             # ─────────────────────────────────────────────────────────────────── #
             # STAGE 8 — APPROXIMATION (GATE 6: SKELETON RESPONSE)                 #
-            # ─────────────────────────────────────────────────────────────────── #
-            # ─────────────────────────────────────────────────────────────────── #
-            # TRIATTENTION GATE 6 — APPROXIMATE (HDC/SDR)                        #
             # ─────────────────────────────────────────────────────────────────── #
             hdc_hit = global_hdc_engine.search(query, threshold=0.75)
             if hdc_hit:
@@ -547,21 +548,14 @@ class ZeroComputeControl:
             )
             
             # GHOST LEARNING: Fragment into atoms (AIS++ Module 10)
-            from backend.core.atomic_stitcher import global_atomic_stitcher
-            from backend.core.mmap_logic_engine import global_mmap_engine
-            from backend.memory.global_memory import global_memory
-            
             hit = global_memory.lookup(query, canonical_form=family_id)
             if hit:
                 # 1. Automaton & Bit-Topology (AIS++ Module 14)
-                from backend.core.bit_topology_engine import global_automaton, global_bit_topology
+                bit_res = await global_bit_topology.query(query)
                 addr = global_bit_topology.store_logic({"answer": hit["answer"], "query": query})
                 global_automaton.add_query(query, addr)
                 
                 # 2. Logic Stores (mmap, symbolic)
-                from backend.core.mmap_logic_engine import global_mmap_engine
-                from backend.core.symbolic_logic_engine import global_symbolic_engine
-                
                 atom_list = query.lower().split()
                 global_mmap_engine.register_logic(query, hit["answer"], atoms=atom_list[:5])
                 
@@ -603,13 +597,14 @@ class ZeroComputeControl:
 
     # ── Helpers ────────────────────────────────────────────────────────────── #
 
-    def _wrap(
+    async def _wrap(
         self, answer: str, mode: str, start_time: float,
         confidence: float, norm_query: str
     ) -> Dict[str, Any]:
         latency = (time.time() - start_time) * 1000
+        # Check health
         try:
-            from backend.core.health_monitor import global_health_monitor
+            health = await global_health_monitor.check()
             global_health_monitor.log_latency(latency)
         except Exception: pass
         return {

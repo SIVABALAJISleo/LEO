@@ -12,7 +12,9 @@
         "adapters",
         "approximation",
         "retrieval",
-        "."
+        "intelligence",
+        "memory",
+        "predictive"
     ],
     "exclude": [
         "**/node_modules",
@@ -22,18 +24,18 @@
         "venv",
         ".git"
     ],
-    "venvPath": ".",
+    "venvPath": "c:\\Users\\sivab\\OneDrive\\Documents\\HYPER\\remix-of-remix-of-remix-of-nvidia-inspired-design-main",
     "venv": "venv",
     "pythonVersion": "3.11",
     "pythonPlatform": "Windows",
     "typeCheckingMode": "basic",
+    "reportMissingImports": "none",
     "extraPaths": [
         "."
     ],
     "executionEnvironments": [
         {
-            "root": ".",
-            "extraPaths": ["."]
+            "root": "."
         }
     ]
 }
