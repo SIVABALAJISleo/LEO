@@ -5,7 +5,7 @@ Applies deduplication, compression, and truncation without loss of meaning.
 """
 import re
 import logging
-from typing import List
+from typing import List, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +24,7 @@ class TokenOptimizer:
     Target: reduce average prompt by 20-40% without accuracy loss.
     """
 
-    def optimize(self, query: str, context_docs: List[str] = None, max_context_tokens: int = 2000) -> dict:
+    def optimize(self, query: str, context_docs: Optional[List[str]] = None, max_context_tokens: int = 2000) -> dict:
         """
         Returns optimized query and context.
         """

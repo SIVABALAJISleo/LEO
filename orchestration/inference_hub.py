@@ -4,27 +4,27 @@ from typing import Dict, Any, List
 
 # Conditional imports for CPU-optimized backends
 try:
-    from llama_cpp import Llama
+    from llama_cpp import Llama # type: ignore
 except ImportError:
     Llama = None
 
 try:
-    import mediapipe as mp
+    import mediapipe as mp # type: ignore
 except ImportError:
     mp = None
 
 try:
-    import cv2
+    import cv2 # type: ignore
 except ImportError:
     cv2 = None
 
 try:
-    import onnxruntime as ort
+    import onnxruntime as ort # type: ignore
 except ImportError:
     ort = None
 
 try:
-    from openvino.runtime import Core as OpenVINOCore
+    from openvino.runtime import Core as OpenVINOCore # type: ignore
 except ImportError:
     OpenVINOCore = None
 
@@ -56,7 +56,8 @@ class InferenceHub:
             if os.path.exists(model_path):
                 logger.info(f"Loading CPU-optimized LLM from: {model_path}")
                 try:
-                    self.llm = Llama(model_path=model_path, n_ctx=512, n_threads=max(1, os.cpu_count()-1), verbose=False)
+                    threads = max(1, (os.cpu_count() or 1) - 1)
+                    self.llm = Llama(model_path=model_path, n_ctx=512, n_threads=threads, verbose=False)
                 except Exception as e:
                     logger.error(f"LLM Load Fail: {e}")
             else:

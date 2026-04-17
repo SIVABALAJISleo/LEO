@@ -32,6 +32,8 @@ class StabilityLayer:
             "backend/core/orchestrator.py",
             "requirements.txt"
         ]
+        # Cache integrity status to avoid redundant O(N) I/O on every request
+        self._integrity_ok = self.verify_integrity()
 
     def verify_integrity(self) -> bool:
         """Point 11: Automated Knowledge & System Quality Control."""
@@ -44,37 +46,30 @@ class StabilityLayer:
     async def secure_invoke(self, query: str, request_id: str, tenant_id: str, workspace_id: str) -> Dict[str, Any]:
         """
         Securely dispatches a request through the stability-hardened pipeline.
-        Implements Chaos Control (Point 1, 7) and Zero-Runtime (Point 3, 12).
+        Bypasses redundant checks unless integrity is compromised.
         """
         start_time = time.time()
         
-        # 1. INTEGRITY CHECK
-        if not self.verify_integrity():
+        # 1. OPTIMIZED INTEGRITY CHECK (Check cached status)
+        if not self._integrity_ok:
             return self._emergency_fallback(query, "INTEGRITY_FAILURE", start_time)
 
-        # 2. GLOBAL MODE CHECK
-        mode = global_chaos_controller.get_mode()
-        if mode == ChaosMode.MINIMAL:
-            logger.warning(f"stability_layer: MINIMAL mode active. Short-circuiting request.")
-            return await global_zero_control.handle_request(query, request_id, tenant_id, workspace_id, start_time)
-
-        # 3. LATENCY PROTECTED EXECUTION
+        # 2. LATENCY PROTECTED EXECUTION (Direct Fast Path)
         try:
-             # Run with a hard timeout wrapper if necessary, but ZeroComputeControl
-             # already has internal timers. Here we add a safety wrap.
-             result = await global_zero_control.handle_request(query, request_id, tenant_id, workspace_id, start_time)
-             
-             # Final Latency Guard (Point 3)
-             elapsed = (time.time() - start_time) * 1000
-             if elapsed > 50.0:
-                 logger.error(f"stability_layer: LATENCY VIOLATION! {elapsed:.2f}ms")
-                 # We still return the result but flag the violation for the self-optimizer
-             
-             return result
-
+             # Bypass intermediate mode checks for latency; ZeroComputeControl handles them
+             return await global_zero_control.handle_request(query, request_id, tenant_id, workspace_id, start_time)
         except Exception as e:
             logger.exception(f"stability_layer: UNEXPECTED_CHAOS: {str(e)}")
             return self._emergency_fallback(query, "UNEXPECTED_EXCEPTION", start_time)
+
+    async def secure_stream(self, query: str, request_id: str, tenant_id: str, workspace_id: str):
+        """Streaming shortcut for Zero-Compute."""
+        if not self._integrity_ok:
+            yield self._emergency_fallback(query, "INTEGRITY_FAILURE", time.time())
+            return
+
+        async for part in global_zero_control.handle_stream(query, request_id, tenant_id, workspace_id, time.time()):
+             yield part
 
     def _emergency_fallback(self, query: str, reason: str, start_time: float) -> Dict[str, Any]:
         """Final resort fallback that guarantees return."""

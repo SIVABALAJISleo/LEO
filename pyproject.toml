@@ -1,16 +1,48 @@
 [tool.pyright]
-include = ["backend", "orchestration", "scripts", "tests"]
-exclude = ["src", "**/node_modules", "**/__pycache__"]
+include = [
+    "backend",
+    "orchestration",
+    "chaos",
+    "experts",
+    "engine_hv",
+    "predictors",
+    "rag",
+    "router",
+    "routers",
+    "adapters",
+    "approximation",
+    "retrieval"
+]
+exclude = [
+    "**/node_modules",
+    "**/__pycache__",
+    "src",
+    "dist",
+    "venv",
+    ".git"
+]
 venvPath = "."
 venv = "venv"
-pythonVersion = "3.13"
+pythonVersion = "3.11"
 pythonPlatform = "Windows"
 typeCheckingMode = "basic"
-extraPaths = [".", "backend"]
+extraPaths = ["."]
+
+[[tool.pyright.executionEnvironments]]
+root = "backend"
+extraPaths = [".."]
+
+[[tool.pyright.executionEnvironments]]
+root = "orchestration"
+extraPaths = [".."]
+
+[[tool.pyright.executionEnvironments]]
+root = "rag"
+extraPaths = [".."]
 
 [[tool.pyright.executionEnvironments]]
 root = "."
-extraPaths = [".", "backend"]
+extraPaths = ["."]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

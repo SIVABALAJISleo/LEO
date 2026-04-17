@@ -26,14 +26,15 @@ class ContinuousLearningEngine:
             logger.info(f"skip_learning: confidence {confidence} too low")
             return
 
-        # 1. Store in Global Memory
-        global_memory.log(query, answer, "LEARNED", confidence)
-
-        # 2. Fragment Decomposition (Rule-based for speed)
+        # 0. Normalize to get entity
         from backend.normalization.normalizer import global_normalizer
         norm = global_normalizer.normalize(query)
         entity = norm["entity"]
-        
+
+        # 1. Store in Global Memory
+        global_memory.log(query, answer, "LEARNED", entity, confidence)
+
+        # 2. Fragment Decomposition (Rule-based for speed)
         fragments = self._decompose_to_fragments(answer)
         for f_type, f_content in fragments.items():
             global_fragment_graph.register_fragment(entity, f_type, f_content)
@@ -43,7 +44,7 @@ class ContinuousLearningEngine:
         # 3. Persistent DB storage (Layer 1 bypass)
         db = SessionLocal()
         try:
-            embedding = self.semantic_cache.model.encode([query])[0]
+            embedding = np.asarray(self.semantic_cache.model.encode([query])[0])
             new_ans = PrecomputedAnswer(
                 canonical_question=query,
                 answer=answer,

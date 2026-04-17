@@ -15,6 +15,8 @@
     "picomatch": "^4.0.4",
     "brace-expansion": "^5.0.5",
     "lodash": "^4.18.0",
+    "protobufjs": "^7.5.5",
+    "follow-redirects": "^1.16.0",
     "vitest": {
       "vite": "^6.4.2"
     }
@@ -61,6 +63,7 @@
     "esbuild": "^0.27.4",
     "express": "^5.2.1",
     "firebase": "^12.10.0",
+    "follow-redirects": "^1.16.0",
     "glob": "^10.5.0",
     "input-otp": "^1.4.2",
     "js-yaml": "^4.1.1",

@@ -70,7 +70,12 @@ try:
     from sentence_transformers import SentenceTransformer
     HAS_TRANSFORMERS = True
 except ImportError:
-    SentenceTransformer = TFIDFLite
+    class FakeSentenceTransformer:
+        def __init__(self, model_name: str = ""):
+            self._impl = TFIDFLite()
+        def encode(self, texts: List[str]) -> np.ndarray:
+            return self._impl.encode(texts)
+    SentenceTransformer = FakeSentenceTransformer
     HAS_TRANSFORMERS = False
 
 try:
@@ -130,7 +135,7 @@ class SemanticCache:
     def __init__(self, dimension: int = 384, threshold: float = 0.98):
         from backend.core.logging import logger as struct_logger
         self.logger = struct_logger
-        self.model = SentenceTransformer('all-MiniLM-L6-v2') if HAS_TRANSFORMERS else TFIDFLite(dimension)
+        self.model = SentenceTransformer('all-MiniLM-L6-v2') 
         if HAS_FAISS:
              self.index = faiss.IndexFlatL2(dimension)
         else:
@@ -153,15 +158,15 @@ class SemanticCache:
         if exact_hit:
             import json
             self.logger.info("semantic_cache_exact_hit", key=cache_key)
-            return {"result": json.loads(exact_hit), "confidence": 1.0}
+            return {"result": json.loads(exact_hit), "confidence": 1.0} # type: ignore
 
         # 2. Semantic Similarity Bypass
         if self.index.ntotal == 0:
             return None
         
         # We use a sub-string or hash for the actual vector storage reference
-        query_vec = self.model.encode([cache_key]).astype('float32')
-        distances, indices = self.index.search(query_vec, 1)
+        query_vec = np.asarray(self.model.encode([cache_key])).astype('float32')
+        distances, indices = self.index.search(query_vec, k=1) # type: ignore
         
         distance = float(distances[0][0])
         if distance < (1 - self.threshold):
@@ -175,7 +180,7 @@ class SemanticCache:
                 self.logger.info("semantic_cache_similarity_hit", distance=distance, confidence=confidence)
                 
                 return {
-                    "result": json.loads(result_json),
+                    "result": json.loads(result_json), # type: ignore
                     "confidence": confidence,
                     "distance": distance
                 }
@@ -193,9 +198,9 @@ class SemanticCache:
         self.redis.set(f"exact_cache:{cache_key}", result_json, ex=86400) # 24h
 
         # 2. Add to semantic index
-        query_vec = self.model.encode([cache_key]).astype('float32')
+        query_vec = np.asarray(self.model.encode([cache_key])).astype('float32')
         idx = self.index.ntotal
-        self.index.add(query_vec)
+        self.index.add(query_vec) # type: ignore
         self.redis.set(f"semantic_val:{idx}", result_json, ex=86400)
         
         self.logger.info("semantic_cache_stored", key=cache_key, index_size=self.index.ntotal)

@@ -1,4 +1,4 @@
-﻿"""
+"""
 backend/rag/embedding_model.py
 Real embedding model using SentenceTransformers + FAISS/NumPy index.
 """
@@ -46,7 +46,7 @@ def encode(texts: List[str]) -> np.ndarray:
     if not texts:
         return np.zeros((0, _DIM), dtype="float32")
     if _model is not None:
-        vecs = _model.encode(texts, normalize_embeddings=True, show_progress_bar=False)
+        vecs = np.asarray(_model.encode(texts, normalize_embeddings=True, show_progress_bar=False))
         return vecs.astype("float32")
     return _tfidf_encode(texts)
 

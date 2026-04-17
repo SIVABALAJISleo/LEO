@@ -3,9 +3,10 @@ Context Expander Module (BONUS)
 Injects retrieved docs or conversation context into the answer dynamically
 without relying on an LLM to weave them together.
 """
+from typing import Optional
 
 class ContextExpander:
-    def expand(self, text: str, query: str, context_docs: list = None) -> str:
+    def expand(self, text: str, query: str, context_docs: Optional[list] = None) -> str:
         """
         Expands the base text with contextual information based on intent length.
         """

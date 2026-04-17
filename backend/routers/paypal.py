@@ -186,7 +186,7 @@ async def paypal_webhook(
             db.flush()
 
         if event_type in ["PAYMENT.SALE.COMPLETED", "CHECKOUT.ORDER.APPROVED", "BILLING.SUBSCRIPTION.ACTIVATED"]:
-            user.tier = "pro"
+            user.tier = "pro" # type: ignore
             # Record subscription
             sub = Subscription(user_id=user.id, paypal_order_id=resource.get("id"), status="active")
             db.add(sub)
@@ -197,7 +197,7 @@ async def paypal_webhook(
                 redis_client.set(f"user:{user_id_str}:tier", "pro")
             
         elif event_type == "BILLING.SUBSCRIPTION.CANCELLED":
-            user.tier = "free"
+            user.tier = "free" # type: ignore
             logger.info(f"User {user_id_str} downgraded to FREE in Database")
             if redis_client:
                 redis_client.set(f"user:{user_id_str}:tier", "free")

@@ -1,6 +1,6 @@
 import json
 import logging
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from backend.core.database import SessionLocal, CompressedKnowledge, CompressedFragment
 
 logger = logging.getLogger(__name__)
@@ -29,14 +29,14 @@ class StorageOptimizer:
                     id=canonical_id,
                     concept=compressed_data.get("concept"),
                     intent=compressed_data.get("intent"),
-                    key_points_json=json.dumps(compressed_data.get("key_points", [])),
-                    fragment_ids_json=json.dumps(fragment_ids),
+                    key_points_json=json.dumps(compressed_data.get("key_points", [])), # type: ignore
+                    fragment_ids_json=json.dumps(fragment_ids), # type: ignore
                     tenant_id=tenant_id
                 )
                 db.add(knowledge)
             else:
-                knowledge.key_points_json = json.dumps(compressed_data.get("key_points", []))
-                knowledge.fragment_ids_json = json.dumps(fragment_ids)
+                knowledge.key_points_json = json.dumps(compressed_data.get("key_points", [])) # type: ignore
+                knowledge.fragment_ids_json = json.dumps(fragment_ids) # type: ignore
             
             db.commit()
             logger.info(f"storage_optimized: Persisted canonical_id={canonical_id} to database.")
@@ -46,7 +46,7 @@ class StorageOptimizer:
         finally:
             db.close()
 
-    def retrieve(self, canonical_id: str) -> Dict[str, Any]:
+    def retrieve(self, canonical_id: str) -> Optional[Dict[str, Any]]:
         """Fetches compressed info from the DB to feed to the Reconstructor."""
         db = SessionLocal()
         try:
@@ -56,9 +56,9 @@ class StorageOptimizer:
                     "compressed_data": {
                         "concept": knowledge.concept,
                         "intent": knowledge.intent,
-                        "key_points": json.loads(knowledge.key_points_json)
+                        "key_points": json.loads(knowledge.key_points_json) # type: ignore
                     },
-                    "fragments": json.loads(knowledge.fragment_ids_json)
+                    "fragments": json.loads(knowledge.fragment_ids_json) # type: ignore
                 }
         finally:
             db.close()

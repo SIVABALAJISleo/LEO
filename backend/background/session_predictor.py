@@ -37,7 +37,7 @@ class SessionPredictor:
         Generates predictions and enqueues them for background compute.
         """
         # 1. Rule-based predictions (Point 2) - Instant
-        rule_preds = global_predictor.predict_next_queries(query, count=6)
+        rule_preds = global_predictor.predict_next_queries(query, session_id=session_id).get("variations", [])
         
         # 2. Sequence-based predictions (Point 8): Predict next queries based on session
         seq_preds = await self.predict_next_steps(session_id)

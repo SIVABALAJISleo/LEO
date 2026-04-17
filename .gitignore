@@ -37,3 +37,9 @@ backend/data_efficiency/__pycache__/
 backend/observability/__pycache__/
 backend/routers/__pycache__/
 scripts/__pycache__/
+pyright_*.json
+zero_compute_errors.json
+*.jsonl
+bench_*.txt
+audit.txt
+files.txt

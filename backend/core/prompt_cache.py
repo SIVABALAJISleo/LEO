@@ -22,9 +22,9 @@ def check_cache(prompt: str, tenant_id: str = "default") -> Optional[str]:
         cached = redis_client.get(key)
         if cached:
             if hasattr(cached, 'decode'):
-                cached = cached.decode('utf-8')
+                cached = cached.decode('utf-8') # type: ignore
             logger.info(f"prompt_cache_hit: tenant={tenant_id}")
-            return cached
+            return str(cached) if not isinstance(cached, str) else cached # type: ignore
     except Exception as e:
         logger.warning(f"prompt_cache_check_failed: {e}")
     return None

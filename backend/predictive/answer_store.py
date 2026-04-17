@@ -19,7 +19,7 @@ class PredictiveAnswerStore:
         db = SessionLocal()
         try:
             # Generate embedding for vector lookup
-            embedding = self.semantic_cache.model.encode([question])[0]
+            embedding = np.asarray(self.semantic_cache.model.encode([question])[0])
             
             new_ans = PrecomputedAnswer(
                 canonical_question=question,
@@ -54,14 +54,16 @@ class PredictiveAnswerStore:
                 return None
                 
             # 2. Vector search (Small scale example, use pgvector in production)
-            query_embedding = self.semantic_cache.model.encode([query])[0]
+            query_embedding = np.asarray(self.semantic_cache.model.encode([query])[0])
             
             best_match = None
             max_sim = 0
             
             for c in candidates:
-                c_emb = np.frombuffer(bytes(c.embedding), dtype='float32')
-                sim = np.dot(query_embedding, c_emb)
+                # Use bytes() to ensure we have a bytes object for frombuffer
+                c_emb = np.frombuffer(bytes(c.embedding), dtype='float32') # type: ignore
+                # Ensure dot product is float
+                sim = float(np.dot(query_embedding, c_emb))
                 if sim > max_sim:
                     max_sim = sim
                     best_match = c
@@ -69,7 +71,7 @@ class PredictiveAnswerStore:
             if max_sim > 0.95: # High confidence threshold for Layer 1
                 logger.info(f"predictive_store_hit: score={max_sim}")
                 return {
-                    "answer": best_match.answer,
+                    "answer": best_match.answer if best_match else "",
                     "confidence": max_sim,
                     "source": "PPE"
                 }

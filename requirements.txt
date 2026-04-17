@@ -2,7 +2,7 @@ fastapi>=0.115.0
 uvicorn[standard]==0.39.0
 pydantic==2.12.5
 pydantic-settings==2.9.1
-python-multipart==0.0.22
+python-multipart==0.0.26
 aiofiles==23.2.1
 # starlette is intentionally omitted: managed as a transitive dep by fastapi
 # Dependabot bumping starlette independently breaks fastapi's version constraint
@@ -45,7 +45,7 @@ firebase-admin==6.5.0
 celery==5.3.6
 redis==7.4.0
 python-docx==1.1.0
-pypdf==6.10.0
+pypdf==6.10.2
 python-magic==0.4.27
 python-dotenv==1.2.1
 pyyaml==6.0.3

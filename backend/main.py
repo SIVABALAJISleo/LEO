@@ -34,7 +34,7 @@ setup_logging()
 limiter = Limiter(key_func=get_remote_address)
 app = FastAPI(title="Project HYPER: Startup Edition")
 app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler) # type: ignore
 setup_cors(app)
 
 @app.on_event("startup")
@@ -99,8 +99,8 @@ class StartupQuery(BaseModel):
 @app.post("/api/v1/query", tags=["product"])
 @limiter.limit("20/minute")
 async def api_query(request: Request, data: StartupQuery, token: dict = Depends(verify_token)):
-    user_id = token.get("uid")
-    tenant_id = token.get("tenant_id", "default")
+    user_id = str(token.get("uid", "unknown"))
+    tenant_id = str(token.get("tenant_id", "default"))
     
     if not global_usage_meter.check_limit(user_id, "free"): # Default to free for legacy
         raise HTTPException(status_code=429, detail="API Limit Exceeded. Upgrade to SaaS Pro.")
@@ -126,6 +126,34 @@ async def api_query(request: Request, data: StartupQuery, token: dict = Depends(
         "cost_saved": result.get("cost_saved", 0.0)
     }
 
+@app.post("/api/v1/query/stream", tags=["product"])
+async def api_query_stream(request: Request, data: StartupQuery, token: dict = Depends(verify_token)):
+    from fastapi.responses import StreamingResponse
+    import json
+    
+    user_id = str(token.get("uid", "unknown"))
+    tenant_id = str(token.get("tenant_id", "default"))
+    
+    if not global_usage_meter.check_limit(user_id, "free"):
+        raise HTTPException(status_code=429, detail="API Limit Exceeded")
+        
+    request_id = f"STRM_{user_id}_{uuid.uuid4().hex[:8]}"
+
+    async def event_generator():
+        async for part in global_stability_layer.secure_stream(
+            data.question, request_id, tenant_id, data.workspace_id
+        ):
+            yield json.dumps({
+                "answer": part.get("answer") or part.get("result"),
+                "source": part.get("source") or part.get("mode"),
+                "confidence": part.get("confidence", 0.0),
+                "request_id": request_id,
+                "latency_ms": part.get("latency_ms", 0)
+            }) + "\n"
+            
+    global_usage_meter.record_usage(user_id)
+    return StreamingResponse(event_generator(), media_type="text/event-stream")
+
 # --- SaaS Optimization API (Phase 8) ---
 
 class OptimizeRequest(BaseModel):
@@ -134,8 +162,8 @@ class OptimizeRequest(BaseModel):
 
 @app.post("/api/v1/optimize", tags=["product"])
 async def api_optimize(request: Request, data: OptimizeRequest, token: dict = Depends(verify_token)):
-    user_id = token.get("uid")
-    tenant_id = token.get("tenant_id", "default")
+    user_id = str(token.get("uid", "unknown"))
+    tenant_id = str(token.get("tenant_id", "default"))
     
     if not global_usage_meter.check_limit(user_id, data.tier):
         raise HTTPException(status_code=429, detail="SaaS Tier Limit Exceeded")
@@ -273,6 +301,7 @@ async def ais_status():
             "massive_predictor": global_massive_predictor.stats(),
             "intent_trajectory": global_intent_trajectory.stats(),
             "knowledge_field":   global_knowledge_field.stats(),
+            "constraint_filter": "active",
         },
         "timestamp": time.time(),
     }

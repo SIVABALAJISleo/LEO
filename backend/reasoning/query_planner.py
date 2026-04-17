@@ -1,6 +1,6 @@
 import logging
 import re
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from backend.intelligence.reasoning import reasoning_expert
 
 logger = logging.getLogger(__name__)
@@ -30,7 +30,7 @@ class QueryPlanner:
         # Fallback: single step
         return [query]
 
-    async def execute_plan(self, query: str) -> str:
+    async def execute_plan(self, query: str) -> Optional[str]:
         """
         Orchestrates the execution of the plan.
         """

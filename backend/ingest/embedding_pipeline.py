@@ -14,6 +14,8 @@ class EmbeddingPipeline:
 
     def get_embeddings(self, chunks: List[str]) -> np.ndarray:
         logger.info(f"generating_embeddings: count={len(chunks)}")
-        return self.model.encode(chunks)
+        # Ensure output is always numpy ndarray even if Tensor is returned by torch backend
+        embeddings = self.model.encode(chunks)
+        return np.asarray(embeddings).astype('float32')
 
 global_embedding_pipeline = EmbeddingPipeline()

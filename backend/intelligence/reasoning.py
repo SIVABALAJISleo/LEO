@@ -49,7 +49,7 @@ class ReasoningExpert:
         self.planner = MultiStepReasoningEngine(model_manager)
         self.evaluator = SelfEvaluationLayer()
 
-    async def solve(self, query: str, context: List[str] = None, session_id: str = "default", tenant_id: str = "default") -> Dict[str, Any]:
+    async def solve(self, query: str, context: Optional[List[str]] = None, session_id: str = "default", tenant_id: str = "default") -> Dict[str, Any]:
         logger.info(f"reasoning_expert_active: query={query}")
         
         # 1. RETRIEVE MEMORY
@@ -67,14 +67,19 @@ class ReasoningExpert:
                 graph_context.extend([f"{word} {r['relation']} {r.get('target', r.get('source'))}" for r in relations])
         
         if graph_context:
-            logger.info("knowledge_graph_hit", count=len(graph_context))
+            logger.info("knowledge_graph_hit", extra={"count": len(graph_context)})
             # If we found a direct answer in the graph, we could potentially bypass here.
             # For now, we add it to context.
             context = (context or []) + graph_context
 
         # 1c. DIGITAL TWIN REASONING (Layer 9: Cheap Simulation)
         from backend.twin.twin_engine import global_twin_engine
-        twin_result = await global_twin_engine.reason(query, context=context, tenant_id=tenant_id)
+        twin_result = await global_twin_engine.reason(query, context=context or [], tenant_id=tenant_id)
+        
+        answer = ""
+        confidence = 0.0
+        steps = []
+
         if twin_result and twin_result["confidence"] > 0.85:
             logger.info("digital_twin_bypass_active")
             from backend.core.metrics import TWIN_HITS
@@ -102,22 +107,31 @@ class ReasoningExpert:
                 
                 # Tier 1: Tiny (Ultra fast)
                 res = await self.model_manager.generate_safe(full_prompt, tier="tiny")
-                answer = res.get("answer") if isinstance(res, dict) else res
-                confidence = res.get("confidence", self.evaluator.evaluate(answer, query)) if isinstance(res, dict) else self.evaluator.evaluate(answer, query)
+                curr_answer = str(res.get("answer") if isinstance(res, dict) else res)
+                curr_conf = res.get("confidence", self.evaluator.evaluate(curr_answer, query)) if isinstance(res, dict) else self.evaluator.evaluate(curr_answer, query)
                 
+                answer = curr_answer
+                confidence = curr_conf
+
                 # Tier 2: Small (Escalate if needed)
                 if confidence < 0.7:
                     logger.info(f"escalating_to_small_model: confidence={confidence}")
                     res = await self.model_manager.generate_safe(full_prompt, tier="small")
-                    answer = res.get("answer") if isinstance(res, dict) else res
-                    confidence = res.get("confidence", self.evaluator.evaluate(answer, query)) if isinstance(res, dict) else self.evaluator.evaluate(answer, query)
+                    curr_answer = str(res.get("answer") if isinstance(res, dict) else res)
+                    curr_conf = res.get("confidence", self.evaluator.evaluate(curr_answer, query)) if isinstance(res, dict) else self.evaluator.evaluate(curr_answer, query)
+                    
+                    answer = curr_answer
+                    confidence = curr_conf
                 
                 # Tier 3: Large (Last resort)
                 if confidence < 0.8:
                     logger.info(f"escalating_to_large_model: confidence={confidence}")
                     res = await self.model_manager.generate_safe(full_prompt, tier="large")
-                    answer = res.get("answer") if isinstance(res, dict) else res
-                    confidence = res.get("confidence", self.evaluator.evaluate(answer, query)) if isinstance(res, dict) else self.evaluator.evaluate(answer, query)
+                    curr_answer = str(res.get("answer") if isinstance(res, dict) else res)
+                    curr_conf = res.get("confidence", self.evaluator.evaluate(curr_answer, query)) if isinstance(res, dict) else self.evaluator.evaluate(curr_answer, query)
+                    
+                    answer = curr_answer
+                    confidence = curr_conf
 
         # 4. UPDATE MEMORY
         global_memory.add_message(session_id, tenant_id, "user", query)
@@ -130,7 +144,7 @@ class ReasoningExpert:
             "strategy": "multi_step_reasoning"
         }
 
-    async def solve_stream(self, query: str, context: List[str] = None, session_id: str = "default", tenant_id: str = "default"):
+    async def solve_stream(self, query: str, context: Optional[List[str]] = None, session_id: str = "default", tenant_id: str = "default"):
         """Streaming version of solve."""
         logger.info(f"reasoning_expert_stream_active: query={query}")
         

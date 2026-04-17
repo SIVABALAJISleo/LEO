@@ -59,7 +59,7 @@ class KVCacheEngine:
                 data = self._redis.get(f"kvcache:{key}")
                 if data:
                     logger.info("kv_hit: source=redis")
-                    return json.loads(data)
+                    return json.loads(data) # type: ignore
             except Exception: # nosec B110
                 pass
         return None

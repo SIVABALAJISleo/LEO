@@ -31,7 +31,7 @@ class EnhancementRouter:
 
         # DLSS LOGIC: Acceptable raw proxy -> upscale it instead of recomputing
         if quality > 0.5 and confidence > 0.6:
-            enhanced = self.enhancer.enhance(answer, query, context_docs, intent)
+            enhanced = self.enhancer.enhance(answer, query, context_docs, intent).get("answer", "")
             return enhanced, "enhanced"
 
         return None, "escalate"

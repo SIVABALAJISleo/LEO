@@ -20,7 +20,7 @@ class FileProcessor:
     @staticmethod
     async def extract_text(file: UploadFile) -> str:
         """Extracts text content from various file types."""
-        filename = file.filename.lower()
+        filename = file.filename.lower() if file.filename else ""
         content = await file.read()
         
         if filename.endswith(".csv"):

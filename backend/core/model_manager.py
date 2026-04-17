@@ -1,7 +1,7 @@
 import os
 import time
 import asyncio
-from typing import Optional
+from typing import Optional, Any
 import structlog
 
 logger = structlog.get_logger()
@@ -15,6 +15,12 @@ class ModelManager:
     _lock = asyncio.Lock()
     _semaphore = asyncio.Semaphore(1) # Only 1 concurrent inference on CPU
     _in_flight = {} # Point 10: Deduplicate in-flight queries
+    
+    model: Any = None
+    local_model: Any = None
+    tiny_model: Any = None
+    remote_model: Any = None
+    initialized: bool = False
 
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
@@ -38,7 +44,7 @@ class ModelManager:
                 server_url = os.getenv("MODEL_SERVER_URL")
                 self.remote_model = None
                 if server_url:
-                    from backend.core.remote_inference import RemoteInference
+                    from .remote_inference import RemoteInference
                     self.remote_model = RemoteInference(server_url)
                 
                 from rag.inference import LocalInference
@@ -58,7 +64,7 @@ class ModelManager:
             return self.remote_model
         elif tier == "tiny":
             # Fallback to local_model if tiny_model path doesn't exist yet
-            if not self.tiny_model.llm:
+            if not self.tiny_model or not self.tiny_model.llm: # type: ignore
                 return self.local_model
             return self.tiny_model
         return self.local_model
@@ -114,7 +120,7 @@ class ModelManager:
                 # Since model.generate is sync (llama-cpp), we run the iteration logic carefully
                 # or assume it's safe if it's a generator.
                 logger.info("inference_stream_start")
-                stream = model.generate(prompt, max_tokens=max_tokens, stream=True)
+                stream = model.generate(prompt, max_tokens=max_tokens, stream=True) # type: ignore
                 for chunk in stream:
                     if isinstance(chunk, dict) and 'choices' in chunk:
                         text = chunk['choices'][0]['text']

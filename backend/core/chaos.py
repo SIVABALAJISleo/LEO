@@ -1,7 +1,9 @@
 import asyncio
 import random
+import logging
 from backend.core.orchestrator import hyper_engine
-from backend.observability.telemetry import logger
+
+logger = logging.getLogger(__name__)
 
 class ChaosSuite:
     """

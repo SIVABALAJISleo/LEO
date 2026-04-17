@@ -42,7 +42,7 @@ class DeferredUpdateStore:
     Clients poll this store for their improved answers.
     """
     def __init__(self):
-        self._store: Dict[str, Dict[str, Any]] = OrderedDict()
+        self._store: OrderedDict[str, Dict[str, Any]] = OrderedDict()
         self._load()
 
     def register_deferred(self, request_id: str, query: str, skeleton: str) -> None:
@@ -182,7 +182,7 @@ class ComputeDeferralSystem:
                     self.update_store.resolve(
                         request_id,
                         result.get("answer", ""),
-                        result.get("confidence", 0.9),
+                        float(result.get("confidence", 0.9)),
                         "deferred_full_compute",
                     )
             except Exception as exc:

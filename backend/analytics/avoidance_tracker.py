@@ -127,8 +127,8 @@ class AvoidanceTracker:
         path_taken: str,
         latency_ms: float,
         model_called: bool,
-        confidence: float = None,
-        entropy_score: float = None,
+        confidence: Optional[float] = None,
+        entropy_score: Optional[float] = None,
         is_cache_hit: bool = False,
         is_prediction_hit: bool = False,
         is_recovery: bool = False,
@@ -176,9 +176,11 @@ class AvoidanceTracker:
             if len(self._entropy_heatmap[family_id]) > 10:
                  self._entropy_heatmap[family_id].pop(0)
 
-            # Categorize latency by hit type
-            if is_cache_hit and "exact" in path_taken:
+            # Categorize latency by hit type (TRIATTENTION v4)
+            if path_taken == "CACHE":
                 self._identical_latencies.append(latency_ms)
+            elif path_taken in ("PREDICTED", "SEMANTIC", "ASSEMBLY"):
+                self._similar_latencies.append(latency_ms)
             elif is_cache_hit or is_prediction_hit:
                 self._similar_latencies.append(latency_ms)
 

@@ -41,7 +41,7 @@ class GlobalKnowledgeLayer:
             return None
             
         emb = global_embedding_pipeline.get_embeddings([query])[0].astype(np.float32)
-        dist, indices = self._index.search(np.array([emb]), 1)
+        dist, indices = self._index.search(np.array([emb]), k=1) # type: ignore
         
         if indices[0][0] != -1:
             similarity = 1.0 - (dist[0][0] / 2.0)
@@ -53,7 +53,7 @@ class GlobalKnowledgeLayer:
     def add_fact(self, query: str, answer: str):
         """Adds a fact to the shared cross-tenant layer."""
         emb = global_embedding_pipeline.get_embeddings([query])[0].astype(np.float32)
-        self._index.add(np.array([emb]))
+        self._index.add(np.array([emb])) # type: ignore
         self._facts.append({"query": query, "answer": answer})
         logger.info(f"global_fact_added: query_len={len(query)}")
 

@@ -94,7 +94,7 @@ def patch_onnx_security():
     Upstream resolved this by removing the feature entirely. We mimic that here.
     """
     try:
-        import onnx.hub as _hub
+        import onnx.hub as _hub # type: ignore
         def _removed_feature(*args, **kwargs):
             raise SecurityError(
                 "onnx.hub.load() has been permanently disabled due to a critical "

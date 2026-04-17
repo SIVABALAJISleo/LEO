@@ -19,7 +19,7 @@ class CostMonitor:
             logs = db.query(UsageLog).filter(UsageLog.workspace_id == workspace_id).all()
             
             total_reqs = len(logs)
-            full_inference_count = sum(1 for log in logs if log.inference_used)
+            full_inference_count = sum(1 for log in logs if bool(log.inference_used))
             avoided_count = total_reqs - full_inference_count
             
             # Simplified savings calculation (dollars)

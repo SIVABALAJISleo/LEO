@@ -27,12 +27,11 @@ class SemanticCanonicalEngine:
                 self.index = faiss.read_index(self.db_path)
                 if os.path.exists(self.metadata_path):
                     with open(self.metadata_path, "rb") as f:
-                        self.ids = pickle.load(f) # nosec B301 - trusted internal file only
+                        self.ids = pickle.load(f)
                 elif os.path.exists(self.metadata_path.replace(".json", ".pkl")):
-                    # Migration: try to load old pickle if present (Safe since we created it locally)
-                    import pickle # nosec B403
+                    # Migration: try to load old pickle if present
                     with open(self.metadata_path.replace(".json", ".pkl"), "rb") as f:
-                        self.ids = pickle.load(f) # nosec B301 - trusted internal file only
+                        self.ids = pickle.load(f)
                 logger.info(f"SemanticCanonicalEngine: Loaded {len(self.ids)} clusters")
             except Exception as e:
                 logger.error(f"SemanticCanonicalEngine: Load error {e}")
@@ -47,7 +46,7 @@ class SemanticCanonicalEngine:
 
         # Ensure correct shape
         emb = query_emb.astype("float32").reshape(1, -1)
-        distances, indices = self.index.search(emb, 1)
+        distances, indices = self.index.search(emb, k=1) # type: ignore
         
         dist = distances[0][0]
         idx = indices[0][0]
@@ -60,7 +59,7 @@ class SemanticCanonicalEngine:
                 from backend.core.database import QueryCluster
                 cluster = db.query(QueryCluster).get(cluster_id)
                 if cluster:
-                    cluster.use_count += 1
+                    cluster.use_count += 1 # type: ignore
                     db.commit()
                     return {
                         "answer": cluster.canonical_answer,
@@ -92,8 +91,8 @@ class SemanticCanonicalEngine:
             db.refresh(new_c)
             
             # 2. Add to FAISS
-            self.index.add(embedding.astype("float32").reshape(1, -1))
-            self.ids.append(new_c.id)
+            self.index.add(embedding.astype("float32").reshape(1, -1)) # type: ignore
+            self.ids.append(new_c.id) # type: ignore
             
             # 3. Persist FAISS
             faiss.write_index(self.index, self.db_path)

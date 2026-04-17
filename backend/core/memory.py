@@ -74,7 +74,7 @@ class ConversationMemory:
             try:
                 data = self.redis.get(key)
                 if data:
-                    return json.loads(data)
+                    return json.loads(data) # type: ignore
             except Exception: # nosec B110
                 pass
         

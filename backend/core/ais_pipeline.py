@@ -427,7 +427,8 @@ class AISPipeline:
             ctx = global_rag_engine.retrieve(query, tenant_id=tenant_id)
             context = [n["content"] for n in ctx] if ctx else []
             answer = await reasoning_expert.solve(query, context=context, tenant_id=tenant_id)
-            return answer if answer else f"Processed: {query}"
+            answer_str = answer.get("answer", str(answer)) if isinstance(answer, dict) else str(answer)
+            return answer_str if answer_str else f"Processed: {query}"
         except Exception as exc:
             logger.error(f"ais.model_call_error: {exc}")
             return f"Unable to process at this time. Query: '{query}'"

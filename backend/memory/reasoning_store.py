@@ -70,7 +70,7 @@ class ReasoningStore:
             self._id_map.append(q_hash)
             
         if embeddings:
-            self._index.add(np.array(embeddings).astype(np.float32))
+            self._index.add(np.array(embeddings).astype(np.float32)) # type: ignore
             logger.info(f"reasoning_index_loaded: count={len(embeddings)}")
 
     def _get_embedding(self, query: str) -> np.ndarray:
@@ -94,7 +94,7 @@ class ReasoningStore:
         self._conn.commit()
 
         # Update FAISS
-        self._index.add(np.array([embedding]))
+        self._index.add(np.array([embedding]).astype('float32')) # type: ignore
         self._id_map.append(q_hash)
         
         logger.info("reasoning_stored: hash=%s..." % q_hash[0:8])
@@ -124,7 +124,7 @@ class ReasoningStore:
             return None
 
         query_emb = self._get_embedding(query)
-        distances, indices = self._index.search(np.array([query_emb]), 1)
+        distances, indices = self._index.search(np.array([query_emb]).astype('float32'), k=1) # type: ignore
         
         # In L2 distance, lower is closer. For normalized vectors, dist ~ 2(1-cos_sim)
         # Cosine Similarity = 1 - (dist/2)

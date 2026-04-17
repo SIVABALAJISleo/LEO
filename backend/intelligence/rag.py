@@ -79,7 +79,12 @@ try:
     from sentence_transformers import SentenceTransformer
     HAS_TRANSFORMERS = True
 except ImportError:
-    SentenceTransformer = TFIDFLite
+    class FakeSentenceTransformer:
+        def __init__(self, model_name: str = ""):
+            self._impl = TFIDFLite()
+        def encode(self, texts: List[str]) -> np.ndarray:
+            return self._impl.encode(texts)
+    SentenceTransformer = FakeSentenceTransformer
     HAS_TRANSFORMERS = False
 
 try:
@@ -110,14 +115,14 @@ class VectorDBAdapter:
         self.index: Any = self.index # Type hint to satisfy pyright
     def add(self, embeddings: np.ndarray):
         if self.mode == "local":
-            self.index.add(embeddings.astype('float32'))
+            self.index.add(embeddings.astype('float32')) # type: ignore
         else:
             # push to remote Qdrant/Milvus cluster
             pass
 
     def search(self, query_vec: np.ndarray, k: int):
         if self.mode == "local":
-            return self.index.search(query_vec, k)
+            return self.index.search(query_vec, k=k) # type: ignore
         else:
             # query remote cluster
             return np.array([[]]), np.array([[]])
@@ -136,14 +141,14 @@ class RAGEngine:
         self.persist_dir = persist_dir
         self.docs_path = os.path.join(persist_dir, "documents.json")
         
-        self.model = SentenceTransformer('all-MiniLM-L6-v2') if HAS_TRANSFORMERS else TFIDFLite(dimension)
+        self.model = SentenceTransformer('all-MiniLM-L6-v2') 
         
         # Select storage mode: 'local' (FAISS) or 'distributed' (Qdrant/Milvus)
         db_mode = os.getenv("VECTOR_DB_MODE", "local")
         self.db = VectorDBAdapter(mode=db_mode, dimension=dimension, persist_dir=persist_dir)
         self.index = self.db.index # Maintain compatibility
         
-        self.documents = []
+        self.documents: List[Dict[str, Any]] = []
         self.bm25: Optional[BM25Okapi] = None
         self.load()
         self._update_bm25()
@@ -178,7 +183,7 @@ class RAGEngine:
             else:
                 processed_docs.append({"content": doc, "tenant_id": tenant_id})
 
-        embeddings = self.model.encode([d["content"] for d in processed_docs])
+        embeddings = np.asarray(self.model.encode([d["content"] for d in processed_docs]))
         logger.info(f"documents_indexed: count={len(docs)} tenant={tenant_id}")
         
         self.db.add(embeddings)
@@ -232,11 +237,13 @@ class RAGEngine:
             
             if cached_vec:
                 try:
-                    query_vec = np.array(json.loads(cached_vec)).astype('float32')
+                    # cached_vec might be string or bytes
+                    data = json.loads(cached_vec) if isinstance(cached_vec, (str, bytes)) else cached_vec
+                    query_vec = np.asarray(data).astype('float32')
                 except: # nosec B110
-                    query_vec = self.model.encode([q]).astype('float32').reshape(1, -1)
+                    query_vec = np.asarray(self.model.encode([q])).astype('float32').reshape(1, -1)
             else:
-                query_vec = self.model.encode([q]).astype('float32').reshape(1, -1)
+                query_vec = np.asarray(self.model.encode([q])).astype('float32').reshape(1, -1)
                 if redis_client:
                     redis_client.set(cache_key, json.dumps(query_vec.tolist()), ex=3600)
             

@@ -28,7 +28,7 @@ class TextCompositionEngine:
         """Standard assembly from base text and list of strings."""
         from backend.core.refiner import global_refiner
         template_key = "definition" if intent not in self.TEMPLATES else intent
-        template = self.TEMPLATES.get(template_key)
+        template = self.TEMPLATES[template_key]
         fragment_str = "\n".join([f"- {f}" for f in fragments])
         raw_composed = template.format(entity=entity, text=base_text, fragments=fragment_str)
         return global_refiner.refine(raw_composed)
@@ -77,12 +77,12 @@ class VideoCompositionEngine:
         """Assembles a simple MP4/GIF from procedural frames."""
         try:
             try:
-                from moviepy.editor import ColorClip, TextClip, CompositeVideoClip
+                from moviepy.editor import ColorClip, TextClip, CompositeVideoClip # type: ignore
                 bg = ColorClip(size=(1280, 720), color=(0, 0, 40), duration=duration)
                 txt = TextClip(title, fontsize=70, color='white', font='Arial', duration=duration).set_position('center')
             except ImportError:
                 # MoviePy 2.x API
-                from moviepy import ColorClip, TextClip, CompositeVideoClip
+                from moviepy import ColorClip, TextClip, CompositeVideoClip # type: ignore
                 bg = ColorClip(size=(1280, 720), color=(0, 0, 40)).with_duration(duration)
                 txt = TextClip(text=title, font_size=70, color='white', font='Arial').with_duration(duration).with_position('center')
             

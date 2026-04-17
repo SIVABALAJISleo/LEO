@@ -2,7 +2,7 @@ import logging
 import json
 import time
 import uuid
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
 
@@ -14,7 +14,7 @@ class StructuredLogger:
             handler = logging.StreamHandler()
             self.logger.addHandler(handler)
 
-    def info(self, message: str, extra: Dict[str, Any] = None):
+    def info(self, message: str, extra: Optional[Dict[str, Any]] = None):
         log_data = {
             "timestamp": time.time(),
             "level": "INFO",
@@ -23,7 +23,7 @@ class StructuredLogger:
         }
         self.logger.info(json.dumps(log_data))
 
-    def error(self, message: str, extra: Dict[str, Any] = None):
+    def error(self, message: str, extra: Optional[Dict[str, Any]] = None):
         log_data = {
             "timestamp": time.time(),
             "level": "ERROR",

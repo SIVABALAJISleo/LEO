@@ -51,6 +51,24 @@ class PredictivePredictor:
             "follow_ups": [f"next steps for {entity}", f"scaling {entity} in production"]
         }
 
+    def mine_patterns(self) -> List[str]:
+        """Returns a list of frequently occurring query patterns to precompute."""
+        # Derive patterns from HOT_QUERIES and session activity
+        hot = list(HOT_QUERIES)
+        session_queries = [
+            q for history in self.session_history.values()
+            for q in history
+        ]
+        # Pick the most recent session queries (unique)
+        seen = set()
+        for q in reversed(session_queries):
+            if q not in seen:
+                seen.add(q)
+                hot.append(q)
+            if len(hot) >= 30:
+                break
+        return hot
+
     async def preload(self, partial_query: str, session_id: str, tenant_id: str):
         """
         Point 10: CONTEXT PRELOADING.

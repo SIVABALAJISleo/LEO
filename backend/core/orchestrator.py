@@ -177,7 +177,7 @@ class UnifiedSaaSEngine:
             h = hashlib.sha256(query.lower().strip().encode()).hexdigest()
             cluster = db.query(QueryCluster).filter(QueryCluster.cluster_hash == h, QueryCluster.tenant_id == tenant_id).first()
             if cluster:
-                cluster.use_count += 1
+                cluster.use_count += 1 # type: ignore
                 db.commit()
                 return {"answer": cluster.canonical_answer, "confidence": 0.98, "canonical": True}
         finally:

@@ -17,7 +17,7 @@ MEMORY_DB_PATH = os.path.join(os.getcwd(), "data", "global_memory_faiss.idx")
 LOG_PATH = os.path.join(os.getcwd(), "data", "global_memory_log.json")
 DIMENSION = 384
 MEMORY_CAP = 50_000
-REUSE_THRESHOLD = 0.90  # Raised to 0.90 for TRIATTENTION requirements
+REUSE_THRESHOLD = 0.85  # Exactly 0.85 as per TRIATTENTION mission
 
 class GlobalMemory:
     """
@@ -69,7 +69,8 @@ class GlobalMemory:
         }
         
         self._log[qhash] = entry
-        self._index.add(np.array([emb]))
+        # FAISS add() requires a 2D float32 array
+        self._index.add(np.asarray([emb]).astype('float32')) # type: ignore
         self._id_map.append(qhash)
 
         self.save()
@@ -86,8 +87,9 @@ class GlobalMemory:
             
         # 2. Semantic
         if self._index.ntotal > 0:
-            emb = global_embedding_pipeline.get_embeddings([query])[0].astype(np.float32)
-            dist, indices = self._index.search(np.array([emb]), 1)
+            emb = np.asarray(global_embedding_pipeline.get_embeddings([query])[0]).astype('float32')
+            # Fix: FAISS search requires 'k=' to be explicit in some stubs or correctly typed
+            dist, indices = self._index.search(np.array([emb]), k=1) # type: ignore
             
             if indices[0][0] != -1:
                 similarity = 1.0 - (dist[0][0] / 2.0)
@@ -152,9 +154,9 @@ class GlobalMemory:
             return results
 
         try:
-            emb = global_embedding_pipeline.get_embeddings([query])[0].astype(np.float32)
+            emb = np.asarray(global_embedding_pipeline.get_embeddings([query])[0]).astype('float32')
             actual_k = min(k, self._index.ntotal)
-            dists, indices = self._index.search(np.array([emb]), actual_k)
+            dists, indices = self._index.search(np.array([emb]), k=actual_k) # type: ignore
 
             for dist, idx in zip(dists[0], indices[0]):
                 if idx == -1:

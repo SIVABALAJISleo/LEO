@@ -135,9 +135,9 @@ class ZeroRepeatStore:
             "timestamp": time.time(),
         }
         self._violation_log.append(violation)
-        logger.error(
-            f"ZERO_REPEAT_VIOLATION: family={family_id} reason={reason} "
-            f"query='{query}' — THIS IS A BUG"
+        logger.critical(
+            f"!!! ZERO_REPEAT_VIOLATION !!! family={family_id} reason={reason} "
+            f"query='{query}' — THIS IS A SYSTEM ARCHITECTURE BUG"
         )
 
     def check_before_compute(

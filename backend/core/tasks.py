@@ -1,6 +1,6 @@
 import os
 import logging
-from celery import Celery
+from celery import Celery # type: ignore
 import asyncio
 from backend.core.orchestrator import hyper_engine
 from backend.core.database import SessionLocal, DocumentMetadata

@@ -48,7 +48,7 @@ class ShadowAnswerStore:
     def save_shadow(self, question: str, answer: str, confidence: float, session_id: str, tenant_id: str = "default", workspace_id: str = "default"):
         db = SessionLocal()
         try:
-            embedding = self.semantic_cache.model.encode([question])[0]
+            embedding = np.asarray(self.semantic_cache.model.encode([question])[0])
             new_ans = ShadowAnswer(
                 question=question,
                 answer=answer,
@@ -93,18 +93,18 @@ class ShadowAnswerStore:
             if not candidates:
                 return None
 
-            query_embedding = self.semantic_cache.model.encode([query])[0]
+            query_embedding = np.asarray(self.semantic_cache.model.encode([query])[0])
             best_match = None
             max_sim = 0
 
             for c in candidates:
-                c_emb = np.frombuffer(bytes(c.embedding), dtype='float32')
+                c_emb = np.frombuffer(bytes(c.embedding), dtype='float32') # type: ignore
                 sim = float(np.dot(query_embedding, c_emb))
                 if sim > max_sim:
                     max_sim = sim
                     best_match = c
 
-            if max_sim > 0.90:
+            if best_match is not None and max_sim > 0.90:
                 logger.info(f"shadow_store_hit: score={max_sim} session={session_id}")
                 return {
                     "answer": best_match.answer,

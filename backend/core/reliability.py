@@ -61,7 +61,7 @@ class ReliabilityOrchestrator:
             logger.error(f"reliability_event: action={action_name} error={e}")
             return self._get_dynamic_fallback(action_name, query_metadata)
 
-    async def _get_fallback(self, action_name: str, kwargs: dict) -> dict:
+    def _get_dynamic_fallback(self, action_name: str, kwargs: dict) -> dict:
         # Tier 1: Last Known Good (if < 5 minutes old)
         lkg = self.lkg_data.get(action_name)
         if lkg:

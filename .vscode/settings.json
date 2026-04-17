@@ -1,11 +1,30 @@
 {
-    "python.defaultInterpreterPath": "C:\\Program Files\\Python313\\python.exe",
+    "python.defaultInterpreterPath": "${workspaceFolder}/venv/Scripts/python.exe",
+    "python.analysis.indexing": true,
+    "python.analysis.diagnosticMode": "workspace",
     "python.analysis.extraPaths": [
-        "c:\\Users\\sivab\\OneDrive\\Documents\\HYPER\\remix-of-remix-of-remix-of-nvidia-inspired-design-main",
-        "c:\\Users\\sivab\\OneDrive\\Documents\\HYPER\\remix-of-remix-of-remix-of-nvidia-inspired-design-main\\backend"
+        "${workspaceFolder}",
+        "${workspaceFolder}/backend",
+        "${workspaceFolder}/orchestration",
+        "${workspaceFolder}/rag"
+    ],
+    "python.analysis.include": [
+        "backend",
+        "orchestration",
+        "rag",
+        "scripts",
+        "tests",
+        "."
+    ],
+    "python.analysis.exclude": [
+        "src",
+        "**/node_modules",
+        "**/__pycache__",
+        "venv",
+        "dist",
+        ".git"
     ],
     "python.analysis.autoSearchPaths": true,
     "python.analysis.useLibraryCodeForTypes": true,
-    "python.analysis.diagnosticMode": "workspace",
     "python.analysis.typeCheckingMode": "basic"
 }

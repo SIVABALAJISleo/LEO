@@ -1,4 +1,5 @@
 import logging
+from typing import Any
 import numpy as np
 
 logger = logging.getLogger(__name__)
@@ -28,7 +29,7 @@ class EmbeddingOptimizer:
         self._cache[text_hash] = quantized
         return emb
         
-    def _quantize_int8(self, emb: np.ndarray) -> np.ndarray:
+    def _quantize_int8(self, emb: np.ndarray) -> Any:
         """Simulates 8-bit quantization for minimal memory footprint."""
         # Simple symmetric quantization for demonstration
         scale = np.max(np.abs(emb)) / 127.0

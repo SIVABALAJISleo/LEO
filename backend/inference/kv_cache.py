@@ -55,7 +55,7 @@ class KVCacheEngine:
                 data = self.redis.get(f"kv_cache:{prompt_hash}")
                 if data:
                     logger.info("kv_cache_hit: prefix_reuse_active (Redis)")
-                    return json.loads(data)
+                    return json.loads(data) # type: ignore
             except Exception as e:
                 logger.warning(f"kv_cache_lookup_failed: {e}")
         

@@ -5,7 +5,7 @@ Simple queries skip the model entirely.
 """
 import re
 import logging
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +31,7 @@ class QueryComplexityEstimator:
     Routes simple queries directly to templates/cache, skipping inference.
     """
 
-    def estimate(self, query: str, normalized: Dict[str, Any] = None) -> str:
+    def estimate(self, query: str, normalized: Optional[Dict[str, Any]] = None) -> str:
         """Returns 'simple', 'medium', or 'complex'."""
         q = query.lower().strip()
         word_count = len(q.split())

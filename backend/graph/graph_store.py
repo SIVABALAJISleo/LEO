@@ -65,7 +65,7 @@ class GraphStore:
             try:
                 data = self._redis.get(f"graph:{key}")
                 if data:
-                    entry = json.loads(data)
+                    entry = json.loads(data) # type: ignore
                     self._store[key] = entry  # Warm local cache
                     logger.info(f"graph_hit: intent={intent} entity={entity} (redis)")
                     return entry
