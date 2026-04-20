@@ -8,7 +8,7 @@ class OutcomeLookup:
     """
     Module E: ANSWER-FIRST LOOKUP TABLES
     - Prefer pre-known outcomes over computation.
-    - “What should this look like?” → direct answer.
+    - ???What should this look like???? ??? direct answer.
     - No path solving, no iteration.
     """
     

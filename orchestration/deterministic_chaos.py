@@ -8,7 +8,7 @@ class DeterministicChaos:
     """
     Module B: DETERMINISTIC CHAOS FUNCTIONS
     - Replace stochastic systems with seeded attractors.
-    - Same input → same outcome, always.
+    - Same input ??? same outcome, always.
     - Chaos is visual complexity, not numerical instability.
     """
     

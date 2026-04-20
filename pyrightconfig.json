@@ -24,14 +24,17 @@
         "venv",
         ".git"
     ],
-    "venvPath": "c:\\Users\\sivab\\OneDrive\\Documents\\HYPER\\remix-of-remix-of-remix-of-nvidia-inspired-design-main",
+    "venvPath": ".",
     "venv": "venv",
     "pythonVersion": "3.11",
     "pythonPlatform": "Windows",
     "typeCheckingMode": "basic",
     "reportMissingImports": "none",
     "extraPaths": [
-        "."
+        ".",
+        "./orchestration",
+        "./approximation",
+        "./backend"
     ],
     "executionEnvironments": [
         {

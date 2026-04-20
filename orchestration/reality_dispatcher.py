@@ -21,11 +21,11 @@ class RealityDispatcher:
     """
     Module G: UNIVERSAL REALITY DISPATCHER
     Single entry point for all world evaluation.
-    Input → Answer → Return → Sleep.
+    Input ??? Answer ??? Return ??? Sleep.
     Pipeline:
-      1. A (Seed Axioms) → Exists?
-      2. B (Geometry)    → Form?
-      3. C (Semantics)   → Meaning?
+      1. A (Seed Axioms) ??? Exists?
+      2. B (Geometry)    ??? Form?
+      3. C (Semantics)   ??? Meaning?
     """
     def __init__(self):
         # Initialize Dependencies

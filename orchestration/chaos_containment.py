@@ -56,7 +56,7 @@ class ChaosContainment:
         valid_pattern = self.get_closest_pattern(initial_state)
         
         if is_chaotic:
-            logger.warning(f"System Detected as CHAOTIC (λ={lyapunov_exponent}). Snapping to Motion Library.")
+            logger.warning(f"System Detected as CHAOTIC (??={lyapunov_exponent}). Snapping to Motion Library.")
             
             formatted_result = {
                 "mode": "PATTERN_PLAYBACK",

@@ -1,6 +1,20 @@
 {
     "python.analysis.extraPaths": ["."],
-    "python.analysis.include": ["backend", "orchestration", "rag"],
+    "python.analysis.include": [
+        "backend",
+        "orchestration",
+        "chaos",
+        "experts",
+        "engine_hv",
+        "predictors",
+        "rag",
+        "router",
+        "approximation",
+        "retrieval",
+        "intelligence",
+        "memory",
+        "predictive"
+    ],
     "python.analysis.exclude": ["src"],
     "python.analysis.diagnosticSeverityOverrides": {
         "reportMissingImports": "none"
