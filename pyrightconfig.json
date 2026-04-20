@@ -1,25 +1,10 @@
 {
     "include": [
-        "backend",
-        "orchestration",
-        "chaos",
-        "experts",
-        "engine_hv",
-        "predictors",
-        "rag",
-        "router",
-        "routers",
-        "adapters",
-        "approximation",
-        "retrieval",
-        "intelligence",
-        "memory",
-        "predictive"
+        "."
     ],
     "exclude": [
         "**/node_modules",
         "**/__pycache__",
-        "src",
         "dist",
         "venv",
         ".git"
@@ -30,15 +15,18 @@
     "pythonPlatform": "Windows",
     "typeCheckingMode": "basic",
     "reportMissingImports": "none",
+    "stubPath": ".",
     "extraPaths": [
-        ".",
-        "./orchestration",
-        "./approximation",
-        "./backend"
+        "."
     ],
     "executionEnvironments": [
         {
-            "root": "."
+            "root": "orchestration",
+            "extraPaths": [".."]
+        },
+        {
+            "root": ".",
+            "extraPaths": ["."]
         }
     ]
 }

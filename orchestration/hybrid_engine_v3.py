@@ -37,7 +37,7 @@ class HybridEngine_V3:
         # Direct check for known structural identities
         if query in self.promotion_registry:
             result = self.fast_path.resolve_invariant(query)
-            return self._finalize(result, "HYBRID_FAST_PATH", start)
+            return self._finalize(result, "HYBRID_FAST_PATH", start, query)
         
         # --- PHASE 2: SLOW PATH (Adaptive) ---
         # Unknown input. Pay for computation.
@@ -51,7 +51,8 @@ class HybridEngine_V3:
         return self._finalize(
             {"result": [adaptive_result['answer']], "adaptive": True}, 
             "HYBRID_SLOW_PATH", 
-            start
+            start,
+            query
         )
 
     def _compile_discovery(self, query: str, answer: str):
@@ -66,7 +67,7 @@ class HybridEngine_V3:
         self.promotion_registry[query] = answer
         logger.info(f"Hybrid: Localized discovery compiled into structural memory: {query[:20]}")
 
-    def _finalize(self, data: Dict[str, Any], technique: str, start: float) -> Dict[str, Any]:
+    def _finalize(self, data: Dict[str, Any], technique: str, start: float, query: str) -> Dict[str, Any]:
         lat = (time.perf_counter() - start) * 1000
         return {
             "resolution": data.get("result", []),
@@ -74,7 +75,7 @@ class HybridEngine_V3:
                 "pipeline": technique,
                 "latency": f"{lat:.4f}ms",
                 "is_adaptive": data.get("adaptive", False),
-                "compiled_discovery": query in self.promotion_registry if 'query' in locals() else True
+                "compiled_discovery": query in self.promotion_registry
             }
         }
 

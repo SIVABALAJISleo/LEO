@@ -1,4 +1,4 @@
-#include <iostream>
+#include <cstdio>
 #include <vector>
 #include <string>
 #include <chrono>
@@ -7,6 +7,11 @@
 #include <cstring>
 #include <algorithm>
 #include <iomanip>
+
+// Compatibility aliases for environments with broken stdint.h resolution
+typedef unsigned int u32;
+typedef unsigned long long u64;
+typedef unsigned char u8;
 
 /**
  * SYMBOLIC DATAFLOW CIRCUIT (SDC)
@@ -22,21 +27,23 @@ const int NODE_POOL_SIZE = 1024;
 
 // --- HARDWARE ALIGNMENT ---
 struct alignas(64) Node {
-    uint64_t symbol_id;
-    uint64_t edges[8];    // Graph connectivity via indices
-    uint64_t data_offset;
-    uint64_t mask[4];      // 256-bit SIMD mask for bitwise logic
+    u64 symbol_id;
+    u64 edges[8];    // Graph connectivity via indices
+    u64 data_offset;
+    u64 mask[4];      // 256-bit SIMD mask for bitwise logic
 };
 
 // --- SIMD ABSTRACTION ---
 #if defined(__AVX2__)
     #define SIMD_LOAD(ptr) _mm256_load_si256((const __m256i*)ptr)
+    #define SIMD_STORE(ptr, val) _mm256_store_si256((__m256i*)ptr, val)
     #define SIMD_AND(q, m) _mm256_and_si256(q, m)
     #define SIMD_XOR(q, m) _mm256_xor_si256(q, m)
     #define SIMD_TYPE __m256i
 #else
     // Fallback to SSE and simulate wider ops
     #define SIMD_LOAD(ptr) _mm_load_si128((const __m128i*)ptr)
+    #define SIMD_STORE(ptr, val) _mm_store_si128((__m128i*)ptr, val)
     #define SIMD_AND(q, m) _mm_and_si128(q, m)
     #define SIMD_XOR(q, m) _mm_xor_si128(q, m)
     #define SIMD_TYPE __m128i
@@ -44,7 +51,7 @@ struct alignas(64) Node {
 
 class SDCEngine {
 private:
-    uint64_t jump_table[STATE_COUNT][256];
+    u64 jump_table[STATE_COUNT][256];
     std::vector<Node> node_pool;
     
 public:
@@ -63,16 +70,16 @@ public:
             node_pool[i].symbol_id = i;
             node_pool[i].data_offset = i * 128; // Lazy data reference
             for (int m = 0; m < 4; ++m) {
-                node_pool[i].mask[m] = 0xFFFFFFFFFFFFFFFF; // Active logic pins
+                node_pool[i].mask[m] = 0xFFFFFFFFFFFFFFFFULL; // Active logic pins
             }
         }
     }
 
     // --- HOT PATH: NO BRANCHING ---
-    uint64_t execute(const std::string& input) {
+    u64 execute(const std::string& input) {
         // 1. INPUT TRAVERSAL (BYTE STREAM JUMP)
-        uint64_t state = 0;
-        const uint8_t* bytes = (const uint8_t*)input.c_str();
+        u64 state = 0;
+        const u8* bytes = (const u8*)input.c_str();
         size_t len = input.length();
 
         // Unrolled loop for predictable cost (if len were fixed)
@@ -82,7 +89,7 @@ public:
 
         // 2. SIMD DATAFLOW (FIXED INSTRUCTION SEQUENCE)
         // Load input state into SIMD register
-        alignas(32) uint64_t q_raw[4] = {state, state, state, state};
+        alignas(32) u64 q_raw[4] = {state, state, state, state};
         SIMD_TYPE q = SIMD_LOAD(q_raw);
 
         // Fetch Node from pool (O1 via index)
@@ -95,33 +102,34 @@ public:
 
         // 3. LAZY DERIVED COMPUTE (IN REGISTERS)
         // Simulate a carry-free derivation: (A - B) + Offset
-        alignas(32) uint64_t res_raw[4];
-        _mm256_store_si256((__m256i*)res_raw, resolved);
+        alignas(32) u64 res_raw[4];
+        SIMD_STORE(res_raw, resolved);
         
-        uint64_t profit = (res_raw[0] > 100) ? (res_raw[0] - 100) : 0; // Branchless ternary if possible
+        u64 profit = (res_raw[0] > 100) ? (res_raw[0] - 100) : 0; // Branchless ternary if possible
         
         return profit + target.symbol_id;
     }
 
     // --- BENCHMARKING ---
     void benchmark(const std::string& query, int iterations = 1000000) {
-        std::cout << "Target Logic Path: Branchless SIMD Dataflow" << std::endl;
-        std::cout << "Query: " << query << std::endl;
+        std::printf("Target Logic Path: Branchless SIMD Dataflow\n");
+        std::printf("Query: %s\n", query.c_str());
 
         auto start = std::chrono::high_resolution_clock::now();
-        uint64_t checksum = 0;
+        u64 checksum = 0;
 
         for (int i = 0; i < iterations; ++i) {
             checksum += execute(query);
         }
 
         auto end = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double, std::nano> ns = (end - start) / iterations;
+        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+        double avg_ns = (double)duration.count() / iterations;
 
-        std::cout << "Avg Latency: " << std::fixed << std::setprecision(2) << ns.count() << " ns" << std::endl;
-        std::cout << "Throughput:  " << (1e9 / ns.count()) / 1e6 << " M queries/sec" << std::endl;
-        std::cout << "Verification: (Checksum " << checksum << ")" << std::endl;
-        std::cout << "------------------------------------------" << std::endl;
+        std::printf("Avg Latency: %.2f ns\n", avg_ns);
+        std::printf("Throughput:  %.2f M queries/sec\n", (1e9 / avg_ns) / 1e6);
+        std::printf("Verification: (Checksum %llu)\n", (unsigned long long)checksum);
+        std::printf("------------------------------------------\n");
     }
 };
 

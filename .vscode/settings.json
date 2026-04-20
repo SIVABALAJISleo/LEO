@@ -1,21 +1,16 @@
 {
-    "python.analysis.extraPaths": ["."],
-    "python.analysis.include": [
-        "backend",
-        "orchestration",
-        "chaos",
-        "experts",
-        "engine_hv",
-        "predictors",
-        "rag",
-        "router",
-        "approximation",
-        "retrieval",
-        "intelligence",
-        "memory",
-        "predictive"
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}"
     ],
-    "python.analysis.exclude": ["src"],
+    "python.analysis.include": [
+        "."
+    ],
+    "python.analysis.exclude": [
+        "**/node_modules",
+        "**/__pycache__",
+        "dist",
+        "venv"
+    ],
     "python.analysis.diagnosticSeverityOverrides": {
         "reportMissingImports": "none"
     }

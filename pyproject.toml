@@ -1,37 +1,5 @@
-[tool.pyright]
-include = [
-    "backend",
-    "orchestration",
-    "chaos",
-    "experts",
-    "engine_hv",
-    "predictors",
-    "rag",
-    "router",
-    "routers",
-    "adapters",
-    "approximation",
-    "retrieval"
-]
-exclude = [
-    "**/node_modules",
-    "**/__pycache__",
-    "src",
-    "dist",
-    "venv",
-    ".git"
-]
-venvPath = "."
-venv = "venv"
-pythonVersion = "3.11"
-pythonPlatform = "Windows"
-typeCheckingMode = "basic"
-reportMissingImports = "none"
-extraPaths = ["."]
-
-[[tool.pyright.executionEnvironments]]
-root = "."
-
 [tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
 testpaths = ["tests"]
 pythonpath = ["."]
