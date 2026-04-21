@@ -1,18 +1,18 @@
 import logging
 from typing import Dict, Any, List
 # Original Modules
-from orchestration.visibility_manager import VisibilityManager
-from orchestration.specular_governor import SpecularGovernor
-from orchestration.chaos_containment import ChaosContainment
-from orchestration.lazy_world import LazyWorldManager
+from .visibility_manager import VisibilityManager
+from .specular_governor import SpecularGovernor
+from .chaos_containment import ChaosContainment
+from .lazy_world import LazyWorldManager
 
 # Reality Control Layer Modules
-from orchestration.world_axioms import WorldAxioms
-from orchestration.deterministic_chaos import DeterministicChaos
-from orchestration.consistency_enforcer import ConsistencyEnforcer
-from orchestration.locality_manager import LocalityManager
-from orchestration.outcome_lookup import OutcomeLookup
-from orchestration.authorship_boundary import AuthorshipBoundary
+from .world_axioms import WorldAxioms
+from .deterministic_chaos import DeterministicChaos
+from .consistency_enforcer import ConsistencyEnforcer
+from .locality_manager import LocalityManager
+from .outcome_lookup import OutcomeLookup
+from .authorship_boundary import AuthorshipBoundary
 
 logger = logging.getLogger(__name__)
 

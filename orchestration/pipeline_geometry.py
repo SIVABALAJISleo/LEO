@@ -1,8 +1,8 @@
 import logging
 from typing import Dict, Any, List
 # Import existing governance modules
-from orchestration.visibility_manager import VisibilityManager
-from orchestration.specular_governor import SpecularGovernor
+from .visibility_manager import VisibilityManager
+from .specular_governor import SpecularGovernor
 
 logger = logging.getLogger(__name__)
 

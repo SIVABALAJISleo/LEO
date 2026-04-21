@@ -5,7 +5,8 @@ from typing import Dict, Any, List, Optional
 from collections import OrderedDict
 
 # Core Evolutionary Stack
-from orchestration.ais_engine import AISEngine
+# Core AI Layer
+from .ais_engine import AISEngine
 
 logger = logging.getLogger(__name__)
 

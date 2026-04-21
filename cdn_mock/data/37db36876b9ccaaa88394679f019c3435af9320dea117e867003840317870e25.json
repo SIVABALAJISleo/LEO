@@ -1,0 +1,10 @@
+{
+    "intent_id": "37db36876b9ccaaa88394679f019c3435af9320dea117e867003840317870e25",
+    "data": {
+        "output": "System Nominal.",
+        "uptime": "99.99%"
+    },
+    "wasm_ref": "status_check_v1",
+    "type": "EXACT",
+    "version": "1.0.0_immutable"
+}

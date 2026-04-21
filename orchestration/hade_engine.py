@@ -5,10 +5,11 @@ from numba import njit, uint64
 from typing import Dict, Any, List
 
 # Optimized Platform Components
-from orchestration.identity import IdentityMapper
-from orchestration.hyper_engine import HyperEngine, jit_propagate
-from orchestration.pspe_math import HDCCore
-from orchestration.compressed_dag import CompressedDAG
+# High-Entropy Architecture Stack
+from .identity import IdentityMapper
+from .hyper_engine import HyperEngine, jit_propagate
+from .pspe_math import HDCCore
+from .compressed_dag import CompressedDAG
 
 logger = logging.getLogger(__name__)
 

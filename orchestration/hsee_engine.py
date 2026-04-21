@@ -4,10 +4,11 @@ import numpy as np
 from typing import Dict, Any, List, Optional
 
 # Final Performance Stack
-from orchestration.identity import IdentityMapper
-from orchestration.hyper_engine import HyperEngine, jit_propagate
-from orchestration.compressed_dag import CompressedDAG
-from orchestration.unification import UnificationEngine
+# Elite Performance Core
+from .identity import IdentityMapper
+from .hyper_engine import HyperEngine, jit_propagate
+from .compressed_dag import CompressedDAG
+from .unification import UnificationEngine
 
 logger = logging.getLogger(__name__)
 

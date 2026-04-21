@@ -6,10 +6,11 @@ import numpy as np
 from typing import Dict, Any, Optional, List
 
 # Optimized Low-Level Modules
-from orchestration.identity import IdentityMapper
-from orchestration.bit_lattice import BitLattice
-from orchestration.compressed_dag import CompressedDAG
-from orchestration.unification import UnificationEngine
+# Structural Foundation
+from .identity import IdentityMapper
+from .bit_lattice import BitLattice
+from .compressed_dag import CompressedDAG
+from .unification import UnificationEngine
 
 logger = logging.getLogger(__name__)
 

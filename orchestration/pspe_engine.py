@@ -4,9 +4,10 @@ import numpy as np
 from typing import Dict, Any, List, Optional
 
 # Final Architecture Stack
-from orchestration.identity import IdentityMapper
-from orchestration.hyper_engine import HyperEngine, jit_propagate
-from orchestration.pspe_math import HDCCore, RNSEngine
+# Deterministic High-Entropy Stack
+from .identity import IdentityMapper
+from .hyper_engine import HyperEngine, jit_propagate
+from .pspe_math import HDCCore, RNSEngine
 
 logger = logging.getLogger(__name__)
 

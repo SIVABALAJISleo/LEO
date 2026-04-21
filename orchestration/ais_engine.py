@@ -3,13 +3,16 @@ import time
 import logging
 import numpy as np
 from typing import Dict, Any, List, Optional
+from orchestration.identity import IdentityMapper
+from orchestration.hyper_engine import HyperIntentEngine
+from orchestration.compressed_dag import CompressedLatticeDAG
 
 # Local imports
 try:
     from orchestration.outcome_lookup import OutcomeLookup
     from orchestration.symbolic_core import SymbolicAICore
     from approximation.probabilistic import ProbabilisticCore
-except ImportError:
+except (ImportError, ValueError):
     # Fallbacks for testing or if imports fail during setup
     class Mock:
         def __init__(self, *args, **kwargs): pass

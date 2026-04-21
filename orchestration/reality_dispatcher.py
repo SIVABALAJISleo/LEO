@@ -3,16 +3,16 @@ import time
 from typing import Dict, Any, Optional
 
 # Import the A-B-C components
-from orchestration.world_axioms import WorldAxioms
-from orchestration.pipeline_geometry import PipelineGeometry
-from orchestration.pipeline_semantics import PipelineSemantics
-from orchestration.authorship_boundary import AuthorshipBoundary
+from .world_axioms import WorldAxioms
+from .pipeline_geometry import PipelineGeometry
+from .pipeline_semantics import PipelineSemantics
+from .authorship_boundary import AuthorshipBoundary
 
 # Import governance for instantiation
-from orchestration.visibility_manager import VisibilityManager
-from orchestration.specular_governor import SpecularGovernor
-from orchestration.chaos_containment import ChaosContainment
-from orchestration.outcome_lookup import OutcomeLookup
+from .visibility_manager import VisibilityManager
+from .specular_governor import SpecularGovernor
+from .chaos_containment import ChaosContainment
+from .outcome_lookup import OutcomeLookup
 from backend.core.chaos_controller import global_chaos_controller, ChaosMode
 
 logger = logging.getLogger(__name__)

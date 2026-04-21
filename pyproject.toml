@@ -1,7 +1,9 @@
 [tool.pyright]
-include = ["."]
+include = ["orchestration", "engine_hv", "approximation", "backend"]
+exclude = ["**/node_modules", "**/__pycache__", "src"]
 extraPaths = ["."]
 typeCheckingMode = "basic"
+reportMissingImports = "warning"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

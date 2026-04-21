@@ -1,5 +1,5 @@
 import numpy as np
-from ..core.fixed_point import FixedPoint
+from engine_hv.core.fixed_point import FixedPoint
 
 class PhysicsEngine:
     """

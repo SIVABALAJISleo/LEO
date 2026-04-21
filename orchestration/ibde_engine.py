@@ -5,9 +5,10 @@ from numba import njit, uint64, int32
 from typing import Dict, Any, List
 
 # Elite Platform Core
-from orchestration.identity import IdentityMapper
-from orchestration.hyper_engine import HyperEngine, jit_propagate
-from orchestration.compressed_dag import CompressedDAG
+# Instruction-Bounded Stack
+from .identity import IdentityMapper
+from .hyper_engine import HyperEngine, jit_propagate
+from .compressed_dag import CompressedDAG
 
 logger = logging.getLogger(__name__)
 

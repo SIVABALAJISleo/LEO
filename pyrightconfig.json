@@ -1,28 +1,49 @@
 {
     "include": [
-        "."
+        "orchestration",
+        "engine_hv",
+        "approximation",
+        "backend",
+        "chaos",
+        "helpers"
     ],
     "exclude": [
         "**/node_modules",
         "**/__pycache__",
         "dist",
         "venv",
-        ".git"
+        ".git",
+        "src"
     ],
     "venvPath": ".",
     "venv": "venv",
     "pythonVersion": "3.11",
     "pythonPlatform": "Windows",
     "typeCheckingMode": "basic",
-    "reportMissingImports": "none",
-    "stubPath": ".",
+    "reportMissingImports": "warning",
     "extraPaths": [
-        "."
+        ".",
+        "orchestration",
+        "engine_hv",
+        "approximation",
+        "backend"
     ],
     "executionEnvironments": [
         {
             "root": "orchestration",
-            "extraPaths": [".."]
+            "extraPaths": ["."]
+        },
+        {
+            "root": "engine_hv",
+            "extraPaths": ["."]
+        },
+        {
+            "root": "approximation",
+            "extraPaths": ["."]
+        },
+        {
+            "root": "backend",
+            "extraPaths": ["."]
         },
         {
             "root": ".",

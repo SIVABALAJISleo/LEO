@@ -13,6 +13,14 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#ifndef UINT64_MAX
+typedef unsigned long long uint64_t;
+typedef unsigned int uint32_t;
+typedef unsigned char uint8_t;
+#endif
+
+using namespace std;
+
 // Compatibility aliases
 typedef unsigned int u32;
 typedef unsigned long long u64;

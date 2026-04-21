@@ -4,11 +4,12 @@ import numpy as np
 from typing import Dict, Any, List
 
 # Core Hyper-Performance Modules
-from orchestration.identity import IdentityMapper
-from orchestration.unification import UnificationEngine
-from orchestration.hyper_engine import HyperEngine, jit_propagate
-from orchestration.context_lattice import ContextLattice
-from orchestration.compressed_dag import CompressedDAG
+# Symbolic Foundation
+from .identity import IdentityMapper
+from .unification import UnificationEngine
+from .hyper_engine import HyperEngine, jit_propagate
+from .context_lattice import ContextLattice
+from .compressed_dag import CompressedDAG
 
 logger = logging.getLogger(__name__)
 
