@@ -1,10 +1,10 @@
 import faiss
 import numpy as np
 import os
-import pickle
+import json
 
 class RagIndex:
-    def __init__(self, dimension=384, index_path='rag_index.faiss', metadata_path='metadata.pkl'):
+    def __init__(self, dimension=384, index_path='rag_index.faiss', metadata_path='metadata.json'):
         self.dimension = dimension
         self.index_path = index_path
         self.metadata_path = metadata_path
@@ -14,8 +14,8 @@ class RagIndex:
         if os.path.exists(index_path):
             print(f"[RagIndex] Loading existing index from {index_path}")
             self.index = faiss.read_index(index_path)
-            with open(metadata_path, 'rb') as f:
-                self.metadata = pickle.load(f)
+            with open(metadata_path, 'r') as f:
+                self.metadata = json.load(f)
             print(f"[RagIndex] Loaded {len(self.metadata)} documents")
         else:
             print(f"[RagIndex] Creating new empty index")
@@ -66,8 +66,8 @@ class RagIndex:
 
     def save(self):
         faiss.write_index(self.index, self.index_path)
-        with open(self.metadata_path, 'wb') as f:
-            pickle.dump(self.metadata, f)
+        with open(self.metadata_path, 'w') as f:
+            json.dump(self.metadata, f)
 
 if __name__ == "__main__":
     idx = RagIndex()

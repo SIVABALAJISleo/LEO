@@ -1,16 +1,16 @@
-#include <iostream>
+#include <stdio.h>
 #include <vector>
 #include <string>
 #include <atomic>
 #include <thread>
 #include <mutex>
 #include <immintrin.h>
-#include <cstring>
+#include <string.h>
 #include <chrono>
 #include <algorithm>
 #include <map>
 #include <unordered_map>
-#include <cstdint>
+#include <stdint.h>
 #include <stdlib.h>
 
 // Compatibility aliases
@@ -197,17 +197,17 @@ public:
         }
         
         write_buffer.clear();
-        std::printf("[L0-V2] Background Compilation Cycle Complete.\n");
+        printf("[L0-V2] Background Compilation Cycle Complete.\n");
     }
 
     void print_metrics() {
         u64 h = metrics.hits.load();
         u64 m = metrics.misses.load();
         double rate = (h + m > 0) ? (double)h / (h + m) * 100.0 : 0;
-        std::printf("--- L0 Metrics ---\n");
-        std::printf("Hit Rate: %.2f%%\n", rate);
-        std::printf("Avg Latency: %llu ns\n", (unsigned long long)(h > 0 ? metrics.total_latency_ns.load() / h : 0));
-        std::printf("-------------------\n");
+        printf("--- L0 Metrics ---\n");
+        printf("Hit Rate: %.2f%%\n", rate);
+        printf("Avg Latency: %llu ns\n", (unsigned long long)(h > 0 ? metrics.total_latency_ns.load() / h : 0));
+        printf("-------------------\n");
     }
 };
 
@@ -216,12 +216,12 @@ int main() {
     
     std::string test = "ENGINE_COMMAND_INIT_ALPHA";
     
-    std::printf("Initial Query (Miss Expected)...\n");
+    printf("Initial Query (Miss Expected)...\n");
     engine.query(test);
     
     std::this_thread::sleep_for(std::chrono::seconds(6)); 
 
-    std::printf("Reified Query (Hit Expected)...\n");
+    printf("Reified Query (Hit Expected)...\n");
     for(int i=0; i<1000; ++i) engine.query(test);
 
     engine.print_metrics();

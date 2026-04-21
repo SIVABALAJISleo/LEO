@@ -91,7 +91,7 @@ class VisibilityManager:
         """
         # Context-aware hash to simulate distinct but deterministic "guesses"
         import hashlib
-        h = hashlib.md5(region_id.encode()).hexdigest()
+        h = hashlib.sha256(region_id.encode()).hexdigest()
         return f"generated_texture_{h[:6]}_plausible"
 
     def context_fill(self, region_id: str) -> Dict[str, Any]:

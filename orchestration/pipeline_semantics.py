@@ -29,7 +29,7 @@ class PipelineSemantics:
         
         # 2. Resolve Physics/Dynamics (Existing Logic)
         import hashlib
-        h = int(hashlib.md5(entity_id.encode()).hexdigest(), 16)
+        h = int(hashlib.sha256(entity_id.encode()).hexdigest(), 16)
         
         # Entropy check
         physics_state = self.chaos.analyze_trajectory(h % 100 / 100.0, 1, 0.4)

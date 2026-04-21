@@ -1,6 +1,6 @@
 import faiss
 import numpy as np
-import pickle
+import json
 import os
 import logging
 from typing import Optional, Dict, Any
@@ -15,7 +15,7 @@ class SemanticCache:
     def __init__(self, dimension=384, cache_path='cache/semantic_cache.faiss'):
         self.dimension = dimension
         self.cache_path = cache_path
-        self.metadata_path = cache_path.replace('.faiss', '.pkl')
+        self.metadata_path = cache_path.replace('.faiss', '.json')
         
         # Ensure cache dir exists
         os.makedirs(os.path.dirname(self.cache_path), exist_ok=True)
@@ -30,16 +30,16 @@ class SemanticCache:
     def load(self):
         try:
             self.index = faiss.read_index(self.cache_path)
-            with open(self.metadata_path, 'rb') as f:
-                self.results = pickle.load(f)
+            with open(self.metadata_path, 'r') as f:
+                self.results = json.load(f)
             logger.info(f"Loaded semantic cache with {len(self.results)} entries.")
         except Exception as e:
             logger.error(f"Failed to load semantic cache: {e}")
 
     def save(self):
         faiss.write_index(self.index, self.cache_path)
-        with open(self.metadata_path, 'wb') as f:
-            pickle.dump(self.results, f)
+        with open(self.metadata_path, 'w') as f:
+            json.dump(self.results, f)
 
     def lookup(self, embedding: np.ndarray, threshold: float = 0.1) -> Optional[Dict[str, Any]]:
         """

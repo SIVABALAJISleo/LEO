@@ -1,14 +1,14 @@
-#include <cstdio>
+#include <stdio.h>
 #include <vector>
 #include <string>
 #include <chrono>
 #include <immintrin.h>
-#include <cstdint>
-#include <cstring>
+#include <stdint.h>
+#include <string.h>
 #include <algorithm>
 #include <iomanip>
 
-// Compatibility aliases for environments with broken stdint.h resolution
+// Compatibility aliases
 typedef unsigned int u32;
 typedef unsigned long long u64;
 typedef unsigned char u8;
@@ -112,8 +112,8 @@ public:
 
     // --- BENCHMARKING ---
     void benchmark(const std::string& query, int iterations = 1000000) {
-        std::printf("Target Logic Path: Branchless SIMD Dataflow\n");
-        std::printf("Query: %s\n", query.c_str());
+        printf("Target Logic Path: Branchless SIMD Dataflow\n");
+        printf("Query: %s\n", query.c_str());
 
         auto start = std::chrono::high_resolution_clock::now();
         u64 checksum = 0;
@@ -126,10 +126,10 @@ public:
         auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
         double avg_ns = (double)duration.count() / iterations;
 
-        std::printf("Avg Latency: %.2f ns\n", avg_ns);
-        std::printf("Throughput:  %.2f M queries/sec\n", (1e9 / avg_ns) / 1e6);
-        std::printf("Verification: (Checksum %llu)\n", (unsigned long long)checksum);
-        std::printf("------------------------------------------\n");
+        printf("Avg Latency: %.2f ns\n", avg_ns);
+        printf("Throughput:  %.2f M queries/sec\n", (1e9 / avg_ns) / 1e6);
+        printf("Verification: (Checksum %llu)\n", (unsigned long long)checksum);
+        printf("------------------------------------------\n");
     }
 };
 

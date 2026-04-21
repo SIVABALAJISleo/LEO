@@ -133,7 +133,7 @@ class AISEngine:
              return self.candidate_keys.index("security_clear")
              
         # Create a mock query vector
-        q_hash = int(hashlib.md5(query.encode()).hexdigest(), 16)
+        q_hash = int(hashlib.sha256(query.encode()).hexdigest(), 16)
         np.random.seed(q_hash % 2**32)
         q_vec = np.random.rand(64).astype(np.float32)
         
