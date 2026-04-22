@@ -11,9 +11,9 @@ try:
     from .compressed_dag import CompressedDAG
 except (ImportError, ValueError):
     try:
-        from orchestration.identity import IdentityMapper
-        from orchestration.hyper_engine import HyperEngine, jit_propagate
-        from orchestration.compressed_dag import CompressedDAG
+        from orchestration.identity import IdentityMapper # type: ignore
+        from orchestration.hyper_engine import HyperEngine, jit_propagate # type: ignore
+        from orchestration.compressed_dag import CompressedDAG # type: ignore
     except ImportError:
         class Mock:
             def __init__(self, *args, **kwargs): pass

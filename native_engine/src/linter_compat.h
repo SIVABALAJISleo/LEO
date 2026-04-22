@@ -27,6 +27,31 @@ typedef int int32_t;
 typedef short int16_t;
 typedef signed char int8_t;
 
+// Forward declarations
+namespace std {
+    template<typename T> class initializer_list {
+    public:
+        const T* _begin;
+        size_t _size;
+        const T* begin() const { return _begin; }
+        const T* end() const { return _begin + _size; }
+        size_t size() const { return _size; }
+    };
+
+    class ostream {
+    public:
+        ostream& operator<<(const char*);
+        ostream& operator<<(int);
+        ostream& operator<<(unsigned int);
+        ostream& operator<<(long long);
+        ostream& operator<<(unsigned long long);
+        ostream& operator<<(double);
+        ostream& operator<<(void*);
+    };
+    extern ostream cout;
+    static const char* endl = "\n";
+}
+
 // Minimal std namespace
 namespace std {
     typedef ::size_t size_t;
@@ -41,6 +66,7 @@ namespace std {
         vector() {}
         vector(size_t n) {}
         vector(size_t n, const T& val) {}
+        vector(std::initializer_list<T> list) {}
         void push_back(const T&);
         void resize(size_t);
         size_t size() const;
@@ -84,6 +110,7 @@ namespace std {
         struct iterator {
             std::pair<K, V>* operator->();
             bool operator!=(const iterator&) const;
+            bool operator==(const iterator&) const;
             iterator& operator++();
         };
         iterator find(const K&);
@@ -97,6 +124,7 @@ namespace std {
         struct iterator {
             const T* operator->();
             bool operator!=(const iterator&) const;
+            bool operator==(const iterator&) const;
             iterator& operator++();
         };
         iterator find(const T&);
@@ -120,6 +148,10 @@ namespace std {
     }
 
     template<typename T, typename... Args> void sort(T, T, Args...);
+    
+    // Memory allocation
+    void* aligned_alloc(size_t, size_t);
+    void free(void*);
     
     class stringstream {
     public:

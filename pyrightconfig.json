@@ -1,5 +1,6 @@
 {
     "include": [
+        ".",
         "orchestration",
         "engine_hv",
         "approximation",
@@ -12,8 +13,7 @@
         "**/__pycache__",
         "dist",
         "venv",
-        ".git",
-        "src"
+        ".git"
     ],
     "venvPath": ".",
     "venv": "venv",
@@ -23,28 +23,9 @@
     "reportMissingImports": "warning",
     "extraPaths": [
         ".",
-        "orchestration",
-        "engine_hv",
-        "approximation",
-        "backend"
+        "orchestration"
     ],
     "executionEnvironments": [
-        {
-            "root": "orchestration",
-            "extraPaths": ["."]
-        },
-        {
-            "root": "engine_hv",
-            "extraPaths": ["."]
-        },
-        {
-            "root": "approximation",
-            "extraPaths": ["."]
-        },
-        {
-            "root": "backend",
-            "extraPaths": ["."]
-        },
         {
             "root": ".",
             "extraPaths": ["."]

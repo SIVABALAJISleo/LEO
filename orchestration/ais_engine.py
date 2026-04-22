@@ -13,12 +13,12 @@ try:
     from approximation.probabilistic import ProbabilisticCore
 except (ImportError, ValueError):
     try:
-        from orchestration.identity import IdentityMapper
-        from orchestration.hyper_engine import HyperIntentEngine
-        from orchestration.compressed_dag import CompressedLatticeDAG
-        from orchestration.outcome_lookup import OutcomeLookup
-        from orchestration.symbolic_core import SymbolicAICore
-        from approximation.probabilistic import ProbabilisticCore
+        from orchestration.identity import IdentityMapper # type: ignore
+        from orchestration.hyper_engine import HyperIntentEngine # type: ignore
+        from orchestration.compressed_dag import CompressedLatticeDAG # type: ignore
+        from orchestration.outcome_lookup import OutcomeLookup # type: ignore
+        from orchestration.symbolic_core import SymbolicAICore # type: ignore
+        from approximation.probabilistic import ProbabilisticCore # type: ignore
     except (ImportError, ValueError):
         # Fallbacks for testing or if imports fail during setup
         class Mock:

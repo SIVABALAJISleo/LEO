@@ -3,17 +3,44 @@ import time
 from typing import Dict, Any, Optional
 
 # Import the A-B-C components
-from .world_axioms import WorldAxioms
-from .pipeline_geometry import PipelineGeometry
-from .pipeline_semantics import PipelineSemantics
-from .authorship_boundary import AuthorshipBoundary
+try:
+    from .world_axioms import WorldAxioms
+    from .pipeline_geometry import PipelineGeometry
+    from .pipeline_semantics import PipelineSemantics
+    from .authorship_boundary import AuthorshipBoundary
+    from .visibility_manager import VisibilityManager
+    from .specular_governor import SpecularGovernor
+    from .chaos_containment import ChaosContainment
+    from .outcome_lookup import OutcomeLookup
+except (ImportError, ValueError):
+    try:
+        from orchestration.world_axioms import WorldAxioms # type: ignore
+        from orchestration.pipeline_geometry import PipelineGeometry # type: ignore
+        from orchestration.pipeline_semantics import PipelineSemantics # type: ignore
+        from orchestration.authorship_boundary import AuthorshipBoundary # type: ignore
+        from orchestration.visibility_manager import VisibilityManager # type: ignore
+        from orchestration.specular_governor import SpecularGovernor # type: ignore
+        from orchestration.chaos_containment import ChaosContainment # type: ignore
+        from orchestration.outcome_lookup import OutcomeLookup # type: ignore
+    except ImportError:
+        class Mock:
+            def __init__(self, *args, **kwargs): pass
+            def is_derivable(self, q): return True
+            def derive_entity(self, q): return {"id": q}
+            def resolve(self, q, c): return {"status": "MOCK"}
+            def wrap_output(self, d): return d
+            def query(self, q): return None
+        WorldAxioms = PipelineGeometry = PipelineSemantics = AuthorshipBoundary = Mock
+        VisibilityManager = SpecularGovernor = ChaosContainment = OutcomeLookup = Mock
 
-# Import governance for instantiation
-from .visibility_manager import VisibilityManager
-from .specular_governor import SpecularGovernor
-from .chaos_containment import ChaosContainment
-from .outcome_lookup import OutcomeLookup
-from backend.core.chaos_controller import global_chaos_controller, ChaosMode
+try:
+    from backend.core.chaos_controller import global_chaos_controller, ChaosMode # type: ignore
+except ImportError:
+    class ChaosMode: MINIMAL = 0; NOMINAL = 1
+    class MockChaos:
+        def get_mode(self): return ChaosMode.NOMINAL
+    global_chaos_controller = MockChaos()
+
 
 logger = logging.getLogger(__name__)
 

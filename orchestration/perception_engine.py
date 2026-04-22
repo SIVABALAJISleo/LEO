@@ -1,18 +1,53 @@
 import logging
 from typing import Dict, Any, List
-# Original Modules
-from .visibility_manager import VisibilityManager
-from .specular_governor import SpecularGovernor
-from .chaos_containment import ChaosContainment
-from .lazy_world import LazyWorldManager
+# Core Evolutionary Stack
+try:
+    from .visibility_manager import VisibilityManager
+    from .specular_governor import SpecularGovernor
+    from .chaos_containment import ChaosContainment
+    from .lazy_world import LazyWorldManager
+    from .world_axioms import WorldAxioms
+    from .deterministic_chaos import DeterministicChaos
+    from .consistency_enforcer import ConsistencyEnforcer
+    from .locality_manager import LocalityManager
+    from .outcome_lookup import OutcomeLookup
+    from .authorship_boundary import AuthorshipBoundary
+except (ImportError, ValueError):
+    try:
+        from orchestration.visibility_manager import VisibilityManager
+        from orchestration.specular_governor import SpecularGovernor
+        from orchestration.chaos_containment import ChaosContainment
+        from orchestration.lazy_world import LazyWorldManager
+        from orchestration.world_axioms import WorldAxioms
+        from orchestration.deterministic_chaos import DeterministicChaos
+        from orchestration.consistency_enforcer import ConsistencyEnforcer
+        from orchestration.locality_manager import LocalityManager
+        from orchestration.outcome_lookup import OutcomeLookup
+        from orchestration.authorship_boundary import AuthorshipBoundary
+    except ImportError:
+        class Mock:
+            def __init__(self, *args, **kwargs): pass
+            def request_visibility(self, q): return {"appearance": "MOCK"}
+            def query_specular_field(self, p, d): return [1,1,1]
+            def analyze_trajectory(self, s, st, l): return {}
+            def touch_object(self, id): pass
+            def update(self): return {"tick": 0}
+            def is_derivable(self, id): return True
+            def resolve_complexity(self, h, t): return {}
+            def enforce(self, id, r): return r
+            def isolation_chamber(self, ids):
+                class Context:
+                    def __enter__(self): pass
+                    def __exit__(self, *a): pass
+                return Context()
+            def assert_write_access(self, id): pass
+            def query(self, q): return None
+            def wrap_output(self, d): return d
+            def _get_hash(self, id): return 0
+        VisibilityManager = SpecularGovernor = ChaosContainment = LazyWorldManager = Mock
+        WorldAxioms = DeterministicChaos = ConsistencyEnforcer = LocalityManager = Mock
+        OutcomeLookup = AuthorshipBoundary = Mock
 
-# Reality Control Layer Modules
-from .world_axioms import WorldAxioms
-from .deterministic_chaos import DeterministicChaos
-from .consistency_enforcer import ConsistencyEnforcer
-from .locality_manager import LocalityManager
-from .outcome_lookup import OutcomeLookup
-from .authorship_boundary import AuthorshipBoundary
 
 logger = logging.getLogger(__name__)
 

@@ -1,7 +1,7 @@
 [tool.pyright]
-include = ["orchestration", "engine_hv", "approximation", "backend"]
-exclude = ["**/node_modules", "**/__pycache__", "src"]
-extraPaths = ["."]
+include = ["."]
+exclude = ["**/node_modules", "**/__pycache__"]
+extraPaths = [".", "orchestration"]
 typeCheckingMode = "basic"
 reportMissingImports = "warning"
 
