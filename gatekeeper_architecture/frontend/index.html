@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gatekeeper Semantic UI</title>
+    <style>
+        :root {
+            --bg: #050505;
+            --surface: #121212;
+            --accent: #00ff9d;
+            --text: #ffffff;
+            --border: #222;
+        }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Monaco', 'Consolas', monospace;
+            padding: 50px;
+            display: flex;
+            justify-content: center;
+        }
+        .gatekeeper-card {
+            width: 700px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        .title { font-size: 14px; letter-spacing: 2px; color: var(--accent); }
+        .version { font-size: 10px; opacity: 0.5; }
+        
+        /* Token Chips Area */
+        .input-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            background: #000;
+            border: 1px solid var(--border);
+            padding: 10px;
+            min-height: 44px;
+            align-items: center;
+            border-radius: 2px;
+        }
+        .chip {
+            background: #1a1a1a;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 4px 10px;
+            font-size: 12px;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .chip-remove { cursor: pointer; opacity: 0.7; }
+        .chip-remove:hover { opacity: 1; }
+        
+        .cursor-input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-family: inherit;
+            font-size: 12px;
+            outline: none;
+            flex-grow: 1;
+        }
+
+        /* Suggestions List */
+        .suggestions-container {
+            margin-top: 5px;
+            background: #000;
+            border: 1px solid var(--border);
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+        .suggestion-item {
+            padding: 8px 15px;
+            font-size: 11px;
+            cursor: pointer;
+            border-bottom: 1px dotted #222;
+        }
+        .suggestion-item:hover {
+            background: var(--accent);
+            color: #000;
+        }
+        .suggestion-label { opacity: 0.4; margin-right: 10px; }
+
+        /* Status & Output */
+        .monitor {
+            margin-top: 30px;
+            font-size: 10px;
+            color: #555;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .json-viewer {
+            background: #000;
+            padding: 15px;
+            border: 1px solid #1a1a1a;
+            color: #00ff9d;
+            white-space: pre-wrap;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="gatekeeper-card">
+    <div class="header">
+        <div class="title">GATEKEEPER v3 // DETERMINISTIC INPUT</div>
+        <div class="version">BUILD: 2026.04.21</div>
+    </div>
+
+    <div class="input-area" id="input-area">
+        <!-- Chips added here -->
+        <input type="text" class="cursor-input" id="cursor-input" placeholder="Select domain..." autofocus>
+    </div>
+
+    <div class="suggestions-container" id="suggestions"></div>
+
+    <div class="monitor">
+        <div><span class="status-dot"></span> LIVE CANONICALIZATION ENGINE</div>
+        <div class="json-viewer" id="json-viewer">{ "state": "WAITING_FOR_INPUT" }</div>
+    </div>
+</div>
+
+<script>
+    /**
+     * FSA DEFINITION
+     * Finite State Automaton for Domain/Entity/Metric/Time/Filter
+     */
+    const states = {
+        DOMAIN: {
+            options: ["SYSTEM", "NETWORK", "SECURITY", "HARDWARE"],
+            next: "ENTITY"
+        },
+        ENTITY: {
+            SYSTEM: ["ALPHA_NODE", "BETA_NODE", "CORE_ROUTING"],
+            NETWORK: ["GATEWAY_01", "PEERING_LNK", "DNS_RESOLVER"],
+            SECURITY: ["FIREWALL_P1", "IDS_AGENT", "AUTH_SVC"],
+            HARDWARE: ["CPU_LNK_01", "MEM_ARRAY", "DISK_VOL_0"],
+            next: "METRIC"
+        },
+        METRIC: {
+            options: ["STATUS", "LATENCY", "LOAD", "ERROR_RATE", "UPTIME"],
+            next: "TIME"
+        },
+        TIME: {
+            options: ["LAST_1H", "LAST_24H", "REALTIME"],
+            next: "FILTER"
+        },
+        FILTER: {
+            options: ["NONE", "CRITICAL_ONLY", "NOMINAL_ONLY"],
+            next: "FINISHED"
+        }
+    };
+
+    let currentState = "DOMAIN";
+    let selectedTokens = {};
+    const inputArea = document.getElementById('input-area');
+    const cursor = document.getElementById('cursor-input');
+    const suggestions = document.getElementById('suggestions');
+    const jsonViewer = document.getElementById('json-viewer');
+
+    function updateSuggestions() {
+        suggestions.innerHTML = '';
+        let options = [];
+        
+        if (currentState === "DOMAIN" || currentState === "METRIC" || currentState === "TIME" || currentState === "FILTER") {
+            options = states[currentState].options;
+        } else if (currentState === "ENTITY") {
+            options = states.ENTITY[selectedTokens.DOMAIN];
+        }
+
+        if (options && options.length > 0) {
+            options.forEach(opt => {
+                const div = document.createElement('div');
+                div.className = 'suggestion-item';
+                div.innerHTML = `<span class="suggestion-label">${currentState}</span> ${opt}`;
+                div.onclick = () => selectToken(opt);
+                suggestions.appendChild(div);
+            });
+            suggestions.style.display = 'block';
+        } else {
+            suggestions.style.display = 'none';
+        }
+    }
+
+    function selectToken(val) {
+        selectedTokens[currentState] = val;
+        
+        // Add Chip
+        const chip = document.createElement('div');
+        chip.className = 'chip';
+        chip.innerHTML = `${val} <span class="chip-remove" onclick="removeLastToken()">×</span>`;
+        inputArea.insertBefore(chip, cursor);
+        
+        // Progress State
+        currentState = states[currentState].next;
+        cursor.value = '';
+        cursor.placeholder = currentState === "FINISHED" ? "Ready to execute..." : `Select ${currentState.toLowerCase()}...`;
+        
+        if (currentState === "FINISHED") {
+            suggestions.style.display = 'none';
+            finalize();
+        } else {
+            updateSuggestions();
+        }
+        
+        updateJSON();
+    }
+
+    function removeLastToken() {
+        // Simple rollback for demo purposes
+        location.reload();
+    }
+
+    function updateJSON() {
+        jsonViewer.textContent = JSON.stringify({
+            status: currentState,
+            query_object: selectedTokens,
+            canonical: buildCanonical()
+        }, null, 2);
+    }
+
+    function buildCanonical() {
+        if (Object.keys(selectedTokens).length === 0) return "";
+        return [
+            selectedTokens.DOMAIN,
+            selectedTokens.ENTITY,
+            selectedTokens.METRIC,
+            selectedTokens.TIME,
+            selectedTokens.FILTER
+        ].filter(Boolean).join('|');
+    }
+
+    function finalize() {
+        const canonical = buildCanonical();
+        jsonViewer.textContent += "\n\n>> EXCEPTION: EXECUTION CORE READY\n>> ID_LOOKUP: MPHF(canonical) -> CDN_FETCH";
+        console.log("Structured Query Sent:", selectedTokens);
+        console.log("Canonical Form for MPHF:", canonical);
+    }
+
+    cursor.onfocus = updateSuggestions;
+    updateSuggestions();
+</script>
+
+</body>
+</html>

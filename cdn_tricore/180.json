@@ -1,0 +1,11 @@
+{
+  "id": 180,
+  "domain": "SYSTEM",
+  "signature": [
+    "background",
+    "in",
+    "manifest",
+    "update"
+  ],
+  "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: update."
+}

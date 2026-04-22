@@ -1,0 +1,15 @@
+{
+  "id": "SYSTEM_334",
+  "signature": [
+    "manifest",
+    "verify"
+  ],
+  "domain": "SYSTEM",
+  "context": null,
+  "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: verify.",
+  "tags": [
+    "system",
+    "manifest"
+  ],
+  "sh": "0x21500005038c8be4"
+}

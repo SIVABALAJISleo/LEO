@@ -1,0 +1,17 @@
+{
+  "id": "SYSTEM_175",
+  "signature": [
+    "audit",
+    "files",
+    "log",
+    "silently"
+  ],
+  "domain": "SYSTEM",
+  "context": null,
+  "response": "Resolution: Accessing SYSTEM for 'log files'. Action: audit.",
+  "tags": [
+    "system",
+    "files"
+  ],
+  "sh": "0x9245b01dfdd01451"
+}

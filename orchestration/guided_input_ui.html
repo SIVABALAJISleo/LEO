@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Deterministic Semantic UI</title>
+    <style>
+        :root {
+            --bg: #0a0a0c;
+            --accent: #00f2ff;
+            --text: #e0e0e0;
+            --panel: #16161a;
+        }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', system-ui, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            width: 500px;
+            background: var(--panel);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 20px rgba(0, 242, 255, 0.1);
+            border: 1px solid #333;
+        }
+        h2 { margin-top: 0; color: var(--accent); font-weight: 300; letter-spacing: 1px; }
+        .input-group { position: relative; margin-top: 20px; }
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            background: #000;
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 6px;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        input:focus { border-color: var(--accent); }
+        .suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #111;
+            border: 1px solid #444;
+            border-top: none;
+            border-bottom-left-radius: 6px;
+            border-bottom-right-radius: 6px;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+            z-index: 10;
+        }
+        .suggestion-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #222;
+            font-size: 0.9em;
+        }
+        .suggestion-item:hover { background: #222; color: var(--accent); }
+        .status { margin-top: 15px; font-size: 0.85em; color: #888; }
+        .tag { font-size: 0.75em; padding: 2px 6px; border: 1px solid #444; border-radius: 4px; color: var(--accent); margin-right: 5px; }
+        .result-panel { margin-top: 25px; padding: 15px; background: #000; border-radius: 6px; border-left: 4px solid var(--accent); display: none; }
+        .error { border-left-color: #ff4444; color: #ff8888; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>DETERMINISTIC SEMANTIC GATE</h2>
+    <div class="status">Constraint: Low-Entropy Input Only</div>
+    
+    <div class="input-group">
+        <input type="text" id="semantic-input" placeholder="Enter command (e.g., 'reboot...')" autocomplete="off">
+        <div class="suggestions" id="suggestions"></div>
+    </div>
+    
+    <div class="status" id="validation-info"><span class="tag">O(1)</span> Ready for deterministic resolution.</div>
+
+    <div class="result-panel" id="result-panel">
+        <div id="result-content"></div>
+    </div>
+</div>
+
+<script>
+    const validCommands = [
+        "reboot alpha node",
+        "reboot beta node",
+        "status of system",
+        "health of engine",
+        "update manifest",
+        "restore registry",
+        "backup database",
+        "synchronize build"
+    ];
+
+    const input = document.getElementById('semantic-input');
+    const suggestions = document.getElementById('suggestions');
+    const resultPanel = document.getElementById('result-panel');
+    const resultContent = document.getElementById('result-content');
+
+    input.addEventListener('input', (e) => {
+        const val = e.target.value.toLowerCase();
+        suggestions.innerHTML = '';
+        if (!val) {
+            suggestions.style.display = 'none';
+            return;
+        }
+
+        const matches = validCommands.filter(c => c.includes(val));
+        if (matches.length > 0) {
+            matches.forEach(m => {
+                const div = document.createElement('div');
+                div.className = 'suggestion-item';
+                div.textContent = m;
+                div.onclick = () => selectCommand(m);
+                suggestions.appendChild(div);
+            });
+            suggestions.style.display = 'block';
+        } else {
+            suggestions.style.display = 'none';
+        }
+    });
+
+    function selectCommand(cmd) {
+        input.value = cmd;
+        suggestions.style.display = 'none';
+        executeCommand(cmd);
+    }
+
+    function executeCommand(cmd) {
+        resultPanel.style.display = 'block';
+        resultPanel.classList.remove('error');
+        
+        // Fast Reject logic (Client Side)
+        if (!validCommands.includes(cmd)) {
+            resultPanel.classList.add('error');
+            resultContent.innerHTML = "<strong>FAST REJECT:</strong> Input entropy too high. Access denied.";
+            return;
+        }
+
+        // Mock deterministic resolution
+        resultContent.innerHTML = `
+            <div style="font-size: 0.8em; color: #888; margin-bottom: 5px;">DET_ID: ${Math.abs(cmd.hashCode()) % 500} | PIPE: MPHF</div>
+            <div><strong>Resolution:</strong> Accessing deterministic anchor for '${cmd}'.</div>
+            <div style="color: #00f2ff; font-size: 0.9em; margin-top: 5px;">Status: SUCCESS (Latency < 0.1ms)</div>
+        `;
+    }
+
+    String.prototype.hashCode = function() {
+        var hash = 0, i, chr;
+        if (this.length === 0) return hash;
+        for (i = 0; i < this.length; i++) {
+            chr   = this.charCodeAt(i);
+            hash  = ((hash << 5) - hash) + chr;
+            hash |= 0; 
+        }
+        return hash;
+    };
+</script>
+
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "id": "INFO_496",
+  "signature": [
+    "locally",
+    "uptime"
+  ],
+  "domain": "INFO",
+  "context": null,
+  "response": "Resolution: Accessing INFO for 'uptime'. Action: how is.",
+  "tags": [
+    "info",
+    "uptime"
+  ],
+  "sh": "0x088914a202a20209"
+}

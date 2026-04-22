@@ -1,0 +1,16 @@
+{
+  "id": "SYSTEM_034",
+  "signature": [
+    "files",
+    "log",
+    "synchronize"
+  ],
+  "domain": "SYSTEM",
+  "context": null,
+  "response": "Resolution: Accessing SYSTEM for 'log files'. Action: synchronize.",
+  "tags": [
+    "system",
+    "files"
+  ],
+  "sh": "0x61403291043661f1"
+}

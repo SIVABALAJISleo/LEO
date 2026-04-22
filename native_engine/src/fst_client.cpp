@@ -1,10 +1,4 @@
-#include <cstdint>
-#include <cstring>
-#include <cstdio>
-#include <cctype>
-#include <vector>
-#include <string>
-#include <map>
+#include "linter_compat.h"
 
 using namespace std;
 

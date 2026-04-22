@@ -1,0 +1,13 @@
+{
+  "id": 141,
+  "domain": "CONTROL",
+  "signature": [
+    "beta",
+    "high",
+    "node",
+    "priority",
+    "restart",
+    "with"
+  ],
+  "response": "Resolution: Accessing CONTROL for 'beta node'. Action: restart."
+}

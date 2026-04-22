@@ -1,0 +1,18 @@
+{
+  "id": "CONTROL_263",
+  "signature": [
+    "after",
+    "core",
+    "reactor",
+    "stop",
+    "verification"
+  ],
+  "domain": "CONTROL",
+  "context": null,
+  "response": "Resolution: Accessing CONTROL for 'core reactor'. Action: stop.",
+  "tags": [
+    "control",
+    "reactor"
+  ],
+  "sh": "0xeeb259da19f0f8cd"
+}

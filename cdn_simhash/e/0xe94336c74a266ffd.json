@@ -1,0 +1,17 @@
+{
+  "id": "SYSTEM_442",
+  "signature": [
+    "background",
+    "identity",
+    "synchronize",
+    "table"
+  ],
+  "domain": "SYSTEM",
+  "context": null,
+  "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: synchronize.",
+  "tags": [
+    "system",
+    "table"
+  ],
+  "sh": "0xe94336c74a266ffd"
+}

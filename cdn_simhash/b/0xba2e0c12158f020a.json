@@ -1,0 +1,16 @@
+{
+  "id": "INFO_023",
+  "signature": [
+    "alpha",
+    "node",
+    "overall"
+  ],
+  "domain": "INFO",
+  "context": null,
+  "response": "Resolution: Accessing INFO for 'node alpha'. Action: check.",
+  "tags": [
+    "info",
+    "alpha"
+  ],
+  "sh": "0xba2e0c12158f020a"
+}

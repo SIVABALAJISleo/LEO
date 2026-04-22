@@ -1,0 +1,18 @@
+{
+  "id": "CONTROL_204",
+  "signature": [
+    "after",
+    "cooling",
+    "restart",
+    "system",
+    "verification"
+  ],
+  "domain": "CONTROL",
+  "context": null,
+  "response": "Resolution: Accessing CONTROL for 'cooling system'. Action: restart.",
+  "tags": [
+    "control",
+    "system"
+  ],
+  "sh": "0xbe31188f0ecbfefc"
+}

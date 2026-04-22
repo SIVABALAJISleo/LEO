@@ -1,0 +1,16 @@
+{
+  "id": "SYSTEM_103",
+  "signature": [
+    "registry",
+    "silently",
+    "verify"
+  ],
+  "domain": "SYSTEM",
+  "context": null,
+  "response": "Resolution: Accessing SYSTEM for 'registry'. Action: verify.",
+  "tags": [
+    "system",
+    "registry"
+  ],
+  "sh": "0x1350b877c5d21dc6"
+}

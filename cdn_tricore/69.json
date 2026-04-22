@@ -1,0 +1,10 @@
+{
+  "id": 69,
+  "domain": "SYSTEM",
+  "signature": [
+    "backup",
+    "identity",
+    "table"
+  ],
+  "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: backup."
+}

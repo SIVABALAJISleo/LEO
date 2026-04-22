@@ -1,0 +1,11 @@
+{
+  "id": 320,
+  "domain": "SYSTEM",
+  "signature": [
+    "database",
+    "forcefully",
+    "restore",
+    "semantic"
+  ],
+  "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: restore."
+}

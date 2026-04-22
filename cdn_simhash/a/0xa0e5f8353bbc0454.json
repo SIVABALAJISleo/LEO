@@ -1,0 +1,16 @@
+{
+  "id": "SYSTEM_467",
+  "signature": [
+    "manifest",
+    "silently",
+    "update"
+  ],
+  "domain": "SYSTEM",
+  "context": null,
+  "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: update.",
+  "tags": [
+    "system",
+    "manifest"
+  ],
+  "sh": "0xa0e5f8353bbc0454"
+}

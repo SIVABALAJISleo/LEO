@@ -1,0 +1,10 @@
+{
+  "id": 154,
+  "domain": "CONTROL",
+  "signature": [
+    "grid",
+    "power",
+    "reboot"
+  ],
+  "response": "Resolution: Accessing CONTROL for 'power grid'. Action: reboot."
+}

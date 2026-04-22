@@ -3,24 +3,32 @@ import time
 import logging
 import numpy as np
 from typing import Dict, Any, List, Optional
-from orchestration.identity import IdentityMapper
-from orchestration.hyper_engine import HyperIntentEngine
-from orchestration.compressed_dag import CompressedLatticeDAG
-
-# Local imports
+# Core Evolutionary Stack
 try:
-    from orchestration.outcome_lookup import OutcomeLookup
-    from orchestration.symbolic_core import SymbolicAICore
+    from .identity import IdentityMapper
+    from .hyper_engine import HyperIntentEngine
+    from .compressed_dag import CompressedLatticeDAG
+    from .outcome_lookup import OutcomeLookup
+    from .symbolic_core import SymbolicAICore
     from approximation.probabilistic import ProbabilisticCore
 except (ImportError, ValueError):
-    # Fallbacks for testing or if imports fail during setup
-    class Mock:
-        def __init__(self, *args, **kwargs): pass
-        def query(self, *args): return None
-        def add(self, *args): pass
-        def contains(self, *args): return False
-        def process_event(self, *args): return []
-    OutcomeLookup = SymbolicAICore = ProbabilisticCore = Mock
+    try:
+        from orchestration.identity import IdentityMapper
+        from orchestration.hyper_engine import HyperIntentEngine
+        from orchestration.compressed_dag import CompressedLatticeDAG
+        from orchestration.outcome_lookup import OutcomeLookup
+        from orchestration.symbolic_core import SymbolicAICore
+        from approximation.probabilistic import ProbabilisticCore
+    except (ImportError, ValueError):
+        # Fallbacks for testing or if imports fail during setup
+        class Mock:
+            def __init__(self, *args, **kwargs): pass
+            def query(self, *args): return None
+            def add(self, *args): pass
+            def contains(self, *args): return False
+            def process_event(self, *args): return []
+        OutcomeLookup = SymbolicAICore = ProbabilisticCore = Mock
+        IdentityMapper = HyperIntentEngine = CompressedLatticeDAG = Mock
 
 logger = logging.getLogger(__name__)
 

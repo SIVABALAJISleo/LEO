@@ -1,0 +1,15 @@
+{
+  "id": "SYSTEM_340",
+  "signature": [
+    "backup",
+    "manifest"
+  ],
+  "domain": "SYSTEM",
+  "context": null,
+  "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: backup.",
+  "tags": [
+    "system",
+    "manifest"
+  ],
+  "sh": "0x8174c41539080924"
+}

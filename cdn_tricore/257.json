@@ -1,0 +1,11 @@
+{
+  "id": 257,
+  "domain": "SYSTEM",
+  "signature": [
+    "background",
+    "build",
+    "in",
+    "synchronize"
+  ],
+  "response": "Resolution: Accessing SYSTEM for 'build'. Action: synchronize."
+}

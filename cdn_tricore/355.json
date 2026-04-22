@@ -1,0 +1,11 @@
+{
+  "id": 355,
+  "domain": "SYSTEM",
+  "signature": [
+    "forcefully",
+    "identity",
+    "table",
+    "verify"
+  ],
+  "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: verify."
+}

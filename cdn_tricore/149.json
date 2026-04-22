@@ -1,0 +1,10 @@
+{
+  "id": 149,
+  "domain": "CONTROL",
+  "signature": [
+    "core",
+    "reactor",
+    "stop"
+  ],
+  "response": "Resolution: Accessing CONTROL for 'core reactor'. Action: stop."
+}

@@ -1,18 +1,4 @@
-#include <stdint.h>
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <vector>
-#include <string>
-#include <map>
-#include <algorithm>
-#include <iostream>
-
-#ifndef UINT64_MAX
-typedef unsigned long long uint64_t;
-typedef unsigned int uint32_t;
-typedef unsigned char uint8_t;
-#endif
+#include "linter_compat.h"
 
 using namespace std;
 

@@ -1,0 +1,12 @@
+{
+  "id": 41,
+  "domain": "SYSTEM",
+  "signature": [
+    "background",
+    "database",
+    "in",
+    "restore",
+    "semantic"
+  ],
+  "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: restore."
+}

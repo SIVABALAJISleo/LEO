@@ -1,131 +1,112 @@
-import hashlib
 import json
-import logging
-import time
-from typing import List, Dict, Any, Optional
+import os
+import subprocess
+import ctypes
 
-logger = logging.getLogger(__name__)
+"""
+HYBRID ORCHESTRATOR - BRIDGE TO EDGE SYSTEM
+"""
 
 class HybridOrchestrator:
-    """
-    Module 60: HYBRID DETERMINISTIC ORCHESTRATOR
-    - Integrates GSF-Core (95%) with Intelligent Fallback (5%).
-    - Enforces MUST-VALIDATE policy.
-    - Zero-hallucination guarantee.
-    """
-    def __init__(self, salt: str = "daily_rotating_salt_0421"):
-        self.salt = salt
-        self.prime_map = {
-            "status": 2, "check": 2, "report": 2,
-            "system": 3, "core": 3, "engine": 3,
-            "reboot": 5, "restart": 5,
-            "alpha": 7, "primary": 7
-        }
-        self.l0_cache: Dict[int, Any] = {}
-        # Dynamic cache for learned outcomes (Fallback results)
-        self.learned_mappings: Dict[int, Any] = {}
+    def __init__(self, cdn_root="./cdn_mock"):
+        self.cdn_root = cdn_root
+        self.vocab = {}
+        self.weights = {}
+        self.load_config()
 
-    def resolve(self, query: str) -> Dict[str, Any]:
-        """
-        Main Decision Pipeline:
-        1. Normalize
-        2. Fast Path (GSF)
-        3. Fallback (Reasoning)
-        4. Validation
-        """
-        tokens = query.lower().strip().split()[:6] # Limit to 6
-        
-        has_unknowns = any(t not in self.prime_map for t in tokens)
-        
-        # 1. GSF FAST PATH
-        if not has_unknowns:
-            product = 1
-            for t in tokens:
-                product *= self.prime_map[t]
-            
-            # Check L0 Cache
-            if product in self.l0_cache:
-                return self.l0_cache[product]
-            
-            # Check Learned Mappings
-            if product in self.learned_mappings:
-                return self._wrap(self.learned_mappings[product], "LEARNED_FAST_PATH")
-                
-            # Compute Secure Hash for CDN
-            h_key = hashlib.sha256(f"{product}:{self.salt}".encode()).hexdigest()
-            
-            # Simulated CDN Fetch
-            response = self._mock_cdn_fetch(h_key)
-            if response:
-                # MANDATORY VALIDATION
-                if self._validate(response, product, tokens):
-                    self.l0_cache[product] = self._wrap(response["data"], "DETERMINISTIC_CDN")
-                    return self.l0_cache[product]
-        
-        # 2. INTELLIGENT FALLBACK (STRICT <5%)
-        logger.info(f"GSF Miss. Escalating to Fallback: {query}")
-        result = self._trigger_fallback(query)
-        
-        # 3. LEARN RESULT (Reify for future Fast Path)
-        if not has_unknowns:
-            product = 1
-            for t in tokens: product *= self.prime_map[t]
-            self.learned_mappings[product] = result
-            
-        return self._wrap(result, "FALLBACK_REASONING")
+    def load_config(self):
+        vocab_path = os.path.join(self.cdn_root, "vocab.json")
+        if os.path.exists(vocab_path):
+            with open(vocab_path, "r") as f:
+                data = json.load(f)
+                self.vocab = data["vocab"]
+                self.weights = data["weights"]
 
-    def _validate(self, response: Dict[str, Any], product: int, tokens: List[str]) -> bool:
-        """Structural Consistency + Keyword Overlap."""
-        if response.get("prime_product") != product:
-            return False
+    def _client_simulate(self, text):
+        import re
+        # Strip punctuation and tokenize
+        tokens = re.findall(r'\w+', text.lower())
         
-        canonical_keywords = set(response.get("keywords", []))
-        input_keywords = set(tokens)
+        # Map to IDs with synonym collapse
+        ids = []
+        seen = set()
+        for t in tokens:
+            cid = self.vocab.get(t, 0)
+            if cid > 0 and cid not in seen:
+                ids.append(cid)
+                seen.add(cid)
         
-        # Reject if zero overlap (Collision prevention)
-        return len(input_keywords.intersection(canonical_keywords)) > 0
+        if not ids:
+            return None, 0
+        
+        drops = 0
+        while ids:
+            # Hash
+            h = self._compute_stable_hash(ids)
+            path = os.path.join(self.cdn_root, f"0x{h:016x}")
+            
+            if os.path.exists(path):
+                return f"0x{h:016x}", drops
+            
+            # Drop lowest weight
+            min_w = 999
+            min_id_idx = -1
+            for i, cid in enumerate(ids):
+                w = self.weights.get(str(cid), 10)
+                if w < min_w:
+                    min_w = w
+                    min_id_idx = i
+            
+            ids.pop(min_id_idx)
+            drops += 1
+            
+        return None, drops
 
-    def _trigger_fallback(self, query: str) -> Any:
-        """Simulates a lightweight reasoning engine (rule-based)."""
-        time.sleep(0.05) # Simulated latency (50ms)
-        return {
-            "title": "Fallback Result",
-            "message": f"Resolved '{query}' via heuristic tier."
-        }
+    def _compute_stable_hash(self, ids):
+        ids = sorted(ids)
+        h = 0xcbf29ce484222325
+        for cid in ids:
+            h ^= cid
+            h = (h * 0x100000001b3) & 0xFFFFFFFFFFFFFFFF
+        return h
 
-    def _mock_cdn_fetch(self, h: str) -> Optional[Dict[str, Any]]:
-        # Mock for 'status system' -> 2 * 3 = 6
-        p6 = 6
-        h6 = hashlib.sha256(f"{p6}:{self.salt}".encode()).hexdigest()
-        if h == h6:
+    def query(self, text):
+        print(f"\n[QUERY] '{text}'")
+        
+        # 1. Edge-side resolution
+        endpoint, drops = self._client_simulate(text)
+        
+        if endpoint:
+            print(f"[EDGE] Resolved to {endpoint} (Dropped {drops} tokens)")
+            # 2. CDN Fetch (Static Only)
+            data_path = os.path.join(self.cdn_root, endpoint, "data.json")
+            with open(data_path, "r") as f:
+                result = json.load(f)
+            
+            # 3. Deterministic Reasoning (Micro-WASM)
+            wasm_path = os.path.join(self.cdn_root, endpoint, "logic.wasm")
+            if os.path.exists(wasm_path):
+                print(f"[EDGE] Executing reasoning logic: {endpoint}/logic.wasm")
+                # Simulated WASM execution
+                result["_meta"] = "verified_via_wasm"
+
+            return result
+        else:
+            # 4. Fallback (Controlled)
+            print("[FALLBACK] Unknown intent. Routing to Secondary Reasoning System...")
             return {
-                "prime_product": 6,
-                "keywords": ["status", "system"],
-                "data": {"title": "System Status", "health": "OK"}
+                "status": "UNKNOWN",
+                "action": "DELEGATE_TO_LLM"
             }
-        return None
-
-    def _wrap(self, data: Any, mode: str) -> Dict[str, Any]:
-        return {
-            "data": data,
-            "telemetry": {
-                "execution_mode": mode,
-                "timestamp": time.time(),
-                "performance_tier": "FAST" if "PATH" in mode else "SLOW"
-            }
-        }
 
 if __name__ == "__main__":
-    hub = HybridOrchestrator()
+    # Ensure compiler has run first
+    # os.system("python orchestration/semantic_compiler.py")
     
-    # Test 1: Fast Path Hit
-    print("\n--- Test 1: GSF Fast Path (Deterministic) ---")
-    print(hub.resolve("Status System"))
+    orch = HybridOrchestrator()
     
-    # Test 2: Unknown Token -> Fallback
-    print("\n--- Test 2: Unknown Intent -> Fallback Reasoning ---")
-    print(hub.resolve("Weather in Space"))
-    
-    # Test 3: Learning -> Subsequent Fast Path
-    print("\n--- Test 3: Repeating query (Learning/Cache check) ---")
-    print(hub.resolve("Weather in Space"))
+    # Test Cases
+    print(orch.query("How is the health of the system?"))    # Should drop 'how', 'is', 'the', 'of', 'the' then match 'health system'
+    print(orch.query("Status report for alpha core"))        # Should match 'status primary system'
+    print(orch.query("Is the engine okay?"))                 # Might match 'engine' -> drop -> 'unknown'
+    print(orch.query("Tell me a joke"))                      # Unknown

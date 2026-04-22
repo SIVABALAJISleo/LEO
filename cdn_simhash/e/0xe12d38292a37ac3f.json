@@ -1,0 +1,16 @@
+{
+  "id": "SYSTEM_225",
+  "signature": [
+    "identity",
+    "table",
+    "update"
+  ],
+  "domain": "SYSTEM",
+  "context": null,
+  "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: update.",
+  "tags": [
+    "system",
+    "table"
+  ],
+  "sh": "0xe12d38292a37ac3f"
+}

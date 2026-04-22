@@ -1,0 +1,17 @@
+{
+  "id": "INFO_130",
+  "signature": [
+    "detailed",
+    "from",
+    "telemetry",
+    "temperature"
+  ],
+  "domain": "INFO",
+  "context": null,
+  "response": "Resolution: Accessing INFO for 'temperature'. Action: telemetry from.",
+  "tags": [
+    "info",
+    "temperature"
+  ],
+  "sh": "0xd144fdc1e61823c5"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "CONTROL_475",
+  "signature": [
+    "cooling",
+    "kill",
+    "system"
+  ],
+  "domain": "CONTROL",
+  "context": null,
+  "response": "Resolution: Accessing CONTROL for 'cooling system'. Action: kill.",
+  "tags": [
+    "control",
+    "system"
+  ],
+  "sh": "0xafb558d72c46b5fc"
+}

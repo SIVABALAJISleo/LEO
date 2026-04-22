@@ -1,0 +1,17 @@
+{
+  "id": "CONTROL_059",
+  "signature": [
+    "activate",
+    "after",
+    "uplink",
+    "verification"
+  ],
+  "domain": "CONTROL",
+  "context": null,
+  "response": "Resolution: Accessing CONTROL for 'uplink'. Action: activate.",
+  "tags": [
+    "control",
+    "uplink"
+  ],
+  "sh": "0x64581eef9aa251d0"
+}

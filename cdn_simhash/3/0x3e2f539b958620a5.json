@@ -1,0 +1,16 @@
+{
+  "id": "CONTROL_290",
+  "signature": [
+    "beta",
+    "node",
+    "stop"
+  ],
+  "domain": "CONTROL",
+  "context": null,
+  "response": "Resolution: Accessing CONTROL for 'beta node'. Action: stop.",
+  "tags": [
+    "control",
+    "node"
+  ],
+  "sh": "0x3e2f539b958620a5"
+}

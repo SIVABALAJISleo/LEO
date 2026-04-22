@@ -9,51 +9,7 @@
 #include <immintrin.h>
 #include <stdlib.h>
 
-// Linter Compatibility Layer
-#ifndef _LINTER_COMPAT_H
-#define _LINTER_COMPAT_H
-
-#if defined(__clang__) || defined(__GNUC__)
-typedef unsigned long long uint64_t;
-typedef unsigned int uint32_t;
-typedef unsigned char uint8_t;
-
-namespace std {
-    template<typename T> class vector {
-    public:
-        void push_back(const T&);
-        T* data();
-        size_t size();
-        T& operator[](size_t);
-    };
-    class string {
-    public:
-        const char* c_str() const;
-        size_t length() const;
-    };
-    namespace chrono {
-        struct high_resolution_clock {
-            static void now();
-        };
-    }
-    using ::uint64_t;
-    using ::uint32_t;
-    using ::uint8_t;
-}
-
-extern "C" {
-    int printf(const char*, ...);
-    void* memset(void*, int, size_t);
-    void* memcpy(void*, const void*, size_t);
-    void* memmove(void*, const void*, size_t);
-}
-
-namespace std {
-    template<typename T> void sort(T, T);
-    template<typename T, typename P> void sort(T, T, P);
-}
-#endif
-#endif
+#include "linter_compat.h"
 
 using namespace std;
 

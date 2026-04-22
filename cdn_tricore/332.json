@@ -1,0 +1,13 @@
+{
+  "id": 332,
+  "domain": "CONTROL",
+  "signature": [
+    "alpha",
+    "high",
+    "node",
+    "priority",
+    "reboot",
+    "with"
+  ],
+  "response": "Resolution: Accessing CONTROL for 'alpha node'. Action: reboot."
+}

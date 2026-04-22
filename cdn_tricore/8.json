@@ -1,0 +1,10 @@
+{
+  "id": 8,
+  "domain": "CONTROL",
+  "signature": [
+    "beta",
+    "initialize",
+    "node"
+  ],
+  "response": "Resolution: Accessing CONTROL for 'beta node'. Action: initialize."
+}

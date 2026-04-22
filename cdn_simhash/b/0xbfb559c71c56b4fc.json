@@ -1,0 +1,14 @@
+{
+  "id": "INFO_478",
+  "signature": [
+    "system"
+  ],
+  "domain": "INFO",
+  "context": null,
+  "response": "Resolution: Accessing INFO for 'system'. Action: check.",
+  "tags": [
+    "info",
+    "system"
+  ],
+  "sh": "0xbfb559c71c56b4fc"
+}

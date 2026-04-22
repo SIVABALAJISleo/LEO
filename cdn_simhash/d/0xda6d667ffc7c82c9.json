@@ -1,0 +1,16 @@
+{
+  "id": "CONTROL_378",
+  "signature": [
+    "delta",
+    "shutdown",
+    "subsystem"
+  ],
+  "domain": "CONTROL",
+  "context": null,
+  "response": "Resolution: Accessing CONTROL for 'subsystem delta'. Action: shutdown.",
+  "tags": [
+    "control",
+    "delta"
+  ],
+  "sh": "0xda6d667ffc7c82c9"
+}

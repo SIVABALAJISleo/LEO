@@ -1,9 +1,4 @@
-#include <cstdint>
-#include <cstring>
-#include <vector>
-#include <string>
-#include <sstream>
-#include <algorithm>
+#include "linter_compat.h"
 
 using namespace std;
 

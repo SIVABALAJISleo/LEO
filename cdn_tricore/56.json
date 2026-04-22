@@ -1,0 +1,10 @@
+{
+  "id": 56,
+  "domain": "SYSTEM",
+  "signature": [
+    "forcefully",
+    "verify",
+    "version"
+  ],
+  "response": "Resolution: Accessing SYSTEM for 'version'. Action: verify."
+}

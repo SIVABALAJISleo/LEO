@@ -1,0 +1,17 @@
+{
+  "id": "INFO_210",
+  "signature": [
+    "from",
+    "load",
+    "locally",
+    "telemetry"
+  ],
+  "domain": "INFO",
+  "context": null,
+  "response": "Resolution: Accessing INFO for 'load'. Action: telemetry from.",
+  "tags": [
+    "info",
+    "load"
+  ],
+  "sh": "0x0e40a222f2a64281"
+}

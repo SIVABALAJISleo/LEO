@@ -1,0 +1,16 @@
+{
+  "id": "SYSTEM_038",
+  "signature": [
+    "forcefully",
+    "manifest",
+    "synchronize"
+  ],
+  "domain": "SYSTEM",
+  "context": null,
+  "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: synchronize.",
+  "tags": [
+    "system",
+    "manifest"
+  ],
+  "sh": "0x21e234d5053c2bf4"
+}

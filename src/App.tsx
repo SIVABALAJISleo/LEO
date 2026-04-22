@@ -13,6 +13,7 @@ import { SystemBanner } from "@/components/ui/SystemBanner";
 import Index from "./pages/Index";
 import Documentation from "./pages/Documentation";
 import Playground from "./pages/Playground";
+import UOD_Engine_Page from "./pages/UOD_Engine_Page";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import Pricing from "./pages/Pricing";
 import NotFound from "./pages/NotFound";
@@ -80,6 +81,7 @@ const App = () => (
                 <Route path="/docs" element={<Documentation />} />
                 <Route path="/documentation" element={<Navigate to="/docs" replace />} />
                 <Route path="/playground" element={<Playground />} />
+                <Route path="/uod-engine" element={<UOD_Engine_Page />} />
                 <Route path="/pricing" element={<Navigate to="/billing/pricing" replace />} />
                 <Route path="/documentation/api-playground" element={<ApiPlayground />} />
                 <Route path="/documentation/guides" element={<Guides />} />

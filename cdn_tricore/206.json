@@ -1,0 +1,10 @@
+{
+  "id": 206,
+  "domain": "CONTROL",
+  "signature": [
+    "immediately",
+    "reset",
+    "uplink"
+  ],
+  "response": "Resolution: Accessing CONTROL for 'uplink'. Action: reset."
+}

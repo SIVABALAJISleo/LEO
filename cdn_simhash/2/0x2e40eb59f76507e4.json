@@ -1,0 +1,16 @@
+{
+  "id": "INFO_088",
+  "signature": [
+    "from",
+    "memory",
+    "telemetry"
+  ],
+  "domain": "INFO",
+  "context": null,
+  "response": "Resolution: Accessing INFO for 'memory'. Action: telemetry from.",
+  "tags": [
+    "info",
+    "memory"
+  ],
+  "sh": "0x2e40eb59f76507e4"
+}

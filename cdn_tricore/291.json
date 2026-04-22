@@ -1,0 +1,11 @@
+{
+  "id": 291,
+  "domain": "SYSTEM",
+  "signature": [
+    "files",
+    "log",
+    "silently",
+    "synchronize"
+  ],
+  "response": "Resolution: Accessing SYSTEM for 'log files'. Action: synchronize."
+}

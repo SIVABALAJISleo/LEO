@@ -28,6 +28,7 @@ from backend.ingest.document_indexer import global_document_indexer
 from backend.core.chaos_controller import global_chaos_controller, ChaosMode
 # Security and Stability: pypdf 6.10.0 and Chaos Containment initialized.
 from backend.core.stability_layer import global_stability_layer
+from backend.hybrid.orchestrator import global_hybrid_system
 
 setup_logging()
 
@@ -153,6 +154,35 @@ async def api_query_stream(request: Request, data: StartupQuery, token: dict = D
             
     global_usage_meter.record_usage(user_id)
     return StreamingResponse(event_generator(), media_type="text/event-stream")
+
+# --- Hybrid Architecture API (New Production System) ---
+
+@app.post("/api/v1/hybrid/query", tags=["hybrid"])
+async def api_hybrid_query(request: Request, data: StartupQuery, token: dict = Depends(verify_token)):
+    user_id = str(token.get("uid", "unknown"))
+    if not global_usage_meter.check_limit(user_id, "free"):
+        raise HTTPException(status_code=429, detail="API Limit Exceeded")
+        
+    result = await global_hybrid_system.process_query(data.question)
+    global_usage_meter.record_usage(user_id)
+    
+    return result
+
+@app.post("/api/v1/hybrid/query/stream", tags=["hybrid"])
+async def api_hybrid_query_stream(request: Request, data: StartupQuery, token: dict = Depends(verify_token)):
+    from fastapi.responses import StreamingResponse
+    import json
+    
+    async def event_generator():
+        async for part in global_hybrid_system.process_query_stream(data.question):
+            yield json.dumps(part) + "\n"
+            
+    return StreamingResponse(event_generator(), media_type="text/event-stream")
+
+@app.post("/api/v1/hybrid/feedback", tags=["hybrid"])
+async def api_hybrid_feedback(request_id: str, score: int, token: dict = Depends(verify_token)):
+    global_hybrid_system.record_feedback(request_id, score)
+    return {"status": "success"}
 
 # --- SaaS Optimization API (Phase 8) ---
 

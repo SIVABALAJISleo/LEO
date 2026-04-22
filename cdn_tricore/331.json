@@ -1,0 +1,12 @@
+{
+  "id": 331,
+  "domain": "CONTROL",
+  "signature": [
+    "at",
+    "beta",
+    "node",
+    "once",
+    "reset"
+  ],
+  "response": "Resolution: Accessing CONTROL for 'beta node'. Action: reset."
+}

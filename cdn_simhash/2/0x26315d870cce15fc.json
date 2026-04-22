@@ -1,0 +1,17 @@
+{
+  "id": "CONTROL_045",
+  "signature": [
+    "cooling",
+    "now",
+    "start",
+    "system"
+  ],
+  "domain": "CONTROL",
+  "context": null,
+  "response": "Resolution: Accessing CONTROL for 'cooling system'. Action: start.",
+  "tags": [
+    "control",
+    "system"
+  ],
+  "sh": "0x26315d870cce15fc"
+}
