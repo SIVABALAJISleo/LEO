@@ -20,7 +20,9 @@ class HybridCache:
             self.redis.ping()
             self.redis_available = True
         except Exception as e:
-            logger.warning(f"Redis not available, using local dict fallback. Error: {e}")
+            import os
+            if not os.getenv("CI"):
+                logger.warning(f"Redis not available, using local dict fallback. Error: {e}")
             self.redis_available = False
             self.redis_fallback = {}
 

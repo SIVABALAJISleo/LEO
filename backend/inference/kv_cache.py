@@ -21,7 +21,9 @@ class KVCacheEngine:
             self.redis.ping()
         except Exception:
             self.redis = None
-            logger.warning("kv_cache: Redis unavailable, using local fallback.")
+            import os
+            if not os.getenv("CI"):
+                logger.warning("kv_cache: Redis unavailable, using local fallback.")
         self.semantic_cache = SemanticCache()
         self.ttl = 3600  # 1 hour TTL for KV states
 

@@ -60,3 +60,5 @@ flake8
 slowapi
 Pillow>=12.2.0
 moviepy>=1.0.3
+
+scikit-fuzzy>=0.4.2

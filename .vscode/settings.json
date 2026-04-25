@@ -1,17 +1,5 @@
 {
-    "python.analysis.extraPaths": [
-        "${workspaceFolder}"
-    ],
-    "python.analysis.include": [
-        "."
-    ],
-    "python.analysis.exclude": [
-        "**/node_modules",
-        "**/__pycache__",
-        "dist",
-        "venv"
-    ],
-    "python.analysis.diagnosticSeverityOverrides": {
-        "reportMissingImports": "none"
-    }
+    "python.analysis.extraPaths": ["."],
+    "python.autoComplete.extraPaths": ["."],
+    "python.defaultInterpreterPath": "${workspaceFolder}/venv/Scripts/python.exe"
 }
