@@ -1,9 +1,13 @@
 import logging
 from typing import Dict, Any
-# Import existing governance modules
-from orchestration.chaos_containment import ChaosContainment
-from orchestration.outcome_lookup import OutcomeLookup
-from orchestration.nzr_engine import NZREngine
+try:
+    from .chaos_containment import ChaosContainment # type: ignore
+    from .outcome_lookup import OutcomeLookup # type: ignore
+    from .nzr_engine import NZREngine # type: ignore
+except ImportError:
+    from orchestration.chaos_containment import ChaosContainment # type: ignore
+    from orchestration.outcome_lookup import OutcomeLookup # type: ignore
+    from orchestration.nzr_engine import NZREngine # type: ignore
 
 logger = logging.getLogger(__name__)
 

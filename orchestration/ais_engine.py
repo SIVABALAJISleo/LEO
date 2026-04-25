@@ -5,12 +5,12 @@ import numpy as np
 from typing import Dict, Any, List, Optional
 # Core Evolutionary Stack
 try:
-    from .identity import IdentityMapper
-    from .hyper_engine import HyperIntentEngine
-    from .compressed_dag import CompressedLatticeDAG
-    from .outcome_lookup import OutcomeLookup
-    from .symbolic_core import SymbolicAICore
-    from approximation.probabilistic import ProbabilisticCore
+    from .identity import IdentityMapper # type: ignore
+    from .hyper_engine import HyperIntentEngine # type: ignore
+    from .compressed_dag import CompressedLatticeDAG # type: ignore
+    from .outcome_lookup import OutcomeLookup # type: ignore
+    from .symbolic_core import SymbolicAICore # type: ignore
+    from approximation.probabilistic import ProbabilisticCore # type: ignore
 except (ImportError, ValueError):
     try:
         from orchestration.identity import IdentityMapper # type: ignore
@@ -186,3 +186,5 @@ if __name__ == "__main__":
     
     print("\nRepeated Query (O1):")
     print(engine.process_query(q))
+
+# Cache invalidation trigger

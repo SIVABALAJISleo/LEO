@@ -72,7 +72,7 @@ extern "C" {
         u128 key = global_hybrid->compute_key(tokens, &has_u);
         *unknown_count = has_u ? 1 : 0;
         
-        free(copy);
+        std::free(copy);
         return (uint64_t)key; // Returning low 64 bits for simplicity in this demo
     }
 }

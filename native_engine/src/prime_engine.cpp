@@ -1,4 +1,6 @@
 #include "linter_compat.h"
+#include <iostream>
+#include <cstdlib>
 
 using namespace std;
 
@@ -72,7 +74,7 @@ extern "C" {
         u128 product = global_gsf->compute_product(tokens);
         std::string hex = global_gsf->get_hex_hash(product);
         
-        free(copy);
+        std::free(copy);
         return strdup(hex.c_str()); // Recipient must free
     }
 }

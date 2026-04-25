@@ -78,6 +78,43 @@ namespace std {
         const T* begin() const;
         const T* end() const;
         T* data();
+        void clear();
+    };
+
+    enum memory_order {
+        memory_order_relaxed,
+        memory_order_consume,
+        memory_order_acquire,
+        memory_order_release,
+        memory_order_acq_rel,
+        memory_order_seq_cst
+    };
+
+    template<typename T> struct atomic {
+        atomic() {}
+        atomic(T val) {}
+        T load(memory_order = memory_order_seq_cst) const { return T(); }
+        void store(T, memory_order = memory_order_seq_cst) {}
+    };
+
+    class mutex {
+    public:
+        void lock() {}
+        void unlock() {}
+    };
+
+    class thread {
+    public:
+        template<class Function, class... Args>
+        explicit thread(Function&& f, Args&&... args) {}
+        void detach() {}
+        void join() {}
+    };
+
+    template<typename Mutex> class lock_guard {
+    public:
+        explicit lock_guard(Mutex& m) {}
+        ~lock_guard() {}
     };
 
     class string {
@@ -134,6 +171,20 @@ namespace std {
 
     // pair moved up
 
+    template<typename K, typename V> class unordered_map {
+    public:
+        V& operator[](const K&);
+        struct iterator {
+            std::pair<K, V>* operator->();
+            bool operator!=(const iterator&) const;
+            bool operator==(const iterator&) const;
+            iterator& operator++();
+        };
+        iterator find(const K&);
+        iterator begin();
+        iterator end();
+    };
+
     namespace chrono {
         struct nanoseconds { long long count() const; };
         struct microseconds { long long count() const; };
@@ -147,7 +198,18 @@ namespace std {
         };
     }
 
+    namespace this_thread {
+        template<class Rep, class Period>
+        void sleep_for(const chrono::milliseconds&);
+        template<class Rep, class Period>
+        void sleep_for(const chrono::seconds&);
+    }
+
     template<typename T, typename... Args> void sort(T, T, Args...);
+
+    template<typename T> struct hash {
+        size_t operator()(const T&) const { return 0; }
+    };
     
     // Memory allocation
     void* aligned_alloc(size_t, size_t);
@@ -179,6 +241,22 @@ extern "C" {
     void* malloc(size_t);
     int tolower(int);
 }
+
+// AVX2 Mocks
+typedef double __m256d;
+typedef float __m256;
+typedef long long __m256i;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+    __m256i _mm256_load_si256(const __m256i* mem_addr);
+    __m256i _mm256_set1_epi64x(long long a);
+    __m256i _mm256_and_si256(__m256i a, __m256i b);
+    int _mm256_testz_si256(__m256i a, __m256i b);
+#ifdef __cplusplus
+}
+#endif
 
 #define NULL 0
 

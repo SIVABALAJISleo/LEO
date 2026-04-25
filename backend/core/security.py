@@ -33,7 +33,7 @@ async def verify_firebase_token(request: Request, auth_creds: HTTPAuthorizationC
     app_env = os.getenv("APP_ENV", "development")
     
     is_dev = app_env == "development"
-    is_audit_token = auth_creds.credentials == "AUDIT_MODE_TOKEN" # nosec B105
+    is_audit_token = auth_creds.credentials == "AUDIT_MODE_TOKEN"
     
     if (is_dev and is_audit_token) or (is_dev and not FIREBASE_AVAILABLE):
         # Development bypass logic

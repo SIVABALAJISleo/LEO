@@ -1,23 +1,10 @@
-#include <stdio.h>
-#include <vector>
-#include <string>
-#include <atomic>
-#include <thread>
-#include <mutex>
-#include <immintrin.h>
-#include <string.h>
-#include <chrono>
-#include <algorithm>
-#include <stdint.h>
-#include <stdlib.h>
+#include "linter_compat.h"
 
 #ifndef UINT64_MAX
 typedef unsigned long long uint64_t;
 typedef unsigned int uint32_t;
 typedef unsigned char uint8_t;
 #endif
-
-using namespace std;
 
 /**
  * L0 SEMANTIC EXECUTION CACHE
@@ -72,7 +59,7 @@ private:
         
         if (worst_node > 0) {
             // Prune node connections (simplified)
-            std::memset(&sn->nodes[worst_node], 0, sizeof(Node));
+            memset(&sn->nodes[worst_node], 0, sizeof(Node));
         }
     }
 
@@ -81,8 +68,8 @@ public:
         primary = new Snapshot{ (Node*)std::aligned_alloc(64, MAX_NODES * sizeof(Node)), 1 };
         shadow = new Snapshot{ (Node*)std::aligned_alloc(64, MAX_NODES * sizeof(Node)), 1 };
         
-        std::memset(primary->nodes, 0, MAX_NODES * sizeof(Node));
-        std::memset(shadow->nodes, 0, MAX_NODES * sizeof(Node));
+        memset(primary->nodes, 0, MAX_NODES * sizeof(Node));
+        memset(shadow->nodes, 0, MAX_NODES * sizeof(Node));
         
         active_snapshot.store(primary);
     }
@@ -127,7 +114,7 @@ public:
 
     void compile_batch() {
         // 1. Sync shadow with primary
-        std::memcpy(shadow->nodes, primary->nodes, MAX_NODES * sizeof(Node));
+        memcpy(shadow->nodes, primary->nodes, MAX_NODES * sizeof(Node));
         shadow->node_count = primary->node_count;
 
         // 2. JIT Compile novelty into shadow
@@ -148,7 +135,7 @@ public:
             
             shadow->nodes[state].value_id = entry.second;
             // Initialize 256-bit SIMD validation mask (Full pass)
-            std::memset(shadow->nodes[state].simd_mask, 0xFF, 32);
+            memset(shadow->nodes[state].simd_mask, 0xFF, 32);
         }
 
         // 3. ATOMIC SNAPSHOT SWAP

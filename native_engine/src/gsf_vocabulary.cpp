@@ -83,6 +83,6 @@ extern "C" {
         uint64_t hi = (uint64_t)(p >> 64);
         uint64_t lo = (uint64_t)p;
         sprintf(out_hex, "%016llx%016llx", (long long)hi, (long long)lo);
-        free(copy);
+        std::free(copy);
     }
 }

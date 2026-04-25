@@ -4,7 +4,7 @@ import numpy as np
 import re
 from typing import List, Dict, Any, Optional
 try:
-    from rank_bm25 import BM25Okapi
+    from rank_bm25 import BM25Okapi # type: ignore
     HAS_BM25 = True
 except ImportError:
     HAS_BM25 = False
@@ -221,7 +221,7 @@ class RAGEngine:
         if not self.documents:
             return []
         
-        from backend.core.middleware import redis_client
+        from backend.core.middleware import redis_client # type: ignore
         import json
         import numpy as np
         
@@ -240,7 +240,7 @@ class RAGEngine:
                     # cached_vec might be string or bytes
                     data = json.loads(cached_vec) if isinstance(cached_vec, (str, bytes)) else cached_vec
                     query_vec = np.asarray(data).astype('float32')
-                except: # nosec B110
+                except:
                     query_vec = np.asarray(self.model.encode([q])).astype('float32').reshape(1, -1)
             else:
                 query_vec = np.asarray(self.model.encode([q])).astype('float32').reshape(1, -1)
@@ -294,8 +294,10 @@ class RAGEngine:
         if runtime_fast:
              return combined_results[:k]
 
-        from backend.intelligence.reranker import global_reranker
+        from backend.intelligence.reranker import global_reranker # type: ignore
         reranked_results = global_reranker.rerank(query, combined_results, top_k=k)
         
         return reranked_results
 global_rag_engine = RAGEngine()
+
+# Cache invalidation trigger

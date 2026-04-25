@@ -19,16 +19,16 @@ except (ImportError, ValueError):
         from orchestration.symbolic_core import SymbolicAICore
     except ImportError:
         class Mock:
-            def __init__(self, *args, **kwargs): pass
+            def __init__(self, *args, **kwargs): self.lattice = np.zeros((10,10))
             def query(self, *args): return None
-            def map_to_bits(self, q): return 0, b''
+            def map_to_bits(self, q): return 0, b'\x00'*32
             def decompose(self, q): return {'symbol': 'NULL'}
             def create_node(self, a, b): return 0
             def get_atom_id(self, s): return 0
             def resolve_path(self, n): return []
             def process_event(self, e): return []
         IdentityMapper = UnificationEngine = HyperEngine = CompressedDAG = SymbolicAICore = Mock
-        def jit_propagate(*args): return np.array([0])
+        def jit_propagate(*args): return np.zeros(32)
 
 logger = logging.getLogger(__name__)
 
