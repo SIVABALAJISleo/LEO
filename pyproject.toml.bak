@@ -1,0 +1,13 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.pyright]
+include = ["."]
+extraPaths = ["."]
+exclude = ["**/node_modules", "**/__pycache__", "venv", "src"]
+venvPath = "."
+venv = "venv"
+executionEnvironments = [
+  { root = "." }
+]

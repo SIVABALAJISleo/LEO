@@ -1,5 +1,13 @@
 {
-    "python.analysis.extraPaths": ["."],
-    "python.autoComplete.extraPaths": ["."],
-    "python.defaultInterpreterPath": "${workspaceFolder}/venv/Scripts/python.exe"
+    "python.analysis.extraPaths": [
+        "c:/Users/sivab/OneDrive/Documents/HYPER/remix-of-remix-of-remix-of-nvidia-inspired-design-main"
+    ],
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.typeCheckingMode": "basic",
+    "markdownlint.config": {
+        "MD022": false,
+        "MD032": false,
+        "MD031": false,
+        "MD030": false
+    }
 }
