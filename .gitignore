@@ -43,3 +43,7 @@ zero_compute_errors.json
 bench_*.txt
 audit.txt
 files.txt
+venv/
+*.egg-info/
+build/
+*.pyc

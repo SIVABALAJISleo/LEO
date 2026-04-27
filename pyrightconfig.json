@@ -23,12 +23,30 @@
     "reportMissingImports": "warning",
     "extraPaths": [
         ".",
-        "orchestration"
+        "..",
+        "adaptive_compute_router",
+        "boundary_perfect_ai",
+        "composable_intel_ai",
+        "controlled_ai_pipeline",
+        "high_accuracy_engine",
+        "high_perf_intel_ai",
+        "hybrid_intel_ai",
+        "hybrid_os_symbolic",
+        "hyper_core_ai",
+        "intel_core_ai",
+        "llm_os_core",
+        "llm_os_intel",
+        "outcome_driven_ai",
+        "safe_outcome_ai",
+        "self_skeptical_engine",
+        "universal_compute_router",
+        "vulkan_intel_ai",
+        "zero_failure_ai"
     ],
     "executionEnvironments": [
         {
             "root": ".",
-            "extraPaths": ["."]
+            "extraPaths": [".", ".."]
         }
     ]
 }

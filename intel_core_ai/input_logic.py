@@ -1,11 +1,11 @@
 import logging
 from typing import Dict, Any, Tuple, Optional
-from pydantic import BaseModel, constr
+from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)
 
 class IntelQuerySchema(BaseModel):
-    query: constr(min_length=1, max_length=1000, strip_whitespace=True)
+    query: str = Field(min_length=1, max_length=1000)
     session_id: str
     metadata: Dict[str, Any] = {}
 
