@@ -11,3 +11,14 @@ Data is persisted to `IndexedDB` via Dexie. Sync logic handles eventual consiste
 
 ## 4. Probabilistic Structures
 Uses Bloom Filters and HyperLogLog to perform approximate counting and set membership checks with minimal memory footprint, avoiding heavy database scans.
+
+## 5. Universal AI Orchestration
+The system utilizes a multi-layered intent resolution pipeline:
+- **Intent Triangulation**: Extracts three possible interpretations of every query.
+- **Speculative Routing**: Simultaneously evaluates compute routes (CPU vs. Quantized Model).
+- **Reality Grounding**: Cross-verifies AI outputs against the vector DB and symbolic kernels.
+
+## 6. Reliability & Zero-Failure Principle
+- **Bounded Uncertainty**: Every response includes a calibrated confidence score and explicit failure modes.
+- **Instant Correction**: The system implements an asynchronous feedback loop that processes copy/edit/re-ask signals to refine future behavior.
+- **No Silent Failures**: If confidence falls below 0.6, the system is mandated to ask for clarification rather than hallucinating.
