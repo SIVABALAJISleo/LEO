@@ -1,11 +1,11 @@
-from pydantic import BaseModel, ValidationError, constr
+from pydantic import BaseModel, ValidationError, Field
 from typing import Dict, Any, Tuple
 import logging
 
 logger = logging.getLogger(__name__)
 
 class QuerySchema(BaseModel):
-    query: constr(min_length=2, max_length=500, strip_whitespace=True)
+    query: str = Field(min_length=2, max_length=500)
     session_id: str
     metadata: Dict[str, Any] = {}
 
