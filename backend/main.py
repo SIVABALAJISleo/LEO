@@ -203,6 +203,29 @@ async def api_deterministic_query(request: Request, data: StartupQuery, token: d
     result = await global_deterministic_engine.process(req)
     return result
 
+@app.post("/api/v1/deterministic_query/stream", tags=["product"])
+async def api_deterministic_query_stream(request: Request, data: StartupQuery, token: dict = Depends(verify_token)):
+    from fastapi.responses import StreamingResponse
+    user_id = token.get("uid", "default")
+    
+    req = QueryRequest(
+        query=data.question,
+        user_id=user_id,
+        context={"workspace_id": data.workspace_id},
+        is_high_risk=False
+    )
+    
+    return StreamingResponse(global_deterministic_engine.process_stream(req), media_type="text/event-stream")
+
+# --- Hybrid AI System (OPEN=Propose, CLOSED=Verify) ---
+
+from backend.core.hybrid_ai_engine import global_hybrid_engine, HybridRequest
+
+@app.post("/api/v1/hybrid_synthesis", tags=["product"])
+async def api_hybrid_synthesis(request: Request, data: HybridRequest, token: dict = Depends(verify_token)):
+    result = await global_hybrid_engine.process(data)
+    return result
+
 
 # --- SaaS Optimization API (Phase 8) ---
 

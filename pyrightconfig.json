@@ -10,14 +10,14 @@
         "ui"
     ],
     "extraPaths": [
-        "."
+        "c:\\Users\\sivab\\OneDrive\\Documents\\HYPER\\remix-of-remix-of-remix-of-nvidia-inspired-design-main"
     ],
     "executionEnvironments": [
         {
-            "root": "."
+            "root": "c:\\Users\\sivab\\OneDrive\\Documents\\HYPER\\remix-of-remix-of-remix-of-nvidia-inspired-design-main"
         }
     ],
-    "venvPath": ".",
+    "venvPath": "c:\\Users\\sivab\\OneDrive\\Documents\\HYPER\\remix-of-remix-of-remix-of-nvidia-inspired-design-main",
     "venv": "venv",
     "pythonVersion": "3.11",
     "typeCheckingMode": "basic",
