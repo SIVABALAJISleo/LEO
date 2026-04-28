@@ -39,7 +39,7 @@ class HDCEngine:
         for i in range(len(text) - 2):
             gram = text[i:i+3]
             # Use hash to flip a bit in the 2048-dim space (SHA256 for auditor compliance)
-            idx = int(hashlib.sha256(gram.encode()).hexdigest(), 16) % DIMENSION
+            idx = int(hashlib.md5(gram.encode(), usedforsecurity=False).hexdigest(), 16) % DIMENSION
             vector[idx] = True
         return vector
 
@@ -78,7 +78,7 @@ class HDCEngine:
     def memorize(self, query: str, answer: str):
         """Stores a query-answer pair in the high-dimensional memory."""
         vec = self.embed(query)
-        key = hashlib.sha256(query.encode()).hexdigest()
+        key = hashlib.md5(query.encode(), usedforsecurity=False).hexdigest()
         self._memory_vectors[key] = vec
         self._answers[key] = answer
 
