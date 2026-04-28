@@ -184,6 +184,26 @@ async def api_hybrid_feedback(request_id: str, score: int, token: dict = Depends
     global_hybrid_system.record_feedback(request_id, score)
     return {"status": "success"}
 
+# --- Deterministic CPU/iGPU Engine (Strict Certainty) ---
+
+from backend.core.deterministic_engine import global_deterministic_engine, QueryRequest
+
+@app.post("/api/v1/deterministic_query", tags=["product"])
+@limiter.limit("30/minute")
+async def api_deterministic_query(request: Request, data: StartupQuery, token: dict = Depends(verify_token)):
+    user_id = token.get("uid", "default")
+    
+    req = QueryRequest(
+        query=data.question,
+        user_id=user_id,
+        context={"workspace_id": data.workspace_id},
+        is_high_risk=False  # can be flagged by a simpler classifier
+    )
+    
+    result = await global_deterministic_engine.process(req)
+    return result
+
+
 # --- SaaS Optimization API (Phase 8) ---
 
 class OptimizeRequest(BaseModel):
