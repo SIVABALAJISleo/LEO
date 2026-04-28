@@ -6,15 +6,15 @@ from typing import Dict, Any, List, Optional
 from pydantic import BaseModel
 
 # Actual Stack Imports
-from backend.intelligence.rag import RAGEngine
+from backend.intelligence.rag import RAGEngine # type: ignore
 import onnxruntime as ort
 try:
     from llama_cpp import Llama
 except ImportError:
     Llama = None
     
-from langchain_core.prompts import PromptTemplate
-from langchain_core.output_parsers import JsonOutputParser
+from langchain_core.prompts import PromptTemplate # type: ignore
+from langchain_core.output_parsers import JsonOutputParser # type: ignore
 
 logger = logging.getLogger(__name__)
 

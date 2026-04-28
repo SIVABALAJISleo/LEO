@@ -11,24 +11,24 @@ from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 
-from backend.core.database import init_db
-from backend.core.orchestrator import hyper_engine
-from backend.core.security import setup_cors, verify_token, patch_onnx_security
-from backend.core.logging import setup_logging, logger as struct_logger
-from backend.core.request_queue import global_request_queue
-from backend.core.metrics import (
-    MODEL_INVOCATIONS, AVOIDANCE_RATIO, GPU_COST_SAVED, RAG_HITS,
-    MICRO_MODEL_HITS, CACHE_HITS, COST_SAVED_TOTAL, ENHANCEMENT_HITS,
-    CPU_USAGE
-)
+from backend.core.database import init_db # type: ignore
+from backend.core.orchestrator import hyper_engine # type: ignore
+from backend.core.security import setup_cors, verify_token, patch_onnx_security # type: ignore
+from backend.core.logging import setup_logging, logger as struct_logger # type: ignore
+from backend.core.request_queue import global_request_queue # type: ignore
+from backend.core.metrics import ( # type: ignore
+    MODEL_INVOCATIONS, AVOIDANCE_RATIO, GPU_COST_SAVED, RAG_HITS, # type: ignore
+    MICRO_MODEL_HITS, CACHE_HITS, COST_SAVED_TOTAL, ENHANCEMENT_HITS, # type: ignore
+    CPU_USAGE # type: ignore
+) # type: ignore
 from fastapi import HTTPException
-from backend.core.usage_metering import global_usage_meter
-from backend.analytics.cost_monitor import global_cost_monitor
-from backend.ingest.document_indexer import global_document_indexer
-from backend.core.chaos_controller import global_chaos_controller, ChaosMode
+from backend.core.usage_metering import global_usage_meter # type: ignore
+from backend.analytics.cost_monitor import global_cost_monitor # type: ignore
+from backend.ingest.document_indexer import global_document_indexer # type: ignore
+from backend.core.chaos_controller import global_chaos_controller, ChaosMode # type: ignore
 # Security and Stability: pypdf 6.10.0 and Chaos Containment initialized.
-from backend.core.stability_layer import global_stability_layer
-from backend.hybrid.orchestrator import global_hybrid_system
+from backend.core.stability_layer import global_stability_layer # type: ignore
+from backend.hybrid.orchestrator import global_hybrid_system # type: ignore
 
 setup_logging()
 
@@ -47,10 +47,10 @@ async def startup_event():
 
     # ── AIS++ Continuous Background Workers ──────────────────────────────── #
     try:
-        from backend.intelligence.knowledge_field import global_knowledge_field
-        from backend.predictive.probability_engine import global_probability_engine
-        from backend.background.compute_engine import global_bg_compute
-        from backend.memory.global_memory import global_memory
+        from backend.intelligence.knowledge_field import global_knowledge_field # type: ignore
+        from backend.predictive.probability_engine import global_probability_engine # type: ignore
+        from backend.background.compute_engine import global_bg_compute # type: ignore
+        from backend.memory.global_memory import global_memory # type: ignore
 
         # Knowledge Field: continuously scans and fills domain coverage gaps
         asyncio.create_task(
@@ -186,7 +186,7 @@ async def api_hybrid_feedback(request_id: str, score: int, token: dict = Depends
 
 # --- Deterministic CPU/iGPU Engine (Strict Certainty) ---
 
-from backend.core.deterministic_engine import global_deterministic_engine, QueryRequest
+from backend.core.deterministic_engine import global_deterministic_engine, QueryRequest # type: ignore
 
 @app.post("/api/v1/deterministic_query", tags=["product"])
 @limiter.limit("30/minute")
@@ -219,7 +219,7 @@ async def api_deterministic_query_stream(request: Request, data: StartupQuery, t
 
 # --- Hybrid AI System (OPEN=Propose, CLOSED=Verify) ---
 
-from backend.core.hybrid_ai_engine import global_hybrid_engine, HybridRequest
+from backend.core.hybrid_ai_engine import global_hybrid_engine, HybridRequest # type: ignore
 
 @app.post("/api/v1/hybrid_synthesis", tags=["product"])
 async def api_hybrid_synthesis(request: Request, data: HybridRequest, token: dict = Depends(verify_token)):
@@ -303,11 +303,11 @@ async def get_avoidance_metrics():
     avoidance_rate = 1 - (model_calls / total_requests)
     All numbers are REAL — no simulated values.
     """
-    from backend.analytics.avoidance_tracker import global_avoidance_tracker
-    from backend.core.zero_repeat_store import global_zero_repeat_store
-    from backend.predictive.massive_prediction_engine import global_massive_predictor
-    from backend.core.delta_compute_engine import global_delta_engine
-    from backend.core.failure_recovery_engine import global_failure_recovery
+    from backend.analytics.avoidance_tracker import global_avoidance_tracker # type: ignore
+    from backend.core.zero_repeat_store import global_zero_repeat_store # type: ignore
+    from backend.predictive.massive_prediction_engine import global_massive_predictor # type: ignore
+    from backend.core.delta_compute_engine import global_delta_engine # type: ignore
+    from backend.core.failure_recovery_engine import global_failure_recovery # type: ignore
 
     return {
         "avoidance_metrics":   global_avoidance_tracker.get_live_metrics(),
@@ -330,22 +330,22 @@ async def ais_status():
     Real-time avoidance rate, module health, path distribution.
     All numbers are measured — none are simulated.
     """
-    from backend.analytics.avoidance_tracker   import global_avoidance_tracker
-    from backend.core.zero_repeat_store        import global_zero_repeat_store
-    from backend.core.global_dedup_cache       import global_dedup_cache
-    from backend.core.delta_compute_engine     import global_delta_engine
-    from backend.core.micro_parallel_processor import global_micro_parallel
-    from backend.core.experience_optimizer     import global_experience_optimizer
-    from backend.core.compute_deferral         import global_compute_deferral
-    from backend.intelligence.approximation_engine import global_approximation_engine
-    from backend.predictive.speculative_executor   import global_speculative_executor
-    from backend.predictive.probability_engine     import global_probability_engine
-    from backend.predictive.massive_prediction_engine import global_massive_predictor
-    from backend.intelligence.intent_trajectory    import global_intent_trajectory
-    from backend.intelligence.knowledge_field      import global_knowledge_field
-    from backend.graph.query_graph                 import global_query_graph
-    from backend.memory.contextual_memory_stack    import global_memory_stack
-    from backend.core.zero_compute                 import global_zero_control
+    from backend.analytics.avoidance_tracker   import global_avoidance_tracker # type: ignore
+    from backend.core.zero_repeat_store        import global_zero_repeat_store # type: ignore
+    from backend.core.global_dedup_cache       import global_dedup_cache # type: ignore
+    from backend.core.delta_compute_engine     import global_delta_engine # type: ignore
+    from backend.core.micro_parallel_processor import global_micro_parallel # type: ignore
+    from backend.core.experience_optimizer     import global_experience_optimizer # type: ignore
+    from backend.core.compute_deferral         import global_compute_deferral # type: ignore
+    from backend.intelligence.approximation_engine import global_approximation_engine # type: ignore
+    from backend.predictive.speculative_executor   import global_speculative_executor # type: ignore
+    from backend.predictive.probability_engine     import global_probability_engine # type: ignore
+    from backend.predictive.massive_prediction_engine import global_massive_predictor # type: ignore
+    from backend.intelligence.intent_trajectory    import global_intent_trajectory # type: ignore
+    from backend.intelligence.knowledge_field      import global_knowledge_field # type: ignore
+    from backend.graph.query_graph                 import global_query_graph # type: ignore
+    from backend.memory.contextual_memory_stack    import global_memory_stack # type: ignore
+    from backend.core.zero_compute                 import global_zero_control # type: ignore
 
     metrics = global_avoidance_tracker.get_live_metrics()
     return {
@@ -394,8 +394,8 @@ async def ais_speculate(request: Request, data: SpeculateRequest,
     System predicts and precomputes likely completions in background.
     Response is instant (<5ms).
     """
-    from backend.predictive.speculative_executor import global_speculative_executor
-    from backend.background.compute_engine      import global_bg_compute
+    from backend.predictive.speculative_executor import global_speculative_executor # type: ignore
+    from backend.background.compute_engine      import global_bg_compute # type: ignore
 
     tenant_id = token.get("tenant_id", "default")
     candidates = global_speculative_executor.predict_completions(data.prefix)
@@ -421,7 +421,7 @@ async def get_deferred_update(request_id: str,
     When a skeleton was returned, call this to get the full answer.
     Returns 'pending' status if not yet ready.
     """
-    from backend.core.compute_deferral import global_compute_deferral
+    from backend.core.compute_deferral import global_compute_deferral # type: ignore
     entry = global_compute_deferral.update_store.get(request_id)
     if not entry:
         raise HTTPException(status_code=404, detail="Request ID not found")
@@ -441,9 +441,9 @@ async def ais_pipeline_stats():
     Detailed per-path latency report from the experience optimizer.
     Shows which pipeline stages are fastest for adaptive routing.
     """
-    from backend.core.experience_optimizer    import global_experience_optimizer
-    from backend.core.zero_compute            import global_zero_control
-    from backend.analytics.avoidance_tracker  import global_avoidance_tracker
+    from backend.core.experience_optimizer    import global_experience_optimizer # type: ignore
+    from backend.core.zero_compute            import global_zero_control # type: ignore
+    from backend.analytics.avoidance_tracker  import global_avoidance_tracker # type: ignore
 
     return {
         "pipeline_stats":    global_zero_control.pipeline_stats(),
