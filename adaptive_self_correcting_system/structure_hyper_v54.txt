@@ -1,0 +1,28 @@
+﻿project_hyper_v54/
+├── api/
+│   ├── main.py             # FastAPI entry
+│   ├── streaming.py        # Token streaming logic
+│   └── telemetry.py        # Metrics and FLOPS tracking
+├── core/
+│   ├── hardness.py         # Input Complexity Analysis
+│   ├── router.py           # Execution Path Brain
+│   ├── cache.py            # Layer 0: Semantic Cache (FAISS)
+│   ├── rag.py              # Layer 1: Retrieval System
+│   ├── models/
+│   │   ├── tiny.py         # Layer 2: GGUF/CPU Model
+│   │   ├── medium.py       # Layer 3: Optimized 7B Model
+│   │   └── heavy.py        # Layer 4: Async Heavy Logic
+│   └── orchestrator.py      # Master Cascade Pipeline
+├── optimization/
+│   ├── cpu_layer.py        # SIMD, Multithreading, Numba JIT
+│   ├── batcher.py          # 50ms Request Batching
+│   └── quantization.py      # GGUF/INT4 loading logic
+├── services/
+│   ├── vector_db.py        # FAISS/Chroma wrapper
+│   └── worker.py            # Redis/Celery integration
+├── models/
+│   └── schemas.py          # Pydantic contracts
+└── utils/
+    ├── entropy.py          # Compressibility logic
+    └── prefetcher.py       # Predictive compute logic
+吐

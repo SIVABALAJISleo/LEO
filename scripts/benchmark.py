@@ -24,7 +24,7 @@ async def run_benchmark():
     print("Phase 1: 50 New Queries (Model + Predictive BG Enqueue)...")
     results_new = []
     for i in range(50):
-        q = f"Detail the implementation of intelligence module {i} in LEO."
+        q = f"Detail the implementation of intelligence module {i} in HYPER."
         start = time.time()
         res = await global_stability_layer.secure_invoke(q, f"BENCH_NEW_{i}", "default", "default")
         latency = (time.time() - start) * 1000
