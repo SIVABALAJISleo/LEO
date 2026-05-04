@@ -36,7 +36,7 @@ async def run_benchmark():
         # 2. Top-K Semantic Test (Point 1)
         # Provide 3 partial matches, ensure system combines them (Point 3)
         global_memory.log("AI Definition", "AI is artificial intelligence.", "background", "def_ai", 0.95)
-        global_memory.log("AI Examples", "Examples include LEO and HYPER.", "background", "ex_ai", 0.95)
+        global_memory.log("AI Examples", "Examples include HYPER and HYPER.", "background", "ex_ai", 0.95)
         await global_zero_control.handle_request("Explain AI definition and examples", f"{label}_topk_{session_id}", tenant_id, workspace_id, time.time())
 
         # 3. Adaptive Prediction Test (Point 6)

@@ -1,9 +1,9 @@
-from fastapi import FastAPI, HTTPException
+﻿from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from .core.orchestrator import CascadeOrchestrator
 from .models.schemas import CascadeResponse
 
-app = FastAPI(title="LEO CASCADE AI SYSTEM (CPU-FIRST)")
+app = FastAPI(title="HYPER CASCADE AI SYSTEM (CPU-FIRST)")
 orchestrator = CascadeOrchestrator()
 
 class Request(BaseModel):

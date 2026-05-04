@@ -20,7 +20,7 @@ async def seed():
         "Compute avoidance is achieved by reusing previously generated answers stored in the Semantic Canonical Answer Reuse layer.",
         "The Chaos Controller monitors system resources and switches to MINIMAL mode under extreme stress.",
         "Sentence Transformers are used to generate embeddings for semantic similarity search in the FAISS index.",
-        "Project LEO is the codename for the hardened, production-ready version of the HYPER platform.",
+        "Project HYPER is the codename for the hardened, production-ready version of the HYPER platform.",
         "Digital Twin reasoning allows the system to simulate outcomes and bypass heavy LLM calls for known patterns."
     ]
     
@@ -31,7 +31,7 @@ async def seed():
     print("Seeding Fragment Graph...")
     global_fragment_graph.register_fragment("HYPER", "definition", "Project HYPER is a next-generation AI platform focused on compute avoidance.")
     global_fragment_graph.register_fragment("HYPER", "mission", "The mission is to achieve practical GPU irrelevance via zero-runtime compute.")
-    global_fragment_graph.register_fragment("LEO", "info", "Project LEO is the production-ready implementation of the HYPER architecture.")
+    global_fragment_graph.register_fragment("HYPER", "info", "Project HYPER is the production-ready implementation of the HYPER architecture.")
     print("Fragment Graph seeded.")
     
     # Verify similarity

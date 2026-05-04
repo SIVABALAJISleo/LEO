@@ -47,3 +47,4 @@ venv/
 *.egg-info/
 build/
 *.pyc
+chroma_db/

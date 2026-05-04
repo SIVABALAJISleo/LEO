@@ -1,4 +1,4 @@
-import time
+﻿import time
 import asyncio
 import logging
 import uuid
@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 class HybridSystem:
     """
-    Project LEO: Unified Hybrid Architecture
+    Project HYPER: Unified Hybrid Architecture
     Integrates all modules from Intent Engine to Learning Loop.
     """
     def __init__(self, confidence_threshold: float = 0.6):
