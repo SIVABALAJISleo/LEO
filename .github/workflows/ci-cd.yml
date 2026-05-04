@@ -86,7 +86,8 @@ jobs:
       - name: Verify Lock File Synchronization
         run: |
           echo "Checking if package-lock.json is in sync with package.json..."
-          if ! npm install --legacy-peer-deps --dry-run 2>&1 | grep -q "up to date"; then
+          npm install --package-lock-only --legacy-peer-deps
+          if ! git diff --exit-code package-lock.json; then
              echo "::error::Lock file drift detected! package.json and package-lock.json are out of sync (likely due to a dependency bump). Run 'npm install --legacy-peer-deps' locally and commit the updated package-lock.json."
              exit 1
           fi
