@@ -19,4 +19,4 @@ class LazyEngine:
 
     def has_next(self) -> bool:
         return len(self.thunks) > 0
-吐
+

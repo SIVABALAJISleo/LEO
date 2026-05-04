@@ -29,4 +29,4 @@ class TrustEngine:
     """
     def calculate_trust(self, reliability: float, agreement: float, freshness: float) -> float:
         return reliability * agreement * freshness
-吐
+

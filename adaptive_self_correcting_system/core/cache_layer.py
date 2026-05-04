@@ -41,4 +41,4 @@ class SemanticCache:
 
 # Singleton instance for the system
 semantic_cache = SemanticCache()
-吐
+

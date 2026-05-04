@@ -18,4 +18,4 @@ class HeavyTaskDetector:
             return "HEAVY"
             
         return "NORMAL"
-吐
+

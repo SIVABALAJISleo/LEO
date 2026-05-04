@@ -17,4 +17,4 @@ class HierarchicalRAG:
         return "\n".join([f"Context {i}: {c}" for i, c in enumerate(chunks)])
 
 hierarchical_rag = HierarchicalRAG()
-吐
+

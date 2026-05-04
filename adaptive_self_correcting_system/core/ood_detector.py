@@ -13,4 +13,4 @@ class OODDetector:
         # 1.0 = known pattern, 0.0 = completely unknown
         score = 0.9 # High score = in-distribution
         return score < self.ood_threshold, score
-吐
+

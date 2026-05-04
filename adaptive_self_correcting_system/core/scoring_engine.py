@@ -21,4 +21,4 @@ class ScoringEngine:
         if unique > 1:
             return "UNSTABLE"
         return "STABLE"
-吐
+

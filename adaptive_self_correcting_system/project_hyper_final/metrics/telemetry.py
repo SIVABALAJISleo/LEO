@@ -20,4 +20,4 @@ class TelemetryManager:
         pass
 
 telemetry = TelemetryManager()
-吐
+

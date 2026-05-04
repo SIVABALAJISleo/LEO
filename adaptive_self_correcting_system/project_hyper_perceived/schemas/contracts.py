@@ -20,4 +20,4 @@ class LeoPerceivedResponse(BaseModel):
 class QueryRequest(BaseModel):
     prompt: str
     session_id: Optional[str] = "default"
-吐
+

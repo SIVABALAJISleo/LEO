@@ -27,4 +27,4 @@ class WallDetectionEngine:
             return "WALL_ZONE"
             
         return "SAFE_ZONE"
-吐
+

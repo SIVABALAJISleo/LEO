@@ -17,4 +17,4 @@ class TemporalEngine:
 
     def is_stale(self, last_updated: float) -> bool:
         return (time.time() - last_updated) > self.ttl
-吐
+

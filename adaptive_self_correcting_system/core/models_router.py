@@ -27,4 +27,4 @@ class HeavyModelLayer:
         # High-compute reasoning (e.g., 70B+ API or Local Batch)
         await asyncio.sleep(1.0) # Async delay
         return f"HEAVY_ANS({query[:10]})"
-吐
+

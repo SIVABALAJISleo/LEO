@@ -21,4 +21,4 @@ class ConsequenceEngine:
             reversibility = Reversibility.IRREVERSIBLE
             
         return level, reversibility
-吐
+

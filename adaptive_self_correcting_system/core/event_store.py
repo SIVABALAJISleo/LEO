@@ -25,4 +25,4 @@ class EventStore:
         for event in self.events:
             state.update(event["data"])
         return state
-吐
+

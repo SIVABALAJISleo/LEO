@@ -19,4 +19,4 @@ class KnowledgeLayer:
     def retrieve_context(self, prompt: str) -> List[str]:
         # Mock RAG context retrieval
         return ["Retrieved context block A", "Retrieved context block B"]
-吐
+

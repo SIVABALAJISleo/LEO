@@ -20,4 +20,4 @@ class AntiHaltingService:
         if current_depth > self.depth_limit:
             return False, f"DEPTH_LIMIT_EXCEEDED: {current_depth} steps"
         return True, "SAFE"
-吐
+

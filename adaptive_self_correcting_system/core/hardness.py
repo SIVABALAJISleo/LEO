@@ -37,4 +37,4 @@ class HardnessDetector:
 
 # Singleton instance
 detector = HardnessDetector()
-吐
+

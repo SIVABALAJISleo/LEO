@@ -19,4 +19,4 @@ class QueryResponse(BaseModel):
     latency_ms: float
     path: str
     cache_hit: bool
-吐
+

@@ -21,4 +21,4 @@ class RetrievalValidator:
         success = agreement >= 0.8 and not conflicts
         
         return success, agreement, conflicts
-吐
+

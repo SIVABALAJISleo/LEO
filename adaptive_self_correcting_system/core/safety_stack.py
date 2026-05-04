@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Tuple
 
 class SafetyStackEngine:
     """
@@ -32,4 +32,4 @@ class SafetyStackEngine:
     def _check_calibration(self, conf: float) -> bool: return conf >= 0.8
     def _check_consistency(self, output: Any) -> bool: return True
     def _check_adversarial(self, output: Any) -> bool: return True
-吐
+

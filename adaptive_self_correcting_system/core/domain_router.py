@@ -25,4 +25,4 @@ class SmartRouter:
             "GENERAL": "small_model"
         }
         return mapping.get(task_type, "small_model")
-吐
+

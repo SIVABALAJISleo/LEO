@@ -22,4 +22,4 @@ class ParetoScoringEngine:
         # Rank by combined total
         scored.sort(key=lambda x: x["total"], reverse=True)
         return scored
-吐
+

@@ -37,4 +37,4 @@ class UncertaintyManager:
         if "?" in query: adj_conf *= 0.9
         if len(query) < 10: adj_conf *= 0.8
         return adj_conf
-吐
+

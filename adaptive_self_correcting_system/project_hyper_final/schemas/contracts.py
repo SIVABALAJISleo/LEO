@@ -24,4 +24,4 @@ class QueryResponse(BaseModel):
     complexity: ComplexityLevel
     latency_ms: float
     path: str
-吐
+

@@ -21,4 +21,4 @@ class DeductiveEngine:
             
         # If not formally provable via rules:
         return False, None
-吐
+

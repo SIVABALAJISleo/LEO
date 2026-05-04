@@ -21,4 +21,4 @@ class SmartRouter:
 
 # Singleton instance
 router = SmartRouter()
-吐
+

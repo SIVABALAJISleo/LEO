@@ -25,4 +25,4 @@ class RagLayer:
     def retrieve(self, query: str) -> List[str]:
         # Mock top-k retrieval
         return [self.vector_db[0]]
-吐
+

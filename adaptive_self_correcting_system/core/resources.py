@@ -18,4 +18,4 @@ class KnowledgeSystem:
     def retrieve(self, query: str) -> str:
         # Mock FAISS search
         return "Augmented context for: " + query[:15]
-吐
+

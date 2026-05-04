@@ -18,4 +18,4 @@ class CalibrationService:
         
         # Return average of scaled confidences
         return sum(scaled) / len(scaled)
-吐
+

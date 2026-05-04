@@ -40,4 +40,4 @@ class HardnessDetector:
         }
 
 detector = HardnessDetector()
-吐
+

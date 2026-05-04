@@ -22,4 +22,4 @@ class HypothesisEngine:
         
         entropy = self.calculate_entropy(probs)
         return entropy > self.entropy_threshold
-吐
+

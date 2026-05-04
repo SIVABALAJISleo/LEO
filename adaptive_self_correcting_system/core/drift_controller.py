@@ -29,4 +29,4 @@ class DriftController:
             cusum=cusum,
             anomaly_detected=anomaly
         )
-吐
+

@@ -16,4 +16,4 @@ class EdgeCaseDetector:
         is_adversarial = "ignore all previous instructions" in user_input.lower()
         
         return is_rare or is_ood or is_adversarial
-吐
+

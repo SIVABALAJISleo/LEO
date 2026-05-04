@@ -21,4 +21,4 @@ class CompletenessService:
         if "delete" in user_input.lower() and "file" not in user_input.lower():
             return True, "Do you mean to delete a 'directory', 'single file', or 'entire database'?"
         return False, None
-吐
+

@@ -21,4 +21,4 @@ class SmallModelEngine:
         if length > 100:
             return "MODERATE"
         return "SIMPLE"
-吐
+

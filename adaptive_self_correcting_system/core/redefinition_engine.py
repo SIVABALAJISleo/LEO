@@ -23,4 +23,4 @@ class RedefinitionEngine:
             return {"task": "HEURISTIC_SAMPLING", "strategy": "APPROX", "reason": "Exhaustive search redefined as sparse heuristic sampling."}
             
         return {"task": "DIRECT_CPU_SOLVE", "strategy": "RETRIEVAL", "reason": "Standard CPU task."}
-吐
+
