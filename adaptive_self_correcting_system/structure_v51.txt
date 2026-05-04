@@ -1,0 +1,22 @@
+cascade_ai_system/
+├── api/
+│   ├── main.py
+│   └── endpoints.py
+├── core/
+│   ├── hardness_detector.py # Complexity analysis
+│   ├── cache_layer.py      # Layer 0: Semantic Cache
+│   ├── rag_layer.py        # Layer 1: Vector Retrieval
+│   ├── tiny_model.py       # Layer 2: CPU-Quantized Inference
+│   ├── medium_model.py     # Layer 3: Optimized Reasoning
+│   ├── heavy_model_queue.py # Layer 4: Async Heavy Processing
+│   └── orchestrator.py      # Master Cascade Controller
+├── services/
+│   ├── vector_db.py        # FAISS/Chroma wrapper
+│   └── queue_service.py    # Redis/Celery integration
+├── models/
+│   └── schemas.py          # Pydantic contracts
+├── utils/
+│   ├── entropy.py          # Compressibility logic
+│   └── batcher.py          # 50ms Request Batching
+└── data/                   # Embeddings and Indices
+吐

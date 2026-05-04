@@ -1,0 +1,26 @@
+optimized_cascade_system/
+├── api/
+│   ├── main.py             # FastAPI entry
+│   ├── v1/
+│   │   └── endpoints.py    # Generation and feedback
+├── core/
+│   ├── router.py           # Smart Router (Brain)
+│   ├── detector.py         # Hardness Detector
+│   ├── cache.py            # Semantic Cache Layer
+│   ├── rag.py              # RAG Retrieval Layer
+│   ├── models/
+│   │   ├── tiny.py         # 2B CPU Model
+│   │   ├── medium.py       # 7B Optimized Model
+│   │   └── heavy.py        # Heavy Async Layer
+│   └── orchestrator.py      # Multi-Layer Controller
+├── services/
+│   ├── vector_db.py        # FAISS/Chroma Service
+│   ├── queue_worker.py     # Celery/Redis Task Processor
+│   └── db.py               # PostgreSQL Persistence
+├── models/
+│   └── schemas.py          # Pydantic Output Contracts
+├── utils/
+│   ├── metrics.py          # Latency/Cache Hit Tracking
+│   └── batcher.py          # 50ms Request Batching
+└── config.py               # Thresholds and Paths
+吐

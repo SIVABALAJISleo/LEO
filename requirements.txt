@@ -55,6 +55,9 @@ GitPython==3.1.47
 prometheus-fastapi-instrumentator
 pytest
 pytest-asyncio
+hypothesis
+mutmut
+mypy
 bandit
 flake8
 slowapi
