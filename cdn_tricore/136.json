@@ -1,0 +1,9 @@
+{
+  "id": 136,
+  "domain": "CONTROL",
+  "signature": [
+    "activate",
+    "uplink"
+  ],
+  "response": "Resolution: Accessing CONTROL for 'uplink'. Action: activate."
+}

@@ -1,0 +1,11 @@
+{
+  "id": 155,
+  "domain": "INFO",
+  "signature": [
+    "how",
+    "is",
+    "latency",
+    "overall"
+  ],
+  "response": "Resolution: Accessing INFO for 'latency'. Action: how is."
+}

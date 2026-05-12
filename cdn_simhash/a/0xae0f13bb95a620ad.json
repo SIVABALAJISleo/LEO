@@ -1,0 +1,16 @@
+{
+  "id": "CONTROL_301",
+  "signature": [
+    "alpha",
+    "node",
+    "stop"
+  ],
+  "domain": "CONTROL",
+  "context": null,
+  "response": "Resolution: Accessing CONTROL for 'alpha node'. Action: stop.",
+  "tags": [
+    "control",
+    "node"
+  ],
+  "sh": "0xae0f13bb95a620ad"
+}

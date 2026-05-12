@@ -1,0 +1,17 @@
+{
+  "id": "CONTROL_270",
+  "signature": [
+    "activate",
+    "engine",
+    "immediately",
+    "primary"
+  ],
+  "domain": "CONTROL",
+  "context": null,
+  "response": "Resolution: Accessing CONTROL for 'primary engine'. Action: activate.",
+  "tags": [
+    "control",
+    "engine"
+  ],
+  "sh": "0x3d20106d00834191"
+}

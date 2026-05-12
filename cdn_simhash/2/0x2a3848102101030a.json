@@ -1,0 +1,15 @@
+{
+  "id": "INFO_069",
+  "signature": [
+    "memory",
+    "overall"
+  ],
+  "domain": "INFO",
+  "context": null,
+  "response": "Resolution: Accessing INFO for 'memory'. Action: how is.",
+  "tags": [
+    "info",
+    "memory"
+  ],
+  "sh": "0x2a3848102101030a"
+}

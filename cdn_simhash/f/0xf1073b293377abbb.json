@@ -1,0 +1,16 @@
+{
+  "id": "SYSTEM_429",
+  "signature": [
+    "identity",
+    "restore",
+    "table"
+  ],
+  "domain": "SYSTEM",
+  "context": null,
+  "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: restore.",
+  "tags": [
+    "system",
+    "table"
+  ],
+  "sh": "0xf1073b293377abbb"
+}

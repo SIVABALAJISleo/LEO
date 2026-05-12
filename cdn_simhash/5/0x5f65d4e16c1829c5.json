@@ -1,0 +1,16 @@
+{
+  "id": "INFO_363",
+  "signature": [
+    "detailed",
+    "health",
+    "temperature"
+  ],
+  "domain": "INFO",
+  "context": null,
+  "response": "Resolution: Accessing INFO for 'temperature'. Action: health of.",
+  "tags": [
+    "info",
+    "temperature"
+  ],
+  "sh": "0x5f65d4e16c1829c5"
+}

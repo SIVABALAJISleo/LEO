@@ -1,0 +1,22 @@
+﻿python : Redis not 
+available, using 
+in-memory fallback. 
+Error: Timeout 
+connecting to server
+At line:1 char:1
++ python tests\test_saa
+s_full_flow.py > 
+test_output.txt 2>&1
++ ~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
+    + CategoryInfo     
+         : NotSpecifi  
+  ed: (Redis not ava   
+ il...cting to serv    
+er:String) [], Rem    
+oteException
+    + FullyQualifiedEr 
+   rorId : NativeComm  
+  andError
+ 

@@ -1,0 +1,11 @@
+{
+  "id": 99,
+  "domain": "CONTROL",
+  "signature": [
+    "after",
+    "reboot",
+    "uplink",
+    "verification"
+  ],
+  "response": "Resolution: Accessing CONTROL for 'uplink'. Action: reboot."
+}

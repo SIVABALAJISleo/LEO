@@ -1,0 +1,20 @@
+{
+  "vocab": {
+    "check": 100,
+    "health": 100,
+    "report": 100,
+    "status": 100,
+    "core": 101,
+    "engine": 101,
+    "platform": 101,
+    "system": 101,
+    "alpha": 102,
+    "main": 102,
+    "primary": 102
+  },
+  "weights": {
+    "100": 10,
+    "101": 2,
+    "102": 5
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "id": "SYSTEM_198",
+  "signature": [
+    "backup",
+    "files",
+    "log",
+    "silently"
+  ],
+  "domain": "SYSTEM",
+  "context": null,
+  "response": "Resolution: Accessing SYSTEM for 'log files'. Action: backup.",
+  "tags": [
+    "system",
+    "files"
+  ],
+  "sh": "0x8255801dfd100433"
+}

@@ -1,0 +1,5002 @@
+[
+  {
+    "id": "CONTROL_000",
+    "query": "kill beta node now",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'beta node'. Action: kill.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "CONTROL_001",
+    "query": "reset alpha node",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'alpha node'. Action: reset.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "SYSTEM_002",
+    "query": "backup identity table",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: backup.",
+    "tags": [
+      "system",
+      "table"
+    ]
+  },
+  {
+    "id": "INFO_003",
+    "query": "check temperature",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'temperature'. Action: check.",
+    "tags": [
+      "info",
+      "temperature"
+    ]
+  },
+  {
+    "id": "INFO_004",
+    "query": "report node alpha overall",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node alpha'. Action: report.",
+    "tags": [
+      "info",
+      "alpha"
+    ]
+  },
+  {
+    "id": "INFO_005",
+    "query": "telemetry from storage",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'storage'. Action: telemetry from.",
+    "tags": [
+      "info",
+      "storage"
+    ]
+  },
+  {
+    "id": "CONTROL_006",
+    "query": "start power grid",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'power grid'. Action: start.",
+    "tags": [
+      "control",
+      "grid"
+    ]
+  },
+  {
+    "id": "SYSTEM_007",
+    "query": "restore semantic database",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: restore.",
+    "tags": [
+      "system",
+      "database"
+    ]
+  },
+  {
+    "id": "SYSTEM_008",
+    "query": "audit semantic database",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: audit.",
+    "tags": [
+      "system",
+      "database"
+    ]
+  },
+  {
+    "id": "SYSTEM_009",
+    "query": "synchronize build silently",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'build'. Action: synchronize.",
+    "tags": [
+      "system",
+      "build"
+    ]
+  },
+  {
+    "id": "SYSTEM_010",
+    "query": "verify registry silently",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'registry'. Action: verify.",
+    "tags": [
+      "system",
+      "registry"
+    ]
+  },
+  {
+    "id": "INFO_011",
+    "query": "status of temperature",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'temperature'. Action: status of.",
+    "tags": [
+      "info",
+      "temperature"
+    ]
+  },
+  {
+    "id": "INFO_012",
+    "query": "how is system",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'system'. Action: how is.",
+    "tags": [
+      "info",
+      "system"
+    ]
+  },
+  {
+    "id": "SYSTEM_013",
+    "query": "verify build",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'build'. Action: verify.",
+    "tags": [
+      "system",
+      "build"
+    ]
+  },
+  {
+    "id": "CONTROL_014",
+    "query": "shutdown power grid",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'power grid'. Action: shutdown.",
+    "tags": [
+      "control",
+      "grid"
+    ]
+  },
+  {
+    "id": "INFO_015",
+    "query": "status of node beta",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node beta'. Action: status of.",
+    "tags": [
+      "info",
+      "beta"
+    ]
+  },
+  {
+    "id": "INFO_016",
+    "query": "check temperature detailed",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'temperature'. Action: check.",
+    "tags": [
+      "info",
+      "temperature"
+    ]
+  },
+  {
+    "id": "INFO_017",
+    "query": "report uptime overall",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'uptime'. Action: report.",
+    "tags": [
+      "info",
+      "uptime"
+    ]
+  },
+  {
+    "id": "INFO_018",
+    "query": "metrics for node beta all",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node beta'. Action: metrics for.",
+    "tags": [
+      "info",
+      "beta"
+    ]
+  },
+  {
+    "id": "CONTROL_019",
+    "query": "shutdown cooling system now",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'cooling system'. Action: shutdown.",
+    "tags": [
+      "control",
+      "system"
+    ]
+  },
+  {
+    "id": "SYSTEM_020",
+    "query": "audit log files",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'log files'. Action: audit.",
+    "tags": [
+      "system",
+      "files"
+    ]
+  },
+  {
+    "id": "INFO_021",
+    "query": "show memory",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'memory'. Action: show.",
+    "tags": [
+      "info",
+      "memory"
+    ]
+  },
+  {
+    "id": "CONTROL_022",
+    "query": "stop primary engine",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'primary engine'. Action: stop.",
+    "tags": [
+      "control",
+      "engine"
+    ]
+  },
+  {
+    "id": "INFO_023",
+    "query": "check node alpha overall",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node alpha'. Action: check.",
+    "tags": [
+      "info",
+      "alpha"
+    ]
+  },
+  {
+    "id": "CONTROL_024",
+    "query": "stop uplink",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'uplink'. Action: stop.",
+    "tags": [
+      "control",
+      "uplink"
+    ]
+  },
+  {
+    "id": "SYSTEM_025",
+    "query": "audit manifest",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: audit.",
+    "tags": [
+      "system",
+      "manifest"
+    ]
+  },
+  {
+    "id": "SYSTEM_026",
+    "query": "restore registry",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'registry'. Action: restore.",
+    "tags": [
+      "system",
+      "registry"
+    ]
+  },
+  {
+    "id": "INFO_027",
+    "query": "how is system overall",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'system'. Action: how is.",
+    "tags": [
+      "info",
+      "system"
+    ]
+  },
+  {
+    "id": "INFO_028",
+    "query": "check load",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'load'. Action: check.",
+    "tags": [
+      "info",
+      "load"
+    ]
+  },
+  {
+    "id": "CONTROL_029",
+    "query": "stop power grid safely",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'power grid'. Action: stop.",
+    "tags": [
+      "control",
+      "grid"
+    ]
+  },
+  {
+    "id": "CONTROL_030",
+    "query": "kill uplink",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'uplink'. Action: kill.",
+    "tags": [
+      "control",
+      "uplink"
+    ]
+  },
+  {
+    "id": "INFO_031",
+    "query": "health of load all",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'load'. Action: health of.",
+    "tags": [
+      "info",
+      "load"
+    ]
+  },
+  {
+    "id": "INFO_032",
+    "query": "health of node beta",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node beta'. Action: health of.",
+    "tags": [
+      "info",
+      "beta"
+    ]
+  },
+  {
+    "id": "SYSTEM_033",
+    "query": "backup manifest",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: backup.",
+    "tags": [
+      "system",
+      "manifest"
+    ]
+  },
+  {
+    "id": "SYSTEM_034",
+    "query": "synchronize log files",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'log files'. Action: synchronize.",
+    "tags": [
+      "system",
+      "files"
+    ]
+  },
+  {
+    "id": "SYSTEM_035",
+    "query": "index log files",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'log files'. Action: index.",
+    "tags": [
+      "system",
+      "files"
+    ]
+  },
+  {
+    "id": "INFO_036",
+    "query": "report latency",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'latency'. Action: report.",
+    "tags": [
+      "info",
+      "latency"
+    ]
+  },
+  {
+    "id": "SYSTEM_037",
+    "query": "update build in background",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'build'. Action: update.",
+    "tags": [
+      "system",
+      "build"
+    ]
+  },
+  {
+    "id": "SYSTEM_038",
+    "query": "synchronize manifest forcefully",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: synchronize.",
+    "tags": [
+      "system",
+      "manifest"
+    ]
+  },
+  {
+    "id": "INFO_039",
+    "query": "metrics for system",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'system'. Action: metrics for.",
+    "tags": [
+      "info",
+      "system"
+    ]
+  },
+  {
+    "id": "SYSTEM_040",
+    "query": "restore version forcefully",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'version'. Action: restore.",
+    "tags": [
+      "system",
+      "version"
+    ]
+  },
+  {
+    "id": "CONTROL_041",
+    "query": "shutdown cooling system immediately",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'cooling system'. Action: shutdown.",
+    "tags": [
+      "control",
+      "system"
+    ]
+  },
+  {
+    "id": "INFO_042",
+    "query": "health of node alpha locally",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node alpha'. Action: health of.",
+    "tags": [
+      "info",
+      "alpha"
+    ]
+  },
+  {
+    "id": "INFO_043",
+    "query": "telemetry from node alpha locally",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node alpha'. Action: telemetry from.",
+    "tags": [
+      "info",
+      "alpha"
+    ]
+  },
+  {
+    "id": "INFO_044",
+    "query": "health of node beta",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node beta'. Action: health of.",
+    "tags": [
+      "info",
+      "beta"
+    ]
+  },
+  {
+    "id": "CONTROL_045",
+    "query": "start cooling system now",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'cooling system'. Action: start.",
+    "tags": [
+      "control",
+      "system"
+    ]
+  },
+  {
+    "id": "INFO_046",
+    "query": "report memory",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'memory'. Action: report.",
+    "tags": [
+      "info",
+      "memory"
+    ]
+  },
+  {
+    "id": "CONTROL_047",
+    "query": "initialize beta node",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'beta node'. Action: initialize.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "SYSTEM_048",
+    "query": "update build forcefully",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'build'. Action: update.",
+    "tags": [
+      "system",
+      "build"
+    ]
+  },
+  {
+    "id": "INFO_049",
+    "query": "check bandwidth all",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'bandwidth'. Action: check.",
+    "tags": [
+      "info",
+      "bandwidth"
+    ]
+  },
+  {
+    "id": "INFO_050",
+    "query": "status of temperature all",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'temperature'. Action: status of.",
+    "tags": [
+      "info",
+      "temperature"
+    ]
+  },
+  {
+    "id": "CONTROL_051",
+    "query": "shutdown power grid now",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'power grid'. Action: shutdown.",
+    "tags": [
+      "control",
+      "grid"
+    ]
+  },
+  {
+    "id": "SYSTEM_052",
+    "query": "synchronize identity table",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: synchronize.",
+    "tags": [
+      "system",
+      "table"
+    ]
+  },
+  {
+    "id": "CONTROL_053",
+    "query": "kill subsystem delta safely",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'subsystem delta'. Action: kill.",
+    "tags": [
+      "control",
+      "delta"
+    ]
+  },
+  {
+    "id": "SYSTEM_054",
+    "query": "verify registry silently",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'registry'. Action: verify.",
+    "tags": [
+      "system",
+      "registry"
+    ]
+  },
+  {
+    "id": "INFO_055",
+    "query": "metrics for bandwidth",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'bandwidth'. Action: metrics for.",
+    "tags": [
+      "info",
+      "bandwidth"
+    ]
+  },
+  {
+    "id": "SYSTEM_056",
+    "query": "verify semantic database silently",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: verify.",
+    "tags": [
+      "system",
+      "database"
+    ]
+  },
+  {
+    "id": "INFO_057",
+    "query": "health of storage",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'storage'. Action: health of.",
+    "tags": [
+      "info",
+      "storage"
+    ]
+  },
+  {
+    "id": "INFO_058",
+    "query": "show latency overall",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'latency'. Action: show.",
+    "tags": [
+      "info",
+      "latency"
+    ]
+  },
+  {
+    "id": "CONTROL_059",
+    "query": "activate uplink after verification",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'uplink'. Action: activate.",
+    "tags": [
+      "control",
+      "uplink"
+    ]
+  },
+  {
+    "id": "CONTROL_060",
+    "query": "stop beta node",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'beta node'. Action: stop.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "SYSTEM_061",
+    "query": "verify build in background",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'build'. Action: verify.",
+    "tags": [
+      "system",
+      "build"
+    ]
+  },
+  {
+    "id": "CONTROL_062",
+    "query": "restart cooling system at once",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'cooling system'. Action: restart.",
+    "tags": [
+      "control",
+      "system"
+    ]
+  },
+  {
+    "id": "SYSTEM_063",
+    "query": "synchronize build in background",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'build'. Action: synchronize.",
+    "tags": [
+      "system",
+      "build"
+    ]
+  },
+  {
+    "id": "CONTROL_064",
+    "query": "restart uplink",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'uplink'. Action: restart.",
+    "tags": [
+      "control",
+      "uplink"
+    ]
+  },
+  {
+    "id": "INFO_065",
+    "query": "how is uptime",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'uptime'. Action: how is.",
+    "tags": [
+      "info",
+      "uptime"
+    ]
+  },
+  {
+    "id": "CONTROL_066",
+    "query": "reset cooling system after verification",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'cooling system'. Action: reset.",
+    "tags": [
+      "control",
+      "system"
+    ]
+  },
+  {
+    "id": "INFO_067",
+    "query": "show node beta detailed",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node beta'. Action: show.",
+    "tags": [
+      "info",
+      "beta"
+    ]
+  },
+  {
+    "id": "CONTROL_068",
+    "query": "activate beta node",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'beta node'. Action: activate.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "INFO_069",
+    "query": "how is memory overall",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'memory'. Action: how is.",
+    "tags": [
+      "info",
+      "memory"
+    ]
+  },
+  {
+    "id": "SYSTEM_070",
+    "query": "restore semantic database in background",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: restore.",
+    "tags": [
+      "system",
+      "database"
+    ]
+  },
+  {
+    "id": "SYSTEM_071",
+    "query": "update semantic database",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: update.",
+    "tags": [
+      "system",
+      "database"
+    ]
+  },
+  {
+    "id": "CONTROL_072",
+    "query": "kill subsystem delta with high priority",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'subsystem delta'. Action: kill.",
+    "tags": [
+      "control",
+      "delta"
+    ]
+  },
+  {
+    "id": "INFO_073",
+    "query": "report temperature locally",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'temperature'. Action: report.",
+    "tags": [
+      "info",
+      "temperature"
+    ]
+  },
+  {
+    "id": "CONTROL_074",
+    "query": "shutdown core reactor after verification",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'core reactor'. Action: shutdown.",
+    "tags": [
+      "control",
+      "reactor"
+    ]
+  },
+  {
+    "id": "CONTROL_075",
+    "query": "stop core reactor",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'core reactor'. Action: stop.",
+    "tags": [
+      "control",
+      "reactor"
+    ]
+  },
+  {
+    "id": "CONTROL_076",
+    "query": "kill primary engine with high priority",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'primary engine'. Action: kill.",
+    "tags": [
+      "control",
+      "engine"
+    ]
+  },
+  {
+    "id": "SYSTEM_077",
+    "query": "audit semantic database",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: audit.",
+    "tags": [
+      "system",
+      "database"
+    ]
+  },
+  {
+    "id": "SYSTEM_078",
+    "query": "audit manifest",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: audit.",
+    "tags": [
+      "system",
+      "manifest"
+    ]
+  },
+  {
+    "id": "CONTROL_079",
+    "query": "start beta node safely",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'beta node'. Action: start.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "INFO_080",
+    "query": "how is system",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'system'. Action: how is.",
+    "tags": [
+      "info",
+      "system"
+    ]
+  },
+  {
+    "id": "SYSTEM_081",
+    "query": "update manifest in background",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: update.",
+    "tags": [
+      "system",
+      "manifest"
+    ]
+  },
+  {
+    "id": "SYSTEM_082",
+    "query": "backup semantic database silently",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: backup.",
+    "tags": [
+      "system",
+      "database"
+    ]
+  },
+  {
+    "id": "CONTROL_083",
+    "query": "activate beta node",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'beta node'. Action: activate.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "SYSTEM_084",
+    "query": "synchronize registry forcefully",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'registry'. Action: synchronize.",
+    "tags": [
+      "system",
+      "registry"
+    ]
+  },
+  {
+    "id": "INFO_085",
+    "query": "status of storage overall",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'storage'. Action: status of.",
+    "tags": [
+      "info",
+      "storage"
+    ]
+  },
+  {
+    "id": "CONTROL_086",
+    "query": "activate primary engine",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'primary engine'. Action: activate.",
+    "tags": [
+      "control",
+      "engine"
+    ]
+  },
+  {
+    "id": "INFO_087",
+    "query": "how is system summary",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'system'. Action: how is.",
+    "tags": [
+      "info",
+      "system"
+    ]
+  },
+  {
+    "id": "INFO_088",
+    "query": "telemetry from memory",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'memory'. Action: telemetry from.",
+    "tags": [
+      "info",
+      "memory"
+    ]
+  },
+  {
+    "id": "CONTROL_089",
+    "query": "restart primary engine safely",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'primary engine'. Action: restart.",
+    "tags": [
+      "control",
+      "engine"
+    ]
+  },
+  {
+    "id": "SYSTEM_090",
+    "query": "synchronize registry",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'registry'. Action: synchronize.",
+    "tags": [
+      "system",
+      "registry"
+    ]
+  },
+  {
+    "id": "INFO_091",
+    "query": "show memory overall",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'memory'. Action: show.",
+    "tags": [
+      "info",
+      "memory"
+    ]
+  },
+  {
+    "id": "CONTROL_092",
+    "query": "restart cooling system after verification",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'cooling system'. Action: restart.",
+    "tags": [
+      "control",
+      "system"
+    ]
+  },
+  {
+    "id": "SYSTEM_093",
+    "query": "synchronize build",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'build'. Action: synchronize.",
+    "tags": [
+      "system",
+      "build"
+    ]
+  },
+  {
+    "id": "SYSTEM_094",
+    "query": "restore registry silently",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'registry'. Action: restore.",
+    "tags": [
+      "system",
+      "registry"
+    ]
+  },
+  {
+    "id": "INFO_095",
+    "query": "report latency",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'latency'. Action: report.",
+    "tags": [
+      "info",
+      "latency"
+    ]
+  },
+  {
+    "id": "SYSTEM_096",
+    "query": "backup semantic database",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: backup.",
+    "tags": [
+      "system",
+      "database"
+    ]
+  },
+  {
+    "id": "CONTROL_097",
+    "query": "initialize primary engine",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'primary engine'. Action: initialize.",
+    "tags": [
+      "control",
+      "engine"
+    ]
+  },
+  {
+    "id": "SYSTEM_098",
+    "query": "index manifest silently",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: index.",
+    "tags": [
+      "system",
+      "manifest"
+    ]
+  },
+  {
+    "id": "SYSTEM_099",
+    "query": "backup build in background",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'build'. Action: backup.",
+    "tags": [
+      "system",
+      "build"
+    ]
+  },
+  {
+    "id": "SYSTEM_100",
+    "query": "restore version in background",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'version'. Action: restore.",
+    "tags": [
+      "system",
+      "version"
+    ]
+  },
+  {
+    "id": "SYSTEM_101",
+    "query": "verify log files forcefully",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'log files'. Action: verify.",
+    "tags": [
+      "system",
+      "files"
+    ]
+  },
+  {
+    "id": "SYSTEM_102",
+    "query": "update semantic database in background",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: update.",
+    "tags": [
+      "system",
+      "database"
+    ]
+  },
+  {
+    "id": "SYSTEM_103",
+    "query": "verify registry silently",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'registry'. Action: verify.",
+    "tags": [
+      "system",
+      "registry"
+    ]
+  },
+  {
+    "id": "INFO_104",
+    "query": "status of node alpha all",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node alpha'. Action: status of.",
+    "tags": [
+      "info",
+      "alpha"
+    ]
+  },
+  {
+    "id": "CONTROL_105",
+    "query": "stop subsystem delta safely",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'subsystem delta'. Action: stop.",
+    "tags": [
+      "control",
+      "delta"
+    ]
+  },
+  {
+    "id": "SYSTEM_106",
+    "query": "index manifest",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: index.",
+    "tags": [
+      "system",
+      "manifest"
+    ]
+  },
+  {
+    "id": "SYSTEM_107",
+    "query": "index log files silently",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'log files'. Action: index.",
+    "tags": [
+      "system",
+      "files"
+    ]
+  },
+  {
+    "id": "SYSTEM_108",
+    "query": "backup registry in background",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'registry'. Action: backup.",
+    "tags": [
+      "system",
+      "registry"
+    ]
+  },
+  {
+    "id": "SYSTEM_109",
+    "query": "verify build",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'build'. Action: verify.",
+    "tags": [
+      "system",
+      "build"
+    ]
+  },
+  {
+    "id": "CONTROL_110",
+    "query": "kill beta node",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'beta node'. Action: kill.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "CONTROL_111",
+    "query": "start subsystem delta",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'subsystem delta'. Action: start.",
+    "tags": [
+      "control",
+      "delta"
+    ]
+  },
+  {
+    "id": "CONTROL_112",
+    "query": "start cooling system immediately",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'cooling system'. Action: start.",
+    "tags": [
+      "control",
+      "system"
+    ]
+  },
+  {
+    "id": "CONTROL_113",
+    "query": "kill power grid at once",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'power grid'. Action: kill.",
+    "tags": [
+      "control",
+      "grid"
+    ]
+  },
+  {
+    "id": "CONTROL_114",
+    "query": "shutdown core reactor with high priority",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'core reactor'. Action: shutdown.",
+    "tags": [
+      "control",
+      "reactor"
+    ]
+  },
+  {
+    "id": "CONTROL_115",
+    "query": "activate alpha node",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'alpha node'. Action: activate.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "INFO_116",
+    "query": "telemetry from node beta",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node beta'. Action: telemetry from.",
+    "tags": [
+      "info",
+      "beta"
+    ]
+  },
+  {
+    "id": "INFO_117",
+    "query": "show load",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'load'. Action: show.",
+    "tags": [
+      "info",
+      "load"
+    ]
+  },
+  {
+    "id": "SYSTEM_118",
+    "query": "index semantic database silently",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: index.",
+    "tags": [
+      "system",
+      "database"
+    ]
+  },
+  {
+    "id": "SYSTEM_119",
+    "query": "restore version in background",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'version'. Action: restore.",
+    "tags": [
+      "system",
+      "version"
+    ]
+  },
+  {
+    "id": "INFO_120",
+    "query": "report uptime",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'uptime'. Action: report.",
+    "tags": [
+      "info",
+      "uptime"
+    ]
+  },
+  {
+    "id": "CONTROL_121",
+    "query": "reboot power grid",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'power grid'. Action: reboot.",
+    "tags": [
+      "control",
+      "grid"
+    ]
+  },
+  {
+    "id": "INFO_122",
+    "query": "show memory all",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'memory'. Action: show.",
+    "tags": [
+      "info",
+      "memory"
+    ]
+  },
+  {
+    "id": "INFO_123",
+    "query": "status of bandwidth",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'bandwidth'. Action: status of.",
+    "tags": [
+      "info",
+      "bandwidth"
+    ]
+  },
+  {
+    "id": "INFO_124",
+    "query": "status of uptime all",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'uptime'. Action: status of.",
+    "tags": [
+      "info",
+      "uptime"
+    ]
+  },
+  {
+    "id": "INFO_125",
+    "query": "health of system",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'system'. Action: health of.",
+    "tags": [
+      "info",
+      "system"
+    ]
+  },
+  {
+    "id": "INFO_126",
+    "query": "how is storage",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'storage'. Action: how is.",
+    "tags": [
+      "info",
+      "storage"
+    ]
+  },
+  {
+    "id": "CONTROL_127",
+    "query": "stop core reactor",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'core reactor'. Action: stop.",
+    "tags": [
+      "control",
+      "reactor"
+    ]
+  },
+  {
+    "id": "SYSTEM_128",
+    "query": "patch build",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'build'. Action: patch.",
+    "tags": [
+      "system",
+      "build"
+    ]
+  },
+  {
+    "id": "CONTROL_129",
+    "query": "start uplink",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'uplink'. Action: start.",
+    "tags": [
+      "control",
+      "uplink"
+    ]
+  },
+  {
+    "id": "INFO_130",
+    "query": "telemetry from temperature detailed",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'temperature'. Action: telemetry from.",
+    "tags": [
+      "info",
+      "temperature"
+    ]
+  },
+  {
+    "id": "INFO_131",
+    "query": "health of load",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'load'. Action: health of.",
+    "tags": [
+      "info",
+      "load"
+    ]
+  },
+  {
+    "id": "INFO_132",
+    "query": "how is uptime locally",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'uptime'. Action: how is.",
+    "tags": [
+      "info",
+      "uptime"
+    ]
+  },
+  {
+    "id": "INFO_133",
+    "query": "report system overall",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'system'. Action: report.",
+    "tags": [
+      "info",
+      "system"
+    ]
+  },
+  {
+    "id": "SYSTEM_134",
+    "query": "audit registry in background",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'registry'. Action: audit.",
+    "tags": [
+      "system",
+      "registry"
+    ]
+  },
+  {
+    "id": "INFO_135",
+    "query": "report latency detailed",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'latency'. Action: report.",
+    "tags": [
+      "info",
+      "latency"
+    ]
+  },
+  {
+    "id": "CONTROL_136",
+    "query": "kill primary engine",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'primary engine'. Action: kill.",
+    "tags": [
+      "control",
+      "engine"
+    ]
+  },
+  {
+    "id": "SYSTEM_137",
+    "query": "audit version",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'version'. Action: audit.",
+    "tags": [
+      "system",
+      "version"
+    ]
+  },
+  {
+    "id": "SYSTEM_138",
+    "query": "verify log files",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'log files'. Action: verify.",
+    "tags": [
+      "system",
+      "files"
+    ]
+  },
+  {
+    "id": "CONTROL_139",
+    "query": "kill primary engine",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'primary engine'. Action: kill.",
+    "tags": [
+      "control",
+      "engine"
+    ]
+  },
+  {
+    "id": "CONTROL_140",
+    "query": "initialize uplink",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'uplink'. Action: initialize.",
+    "tags": [
+      "control",
+      "uplink"
+    ]
+  },
+  {
+    "id": "SYSTEM_141",
+    "query": "verify manifest",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: verify.",
+    "tags": [
+      "system",
+      "manifest"
+    ]
+  },
+  {
+    "id": "INFO_142",
+    "query": "show node beta",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node beta'. Action: show.",
+    "tags": [
+      "info",
+      "beta"
+    ]
+  },
+  {
+    "id": "CONTROL_143",
+    "query": "reboot core reactor",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'core reactor'. Action: reboot.",
+    "tags": [
+      "control",
+      "reactor"
+    ]
+  },
+  {
+    "id": "INFO_144",
+    "query": "health of node beta detailed",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node beta'. Action: health of.",
+    "tags": [
+      "info",
+      "beta"
+    ]
+  },
+  {
+    "id": "SYSTEM_145",
+    "query": "restore version",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'version'. Action: restore.",
+    "tags": [
+      "system",
+      "version"
+    ]
+  },
+  {
+    "id": "INFO_146",
+    "query": "report memory all",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'memory'. Action: report.",
+    "tags": [
+      "info",
+      "memory"
+    ]
+  },
+  {
+    "id": "CONTROL_147",
+    "query": "reboot uplink after verification",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'uplink'. Action: reboot.",
+    "tags": [
+      "control",
+      "uplink"
+    ]
+  },
+  {
+    "id": "INFO_148",
+    "query": "status of latency",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'latency'. Action: status of.",
+    "tags": [
+      "info",
+      "latency"
+    ]
+  },
+  {
+    "id": "SYSTEM_149",
+    "query": "restore build",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'build'. Action: restore.",
+    "tags": [
+      "system",
+      "build"
+    ]
+  },
+  {
+    "id": "CONTROL_150",
+    "query": "reset power grid",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'power grid'. Action: reset.",
+    "tags": [
+      "control",
+      "grid"
+    ]
+  },
+  {
+    "id": "INFO_151",
+    "query": "telemetry from node beta all",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node beta'. Action: telemetry from.",
+    "tags": [
+      "info",
+      "beta"
+    ]
+  },
+  {
+    "id": "INFO_152",
+    "query": "report load",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'load'. Action: report.",
+    "tags": [
+      "info",
+      "load"
+    ]
+  },
+  {
+    "id": "CONTROL_153",
+    "query": "kill subsystem delta",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'subsystem delta'. Action: kill.",
+    "tags": [
+      "control",
+      "delta"
+    ]
+  },
+  {
+    "id": "CONTROL_154",
+    "query": "kill beta node",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'beta node'. Action: kill.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "SYSTEM_155",
+    "query": "restore build forcefully",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'build'. Action: restore.",
+    "tags": [
+      "system",
+      "build"
+    ]
+  },
+  {
+    "id": "SYSTEM_156",
+    "query": "audit version in background",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'version'. Action: audit.",
+    "tags": [
+      "system",
+      "version"
+    ]
+  },
+  {
+    "id": "SYSTEM_157",
+    "query": "audit registry in background",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'registry'. Action: audit.",
+    "tags": [
+      "system",
+      "registry"
+    ]
+  },
+  {
+    "id": "CONTROL_158",
+    "query": "stop alpha node after verification",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'alpha node'. Action: stop.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "SYSTEM_159",
+    "query": "update registry",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'registry'. Action: update.",
+    "tags": [
+      "system",
+      "registry"
+    ]
+  },
+  {
+    "id": "INFO_160",
+    "query": "report uptime summary",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'uptime'. Action: report.",
+    "tags": [
+      "info",
+      "uptime"
+    ]
+  },
+  {
+    "id": "CONTROL_161",
+    "query": "kill cooling system after verification",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'cooling system'. Action: kill.",
+    "tags": [
+      "control",
+      "system"
+    ]
+  },
+  {
+    "id": "SYSTEM_162",
+    "query": "restore identity table",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: restore.",
+    "tags": [
+      "system",
+      "table"
+    ]
+  },
+  {
+    "id": "CONTROL_163",
+    "query": "reboot uplink",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'uplink'. Action: reboot.",
+    "tags": [
+      "control",
+      "uplink"
+    ]
+  },
+  {
+    "id": "SYSTEM_164",
+    "query": "restore semantic database forcefully",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: restore.",
+    "tags": [
+      "system",
+      "database"
+    ]
+  },
+  {
+    "id": "SYSTEM_165",
+    "query": "synchronize identity table in background",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: synchronize.",
+    "tags": [
+      "system",
+      "table"
+    ]
+  },
+  {
+    "id": "INFO_166",
+    "query": "how is memory all",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'memory'. Action: how is.",
+    "tags": [
+      "info",
+      "memory"
+    ]
+  },
+  {
+    "id": "SYSTEM_167",
+    "query": "audit semantic database in background",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: audit.",
+    "tags": [
+      "system",
+      "database"
+    ]
+  },
+  {
+    "id": "INFO_168",
+    "query": "metrics for load",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'load'. Action: metrics for.",
+    "tags": [
+      "info",
+      "load"
+    ]
+  },
+  {
+    "id": "SYSTEM_169",
+    "query": "patch registry in background",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'registry'. Action: patch.",
+    "tags": [
+      "system",
+      "registry"
+    ]
+  },
+  {
+    "id": "SYSTEM_170",
+    "query": "audit log files silently",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'log files'. Action: audit.",
+    "tags": [
+      "system",
+      "files"
+    ]
+  },
+  {
+    "id": "CONTROL_171",
+    "query": "kill alpha node",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'alpha node'. Action: kill.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "SYSTEM_172",
+    "query": "backup log files",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'log files'. Action: backup.",
+    "tags": [
+      "system",
+      "files"
+    ]
+  },
+  {
+    "id": "SYSTEM_173",
+    "query": "update registry",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'registry'. Action: update.",
+    "tags": [
+      "system",
+      "registry"
+    ]
+  },
+  {
+    "id": "SYSTEM_174",
+    "query": "update identity table",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: update.",
+    "tags": [
+      "system",
+      "table"
+    ]
+  },
+  {
+    "id": "SYSTEM_175",
+    "query": "audit log files silently",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'log files'. Action: audit.",
+    "tags": [
+      "system",
+      "files"
+    ]
+  },
+  {
+    "id": "SYSTEM_176",
+    "query": "backup version",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'version'. Action: backup.",
+    "tags": [
+      "system",
+      "version"
+    ]
+  },
+  {
+    "id": "INFO_177",
+    "query": "how is uptime",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'uptime'. Action: how is.",
+    "tags": [
+      "info",
+      "uptime"
+    ]
+  },
+  {
+    "id": "CONTROL_178",
+    "query": "reset subsystem delta after verification",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'subsystem delta'. Action: reset.",
+    "tags": [
+      "control",
+      "delta"
+    ]
+  },
+  {
+    "id": "SYSTEM_179",
+    "query": "update identity table in background",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: update.",
+    "tags": [
+      "system",
+      "table"
+    ]
+  },
+  {
+    "id": "SYSTEM_180",
+    "query": "update semantic database in background",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: update.",
+    "tags": [
+      "system",
+      "database"
+    ]
+  },
+  {
+    "id": "CONTROL_181",
+    "query": "restart alpha node with high priority",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'alpha node'. Action: restart.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "CONTROL_182",
+    "query": "kill uplink safely",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'uplink'. Action: kill.",
+    "tags": [
+      "control",
+      "uplink"
+    ]
+  },
+  {
+    "id": "SYSTEM_183",
+    "query": "backup version",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'version'. Action: backup.",
+    "tags": [
+      "system",
+      "version"
+    ]
+  },
+  {
+    "id": "SYSTEM_184",
+    "query": "audit semantic database",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: audit.",
+    "tags": [
+      "system",
+      "database"
+    ]
+  },
+  {
+    "id": "SYSTEM_185",
+    "query": "synchronize identity table",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: synchronize.",
+    "tags": [
+      "system",
+      "table"
+    ]
+  },
+  {
+    "id": "INFO_186",
+    "query": "metrics for load overall",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'load'. Action: metrics for.",
+    "tags": [
+      "info",
+      "load"
+    ]
+  },
+  {
+    "id": "INFO_187",
+    "query": "report bandwidth",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'bandwidth'. Action: report.",
+    "tags": [
+      "info",
+      "bandwidth"
+    ]
+  },
+  {
+    "id": "CONTROL_188",
+    "query": "shutdown power grid",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'power grid'. Action: shutdown.",
+    "tags": [
+      "control",
+      "grid"
+    ]
+  },
+  {
+    "id": "CONTROL_189",
+    "query": "initialize beta node",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'beta node'. Action: initialize.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "INFO_190",
+    "query": "how is bandwidth overall",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'bandwidth'. Action: how is.",
+    "tags": [
+      "info",
+      "bandwidth"
+    ]
+  },
+  {
+    "id": "INFO_191",
+    "query": "show storage locally",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'storage'. Action: show.",
+    "tags": [
+      "info",
+      "storage"
+    ]
+  },
+  {
+    "id": "INFO_192",
+    "query": "status of system summary",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'system'. Action: status of.",
+    "tags": [
+      "info",
+      "system"
+    ]
+  },
+  {
+    "id": "INFO_193",
+    "query": "show load",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'load'. Action: show.",
+    "tags": [
+      "info",
+      "load"
+    ]
+  },
+  {
+    "id": "INFO_194",
+    "query": "report temperature",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'temperature'. Action: report.",
+    "tags": [
+      "info",
+      "temperature"
+    ]
+  },
+  {
+    "id": "SYSTEM_195",
+    "query": "backup registry silently",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'registry'. Action: backup.",
+    "tags": [
+      "system",
+      "registry"
+    ]
+  },
+  {
+    "id": "SYSTEM_196",
+    "query": "restore build",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'build'. Action: restore.",
+    "tags": [
+      "system",
+      "build"
+    ]
+  },
+  {
+    "id": "INFO_197",
+    "query": "show storage",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'storage'. Action: show.",
+    "tags": [
+      "info",
+      "storage"
+    ]
+  },
+  {
+    "id": "SYSTEM_198",
+    "query": "backup log files silently",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'log files'. Action: backup.",
+    "tags": [
+      "system",
+      "files"
+    ]
+  },
+  {
+    "id": "CONTROL_199",
+    "query": "restart subsystem delta",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'subsystem delta'. Action: restart.",
+    "tags": [
+      "control",
+      "delta"
+    ]
+  },
+  {
+    "id": "INFO_200",
+    "query": "metrics for uptime locally",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'uptime'. Action: metrics for.",
+    "tags": [
+      "info",
+      "uptime"
+    ]
+  },
+  {
+    "id": "SYSTEM_201",
+    "query": "verify manifest silently",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: verify.",
+    "tags": [
+      "system",
+      "manifest"
+    ]
+  },
+  {
+    "id": "INFO_202",
+    "query": "how is temperature overall",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'temperature'. Action: how is.",
+    "tags": [
+      "info",
+      "temperature"
+    ]
+  },
+  {
+    "id": "CONTROL_203",
+    "query": "reboot core reactor",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'core reactor'. Action: reboot.",
+    "tags": [
+      "control",
+      "reactor"
+    ]
+  },
+  {
+    "id": "CONTROL_204",
+    "query": "restart cooling system after verification",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'cooling system'. Action: restart.",
+    "tags": [
+      "control",
+      "system"
+    ]
+  },
+  {
+    "id": "SYSTEM_205",
+    "query": "restore manifest silently",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: restore.",
+    "tags": [
+      "system",
+      "manifest"
+    ]
+  },
+  {
+    "id": "INFO_206",
+    "query": "show load all",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'load'. Action: show.",
+    "tags": [
+      "info",
+      "load"
+    ]
+  },
+  {
+    "id": "CONTROL_207",
+    "query": "reset subsystem delta",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'subsystem delta'. Action: reset.",
+    "tags": [
+      "control",
+      "delta"
+    ]
+  },
+  {
+    "id": "CONTROL_208",
+    "query": "stop subsystem delta after verification",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'subsystem delta'. Action: stop.",
+    "tags": [
+      "control",
+      "delta"
+    ]
+  },
+  {
+    "id": "INFO_209",
+    "query": "telemetry from node beta all",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node beta'. Action: telemetry from.",
+    "tags": [
+      "info",
+      "beta"
+    ]
+  },
+  {
+    "id": "INFO_210",
+    "query": "telemetry from load locally",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'load'. Action: telemetry from.",
+    "tags": [
+      "info",
+      "load"
+    ]
+  },
+  {
+    "id": "SYSTEM_211",
+    "query": "patch version forcefully",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'version'. Action: patch.",
+    "tags": [
+      "system",
+      "version"
+    ]
+  },
+  {
+    "id": "SYSTEM_212",
+    "query": "index semantic database",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: index.",
+    "tags": [
+      "system",
+      "database"
+    ]
+  },
+  {
+    "id": "INFO_213",
+    "query": "report node beta",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node beta'. Action: report.",
+    "tags": [
+      "info",
+      "beta"
+    ]
+  },
+  {
+    "id": "CONTROL_214",
+    "query": "restart beta node with high priority",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'beta node'. Action: restart.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "INFO_215",
+    "query": "telemetry from system all",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'system'. Action: telemetry from.",
+    "tags": [
+      "info",
+      "system"
+    ]
+  },
+  {
+    "id": "CONTROL_216",
+    "query": "reset core reactor at once",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'core reactor'. Action: reset.",
+    "tags": [
+      "control",
+      "reactor"
+    ]
+  },
+  {
+    "id": "SYSTEM_217",
+    "query": "audit log files",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'log files'. Action: audit.",
+    "tags": [
+      "system",
+      "files"
+    ]
+  },
+  {
+    "id": "INFO_218",
+    "query": "show node alpha locally",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node alpha'. Action: show.",
+    "tags": [
+      "info",
+      "alpha"
+    ]
+  },
+  {
+    "id": "SYSTEM_219",
+    "query": "restore log files silently",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'log files'. Action: restore.",
+    "tags": [
+      "system",
+      "files"
+    ]
+  },
+  {
+    "id": "INFO_220",
+    "query": "check bandwidth overall",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'bandwidth'. Action: check.",
+    "tags": [
+      "info",
+      "bandwidth"
+    ]
+  },
+  {
+    "id": "SYSTEM_221",
+    "query": "patch manifest",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: patch.",
+    "tags": [
+      "system",
+      "manifest"
+    ]
+  },
+  {
+    "id": "INFO_222",
+    "query": "show temperature",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'temperature'. Action: show.",
+    "tags": [
+      "info",
+      "temperature"
+    ]
+  },
+  {
+    "id": "INFO_223",
+    "query": "status of temperature",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'temperature'. Action: status of.",
+    "tags": [
+      "info",
+      "temperature"
+    ]
+  },
+  {
+    "id": "CONTROL_224",
+    "query": "reboot uplink",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'uplink'. Action: reboot.",
+    "tags": [
+      "control",
+      "uplink"
+    ]
+  },
+  {
+    "id": "SYSTEM_225",
+    "query": "update identity table",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: update.",
+    "tags": [
+      "system",
+      "table"
+    ]
+  },
+  {
+    "id": "INFO_226",
+    "query": "check node alpha summary",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node alpha'. Action: check.",
+    "tags": [
+      "info",
+      "alpha"
+    ]
+  },
+  {
+    "id": "SYSTEM_227",
+    "query": "audit registry silently",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'registry'. Action: audit.",
+    "tags": [
+      "system",
+      "registry"
+    ]
+  },
+  {
+    "id": "CONTROL_228",
+    "query": "activate beta node",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'beta node'. Action: activate.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "CONTROL_229",
+    "query": "activate alpha node immediately",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'alpha node'. Action: activate.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "INFO_230",
+    "query": "metrics for bandwidth overall",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'bandwidth'. Action: metrics for.",
+    "tags": [
+      "info",
+      "bandwidth"
+    ]
+  },
+  {
+    "id": "INFO_231",
+    "query": "metrics for bandwidth detailed",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'bandwidth'. Action: metrics for.",
+    "tags": [
+      "info",
+      "bandwidth"
+    ]
+  },
+  {
+    "id": "CONTROL_232",
+    "query": "kill core reactor after verification",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'core reactor'. Action: kill.",
+    "tags": [
+      "control",
+      "reactor"
+    ]
+  },
+  {
+    "id": "CONTROL_233",
+    "query": "start alpha node immediately",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'alpha node'. Action: start.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "SYSTEM_234",
+    "query": "backup build in background",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'build'. Action: backup.",
+    "tags": [
+      "system",
+      "build"
+    ]
+  },
+  {
+    "id": "CONTROL_235",
+    "query": "initialize beta node at once",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'beta node'. Action: initialize.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "CONTROL_236",
+    "query": "start cooling system",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'cooling system'. Action: start.",
+    "tags": [
+      "control",
+      "system"
+    ]
+  },
+  {
+    "id": "INFO_237",
+    "query": "show load",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'load'. Action: show.",
+    "tags": [
+      "info",
+      "load"
+    ]
+  },
+  {
+    "id": "INFO_238",
+    "query": "health of node beta",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node beta'. Action: health of.",
+    "tags": [
+      "info",
+      "beta"
+    ]
+  },
+  {
+    "id": "SYSTEM_239",
+    "query": "audit identity table silently",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: audit.",
+    "tags": [
+      "system",
+      "table"
+    ]
+  },
+  {
+    "id": "INFO_240",
+    "query": "status of bandwidth locally",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'bandwidth'. Action: status of.",
+    "tags": [
+      "info",
+      "bandwidth"
+    ]
+  },
+  {
+    "id": "SYSTEM_241",
+    "query": "synchronize registry in background",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'registry'. Action: synchronize.",
+    "tags": [
+      "system",
+      "registry"
+    ]
+  },
+  {
+    "id": "CONTROL_242",
+    "query": "kill subsystem delta",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'subsystem delta'. Action: kill.",
+    "tags": [
+      "control",
+      "delta"
+    ]
+  },
+  {
+    "id": "CONTROL_243",
+    "query": "stop power grid",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'power grid'. Action: stop.",
+    "tags": [
+      "control",
+      "grid"
+    ]
+  },
+  {
+    "id": "SYSTEM_244",
+    "query": "patch build in background",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'build'. Action: patch.",
+    "tags": [
+      "system",
+      "build"
+    ]
+  },
+  {
+    "id": "INFO_245",
+    "query": "status of load",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'load'. Action: status of.",
+    "tags": [
+      "info",
+      "load"
+    ]
+  },
+  {
+    "id": "SYSTEM_246",
+    "query": "index identity table",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: index.",
+    "tags": [
+      "system",
+      "table"
+    ]
+  },
+  {
+    "id": "CONTROL_247",
+    "query": "reboot alpha node",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'alpha node'. Action: reboot.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "SYSTEM_248",
+    "query": "index manifest silently",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: index.",
+    "tags": [
+      "system",
+      "manifest"
+    ]
+  },
+  {
+    "id": "INFO_249",
+    "query": "health of node alpha",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node alpha'. Action: health of.",
+    "tags": [
+      "info",
+      "alpha"
+    ]
+  },
+  {
+    "id": "CONTROL_250",
+    "query": "activate uplink now",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'uplink'. Action: activate.",
+    "tags": [
+      "control",
+      "uplink"
+    ]
+  },
+  {
+    "id": "INFO_251",
+    "query": "status of memory overall",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'memory'. Action: status of.",
+    "tags": [
+      "info",
+      "memory"
+    ]
+  },
+  {
+    "id": "SYSTEM_252",
+    "query": "synchronize build",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'build'. Action: synchronize.",
+    "tags": [
+      "system",
+      "build"
+    ]
+  },
+  {
+    "id": "INFO_253",
+    "query": "check node beta overall",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node beta'. Action: check.",
+    "tags": [
+      "info",
+      "beta"
+    ]
+  },
+  {
+    "id": "INFO_254",
+    "query": "show temperature",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'temperature'. Action: show.",
+    "tags": [
+      "info",
+      "temperature"
+    ]
+  },
+  {
+    "id": "INFO_255",
+    "query": "telemetry from bandwidth",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'bandwidth'. Action: telemetry from.",
+    "tags": [
+      "info",
+      "bandwidth"
+    ]
+  },
+  {
+    "id": "SYSTEM_256",
+    "query": "verify registry",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'registry'. Action: verify.",
+    "tags": [
+      "system",
+      "registry"
+    ]
+  },
+  {
+    "id": "CONTROL_257",
+    "query": "start power grid immediately",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'power grid'. Action: start.",
+    "tags": [
+      "control",
+      "grid"
+    ]
+  },
+  {
+    "id": "CONTROL_258",
+    "query": "stop uplink at once",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'uplink'. Action: stop.",
+    "tags": [
+      "control",
+      "uplink"
+    ]
+  },
+  {
+    "id": "INFO_259",
+    "query": "telemetry from storage overall",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'storage'. Action: telemetry from.",
+    "tags": [
+      "info",
+      "storage"
+    ]
+  },
+  {
+    "id": "CONTROL_260",
+    "query": "start core reactor",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'core reactor'. Action: start.",
+    "tags": [
+      "control",
+      "reactor"
+    ]
+  },
+  {
+    "id": "INFO_261",
+    "query": "show node beta locally",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node beta'. Action: show.",
+    "tags": [
+      "info",
+      "beta"
+    ]
+  },
+  {
+    "id": "INFO_262",
+    "query": "health of memory",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'memory'. Action: health of.",
+    "tags": [
+      "info",
+      "memory"
+    ]
+  },
+  {
+    "id": "CONTROL_263",
+    "query": "stop core reactor after verification",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'core reactor'. Action: stop.",
+    "tags": [
+      "control",
+      "reactor"
+    ]
+  },
+  {
+    "id": "CONTROL_264",
+    "query": "start alpha node",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'alpha node'. Action: start.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "INFO_265",
+    "query": "how is node beta",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node beta'. Action: how is.",
+    "tags": [
+      "info",
+      "beta"
+    ]
+  },
+  {
+    "id": "SYSTEM_266",
+    "query": "update log files silently",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'log files'. Action: update.",
+    "tags": [
+      "system",
+      "files"
+    ]
+  },
+  {
+    "id": "CONTROL_267",
+    "query": "stop alpha node at once",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'alpha node'. Action: stop.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "CONTROL_268",
+    "query": "start uplink",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'uplink'. Action: start.",
+    "tags": [
+      "control",
+      "uplink"
+    ]
+  },
+  {
+    "id": "INFO_269",
+    "query": "check storage detailed",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'storage'. Action: check.",
+    "tags": [
+      "info",
+      "storage"
+    ]
+  },
+  {
+    "id": "CONTROL_270",
+    "query": "activate primary engine immediately",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'primary engine'. Action: activate.",
+    "tags": [
+      "control",
+      "engine"
+    ]
+  },
+  {
+    "id": "INFO_271",
+    "query": "show temperature",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'temperature'. Action: show.",
+    "tags": [
+      "info",
+      "temperature"
+    ]
+  },
+  {
+    "id": "SYSTEM_272",
+    "query": "audit semantic database",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: audit.",
+    "tags": [
+      "system",
+      "database"
+    ]
+  },
+  {
+    "id": "CONTROL_273",
+    "query": "shutdown uplink at once",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'uplink'. Action: shutdown.",
+    "tags": [
+      "control",
+      "uplink"
+    ]
+  },
+  {
+    "id": "INFO_274",
+    "query": "status of bandwidth",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'bandwidth'. Action: status of.",
+    "tags": [
+      "info",
+      "bandwidth"
+    ]
+  },
+  {
+    "id": "CONTROL_275",
+    "query": "shutdown subsystem delta",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'subsystem delta'. Action: shutdown.",
+    "tags": [
+      "control",
+      "delta"
+    ]
+  },
+  {
+    "id": "CONTROL_276",
+    "query": "reset power grid immediately",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'power grid'. Action: reset.",
+    "tags": [
+      "control",
+      "grid"
+    ]
+  },
+  {
+    "id": "SYSTEM_277",
+    "query": "backup semantic database in background",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: backup.",
+    "tags": [
+      "system",
+      "database"
+    ]
+  },
+  {
+    "id": "CONTROL_278",
+    "query": "activate power grid",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'power grid'. Action: activate.",
+    "tags": [
+      "control",
+      "grid"
+    ]
+  },
+  {
+    "id": "SYSTEM_279",
+    "query": "index log files",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'log files'. Action: index.",
+    "tags": [
+      "system",
+      "files"
+    ]
+  },
+  {
+    "id": "SYSTEM_280",
+    "query": "restore build",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'build'. Action: restore.",
+    "tags": [
+      "system",
+      "build"
+    ]
+  },
+  {
+    "id": "SYSTEM_281",
+    "query": "verify identity table",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: verify.",
+    "tags": [
+      "system",
+      "table"
+    ]
+  },
+  {
+    "id": "CONTROL_282",
+    "query": "shutdown alpha node immediately",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'alpha node'. Action: shutdown.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "SYSTEM_283",
+    "query": "index version forcefully",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'version'. Action: index.",
+    "tags": [
+      "system",
+      "version"
+    ]
+  },
+  {
+    "id": "INFO_284",
+    "query": "report memory all",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'memory'. Action: report.",
+    "tags": [
+      "info",
+      "memory"
+    ]
+  },
+  {
+    "id": "CONTROL_285",
+    "query": "restart uplink at once",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'uplink'. Action: restart.",
+    "tags": [
+      "control",
+      "uplink"
+    ]
+  },
+  {
+    "id": "SYSTEM_286",
+    "query": "update semantic database",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: update.",
+    "tags": [
+      "system",
+      "database"
+    ]
+  },
+  {
+    "id": "SYSTEM_287",
+    "query": "update version",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'version'. Action: update.",
+    "tags": [
+      "system",
+      "version"
+    ]
+  },
+  {
+    "id": "SYSTEM_288",
+    "query": "update manifest in background",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: update.",
+    "tags": [
+      "system",
+      "manifest"
+    ]
+  },
+  {
+    "id": "INFO_289",
+    "query": "metrics for latency",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'latency'. Action: metrics for.",
+    "tags": [
+      "info",
+      "latency"
+    ]
+  },
+  {
+    "id": "CONTROL_290",
+    "query": "stop beta node",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'beta node'. Action: stop.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "SYSTEM_291",
+    "query": "verify registry",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'registry'. Action: verify.",
+    "tags": [
+      "system",
+      "registry"
+    ]
+  },
+  {
+    "id": "CONTROL_292",
+    "query": "reboot cooling system",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'cooling system'. Action: reboot.",
+    "tags": [
+      "control",
+      "system"
+    ]
+  },
+  {
+    "id": "SYSTEM_293",
+    "query": "patch log files",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'log files'. Action: patch.",
+    "tags": [
+      "system",
+      "files"
+    ]
+  },
+  {
+    "id": "INFO_294",
+    "query": "check uptime",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'uptime'. Action: check.",
+    "tags": [
+      "info",
+      "uptime"
+    ]
+  },
+  {
+    "id": "CONTROL_295",
+    "query": "shutdown subsystem delta now",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'subsystem delta'. Action: shutdown.",
+    "tags": [
+      "control",
+      "delta"
+    ]
+  },
+  {
+    "id": "SYSTEM_296",
+    "query": "verify version forcefully",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'version'. Action: verify.",
+    "tags": [
+      "system",
+      "version"
+    ]
+  },
+  {
+    "id": "CONTROL_297",
+    "query": "start primary engine",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'primary engine'. Action: start.",
+    "tags": [
+      "control",
+      "engine"
+    ]
+  },
+  {
+    "id": "INFO_298",
+    "query": "status of bandwidth",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'bandwidth'. Action: status of.",
+    "tags": [
+      "info",
+      "bandwidth"
+    ]
+  },
+  {
+    "id": "SYSTEM_299",
+    "query": "update version",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'version'. Action: update.",
+    "tags": [
+      "system",
+      "version"
+    ]
+  },
+  {
+    "id": "INFO_300",
+    "query": "telemetry from node alpha",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node alpha'. Action: telemetry from.",
+    "tags": [
+      "info",
+      "alpha"
+    ]
+  },
+  {
+    "id": "CONTROL_301",
+    "query": "stop alpha node",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'alpha node'. Action: stop.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "SYSTEM_302",
+    "query": "restore log files",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'log files'. Action: restore.",
+    "tags": [
+      "system",
+      "files"
+    ]
+  },
+  {
+    "id": "SYSTEM_303",
+    "query": "update version",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'version'. Action: update.",
+    "tags": [
+      "system",
+      "version"
+    ]
+  },
+  {
+    "id": "CONTROL_304",
+    "query": "kill primary engine with high priority",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'primary engine'. Action: kill.",
+    "tags": [
+      "control",
+      "engine"
+    ]
+  },
+  {
+    "id": "INFO_305",
+    "query": "show system",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'system'. Action: show.",
+    "tags": [
+      "info",
+      "system"
+    ]
+  },
+  {
+    "id": "SYSTEM_306",
+    "query": "audit semantic database silently",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: audit.",
+    "tags": [
+      "system",
+      "database"
+    ]
+  },
+  {
+    "id": "SYSTEM_307",
+    "query": "verify log files forcefully",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'log files'. Action: verify.",
+    "tags": [
+      "system",
+      "files"
+    ]
+  },
+  {
+    "id": "SYSTEM_308",
+    "query": "restore identity table",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: restore.",
+    "tags": [
+      "system",
+      "table"
+    ]
+  },
+  {
+    "id": "INFO_309",
+    "query": "status of uptime all",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'uptime'. Action: status of.",
+    "tags": [
+      "info",
+      "uptime"
+    ]
+  },
+  {
+    "id": "INFO_310",
+    "query": "report load",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'load'. Action: report.",
+    "tags": [
+      "info",
+      "load"
+    ]
+  },
+  {
+    "id": "INFO_311",
+    "query": "check node alpha detailed",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node alpha'. Action: check.",
+    "tags": [
+      "info",
+      "alpha"
+    ]
+  },
+  {
+    "id": "CONTROL_312",
+    "query": "initialize cooling system",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'cooling system'. Action: initialize.",
+    "tags": [
+      "control",
+      "system"
+    ]
+  },
+  {
+    "id": "CONTROL_313",
+    "query": "restart cooling system with high priority",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'cooling system'. Action: restart.",
+    "tags": [
+      "control",
+      "system"
+    ]
+  },
+  {
+    "id": "SYSTEM_314",
+    "query": "backup identity table",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: backup.",
+    "tags": [
+      "system",
+      "table"
+    ]
+  },
+  {
+    "id": "CONTROL_315",
+    "query": "restart core reactor",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'core reactor'. Action: restart.",
+    "tags": [
+      "control",
+      "reactor"
+    ]
+  },
+  {
+    "id": "SYSTEM_316",
+    "query": "verify manifest",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: verify.",
+    "tags": [
+      "system",
+      "manifest"
+    ]
+  },
+  {
+    "id": "CONTROL_317",
+    "query": "start subsystem delta immediately",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'subsystem delta'. Action: start.",
+    "tags": [
+      "control",
+      "delta"
+    ]
+  },
+  {
+    "id": "SYSTEM_318",
+    "query": "restore identity table",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: restore.",
+    "tags": [
+      "system",
+      "table"
+    ]
+  },
+  {
+    "id": "CONTROL_319",
+    "query": "kill subsystem delta at once",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'subsystem delta'. Action: kill.",
+    "tags": [
+      "control",
+      "delta"
+    ]
+  },
+  {
+    "id": "CONTROL_320",
+    "query": "reset alpha node at once",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'alpha node'. Action: reset.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "CONTROL_321",
+    "query": "start beta node after verification",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'beta node'. Action: start.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "SYSTEM_322",
+    "query": "backup registry silently",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'registry'. Action: backup.",
+    "tags": [
+      "system",
+      "registry"
+    ]
+  },
+  {
+    "id": "INFO_323",
+    "query": "show latency",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'latency'. Action: show.",
+    "tags": [
+      "info",
+      "latency"
+    ]
+  },
+  {
+    "id": "CONTROL_324",
+    "query": "kill power grid with high priority",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'power grid'. Action: kill.",
+    "tags": [
+      "control",
+      "grid"
+    ]
+  },
+  {
+    "id": "SYSTEM_325",
+    "query": "audit identity table silently",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: audit.",
+    "tags": [
+      "system",
+      "table"
+    ]
+  },
+  {
+    "id": "SYSTEM_326",
+    "query": "index identity table",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: index.",
+    "tags": [
+      "system",
+      "table"
+    ]
+  },
+  {
+    "id": "INFO_327",
+    "query": "status of node alpha",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node alpha'. Action: status of.",
+    "tags": [
+      "info",
+      "alpha"
+    ]
+  },
+  {
+    "id": "INFO_328",
+    "query": "report temperature",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'temperature'. Action: report.",
+    "tags": [
+      "info",
+      "temperature"
+    ]
+  },
+  {
+    "id": "INFO_329",
+    "query": "status of storage summary",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'storage'. Action: status of.",
+    "tags": [
+      "info",
+      "storage"
+    ]
+  },
+  {
+    "id": "CONTROL_330",
+    "query": "reset alpha node",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'alpha node'. Action: reset.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "INFO_331",
+    "query": "show load summary",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'load'. Action: show.",
+    "tags": [
+      "info",
+      "load"
+    ]
+  },
+  {
+    "id": "SYSTEM_332",
+    "query": "backup version in background",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'version'. Action: backup.",
+    "tags": [
+      "system",
+      "version"
+    ]
+  },
+  {
+    "id": "INFO_333",
+    "query": "how is bandwidth detailed",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'bandwidth'. Action: how is.",
+    "tags": [
+      "info",
+      "bandwidth"
+    ]
+  },
+  {
+    "id": "SYSTEM_334",
+    "query": "verify manifest",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: verify.",
+    "tags": [
+      "system",
+      "manifest"
+    ]
+  },
+  {
+    "id": "INFO_335",
+    "query": "health of node beta",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node beta'. Action: health of.",
+    "tags": [
+      "info",
+      "beta"
+    ]
+  },
+  {
+    "id": "CONTROL_336",
+    "query": "reboot power grid at once",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'power grid'. Action: reboot.",
+    "tags": [
+      "control",
+      "grid"
+    ]
+  },
+  {
+    "id": "CONTROL_337",
+    "query": "restart uplink at once",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'uplink'. Action: restart.",
+    "tags": [
+      "control",
+      "uplink"
+    ]
+  },
+  {
+    "id": "SYSTEM_338",
+    "query": "update registry",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'registry'. Action: update.",
+    "tags": [
+      "system",
+      "registry"
+    ]
+  },
+  {
+    "id": "CONTROL_339",
+    "query": "shutdown alpha node with high priority",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'alpha node'. Action: shutdown.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "SYSTEM_340",
+    "query": "backup manifest",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: backup.",
+    "tags": [
+      "system",
+      "manifest"
+    ]
+  },
+  {
+    "id": "INFO_341",
+    "query": "status of bandwidth",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'bandwidth'. Action: status of.",
+    "tags": [
+      "info",
+      "bandwidth"
+    ]
+  },
+  {
+    "id": "CONTROL_342",
+    "query": "activate alpha node immediately",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'alpha node'. Action: activate.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "INFO_343",
+    "query": "how is storage locally",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'storage'. Action: how is.",
+    "tags": [
+      "info",
+      "storage"
+    ]
+  },
+  {
+    "id": "CONTROL_344",
+    "query": "shutdown cooling system immediately",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'cooling system'. Action: shutdown.",
+    "tags": [
+      "control",
+      "system"
+    ]
+  },
+  {
+    "id": "INFO_345",
+    "query": "metrics for storage overall",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'storage'. Action: metrics for.",
+    "tags": [
+      "info",
+      "storage"
+    ]
+  },
+  {
+    "id": "CONTROL_346",
+    "query": "reboot alpha node immediately",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'alpha node'. Action: reboot.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "SYSTEM_347",
+    "query": "backup semantic database",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: backup.",
+    "tags": [
+      "system",
+      "database"
+    ]
+  },
+  {
+    "id": "SYSTEM_348",
+    "query": "patch registry in background",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'registry'. Action: patch.",
+    "tags": [
+      "system",
+      "registry"
+    ]
+  },
+  {
+    "id": "CONTROL_349",
+    "query": "reset cooling system",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'cooling system'. Action: reset.",
+    "tags": [
+      "control",
+      "system"
+    ]
+  },
+  {
+    "id": "SYSTEM_350",
+    "query": "verify version",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'version'. Action: verify.",
+    "tags": [
+      "system",
+      "version"
+    ]
+  },
+  {
+    "id": "CONTROL_351",
+    "query": "reset uplink immediately",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'uplink'. Action: reset.",
+    "tags": [
+      "control",
+      "uplink"
+    ]
+  },
+  {
+    "id": "SYSTEM_352",
+    "query": "patch registry",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'registry'. Action: patch.",
+    "tags": [
+      "system",
+      "registry"
+    ]
+  },
+  {
+    "id": "INFO_353",
+    "query": "check load",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'load'. Action: check.",
+    "tags": [
+      "info",
+      "load"
+    ]
+  },
+  {
+    "id": "SYSTEM_354",
+    "query": "audit semantic database",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: audit.",
+    "tags": [
+      "system",
+      "database"
+    ]
+  },
+  {
+    "id": "CONTROL_355",
+    "query": "restart core reactor safely",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'core reactor'. Action: restart.",
+    "tags": [
+      "control",
+      "reactor"
+    ]
+  },
+  {
+    "id": "INFO_356",
+    "query": "report node alpha",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node alpha'. Action: report.",
+    "tags": [
+      "info",
+      "alpha"
+    ]
+  },
+  {
+    "id": "INFO_357",
+    "query": "status of uptime summary",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'uptime'. Action: status of.",
+    "tags": [
+      "info",
+      "uptime"
+    ]
+  },
+  {
+    "id": "CONTROL_358",
+    "query": "activate beta node",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'beta node'. Action: activate.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "CONTROL_359",
+    "query": "kill power grid after verification",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'power grid'. Action: kill.",
+    "tags": [
+      "control",
+      "grid"
+    ]
+  },
+  {
+    "id": "SYSTEM_360",
+    "query": "restore build",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'build'. Action: restore.",
+    "tags": [
+      "system",
+      "build"
+    ]
+  },
+  {
+    "id": "CONTROL_361",
+    "query": "start cooling system",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'cooling system'. Action: start.",
+    "tags": [
+      "control",
+      "system"
+    ]
+  },
+  {
+    "id": "CONTROL_362",
+    "query": "initialize core reactor",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'core reactor'. Action: initialize.",
+    "tags": [
+      "control",
+      "reactor"
+    ]
+  },
+  {
+    "id": "INFO_363",
+    "query": "health of temperature detailed",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'temperature'. Action: health of.",
+    "tags": [
+      "info",
+      "temperature"
+    ]
+  },
+  {
+    "id": "SYSTEM_364",
+    "query": "verify identity table forcefully",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: verify.",
+    "tags": [
+      "system",
+      "table"
+    ]
+  },
+  {
+    "id": "SYSTEM_365",
+    "query": "patch manifest",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: patch.",
+    "tags": [
+      "system",
+      "manifest"
+    ]
+  },
+  {
+    "id": "CONTROL_366",
+    "query": "kill cooling system",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'cooling system'. Action: kill.",
+    "tags": [
+      "control",
+      "system"
+    ]
+  },
+  {
+    "id": "SYSTEM_367",
+    "query": "verify identity table",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: verify.",
+    "tags": [
+      "system",
+      "table"
+    ]
+  },
+  {
+    "id": "CONTROL_368",
+    "query": "reboot alpha node with high priority",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'alpha node'. Action: reboot.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "INFO_369",
+    "query": "how is memory",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'memory'. Action: how is.",
+    "tags": [
+      "info",
+      "memory"
+    ]
+  },
+  {
+    "id": "INFO_370",
+    "query": "show temperature",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'temperature'. Action: show.",
+    "tags": [
+      "info",
+      "temperature"
+    ]
+  },
+  {
+    "id": "INFO_371",
+    "query": "metrics for node alpha overall",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node alpha'. Action: metrics for.",
+    "tags": [
+      "info",
+      "alpha"
+    ]
+  },
+  {
+    "id": "INFO_372",
+    "query": "how is bandwidth detailed",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'bandwidth'. Action: how is.",
+    "tags": [
+      "info",
+      "bandwidth"
+    ]
+  },
+  {
+    "id": "CONTROL_373",
+    "query": "shutdown beta node",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'beta node'. Action: shutdown.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "INFO_374",
+    "query": "health of system summary",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'system'. Action: health of.",
+    "tags": [
+      "info",
+      "system"
+    ]
+  },
+  {
+    "id": "INFO_375",
+    "query": "metrics for system overall",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'system'. Action: metrics for.",
+    "tags": [
+      "info",
+      "system"
+    ]
+  },
+  {
+    "id": "CONTROL_376",
+    "query": "kill power grid",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'power grid'. Action: kill.",
+    "tags": [
+      "control",
+      "grid"
+    ]
+  },
+  {
+    "id": "CONTROL_377",
+    "query": "start alpha node after verification",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'alpha node'. Action: start.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "CONTROL_378",
+    "query": "shutdown subsystem delta",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'subsystem delta'. Action: shutdown.",
+    "tags": [
+      "control",
+      "delta"
+    ]
+  },
+  {
+    "id": "CONTROL_379",
+    "query": "initialize uplink",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'uplink'. Action: initialize.",
+    "tags": [
+      "control",
+      "uplink"
+    ]
+  },
+  {
+    "id": "SYSTEM_380",
+    "query": "synchronize registry in background",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'registry'. Action: synchronize.",
+    "tags": [
+      "system",
+      "registry"
+    ]
+  },
+  {
+    "id": "INFO_381",
+    "query": "show node beta",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node beta'. Action: show.",
+    "tags": [
+      "info",
+      "beta"
+    ]
+  },
+  {
+    "id": "INFO_382",
+    "query": "status of uptime",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'uptime'. Action: status of.",
+    "tags": [
+      "info",
+      "uptime"
+    ]
+  },
+  {
+    "id": "SYSTEM_383",
+    "query": "index manifest forcefully",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: index.",
+    "tags": [
+      "system",
+      "manifest"
+    ]
+  },
+  {
+    "id": "SYSTEM_384",
+    "query": "index identity table",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: index.",
+    "tags": [
+      "system",
+      "table"
+    ]
+  },
+  {
+    "id": "SYSTEM_385",
+    "query": "restore registry",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'registry'. Action: restore.",
+    "tags": [
+      "system",
+      "registry"
+    ]
+  },
+  {
+    "id": "INFO_386",
+    "query": "check storage summary",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'storage'. Action: check.",
+    "tags": [
+      "info",
+      "storage"
+    ]
+  },
+  {
+    "id": "SYSTEM_387",
+    "query": "patch version",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'version'. Action: patch.",
+    "tags": [
+      "system",
+      "version"
+    ]
+  },
+  {
+    "id": "INFO_388",
+    "query": "telemetry from node alpha detailed",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node alpha'. Action: telemetry from.",
+    "tags": [
+      "info",
+      "alpha"
+    ]
+  },
+  {
+    "id": "CONTROL_389",
+    "query": "restart primary engine",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'primary engine'. Action: restart.",
+    "tags": [
+      "control",
+      "engine"
+    ]
+  },
+  {
+    "id": "INFO_390",
+    "query": "report latency",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'latency'. Action: report.",
+    "tags": [
+      "info",
+      "latency"
+    ]
+  },
+  {
+    "id": "SYSTEM_391",
+    "query": "index registry silently",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'registry'. Action: index.",
+    "tags": [
+      "system",
+      "registry"
+    ]
+  },
+  {
+    "id": "SYSTEM_392",
+    "query": "verify build",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'build'. Action: verify.",
+    "tags": [
+      "system",
+      "build"
+    ]
+  },
+  {
+    "id": "INFO_393",
+    "query": "status of node alpha detailed",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node alpha'. Action: status of.",
+    "tags": [
+      "info",
+      "alpha"
+    ]
+  },
+  {
+    "id": "INFO_394",
+    "query": "how is uptime",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'uptime'. Action: how is.",
+    "tags": [
+      "info",
+      "uptime"
+    ]
+  },
+  {
+    "id": "INFO_395",
+    "query": "show temperature locally",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'temperature'. Action: show.",
+    "tags": [
+      "info",
+      "temperature"
+    ]
+  },
+  {
+    "id": "CONTROL_396",
+    "query": "activate power grid immediately",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'power grid'. Action: activate.",
+    "tags": [
+      "control",
+      "grid"
+    ]
+  },
+  {
+    "id": "INFO_397",
+    "query": "status of system overall",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'system'. Action: status of.",
+    "tags": [
+      "info",
+      "system"
+    ]
+  },
+  {
+    "id": "INFO_398",
+    "query": "health of temperature",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'temperature'. Action: health of.",
+    "tags": [
+      "info",
+      "temperature"
+    ]
+  },
+  {
+    "id": "INFO_399",
+    "query": "status of uptime locally",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'uptime'. Action: status of.",
+    "tags": [
+      "info",
+      "uptime"
+    ]
+  },
+  {
+    "id": "CONTROL_400",
+    "query": "stop primary engine",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'primary engine'. Action: stop.",
+    "tags": [
+      "control",
+      "engine"
+    ]
+  },
+  {
+    "id": "INFO_401",
+    "query": "show system overall",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'system'. Action: show.",
+    "tags": [
+      "info",
+      "system"
+    ]
+  },
+  {
+    "id": "CONTROL_402",
+    "query": "stop cooling system",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'cooling system'. Action: stop.",
+    "tags": [
+      "control",
+      "system"
+    ]
+  },
+  {
+    "id": "CONTROL_403",
+    "query": "shutdown alpha node immediately",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'alpha node'. Action: shutdown.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "CONTROL_404",
+    "query": "initialize cooling system",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'cooling system'. Action: initialize.",
+    "tags": [
+      "control",
+      "system"
+    ]
+  },
+  {
+    "id": "INFO_405",
+    "query": "show node alpha",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node alpha'. Action: show.",
+    "tags": [
+      "info",
+      "alpha"
+    ]
+  },
+  {
+    "id": "SYSTEM_406",
+    "query": "backup build",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'build'. Action: backup.",
+    "tags": [
+      "system",
+      "build"
+    ]
+  },
+  {
+    "id": "INFO_407",
+    "query": "report bandwidth",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'bandwidth'. Action: report.",
+    "tags": [
+      "info",
+      "bandwidth"
+    ]
+  },
+  {
+    "id": "SYSTEM_408",
+    "query": "index manifest",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: index.",
+    "tags": [
+      "system",
+      "manifest"
+    ]
+  },
+  {
+    "id": "CONTROL_409",
+    "query": "reboot cooling system safely",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'cooling system'. Action: reboot.",
+    "tags": [
+      "control",
+      "system"
+    ]
+  },
+  {
+    "id": "INFO_410",
+    "query": "health of temperature summary",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'temperature'. Action: health of.",
+    "tags": [
+      "info",
+      "temperature"
+    ]
+  },
+  {
+    "id": "INFO_411",
+    "query": "metrics for node beta locally",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node beta'. Action: metrics for.",
+    "tags": [
+      "info",
+      "beta"
+    ]
+  },
+  {
+    "id": "CONTROL_412",
+    "query": "initialize primary engine",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'primary engine'. Action: initialize.",
+    "tags": [
+      "control",
+      "engine"
+    ]
+  },
+  {
+    "id": "SYSTEM_413",
+    "query": "patch manifest",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: patch.",
+    "tags": [
+      "system",
+      "manifest"
+    ]
+  },
+  {
+    "id": "CONTROL_414",
+    "query": "kill subsystem delta",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'subsystem delta'. Action: kill.",
+    "tags": [
+      "control",
+      "delta"
+    ]
+  },
+  {
+    "id": "CONTROL_415",
+    "query": "reboot beta node safely",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'beta node'. Action: reboot.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "SYSTEM_416",
+    "query": "patch registry",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'registry'. Action: patch.",
+    "tags": [
+      "system",
+      "registry"
+    ]
+  },
+  {
+    "id": "CONTROL_417",
+    "query": "reboot primary engine",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'primary engine'. Action: reboot.",
+    "tags": [
+      "control",
+      "engine"
+    ]
+  },
+  {
+    "id": "CONTROL_418",
+    "query": "kill cooling system now",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'cooling system'. Action: kill.",
+    "tags": [
+      "control",
+      "system"
+    ]
+  },
+  {
+    "id": "CONTROL_419",
+    "query": "initialize uplink safely",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'uplink'. Action: initialize.",
+    "tags": [
+      "control",
+      "uplink"
+    ]
+  },
+  {
+    "id": "INFO_420",
+    "query": "how is load overall",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'load'. Action: how is.",
+    "tags": [
+      "info",
+      "load"
+    ]
+  },
+  {
+    "id": "INFO_421",
+    "query": "telemetry from latency",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'latency'. Action: telemetry from.",
+    "tags": [
+      "info",
+      "latency"
+    ]
+  },
+  {
+    "id": "INFO_422",
+    "query": "check uptime locally",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'uptime'. Action: check.",
+    "tags": [
+      "info",
+      "uptime"
+    ]
+  },
+  {
+    "id": "INFO_423",
+    "query": "how is latency overall",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'latency'. Action: how is.",
+    "tags": [
+      "info",
+      "latency"
+    ]
+  },
+  {
+    "id": "INFO_424",
+    "query": "report load",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'load'. Action: report.",
+    "tags": [
+      "info",
+      "load"
+    ]
+  },
+  {
+    "id": "SYSTEM_425",
+    "query": "restore log files",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'log files'. Action: restore.",
+    "tags": [
+      "system",
+      "files"
+    ]
+  },
+  {
+    "id": "SYSTEM_426",
+    "query": "synchronize build silently",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'build'. Action: synchronize.",
+    "tags": [
+      "system",
+      "build"
+    ]
+  },
+  {
+    "id": "CONTROL_427",
+    "query": "initialize subsystem delta with high priority",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'subsystem delta'. Action: initialize.",
+    "tags": [
+      "control",
+      "delta"
+    ]
+  },
+  {
+    "id": "SYSTEM_428",
+    "query": "synchronize version forcefully",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'version'. Action: synchronize.",
+    "tags": [
+      "system",
+      "version"
+    ]
+  },
+  {
+    "id": "SYSTEM_429",
+    "query": "restore identity table",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: restore.",
+    "tags": [
+      "system",
+      "table"
+    ]
+  },
+  {
+    "id": "CONTROL_430",
+    "query": "start power grid now",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'power grid'. Action: start.",
+    "tags": [
+      "control",
+      "grid"
+    ]
+  },
+  {
+    "id": "SYSTEM_431",
+    "query": "synchronize log files silently",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'log files'. Action: synchronize.",
+    "tags": [
+      "system",
+      "files"
+    ]
+  },
+  {
+    "id": "INFO_432",
+    "query": "check temperature",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'temperature'. Action: check.",
+    "tags": [
+      "info",
+      "temperature"
+    ]
+  },
+  {
+    "id": "INFO_433",
+    "query": "health of node beta",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node beta'. Action: health of.",
+    "tags": [
+      "info",
+      "beta"
+    ]
+  },
+  {
+    "id": "CONTROL_434",
+    "query": "shutdown uplink",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'uplink'. Action: shutdown.",
+    "tags": [
+      "control",
+      "uplink"
+    ]
+  },
+  {
+    "id": "CONTROL_435",
+    "query": "reset beta node at once",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'beta node'. Action: reset.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "INFO_436",
+    "query": "status of load all",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'load'. Action: status of.",
+    "tags": [
+      "info",
+      "load"
+    ]
+  },
+  {
+    "id": "CONTROL_437",
+    "query": "start beta node",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'beta node'. Action: start.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "INFO_438",
+    "query": "telemetry from load",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'load'. Action: telemetry from.",
+    "tags": [
+      "info",
+      "load"
+    ]
+  },
+  {
+    "id": "SYSTEM_439",
+    "query": "restore semantic database",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: restore.",
+    "tags": [
+      "system",
+      "database"
+    ]
+  },
+  {
+    "id": "INFO_440",
+    "query": "health of storage overall",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'storage'. Action: health of.",
+    "tags": [
+      "info",
+      "storage"
+    ]
+  },
+  {
+    "id": "CONTROL_441",
+    "query": "stop power grid",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'power grid'. Action: stop.",
+    "tags": [
+      "control",
+      "grid"
+    ]
+  },
+  {
+    "id": "SYSTEM_442",
+    "query": "synchronize identity table in background",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: synchronize.",
+    "tags": [
+      "system",
+      "table"
+    ]
+  },
+  {
+    "id": "SYSTEM_443",
+    "query": "backup manifest forcefully",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: backup.",
+    "tags": [
+      "system",
+      "manifest"
+    ]
+  },
+  {
+    "id": "SYSTEM_444",
+    "query": "backup registry",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'registry'. Action: backup.",
+    "tags": [
+      "system",
+      "registry"
+    ]
+  },
+  {
+    "id": "INFO_445",
+    "query": "health of node beta",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node beta'. Action: health of.",
+    "tags": [
+      "info",
+      "beta"
+    ]
+  },
+  {
+    "id": "SYSTEM_446",
+    "query": "index registry",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'registry'. Action: index.",
+    "tags": [
+      "system",
+      "registry"
+    ]
+  },
+  {
+    "id": "INFO_447",
+    "query": "report temperature",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'temperature'. Action: report.",
+    "tags": [
+      "info",
+      "temperature"
+    ]
+  },
+  {
+    "id": "INFO_448",
+    "query": "telemetry from storage",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'storage'. Action: telemetry from.",
+    "tags": [
+      "info",
+      "storage"
+    ]
+  },
+  {
+    "id": "INFO_449",
+    "query": "health of node alpha",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node alpha'. Action: health of.",
+    "tags": [
+      "info",
+      "alpha"
+    ]
+  },
+  {
+    "id": "SYSTEM_450",
+    "query": "audit registry in background",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'registry'. Action: audit.",
+    "tags": [
+      "system",
+      "registry"
+    ]
+  },
+  {
+    "id": "INFO_451",
+    "query": "metrics for storage all",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'storage'. Action: metrics for.",
+    "tags": [
+      "info",
+      "storage"
+    ]
+  },
+  {
+    "id": "INFO_452",
+    "query": "telemetry from node beta overall",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node beta'. Action: telemetry from.",
+    "tags": [
+      "info",
+      "beta"
+    ]
+  },
+  {
+    "id": "CONTROL_453",
+    "query": "restart beta node",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'beta node'. Action: restart.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "SYSTEM_454",
+    "query": "audit identity table",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: audit.",
+    "tags": [
+      "system",
+      "table"
+    ]
+  },
+  {
+    "id": "SYSTEM_455",
+    "query": "patch identity table forcefully",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: patch.",
+    "tags": [
+      "system",
+      "table"
+    ]
+  },
+  {
+    "id": "CONTROL_456",
+    "query": "kill core reactor",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'core reactor'. Action: kill.",
+    "tags": [
+      "control",
+      "reactor"
+    ]
+  },
+  {
+    "id": "CONTROL_457",
+    "query": "start alpha node",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'alpha node'. Action: start.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "SYSTEM_458",
+    "query": "backup semantic database",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: backup.",
+    "tags": [
+      "system",
+      "database"
+    ]
+  },
+  {
+    "id": "CONTROL_459",
+    "query": "restart uplink immediately",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'uplink'. Action: restart.",
+    "tags": [
+      "control",
+      "uplink"
+    ]
+  },
+  {
+    "id": "INFO_460",
+    "query": "telemetry from temperature overall",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'temperature'. Action: telemetry from.",
+    "tags": [
+      "info",
+      "temperature"
+    ]
+  },
+  {
+    "id": "CONTROL_461",
+    "query": "shutdown alpha node",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'alpha node'. Action: shutdown.",
+    "tags": [
+      "control",
+      "node"
+    ]
+  },
+  {
+    "id": "INFO_462",
+    "query": "how is node beta",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'node beta'. Action: how is.",
+    "tags": [
+      "info",
+      "beta"
+    ]
+  },
+  {
+    "id": "SYSTEM_463",
+    "query": "backup identity table",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: backup.",
+    "tags": [
+      "system",
+      "table"
+    ]
+  },
+  {
+    "id": "CONTROL_464",
+    "query": "stop core reactor immediately",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'core reactor'. Action: stop.",
+    "tags": [
+      "control",
+      "reactor"
+    ]
+  },
+  {
+    "id": "SYSTEM_465",
+    "query": "index build",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'build'. Action: index.",
+    "tags": [
+      "system",
+      "build"
+    ]
+  },
+  {
+    "id": "SYSTEM_466",
+    "query": "audit log files",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'log files'. Action: audit.",
+    "tags": [
+      "system",
+      "files"
+    ]
+  },
+  {
+    "id": "SYSTEM_467",
+    "query": "update manifest silently",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: update.",
+    "tags": [
+      "system",
+      "manifest"
+    ]
+  },
+  {
+    "id": "CONTROL_468",
+    "query": "initialize core reactor safely",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'core reactor'. Action: initialize.",
+    "tags": [
+      "control",
+      "reactor"
+    ]
+  },
+  {
+    "id": "SYSTEM_469",
+    "query": "synchronize semantic database silently",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: synchronize.",
+    "tags": [
+      "system",
+      "database"
+    ]
+  },
+  {
+    "id": "CONTROL_470",
+    "query": "activate uplink",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'uplink'. Action: activate.",
+    "tags": [
+      "control",
+      "uplink"
+    ]
+  },
+  {
+    "id": "SYSTEM_471",
+    "query": "verify manifest silently",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: verify.",
+    "tags": [
+      "system",
+      "manifest"
+    ]
+  },
+  {
+    "id": "SYSTEM_472",
+    "query": "synchronize registry",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'registry'. Action: synchronize.",
+    "tags": [
+      "system",
+      "registry"
+    ]
+  },
+  {
+    "id": "INFO_473",
+    "query": "check bandwidth",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'bandwidth'. Action: check.",
+    "tags": [
+      "info",
+      "bandwidth"
+    ]
+  },
+  {
+    "id": "SYSTEM_474",
+    "query": "backup manifest forcefully",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: backup.",
+    "tags": [
+      "system",
+      "manifest"
+    ]
+  },
+  {
+    "id": "CONTROL_475",
+    "query": "kill cooling system",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'cooling system'. Action: kill.",
+    "tags": [
+      "control",
+      "system"
+    ]
+  },
+  {
+    "id": "INFO_476",
+    "query": "status of bandwidth all",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'bandwidth'. Action: status of.",
+    "tags": [
+      "info",
+      "bandwidth"
+    ]
+  },
+  {
+    "id": "CONTROL_477",
+    "query": "initialize cooling system",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'cooling system'. Action: initialize.",
+    "tags": [
+      "control",
+      "system"
+    ]
+  },
+  {
+    "id": "INFO_478",
+    "query": "check system",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'system'. Action: check.",
+    "tags": [
+      "info",
+      "system"
+    ]
+  },
+  {
+    "id": "INFO_479",
+    "query": "metrics for latency all",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'latency'. Action: metrics for.",
+    "tags": [
+      "info",
+      "latency"
+    ]
+  },
+  {
+    "id": "INFO_480",
+    "query": "telemetry from uptime",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'uptime'. Action: telemetry from.",
+    "tags": [
+      "info",
+      "uptime"
+    ]
+  },
+  {
+    "id": "SYSTEM_481",
+    "query": "index build",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'build'. Action: index.",
+    "tags": [
+      "system",
+      "build"
+    ]
+  },
+  {
+    "id": "CONTROL_482",
+    "query": "reboot power grid",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'power grid'. Action: reboot.",
+    "tags": [
+      "control",
+      "grid"
+    ]
+  },
+  {
+    "id": "SYSTEM_483",
+    "query": "backup semantic database",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: backup.",
+    "tags": [
+      "system",
+      "database"
+    ]
+  },
+  {
+    "id": "SYSTEM_484",
+    "query": "restore version",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'version'. Action: restore.",
+    "tags": [
+      "system",
+      "version"
+    ]
+  },
+  {
+    "id": "SYSTEM_485",
+    "query": "index identity table",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: index.",
+    "tags": [
+      "system",
+      "table"
+    ]
+  },
+  {
+    "id": "INFO_486",
+    "query": "health of memory",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'memory'. Action: health of.",
+    "tags": [
+      "info",
+      "memory"
+    ]
+  },
+  {
+    "id": "SYSTEM_487",
+    "query": "restore log files",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'log files'. Action: restore.",
+    "tags": [
+      "system",
+      "files"
+    ]
+  },
+  {
+    "id": "SYSTEM_488",
+    "query": "restore registry silently",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'registry'. Action: restore.",
+    "tags": [
+      "system",
+      "registry"
+    ]
+  },
+  {
+    "id": "CONTROL_489",
+    "query": "start cooling system",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'cooling system'. Action: start.",
+    "tags": [
+      "control",
+      "system"
+    ]
+  },
+  {
+    "id": "INFO_490",
+    "query": "metrics for storage",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'storage'. Action: metrics for.",
+    "tags": [
+      "info",
+      "storage"
+    ]
+  },
+  {
+    "id": "CONTROL_491",
+    "query": "stop subsystem delta now",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'subsystem delta'. Action: stop.",
+    "tags": [
+      "control",
+      "delta"
+    ]
+  },
+  {
+    "id": "INFO_492",
+    "query": "telemetry from system detailed",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'system'. Action: telemetry from.",
+    "tags": [
+      "info",
+      "system"
+    ]
+  },
+  {
+    "id": "INFO_493",
+    "query": "telemetry from bandwidth",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'bandwidth'. Action: telemetry from.",
+    "tags": [
+      "info",
+      "bandwidth"
+    ]
+  },
+  {
+    "id": "SYSTEM_494",
+    "query": "audit semantic database silently",
+    "domain": "SYSTEM",
+    "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: audit.",
+    "tags": [
+      "system",
+      "database"
+    ]
+  },
+  {
+    "id": "CONTROL_495",
+    "query": "kill uplink with high priority",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'uplink'. Action: kill.",
+    "tags": [
+      "control",
+      "uplink"
+    ]
+  },
+  {
+    "id": "INFO_496",
+    "query": "how is uptime locally",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'uptime'. Action: how is.",
+    "tags": [
+      "info",
+      "uptime"
+    ]
+  },
+  {
+    "id": "CONTROL_497",
+    "query": "start power grid immediately",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'power grid'. Action: start.",
+    "tags": [
+      "control",
+      "grid"
+    ]
+  },
+  {
+    "id": "CONTROL_498",
+    "query": "restart uplink",
+    "domain": "CONTROL",
+    "response": "Resolution: Accessing CONTROL for 'uplink'. Action: restart.",
+    "tags": [
+      "control",
+      "uplink"
+    ]
+  },
+  {
+    "id": "INFO_499",
+    "query": "health of storage locally",
+    "domain": "INFO",
+    "response": "Resolution: Accessing INFO for 'storage'. Action: health of.",
+    "tags": [
+      "info",
+      "storage"
+    ]
+  }
+]

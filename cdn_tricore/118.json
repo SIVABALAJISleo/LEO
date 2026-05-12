@@ -1,0 +1,11 @@
+{
+  "id": 118,
+  "domain": "CONTROL",
+  "signature": [
+    "engine",
+    "primary",
+    "restart",
+    "safely"
+  ],
+  "response": "Resolution: Accessing CONTROL for 'primary engine'. Action: restart."
+}

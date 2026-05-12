@@ -1,0 +1,10 @@
+{
+    "intent_id": "cf6cd5a967b64e160084f367d7c46075a38bbe8a7dfcd9182dff95fc4e54966f",
+    "data": {
+        "output": "System Nominal.",
+        "uptime": "99.99%"
+    },
+    "wasm_ref": "status_check_v1",
+    "type": "MIP_MAP",
+    "version": "1.0.0_immutable"
+}

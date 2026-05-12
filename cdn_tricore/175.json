@@ -1,0 +1,9 @@
+{
+  "id": 175,
+  "domain": "SYSTEM",
+  "signature": [
+    "manifest",
+    "verify"
+  ],
+  "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: verify."
+}

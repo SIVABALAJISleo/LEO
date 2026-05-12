@@ -1,0 +1,16 @@
+{
+  "id": "CONTROL_376",
+  "signature": [
+    "grid",
+    "kill",
+    "power"
+  ],
+  "domain": "CONTROL",
+  "context": null,
+  "response": "Resolution: Accessing CONTROL for 'power grid'. Action: kill.",
+  "tags": [
+    "control",
+    "grid"
+  ],
+  "sh": "0xefd1937703e3b0b1"
+}

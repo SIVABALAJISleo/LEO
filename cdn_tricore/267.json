@@ -1,0 +1,11 @@
+{
+  "id": 267,
+  "domain": "CONTROL",
+  "signature": [
+    "activate",
+    "engine",
+    "immediately",
+    "primary"
+  ],
+  "response": "Resolution: Accessing CONTROL for 'primary engine'. Action: activate."
+}

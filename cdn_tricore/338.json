@@ -1,0 +1,11 @@
+{
+  "id": 338,
+  "domain": "SYSTEM",
+  "signature": [
+    "audit",
+    "background",
+    "in",
+    "version"
+  ],
+  "response": "Resolution: Accessing SYSTEM for 'version'. Action: audit."
+}

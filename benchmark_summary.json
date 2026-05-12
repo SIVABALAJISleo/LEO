@@ -1,0 +1,26 @@
+{
+    "new": {
+        "avg": 4.841732978820801,
+        "min": 2.3436546325683594,
+        "max": 25.88057518005371
+    },
+    "identical": {
+        "avg": 2.281928062438965,
+        "min": 1.1749267578125,
+        "max": 4.904985427856445
+    },
+    "paraphrased": {
+        "avg": 2.3852157592773438,
+        "min": 1.291036605834961,
+        "max": 3.931283950805664
+    },
+    "overall": {
+        "total_requests": 151,
+        "model_calls": 0,
+        "avoidance_rate": 1.0,
+        "prediction_hit_rate": 0.0,
+        "failure_recovery_rate": 0.0,
+        "avg_latency_ms": 1.92,
+        "reuse_rate": 1.0
+    }
+}

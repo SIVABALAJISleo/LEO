@@ -1,0 +1,26 @@
+﻿project_hyper/
+├── api/
+│   ├── main.py             # FastAPI entry
+│   ├── routes.py           # Generation endpoints
+│   └── telemetry.py        # Metrics tracking
+├── core/
+│   ├── hardness.py         # Step 0: Complexity Analysis
+│   ├── router.py           # Step 1: Brain/Routing Logic
+│   ├── cache.py            # Step 2: Semantic Cache
+│   ├── rag.py              # Step 3: Retrieval Pipeline
+│   ├── models/
+│   │   ├── tiny.py         # Step 4: CPU-Quantized Model
+│   │   ├── medium.py       # Step 5: Optimized Reasoning
+│   │   └── heavy.py        # Step 6: Async Heavy Processor
+│   └── orchestrator.py      # Master Cascade Controller
+├── services/
+│   ├── vector_store.py      # FAISS/Chroma wrapper
+│   ├── worker.py            # Celery/Redis background tasks
+│   └── database.py          # PostgreSQL persistence
+├── models/
+│   └── schemas.py          # Pydantic response contracts
+├── utils/
+│   ├── compression.py      # Entropy/Compressibility logic
+│   └── batching.py         # 50ms Request Batcher
+└── config.py               # Thresholds and System Config
+

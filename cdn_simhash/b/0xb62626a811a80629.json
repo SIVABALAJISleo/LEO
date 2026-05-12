@@ -1,0 +1,19 @@
+{
+  "id": "CONTROL_181",
+  "signature": [
+    "alpha",
+    "high",
+    "node",
+    "priority",
+    "restart",
+    "with"
+  ],
+  "domain": "CONTROL",
+  "context": null,
+  "response": "Resolution: Accessing CONTROL for 'alpha node'. Action: restart.",
+  "tags": [
+    "control",
+    "node"
+  ],
+  "sh": "0xb62626a811a80629"
+}

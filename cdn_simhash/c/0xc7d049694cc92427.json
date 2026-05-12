@@ -1,0 +1,16 @@
+{
+  "id": "INFO_329",
+  "signature": [
+    "status",
+    "storage",
+    "summary"
+  ],
+  "domain": "INFO",
+  "context": null,
+  "response": "Resolution: Accessing INFO for 'storage'. Action: status of.",
+  "tags": [
+    "info",
+    "storage"
+  ],
+  "sh": "0xc7d049694cc92427"
+}

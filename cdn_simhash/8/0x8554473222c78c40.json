@@ -1,0 +1,18 @@
+{
+  "id": "CONTROL_336",
+  "signature": [
+    "at",
+    "grid",
+    "once",
+    "power",
+    "reboot"
+  ],
+  "domain": "CONTROL",
+  "context": null,
+  "response": "Resolution: Accessing CONTROL for 'power grid'. Action: reboot.",
+  "tags": [
+    "control",
+    "grid"
+  ],
+  "sh": "0x8554473222c78c40"
+}

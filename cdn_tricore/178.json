@@ -1,0 +1,10 @@
+{
+  "id": 178,
+  "domain": "INFO",
+  "signature": [
+    "of",
+    "status",
+    "uptime"
+  ],
+  "response": "Resolution: Accessing INFO for 'uptime'. Action: status of."
+}

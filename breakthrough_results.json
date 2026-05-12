@@ -1,0 +1,30 @@
+[
+  {
+    "query": "render a high-fidelity forest with complex shadows and ray-traced water",
+    "latency_ms": 2058.2313537597656,
+    "sdgp_latency": 0.0002384185791015625,
+    "gpu_reduction": "100%",
+    "equivalence": 24
+  },
+  {
+    "query": "calculate the sum of prime numbers between 1 and 1000 using tensor bypass",
+    "latency_ms": 2044.0495014190674,
+    "sdgp_latency": 0.0002384185791015625,
+    "gpu_reduction": "100%",
+    "equivalence": 24
+  },
+  {
+    "query": "simulate the physics of 10,000 sheep in a complex valley",
+    "latency_ms": 2052.1645545959473,
+    "sdgp_latency": 0.000476837158203125,
+    "gpu_reduction": "100%",
+    "equivalence": 24
+  },
+  {
+    "query": "generate a 4K photorealistic scene of Mars surface",
+    "latency_ms": 2074.521541595459,
+    "sdgp_latency": 0.000476837158203125,
+    "gpu_reduction": "100%",
+    "equivalence": 24
+  }
+]

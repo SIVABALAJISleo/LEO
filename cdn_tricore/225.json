@@ -1,0 +1,11 @@
+{
+  "id": 225,
+  "domain": "SYSTEM",
+  "signature": [
+    "background",
+    "backup",
+    "in",
+    "registry"
+  ],
+  "response": "Resolution: Accessing SYSTEM for 'registry'. Action: backup."
+}

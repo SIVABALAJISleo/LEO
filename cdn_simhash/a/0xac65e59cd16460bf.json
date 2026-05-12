@@ -1,0 +1,17 @@
+{
+  "id": "CONTROL_079",
+  "signature": [
+    "beta",
+    "node",
+    "safely",
+    "start"
+  ],
+  "domain": "CONTROL",
+  "context": null,
+  "response": "Resolution: Accessing CONTROL for 'beta node'. Action: start.",
+  "tags": [
+    "control",
+    "node"
+  ],
+  "sh": "0xac65e59cd16460bf"
+}

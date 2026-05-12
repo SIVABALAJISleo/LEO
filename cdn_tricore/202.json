@@ -1,0 +1,10 @@
+{
+  "id": 202,
+  "domain": "SYSTEM",
+  "signature": [
+    "build",
+    "forcefully",
+    "update"
+  ],
+  "response": "Resolution: Accessing SYSTEM for 'build'. Action: update."
+}

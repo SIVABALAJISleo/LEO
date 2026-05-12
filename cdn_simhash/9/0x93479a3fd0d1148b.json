@@ -1,0 +1,16 @@
+{
+  "id": "SYSTEM_391",
+  "signature": [
+    "index",
+    "registry",
+    "silently"
+  ],
+  "domain": "SYSTEM",
+  "context": null,
+  "response": "Resolution: Accessing SYSTEM for 'registry'. Action: index.",
+  "tags": [
+    "system",
+    "registry"
+  ],
+  "sh": "0x93479a3fd0d1148b"
+}

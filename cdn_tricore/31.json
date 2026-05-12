@@ -1,0 +1,9 @@
+{
+  "id": 31,
+  "domain": "SYSTEM",
+  "signature": [
+    "patch",
+    "version"
+  ],
+  "response": "Resolution: Accessing SYSTEM for 'version'. Action: patch."
+}

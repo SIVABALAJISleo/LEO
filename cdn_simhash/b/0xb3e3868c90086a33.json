@@ -1,0 +1,16 @@
+{
+  "id": "SYSTEM_283",
+  "signature": [
+    "forcefully",
+    "index",
+    "version"
+  ],
+  "domain": "SYSTEM",
+  "context": null,
+  "response": "Resolution: Accessing SYSTEM for 'version'. Action: index.",
+  "tags": [
+    "system",
+    "version"
+  ],
+  "sh": "0xb3e3868c90086a33"
+}

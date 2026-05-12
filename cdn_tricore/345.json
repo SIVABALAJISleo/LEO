@@ -1,0 +1,10 @@
+{
+  "id": 345,
+  "domain": "CONTROL",
+  "signature": [
+    "delta",
+    "reset",
+    "subsystem"
+  ],
+  "response": "Resolution: Accessing CONTROL for 'subsystem delta'. Action: reset."
+}

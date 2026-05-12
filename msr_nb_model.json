@@ -1,0 +1,404 @@
+{
+  "token_probs": {
+    "kill": {
+      "CONTROL": 0.16981132075471697,
+      "INFO": 0.0,
+      "SYSTEM": 0.0
+    },
+    "beta": {
+      "CONTROL": 0.12578616352201258,
+      "INFO": 0.12790697674418605,
+      "SYSTEM": 0.0
+    },
+    "now": {
+      "CONTROL": 0.05660377358490566,
+      "INFO": 0.0,
+      "SYSTEM": 0.0
+    },
+    "node": {
+      "CONTROL": 0.2641509433962264,
+      "INFO": 0.22674418604651161,
+      "SYSTEM": 0.0
+    },
+    "alpha": {
+      "CONTROL": 0.13836477987421383,
+      "INFO": 0.09883720930232558,
+      "SYSTEM": 0.0
+    },
+    "reset": {
+      "CONTROL": 0.07547169811320754,
+      "INFO": 0.0,
+      "SYSTEM": 0.0
+    },
+    "backup": {
+      "CONTROL": 0.0,
+      "INFO": 0.0,
+      "SYSTEM": 0.14792899408284024
+    },
+    "table": {
+      "CONTROL": 0.0,
+      "INFO": 0.0,
+      "SYSTEM": 0.14792899408284024
+    },
+    "identity": {
+      "CONTROL": 0.0,
+      "INFO": 0.0,
+      "SYSTEM": 0.14792899408284024
+    },
+    "check": {
+      "CONTROL": 0.0,
+      "INFO": 0.09883720930232558,
+      "SYSTEM": 0.0
+    },
+    "temperature": {
+      "CONTROL": 0.0,
+      "INFO": 0.12209302325581395,
+      "SYSTEM": 0.0
+    },
+    "overall": {
+      "CONTROL": 0.0,
+      "INFO": 0.1569767441860465,
+      "SYSTEM": 0.0
+    },
+    "report": {
+      "CONTROL": 0.0,
+      "INFO": 0.13372093023255813,
+      "SYSTEM": 0.0
+    },
+    "telemetry": {
+      "CONTROL": 0.0,
+      "INFO": 0.12209302325581395,
+      "SYSTEM": 0.0
+    },
+    "storage": {
+      "CONTROL": 0.0,
+      "INFO": 0.09883720930232558,
+      "SYSTEM": 0.0
+    },
+    "from": {
+      "CONTROL": 0.0,
+      "INFO": 0.12209302325581395,
+      "SYSTEM": 0.0
+    },
+    "start": {
+      "CONTROL": 0.13836477987421383,
+      "INFO": 0.0,
+      "SYSTEM": 0.0
+    },
+    "grid": {
+      "CONTROL": 0.1320754716981132,
+      "INFO": 0.0,
+      "SYSTEM": 0.0
+    },
+    "power": {
+      "CONTROL": 0.1320754716981132,
+      "INFO": 0.0,
+      "SYSTEM": 0.0
+    },
+    "semantic": {
+      "CONTROL": 0.0,
+      "INFO": 0.0,
+      "SYSTEM": 0.15384615384615385
+    },
+    "database": {
+      "CONTROL": 0.0,
+      "INFO": 0.0,
+      "SYSTEM": 0.15384615384615385
+    },
+    "restore": {
+      "CONTROL": 0.0,
+      "INFO": 0.0,
+      "SYSTEM": 0.15976331360946747
+    },
+    "audit": {
+      "CONTROL": 0.0,
+      "INFO": 0.0,
+      "SYSTEM": 0.14201183431952663
+    },
+    "silently": {
+      "CONTROL": 0.0,
+      "INFO": 0.0,
+      "SYSTEM": 0.1893491124260355
+    },
+    "synchronize": {
+      "CONTROL": 0.0,
+      "INFO": 0.0,
+      "SYSTEM": 0.11242603550295859
+    },
+    "build": {
+      "CONTROL": 0.0,
+      "INFO": 0.0,
+      "SYSTEM": 0.13609467455621302
+    },
+    "verify": {
+      "CONTROL": 0.0,
+      "INFO": 0.0,
+      "SYSTEM": 0.13609467455621302
+    },
+    "registry": {
+      "CONTROL": 0.0,
+      "INFO": 0.0,
+      "SYSTEM": 0.1834319526627219
+    },
+    "of": {
+      "CONTROL": 0.0,
+      "INFO": 0.27906976744186046,
+      "SYSTEM": 0.0
+    },
+    "status": {
+      "CONTROL": 0.0,
+      "INFO": 0.1511627906976744,
+      "SYSTEM": 0.0
+    },
+    "is": {
+      "CONTROL": 0.0,
+      "INFO": 0.12790697674418605,
+      "SYSTEM": 0.0
+    },
+    "how": {
+      "CONTROL": 0.0,
+      "INFO": 0.12790697674418605,
+      "SYSTEM": 0.0
+    },
+    "system": {
+      "CONTROL": 0.1509433962264151,
+      "INFO": 0.09302325581395349,
+      "SYSTEM": 0.0
+    },
+    "shutdown": {
+      "CONTROL": 0.11320754716981132,
+      "INFO": 0.0,
+      "SYSTEM": 0.0
+    },
+    "detailed": {
+      "CONTROL": 0.0,
+      "INFO": 0.08139534883720931,
+      "SYSTEM": 0.0
+    },
+    "uptime": {
+      "CONTROL": 0.0,
+      "INFO": 0.09883720930232558,
+      "SYSTEM": 0.0
+    },
+    "all": {
+      "CONTROL": 0.0,
+      "INFO": 0.11046511627906977,
+      "SYSTEM": 0.0
+    },
+    "metrics": {
+      "CONTROL": 0.0,
+      "INFO": 0.09302325581395349,
+      "SYSTEM": 0.0
+    },
+    "for": {
+      "CONTROL": 0.0,
+      "INFO": 0.09302325581395349,
+      "SYSTEM": 0.0
+    },
+    "cooling": {
+      "CONTROL": 0.1509433962264151,
+      "INFO": 0.0,
+      "SYSTEM": 0.0
+    },
+    "log": {
+      "CONTROL": 0.0,
+      "INFO": 0.0,
+      "SYSTEM": 0.1242603550295858
+    },
+    "files": {
+      "CONTROL": 0.0,
+      "INFO": 0.0,
+      "SYSTEM": 0.1242603550295858
+    },
+    "show": {
+      "CONTROL": 0.0,
+      "INFO": 0.14534883720930233,
+      "SYSTEM": 0.0
+    },
+    "memory": {
+      "CONTROL": 0.0,
+      "INFO": 0.0755813953488372,
+      "SYSTEM": 0.0
+    },
+    "stop": {
+      "CONTROL": 0.12578616352201258,
+      "INFO": 0.0,
+      "SYSTEM": 0.0
+    },
+    "engine": {
+      "CONTROL": 0.0880503144654088,
+      "INFO": 0.0,
+      "SYSTEM": 0.0
+    },
+    "primary": {
+      "CONTROL": 0.0880503144654088,
+      "INFO": 0.0,
+      "SYSTEM": 0.0
+    },
+    "uplink": {
+      "CONTROL": 0.1509433962264151,
+      "INFO": 0.0,
+      "SYSTEM": 0.0
+    },
+    "manifest": {
+      "CONTROL": 0.0,
+      "INFO": 0.0,
+      "SYSTEM": 0.14201183431952663
+    },
+    "load": {
+      "CONTROL": 0.0,
+      "INFO": 0.11046511627906977,
+      "SYSTEM": 0.0
+    },
+    "safely": {
+      "CONTROL": 0.06918238993710692,
+      "INFO": 0.0,
+      "SYSTEM": 0.0
+    },
+    "health": {
+      "CONTROL": 0.0,
+      "INFO": 0.12790697674418605,
+      "SYSTEM": 0.0
+    },
+    "index": {
+      "CONTROL": 0.0,
+      "INFO": 0.0,
+      "SYSTEM": 0.11242603550295859
+    },
+    "latency": {
+      "CONTROL": 0.0,
+      "INFO": 0.06395348837209303,
+      "SYSTEM": 0.0
+    },
+    "update": {
+      "CONTROL": 0.0,
+      "INFO": 0.0,
+      "SYSTEM": 0.11242603550295859
+    },
+    "in": {
+      "CONTROL": 0.0,
+      "INFO": 0.0,
+      "SYSTEM": 0.16568047337278108
+    },
+    "background": {
+      "CONTROL": 0.0,
+      "INFO": 0.0,
+      "SYSTEM": 0.16568047337278108
+    },
+    "forcefully": {
+      "CONTROL": 0.0,
+      "INFO": 0.0,
+      "SYSTEM": 0.10059171597633136
+    },
+    "version": {
+      "CONTROL": 0.0,
+      "INFO": 0.0,
+      "SYSTEM": 0.11242603550295859
+    },
+    "immediately": {
+      "CONTROL": 0.11320754716981132,
+      "INFO": 0.0,
+      "SYSTEM": 0.0
+    },
+    "locally": {
+      "CONTROL": 0.0,
+      "INFO": 0.09883720930232558,
+      "SYSTEM": 0.0
+    },
+    "initialize": {
+      "CONTROL": 0.0880503144654088,
+      "INFO": 0.0,
+      "SYSTEM": 0.0
+    },
+    "bandwidth": {
+      "CONTROL": 0.0,
+      "INFO": 0.11046511627906977,
+      "SYSTEM": 0.0
+    },
+    "delta": {
+      "CONTROL": 0.11320754716981132,
+      "INFO": 0.0,
+      "SYSTEM": 0.0
+    },
+    "subsystem": {
+      "CONTROL": 0.11320754716981132,
+      "INFO": 0.0,
+      "SYSTEM": 0.0
+    },
+    "verification": {
+      "CONTROL": 0.09433962264150944,
+      "INFO": 0.0,
+      "SYSTEM": 0.0
+    },
+    "after": {
+      "CONTROL": 0.09433962264150944,
+      "INFO": 0.0,
+      "SYSTEM": 0.0
+    },
+    "activate": {
+      "CONTROL": 0.0880503144654088,
+      "INFO": 0.0,
+      "SYSTEM": 0.0
+    },
+    "restart": {
+      "CONTROL": 0.1069182389937107,
+      "INFO": 0.0,
+      "SYSTEM": 0.0
+    },
+    "at": {
+      "CONTROL": 0.08176100628930817,
+      "INFO": 0.0,
+      "SYSTEM": 0.0
+    },
+    "once": {
+      "CONTROL": 0.08176100628930817,
+      "INFO": 0.0,
+      "SYSTEM": 0.0
+    },
+    "high": {
+      "CONTROL": 0.07547169811320754,
+      "INFO": 0.0,
+      "SYSTEM": 0.0
+    },
+    "with": {
+      "CONTROL": 0.07547169811320754,
+      "INFO": 0.0,
+      "SYSTEM": 0.0
+    },
+    "priority": {
+      "CONTROL": 0.07547169811320754,
+      "INFO": 0.0,
+      "SYSTEM": 0.0
+    },
+    "core": {
+      "CONTROL": 0.10062893081761007,
+      "INFO": 0.0,
+      "SYSTEM": 0.0
+    },
+    "reactor": {
+      "CONTROL": 0.10062893081761007,
+      "INFO": 0.0,
+      "SYSTEM": 0.0
+    },
+    "summary": {
+      "CONTROL": 0.0,
+      "INFO": 0.05813953488372093,
+      "SYSTEM": 0.0
+    },
+    "reboot": {
+      "CONTROL": 0.09433962264150944,
+      "INFO": 0.0,
+      "SYSTEM": 0.0
+    },
+    "patch": {
+      "CONTROL": 0.0,
+      "INFO": 0.0,
+      "SYSTEM": 0.07692307692307693
+    }
+  },
+  "priors": {
+    "CONTROL": 0.318,
+    "INFO": 0.344,
+    "SYSTEM": 0.338
+  }
+}

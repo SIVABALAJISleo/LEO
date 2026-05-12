@@ -1,0 +1,16 @@
+{
+  "id": "SYSTEM_354",
+  "signature": [
+    "audit",
+    "database",
+    "semantic"
+  ],
+  "domain": "SYSTEM",
+  "context": null,
+  "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: audit.",
+  "tags": [
+    "system",
+    "database"
+  ],
+  "sh": "0xa4bfa581f0842d08"
+}

@@ -1,0 +1,17 @@
+{
+  "id": "SYSTEM_070",
+  "signature": [
+    "background",
+    "database",
+    "restore",
+    "semantic"
+  ],
+  "domain": "SYSTEM",
+  "context": null,
+  "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: restore.",
+  "tags": [
+    "system",
+    "database"
+  ],
+  "sh": "0x8413242102042e11"
+}

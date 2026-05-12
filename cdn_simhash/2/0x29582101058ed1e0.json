@@ -1,0 +1,16 @@
+{
+  "id": "SYSTEM_138",
+  "signature": [
+    "files",
+    "log",
+    "verify"
+  ],
+  "domain": "SYSTEM",
+  "context": null,
+  "response": "Resolution: Accessing SYSTEM for 'log files'. Action: verify.",
+  "tags": [
+    "system",
+    "files"
+  ],
+  "sh": "0x29582101058ed1e0"
+}

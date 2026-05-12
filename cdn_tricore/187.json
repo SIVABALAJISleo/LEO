@@ -1,0 +1,11 @@
+{
+  "id": 187,
+  "domain": "CONTROL",
+  "signature": [
+    "activate",
+    "grid",
+    "immediately",
+    "power"
+  ],
+  "response": "Resolution: Accessing CONTROL for 'power grid'. Action: activate."
+}

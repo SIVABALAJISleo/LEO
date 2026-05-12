@@ -1,0 +1,17 @@
+{
+  "id": "SYSTEM_056",
+  "signature": [
+    "database",
+    "semantic",
+    "silently",
+    "verify"
+  ],
+  "domain": "SYSTEM",
+  "context": null,
+  "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: verify.",
+  "tags": [
+    "system",
+    "database"
+  ],
+  "sh": "0x0410a001c5840440"
+}

@@ -1,0 +1,11 @@
+{
+  "id": 73,
+  "domain": "SYSTEM",
+  "signature": [
+    "database",
+    "semantic",
+    "silently",
+    "verify"
+  ],
+  "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: verify."
+}

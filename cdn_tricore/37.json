@@ -1,0 +1,11 @@
+{
+  "id": 37,
+  "domain": "CONTROL",
+  "signature": [
+    "beta",
+    "kill",
+    "node",
+    "now"
+  ],
+  "response": "Resolution: Accessing CONTROL for 'beta node'. Action: kill."
+}

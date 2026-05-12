@@ -1,0 +1,17 @@
+{
+  "id": "CONTROL_029",
+  "signature": [
+    "grid",
+    "power",
+    "safely",
+    "stop"
+  ],
+  "domain": "CONTROL",
+  "context": null,
+  "response": "Resolution: Accessing CONTROL for 'power grid'. Action: stop.",
+  "tags": [
+    "control",
+    "grid"
+  ],
+  "sh": "0xaa71d45cd9f6b0b7"
+}

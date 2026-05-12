@@ -1,0 +1,16 @@
+{
+  "id": "SYSTEM_488",
+  "signature": [
+    "registry",
+    "restore",
+    "silently"
+  ],
+  "domain": "SYSTEM",
+  "context": null,
+  "response": "Resolution: Accessing SYSTEM for 'registry'. Action: restore.",
+  "tags": [
+    "system",
+    "registry"
+  ],
+  "sh": "0x9257fa3dd1d31d93"
+}

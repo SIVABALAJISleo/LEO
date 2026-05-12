@@ -1,0 +1,9 @@
+{
+  "id": 293,
+  "domain": "SYSTEM",
+  "signature": [
+    "registry",
+    "update"
+  ],
+  "response": "Resolution: Accessing SYSTEM for 'registry'. Action: update."
+}

@@ -1,0 +1,12 @@
+{
+  "id": 352,
+  "domain": "CONTROL",
+  "signature": [
+    "at",
+    "core",
+    "once",
+    "reactor",
+    "reset"
+  ],
+  "response": "Resolution: Accessing CONTROL for 'core reactor'. Action: reset."
+}

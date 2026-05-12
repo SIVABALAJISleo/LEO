@@ -1,0 +1,16 @@
+{
+  "id": "INFO_015",
+  "signature": [
+    "beta",
+    "node",
+    "status"
+  ],
+  "domain": "INFO",
+  "context": null,
+  "response": "Resolution: Accessing INFO for 'node beta'. Action: status of.",
+  "tags": [
+    "info",
+    "beta"
+  ],
+  "sh": "0x4405692944c0202f"
+}

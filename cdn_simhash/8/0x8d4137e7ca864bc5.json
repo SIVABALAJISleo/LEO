@@ -1,0 +1,16 @@
+{
+  "id": "SYSTEM_061",
+  "signature": [
+    "background",
+    "build",
+    "verify"
+  ],
+  "domain": "SYSTEM",
+  "context": null,
+  "response": "Resolution: Accessing SYSTEM for 'build'. Action: verify.",
+  "tags": [
+    "system",
+    "build"
+  ],
+  "sh": "0x8d4137e7ca864bc5"
+}

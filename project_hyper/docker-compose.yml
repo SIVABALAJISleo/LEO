@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=production
+      - REDIS_URL=redis://redis:6379
+      - VECTOR_DB_PATH=/data/vector_db
+      - MODELS_PATH=/data/models
+    volumes:
+      - ./data:/data
+    depends_on:
+      - redis
+    deploy:
+      resources:
+        limits:
+          cpus: '8' # CPU-first architecture
+          memory: 16G
+        reservations:
+          cpus: '4'
+          memory: 8G
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --save 60 1 --loglevel warning
+
+volumes:
+  redis_data:

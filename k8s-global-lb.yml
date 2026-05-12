@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hyper-global-ingress
+  annotations:
+    # AWS Global Accelerator / Cloudflare
+    kubernetes.io/ingress.class: "alb"
+    alb.ingress.kubernetes.io/scheme: "internet-facing"
+    alb.ingress.kubernetes.io/target-type: "ip"
+    external-dns.alpha.kubernetes.io/hostname: "api.hyper.com"
+    # Route 53 Geoproximity Failover Configuration
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
+spec:
+  rules:
+    - host: api.hyper.com
+      http:
+        paths:
+          - path: /*
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: hyper-backend-service
+                port:
+                  number: 8000

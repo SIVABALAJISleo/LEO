@@ -1,0 +1,11 @@
+{
+  "id": 218,
+  "domain": "SYSTEM",
+  "signature": [
+    "background",
+    "in",
+    "restore",
+    "version"
+  ],
+  "response": "Resolution: Accessing SYSTEM for 'version'. Action: restore."
+}

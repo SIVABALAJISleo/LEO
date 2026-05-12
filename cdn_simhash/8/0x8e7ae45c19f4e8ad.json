@@ -1,0 +1,17 @@
+{
+  "id": "CONTROL_355",
+  "signature": [
+    "core",
+    "reactor",
+    "restart",
+    "safely"
+  ],
+  "domain": "CONTROL",
+  "context": null,
+  "response": "Resolution: Accessing CONTROL for 'core reactor'. Action: restart.",
+  "tags": [
+    "control",
+    "reactor"
+  ],
+  "sh": "0x8e7ae45c19f4e8ad"
+}

@@ -1,0 +1,11 @@
+{
+  "id": 282,
+  "domain": "CONTROL",
+  "signature": [
+    "activate",
+    "alpha",
+    "immediately",
+    "node"
+  ],
+  "response": "Resolution: Accessing CONTROL for 'alpha node'. Action: activate."
+}

@@ -1,0 +1,16 @@
+{
+  "id": "INFO_345",
+  "signature": [
+    "metrics",
+    "overall",
+    "storage"
+  ],
+  "domain": "INFO",
+  "context": null,
+  "response": "Resolution: Accessing INFO for 'storage'. Action: metrics for.",
+  "tags": [
+    "info",
+    "storage"
+  ],
+  "sh": "0x9e1c5a203dcfb296"
+}

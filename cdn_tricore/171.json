@@ -1,0 +1,9 @@
+{
+  "id": 171,
+  "domain": "SYSTEM",
+  "signature": [
+    "build",
+    "index"
+  ],
+  "response": "Resolution: Accessing SYSTEM for 'build'. Action: index."
+}

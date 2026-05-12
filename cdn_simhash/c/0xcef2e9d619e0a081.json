@@ -1,0 +1,16 @@
+{
+  "id": "CONTROL_456",
+  "signature": [
+    "core",
+    "kill",
+    "reactor"
+  ],
+  "domain": "CONTROL",
+  "context": null,
+  "response": "Resolution: Accessing CONTROL for 'core reactor'. Action: kill.",
+  "tags": [
+    "control",
+    "reactor"
+  ],
+  "sh": "0xcef2e9d619e0a081"
+}

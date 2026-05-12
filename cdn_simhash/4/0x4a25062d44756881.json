@@ -1,0 +1,17 @@
+{
+  "id": "CONTROL_317",
+  "signature": [
+    "delta",
+    "immediately",
+    "start",
+    "subsystem"
+  ],
+  "domain": "CONTROL",
+  "context": null,
+  "response": "Resolution: Accessing CONTROL for 'subsystem delta'. Action: start.",
+  "tags": [
+    "control",
+    "delta"
+  ],
+  "sh": "0x4a25062d44756881"
+}

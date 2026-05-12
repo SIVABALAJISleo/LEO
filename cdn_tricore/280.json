@@ -1,0 +1,10 @@
+{
+  "id": 280,
+  "domain": "SYSTEM",
+  "signature": [
+    "files",
+    "log",
+    "verify"
+  ],
+  "response": "Resolution: Accessing SYSTEM for 'log files'. Action: verify."
+}

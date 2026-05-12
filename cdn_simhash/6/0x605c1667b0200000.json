@@ -1,0 +1,15 @@
+{
+  "id": "CONTROL_434",
+  "signature": [
+    "shutdown",
+    "uplink"
+  ],
+  "domain": "CONTROL",
+  "context": null,
+  "response": "Resolution: Accessing CONTROL for 'uplink'. Action: shutdown.",
+  "tags": [
+    "control",
+    "uplink"
+  ],
+  "sh": "0x605c1667b0200000"
+}

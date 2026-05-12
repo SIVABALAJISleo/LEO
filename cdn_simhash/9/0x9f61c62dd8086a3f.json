@@ -1,0 +1,16 @@
+{
+  "id": "SYSTEM_332",
+  "signature": [
+    "background",
+    "backup",
+    "version"
+  ],
+  "domain": "SYSTEM",
+  "context": null,
+  "response": "Resolution: Accessing SYSTEM for 'version'. Action: backup.",
+  "tags": [
+    "system",
+    "version"
+  ],
+  "sh": "0x9f61c62dd8086a3f"
+}

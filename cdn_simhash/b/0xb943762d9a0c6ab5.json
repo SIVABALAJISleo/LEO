@@ -1,0 +1,16 @@
+{
+  "id": "SYSTEM_119",
+  "signature": [
+    "background",
+    "restore",
+    "version"
+  ],
+  "domain": "SYSTEM",
+  "context": null,
+  "response": "Resolution: Accessing SYSTEM for 'version'. Action: restore.",
+  "tags": [
+    "system",
+    "version"
+  ],
+  "sh": "0xb943762d9a0c6ab5"
+}

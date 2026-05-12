@@ -1,0 +1,10 @@
+{
+  "id": 231,
+  "domain": "INFO",
+  "signature": [
+    "all",
+    "load",
+    "show"
+  ],
+  "response": "Resolution: Accessing INFO for 'load'. Action: show."
+}

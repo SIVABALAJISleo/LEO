@@ -1,0 +1,16 @@
+{
+  "id": "CONTROL_417",
+  "signature": [
+    "engine",
+    "primary",
+    "reboot"
+  ],
+  "domain": "CONTROL",
+  "context": null,
+  "response": "Resolution: Accessing CONTROL for 'primary engine'. Action: reboot.",
+  "tags": [
+    "control",
+    "engine"
+  ],
+  "sh": "0xbd34537ff2cac959"
+}

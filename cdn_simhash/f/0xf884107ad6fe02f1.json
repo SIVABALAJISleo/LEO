@@ -1,0 +1,16 @@
+{
+  "id": "INFO_480",
+  "signature": [
+    "from",
+    "telemetry",
+    "uptime"
+  ],
+  "domain": "INFO",
+  "context": null,
+  "response": "Resolution: Accessing INFO for 'uptime'. Action: telemetry from.",
+  "tags": [
+    "info",
+    "uptime"
+  ],
+  "sh": "0xf884107ad6fe02f1"
+}

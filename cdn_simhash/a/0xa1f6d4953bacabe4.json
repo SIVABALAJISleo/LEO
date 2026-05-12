@@ -1,0 +1,15 @@
+{
+  "id": "SYSTEM_413",
+  "signature": [
+    "manifest",
+    "patch"
+  ],
+  "domain": "SYSTEM",
+  "context": null,
+  "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: patch.",
+  "tags": [
+    "system",
+    "manifest"
+  ],
+  "sh": "0xa1f6d4953bacabe4"
+}

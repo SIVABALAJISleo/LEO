@@ -1,0 +1,19 @@
+{
+  "id": "CONTROL_114",
+  "signature": [
+    "core",
+    "high",
+    "priority",
+    "reactor",
+    "shutdown",
+    "with"
+  ],
+  "domain": "CONTROL",
+  "context": null,
+  "response": "Resolution: Accessing CONTROL for 'core reactor'. Action: shutdown.",
+  "tags": [
+    "control",
+    "reactor"
+  ],
+  "sh": "0xfefaeace1dac0289"
+}

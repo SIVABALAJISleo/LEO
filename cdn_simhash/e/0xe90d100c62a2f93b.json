@@ -1,0 +1,16 @@
+{
+  "id": "SYSTEM_454",
+  "signature": [
+    "audit",
+    "identity",
+    "table"
+  ],
+  "domain": "SYSTEM",
+  "context": null,
+  "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: audit.",
+  "tags": [
+    "system",
+    "table"
+  ],
+  "sh": "0xe90d100c62a2f93b"
+}
