@@ -19,7 +19,7 @@ if %errorlevel% neq 0 (
 
 echo.
 echo Pushing all commits to GitHub...
-cd /d "%~dp0"
+cd /d "c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main"
 git push origin main
 
 if %errorlevel% equ 0 (
