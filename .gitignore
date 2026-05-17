@@ -48,3 +48,5 @@ venv/
 build/
 *.pyc
 chroma_db/
+.hyper_cache/
+scratch/

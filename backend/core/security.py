@@ -111,7 +111,40 @@ def patch_onnx_security():
 class SecurityError(Exception):
     pass
 
+def patch_gitpython_security():
+    """
+    Patches GitPython <= 3.1.49 against CVE-2026-42215 newline injection bypass.
+    Validates section and option parameters in config_writer() set_value()
+    to prevent forged core.hooksPath headers causing RCE.
+    """
+    try:
+        import git.config
+        
+        original_set_value = git.config.GitConfigParser.set_value
+        
+        _FORBIDDEN_CHARS = {'\n', '\r', '\x00'}
 
-# Apply the patch at import time so it takes effect before any other code
-# that might call the onnx module load.
+        def safe_set_value(self, section: str, option: str, value):
+            # Check actual control characters — NOT escaped literals
+            if any(c in section for c in _FORBIDDEN_CHARS):
+                raise ValueError(
+                    "Security violation: control characters (\\n, \\r, NUL) are not allowed "
+                    "in Git config section names (CVE-2026-42215 mitigation)"
+                )
+            if any(c in option for c in _FORBIDDEN_CHARS):
+                raise ValueError(
+                    "Security violation: control characters (\\n, \\r, NUL) are not allowed "
+                    "in Git config option names (CVE-2026-42215 mitigation)"
+                )
+            return original_set_value(self, section, option, value)
+            
+        git.config.GitConfigParser.set_value = safe_set_value
+        
+        import logging
+        logging.getLogger("hyper.security").info("GitPython config_writer patched — newline injection prevented (CVE mitigation)")
+    except ImportError:
+        pass  # GitPython not installed, nothing to patch
+
+# Apply the patches at import time so they take effect before any other code
 patch_onnx_security()
+patch_gitpython_security()
