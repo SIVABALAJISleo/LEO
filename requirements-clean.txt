@@ -8,7 +8,7 @@ aiofiles==23.2.1
 # Dependabot bumping starlette independently breaks fastapi's version constraint
 passlib[bcrypt]==1.7.4
 bcrypt==4.1.3
-PyJWT==2.12.1
+PyJWT==2.13.0
 cryptography==46.0.7
 sqlalchemy==2.0.30
 onnxruntime==1.24.4
