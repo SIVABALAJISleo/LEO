@@ -47,6 +47,7 @@ export interface OrchestrateResponse {
 }
 
 const BACKEND_URL = 'http://localhost:8005/api/v1';
+const LEO_BASE   = 'http://localhost:8005';
 
 /**
  * HYPER API Client
@@ -55,7 +56,7 @@ const BACKEND_URL = 'http://localhost:8005/api/v1';
 export const hyperClient = {
     async getHealth(): Promise<HealthStatus> {
         try {
-            const response = await fetch(`${BACKEND_URL}/health`);
+            const response = await fetch(`${LEO_BASE}/health`);
             if (response.ok) {
                 const health = await response.json();
                 return {
@@ -76,23 +77,21 @@ export const hyperClient = {
 
     async getStatus(): Promise<BackendStatus> {
         try {
-            const response = await fetch(`${BACKEND_URL}/compute/telemetry`, {
-                headers: { 'Authorization': `Bearer AUDIT_MODE_TOKEN` }
-            });
+            const response = await fetch(`${BACKEND_URL}/compute/telemetry`);
             if (response.ok) {
                 const telemetry = await response.json();
                 return {
-                    version: '1.0.0-PROD',
+                    version: '2.0.0-LEO',
                     metrics: {
-                        requests: 0,
+                        requests: telemetry.leo?.total_requests ?? 0,
                         errors: 0,
-                        latency_avg: 0.12
+                        latency_avg: 0.05
                     },
                     hardware: {
-                        cpu_load: telemetry.cpu.average_utilization,
-                        memory_percent: telemetry.memory.percent_used,
+                        cpu_load: telemetry.cpu?.average_utilization ?? 0,
+                        memory_percent: telemetry.memory?.percent_used ?? 0,
                         disk_percent: 40,
-                        memory_available_gb: telemetry.memory.total_gb - telemetry.memory.used_gb
+                        memory_available_gb: (telemetry.memory?.total_gb ?? 0) - (telemetry.memory?.used_gb ?? 0)
                     },
                     server_time: Date.now() / 1000
                 };
@@ -102,7 +101,7 @@ export const hyperClient = {
         }
 
         return {
-            version: '1.0.0-PROD',
+            version: '2.0.0-LEO',
             metrics: { requests: 0, errors: 0, latency_avg: 0 },
             hardware: { cpu_load: 0, memory_percent: 0, disk_percent: 0, memory_available_gb: 0 },
             server_time: Date.now() / 1000
@@ -114,20 +113,18 @@ export const hyperClient = {
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async executeRemote(query: string, metadata: any = {}): Promise<any> {
-        const response = await fetch(`${BACKEND_URL}/query`, {
+        // Routes to LEO 10-Layer Semantic Orchestration Engine
+        const response = await fetch(`${LEO_BASE}/api/v1/leo/orchestrate`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer AUDIT_MODE_TOKEN`
-            },
-            body: JSON.stringify({ 
-                question: query, 
-                workspace_id: metadata.workspace_id || "default" 
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                query,
+                workspace_id: metadata.workspace_id || 'default',
             })
         });
         if (!response.ok) {
             const err = await response.json().catch(() => ({ detail: response.statusText }));
-            throw new Error(err.detail || `Backend error: ${response.statusText}`);
+            throw new Error(err.detail || `LEO Backend error: ${response.statusText}`);
         }
         return response.json();
     },
@@ -145,6 +142,59 @@ export const hyperClient = {
             body: formData
         });
         if (!response.ok) throw new Error(`Upload error: ${response.statusText}`);
+        return response.json();
+    },
+
+    async uploadPolicyDoc(
+        file: File,
+        level: string = 'Global',
+        department: string = 'General',
+        region: string = 'Global',
+        version: string = '1.0'
+    ): Promise<any> {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('authority_level', level);
+        formData.append('department', department);
+        formData.append('region', region);
+        formData.append('version', version);
+
+        const response = await fetch(`${LEO_BASE}/api/v1/policy/ingest`, {
+            method: 'POST',
+            body: formData
+        });
+        if (!response.ok) {
+            const err = await response.json().catch(() => ({ detail: response.statusText }));
+            throw new Error(err.detail || `Upload error: ${response.statusText}`);
+        }
+        return response.json();
+    },
+
+    async getContradictions(): Promise<any> {
+        const response = await fetch(`${LEO_BASE}/api/v1/policy/contradictions`);
+        if (!response.ok) throw new Error(`Contradiction fetch error: ${response.statusText}`);
+        return response.json();
+    },
+
+    async getPolicyGraph(): Promise<any> {
+        const response = await fetch(`${LEO_BASE}/api/v1/policy/graph`);
+        if (!response.ok) throw new Error(`Graph fetch error: ${response.statusText}`);
+        return response.json();
+    },
+
+    async getAuditTimeline(): Promise<any> {
+        const response = await fetch(`${LEO_BASE}/api/v1/policy/audit`);
+        if (!response.ok) throw new Error(`Audit fetch error: ${response.statusText}`);
+        return response.json();
+    },
+
+    async routeContradictionAlert(department: string, severity: string, rationale: string): Promise<any> {
+        const response = await fetch(`${LEO_BASE}/api/v1/policy/route`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ department, severity, rationale })
+        });
+        if (!response.ok) throw new Error(`Routing alert error: ${response.statusText}`);
         return response.json();
     },
 

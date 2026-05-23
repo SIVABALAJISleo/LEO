@@ -48,6 +48,7 @@ import RuntimeProofs from "./pages/admin/RuntimeProofs";
 import GpuBypassDemo from "./pages/GpuBypassDemo";
 import SystemDashboard from "./pages/SystemDashboard";
 import OrchestrationExplorer from "./pages/OrchestrationExplorer";
+import LeoOrchestrationMaster from "./pages/LeoOrchestrationMaster";
 
 // Billing Pages
 import PricingPlansPage from "./pages/billing/PricingPlansPage";
@@ -211,6 +212,7 @@ const App = () => (
                   }
                 />
                 <Route path="/gpu-bypass-demo" element={<GpuBypassDemo />} />
+                <Route path="/leo-master" element={<LeoOrchestrationMaster />} />
                 <Route
                   path="/admin/dashboard"
                   element={
