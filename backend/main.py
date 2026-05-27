@@ -16,6 +16,11 @@ from backend.core.leo_orchestrator import global_leo_orchestrator
 from backend.core.database import get_db, PolicyDocument, PolicyChunk, PolicyRelationship, AuditProvenanceLog
 from backend.core.policy_system import PolicyParser, GovernanceContradictionEngine, GovernanceRouter
 
+# Import OpenAI drop-in gateway and Telemetry instrumentor
+from backend.gateway.openai_gateway import router as openai_router
+from backend.observability.telemetry import TelemetryInstrumentor
+
+
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
 
@@ -34,6 +39,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Register drop-in OpenAI-compatible router and Prometheus telemetry instrumentation
+app.include_router(openai_router)
+TelemetryInstrumentor.instrument_app(app)
+
 
 
 # ── Request / Response Models ─────────────────────────────────────────────── #
@@ -305,6 +315,42 @@ async def policy_route(req: RoutingRequest, db: Session = Depends(get_db)):
         "status": "routed",
         "authority_target": target,
         "timestamp": datetime.datetime.now().isoformat()
+    }
+
+
+@app.get("/api/v1/leo/hardware", tags=["Hardware"])
+async def get_hardware_profile():
+    """Returns the detected system hardware profile."""
+    return global_leo_orchestrator.prod_router.profile
+
+@app.get("/api/v1/leo/crystallization", tags=["Crystallization"])
+async def get_crystallization_shortcuts():
+    """Returns all compiled FSM lookup rules."""
+    import sqlite3
+    conn = sqlite3.connect("hyper_engine.db")
+    c = conn.cursor()
+    c.execute("SELECT shortcut_id, pattern_regex, response_template, hit_count, created_at FROM compiled_shortcuts")
+    rows = c.fetchall()
+    conn.close()
+    return [
+        {
+            "shortcut_id": r[0],
+            "pattern_regex": r[1],
+            "response_template": r[2],
+            "hit_count": r[3],
+            "created_at": r[4]
+        }
+        for r in rows
+    ]
+
+@app.post("/api/v1/leo/crystallization/compile", tags=["Crystallization"])
+async def trigger_crystallization():
+    """Manually compiles frequent query traces into FSM lookup rules."""
+    compiled_count = global_leo_orchestrator.prod_compiler.crystallize_frequent_patterns(min_hits=2)
+    return {
+        "status": "success",
+        "compiled_rules_count": compiled_count,
+        "message": f"Successfully compiled {compiled_count} FSM rules from trace history."
     }
 
 

@@ -48,7 +48,8 @@ import RuntimeProofs from "./pages/admin/RuntimeProofs";
 import GpuBypassDemo from "./pages/GpuBypassDemo";
 import SystemDashboard from "./pages/SystemDashboard";
 import OrchestrationExplorer from "./pages/OrchestrationExplorer";
-import LeoOrchestrationMaster from "./pages/LeoOrchestrationMaster";
+import LeoUnifiedDashboard from "./pages/LeoUnifiedDashboard";
+
 
 // Billing Pages
 import PricingPlansPage from "./pages/billing/PricingPlansPage";
