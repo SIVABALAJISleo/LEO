@@ -85,7 +85,7 @@ class ProductionSemanticCache:
 
     def store(self, query: str, answer: str, confidence: float):
         """Caches query locally and pushes vector to Qdrant."""
-        query_hash = hashlib.md5(query.lower().strip().encode()).hexdigest()
+        query_hash = hashlib.md5(query.lower().strip().encode(), usedforsecurity=False).hexdigest()  # nosec B324
         now = time.time()
         
         conn = sqlite3.connect(self.db_path)
@@ -121,7 +121,7 @@ class ProductionSemanticCache:
         conn.close()
 
     def retrieve(self, query: str) -> Optional[Dict[str, Any]]:
-        query_hash = hashlib.md5(query.lower().strip().encode()).hexdigest()
+        query_hash = hashlib.md5(query.lower().strip().encode(), usedforsecurity=False).hexdigest()  # nosec B324
         now = time.time()
         
         conn = sqlite3.connect(self.db_path)

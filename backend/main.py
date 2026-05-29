@@ -159,7 +159,7 @@ async def policy_ingest(
     try:
         content_bytes = await file.read()
         content_text = content_bytes.decode("utf-8", errors="ignore")
-        content_hash = hashlib.md5(content_text.strip().encode()).hexdigest()
+        content_hash = hashlib.md5(content_text.strip().encode(), usedforsecurity=False).hexdigest()  # nosec B324
 
         # Deduplication validator
         existing = db.query(PolicyDocument).filter(PolicyDocument.content_hash == content_hash).first()
