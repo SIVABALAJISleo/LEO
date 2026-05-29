@@ -7,6 +7,7 @@ and document parsing (PDF via pypdf, DOCX via python-docx, and CSV).
 import os
 import math
 import sqlite3
+import hashlib
 import numpy as np
 import logging
 from typing import List, Dict, Any, Tuple
