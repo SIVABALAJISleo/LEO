@@ -58,3 +58,31 @@ export const simulateQuery = async (req: OrchestrateRequest): Promise<Orchestrat
   const res = await leoApi.post("/leo/orchestrate", req);
   return res.data;
 };
+
+export interface DevOpsSettings {
+  sentry_dsn?: string;
+  pagerduty_integration_key?: string;
+  stripe_signature_checking?: boolean;
+  canary_deployment_pct?: number;
+  active_rollback?: boolean;
+}
+
+export const fetchDevOpsStatus = async (): Promise<DevOpsSettings> => {
+  const res = await leoApi.get("/devops/status");
+  return res.data;
+};
+
+export const configureDevOps = async (settings: DevOpsSettings): Promise<DevOpsSettings> => {
+  const res = await leoApi.post("/devops/configure", settings);
+  return res.data.settings;
+};
+
+export const sendStripeWebhook = async (payload: any, signature: string): Promise<any> => {
+  const res = await leoApi.post("/billing/webhook", payload, {
+    headers: {
+      "stripe-signature": signature,
+    },
+  });
+  return res.data;
+};
+
