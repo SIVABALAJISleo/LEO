@@ -47,6 +47,19 @@ class ProductionSemanticCache:
             self.encoder = TrigramEmbedder()
             self.vector_dim = 384
 
+    @property
+    def _store(self):
+        try:
+            conn = sqlite3.connect(self.db_path)
+            cursor = conn.cursor()
+            cursor.execute("SELECT count(*) FROM semantic_cache")
+            count = cursor.fetchone()[0]
+            conn.close()
+            return [None] * count
+        except Exception:
+            return []
+
+
         # Connect to Qdrant Docker Container
         self.qdrant = None
         self.qdrant_collection = "semantic_fabric"

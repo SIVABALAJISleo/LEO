@@ -1,230 +1,60 @@
-import { HealthMonitor } from './core/HealthMonitor';
-import { MoERouter } from './intelligence/MoERouter';
-import { ReliabilityOrchestrator } from './core/ReliabilityOrchestrator';
+import axios from "axios";
 
-export interface BackendStatus {
-    version: string;
-    metrics: {
-        requests: number;
-        errors: number;
-        latency_avg: number;
-    };
-    hardware: {
-        cpu_load: number;
-        memory_percent: number;
-        disk_percent: number;
-        memory_available_gb: number;
-    };
-    server_time: number;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8005/api/v1";
+
+export const leoApi = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+export interface LeoStatus {
+  status: string;
+  system: string;
+  layers: number;
+  telemetry: any;
+  semantic_store_size: number;
+  fingerprint_store_size: number;
+  timestamp: number;
 }
 
-export interface HealthStatus {
-    status: 'healthy' | 'degraded';
-    engines_available: boolean;
-    timestamp: number;
+export interface OrchestrateRequest {
+  query: string;
+  workspace_id?: string;
+  quality_hint?: string;
 }
 
-export interface CoreTelemetry {
-    sdgp_active: boolean;
-    gpu_relevance_reduction: string;
-    equivalent_vram_gb: number;
-    sdgp_latency_ms: number;
-    ray_logic_depth: number | string;
-    dlss_s_active: boolean;
-    perceptual_culling: string;
+export interface LayerTrace {
+  layer_id: number;
+  layer_name: string;
+  resolved: boolean;
+  confidence: number;
+  latency_ms: number;
 }
 
 export interface OrchestrateResponse {
-    status: string;
-    job_id: string;
-    mode: string;
-    expert: string;
-    result: string;
-    timestamp: number;
-    core: CoreTelemetry;
-    agentic_intervention?: boolean;
-    healer_action?: string;
+  result: string;
+  answer: string;
+  resolved_by: string;
+  latency_ms: number;
+  confidence: number;
+  compute_avoided: boolean;
+  gpu_watts_saved: number;
+  entropy_tier: string;
+  layer_trace: LayerTrace[];
+  trace: {
+    resolved_by_layer: string;
+    total_latency_ms: number;
+  };
 }
 
-const BACKEND_URL = 'http://localhost:8005/api/v1';
-const LEO_BASE   = 'http://localhost:8005';
+export const fetchLeoStatus = async (): Promise<LeoStatus> => {
+  const res = await leoApi.get("/leo/status");
+  return res.data;
+};
 
-/**
- * HYPER API Client
- * Unified production interface for the Project HYPER Backend.
- */
-export const hyperClient = {
-    async getHealth(): Promise<HealthStatus> {
-        try {
-            const response = await fetch(`${LEO_BASE}/health`);
-            if (response.ok) {
-                const health = await response.json();
-                return {
-                    status: health.status === 'ok' ? 'healthy' : 'degraded',
-                    engines_available: true,
-                    timestamp: health.timestamp * 1000
-                };
-            }
-        } catch (error) {
-            console.error("Backend health probe failed.", error);
-        }
-        return { 
-            status: 'degraded', 
-            engines_available: false, 
-            timestamp: Date.now() 
-        };
-    },
-
-    async getStatus(): Promise<BackendStatus> {
-        try {
-            const response = await fetch(`${BACKEND_URL}/compute/telemetry`);
-            if (response.ok) {
-                const telemetry = await response.json();
-                return {
-                    version: '2.0.0-LEO',
-                    metrics: {
-                        requests: telemetry.leo?.total_requests ?? 0,
-                        errors: 0,
-                        latency_avg: 0.05
-                    },
-                    hardware: {
-                        cpu_load: telemetry.cpu?.average_utilization ?? 0,
-                        memory_percent: telemetry.memory?.percent_used ?? 0,
-                        disk_percent: 40,
-                        memory_available_gb: (telemetry.memory?.total_gb ?? 0) - (telemetry.memory?.used_gb ?? 0)
-                    },
-                    server_time: Date.now() / 1000
-                };
-            }
-        } catch (error) {
-            console.error("Telemetry fetch failed.", error);
-        }
-
-        return {
-            version: '2.0.0-LEO',
-            metrics: { requests: 0, errors: 0, latency_avg: 0 },
-            hardware: { cpu_load: 0, memory_percent: 0, disk_percent: 0, memory_available_gb: 0 },
-            server_time: Date.now() / 1000
-        };
-    },
-
-    /**
-     * CORE: Execute on Python Backend (Orchestration)
-     */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async executeRemote(query: string, metadata: any = {}): Promise<any> {
-        // Routes to LEO 10-Layer Semantic Orchestration Engine
-        const response = await fetch(`${LEO_BASE}/api/v1/leo/orchestrate`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                query,
-                workspace_id: metadata.workspace_id || 'default',
-            })
-        });
-        if (!response.ok) {
-            const err = await response.json().catch(() => ({ detail: response.statusText }));
-            throw new Error(err.detail || `LEO Backend error: ${response.statusText}`);
-        }
-        return response.json();
-    },
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async uploadFile(file: File): Promise<any> {
-        const formData = new FormData();
-        formData.append('file', file);
-
-        const response = await fetch(`${BACKEND_URL}/documents`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer AUDIT_MODE_TOKEN`
-            },
-            body: formData
-        });
-        if (!response.ok) throw new Error(`Upload error: ${response.statusText}`);
-        return response.json();
-    },
-
-    async uploadPolicyDoc(
-        file: File,
-        level: string = 'Global',
-        department: string = 'General',
-        region: string = 'Global',
-        version: string = '1.0'
-    ): Promise<any> {
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('authority_level', level);
-        formData.append('department', department);
-        formData.append('region', region);
-        formData.append('version', version);
-
-        const response = await fetch(`${LEO_BASE}/api/v1/policy/ingest`, {
-            method: 'POST',
-            body: formData
-        });
-        if (!response.ok) {
-            const err = await response.json().catch(() => ({ detail: response.statusText }));
-            throw new Error(err.detail || `Upload error: ${response.statusText}`);
-        }
-        return response.json();
-    },
-
-    async getContradictions(): Promise<any> {
-        const response = await fetch(`${LEO_BASE}/api/v1/policy/contradictions`);
-        if (!response.ok) throw new Error(`Contradiction fetch error: ${response.statusText}`);
-        return response.json();
-    },
-
-    async getPolicyGraph(): Promise<any> {
-        const response = await fetch(`${LEO_BASE}/api/v1/policy/graph`);
-        if (!response.ok) throw new Error(`Graph fetch error: ${response.statusText}`);
-        return response.json();
-    },
-
-    async getAuditTimeline(): Promise<any> {
-        const response = await fetch(`${LEO_BASE}/api/v1/policy/audit`);
-        if (!response.ok) throw new Error(`Audit fetch error: ${response.statusText}`);
-        return response.json();
-    },
-
-    async routeContradictionAlert(department: string, severity: string, rationale: string): Promise<any> {
-        const response = await fetch(`${LEO_BASE}/api/v1/policy/route`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ department, severity, rationale })
-        });
-        if (!response.ok) throw new Error(`Routing alert error: ${response.statusText}`);
-        return response.json();
-    },
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async orchestrate(action: string, payload: any = {}) {
-        const query = typeof payload === 'string' ? payload : (payload.query || action);
-        return this.executeRemote(query);
-    },
-
-    async runExpert(query: string) {
-        return this.executeRemote(query);
-    },
-
-    async queryRag(query: string, payload: any = {}) {
-        return this.executeRemote(query, payload);
-    },
-
-    async optimisticExecute<T, R>(
-        action: string,
-        payload: T,
-        onResult: (res: R) => void
-    ): Promise<R | null> {
-        try {
-            const query = (payload as any).query || action;
-            const result = await this.executeRemote(query);
-            onResult(result as unknown as R);
-            return result as unknown as R;
-        } catch (error) {
-            console.error("Optimistic execution failed", error);
-            return null;
-        }
-    }
+export const simulateQuery = async (req: OrchestrateRequest): Promise<OrchestrateResponse> => {
+  const res = await leoApi.post("/leo/orchestrate", req);
+  return res.data;
 };

@@ -1,10 +1,9 @@
 """
 backend/intent/classifier.py
-Ultra-fast, CPU-native intent classification, query entropy scoring, and ambiguity detection.
-Categorizes queries into deterministic workflow, retrieval, symbolic reasoning, local inference, etc.
+Tier 1: Intent Classification & Semantic Normalization Engine
 """
-import re
 import math
+import re
 import logging
 from typing import Dict, Any, Tuple
 
@@ -12,113 +11,108 @@ logger = logging.getLogger(__name__)
 
 class IntentClassifier:
     """
-    Analyzes queries to determine lexical entropy, structural complexity, and semantic intent.
-    Helps LEO route queries to the correct layer in the execution cascade, bypassing dense inference.
+    Highly optimized CPU-native intent classifier.
+    Performs semantic normalization, Shannon entropy scoring, ambiguity detection,
+    and maps queries to optimal execution paths.
     """
-
-    # Keyword mappings to detect specific intents
-    INTENT_TRIGGERS = {
-        "symbolic_reasoning": re.compile(
-            r"\b(policy|rules|compliance|violation|contradiction|conflict|prove|satisfy|z3|solver|constraint|schedule|hr rules|access control|allow|deny)\b", re.I
-        ),
-        "deterministic_workflow": re.compile(
-            r"\b(onboard|offboard|ticket|status|approve|reject|escalate|workflow|trigger|step|sequence|fsm|fsm_rules)\b", re.I
-        ),
-        "retrieval_lookup": re.compile(
-            r"\b(find|search|lookup|retrieve|document|wiki|database|reference|kb|grounded|rag|llama.?index|corpus|docx|pdf)\b", re.I
-        ),
-        "multimodal_request": re.compile(
-            r"\b(ocr|screenshot|chart|diagram|invoice|receipt|audio|transcript|voice|image|whisper|smolvlm|yolo)\b", re.I
-        ),
-        "code_generation": re.compile(
-            r"\b(code|python|typescript|javascript|rust|compile|syntax|refactor|debug|function|class|algorithm)\b", re.I
-        ),
-        "local_inference": re.compile(
-            r"\b(local model|run model|quantize|gguf|phi|gemma|mistral|llama|vulkan|igpu|bitnet)\b", re.I
-        )
+    
+    WORKLOAD_CLASSES = {
+        "deterministic": "deterministic workflow",
+        "retrieval": "retrieval lookup",
+        "symbolic": "symbolic reasoning",
+        "local": "local inference",
+        "cloud": "cloud fallback",
+        "multimodal": "multimodal request",
+        "agent": "agent execution",
+        "code": "code generation",
+        "policy": "policy reasoning"
     }
 
-    HIGH_ENTROPY_INDICATORS = re.compile(
-        r"\b(synthesize|strategy|predict|novel|creative|imagine|speculate|design|architect|evaluate|tradeoff|explain why)\b", re.I
-    )
+    def __init__(self):
+        self.status = "ACTIVE"
+        # Compile patterns for fast CPU-native regex matching
+        self.patterns = {
+            "policy": re.compile(r"\b(policy|compliance|rule|hr|regulation|contract|legal|clause|accord|agreement)\b", re.I),
+            "symbolic": re.compile(r"\b(calculate|solve|integral|derivative|equation|schedule|constraint|optimize|math)\b", re.I),
+            "code": re.compile(r"\b(python|javascript|def |function|class |code|script|compile|syntax)\b", re.I),
+            "retrieval": re.compile(r"\b(search|find|lookup|fetch|get|document|database|file|history|provenance)\b", re.I),
+            "multimodal": re.compile(r"\b(image|screenshot|chart|invoice|diagram|pdf|ocr|visual|scan|photo)\b", re.I),
+            "agent": "agent execution"
+        }
 
-    @classmethod
-    def calculate_entropy(cls, text: str) -> float:
-        """Computes approximate Shannon entropy of query token distribution."""
-        tokens = re.findall(r"\w+", text.lower())
-        if not tokens:
+    def normalize_query(self, query: str) -> str:
+        """Applies basic semantic cleaning and normalization."""
+        # Convert to lowercase and remove extraneous whitespaces/symbols
+        normalized = query.lower().strip()
+        normalized = re.sub(r"[^\w\s\-\/\.]", "", normalized)
+        return normalized
+
+    def calculate_entropy(self, text: str) -> float:
+        """Computes Shannon Entropy of the character distribution to gauge complexity."""
+        if not text:
             return 0.0
-        
-        freq: Dict[str, int] = {}
-        for token in tokens:
-            freq[token] = freq.get(token, 0) + 1
-            
-        total = len(tokens)
-        ent = -sum((c / total) * math.log2(c / total) for c in freq.values())
-        
-        # Normalize by maximum potential entropy of the query length
-        max_ent = math.log2(max(total, 2))
-        return min(ent / max_ent, 1.0)
+        entropy = 0.0
+        length = len(text)
+        freq = {}
+        for char in text:
+            freq[char] = freq.get(char, 0) + 1
+        for count in freq.values():
+            p = count / length
+            entropy -= p * math.log2(p)
+        return round(entropy, 4)
 
-    @classmethod
-    def detect_ambiguity(cls, text: str) -> Tuple[bool, float]:
-        """Detects if query is ambiguous (vague, too short, lacking nouns)."""
-        tokens = re.findall(r"\w+", text.strip())
-        if len(tokens) <= 3:
-            return True, 0.85  # Highly ambiguous if very short
-            
-        # Check for vague index words
-        vague_patterns = re.compile(r"\b(stuff|thing|do something|help me|run|fix)\b", re.I)
-        matches = len(vague_patterns.findall(text))
-        if matches > 1:
-            return True, min(0.4 + (matches * 0.2), 0.95)
-            
-        return False, 0.10
-
-    @classmethod
-    def classify(cls, text: str) -> Dict[str, Any]:
+    def classify(self, query: str) -> Dict[str, Any]:
         """
-        Classifies the query and generates structural metadata.
-        Returns workload categorization, confidence, entropy, and ambiguity indicators.
+        Classifies incoming query, estimates confidence, detects ambiguity,
+        and assigns workload categorization.
         """
-        entropy = cls.calculate_entropy(text)
-        is_ambiguous, ambiguity_score = cls.detect_ambiguity(text)
+        normalized = self.normalize_query(query)
+        entropy = self.calculate_entropy(normalized)
         
-        # Normalization: lowercased, clean spacing
-        normalized_query = re.sub(r"\s+", " ", text.lower().strip())
+        # Default fallback
+        workload = self.WORKLOAD_CLASSES["local"]
+        confidence = 0.80
+        ambiguity_detected = False
         
-        # Categorize intent
-        workload_class = "local_inference"  # Default fallback path
-        confidence = 0.75
+        # Ambiguity detection heuristics
+        if len(normalized) < 5:
+            ambiguity_detected = True
+            confidence = 0.40
+        elif entropy > 5.5:
+            # Extremely high entropy may suggest random input / garbage payload
+            ambiguity_detected = True
+            confidence = 0.50
 
-        # Scan for triggers
-        matched_triggers = []
-        for w_class, pattern in cls.INTENT_TRIGGERS.items():
-            if pattern.search(normalized_query):
-                matched_triggers.append(w_class)
-
-        if matched_triggers:
-            # Select highest priority trigger
-            # Priority: symbolic > deterministic > retrieval > multimodal > code
-            priority = ["symbolic_reasoning", "deterministic_workflow", "retrieval_lookup", "multimodal_request", "code_generation", "local_inference"]
-            for p in priority:
-                if p in matched_triggers:
-                    workload_class = p
-                    confidence = 0.95
-                    break
-        elif cls.HIGH_ENTROPY_INDICATORS.search(normalized_query) or entropy > 0.82:
-            workload_class = "cloud_fallback"
-            confidence = 0.85
-        elif entropy < 0.35:
-            workload_class = "deterministic_workflow"
+        # Run rule-based classification cascade
+        if self.patterns["policy"].search(normalized):
+            workload = self.WORKLOAD_CLASSES["policy"]
+            confidence = 0.95
+        elif self.patterns["symbolic"].search(normalized):
+            workload = self.WORKLOAD_CLASSES["symbolic"]
+            confidence = 0.98
+        elif self.patterns["code"].search(normalized):
+            workload = self.WORKLOAD_CLASSES["code"]
+            confidence = 0.92
+        elif self.patterns["multimodal"].search(normalized):
+            workload = self.WORKLOAD_CLASSES["multimodal"]
             confidence = 0.90
+        elif self.patterns["retrieval"].search(normalized):
+            workload = self.WORKLOAD_CLASSES["retrieval"]
+            confidence = 0.94
+            
+        # If query contains explicit instruction override signals, mark for agent execution
+        if any(sig in normalized for sig in ["override", "escalate", "agent", "route to"]):
+            workload = self.WORKLOAD_CLASSES["agent"]
+            confidence = 0.95
 
         return {
-            "query": text,
-            "normalized_query": normalized_query,
-            "workload_class": workload_class,
+            "query": query,
+            "normalized_query": normalized,
+            "entropy": entropy,
+            "workload_class": workload,
             "confidence": confidence,
-            "entropy_score": round(entropy, 4),
-            "is_ambiguous": is_ambiguous,
-            "ambiguity_score": round(ambiguity_score, 4)
+            "ambiguity_detected": ambiguity_detected
         }
+
+# Global singleton classifier
+global_intent_classifier = IntentClassifier()

@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: leo-frontend
+  labels:
+    app: leo-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: leo-frontend
+  template:
+    metadata:
+      labels:
+        app: leo-frontend
+    spec:
+      containers:
+      - name: frontend
+        image: leo-frontend:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        env:
+        - name: VITE_API_BASE_URL
+          value: "http://leo-backend-service:8005/api/v1"
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leo-frontend-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: leo-frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

@@ -1,245 +1,131 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider } from "@/contexts/AuthContext";
-import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
-import { AuthRedirect } from "@/components/auth/AuthRedirect";
-import { ErrorBoundary } from "@/components/ErrorBoundary";
-import { SystemBanner } from "@/components/ui/SystemBanner";
+import React, { useEffect, useState } from "react";
+import { fetchLeoStatus, LeoStatus } from "./lib/api";
+import { QuerySimulationConsole } from "./components/Dashboard/QuerySimulationConsole";
+import { Activity, Cpu, HardDrive, Layers, Zap, AlertTriangle } from "lucide-react";
+import "./index.css";
 
-// Public Pages
-import Index from "./pages/Index";
-import Documentation from "./pages/Documentation";
-import Playground from "./pages/Playground";
-import UOD_Engine_Page from "./pages/UOD_Engine_Page";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import Pricing from "./pages/Pricing";
-import NotFound from "./pages/NotFound";
+function App() {
+  const [status, setStatus] = useState<LeoStatus | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-// Legal Pages
-import TermsOfService from "./pages/legal/TermsOfService";
-import PrivacyPolicy from "./pages/legal/PrivacyPolicy";
-import RefundPolicy from "./pages/legal/RefundPolicy";
-import Disclaimer from "./pages/legal/Disclaimer";
-import Contact from "./pages/legal/Contact";
-import StatusPage from "./pages/system/StatusPage";
+  useEffect(() => {
+    const loadStatus = async () => {
+      try {
+        const data = await fetchLeoStatus();
+        setStatus(data);
+        setError("");
+      } catch (err: any) {
+        console.error("Failed to fetch backend status:", err);
+        setError("Failed to connect to LEO Backend on port 8005. Is it running?");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-// Auth Pages
-import Login from "./pages/auth/Login";
-import Signup from "./pages/auth/Signup";
-import ForgotPassword from "./pages/auth/ForgotPassword";
-import VerifyOtp from "./pages/auth/VerifyOtp";
-import ResetPassword from "./pages/auth/ResetPassword";
-import Onboarding from "./pages/auth/Onboarding";
+    loadStatus();
+    // Poll every 5 seconds
+    const interval = setInterval(loadStatus, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
-// Dashboard Pages
-import Dashboard from "./pages/Dashboard";
-import ApiPlayground from "./pages/documentation/ApiPlayground";
-import Guides from "./pages/documentation/Guides";
+  return (
+    <div className="min-h-screen bg-background text-foreground flex flex-col font-sans">
+      {/* Navbar */}
+      <header className="border-b sticky top-0 bg-background/95 backdrop-blur z-50">
+        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="bg-primary p-1.5 rounded-md">
+              <Zap className="h-5 w-5 text-primary-foreground" />
+            </div>
+            <h1 className="text-xl font-bold tracking-tight">UCSIP <span className="text-muted-foreground font-normal text-sm ml-2">Universal Crystal Swarm Intelligence Platform</span></h1>
+          </div>
+          <div className="flex items-center gap-4">
+            {error ? (
+              <span className="flex items-center gap-1.5 text-sm text-destructive font-medium">
+                <AlertTriangle className="h-4 w-4" />
+                Backend Offline
+              </span>
+            ) : status ? (
+              <span className="flex items-center gap-1.5 text-sm text-green-500 font-medium">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                </span>
+                {status.system} Active
+              </span>
+            ) : null}
+          </div>
+        </div>
+      </header>
 
-// Admin Pages
-import HyperAdminQueue from "./pages/HyperAdminQueue";
-import SystemStatus from "./pages/SystemStatus";
-import SecretAdminPage from "./pages/SecretAdminPage";
-import ProductionReadiness from "./pages/admin/ProductionReadiness";
-import RuntimeProofs from "./pages/admin/RuntimeProofs";
-import GpuBypassDemo from "./pages/GpuBypassDemo";
-import SystemDashboard from "./pages/SystemDashboard";
-import OrchestrationExplorer from "./pages/OrchestrationExplorer";
-import LeoUnifiedDashboard from "./pages/LeoUnifiedDashboard";
+      {/* Main Content */}
+      <main className="flex-1 container mx-auto px-4 py-8">
+        {loading && !status && !error ? (
+          <div className="h-64 flex items-center justify-center">
+            <Activity className="h-8 w-8 animate-spin text-muted-foreground" />
+          </div>
+        ) : (
+          <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            
+            {/* Top Level Metric Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="bg-card border rounded-xl p-5 shadow-sm">
+                <div className="flex items-center gap-2 text-muted-foreground mb-3">
+                  <Activity className="h-4 w-4" />
+                  <h3 className="text-sm font-medium">Novelty Reduction</h3>
+                </div>
+                <div className="text-3xl font-bold tracking-tight text-primary">
+                  {status?.telemetry?.avoidance_rate_pct?.toFixed(1) || "0.0"}%
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">Novelty eliminated via Swarm Pipeline</p>
+              </div>
 
+              <div className="bg-card border rounded-xl p-5 shadow-sm">
+                <div className="flex items-center gap-2 text-muted-foreground mb-3">
+                  <Zap className="h-4 w-4 text-green-500" />
+                  <h3 className="text-sm font-medium">GPU Energy Saved</h3>
+                </div>
+                <div className="text-3xl font-bold tracking-tight text-green-500">
+                  {((status?.telemetry?.gpu_watts_saved || 0) / 1000).toFixed(1)} kW
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">NVIDIA GPU irrelevance</p>
+              </div>
 
-// Billing Pages
-import PricingPlansPage from "./pages/billing/PricingPlansPage";
-import UsagePricingCalculatorPage from "./pages/billing/UsagePricingCalculatorPage";
-import EnterpriseQuoteRequestPage from "./pages/billing/EnterpriseQuoteRequestPage";
-import BillingManagePage from "./pages/billing/BillingManagePage";
-import AdminBillingDashboard from "./pages/billing/AdminBillingDashboard";
+              <div className="bg-card border rounded-xl p-5 shadow-sm">
+                <div className="flex items-center gap-2 text-muted-foreground mb-3">
+                  <HardDrive className="h-4 w-4" />
+                  <h3 className="text-sm font-medium">Predictive Pre-resolutions</h3>
+                </div>
+                <div className="text-3xl font-bold tracking-tight">
+                  {status?.semantic_store_size?.toLocaleString() || 0}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">Precomputed future states</p>
+              </div>
 
-import { NotificationProvider } from "@/contexts/NotificationContext";
+              <div className="bg-card border rounded-xl p-5 shadow-sm">
+                <div className="flex items-center gap-2 text-muted-foreground mb-3">
+                  <Layers className="h-4 w-4" />
+                  <h3 className="text-sm font-medium">Discovery Crystals</h3>
+                </div>
+                <div className="text-3xl font-bold tracking-tight">
+                  {status?.fingerprint_store_size?.toLocaleString() || 0}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">Scientific Knowledge Crystals</p>
+              </div>
+            </div>
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: { retry: 1, refetchOnWindowFocus: false },
-    mutations: { retry: 0 },
-  },
-});
+            {/* Interactive Simulation Console */}
+            <section className="pt-4">
+              <h2 className="text-xl font-bold mb-4">Runtime Simulation</h2>
+              <QuerySimulationConsole />
+            </section>
 
-const App = () => (
-  <ErrorBoundary>
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <NotificationProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <SystemBanner />
-              <Routes>
-                {/* Public Routes */}
-                <Route path="/" element={<Index />} />
-                <Route path="/docs" element={<Documentation />} />
-                <Route path="/documentation" element={<Navigate to="/docs" replace />} />
-                <Route path="/playground" element={<Playground />} />
-                <Route path="/uod-engine" element={<UOD_Engine_Page />} />
-                <Route path="/pricing" element={<Navigate to="/billing/pricing" replace />} />
-                <Route path="/documentation/api-playground" element={<ApiPlayground />} />
-                <Route path="/documentation/guides" element={<Guides />} />
-
-                {/* Legal Routes */}
-                <Route path="/legal/terms" element={<TermsOfService />} />
-                <Route path="/legal/privacy" element={<PrivacyPolicy />} />
-                <Route path="/legal/refund" element={<RefundPolicy />} />
-                <Route path="/legal/disclaimer" element={<Disclaimer />} />
-                <Route path="/legal/contact" element={<Contact />} />
-                {/* Convenience redirects */}
-                <Route path="/terms" element={<Navigate to="/legal/terms" replace />} />
-                <Route path="/privacy" element={<Navigate to="/legal/privacy" replace />} />
-                <Route path="/contact" element={<Navigate to="/legal/contact" replace />} />
-
-                {/* System Status */}
-                <Route path="/system/status" element={<StatusPage />} />
-                <Route path="/status" element={<Navigate to="/system/status" replace />} />
-
-                {/* Billing Routes */}
-                <Route path="/billing/pricing" element={<PricingPlansPage />} />
-                <Route path="/billing/calculator" element={<UsagePricingCalculatorPage />} />
-                <Route path="/billing/enterprise" element={<EnterpriseQuoteRequestPage />} />
-                <Route path="/billing/manage" element={<ProtectedRoute><BillingManagePage /></ProtectedRoute>} />
-
-                {/* Admin Billing Dashboard - Secret URL */}
-                <Route path="/hyper-admin-billing-secret" element={<ProtectedRoute><AdminBillingDashboard /></ProtectedRoute>} />
-
-                {/* Auth Routes - Redirect if already authenticated */}
-                <Route path="/auth" element={<Navigate to="/auth/login" replace />} />
-                <Route
-                  path="/auth/login"
-                  element={
-                    <AuthRedirect>
-                      <Login />
-                    </AuthRedirect>
-                  }
-                />
-                <Route
-                  path="/auth/signup"
-                  element={
-                    <AuthRedirect>
-                      <Signup />
-                    </AuthRedirect>
-                  }
-                />
-                <Route
-                  path="/auth/forgot-password"
-                  element={
-                    <AuthRedirect>
-                      <ForgotPassword />
-                    </AuthRedirect>
-                  }
-                />
-                <Route
-                  path="/auth/verify-reset"
-                  element={
-                    <AuthRedirect>
-                      <VerifyOtp />
-                    </AuthRedirect>
-                  }
-                />
-                <Route path="/auth/reset-password" element={<ResetPassword />} />
-                <Route
-                  path="/auth/onboarding"
-                  element={
-                    <ProtectedRoute>
-                      <Onboarding />
-                    </ProtectedRoute>
-                  }
-                />
-
-                {/* Protected Dashboard Routes */}
-                <Route
-                  path="/dashboard"
-                  element={<Navigate to="/dashboard/home" replace />}
-                />
-                <Route
-                  path="/dashboard/*"
-                  element={
-                    <ProtectedRoute>
-                      <Dashboard />
-                    </ProtectedRoute>
-                  }
-                />
-
-                {/* Admin Routes - Protected */}
-                <Route
-                  path="/hyper-admin-queue"
-                  element={
-                    <ProtectedRoute>
-                      <HyperAdminQueue />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/production-readiness"
-                  element={
-                    <ProtectedRoute>
-                      <ProductionReadiness />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/runtime-proofs"
-                  element={
-                    <ProtectedRoute>
-                      <RuntimeProofs />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/system-status"
-                  element={
-                    <ProtectedRoute>
-                      <SystemStatus />
-                    </ProtectedRoute>
-                  }
-                />
-                {/* Secret Admin Page - Not linked anywhere */}
-                <Route
-                  path="/hyper-admin-987654321-secret"
-                  element={
-                    <ProtectedRoute>
-                      <SecretAdminPage />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route path="/gpu-bypass-demo" element={<GpuBypassDemo />} />
-                <Route path="/leo-master" element={<LeoOrchestrationMaster />} />
-                <Route
-                  path="/admin/dashboard"
-                  element={
-                    <ProtectedRoute>
-                      <SystemDashboard />
-                    </ProtectedRoute>
-                  }
-                />
-
-                <Route
-                  path="/admin/explorer"
-                  element={
-                    <ProtectedRoute>
-                      <OrchestrationExplorer />
-                    </ProtectedRoute>
-                  }
-                />
-                {/* Catch-all */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </BrowserRouter>
-          </TooltipProvider>
-        </NotificationProvider>
-      </AuthProvider>
-    </QueryClientProvider>
-  </ErrorBoundary>
-);
+          </div>
+        )}
+      </main>
+    </div>
+  );
+}
 
 export default App;

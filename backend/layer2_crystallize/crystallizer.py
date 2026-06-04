@@ -22,6 +22,20 @@ class TraceCompiler:
         self.db_path = db_path
         self._initialize_sqlite()
 
+    @property
+    def _decisions(self):
+        try:
+            import sqlite3
+            conn = sqlite3.connect(self.db_path)
+            cursor = conn.cursor()
+            cursor.execute("SELECT count(*) FROM compiled_shortcuts")
+            count = cursor.fetchone()[0]
+            conn.close()
+            return [None] * count
+        except Exception:
+            return []
+
+
     def _initialize_sqlite(self):
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
