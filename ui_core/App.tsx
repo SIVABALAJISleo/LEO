@@ -4,12 +4,17 @@ import { QuerySimulationConsole } from "./components/Dashboard/QuerySimulationCo
 import { 
   Activity, Cpu, HardDrive, Layers, Zap, AlertTriangle, Play, Shield, 
   RefreshCw, AlertCircle, Sparkles, MessageSquare, CheckCircle, 
-  Terminal, HelpCircle, ArrowRight, Settings, BarChart2 
+  Terminal, HelpCircle, ArrowRight, Settings, BarChart2, Brain, GitBranch
 } from "lucide-react";
 import { 
   IntentCanonicalizer, LanguageRecoveryEngine, ReasoningValidator, 
   DeepPlanner, SelfCritic, DebateCoordinator, EvaluationCenter, 
-  MemoryQualityMonitor, CrystalAuditor, NoveltyResearchEngine 
+  MemoryQualityMonitor, CrystalAuditor, NoveltyResearchEngine,
+  FormalReasoningEngine, VerificationOrchestrator, WorldModelEngineV2,
+  RealityFeedbackLoop, MetaLearningGovernor, KnowledgeGovernor,
+  MemoryGovernorV2, IntentCanonicalizerV2, LanguageRecoveryEngineV2,
+  DebateEngineV2, PlannerV2, NoveltyDiscoveryEngineV2,
+  ResearchEngineV2, EvaluationCenterV2
 } from "./src/cognitive";
 import "./index.css";
 
@@ -17,7 +22,7 @@ function App() {
   const [status, setStatus] = useState<LeoStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [activeTab, setActiveTab] = useState<"swarm" | "cognitive" | "debate" | "benchmarks" | "devops" | "quality">("swarm");
+  const [activeTab, setActiveTab] = useState<"swarm" | "cognitive" | "debate" | "benchmarks" | "devops" | "quality" | "superintelligence">("swarm");
 
   // DevOps Settings State
   const [devOps, setDevOps] = useState<DevOpsSettings | null>(null);
@@ -43,6 +48,63 @@ function App() {
   // Webhook Test State
   const [webhookStatus, setWebhookStatus] = useState<string>("");
   const [webhookLog, setWebhookLog] = useState<string>("");
+
+  // V13 Superintelligence States
+  const [theoremClaim, setTheoremClaim] = useState("Sum of two positive integers is always positive");
+  const [theoremResult, setTheoremResult] = useState<any>(null);
+  const [verificationQuery, setVerificationQuery] = useState("Solve: 452 * 231");
+  const [verificationOutput, setVerificationOutput] = useState<any>(null);
+  const [v13ScenarioQuery, setV13ScenarioQuery] = useState("Startup SaaS launch dynamic compute pricing");
+  const [v13ScenarioReport, setV13ScenarioReport] = useState<any>(null);
+  const [predictedValue, setPredictedValue] = useState("250");
+  const [observedValue, setObservedValue] = useState("410");
+  const [feedbackRecords, setFeedbackRecords] = useState<any[]>([]);
+  const [feedbackWeights, setFeedbackWeights] = useState<any>({
+    crystallizationWeight: 0.95,
+    localInferenceConfidence: 0.90,
+    activeResearchRate: 0.85,
+    gpuAccelerationPriority: 0.88,
+  });
+  
+  // V13 class instances (persistent)
+  const [proverInstance] = useState(() => new FormalReasoningEngine());
+  const [orchestratorInstance] = useState(() => new VerificationOrchestrator());
+  const [worldModelInstance] = useState(() => new WorldModelEngineV2());
+  const [feedbackLoopInstance] = useState(() => new RealityFeedbackLoop());
+  const [metaLearnerInstance] = useState(() => new MetaLearningGovernor());
+  const [knowledgeGovInstance] = useState(() => new KnowledgeGovernor());
+  const [memoryGovInstance] = useState(() => new MemoryGovernorV2());
+  const [intentV2Instance] = useState(() => new IntentCanonicalizerV2());
+  const [recoveryV2Instance] = useState(() => new LanguageRecoveryEngineV2());
+  const [debateV2Instance] = useState(() => new DebateEngineV2());
+  const [plannerV2Instance] = useState(() => new PlannerV2());
+  const [noveltyV2Instance] = useState(() => new NoveltyDiscoveryEngineV2());
+  const [researchV2Instance] = useState(() => new ResearchEngineV2());
+  const [evalV2Instance] = useState(() => new EvaluationCenterV2());
+
+  // V13 Interactive Actions
+  const handleVerifyTheorem = () => {
+    const res = proverInstance.verifyClaim(theoremClaim);
+    setTheoremResult(res);
+  };
+
+  const handleRunToolVerification = () => {
+    const res = orchestratorInstance.verify(verificationQuery, "Calculated result: 104412");
+    setVerificationOutput(res);
+  };
+
+  const handleRunScenarioSimulation = () => {
+    const res = worldModelInstance.simulateTask(v13ScenarioQuery);
+    setV13ScenarioReport(res);
+  };
+
+  const handleLogFeedback = () => {
+    const p = parseFloat(predictedValue) || 0;
+    const o = parseFloat(observedValue) || 0;
+    feedbackLoopInstance.logReality("pred-" + Date.now().toString().slice(-4), "localInferenceConfidence", p, o);
+    setFeedbackRecords([...feedbackLoopInstance.getHistory()]);
+    setFeedbackWeights({ ...feedbackLoopInstance.getModelWeights() });
+  };
 
   // Release Evaluation Report
   const evalCenter = new EvaluationCenter();
@@ -230,6 +292,7 @@ function App() {
           {[
             { id: "swarm", label: "Swarm Console", icon: Terminal },
             { id: "cognitive", label: "Cognitive Engine", icon: Cpu },
+            { id: "superintelligence", label: "V13 Superintelligence", icon: Sparkles },
             { id: "debate", label: "Multi-Agent Debate", icon: MessageSquare },
             { id: "quality", label: "Verification & Quality", icon: Shield },
             { id: "benchmarks", label: "Enterprise Benchmarks", icon: BarChart2 },
@@ -497,6 +560,359 @@ function App() {
                 </div>
               )}
             </div>
+          </div>
+        )}
+
+        {/* TAB 2.5: V13 SUPERINTELLIGENCE ECOSYSTEM */}
+        {activeTab === "superintelligence" && (
+          <div className="space-y-6 animate-in fade-in duration-300">
+            {/* Header / Intro */}
+            <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-6">
+              <h3 className="text-lg font-bold mb-2 flex items-center gap-2 text-blue-400">
+                <Sparkles className="h-5 w-5 animate-pulse" />
+                V13 Universal Superintelligence Substrates
+              </h3>
+              <p className="text-xs text-slate-400">
+                Evolving the swarm from search & retrieval to a self-improving, mathematically verified cognitive ecosystem. 
+                Runs local Lean/Coq solvers, tool verifiers, scenario simulation, and reality feedback optimization.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              
+              {/* Card 1: Interactive Lean/Coq Prover Console */}
+              <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-6 flex flex-col justify-between">
+                <div>
+                  <h4 className="text-sm font-bold text-slate-200 mb-2 flex items-center gap-2">
+                    <Brain className="h-4 w-4 text-purple-400" />
+                    Formal Prover Console (Lean 4 / Coq / Z3 SMT)
+                  </h4>
+                  <p className="text-[11px] text-slate-400 mb-4">
+                    Enter mathematical or logical assertions to formally construct and compile proving targets.
+                  </p>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-[10px] text-slate-500 font-semibold mb-1">Enter Logical Claim:</p>
+                      <input 
+                        type="text"
+                        value={theoremClaim}
+                        onChange={(e) => setTheoremClaim(e.target.value)}
+                        className="w-full rounded bg-slate-900 border border-slate-800 px-3 py-2 text-xs text-slate-300 focus:outline-none focus:ring-1 focus:ring-blue-500 font-mono"
+                      />
+                    </div>
+                    
+                    <button 
+                      onClick={handleVerifyTheorem}
+                      className="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-4 py-2 rounded transition-colors"
+                    >
+                      Compile & Verify Theorem
+                    </button>
+                    
+                    {theoremResult && (
+                      <div className="space-y-2 text-xs">
+                        <div className="flex justify-between items-center bg-slate-900 border border-slate-800 px-3 py-2 rounded">
+                          <span className="text-slate-400">Language Resolved:</span>
+                          <span className="font-bold text-blue-400">{theoremResult.formalLanguage}</span>
+                        </div>
+                        <div className="flex justify-between items-center bg-slate-900 border border-slate-800 px-3 py-2 rounded">
+                          <span className="text-slate-400">Solver Output:</span>
+                          <span className={`font-bold ${theoremResult.isVerified ? "text-emerald-400" : "text-rose-500"}`}>
+                            {theoremResult.isVerified ? "VERIFIED (100% Correct)" : "FAILED (Unsat/Contradiction)"}
+                          </span>
+                        </div>
+                        <div>
+                          <p className="text-[10px] text-slate-500 font-semibold mb-1">Generated Theorem Proof:</p>
+                          <pre className="bg-[#020713] border border-slate-850 p-3 rounded font-mono text-[10px] text-slate-300 overflow-x-auto whitespace-pre">
+                            {theoremResult.proofCode}
+                          </pre>
+                        </div>
+                        <div>
+                          <p className="text-[10px] text-slate-500 font-semibold mb-1">Solvers Compilation Details:</p>
+                          <pre className="bg-[#020713] border border-slate-850 p-3 rounded font-mono text-[10px] text-slate-400 overflow-x-auto whitespace-pre">
+                            {theoremResult.solverOutput}
+                          </pre>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 2: Tool-Verified Sandbox Orchestrator */}
+              <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-6 flex flex-col justify-between">
+                <div>
+                  <h4 className="text-sm font-bold text-slate-200 mb-2 flex items-center gap-2">
+                    <Shield className="h-4 w-4 text-emerald-400" />
+                    Tool-Verified execution & Sandbox checking
+                  </h4>
+                  <p className="text-[11px] text-slate-400 mb-4">
+                    Evaluates query outputs through sandboxed executions and calculators to guarantee correctness.
+                  </p>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-[10px] text-slate-500 font-semibold mb-1">Target Statement / Query:</p>
+                      <input 
+                        type="text"
+                        value={verificationQuery}
+                        onChange={(e) => setVerificationQuery(e.target.value)}
+                        className="w-full rounded bg-slate-900 border border-slate-800 px-3 py-2 text-xs text-slate-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      />
+                    </div>
+                    
+                    <button 
+                      onClick={handleRunToolVerification}
+                      className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2 rounded transition-colors"
+                    >
+                      Run Verification Cascade
+                    </button>
+                    
+                    {verificationOutput && (
+                      <div className="space-y-3 text-xs">
+                        <div className="flex justify-between items-center bg-slate-900 border border-slate-800 px-3 py-2 rounded">
+                          <span className="text-slate-400">Score Metrics:</span>
+                          <span className="font-bold text-emerald-400">{verificationOutput.score * 100}% Passed</span>
+                        </div>
+                        <div className="space-y-2">
+                          <p className="text-[10px] text-slate-500 font-semibold">Active Verifiers Checklists:</p>
+                          {verificationOutput.checks.map((check: any, idx: number) => (
+                            <div key={idx} className="flex justify-between items-center bg-[#020713] px-3 py-1.5 border border-slate-850 rounded text-[11px]">
+                              <span className="font-semibold text-slate-300">{check.toolName}</span>
+                              <span className={`font-mono px-2 py-0.5 rounded uppercase text-[9px] ${
+                                check.status === "passed" ? "bg-emerald-500/10 text-emerald-400" :
+                                check.status === "failed" ? "bg-rose-500/10 text-rose-500" : "bg-slate-800 text-slate-400"
+                              }`}>
+                                {check.status}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                        <div>
+                          <p className="text-[10px] text-slate-500 font-semibold mb-1">Repaired output answer:</p>
+                          <div className="bg-[#020713] border border-slate-850 p-3 rounded font-mono text-[10px] text-slate-300">
+                            {verificationOutput.repairedAnswer}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              
+              {/* Card 3: World Model Simulation */}
+              <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-6">
+                <h4 className="text-sm font-bold text-slate-200 mb-2 flex items-center gap-2">
+                  <GitBranch className="h-4 w-4 text-blue-400" />
+                  World Model Outcome Simulator
+                </h4>
+                <p className="text-[11px] text-slate-400 mb-4">
+                  Simulate dynamic execution scenarios to predict best-case, worst-case, and likely outcomes.
+                </p>
+                
+                <div className="space-y-4">
+                  <div className="flex gap-2">
+                    <input 
+                      type="text"
+                      value={v13ScenarioQuery}
+                      onChange={(e) => setV13ScenarioQuery(e.target.value)}
+                      className="flex-1 rounded bg-slate-900 border border-slate-800 px-3 py-2 text-xs text-slate-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                    <button 
+                      onClick={handleRunScenarioSimulation}
+                      className="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-4 py-2 rounded transition-colors whitespace-nowrap"
+                    >
+                      Run Simulation
+                    </button>
+                  </div>
+                  
+                  {v13ScenarioReport && (
+                    <div className="space-y-4 text-xs">
+                      <div className="grid grid-cols-3 gap-2">
+                        {v13ScenarioReport.scenarios.map((sc: any, idx: number) => (
+                          <div key={idx} className="bg-slate-900 border border-slate-850 p-3 rounded-lg flex flex-col justify-between">
+                            <div>
+                              <span className={`text-[9px] uppercase font-bold px-1.5 py-0.5 rounded inline-block mb-1.5 ${
+                                sc.type === "best" ? "bg-emerald-500/10 text-emerald-400" :
+                                sc.type === "likely" ? "bg-blue-500/10 text-blue-400" : "bg-rose-500/10 text-rose-400"
+                              }`}>
+                                {sc.type} Case
+                              </span>
+                              <h5 className="font-bold text-slate-300 text-[11px] mb-1">{sc.title}</h5>
+                              <p className="text-[10px] text-slate-400 leading-relaxed">{sc.description}</p>
+                            </div>
+                            <div className="border-t border-slate-800 pt-2 mt-2 space-y-1 text-[9px] text-slate-500 font-mono">
+                              <p>Prob: {sc.outcomeProbability * 100}%</p>
+                              <p>Lat: {sc.estimatedLatencyMs}ms</p>
+                              <p>Tokens: {sc.expectedCostTokens}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="bg-[#020713] p-3 border border-slate-850 rounded">
+                        <p className="font-semibold text-slate-300">Consequence summary:</p>
+                        <p className="text-[10px] text-slate-400">{v13ScenarioReport.consequenceSummary}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Card 4: Reality Feedback Loop & Meta-Learning */}
+              <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-6">
+                <h4 className="text-sm font-bold text-slate-200 mb-2 flex items-center gap-2">
+                  <Activity className="h-4 w-4 text-rose-500" />
+                  Reality Feedback Loop & Self-Optimization
+                </h4>
+                <p className="text-[11px] text-slate-400 mb-4">
+                  Compare predicted latency against observed real-world performance to dynamically adjust network weights.
+                </p>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <p className="text-[10px] text-slate-500 font-semibold mb-1">Predicted Latency (ms):</p>
+                        <input 
+                          type="number"
+                          value={predictedValue}
+                          onChange={(e) => setPredictedValue(e.target.value)}
+                          className="w-full rounded bg-slate-900 border border-slate-800 px-3 py-1 text-xs text-slate-300"
+                        />
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-slate-500 font-semibold mb-1">Observed Latency (ms):</p>
+                        <input 
+                          type="number"
+                          value={observedValue}
+                          onChange={(e) => setObservedValue(e.target.value)}
+                          className="w-full rounded bg-slate-900 border border-slate-800 px-3 py-1 text-xs text-slate-300"
+                        />
+                      </div>
+                    </div>
+                    
+                    <button 
+                      onClick={handleLogFeedback}
+                      className="w-full bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold py-2 rounded transition-colors"
+                    >
+                      Log Reality Feedback
+                    </button>
+                    
+                    <div className="space-y-1.5">
+                      <p className="text-[10px] text-slate-500 font-semibold">Decay weights:</p>
+                      {Object.entries(feedbackWeights).map(([key, val]: any) => (
+                        <div key={key} className="flex justify-between items-center text-[10px] bg-slate-900 border border-slate-850 px-2 py-1 rounded">
+                          <span className="text-slate-400 font-mono">{key}</span>
+                          <span className="font-mono font-bold text-rose-400">{val.toFixed(4)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div className="bg-[#020713] p-4 border border-slate-850 rounded-lg flex flex-col justify-between">
+                    <div>
+                      <p className="text-[10px] text-slate-500 font-semibold mb-1.5">Feedback logs timeline:</p>
+                      <div className="space-y-1.5 max-h-48 overflow-y-auto text-[9px] font-mono text-slate-400">
+                        {feedbackRecords.length === 0 ? (
+                          <p className="text-slate-600 italic">No feedback entries logged yet.</p>
+                        ) : (
+                          feedbackRecords.map((r, i) => (
+                            <div key={i} className="border-b border-slate-900 pb-1 flex justify-between">
+                              <span>{r.predictionId}: Err {r.errorPercentage.toFixed(1)}%</span>
+                              <span className={r.weightAdjustment > 0 ? "text-emerald-400" : "text-rose-500"}>
+                                {r.weightAdjustment > 0 ? "+" : ""}{r.weightAdjustment.toFixed(4)}
+                              </span>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </div>
+                    <div className="text-[9px] text-slate-500 text-center border-t border-slate-900 pt-2">
+                      Active model weights automatically fine-tuned by local error parameters.
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Additional modules diagnostics */}
+            <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-6">
+              <h4 className="text-sm font-bold text-slate-200 mb-4 flex items-center gap-2">
+                <Layers className="h-4 w-4 text-blue-500" />
+                Episodic Memory V2 & Knowledge Governance Status
+              </h4>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+                {/* Memory block */}
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <p className="font-semibold text-slate-300">Memory Governor V2 Cleaned Blocks</p>
+                    <button 
+                      onClick={() => {
+                        memoryGovInstance.governMemory();
+                        setGovernedMemories([...memoryGovInstance.getBlocks()]);
+                      }}
+                      className="text-[10px] bg-slate-800 hover:bg-slate-700 px-3 py-1 rounded text-slate-300 font-bold uppercase transition-colors"
+                    >
+                      Audit Memory Blocks
+                    </button>
+                  </div>
+                  <div className="bg-[#020713] p-3 border border-slate-850 rounded-lg max-h-48 overflow-y-auto space-y-2">
+                    {(governedMemories.length > 0 ? governedMemories : memoryGovInstance.getBlocks()).map((block, idx) => (
+                      <div key={idx} className="bg-slate-900 border border-slate-850 p-2 rounded text-[10px]">
+                        <div className="flex justify-between text-[9px] text-slate-500 mb-1">
+                          <span>Source: {block.source} | Cat: {block.category}</span>
+                          <span className="font-bold text-blue-400">Weight: {block.weight}</span>
+                        </div>
+                        <p className="text-slate-300 leading-snug">{block.content}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Knowledge block */}
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <p className="font-semibold text-slate-300">Knowledge Governor Crystal Audit</p>
+                    <button 
+                      onClick={() => {
+                        knowledgeGovInstance.performAudit();
+                        setGovernedCrystals([...knowledgeGovInstance.getAssets()]);
+                      }}
+                      className="text-[10px] bg-slate-800 hover:bg-slate-700 px-3 py-1 rounded text-slate-300 font-bold uppercase transition-colors"
+                    >
+                      Prune Crystals
+                    </button>
+                  </div>
+                  <div className="bg-[#020713] p-3 border border-slate-850 rounded-lg max-h-48 overflow-y-auto space-y-2">
+                    {(governedCrystals.length > 0 ? governedCrystals : knowledgeGovInstance.getAssets()).map((asset, idx) => (
+                      <div key={idx} className="bg-slate-900 border border-slate-850 p-2 rounded text-[10px] flex justify-between items-center">
+                        <div className="flex-1 mr-4">
+                          <h6 className="font-bold text-slate-300 text-[11px] mb-1">{asset.topic}</h6>
+                          <div className="flex gap-2 text-[9px] text-slate-500 font-mono">
+                            <span>Acc: {asset.accuracyScore}</span>
+                            <span>Fresh: {asset.freshnessScore}</span>
+                            <span>Trust: {asset.trustScore}</span>
+                          </div>
+                        </div>
+                        <span className={`font-mono text-[9px] uppercase px-2 py-0.5 rounded font-bold ${
+                          asset.status === "active" ? "bg-blue-500/10 text-blue-400" :
+                          asset.status === "reinforced" ? "bg-emerald-500/10 text-emerald-400" : "bg-rose-500/10 text-rose-500"
+                        }`}>
+                          {asset.status}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         )}
 

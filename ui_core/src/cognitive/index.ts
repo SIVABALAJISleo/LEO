@@ -8,3 +8,19 @@ export * from "./evaluationCenter";
 export * from "./memoryQualityMonitor";
 export * from "./crystalAuditor";
 export * from "./noveltyResearchEngine";
+
+// V13 Superintelligence Modules
+export * from "./formalReasoningEngine";
+export * from "./verificationOrchestrator";
+export * from "./worldModelEngineV2";
+export * from "./realityFeedbackLoop";
+export * from "./metaLearningGovernor";
+export * from "./knowledgeGovernor";
+export * from "./memoryGovernorV2";
+export * from "./intentCanonicalizerV2";
+export * from "./languageRecoveryEngineV2";
+export * from "./debateEngineV2";
+export * from "./plannerV2";
+export * from "./noveltyDiscoveryEngineV2";
+export * from "./researchEngineV2";
+export * from "./evaluationCenterV2";

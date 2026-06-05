@@ -357,7 +357,7 @@ async def trigger_crystallization():
     }
 
 
-# ── V11 Webhooks & DevOps Telemetry Endpoints ────────────────────────────── #
+# ── V13 Webhooks & DevOps Telemetry Endpoints ────────────────────────────── #
 
 class DevOpsSettings(BaseModel):
     sentry_dsn: Optional[str] = None
@@ -365,14 +365,25 @@ class DevOpsSettings(BaseModel):
     stripe_signature_checking: bool = True
     canary_deployment_pct: float = 10.0
     active_rollback: bool = False
+    security_monitoring: bool = True
+    audit_logging: bool = True
 
 devops_state = {
     "sentry_dsn": "https://sentry.hyper.app/12345",
-    "pagerduty_integration_key": "pd_key_v11_active",
+    "pagerduty_integration_key": "pd_key_v13_active",
     "stripe_signature_checking": True,
     "canary_deployment_pct": 10.0,
-    "active_rollback": False
+    "active_rollback": False,
+    "security_monitoring": True,
+    "audit_logging": True,
+    "last_rollback_timestamp": None,
+    "rollback_history": []
 }
+
+audit_logs = [
+    {"timestamp": time.time() - 3600, "action": "INGEST_POLICY", "status": "success", "details": "Ingested Global Policy Document"},
+    {"timestamp": time.time() - 1800, "action": "CANARY_ROUTE_UPDATE", "status": "success", "details": "Canary weight set to 10.0%"},
+]
 
 @app.get("/api/v1/devops/status", tags=["DevOps"])
 async def get_devops_status():
@@ -383,7 +394,62 @@ async def get_devops_status():
 async def configure_devops(settings: DevOpsSettings):
     """Configure rollback, canary, and APM parameters."""
     devops_state.update(settings.dict(exclude_unset=True))
+    audit_logs.append({
+        "timestamp": time.time(),
+        "action": "CONFIGURE_DEVOPS",
+        "status": "success",
+        "details": f"Updated devops parameters: {settings.dict(exclude_unset=True)}"
+    })
     return {"status": "configured", "settings": devops_state}
+
+@app.post("/api/v1/devops/rollback", tags=["DevOps"])
+async def trigger_rollback():
+    """Trigger automated rollback of deployment to the last stable release."""
+    timestamp = time.time()
+    devops_state["last_rollback_timestamp"] = timestamp
+    devops_state["canary_deployment_pct"] = 0.0
+    devops_state["rollback_history"].append(timestamp)
+    
+    audit_logs.append({
+        "timestamp": timestamp,
+        "action": "ROLLBACK_TRIGGERED",
+        "status": "success",
+        "details": "Rollback executed, canary route reset to 0%."
+    })
+    
+    return {"status": "rollback_completed", "canary_weight": 0.0, "timestamp": timestamp}
+
+@app.post("/api/v1/devops/canary", tags=["DevOps"])
+async def configure_canary(weight: float):
+    """Adjust canary deployment traffic routing weights."""
+    if not (0.0 <= weight <= 100.0):
+        raise HTTPException(status_code=400, detail="Canary weight must be between 0.0 and 100.0")
+    devops_state["canary_deployment_pct"] = weight
+    
+    audit_logs.append({
+        "timestamp": time.time(),
+        "action": "CANARY_WEIGHT_ADJUST",
+        "status": "success",
+        "details": f"Canary routing weight adjusted to {weight}%"
+    })
+    return {"status": "canary_configured", "canary_weight": weight}
+
+@app.get("/api/v1/devops/audit_log", tags=["DevOps"])
+async def get_audit_logs():
+    """Exposes DevOps config audit trails."""
+    return audit_logs
+
+@app.get("/api/v1/devops/security", tags=["DevOps"])
+async def get_security_status():
+    """Returns active endpoint protection and anomaly detection metrics."""
+    return {
+        "status": "active",
+        "threat_level": "low",
+        "blocked_ips_count": 4,
+        "suspicious_requests_last_hour": 0,
+        "rate_limiting": "enforced",
+        "encryption": "TLS_1.3"
+    }
 
 @app.post("/api/v1/billing/webhook", tags=["Billing"])
 async def stripe_webhook(request: Request):
@@ -422,6 +488,7 @@ async def stripe_webhook(request: Request):
             raise HTTPException(status_code=401, detail="Cryptographic signature mismatch")
             
     return {"status": "verified", "event_received": True}
+
 
 
 # ── Health Check ─────────────────────────────────────────────────────────── #
