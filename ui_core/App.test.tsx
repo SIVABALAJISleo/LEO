@@ -32,6 +32,6 @@ describe('App Component', () => {
         render(<App />);
 
         // Check for unique heading
-        expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/Smarter. Faster./i);
+        expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/UCSIP/i);
     });
 });

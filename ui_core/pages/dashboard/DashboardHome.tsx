@@ -18,6 +18,7 @@ import { ExecutionTransparencyPanel } from '@/components/dashboard/ExecutionTran
 import { RealityAuditMetrics } from '@/components/dashboard/RealityAuditMetrics';
 import { ProductionAuditDashboard } from '@/components/dashboard/ProductionAuditDashboard';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
@@ -90,7 +91,12 @@ const DashboardHome = () => {
 
       {/* Global Status */}
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">System Overview</h2>
+        <div className="flex items-center gap-4">
+          <h2 className="text-2xl font-bold">System Overview</h2>
+          <Button variant="outline" className="border-primary/50 text-primary" onClick={() => window.location.href = '/dashboard/leo-master'}>
+            Launch LEO Master Orchestrator
+          </Button>
+        </div>
         <GlobalStatusPill status={systemMetrics?.status || 'healthy'} />
       </div>
 

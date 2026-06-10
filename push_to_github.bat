@@ -19,7 +19,7 @@ if %errorlevel% neq 0 (
 
 echo.
 echo Pushing all commits to GitHub...
-cd /d "c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main"
+cd /d "%~dp0"
 git push origin main
 
 if %errorlevel% equ 0 (
@@ -27,8 +27,8 @@ if %errorlevel% equ 0 (
     echo [SUCCESS] All files pushed to GitHub!
 ) else (
     echo.
-    echo [FAILED] Still cannot connect. 
-    echo Please check your internet connection and try again.
+    echo [FAILED] Still cannot connect or push. 
+    echo Please check your internet connection and credentials, then try again.
 )
 
 echo.
