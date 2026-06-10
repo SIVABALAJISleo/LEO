@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { fetchLeoStatus, LeoStatus, fetchDevOpsStatus, configureDevOps, sendStripeWebhook, DevOpsSettings } from "./lib/api";
 import { QuerySimulationConsole } from "./components/dashboard/QuerySimulationConsole";
+import { ValidationDashboard } from "./src/dashboards/ValidationDashboard";
+import { FailureHuntingDashboard } from "./src/dashboards/FailureHuntingDashboard";
+import { QualityAmplifierDashboard } from "./src/dashboards/QualityAmplifierDashboard";
+import { FrontierOptimizationDashboard } from "./src/dashboards/FrontierOptimizationDashboard";
 import { 
   Activity, Cpu, HardDrive, Layers, Zap, AlertTriangle, Play, Shield, 
   RefreshCw, AlertCircle, Sparkles, MessageSquare, CheckCircle, 
-  Terminal, HelpCircle, ArrowRight, Settings, BarChart2, Brain, GitBranch
+  Terminal, HelpCircle, ArrowRight, Settings, BarChart2, Brain, GitBranch, Crosshair, FlaskConical, Gauge
 } from "lucide-react";
 import { 
   IntentCanonicalizer, LanguageRecoveryEngine, ReasoningValidator, 
@@ -91,7 +95,7 @@ function App() {
   const [status, setStatus] = useState<LeoStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [activeTab, setActiveTab] = useState<"swarm" | "cognitive" | "debate" | "benchmarks" | "devops" | "quality" | "v14super" | "v15substrate" | "v16substrate" | "v17dominance">("swarm");
+  const [activeTab, setActiveTab] = useState<"swarm" | "cognitive" | "debate" | "benchmarks" | "devops" | "quality" | "v14super" | "v15substrate" | "v16substrate" | "v17dominance" | "v18validation" | "failureHunting" | "v22quality" | "v23frontier">("swarm");
 
   // --- V17 Domain Dominance States ---
   const [v17QueryInput, setV17QueryInput] = useState("Issue transaction refund invoice");
@@ -842,6 +846,10 @@ function App() {
             { id: "v15substrate", label: "V15 Cognitive Substrate", icon: Brain },
             { id: "v16substrate", label: "V16 Cognitive Substrate", icon: Sparkles },
             { id: "v17dominance", label: "V17 Domain Dominance", icon: Zap },
+            { id: "v18validation", label: "V18 Validation Universe", icon: Shield },
+            { id: "failureHunting", label: "Failure Hunting", icon: Crosshair },
+            { id: "v22quality", label: "V22 Quality Amplifier", icon: FlaskConical },
+            { id: "v23frontier", label: "V23 Frontier Optimization", icon: Gauge },
             { id: "debate", label: "Multi-Agent Debate", icon: MessageSquare },
             { id: "quality", label: "Verification & Quality", icon: Shield },
             { id: "benchmarks", label: "Enterprise Benchmarks", icon: BarChart2 },
@@ -3489,6 +3497,34 @@ function App() {
 
             </div>
 
+          </div>
+        )}
+
+        {/* TAB 8.6: V18 ENTERPRISE VALIDATION UNIVERSE */}
+        {activeTab === "v18validation" && (
+          <div className="space-y-6 animate-in fade-in duration-300">
+            <ValidationDashboard />
+          </div>
+        )}
+
+        {/* TAB 9: FAILURE HUNTING MASTER DASHBOARD */}
+        {activeTab === "failureHunting" && (
+          <div className="space-y-6 animate-in fade-in duration-300 h-full min-h-[calc(100vh-140px)]">
+            <FailureHuntingDashboard />
+          </div>
+        )}
+
+        {/* TAB 10: V22 QUALITY AMPLIFIER */}
+        {activeTab === "v22quality" && (
+          <div className="-mx-4 -my-8 animate-in fade-in duration-300">
+            <QualityAmplifierDashboard />
+          </div>
+        )}
+
+        {/* TAB 11: V23 FRONTIER OPTIMIZATION */}
+        {activeTab === "v23frontier" && (
+          <div className="-mx-4 -my-8 animate-in fade-in duration-300">
+            <FrontierOptimizationDashboard />
           </div>
         )}
 
