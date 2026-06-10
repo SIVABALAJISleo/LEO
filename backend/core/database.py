@@ -136,6 +136,51 @@ class UsageLog(Base):
     inference_used = Column(Boolean)
     timestamp = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc))
 
+class PolicyDocument(Base):
+    """Immutable record of an ingested enterprise policy document."""
+    __tablename__ = "policy_documents"
+    id = Column(Integer, primary_key=True, index=True)
+    filename = Column(String, index=True)
+    content_hash = Column(String, unique=True, index=True)
+    authority_level = Column(String) # Global, Regional, Departmental
+    department = Column(String, index=True)
+    region = Column(String, index=True)
+    version = Column(String)
+    created_at = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc))
+
+class PolicyChunk(Base):
+    """Hierarchical split of policy text clauses."""
+    __tablename__ = "policy_chunks"
+    id = Column(Integer, primary_key=True, index=True)
+    document_id = Column(Integer, index=True)
+    section_header = Column(String)
+    clause_number = Column(String, index=True)
+    content = Column(Text)
+    authority_level = Column(String)
+    region = Column(String)
+    created_at = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc))
+
+class PolicyRelationship(Base):
+    """Evaluated semantic / logic links between policy chunks."""
+    __tablename__ = "policy_relationships"
+    id = Column(Integer, primary_key=True, index=True)
+    source_chunk_id = Column(Integer, index=True)
+    target_chunk_id = Column(Integer, index=True)
+    relationship_type = Column(String, index=True) # CONTRADICTS, SUPERSEDES, DEPENDS_ON, etc.
+    confidence = Column(Float)
+    rationale = Column(Text)
+    created_at = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc))
+
+class AuditProvenanceLog(Base):
+    """Trace logs recording the history of governance events."""
+    __tablename__ = "audit_provenance_logs"
+    id = Column(Integer, primary_key=True, index=True)
+    action = Column(String) # 'INGEST', 'RESOLVE_CONFLICT', 'ESC_ROUTE'
+    document_id = Column(Integer, index=True)
+    details = Column(Text)
+    actor = Column(String)
+    timestamp = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc))
+
 def init_db():
     Base.metadata.create_all(bind=engine)
 

@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: leo-backend
+  labels:
+    app: leo-backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: leo-backend
+  template:
+    metadata:
+      labels:
+        app: leo-backend
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+              - key: beta.kubernetes.io/instance-type
+                operator: In
+                values:
+                - compute-optimized
+      containers:
+      - name: backend
+        image: leo-backend:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8005
+        resources:
+          requests:
+            cpu: "2"
+            memory: "4Gi"
+          limits:
+            cpu: "8"
+            memory: "16Gi"
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8005
+          initialDelaySeconds: 30
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leo-backend-service
+spec:
+  selector:
+    app: leo-backend
+  ports:
+    - protocol: TCP
+      port: 8005
+      targetPort: 8005

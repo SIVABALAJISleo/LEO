@@ -14,4 +14,4 @@ def test_root():
     """Test root entry point."""
     response = client.get("/")
     assert response.status_code == 200
-    assert "Project HYPER" in response.json()["message"]
+    assert "LEO" in response.json()["message"]

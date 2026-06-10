@@ -59,6 +59,7 @@ import { cn } from '@/lib/utils';
 
 const mainNavItems = [
   { title: 'Dashboard', url: '/dashboard/home', icon: LayoutDashboard },
+  { title: 'LEO 10-Layer Master', url: '/dashboard/leo-master', icon: Layers },
   { title: 'Vision Intelligence', url: '/dashboard/vision', icon: Eye },
   { title: 'JEPA Architectures', url: '/dashboard/jepa', icon: Microscope },
   { title: 'SOTA Models', url: '/dashboard/sota', icon: Cpu },

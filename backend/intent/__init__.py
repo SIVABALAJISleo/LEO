@@ -1,0 +1,1 @@
+from backend.intent.classifier import global_intent_classifier, IntentClassifier

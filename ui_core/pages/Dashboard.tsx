@@ -11,6 +11,7 @@ import InferencePage from '@/pages/dashboard/InferencePage';
 import ResultsPage from '@/pages/dashboard/ResultsPage';
 import SettingsPage from '@/pages/dashboard/SettingsPage';
 import OrchestrationExplorer from '@/pages/OrchestrationExplorer';
+import LeoOrchestrationMaster from '@/pages/LeoOrchestrationMaster';
 import SystemDashboard from '@/pages/SystemDashboard';
 import GpuBypassDemo from '@/pages/GpuBypassDemo';
 import VisionPage from '@/pages/dashboard/VisionPage';
@@ -49,6 +50,7 @@ const Dashboard = () => {
 
               {/* Production Functional Routes */}
               <Route path="orchestration" element={<OrchestrationExplorer />} />
+              <Route path="leo-master" element={<LeoOrchestrationMaster />} />
               <Route path="telemetry" element={<SystemDashboard />} />
               <Route path="gpu-bypass" element={<GpuBypassDemo />} />
 
