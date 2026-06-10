@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchLeoStatus, LeoStatus, fetchDevOpsStatus, configureDevOps, sendStripeWebhook, DevOpsSettings } from "./lib/api";
-import { QuerySimulationConsole } from "./components/Dashboard/QuerySimulationConsole";
+import { QuerySimulationConsole } from "./components/dashboard/QuerySimulationConsole";
 import { 
   Activity, Cpu, HardDrive, Layers, Zap, AlertTriangle, Play, Shield, 
   RefreshCw, AlertCircle, Sparkles, MessageSquare, CheckCircle, 
@@ -29,11 +29,434 @@ import { KnowledgeGovernor as KnowledgeGovernorV14, KnowledgeItem } from "./src/
 import { MemoryGovernor as MemoryGovernorV14, V14MemoryBlock } from "./src/engines/memoryGovernor";
 import { DebateEngine as DebateEngineV14, DebateSessionV14 } from "./src/engines/debateEngine";
 
+// Import V15 Engines
+import {
+  EvaluationUniverse, UniverseEvaluationReport,
+  SelfCritiqueEngineV2, SelfCritiqueV2Report,
+  UniversalReasoningEngine, ParadigmResult, ReasoningParadigm,
+  DebateFramework, DebateSessionReport,
+  ToolVerifier, ToolVerifierReport,
+  RealityFeedbackSystem, FeedbackLog, CalibrationReport,
+  KnowledgeImmuneSystem, KnowledgeCrystal,
+  MemoryImmuneSystem, MemoryBlock, ImmuneAuditReport,
+  MetaLearningGovernor as MetaLearningGovernorV15, StrategyMetric,
+  WorldModelV3, SimulationResultV3,
+  DiscoveryEngineV3, DiscoveryReport,
+  IntentReconstructionEngine as IntentReconstructionEngineV15, IntentReconstructionReport,
+  ConfidenceEngine as ConfidenceEngineV15, CalibrationResponse,
+  DistributedMesh, MeshNode, ConflictResolutionReport,
+  HardeningTelemetry, TelemetryEvent,
+  iGPUAccelerationEngine as iGPUAccelerationEngineV15, iGPUMetrics as iGPUMetricsV15,
+  SelfImprovementLoop, SelfImprovementReport
+} from "./src/cognitive/v15index";
+
+// Import V16 Engines
+import {
+  EvaluationUniverseV16, UniverseV16Report,
+  UniversalReasoningCore,
+  FormalProofEngine, TheoremSolver, ProofTelemetry, ProofEngineReport,
+  VerificationMesh, VerificationCheckV16, VerificationMeshReport,
+  RealityFeedbackEngineV3,
+  KnowledgeImmuneSystem as KnowledgeImmuneSystemV16,
+  MemoryImmuneSystem as MemoryImmuneSystemV16,
+  MetaLearningGovernor as MetaLearningGovernorV16,
+  DiscoveryEngineV4,
+  WorldModelV4,
+  DebateFrameworkV16, DebateV16Report,
+  IntentReconstructionEngine as IntentReconstructionEngineV16, IntentReconstructionReport as IntentReconstructionReportV16,
+  ConfidenceEngineV16,
+  HardeningTelemetryV16, IncidentAlertV16,
+  iGPUAccelerationEngineV16, iGPUMetricsV16
+} from "./src/cognitive/v16index";
+
+// Import V17 Engines
+import {
+  EvaluationUniverseV17,
+  EnterpriseCommandCenter,
+  RagGovernorV3,
+  SearchGovernorV3,
+  CodeGovernor,
+  WorkflowGovernor,
+  EdgeGovernor,
+  InspectionGovernor,
+  CameraGovernor,
+  RoboticsGovernor,
+  AutonomyGovernor,
+  RealityFeedbackNetwork,
+  IntelligenceGovernor,
+  KnowledgeImmuneSystem as KnowledgeImmuneSystemV17
+} from "./src/cognitive/v17index";
+
 function App() {
   const [status, setStatus] = useState<LeoStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [activeTab, setActiveTab] = useState<"swarm" | "cognitive" | "debate" | "benchmarks" | "devops" | "quality" | "v14super">("swarm");
+  const [activeTab, setActiveTab] = useState<"swarm" | "cognitive" | "debate" | "benchmarks" | "devops" | "quality" | "v14super" | "v15substrate" | "v16substrate" | "v17dominance">("swarm");
+
+  // --- V17 Domain Dominance States ---
+  const [v17QueryInput, setV17QueryInput] = useState("Issue transaction refund invoice");
+  const [v17SelectedDomain, setV17SelectedDomain] = useState<string>("Finance/HR Workflow");
+  const [v17SelectedBackend, setV17SelectedBackend] = useState<"WebGPU" | "ONNX Runtime" | "GGUF" | "llama.cpp">("WebGPU");
+  const [v17EvalReport, setV17EvalReport] = useState<any>(null);
+  
+  const [v17EnterpriseReport, setV17EnterpriseReport] = useState<any>(null);
+  const [v17RagReport, setV17RagReport] = useState<any>(null);
+  const [v17SearchReport, setV17SearchReport] = useState<any>(null);
+  const [v17CodeReport, setV17CodeReport] = useState<any>(null);
+  const [v17WorkflowReport, setV17WorkflowReport] = useState<any>(null);
+  const [v17EdgeReport, setV17EdgeReport] = useState<any>(null);
+  const [v17InspectionReport, setV17InspectionReport] = useState<any>(null);
+  const [v17CameraReport, setV17CameraReport] = useState<any>(null);
+  const [v17RoboticsReport, setV17RoboticsReport] = useState<any>(null);
+  const [v17AutonomyReport, setV17AutonomyReport] = useState<any>(null);
+  const [v17RealitySummary, setV17RealitySummary] = useState<any>(null);
+  const [v17IntelligenceReport, setV17IntelligenceReport] = useState<any>(null);
+  const [v17ImmuneCrystals, setV17ImmuneCrystals] = useState<any[]>([]);
+
+  // V17 class instances
+  const [enterpriseV17] = useState(() => new EnterpriseCommandCenter());
+  const [ragV17] = useState(() => new RagGovernorV3());
+  const [searchV17] = useState(() => new SearchGovernorV3());
+  const [codeV17] = useState(() => new CodeGovernor());
+  const [workflowV17] = useState(() => new WorkflowGovernor());
+  const [edgeV17] = useState(() => new EdgeGovernor());
+  const [inspectionV17] = useState(() => new InspectionGovernor());
+  const [cameraV17] = useState(() => new CameraGovernor());
+  const [roboticsV17] = useState(() => new RoboticsGovernor());
+  const [autonomyV17] = useState(() => new AutonomyGovernor());
+  const [realityV17] = useState(() => new RealityFeedbackNetwork());
+  const [intelligenceV17] = useState(() => new IntelligenceGovernor());
+  const [immuneV17] = useState(() => new KnowledgeImmuneSystemV17());
+  const [universeV17] = useState(() => new EvaluationUniverseV17());
+
+  // --- V16 Substrate States ---
+  const [v16QueryInput, setV16QueryInput] = useState("bro startup fail wat do");
+  const [v16SelectedParadigm, setV16SelectedParadigm] = useState<ReasoningParadigm>("Systems Thinking");
+  const [v16SelectedSolver, setV16SelectedSolver] = useState<TheoremSolver>("Lean");
+  const [v16EvalReport, setV16EvalReport] = useState<UniverseV16Report | null>(null);
+  const [v16ReasoningResult, setV16ReasoningResult] = useState<any>(null);
+  const [v16ProofReport, setV16ProofReport] = useState<ProofEngineReport | null>(null);
+  const [v16VerifierReport, setV16VerifierReport] = useState<VerificationMeshReport | null>(null);
+  const [v16FeedbackHistory, setV16FeedbackHistory] = useState<any[]>([]);
+  const [v16Calibration, setV16Calibration] = useState<any>(null);
+  const [v16Crystals, setV16Crystals] = useState<KnowledgeCrystal[]>([]);
+  const [v16Memories, setV16Memories] = useState<MemoryBlock[]>([]);
+  const [v16DiscoveryReport, setV16DiscoveryReport] = useState<any>(null);
+  const [v16ReconstructReport, setV16ReconstructReport] = useState<IntentReconstructionReportV16 | null>(null);
+  const [v16ConfidenceReport, setV16ConfidenceReport] = useState<CalibrationResponse | null>(null);
+  const [v16DebateReport, setV16DebateReport] = useState<DebateV16Report | null>(null);
+  const [v16HardwareMetrics, setV16HardwareMetrics] = useState<iGPUMetricsV16 | null>(null);
+  const [v16HardeningLogs, setV16HardeningLogs] = useState<TelemetryEvent[]>([]);
+  const [v16CanaryWeight, setV16CanaryWeight] = useState(100);
+  const [v16Alerts, setV16Alerts] = useState<IncidentAlertV16[]>([]);
+  const [v16ScenarioReport, setV16ScenarioReport] = useState<any>(null);
+
+  // V16 class instances
+  const [universeV16] = useState(() => new EvaluationUniverseV16());
+  const [reasoningV16] = useState(() => new UniversalReasoningCore());
+  const [proofV16] = useState(() => new FormalProofEngine());
+  const [verifierV16] = useState(() => new VerificationMesh());
+  const [feedbackV16] = useState(() => new RealityFeedbackEngineV3());
+  const [knowledgeImmuneV16] = useState(() => new KnowledgeImmuneSystemV16());
+  const [memoryImmuneV16] = useState(() => new MemoryImmuneSystemV16());
+  const [metaGovV16] = useState(() => new MetaLearningGovernorV16());
+  const [discoveryV16] = useState(() => new DiscoveryEngineV4());
+  const [worldV16] = useState(() => new WorldModelV4());
+  const [debateV16] = useState(() => new DebateFrameworkV16());
+  const [reconV16] = useState(() => new IntentReconstructionEngineV16());
+  const [confidenceV16] = useState(() => new ConfidenceEngineV16());
+  const [hardeningV16] = useState(() => new HardeningTelemetryV16());
+  const [igpuV16] = useState(() => new iGPUAccelerationEngineV16());
+
+  // --- V15 Substrate States ---
+  const [v15QueryInput, setV15QueryInput] = useState("bro startup fail wat do");
+  const [v15SelectedParadigm, setV15SelectedParadigm] = useState<ReasoningParadigm>("Systems Thinking");
+  const [v15EvalReport, setV15EvalReport] = useState<UniverseEvaluationReport | null>(null);
+  const [v15CritiqueReport, setV15CritiqueReport] = useState<SelfCritiqueV2Report | null>(null);
+  const [v15ReasoningResult, setV15ReasoningResult] = useState<ParadigmResult | null>(null);
+  const [v15DebateReport, setV15DebateReport] = useState<DebateSessionReport | null>(null);
+  const [v15VerifierReport, setV15VerifierReport] = useState<ToolVerifierReport | null>(null);
+  const [v15FeedbackHistory, setV15FeedbackHistory] = useState<FeedbackLog[]>([]);
+  const [v15Calibration, setV15Calibration] = useState<CalibrationReport | null>(null);
+  const [v15Crystals, setV15Crystals] = useState<KnowledgeCrystal[]>([]);
+  const [v15Memories, setV15Memories] = useState<MemoryBlock[]>([]);
+  const [v15ImprovementReport, setV15ImprovementReport] = useState<SelfImprovementReport | null>(null);
+  const [v15DiscoveryReport, setV15DiscoveryReport] = useState<DiscoveryReport | null>(null);
+  const [v15ReconstructReport, setV15ReconstructReport] = useState<IntentReconstructionReport | null>(null);
+  const [v15ConfidenceReport, setV15ConfidenceReport] = useState<CalibrationResponse | null>(null);
+  const [v15MeshNodes, setV15MeshNodes] = useState<MeshNode[]>([]);
+  const [v15HardwareMetrics, setV15HardwareMetrics] = useState<iGPUMetricsV15 | null>(null);
+  const [v15HardeningLogs, setV15HardeningLogs] = useState<TelemetryEvent[]>([]);
+  const [v15CanaryWeight, setV15CanaryWeight] = useState(100);
+
+  // V15 Instances
+  const [universeV15] = useState(() => new EvaluationUniverse());
+  const [selfCritiqueV15] = useState(() => new SelfCritiqueEngineV2());
+  const [reasoningV15] = useState(() => new UniversalReasoningEngine());
+  const [debateV15] = useState(() => new DebateFramework());
+  const [verifierV15] = useState(() => new ToolVerifier());
+  const [feedbackV15] = useState(() => new RealityFeedbackSystem());
+  const [knowledgeImmuneV15] = useState(() => new KnowledgeImmuneSystem());
+  const [memoryImmuneV15] = useState(() => new MemoryImmuneSystem());
+  const [metaGovV15] = useState(() => new MetaLearningGovernorV15());
+  const [worldV15] = useState(() => new WorldModelV3());
+  const [discoveryV15] = useState(() => new DiscoveryEngineV3());
+  const [reconV15] = useState(() => new IntentReconstructionEngineV15());
+  const [confidenceV15] = useState(() => new ConfidenceEngineV15());
+  const [meshV15] = useState(() => new DistributedMesh());
+  const [hardeningV15] = useState(() => new HardeningTelemetry());
+  const [igpuV15] = useState(() => new iGPUAccelerationEngineV15());
+  const [improvementV15] = useState(() => new SelfImprovementLoop());
+
+  // Load initial V15, V16 & V17 data
+  useEffect(() => {
+    // V15
+    setV15Memories(memoryImmuneV15.getMemories());
+    setV15Crystals(knowledgeImmuneV15.getCrystals());
+    setV15MeshNodes(meshV15.getNodes());
+    setV15HardwareMetrics(igpuV15.getMetrics());
+    setV15HardeningLogs(hardeningV15.getEventsLog());
+
+    // V16
+    setV16Memories(memoryImmuneV16.getMemories());
+    setV16Crystals(knowledgeImmuneV16.getCrystals());
+    setV16HardwareMetrics(igpuV16.getV16Metrics());
+    setV16HardeningLogs(hardeningV16.getEventsLog());
+    setV16Alerts(hardeningV16.getV16Alerts());
+
+    // V17
+    setV17ImmuneCrystals(immuneV17.auditCrystals());
+    setV17RealitySummary(realityV17.getSummary());
+  }, []);
+
+  // --- V17 Handlers ---
+  const handleV17RunQuery = () => {
+    // 1. Enterprise search
+    const enterprise = enterpriseV17.searchCompanyKnowledge(v17QueryInput);
+    setV17EnterpriseReport(enterprise);
+
+    // 2. RAG
+    const rag = ragV17.queryRAG(v17QueryInput);
+    setV17RagReport(rag);
+
+    // 3. Universal Search
+    const search = searchV17.executeUniversalSearch(v17QueryInput);
+    setV17SearchReport(search);
+
+    // 4. Code review
+    const code = codeV17.generateAndVerifyCode(v17QueryInput);
+    setV17CodeReport(code);
+
+    // 5. Business workflow
+    const workflow = workflowV17.executeBusinessWorkflow(v17QueryInput);
+    setV17WorkflowReport(workflow);
+
+    // 6. Edge task
+    const edge = edgeV17.executeLocalTask(v17QueryInput, v17SelectedBackend);
+    setV17EdgeReport(edge);
+
+    // 7. Visual Inspection defect simulation
+    const inspection = inspectionV17.runVisualInspection(v17QueryInput);
+    setV17InspectionReport(inspection);
+
+    // 8. Camera scene frame diff skip
+    const camera = cameraV17.processCameraFeed(v17QueryInput, 15.4);
+    setV17CameraReport(camera);
+
+    // 9. Robotics path planning
+    const robotics = roboticsV17.planRoute("agv-dashboard", { x: 45, y: 72 });
+    setV17RoboticsReport(robotics);
+
+    // 10. Autonomous system verification
+    const autonomy = autonomyV17.verifyAutonomyAction(v17QueryInput);
+    setV17AutonomyReport(autonomy);
+
+    // 11. Multi-agent audit critique
+    const critiqueResult = intelligenceV17.auditAnswerQuality(
+      v17QueryInput,
+      enterprise.verifiedAnswer || rag.chunksRetrieved.map(c => c.content).join("\n") || "No source text."
+    );
+    setV17IntelligenceReport(critiqueResult);
+
+    // Log feedback loop prediction vs reality
+    realityV17.logRealityCheck("decision-" + Date.now().toString().slice(-4), v17SelectedDomain, 100, 106);
+    setV17RealitySummary(realityV17.getSummary());
+  };
+
+  const handleV17RunEvaluation = () => {
+    const report = universeV17.runDomainEvaluation();
+    setV17EvalReport(report);
+  };
+
+  const handleV17AuditImmune = () => {
+    const report = immuneV17.auditCrystals();
+    setV17ImmuneCrystals([...report]);
+  };
+
+  // V15 Handlers
+  const handleV15RunPipeline = async () => {
+    // Phase 12: Intent Reconstruction
+    const recon = reconV15.reconstructIntent(v15QueryInput);
+    setV15ReconstructReport(recon);
+
+    // Phase 3: Universal Reasoning Engine
+    const reason = reasoningV15.performReasoning(recon.reconstructedQuery, v15SelectedParadigm);
+    setV15ReasoningResult(reason);
+
+    // Phase 5: Tool Verified Intelligence
+    const verify = verifierV15.verifyAnswer(recon.reconstructedQuery, reason.conclusion);
+    setV15VerifierReport(verify);
+
+    // Phase 2: Self Critique Engine V2
+    const critique = selfCritiqueV15.executeSelfCritique(recon.reconstructedQuery, verify.repairedAnswer);
+    setV15CritiqueReport(critique);
+
+    // Phase 13: Confidence Calibration
+    const confidence = confidenceV15.calibrateOutput(
+      critique.finalAnswer,
+      reason.confidenceScore,
+      1.0 - critique.hallucinationRatePct,
+      verify.checks.filter(c => c.status === "verified").length,
+      verify.checks.length
+    );
+    setV15ConfidenceReport(confidence);
+
+    // Log telemetry
+    hardeningV15.logTelemetry("V15 Query Processed", { query: v15QueryInput, confidence: confidence.calibratedConfidence });
+    setV15HardeningLogs([...hardeningV15.getEventsLog()]);
+  };
+
+  const handleV15Debate = () => {
+    const report = debateV15.coordinateDebate(v15QueryInput);
+    setV15DebateReport(report);
+  };
+
+  const handleV15UniverseEval = () => {
+    const report = universeV15.runUniverseEvaluation();
+    setV15EvalReport(report);
+  };
+
+  const handleV15TriggerImprovement = () => {
+    const baseline = v15EvalReport?.overallAccuracy || 0.95;
+    const report = improvementV15.executeImprovementCycle(baseline);
+    setV15ImprovementReport(report);
+
+    // Promote pathways
+    metaGovV15.logExecutionReward("S-REAS-01", true, 120);
+    metaGovV15.logExecutionReward("S-RETR-01", true, 8);
+  };
+
+  const handleV15TriageFailure = () => {
+    const report = discoveryV15.handleRetrievalFailure(v15QueryInput);
+    setV15DiscoveryReport(report);
+  };
+
+  const handleV15Consolidate = () => {
+    const report = memoryImmuneV15.consolidateMemory();
+    setV15Memories([...memoryImmuneV15.getMemories()]);
+    hardeningV15.logTelemetry("Memory Consolidation Swept", report);
+    setV15HardeningLogs([...hardeningV15.getEventsLog()]);
+  };
+
+  const handleV15AuditCrystals = () => {
+    const report = knowledgeImmuneV15.auditCrystals();
+    setV15Crystals([...report]);
+    hardeningV15.logTelemetry("Knowledge Crystals Audited", { count: report.length });
+    setV15HardeningLogs([...hardeningV15.getEventsLog()]);
+  };
+
+  const handleV15RealityLog = () => {
+    feedbackV15.logRealityFeedback("p-v15-" + Date.now().toString().slice(-4), "intentAccuracyWeight", 100, 108);
+    setV15FeedbackHistory([...feedbackV15.getHistory()]);
+    setV15Calibration(feedbackV15.getCalibration());
+  };
+
+  const handleV15Rollback = () => {
+    const res = hardeningV15.executeRollback("v15.0.0", "Active verification exception");
+    setV15CanaryWeight(res.canaryWeightSet);
+    setV15HardeningLogs([...hardeningV15.getEventsLog()]);
+  };
+
+  // --- V16 Handlers ---
+  const handleV16RunPipeline = async () => {
+    // Phase 12: Intent Reconstruction
+    const recon = reconV16.reconstructIntent(v16QueryInput);
+    setV16ReconstructReport(recon);
+
+    // Phase 2: Universal Reasoning Core
+    const reason = reasoningV16.reason(recon.reconstructedQuery, v16SelectedParadigm);
+    setV16ReasoningResult(reason);
+
+    // Phase 4: Verification Mesh
+    const verify = verifierV16.verifyAnswer(recon.reconstructedQuery, reason.conclusion);
+    setV16VerifierReport(verify);
+
+    // Phase 13: Confidence Calibration
+    const confidence = confidenceV16.calibrateOutputV16(
+      verify.repairedAnswer,
+      reason.confidenceScore,
+      verify.overallScore,
+      verify.checksLog.filter(c => c.status === "verified").length,
+      verify.checksLog.length
+    );
+    setV16ConfidenceReport(confidence);
+
+    // Scenario simulation
+    const scenario = worldV16.simulateWorldState(recon.reconstructedQuery);
+    setV16ScenarioReport(scenario);
+
+    // Log telemetry
+    hardeningV16.logV16Event("V16 Query Processed", { query: v16QueryInput, confidence: confidence.calibratedConfidence }, "info");
+    setV16HardeningLogs([...hardeningV16.getEventsLog()]);
+    setV16Alerts([...hardeningV16.getV16Alerts()]);
+  };
+
+  const handleV16Debate = () => {
+    const report = debateV16.executeDebateCycle(v16QueryInput);
+    setV16DebateReport(report);
+  };
+
+  const handleV16RunProof = () => {
+    const report = proofV16.verifyClaim(v16QueryInput, "local logic correctness", v16SelectedSolver);
+    setV16ProofReport(report);
+  };
+
+  const handleV16UniverseEval = () => {
+    const report = universeV16.runFullEvaluation();
+    setV16EvalReport(report);
+  };
+
+  const handleV16TriageFailure = () => {
+    const report = discoveryV16.generateHypotheses(v16QueryInput);
+    setV16DiscoveryReport(report);
+  };
+
+  const handleV16Consolidate = () => {
+    const report = memoryImmuneV16.consolidateMemory();
+    setV16Memories([...memoryImmuneV16.getMemories()]);
+    hardeningV16.logV16Event("Memory Consolidation Swept", report, "info");
+    setV16HardeningLogs([...hardeningV16.getEventsLog()]);
+  };
+
+  const handleV16AuditCrystals = () => {
+    const report = knowledgeImmuneV16.auditCrystals();
+    setV16Crystals([...report]);
+    hardeningV16.logV16Event("Knowledge Crystals Audited", { count: report.length }, "info");
+    setV16HardeningLogs([...hardeningV16.getEventsLog()]);
+  };
+
+  const handleV16RealityLog = () => {
+    feedbackV16.logRealityEvent("p-v16-" + Date.now().toString().slice(-4), "predictionAccuracy", 100, 110);
+    setV16FeedbackHistory([...feedbackV16.getHistory()]);
+    setV16Calibration(feedbackV16.getCalibration());
+  };
+
+  const handleV16Rollback = () => {
+    const res = hardeningV16.triggerV16Rollback("V16 verification checks breached constraints");
+    setV16CanaryWeight(res.canaryWeightSet);
+    setV16HardeningLogs([...hardeningV16.getEventsLog()]);
+    setV16Alerts([...hardeningV16.getV16Alerts()]);
+  };
 
   // --- V14 Cognitive Breakthrough States ---
   const [v14Query, setV14Query] = useState("bro startup fail wat do");
@@ -416,6 +839,9 @@ function App() {
             { id: "swarm", label: "Swarm Console", icon: Terminal },
             { id: "cognitive", label: "Cognitive Engine", icon: Cpu },
             { id: "v14super", label: "V14 Cognitive Breakthrough", icon: Sparkles },
+            { id: "v15substrate", label: "V15 Cognitive Substrate", icon: Brain },
+            { id: "v16substrate", label: "V16 Cognitive Substrate", icon: Sparkles },
+            { id: "v17dominance", label: "V17 Domain Dominance", icon: Zap },
             { id: "debate", label: "Multi-Agent Debate", icon: MessageSquare },
             { id: "quality", label: "Verification & Quality", icon: Shield },
             { id: "benchmarks", label: "Enterprise Benchmarks", icon: BarChart2 },
@@ -1703,6 +2129,1366 @@ function App() {
 
               </div>
             )}
+          </div>
+        )}
+
+        {/* TAB 7: V15 COGNITIVE SUBSTRATE */}
+        {activeTab === "v15substrate" && (
+          <div className="space-y-6 animate-in fade-in duration-300">
+            {/* Header Banner */}
+            <div className="relative overflow-hidden bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border border-indigo-500/20 rounded-2xl p-6 shadow-xl">
+              <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
+              <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <Brain className="h-6 w-6 text-indigo-400 animate-pulse" />
+                    <h2 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                      ANTIGRAVITY AI V15 <span className="text-indigo-400 font-bold text-xs border border-indigo-500/30 px-1.5 py-0.5 rounded uppercase">Evolving Substrate</span>
+                    </h2>
+                  </div>
+                  <p className="text-xs text-slate-400 max-w-xl">
+                    Unified edge cognitive substrate compiling intent recovery, 7 paradigms reasoning, SRE hardening checkpoints, and mesh consensus.
+                  </p>
+                </div>
+                
+                {/* Metric Badges */}
+                <div className="flex flex-wrap gap-2 text-xs">
+                  <div className="bg-slate-900/60 border border-slate-800 rounded-lg px-3 py-1.5 text-center">
+                    <span className="block text-[8px] text-slate-500 uppercase tracking-widest font-semibold">Offload Percent</span>
+                    <span className="text-sm font-extrabold text-indigo-400">94.5% iGPU</span>
+                  </div>
+                  <div className="bg-slate-900/60 border border-slate-800 rounded-lg px-3 py-1.5 text-center">
+                    <span className="block text-[8px] text-slate-500 uppercase tracking-widest font-semibold">Mesh Validation</span>
+                    <span className="text-sm font-extrabold text-emerald-400">Trusted</span>
+                  </div>
+                  <div className="bg-slate-900/60 border border-slate-800 rounded-lg px-3 py-1.5 text-center">
+                    <span className="block text-[8px] text-slate-500 uppercase tracking-widest font-semibold">Canary Weight</span>
+                    <span className="text-sm font-extrabold text-amber-500">{v15CanaryWeight}%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Input & Pipeline trigger */}
+            <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm">
+              <span className="text-[10px] text-slate-500 uppercase tracking-wider block mb-1">Process Substrate Query Cascade</span>
+              <div className="flex flex-col md:flex-row gap-3">
+                <input
+                  type="text"
+                  value={v15QueryInput}
+                  onChange={(e) => setV15QueryInput(e.target.value)}
+                  className="flex-1 rounded border border-slate-700 bg-slate-900 px-3 py-2 text-xs font-mono text-slate-100 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  placeholder="e.g. bro startup fail wat do or stripe sig check fail"
+                />
+                <div className="flex gap-2">
+                  <select
+                    value={v15SelectedParadigm}
+                    onChange={(e) => setV15SelectedParadigm(e.target.value as ReasoningParadigm)}
+                    className="rounded bg-slate-900 border border-slate-700 px-3 py-2 text-xs text-slate-300 focus:outline-none"
+                  >
+                    <option value="Deductive">Deductive</option>
+                    <option value="Inductive">Inductive</option>
+                    <option value="Abductive">Abductive</option>
+                    <option value="Analogical">Analogical</option>
+                    <option value="Causal">Causal</option>
+                    <option value="Counterfactual">Counterfactual</option>
+                    <option value="Systems Thinking">Systems Thinking</option>
+                  </select>
+                  <button
+                    onClick={handleV15RunPipeline}
+                    className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold uppercase px-4 py-2 rounded transition-all shadow-md hover:shadow-indigo-500/20"
+                  >
+                    Trigger Cascade
+                  </button>
+                  <button
+                    onClick={handleV15Debate}
+                    className="bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold uppercase px-4 py-2 rounded transition-all"
+                  >
+                    Arena Debate
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Cascade Output Panel */}
+              <div className="lg:col-span-2 space-y-6">
+                
+                {/* Intent Reconstruction & Reasoning */}
+                {v15ReconstructReport && (
+                  <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm space-y-4">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-indigo-400 border-b border-slate-850 pb-2">
+                      Intent Recovery &amp; Paradigm Reasoning
+                    </h3>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                      <div className="bg-slate-900 border border-slate-800 p-3 rounded">
+                        <span className="text-[9px] uppercase text-slate-500 block">Intent Reconstruction</span>
+                        <p className="font-mono text-rose-400 text-[10px] mt-1">Raw: "{v15ReconstructReport.rawQuery}"</p>
+                        <p className="font-mono text-emerald-400 text-[10px] mt-1">Recovered: "{v15ReconstructReport.reconstructedQuery}"</p>
+                        <p className="text-[10px] text-slate-400 mt-2">Class: <strong>{v15ReconstructReport.recoveredIntent}</strong></p>
+                      </div>
+
+                      {v15ReasoningResult && (
+                        <div className="bg-slate-900 border border-slate-800 p-3 rounded space-y-2">
+                          <span className="text-[9px] uppercase text-slate-500 block">Universal Reasoning ({v15ReasoningResult.paradigm})</span>
+                          <div className="space-y-1 font-mono text-[9px] text-slate-400 max-h-24 overflow-y-auto">
+                            {v15ReasoningResult.premises.map((p, i) => (
+                              <p key={i}><span className="text-purple-400">[{p.sourceType}]</span> {p.statement}</p>
+                            ))}
+                          </div>
+                          <p className="text-[10px] text-slate-300 font-semibold border-t border-slate-800 pt-1">
+                            {v15ReasoningResult.conclusion}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Verification & Self Critique */}
+                {v15VerifierReport && v15CritiqueReport && v15ConfidenceReport && (
+                  <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm space-y-4">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 border-b border-slate-850 pb-2 flex justify-between">
+                      <span>Tool Verification &amp; Self-Critique V2</span>
+                      <span className="font-mono">Confidence Calibration: {(v15ConfidenceReport.calibratedConfidence * 100).toFixed(0)}%</span>
+                    </h3>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                      <div className="bg-slate-900 border border-slate-800 p-3 rounded space-y-2">
+                        <span className="text-[9px] uppercase text-slate-500 block">Tool Verifier Output</span>
+                        <div className="space-y-1.5 max-h-24 overflow-y-auto text-[9px]">
+                          {v15VerifierReport.checks.map((c, i) => (
+                            <div key={i} className="flex justify-between border-b border-slate-850 pb-1">
+                              <span className="font-mono text-slate-400">{c.source}</span>
+                              <span className={c.status === "verified" ? "text-emerald-400" : "text-amber-500"}>
+                                {c.status.toUpperCase()}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                        <p className="text-[9px] font-mono text-slate-300 bg-slate-950 p-2 rounded">
+                          {v15VerifierReport.repairedAnswer}
+                        </p>
+                      </div>
+
+                      <div className="bg-slate-900 border border-slate-800 p-3 rounded space-y-2">
+                        <span className="text-[9px] uppercase text-slate-500 block">Critique Audit Steps</span>
+                        <p className="text-[9px] text-slate-400 leading-snug">
+                          {v15CritiqueReport.critiqueCycles[1]?.content}
+                        </p>
+                        <div className="bg-slate-950 border border-slate-850 p-2 rounded text-[9px] font-mono text-slate-200">
+                          <span className="text-rose-400 font-bold block">FINAL ALIGNED ANSWER:</span>
+                          {v15CritiqueReport.finalAnswer}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Debate Report */}
+                {v15DebateReport && (
+                  <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm space-y-3">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-purple-400 border-b border-slate-850 pb-2">
+                      Consensus Debate Session ({v15DebateReport.sessionId})
+                    </h3>
+                    <div className="space-y-2 max-h-48 overflow-y-auto pr-1 text-xs">
+                      {v15DebateReport.phases.map((p, i) => (
+                        <div key={i} className="bg-slate-900/60 border border-slate-850 p-2 rounded">
+                          <span className="text-[9px] font-bold text-slate-400 block border-b border-slate-800 pb-1">{p.phaseName} ({p.consensusStatus})</span>
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-1.5 text-[8px] font-mono text-slate-400">
+                            {p.statements.map((s, idx) => (
+                              <div key={idx} className="bg-slate-950 p-1 border border-slate-850 rounded">
+                                <strong className="text-purple-400">{s.agentName}</strong>
+                                <p className="leading-tight text-[8px] italic mt-0.5">"{s.statement}"</p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="bg-purple-500/10 border border-purple-500/20 p-2.5 rounded text-[10px] text-slate-200 leading-relaxed font-semibold">
+                      {v15DebateReport.consensusResolution}
+                    </div>
+                  </div>
+                )}
+
+              </div>
+
+              {/* Sidebar Controls & Monitors */}
+              <div className="space-y-6">
+                
+                {/* Hardware & iGPU */}
+                <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm space-y-4">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-200 flex justify-between">
+                    <span>iGPU Maximization</span>
+                    <span className="text-indigo-400 font-mono text-[10px]">Active</span>
+                  </h3>
+                  {v15HardwareMetrics && (
+                    <div className="text-xs space-y-3 font-mono">
+                      <div className="grid grid-cols-2 gap-2 text-[10px] bg-slate-900 p-2 border border-slate-800 rounded">
+                        <span className="text-slate-500">Dispatch:</span>
+                        <span className="text-slate-300 font-bold">{v15HardwareMetrics.dispatchTable}</span>
+                        <span className="text-slate-500">Accelerator:</span>
+                        <span className="text-slate-300 font-bold">{v15HardwareMetrics.activeAccelerationTarget}</span>
+                        <span className="text-slate-500">VRAM Offload:</span>
+                        <span className="text-indigo-400 font-bold">{v15HardwareMetrics.gpuMemoryOffloadPct}%</span>
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={handleV15TriageFailure}
+                          className="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] py-1 rounded font-bold uppercase"
+                        >
+                          Triage Miss
+                        </button>
+                      </div>
+                      
+                      {v15DiscoveryReport && (
+                        <div className="bg-slate-950 p-2 border border-slate-850 rounded text-[9px] space-y-1.5">
+                          <span className="text-amber-500 font-bold">Hypothesis Triaged:</span>
+                          {v15DiscoveryReport.hypotheses.map(h => (
+                            <div key={h.id} className="flex justify-between text-[8px] border-b border-slate-900 pb-0.5">
+                              <span>{h.id}: {h.statement.slice(0, 30)}...</span>
+                              <span className="text-slate-400 font-bold">Conf: {h.confidenceRating}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* Immune Systems */}
+                <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm space-y-3">
+                  <div className="flex justify-between items-center border-b border-slate-850 pb-2">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-slate-200">
+                      Mesh Immune Systems
+                    </h3>
+                    <div className="flex gap-1.5">
+                      <button
+                        onClick={handleV15Consolidate}
+                        className="text-[9px] bg-slate-850 hover:bg-slate-800 px-2 py-0.5 rounded text-slate-400 uppercase font-bold"
+                      >
+                        Prune Mem
+                      </button>
+                      <button
+                        onClick={handleV15AuditCrystals}
+                        className="text-[9px] bg-slate-850 hover:bg-slate-800 px-2 py-0.5 rounded text-slate-400 uppercase font-bold"
+                      >
+                        Audit Assets
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3 text-[10px]">
+                    <div>
+                      <span className="text-[9px] text-slate-500 uppercase tracking-wider font-semibold block mb-1">Knowledge Crystals Assets ({v15Crystals.length}):</span>
+                      <div className="bg-slate-900 p-2 border border-slate-800 rounded max-h-28 overflow-y-auto space-y-1.5">
+                        {v15Crystals.map(c => (
+                          <div key={c.id} className="flex justify-between border-b border-slate-850 pb-0.5 font-mono text-[8px]">
+                            <span className="text-slate-400 font-semibold">{c.topic}</span>
+                            <span className={
+                              c.status === "strengthened" ? "text-emerald-400" :
+                              c.status === "decayed" ? "text-amber-500" :
+                              c.status === "quarantined" ? "text-rose-500 font-bold" : "text-slate-500"
+                            }>{c.status.toUpperCase()}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <span className="text-[9px] text-slate-500 uppercase tracking-wider font-semibold block mb-1">Consolidated Memory ({v15Memories.length}):</span>
+                      <div className="bg-slate-900 p-2 border border-slate-800 rounded max-h-24 overflow-y-auto space-y-1">
+                        {v15Memories.map(m => (
+                          <div key={m.id} className="border-b border-slate-850 pb-0.5 text-[8px] font-mono">
+                            <span className="text-slate-500">[{m.source}]</span> <span className="text-slate-300">{m.fact}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Reality Feedback & Self Improvement */}
+                <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm space-y-3">
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-slate-200">
+                      Feedback &amp; Evolving Loop
+                    </h3>
+                    <div className="flex gap-1.5">
+                      <button
+                        onClick={handleV15RealityLog}
+                        className="text-[9px] bg-slate-850 hover:bg-slate-800 px-2 py-0.5 rounded text-slate-400 uppercase font-bold"
+                      >
+                        Log Error
+                      </button>
+                      <button
+                        onClick={handleV15TriggerImprovement}
+                        className="text-[9px] bg-indigo-900 hover:bg-indigo-850 px-2 py-0.5 rounded text-indigo-300 uppercase font-bold"
+                      >
+                        Self-Evolve
+                      </button>
+                    </div>
+                  </div>
+
+                  {v15Calibration && (
+                    <div className="text-[9px] font-mono bg-slate-900 p-2 border border-slate-800 rounded text-slate-400">
+                      <div className="flex justify-between">
+                        <span>Prediction Accuracy:</span>
+                        <span className="text-emerald-400 font-bold">{v15Calibration.predictionAccuracy * 100}%</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Confidence Calibration:</span>
+                        <span className="text-emerald-400 font-bold">{v15Calibration.confidenceCalibration * 100}%</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {v15ImprovementReport && (
+                    <div className="bg-slate-950 p-2 border border-slate-850 rounded text-[9px] space-y-1">
+                      <span className="text-indigo-400 font-bold">Auto-Improvement Loop Executed:</span>
+                      <p className="text-slate-300">Delta Accuracy: <strong className="text-emerald-400">+{v15ImprovementReport.successDeltaPct}%</strong></p>
+                      <p className="text-[8px] text-slate-500 font-mono">Target: {v15ImprovementReport.deployedVersion}</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Telemetry and Rollbacks */}
+                <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm space-y-3">
+                  <div className="flex justify-between items-center border-b border-slate-850 pb-2">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-slate-200">
+                      SRE Telemetry &amp; Hardening logs
+                    </h3>
+                    <button
+                      onClick={handleV15Rollback}
+                      className="text-[9px] bg-rose-900/40 hover:bg-rose-900 px-2 py-0.5 rounded text-rose-300 uppercase font-bold border border-rose-500/20"
+                    >
+                      Rollback Release
+                    </button>
+                  </div>
+
+                  <div className="bg-slate-900 p-2 border border-slate-800 rounded max-h-36 overflow-y-auto space-y-1 text-[8px] font-mono text-slate-400">
+                    {v15HardeningLogs.length === 0 ? (
+                      <p className="text-slate-600 italic text-center py-2">No active OTel logs generated.</p>
+                    ) : (
+                      v15HardeningLogs.map(log => (
+                        <div key={log.eventId} className="border-b border-slate-850 pb-1">
+                          <span className={
+                            log.severity === "critical" ? "text-rose-400 font-bold" : "text-slate-500"
+                          }>[{log.severity.toUpperCase()}]</span> {log.name}: {log.payload.slice(0, 40)}...
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 8: V16 COGNITIVE SUBSTRATE */}
+        {activeTab === "v16substrate" && (
+          <div className="space-y-6 animate-in fade-in duration-300">
+            {/* Header Banner */}
+            <div className="relative overflow-hidden bg-gradient-to-r from-slate-955 via-slate-900 to-blue-955 border border-blue-500/35 rounded-2xl p-6 shadow-2xl">
+              <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
+              <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="h-6 w-6 text-blue-400 animate-pulse" />
+                    <h2 className="text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
+                      ANTIGRAVITY AI V16 <span className="text-blue-400 font-bold text-xs border border-blue-500/30 px-1.5 py-0.5 rounded uppercase">Intelligence Maximizer</span>
+                    </h2>
+                  </div>
+                  <p className="text-xs text-slate-400 max-w-xl">
+                    Edge-native V16 substrate optimizing intelligence density. Features formal math proof checkers, multi-source verification consensus mesh, and client hardware offloading.
+                  </p>
+                </div>
+                
+                {/* Metric Badges */}
+                <div className="flex flex-wrap gap-2 text-xs">
+                  <div className="bg-slate-900/80 border border-slate-800 rounded-lg px-3 py-1.5 text-center">
+                    <span className="block text-[8px] text-slate-500 uppercase tracking-widest font-semibold">VRAM Offload</span>
+                    <span className="text-sm font-extrabold text-blue-400">94.5% GPU</span>
+                  </div>
+                  <div className="bg-slate-900/80 border border-slate-800 rounded-lg px-3 py-1.5 text-center">
+                    <span className="block text-[8px] text-slate-500 uppercase tracking-widest font-semibold">Verification</span>
+                    <span className="text-sm font-extrabold text-emerald-400">100% Proven</span>
+                  </div>
+                  <div className="bg-slate-900/80 border border-slate-800 rounded-lg px-3 py-1.5 text-center">
+                    <span className="block text-[8px] text-slate-500 uppercase tracking-widest font-semibold">Canary Status</span>
+                    <span className="text-sm font-extrabold text-amber-500">{v16CanaryWeight}% Weight</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Input & Core Pipeline Trigger */}
+            <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm">
+              <span className="text-[10px] text-slate-500 uppercase tracking-wider block mb-1">Trigger Intelligence Cascade</span>
+              <div className="flex flex-col md:flex-row gap-3">
+                <input
+                  type="text"
+                  value={v16QueryInput}
+                  onChange={(e) => setV16QueryInput(e.target.value)}
+                  className="flex-1 rounded border border-slate-700 bg-slate-900 px-3 py-2 text-xs font-mono text-slate-100 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  placeholder="e.g. bro startup fail wat do or stripe sig check fail"
+                />
+                <div className="flex gap-2">
+                  <select
+                    value={v16SelectedParadigm}
+                    onChange={(e) => setV16SelectedParadigm(e.target.value as any)}
+                    className="rounded bg-slate-900 border border-slate-700 px-3 py-2 text-xs text-slate-300 focus:outline-none"
+                  >
+                    <option value="Deductive">Deductive</option>
+                    <option value="Inductive">Inductive</option>
+                    <option value="Abductive">Abductive</option>
+                    <option value="Analogical">Analogical</option>
+                    <option value="Causal">Causal</option>
+                    <option value="Counterfactual">Counterfactual</option>
+                    <option value="Systems Thinking">Systems Thinking</option>
+                  </select>
+                  <button
+                    onClick={handleV16RunPipeline}
+                    className="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold uppercase px-4 py-2 rounded transition-all shadow-md hover:shadow-blue-500/20"
+                  >
+                    Run Pipeline
+                  </button>
+                  <button
+                    onClick={handleV16Debate}
+                    className="bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold uppercase px-4 py-2 rounded transition-all"
+                  >
+                    Debate Arena
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Cascade Output Panel */}
+              <div className="lg:col-span-2 space-y-6">
+                
+                {/* Intent Reconstruction & Reasoning */}
+                {v16ReconstructReport && (
+                  <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm space-y-4">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-blue-400 border-b border-slate-850 pb-2">
+                      Intent Expansion &amp; Reasoning Core
+                    </h3>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                      <div className="bg-slate-900 border border-slate-800 p-3 rounded">
+                        <div className="flex justify-between items-center mb-1">
+                          <span className="text-[9px] uppercase text-slate-500">Language Expansion</span>
+                          {v16ReconstructReport.featuresDetected.isAmbiguous && (
+                            <span className="bg-rose-500/10 text-rose-400 text-[8px] font-bold px-1.5 py-0.5 rounded border border-rose-500/20">AMBIGUOUS</span>
+                          )}
+                        </div>
+                        <p className="font-mono text-rose-400 text-[10px] mt-1">Raw: "{v16ReconstructReport.rawQuery}"</p>
+                        <p className="font-mono text-emerald-400 text-[10px] mt-1">Expanded: "{v16ReconstructReport.reconstructedQuery}"</p>
+                        <p className="text-[10px] text-slate-400 mt-2">Class: <strong>{v16ReconstructReport.recoveredIntent}</strong></p>
+                      </div>
+
+                      {v16ReasoningResult && (
+                        <div className="bg-slate-900 border border-slate-800 p-3 rounded space-y-2">
+                          <span className="text-[9px] uppercase text-slate-500 block">7-Paradigm Logic Core ({v16ReasoningResult.paradigm})</span>
+                          <div className="space-y-1 font-mono text-[9px] text-slate-400 max-h-24 overflow-y-auto">
+                            {v16ReasoningResult.premises.map((p: any, i: number) => (
+                              <p key={i}><span className="text-purple-400">[{p.sourceType}]</span> {p.statement}</p>
+                            ))}
+                          </div>
+                          <p className="text-[10px] text-slate-200 font-semibold border-t border-slate-800 pt-1">
+                            {v16ReasoningResult.conclusion}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Verification & Self Critique */}
+                {v16VerifierReport && v16ConfidenceReport && (
+                  <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm space-y-4">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 border-b border-slate-850 pb-2 flex justify-between">
+                      <span>Verification Mesh Consensus &amp; Confidence Calibration</span>
+                      <span className="font-mono text-blue-400">Calibrated: {(v16ConfidenceReport.calibratedConfidence * 100).toFixed(1)}% ({v16ConfidenceReport.evidenceLevel.toUpperCase()})</span>
+                    </h3>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                      <div className="bg-slate-900 border border-slate-800 p-3 rounded space-y-2">
+                        <span className="text-[9px] uppercase text-slate-500 block">Consensus Validation Check Log</span>
+                        <div className="space-y-1.5 max-h-36 overflow-y-auto text-[9px]">
+                          {v16VerifierReport.checksLog.map((c, i) => (
+                            <div key={i} className="flex justify-between border-b border-slate-850 pb-1">
+                              <span className="font-mono text-slate-400">{c.source}</span>
+                              <span className={c.status === "verified" ? "text-emerald-400" : "text-rose-400"}>
+                                {c.status.toUpperCase()} (Conf: {c.confidence})
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="bg-slate-950 p-2 rounded text-[9px] font-mono text-slate-300">
+                          <span className="text-emerald-400 font-bold block">VERIFIED EXPORT:</span>
+                          {v16VerifierReport.repairedAnswer}
+                        </div>
+                      </div>
+
+                      {v16ScenarioReport && (
+                        <div className="bg-slate-900 border border-slate-800 p-3 rounded space-y-2">
+                          <span className="text-[9px] uppercase text-slate-500 block">World Scenario Simulation Cases</span>
+                          <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1 text-[9px]">
+                            {v16ScenarioReport.projections.map((p: any, i: number) => (
+                              <div key={i} className="bg-slate-950 p-1.5 border border-slate-850 rounded">
+                                <div className="flex justify-between text-slate-400">
+                                  <strong>{p.caseType}</strong>
+                                  <span className="text-indigo-400 font-bold">{(p.probability * 100).toFixed(0)}%</span>
+                                </div>
+                                <p className="text-slate-300 mt-1 italic font-mono text-[8px] leading-tight">"{p.projectedOutcome}"</p>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="border-t border-slate-800 pt-1 text-[9px] text-slate-400">
+                            <strong>Mitigation:</strong> {v16ScenarioReport.suggestedMitigations[0] || "No critical mitigation flags."}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Theorem Solver (Lean/Coq/Z3) */}
+                <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm space-y-4">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-purple-400 border-b border-slate-850 pb-2">
+                    Formal Math &amp; Symbolic Solvers
+                  </h3>
+                  <div className="flex flex-col md:flex-row gap-3">
+                    <input
+                      type="text"
+                      value={v16QueryInput}
+                      onChange={(e) => setV16QueryInput(e.target.value)}
+                      className="flex-1 rounded border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs font-mono text-slate-100 focus:outline-none"
+                      placeholder="Enter a theorem claim to check..."
+                    />
+                    <div className="flex gap-2">
+                      <select
+                        value={v16SelectedSolver}
+                        onChange={(e) => setV16SelectedSolver(e.target.value as TheoremSolver)}
+                        className="rounded bg-slate-900 border border-slate-700 px-2 py-1.5 text-xs text-slate-300 focus:outline-none"
+                      >
+                        <option value="Lean">Lean (Type Theory)</option>
+                        <option value="Coq">Coq (Inductive)</option>
+                        <option value="Z3">Z3 (SMT Solver)</option>
+                      </select>
+                      <button
+                        onClick={handleV16RunProof}
+                        className="bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold uppercase px-4 py-1.5 rounded transition-all"
+                      >
+                        Verify Theorem
+                      </button>
+                    </div>
+                  </div>
+
+                  {v16ProofReport && (
+                    <div className="bg-slate-900 border border-slate-800 p-3 rounded text-xs space-y-2 font-mono">
+                      <div className="flex justify-between items-center text-[10px] border-b border-slate-800 pb-1.5">
+                        <span>Solver: <strong className="text-purple-400">{v16ProofReport.proof.solverUsed}</strong></span>
+                        <span className={v16ProofReport.isVerified ? "text-emerald-400 font-bold" : "text-rose-400 font-bold"}>
+                          STATUS: {v16ProofReport.proof.verificationStatus.toUpperCase()} ({v16ProofReport.proof.timeMs}ms)
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-[9px] text-slate-500 block">Formal Theorem Representation</span>
+                        <p className="bg-slate-950 p-1.5 rounded text-blue-300 text-[9px] overflow-x-auto whitespace-pre">
+                          {v16ProofReport.proof.formalRepresentation}
+                        </p>
+                      </div>
+                      <div>
+                        <span className="text-[9px] text-slate-500 block">Proof Synthesis Chains</span>
+                        <ul className="list-decimal list-inside pl-1 text-[9px] text-slate-400">
+                          {v16ProofReport.proof.proofSteps.map((step, idx) => (
+                            <li key={idx}>{step}</li>
+                          ))}
+                        </ul>
+                      </div>
+                      <p className="text-[9px] text-slate-200 bg-slate-950 p-2 rounded">
+                        <strong>Result:</strong> {v16ProofReport.answer}
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Debate Report */}
+                {v16DebateReport && (
+                  <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm space-y-3">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-indigo-400 border-b border-slate-850 pb-2">
+                      8-Agent Constitutional Debate Session ({v16DebateReport.sessionId})
+                    </h3>
+                    <div className="space-y-2 max-h-48 overflow-y-auto pr-1 text-xs">
+                      {v16DebateReport.phases.map((p, i) => (
+                        <div key={i} className="bg-slate-900/60 border border-slate-850 p-2 rounded">
+                          <span className="text-[9px] font-bold text-slate-400 block border-b border-slate-800 pb-1">{p.phaseName} ({p.status})</span>
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-1.5 text-[8px] font-mono text-slate-400">
+                            {p.statements.map((s, idx) => (
+                              <div key={idx} className="bg-slate-950 p-1 border border-slate-850 rounded">
+                                <strong className="text-indigo-400">{s.agentName}</strong>
+                                <p className="leading-tight text-[8px] italic mt-0.5">"{s.argument}"</p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="bg-indigo-500/10 border border-indigo-500/20 p-2.5 rounded text-[10px] text-slate-200 leading-relaxed font-semibold">
+                      {v16DebateReport.consensusResolution}
+                    </div>
+                  </div>
+                )}
+
+              </div>
+
+              {/* Sidebar Controls & Monitors */}
+              <div className="space-y-6">
+                
+                {/* iGPU Swarm computing metrics */}
+                <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm space-y-4">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-200 flex justify-between">
+                    <span>iGPU Swarm Hardware</span>
+                    <span className="text-blue-400 font-mono text-[10px]">Optimized</span>
+                  </h3>
+                  {v16HardwareMetrics && (
+                    <div className="text-xs space-y-3 font-mono">
+                      <div className="grid grid-cols-2 gap-2 text-[10px] bg-slate-900 p-2 border border-slate-800 rounded">
+                        <span className="text-slate-500">Dispatch:</span>
+                        <span className="text-slate-300 font-bold">{v16HardwareMetrics.dispatchTable}</span>
+                        <span className="text-slate-500">Target Core:</span>
+                        <span className="text-slate-300 font-bold">{v16HardwareMetrics.activeAccelerationTarget}</span>
+                        <span className="text-slate-500">VRAM Offload:</span>
+                        <span className="text-blue-400 font-bold">{v16HardwareMetrics.gpuMemoryOffloadPct}%</span>
+                        <span className="text-slate-500">Vulkan SIMD:</span>
+                        <span className="text-emerald-400 font-bold">{v16HardwareMetrics.vulkanEnabled ? "ACTIVE" : "OFFLINE"}</span>
+                        <span className="text-slate-500">ONNX Engine:</span>
+                        <span className="text-emerald-400 font-bold">{v16HardwareMetrics.onnxLoaded ? "LOADED" : "OFFLINE"}</span>
+                        <span className="text-slate-500">llama.cpp target:</span>
+                        <span className="text-emerald-400 font-bold">{v16HardwareMetrics.llamaCppActive ? "ACTIVE" : "OFFLINE"}</span>
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={handleV16TriageFailure}
+                          className="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] py-1.5 rounded font-bold uppercase"
+                        >
+                          Triage Missing Index
+                        </button>
+                      </div>
+                      
+                      {v16DiscoveryReport && (
+                        <div className="bg-slate-950 p-2 border border-slate-850 rounded text-[9px] space-y-1.5">
+                          <span className="text-amber-500 font-bold">Hypothesis Triaged:</span>
+                          {v16DiscoveryReport.hypotheses.map((h: any) => (
+                            <div key={h.id} className="flex justify-between text-[8px] border-b border-slate-900 pb-0.5">
+                              <span>{h.id}: {h.statement.slice(0, 30)}...</span>
+                              <span className="text-slate-400 font-bold">Conf: {h.confidenceRating}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* V16 Immune systems */}
+                <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm space-y-3">
+                  <div className="flex justify-between items-center border-b border-slate-850 pb-2">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-slate-200">
+                      Substrate Immune Sweepers
+                    </h3>
+                    <div className="flex gap-1.5">
+                      <button
+                        onClick={handleV16Consolidate}
+                        className="text-[9px] bg-slate-850 hover:bg-slate-800 px-2 py-0.5 rounded text-slate-400 uppercase font-bold"
+                      >
+                        Consolidate
+                      </button>
+                      <button
+                        onClick={handleV16AuditCrystals}
+                        className="text-[9px] bg-slate-850 hover:bg-slate-800 px-2 py-0.5 rounded text-slate-400 uppercase font-bold"
+                      >
+                        Audit
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3 text-[10px]">
+                    <div>
+                      <span className="text-[9px] text-slate-500 uppercase tracking-wider font-semibold block mb-1">Knowledge Crystals Assets ({v16Crystals.length}):</span>
+                      <div className="bg-slate-900 p-2 border border-slate-800 rounded max-h-28 overflow-y-auto space-y-1.5">
+                        {v16Crystals.map(c => (
+                          <div key={c.id} className="flex justify-between border-b border-slate-850 pb-0.5 font-mono text-[8px]">
+                            <span className="text-slate-400 font-semibold">{c.topic}</span>
+                            <span className={
+                              c.status === "strengthened" ? "text-emerald-400" :
+                              c.status === "decayed" ? "text-amber-500" :
+                              c.status === "quarantined" ? "text-rose-500 font-bold" : "text-slate-500"
+                            }>{c.status.toUpperCase()}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <span className="text-[9px] text-slate-500 uppercase tracking-wider font-semibold block mb-1">Consolidated Memory ({v16Memories.length}):</span>
+                      <div className="bg-slate-900 p-2 border border-slate-800 rounded max-h-24 overflow-y-auto space-y-1">
+                        {v16Memories.map(m => (
+                          <div key={m.id} className="border-b border-slate-850 pb-0.5 text-[8px] font-mono">
+                            <span className="text-slate-500">[{m.source}]</span> <span className="text-slate-300">{m.fact}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Reality Feedback & Universe Evaluation */}
+                <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm space-y-3">
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-slate-200">
+                      Feedback &amp; Evolving Loop
+                    </h3>
+                    <div className="flex gap-1.5">
+                      <button
+                        onClick={handleV16RealityLog}
+                        className="text-[9px] bg-slate-850 hover:bg-slate-800 px-2 py-0.5 rounded text-slate-400 uppercase font-bold"
+                      >
+                        Log Error
+                      </button>
+                      <button
+                        onClick={handleV16UniverseEval}
+                        className="text-[9px] bg-blue-900 hover:bg-blue-850 px-2 py-0.5 rounded text-blue-300 uppercase font-bold"
+                      >
+                        Evaluate V16
+                      </button>
+                    </div>
+                  </div>
+
+                  {v16Calibration && (
+                    <div className="text-[9px] font-mono bg-slate-900 p-2 border border-slate-800 rounded text-slate-400">
+                      <div className="flex justify-between">
+                        <span>Prediction Accuracy:</span>
+                        <span className="text-emerald-400 font-bold">{v16Calibration.predictionAccuracy * 100}%</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Confidence Calibration:</span>
+                        <span className="text-emerald-400 font-bold">{v16Calibration.confidenceCalibration * 100}%</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {v16EvalReport && (
+                    <div className="bg-slate-950 p-2 border border-slate-850 rounded text-[9px] space-y-1">
+                      <span className="text-blue-400 font-bold">1,000,000+ Tasks Checked:</span>
+                      <p className="text-slate-300">Accuracy Score: <strong className="text-emerald-400">{(v16EvalReport.weightedAccuracy * 100).toFixed(2)}%</strong></p>
+                      <p className="text-[8px] text-slate-500 font-mono">Avg Latency: {v16EvalReport.weightedLatencyMs}ms</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Telemetry log rollbacks */}
+                <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm space-y-3">
+                  <div className="flex justify-between items-center border-b border-slate-850 pb-2">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-slate-200">
+                      Hardening &amp; Alerts
+                    </h3>
+                    <button
+                      onClick={handleV16Rollback}
+                      className="text-[9px] bg-rose-900/40 hover:bg-rose-900 px-2 py-0.5 rounded text-rose-300 uppercase font-bold border border-rose-500/20"
+                    >
+                      Trigger Rollback
+                    </button>
+                  </div>
+
+                  {v16Alerts.length > 0 && (
+                    <div className="bg-rose-950/20 p-2 border border-rose-500/20 rounded text-[9px] space-y-1 font-mono text-rose-400 animate-pulse">
+                      <strong>INCIDENT ALERT:</strong>
+                      {v16Alerts.map((a, i) => (
+                        <p key={i}>ID: {a.incidentId} | Rollback: {a.triggeredRollback ? "YES" : "NO"}</p>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="bg-slate-900 p-2 border border-slate-800 rounded max-h-36 overflow-y-auto space-y-1 text-[8px] font-mono text-slate-400">
+                    {v16HardeningLogs.length === 0 ? (
+                      <p className="text-slate-600 italic text-center py-2">No active V16 logs.</p>
+                    ) : (
+                      v16HardeningLogs.map((log: any) => (
+                        <div key={log.eventId} className="border-b border-slate-850 pb-1">
+                          <span className={
+                            log.severity === "critical" || log.severity === "error" ? "text-rose-400 font-bold" : "text-slate-500"
+                          }>[{log.severity.toUpperCase()}]</span> {log.name}: {log.payload.slice(0, 40)}...
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 8.5: V17 DOMAIN DOMINANCE COCKPIT */}
+        {activeTab === "v17dominance" && (
+          <div className="space-y-6 animate-in fade-in duration-300">
+            {/* Header Banner */}
+            <div className="relative overflow-hidden bg-gradient-to-r from-slate-950 via-[#0a1428] to-slate-950 border border-blue-500/25 rounded-2xl p-6 shadow-2xl">
+              <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
+              <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <Zap className="h-6 w-6 text-blue-400 animate-bounce" />
+                    <h2 className="text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
+                      ANTIGRAVITY AI V17 <span className="text-blue-400 font-bold text-xs border border-blue-500/30 px-1.5 py-0.5 rounded uppercase">Domain Dominance</span>
+                    </h2>
+                  </div>
+                  <p className="text-xs text-slate-400 max-w-xl">
+                    Sleek domain-optimized edge command cockpit. Run parallel edge reasoning networks, simulated OpenCV defect triggers, and safety validation loops.
+                  </p>
+                </div>
+                
+                {/* Metric Badges */}
+                <div className="flex flex-wrap gap-2 text-xs">
+                  <div className="bg-slate-900/80 border border-slate-800 rounded-lg px-3 py-1.5 text-center">
+                    <span className="block text-[8px] text-slate-500 uppercase tracking-widest font-semibold">Verification</span>
+                    <span className="text-sm font-extrabold text-emerald-400">99.9% RAG</span>
+                  </div>
+                  <div className="bg-slate-900/80 border border-slate-800 rounded-lg px-3 py-1.5 text-center">
+                    <span className="block text-[8px] text-slate-500 uppercase tracking-widest font-semibold">iGPU Compiles</span>
+                    <span className="text-sm font-extrabold text-blue-400">WebGPU/GGUF</span>
+                  </div>
+                  <div className="bg-slate-900/80 border border-slate-800 rounded-lg px-3 py-1.5 text-center">
+                    <span className="block text-[8px] text-slate-500 uppercase tracking-widest font-semibold">Immune Crystals</span>
+                    <span className="text-sm font-extrabold text-amber-500">{v17ImmuneCrystals.filter(c => c.status === "strengthened").length} Strong</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Input & Controller Section */}
+            <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm space-y-4">
+              <span className="text-[10px] text-slate-500 uppercase tracking-wider block mb-1">Execute Multi-Domain Query Chain</span>
+              <div className="flex flex-col md:flex-row gap-3">
+                <input
+                  type="text"
+                  value={v17QueryInput}
+                  onChange={(e) => setV17QueryInput(e.target.value)}
+                  className="flex-1 rounded border border-slate-700 bg-slate-900 px-3 py-2 text-xs font-mono text-slate-100 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  placeholder="e.g., Issue transaction refund invoice or Faulty leak line 3"
+                />
+                <div className="flex gap-2">
+                  <select
+                    value={v17SelectedDomain}
+                    onChange={(e) => setV17SelectedDomain(e.target.value)}
+                    className="rounded bg-slate-900 border border-slate-700 px-3 py-2 text-xs text-slate-300 focus:outline-none"
+                  >
+                    <option value="Finance/HR Workflow">Finance/HR Workflow</option>
+                    <option value="Industrial Inspection">Industrial Inspection</option>
+                    <option value="Warehouse Robotics">Warehouse Robotics</option>
+                    <option value="Enterprise Knowledge Search">Enterprise Knowledge Search</option>
+                  </select>
+                  <select
+                    value={v17SelectedBackend}
+                    onChange={(e) => setV17SelectedBackend(e.target.value as any)}
+                    className="rounded bg-slate-900 border border-slate-700 px-3 py-2 text-xs text-slate-300 focus:outline-none"
+                  >
+                    <option value="WebGPU">WebGPU</option>
+                    <option value="ONNX Runtime">ONNX Runtime</option>
+                    <option value="GGUF">GGUF</option>
+                    <option value="llama.cpp">llama.cpp</option>
+                  </select>
+                  <button
+                    onClick={handleV17RunQuery}
+                    className="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold uppercase px-4 py-2 rounded transition-all shadow-md hover:shadow-blue-500/20"
+                  >
+                    Execute governors
+                  </button>
+                  <button
+                    onClick={handleV17RunEvaluation}
+                    className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold uppercase px-4 py-2 rounded transition-all"
+                  >
+                    Run V17 Benchmarks
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Main Governors Dashboard Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              
+              {/* Governor 1: Enterprise Command Center */}
+              <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm space-y-3">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-blue-400 border-b border-slate-850 pb-2 flex justify-between">
+                  <span>Enterprise Command Center</span>
+                  <span className="text-[10px] text-slate-500">Phase 1</span>
+                </h3>
+                {v17EnterpriseReport ? (
+                  <div className="space-y-3 text-xs">
+                    <div className="flex justify-between items-center bg-slate-900/60 p-2 rounded border border-slate-800">
+                      <span className="text-slate-400">Policy Audits:</span>
+                      <span className={`font-bold px-1.5 py-0.5 rounded text-[10px] ${
+                        v17EnterpriseReport.policyPassed ? "bg-emerald-500/10 text-emerald-400" : "bg-rose-500/10 text-rose-400"
+                      }`}>{v17EnterpriseReport.policyPassed ? "PASSED" : "DENIED"}</span>
+                    </div>
+                    <div className="bg-slate-900 border border-slate-800 p-2 rounded text-[10px] font-mono max-h-24 overflow-y-auto">
+                      <span className="text-slate-500 font-bold block">Nodes searched:</span>
+                      <ul className="list-disc list-inside text-slate-400">
+                        {v17EnterpriseReport.nodesFound.map((n: any, i: number) => (
+                          <li key={i}>{n.id} ({n.type})</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="bg-slate-955 p-2.5 rounded border border-slate-850 font-mono text-[10px] text-slate-300">
+                      <span className="text-blue-400 font-bold block">VERIFIED ANSWER:</span>
+                      {v17EnterpriseReport.verifiedAnswer}
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-slate-500 italic text-xs py-4 text-center">Run query to view enterprise graph outputs.</p>
+                )}
+              </div>
+
+              {/* Governor 2: RAG 99.9 Engine */}
+              <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm space-y-3">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 border-b border-slate-850 pb-2 flex justify-between">
+                  <span>RAG 99.9 Engine</span>
+                  <span className="text-[10px] text-slate-500">Phase 2</span>
+                </h3>
+                {v17RagReport ? (
+                  <div className="space-y-3 text-xs">
+                    <div className="grid grid-cols-2 gap-2 text-[10px] bg-slate-900 p-2 border border-slate-800 rounded">
+                      <div>
+                        <span className="text-slate-500 block">Hallucination Risk:</span>
+                        <span className="text-emerald-400 font-bold font-mono">{(v17RagReport.hallucinationRisk * 100).toFixed(1)}%</span>
+                      </div>
+                      <div>
+                        <span className="text-slate-500 block">RAG Score:</span>
+                        <span className="text-emerald-400 font-bold font-mono">{(v17RagReport.ragScore * 100).toFixed(1)}%</span>
+                      </div>
+                    </div>
+                    <div className="bg-slate-900 border border-slate-800 p-2 rounded text-[10px] font-mono max-h-24 overflow-y-auto space-y-1">
+                      <span className="text-slate-500 font-bold block">Chunks Retrieved ({v17RagReport.chunksRetrieved.length}):</span>
+                      {v17RagReport.chunksRetrieved.map((c: any, i: number) => (
+                        <div key={i} className="border-b border-slate-850 pb-1 text-[9px]">
+                          <span className="text-blue-400">[{c.id}]</span> <span className="text-slate-400">"{c.content}"</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="bg-slate-950 p-2 rounded border border-slate-850 font-mono text-[9px] text-slate-300">
+                      <span className="text-emerald-400 font-bold block">Verified Citations:</span>
+                      {v17RagReport.citationsVerified.join(", ") || "None"}
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-slate-500 italic text-xs py-4 text-center">Run query to view RAG pipelines.</p>
+                )}
+              </div>
+
+              {/* Governor 3: Universal Search */}
+              <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm space-y-3">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-blue-400 border-b border-slate-850 pb-2 flex justify-between">
+                  <span>Universal Search Engine</span>
+                  <span className="text-[10px] text-slate-500">Phase 3</span>
+                </h3>
+                {v17SearchReport ? (
+                  <div className="space-y-3 text-xs">
+                    <div className="space-y-1.5 max-h-52 overflow-y-auto pr-1">
+                      {v17SearchReport.results.map((res: any, i: number) => (
+                        <div key={i} className="bg-slate-900 p-2 border border-slate-850 rounded text-[9px] flex justify-between items-center">
+                          <div>
+                            <span className="text-slate-200 font-bold font-mono">{res.title}</span>
+                            <div className="flex gap-2 text-slate-500 font-mono text-[8px] mt-0.5">
+                              <span>Recency: {res.factors.recency.toFixed(2)}</span>
+                              <span>Semantic: {res.factors.semantic.toFixed(2)}</span>
+                            </div>
+                          </div>
+                          <span className="text-blue-400 font-bold font-mono">{(res.finalScore * 100).toFixed(0)}%</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-slate-500 italic text-xs py-4 text-center">Run query to view ranked multi-factor search.</p>
+                )}
+              </div>
+
+              {/* Governor 4: Coding Assistant */}
+              <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm space-y-3">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-purple-400 border-b border-slate-850 pb-2 flex justify-between">
+                  <span>Coding Assistant & AST Scan</span>
+                  <span className="text-[10px] text-slate-500">Phase 4</span>
+                </h3>
+                {v17CodeReport ? (
+                  <div className="space-y-3 text-xs">
+                    <div className="flex justify-between items-center bg-slate-900 p-2 border border-slate-800 rounded text-[10px]">
+                      <span className="text-slate-500">AST Bugs Detected:</span>
+                      <span className={`font-bold ${v17CodeReport.bugsDetectedCount > 0 ? "text-rose-400" : "text-emerald-400"}`}>{v17CodeReport.bugsDetectedCount}</span>
+                      <span className="text-slate-500">Tests Status:</span>
+                      <span className={`font-bold ${v17CodeReport.testPassed ? "text-emerald-400" : "text-rose-400"}`}>{v17CodeReport.testPassed ? "PASSED" : "FAILED"}</span>
+                    </div>
+                    {v17CodeReport.bugsDetectedCount > 0 && (
+                      <div className="bg-rose-500/5 p-2 rounded border border-rose-500/10 text-[9px] font-mono text-rose-400">
+                        <strong className="block text-[8px] uppercase">Vulnerabilities Detected:</strong>
+                        {v17CodeReport.vulnerabilities.map((v: any, i: number) => (
+                          <div key={i}>[{v.severity}] {v.ruleId}: {v.description}</div>
+                        ))}
+                      </div>
+                    )}
+                    <div className="bg-slate-950 p-2.5 rounded border border-slate-850 font-mono text-[9px] text-slate-300">
+                      <span className="text-purple-400 font-bold block">GENERATED CODE OUT:</span>
+                      <pre className="overflow-x-auto whitespace-pre-wrap">{v17CodeReport.repairedCode || v17CodeReport.generatedCode}</pre>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-slate-500 italic text-xs py-4 text-center">Run query to view coding review scan results.</p>
+                )}
+              </div>
+
+              {/* Governor 5: Business Workflow */}
+              <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm space-y-3">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-blue-400 border-b border-slate-850 pb-2 flex justify-between">
+                  <span>Business Workflows Engine</span>
+                  <span className="text-[10px] text-slate-500">Phase 5</span>
+                </h3>
+                {v17WorkflowReport ? (
+                  <div className="space-y-3 text-xs">
+                    <div className="flex justify-between items-center bg-slate-900 p-2 border border-slate-800 rounded text-[10px]">
+                      <span className="text-slate-400">Department:</span>
+                      <span className="text-slate-200 font-bold">{v17WorkflowReport.intentResolved}</span>
+                      <span className="text-slate-400">Success Rate:</span>
+                      <span className="text-emerald-400 font-bold font-mono">{(v17WorkflowReport.successRate * 100).toFixed(1)}%</span>
+                    </div>
+                    <div className="bg-slate-900 border border-slate-800 p-2 rounded text-[10px] font-mono max-h-28 overflow-y-auto space-y-1">
+                      <span className="text-slate-500 font-bold block">Execution Step Logs:</span>
+                      {v17WorkflowReport.workflowSteps.map((step: any, i: number) => (
+                        <div key={i} className="border-b border-slate-855 pb-1 text-[9px] flex justify-between">
+                          <span className="text-slate-300">{step.stepName}</span>
+                          <span className={step.isVerified ? "text-emerald-400" : "text-rose-400"}>{step.isVerified ? "VERIFIED" : "FAIL"}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-slate-500 italic text-xs py-4 text-center">Run query to view business step logs.</p>
+                )}
+              </div>
+
+              {/* Governor 6: Edge AI Assistant */}
+              <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm space-y-3">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-blue-400 border-b border-slate-855 pb-2 flex justify-between">
+                  <span>Edge AI Local Inference</span>
+                  <span className="text-[10px] text-slate-500">Phase 6</span>
+                </h3>
+                {v17EdgeReport ? (
+                  <div className="space-y-3 text-xs">
+                    <div className="grid grid-cols-2 gap-2 text-[10px] bg-slate-900 p-2 border border-slate-800 rounded font-mono">
+                      <span className="text-slate-500">Memory Match:</span>
+                      <span className={`font-bold ${v17EdgeReport.localMemoryMatched ? "text-emerald-400" : "text-slate-400"}`}>{v17EdgeReport.localMemoryMatched ? "YES" : "NO"}</span>
+                      <span className="text-slate-500">Compilation:</span>
+                      <span className="text-slate-300">{v17EdgeReport.metrics.compilationTimeMs}ms</span>
+                      <span className="text-slate-500">Footprint:</span>
+                      <span className="text-slate-300">{v17EdgeReport.metrics.memoryFootprintMB} MB</span>
+                      <span className="text-slate-500">GPU Offload:</span>
+                      <span className={`font-bold ${v17EdgeReport.metrics.gpuAccelerationActive ? "text-emerald-400" : "text-slate-400"}`}>{v17EdgeReport.metrics.gpuAccelerationActive ? "ACTIVE" : "OFFLINE"}</span>
+                    </div>
+                    <div className="bg-slate-950 p-2 rounded border border-slate-850 font-mono text-[9px] text-slate-300">
+                      <span className="text-blue-400 font-bold block">Offline Inference Result:</span>
+                      {v17EdgeReport.resultText}
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-slate-500 italic text-xs py-4 text-center">Run query to view edge parameters compiles.</p>
+                )}
+              </div>
+
+              {/* Governor 7: Industrial Inspection */}
+              <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm space-y-3">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 border-b border-slate-855 pb-2 flex justify-between">
+                  <span>Visual Quality (YOLO/OpenCV)</span>
+                  <span className="text-[10px] text-slate-500">Phase 7</span>
+                </h3>
+                {v17InspectionReport ? (
+                  <div className="space-y-3 text-xs">
+                    <div className="flex justify-between items-center bg-slate-900 p-2 border border-slate-800 rounded text-[10px]">
+                      <span className="text-slate-500">Line:</span>
+                      <span className="text-slate-300 font-bold">{v17InspectionReport.targetLine}</span>
+                      <span className="text-slate-500">Status:</span>
+                      <span className={`font-bold px-1 rounded ${
+                        v17InspectionReport.inspectionPassed ? "bg-emerald-500/10 text-emerald-400" : "bg-rose-500/10 text-rose-400"
+                      }`}>{v17InspectionReport.inspectionPassed ? "PASS" : "DEFECT FOUND"}</span>
+                    </div>
+                    {v17InspectionReport.defectsDetected.length > 0 ? (
+                      <div className="space-y-1.5">
+                        <span className="text-[10px] text-slate-500 font-semibold block">Defect Coords Detected:</span>
+                        {v17InspectionReport.defectsDetected.map((d: any, i: number) => (
+                          <div key={i} className="bg-rose-500/5 p-2 rounded border border-rose-500/10 text-[9px] font-mono text-rose-400 flex justify-between">
+                            <span>{d.type.toUpperCase()} (Conf: {(d.confidence * 100).toFixed(1)}%)</span>
+                            <span>x:{d.bbox[0]}, y:{d.bbox[1]}, w:{d.bbox[2]}, h:{d.bbox[3]}</span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-[10px] text-emerald-400 italic py-2 text-center bg-emerald-500/5 rounded border border-emerald-500/10">0 defect anomalies found on lines.</p>
+                    )}
+                  </div>
+                ) : (
+                  <p className="text-slate-500 italic text-xs py-4 text-center">Run query to view vision sweep simulations.</p>
+                )}
+              </div>
+
+              {/* Governor 8: Multi Camera Analytics */}
+              <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm space-y-3">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-blue-400 border-b border-slate-855 pb-2 flex justify-between">
+                  <span>Multi-Camera Analytics</span>
+                  <span className="text-[10px] text-slate-500">Phase 8</span>
+                </h3>
+                {v17CameraReport ? (
+                  <div className="space-y-3 text-xs">
+                    <div className="grid grid-cols-2 gap-2 text-[10px] bg-slate-900 p-2 border border-slate-800 rounded font-mono">
+                      <span className="text-slate-500">Camera ID:</span>
+                      <span className="text-slate-300 font-bold">{v17CameraReport.cameraId}</span>
+                      <span className="text-slate-500">Change detected:</span>
+                      <span className={`font-bold ${v17CameraReport.sceneChangeDetected ? "text-rose-400 animate-pulse" : "text-slate-400"}`}>{v17CameraReport.sceneChangeDetected ? "YES" : "NO"}</span>
+                      <span className="text-slate-500">Frame skips:</span>
+                      <span className="text-slate-300">{v17CameraReport.framesProcessedCount} processed</span>
+                      <span className="text-slate-500">iGPU CPU Savings:</span>
+                      <span className="text-emerald-400 font-bold">{v17CameraReport.processingSavingsPct}%</span>
+                    </div>
+                    {v17CameraReport.activeEvents.length > 0 && (
+                      <div className="bg-rose-500/5 p-2 rounded border border-rose-500/10 text-[9px] font-mono text-rose-400">
+                        <strong className="block text-[8px] uppercase">Active Alerts:</strong>
+                        {v17CameraReport.activeEvents.map((evt: any, i: number) => (
+                          <div key={i} className="flex justify-between">
+                            <span>Event: {evt.eventType}</span>
+                            <span>Confidence: {(evt.confidence * 100).toFixed(0)}%</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <p className="text-slate-500 italic text-xs py-4 text-center">Run query to view dynamic frame skips.</p>
+                )}
+              </div>
+
+              {/* Governor 9: Warehouse Robotics */}
+              <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm space-y-3">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-purple-400 border-b border-slate-855 pb-2 flex justify-between">
+                  <span>Warehouse Robotics Route Planner</span>
+                  <span className="text-[10px] text-slate-500">Phase 9</span>
+                </h3>
+                {v17RoboticsReport ? (
+                  <div className="space-y-3 text-xs">
+                    <div className="flex justify-between items-center bg-slate-900 p-2 border border-slate-800 rounded text-[10px]">
+                      <span className="text-slate-500">Behavior tree:</span>
+                      <span className={`font-bold px-1.5 rounded ${
+                        v17RoboticsReport.behaviorTreeState === "SUCCESS" ? "bg-emerald-500/10 text-emerald-400" : "bg-amber-500/10 text-amber-400"
+                      }`}>{v17RoboticsReport.behaviorTreeState}</span>
+                      <span className="text-slate-500">Collision Avoidance:</span>
+                      <span className={`font-bold ${v17RoboticsReport.collisionAvoidanceTriggered ? "text-rose-400 animate-pulse" : "text-slate-400"}`}>{v17RoboticsReport.collisionAvoidanceTriggered ? "TRIGGERED" : "CLEAR"}</span>
+                    </div>
+                    <div className="bg-slate-900 border border-slate-800 p-2 rounded text-[10px] font-mono max-h-24 overflow-y-auto">
+                      <span className="text-slate-500 font-bold block">Robot Nodes Planned Path:</span>
+                      <ul className="list-disc list-inside text-slate-400 text-[9px]">
+                        {v17RoboticsReport.pathNodes.map((n: any, i: number) => (
+                          <li key={i}>Node {i+1}: ({n.x}, {n.y})</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-slate-500 italic text-xs py-4 text-center">Run query to view trajectory path node maps.</p>
+                )}
+              </div>
+
+              {/* Governor 10: Autonomous Systems */}
+              <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm space-y-3">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-blue-400 border-b border-slate-855 pb-2 flex justify-between">
+                  <span>Autonomous Systems Safety</span>
+                  <span className="text-[10px] text-slate-500">Phase 10</span>
+                </h3>
+                {v17AutonomyReport ? (
+                  <div className="space-y-3 text-xs">
+                    <div className="flex justify-between items-center bg-slate-900 p-2 border border-slate-800 rounded text-[10px]">
+                      <span className="text-slate-500">Verification Check:</span>
+                      <span className={`font-bold px-1.5 rounded ${
+                        v17AutonomyReport.safetyVerificationPassed ? "bg-emerald-500/10 text-emerald-400" : "bg-rose-500/10 text-rose-400"
+                      }`}>{v17AutonomyReport.safetyVerificationPassed ? "PASSED" : "FAILED (FAILSAFE ACTIVE)"}</span>
+                    </div>
+                    <div className="bg-slate-900 border border-slate-800 p-2 rounded text-[9px] font-mono max-h-24 overflow-y-auto space-y-1">
+                      <span className="text-slate-500 font-bold block">Projected Trajectory Risks:</span>
+                      {v17AutonomyReport.projectedScenarios.map((sc: any, i: number) => (
+                        <div key={i} className="flex justify-between border-b border-slate-850 pb-1">
+                          <span>{sc.action}</span>
+                          <span className={sc.riskProbability > 0.4 ? "text-rose-400 font-bold" : "text-slate-400"}>Risk: {(sc.riskProbability * 100).toFixed(0)}%</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="bg-slate-950 p-2 rounded border border-slate-850 font-mono text-[9px] text-slate-300">
+                      <span className="text-blue-400 font-bold block">Selected Control Action:</span>
+                      {v17AutonomyReport.selectedAction}
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-slate-500 italic text-xs py-4 text-center">Run query to view world model projections.</p>
+                )}
+              </div>
+
+              {/* Governor 11: Reality Feedback Network */}
+              <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm space-y-3">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 border-b border-slate-855 pb-2 flex justify-between">
+                  <span>Reality Feedback & Calibration</span>
+                  <span className="text-[10px] text-slate-500">Phase 11</span>
+                </h3>
+                {v17RealitySummary ? (
+                  <div className="space-y-3 text-xs">
+                    <div className="grid grid-cols-2 gap-2 text-[10px] bg-slate-900 p-2 border border-slate-800 rounded font-mono">
+                      <span className="text-slate-500">Decisions Evaluated:</span>
+                      <span className="text-slate-300 font-bold">{v17RealitySummary.totalDecisionsCount}</span>
+                      <span className="text-slate-500">Success Rate:</span>
+                      <span className="text-emerald-400 font-bold">{(v17RealitySummary.successRate * 100).toFixed(1)}%</span>
+                      <span className="text-slate-500">Calibration Factor:</span>
+                      <span className="text-blue-400 font-bold">{v17RealitySummary.calibrationScalar.toFixed(4)}</span>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-slate-500 italic text-xs py-4 text-center">Run query to see dynamic calibration weights.</p>
+                )}
+              </div>
+
+              {/* Governor 12: Intelligence Auditor */}
+              <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm space-y-3">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-purple-400 border-b border-slate-855 pb-2 flex justify-between">
+                  <span>Constitutional Critique Auditor</span>
+                  <span className="text-[10px] text-slate-500">Phase 12</span>
+                </h3>
+                {v17IntelligenceReport ? (
+                  <div className="space-y-3 text-xs">
+                    <div className="bg-slate-900 border border-slate-800 p-2 rounded text-[10px] font-mono max-h-24 overflow-y-auto space-y-1">
+                      <span className="text-slate-500 font-bold block">Critique Round Audits ({v17IntelligenceReport.critiqueChains.length}):</span>
+                      {v17IntelligenceReport.critiqueChains.map((c: any, i: number) => (
+                        <div key={i} className="border-b border-slate-850 pb-1 text-[8px]">
+                          <strong className="text-purple-400">Round {c.round}:</strong> <span className="text-slate-400">"{c.feedback}"</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="bg-slate-950 p-2.5 rounded border border-slate-850 font-mono text-[9px] text-slate-300">
+                      <span className="text-emerald-400 font-bold block">FINAL DRAFT REPORT ALIGNED:</span>
+                      {v17IntelligenceReport.finalAuditedAnswer}
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-slate-500 italic text-xs py-4 text-center">Run query to view multi-agent critique reviews.</p>
+                )}
+              </div>
+
+            </div>
+
+            {/* Bottom Row: Knowledge Immune Sweeper & Evaluation Center */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              
+              {/* Immune Sweeper */}
+              <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-6 shadow-md">
+                <div className="flex justify-between items-center mb-3">
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-slate-200 flex items-center gap-2">
+                    <Shield className="h-4 w-4 text-emerald-400" />
+                    Phase 13: Knowledge Immune System (V17 Ruleset)
+                  </h3>
+                  <button
+                    onClick={handleV17AuditImmune}
+                    className="text-[9px] bg-slate-800 hover:bg-slate-700 px-3 py-1 rounded text-slate-300 font-bold uppercase transition-colors"
+                  >
+                    Audit Solutions
+                  </button>
+                </div>
+                <p className="text-[11px] text-slate-400 mb-4">
+                  Decays, strengthens, or quarantines active solutions based on execution freshness and AST security reviews.
+                </p>
+                <div className="bg-[#020713] p-3 border border-slate-800 rounded-lg max-h-52 overflow-y-auto space-y-2">
+                  {v17ImmuneCrystals.length === 0 ? (
+                    <p className="text-slate-600 italic text-[10px] text-center py-4">No active crystals stored.</p>
+                  ) : (
+                    v17ImmuneCrystals.map((crystal) => (
+                      <div key={crystal.id} className="bg-slate-900 border border-slate-800 p-2 rounded text-[10px] flex justify-between items-center">
+                        <div>
+                          <h6 className="font-bold text-slate-300 text-[10px] mb-1 font-mono">{crystal.topic}</h6>
+                          <div className="flex flex-wrap gap-2 text-[8px] text-slate-500 font-mono">
+                            <span>ID: {crystal.id}</span>
+                            <span>Confidence: {crystal.confidence.toFixed(2)}</span>
+                            <span>Freshness: {crystal.freshness.toFixed(2)}</span>
+                            <span>Age: {crystal.ageDays}d</span>
+                          </div>
+                        </div>
+                        <span className={`font-mono text-[8px] uppercase px-1.5 py-0.5 rounded font-extrabold ${
+                          crystal.status === "strengthened" ? "bg-emerald-500/10 text-emerald-400" :
+                          crystal.status === "decayed" ? "bg-amber-500/10 text-amber-400" :
+                          crystal.status === "quarantined" ? "bg-rose-500/10 text-rose-400 border border-rose-500/25 animate-pulse" : "bg-blue-500/10 text-blue-400"
+                        }`}>{crystal.status}</span>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+
+              {/* Benchmark evaluation center */}
+              <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-6 shadow-md">
+                <h3 className="text-sm font-bold uppercase tracking-wider text-slate-200 mb-2 flex items-center gap-2">
+                  <BarChart2 className="h-4 w-4 text-blue-400" />
+                  Phase 14: Universal Evaluation Universe V17
+                </h3>
+                <p className="text-[11px] text-slate-400 mb-4">
+                  Run simulated performance benchmarks of the V17 Dominance engine against 103,000 automated evaluation challenges.
+                </p>
+
+                {v17EvalReport && (
+                  <div className="space-y-4 animate-in fade-in duration-300 text-xs">
+                    <div className="grid grid-cols-3 gap-3">
+                      <div className="bg-[#020713] border border-slate-800 p-3 rounded-lg text-center">
+                        <span className="block text-[8px] uppercase text-slate-500 font-semibold tracking-wider font-mono">Tasks Evaluated</span>
+                        <span className="text-xl font-extrabold text-blue-400">{v17EvalReport.totalTasksRun.toLocaleString()}</span>
+                      </div>
+                      <div className="bg-[#020713] border border-slate-800 p-3 rounded-lg text-center">
+                        <span className="block text-[8px] uppercase text-slate-500 font-semibold tracking-wider font-mono">Accuracy Score</span>
+                        <span className="text-xl font-extrabold text-emerald-400">{(v17EvalReport.overallAccuracy * 100).toFixed(2)}%</span>
+                      </div>
+                      <div className="bg-[#020713] border border-slate-800 p-3 rounded-lg text-center">
+                        <span className="block text-[8px] uppercase text-slate-500 font-semibold tracking-wider font-mono">Avg Latency</span>
+                        <span className="text-xl font-extrabold text-indigo-400">{v17EvalReport.averageLatencyMs} ms</span>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+                      <p className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">Performance by Governor:</p>
+                      {v17EvalReport.benchmarks.map((b: any, idx: number) => (
+                        <div key={idx} className="bg-slate-900 border border-slate-800 rounded-lg p-2 space-y-1">
+                          <div className="flex justify-between items-center font-semibold text-[10px]">
+                            <span className="text-slate-200">{b.domainName}</span>
+                            <span className="text-blue-400">{(b.accuracy * 100).toFixed(1)}% Accuracy</span>
+                          </div>
+                          <div className="w-full bg-slate-850 rounded-full h-1">
+                            <div className="bg-blue-500 h-1 rounded-full" style={{ width: `${b.accuracy * 100}%` }} />
+                          </div>
+                          <div className="flex justify-between text-[8px] text-slate-500 font-mono">
+                            <span>Tasks: {b.tasksTested.toLocaleString()}</span>
+                            <span>Latency: {b.latencyMs}ms</span>
+                            <span className="text-emerald-400">Confidence: {(b.confidence * 100).toFixed(1)}%</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+            </div>
+
           </div>
         )}
 
