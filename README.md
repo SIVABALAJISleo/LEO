@@ -1,69 +1,234 @@
-# 🚀 PROJECT HYPER: COMPUTE-AVOIDANCE INTELLIGENCE ARCHITECTURE
-**The Supreme CPU-First, GPU-Minimizing AI Operating System**
+🚀 LEO AI
 
-Project HYPER is a radical architectural shift away from brute-force tensor generation. By leveraging **Semantic Caching**, **Neurosymbolic Routing**, **Sparse Activation**, and **Edge Mesh Distribution**, HYPER achieves a 99% reduction in practical GPU dependency.
+Enterprise Intelligence Platform for Reasoning, Knowledge Retrieval, Memory, Verification, and Autonomous Improvement
 
-*The best computation is the computation that never happens.*
+LEO AI is an advanced AI platform designed to combine reasoning, memory, retrieval, validation, and autonomous optimization into a unified intelligence system.
 
-## 📂 Modular Folder Structure & Architecture
-The system is fully deployed in this repository. 
+The platform integrates GraphRAG, Memory Systems, Agent Swarms, Reality Alignment, Scientific Validation, and Enterprise Reliability frameworks to deliver accurate, scalable, and trustworthy AI solutions.
 
-```text
-HYPER-main/
-├── README.md                      # This deployment guide
-├── docker-compose.yml             # CPU-capped swarm orchestration
-├── Dockerfile                     # AVX-512 / llama.cpp optimized container
-├── pyrightconfig.json             # IDE Linting configuration
-└── project_hyper/
-    ├── api/
-    │   └── routes.py              # FastAPI Streaming & Orchestration endpoints
-    ├── core/
-    │   └── orchestrator.py        # Master Cascade Router (Legacy)
-    ├── edge_router.py             # Security, Telemetry, and Semantic Cascade Layer
-    ├── sparse_core.py             # Mamba/BitNet/RWKV Sparse Execution Engine
-    ├── ultra_master_pipeline.py   # The Z3/SymPy Neurosymbolic Bypass Runtime
-    ├── cache.py                   # FAISS Semantic Vectors & Redis Integration
-    ├── compute.py                 # mmap and GGUF Tensor Loading
-    ├── rag.py                     # ChromaDB Contextual Compression
-    └── uncertainty.py             # Probabilistic Route Escalation
-```
-
-## 🧠 Core Systems Deployed
-
-1.  **Multi-Stage Cascade Router (`edge_router.py`)**: Intercepts queries via Lexical Security Firewalls and dumps them to the Semantic Cache. If a miss occurs, it routes to Z3/SymPy for math/logic, avoiding neural hallucination and FLOPs.
-2.  **Sparse CPU-First Runtime (`sparse_core.py`)**: Models are memory-mapped (`mmap`) directly to DDR5 RAM. Generative tasks use `llama.cpp` bound to AVX2/AVX512 SIMD instructions.
-3.  **Distributed Edge Mesh (`docker-compose.yml`)**: Scalable peer-to-peer Ray/Celery nodes. Limits containers to 8 vCPUs, completely decoupling scaling from centralized cloud GPUs.
-
-## 🚀 Deployment Steps (Production & Edge)
-
-### 1. Local Edge Deployment (Single Node)
-To run the orchestration API locally on a commodity CPU:
-```bash
-# Ensure Docker is installed
-cd HYPER-main/project_hyper
-docker-compose up --build -d
-```
-The FastAPI Gateway will be available at `http://localhost:8000`. It automatically starts the Redis semantic cache and the CPU-inference endpoints.
-
-### 2. Distributed Mesh Deployment (Kubernetes / Ray)
-For horizontal CPU scaling across commodity hardware:
-1.  Deploy the Redis instance centrally.
-2.  Deploy the HYPER Docker containers across the edge nodes as stateless worker pods.
-3.  The `TelemetryEngine` (in `edge_router.py`) will automatically track Compute Avoided and GPU Watts Saved across the mesh.
-
-## 📊 Telemetry & Observability
-The API exposes internal telemetry tracking the exact execution route:
-*   `CACHE`: Intercepted by FAISS/Redis (~5ms).
-*   `SYMBOLIC`: Routed to Python Sandbox / Z3 Engine (~50ms).
-*   `CPU_SPARSE`: Routed to local GGUF/Mamba Model (~200ms TTFT).
-*   `GPU_FALLBACK`: Extreme rare event (<1%).
-
-## 📖 Deep Architecture Manifestos
-For extensive detail on the specific compiler optimizations, thermal energy routing, and CREP (Contextual Reembedding Principle) Engine, review the master documents stored in the system's brain:
-*   `PROJECT_LEO_COMPLETE_SYSTEM.md`
-*   `PROJECT_LEO_COMPUTATIONAL_REFORMULATION.md`
-*   `PROJECT_LEO_DISTRIBUTED_MESH.md`
-*   `PROJECT_LEO_ONTOCOMPILER.md`
 
 ---
-*Built for Intelligence per Watt.*
+
+🌟 Key Features
+
+🧠 Advanced Reasoning
+
+Multi-path reasoning
+
+Consensus validation
+
+Long-tail problem solving
+
+Uncertainty-aware decision making
+
+
+📚 GraphRAG & Knowledge Retrieval
+
+Graph-based retrieval architecture
+
+Citation-aware responses
+
+Knowledge freshness tracking
+
+Semantic search optimization
+
+
+💾 Memory Intelligence
+
+Episodic Memory
+
+Semantic Memory
+
+Procedural Memory
+
+Memory consistency validation
+
+Contradiction detection and resolution
+
+
+🤖 Agent Swarm Architecture
+
+Planner Agents
+
+Research Agents
+
+Verification Agents
+
+Critic Agents
+
+Execution Agents
+
+
+🔬 Scientific Validation Framework
+
+Benchmark certification
+
+Statistical validation
+
+Independent reproducibility testing
+
+Reality alignment scoring
+
+
+⚡ Local AI Optimization
+
+CPU Execution
+
+Integrated GPU Acceleration
+
+WebGPU Support
+
+OpenVINO Integration
+
+ONNX Runtime Optimization
+
+Quantized Inference Pipelines
+
+
+🛡️ Enterprise Reliability & Security
+
+Prompt Injection Protection
+
+Memory Poisoning Detection
+
+RAG Poisoning Detection
+
+Adversarial Testing
+
+Reliability Monitoring
+
+Automated Failure Recovery
+
+
+
+---
+
+🏗️ Platform Architecture
+
+LEO AI is organized into multiple intelligence layers:
+
+Layer	Description
+
+Knowledge Crystallization	Converts repeated reasoning into reusable intelligence
+GraphRAG	Retrieval-first reasoning and evidence discovery
+Memory System	Long-term structured memory management
+Agent Swarm	Specialized multi-agent collaboration
+Reality Feedback Network	Prediction → Outcome → Learning
+Validation Framework	Continuous benchmarking and certification
+Optimization Framework	Autonomous quality improvement
+Scientific Validation Lab	Independent reproducibility and audit support
+
+
+
+---
+
+📊 Core Objectives
+
+Metric	Target
+
+Reasoning Accuracy	95%+
+Memory Consistency	98%+
+Search Quality	99%+
+RAG Quality	99%+
+Agent Accuracy	98%+
+Enterprise Reliability	99%+
+Reality Alignment	97%+
+Hallucination Rate	<1%
+
+
+
+---
+
+🌍 Use Cases
+
+Enterprise Search
+
+Knowledge Management
+
+AI Research Assistants
+
+Coding Assistants
+
+Business Automation
+
+Cybersecurity Operations
+
+Internal Enterprise Copilots
+
+Document Intelligence
+
+Workflow Automation
+
+
+
+---
+
+🛠️ Technology Stack
+
+Frontend
+
+React
+
+TypeScript
+
+Vite
+
+Tailwind CSS
+
+
+AI & Intelligence
+
+GraphRAG
+
+Agent Systems
+
+Memory Systems
+
+Local LLM Runtime
+
+
+Performance
+
+OpenVINO
+
+ONNX Runtime
+
+WebGPU
+
+Quantization Pipelines
+
+
+Validation
+
+Benchmark Certification
+
+Statistical Validation
+
+Red Team Testing
+
+Reality Alignment Framework
+
+
+
+---
+
+🎯 Philosophy
+
+LEO AI is built around a simple idea:
+
+> Learn More. Compute Less. Reuse Intelligence. Validate Everything.
+
+
+
+Instead of relying solely on brute-force computation, the platform focuses on reasoning quality, knowledge reuse, validation, memory consistency, and continuous improvement.
+
+
+---
+
+👨‍💻 Founder
+
+S. Sivabalaji
+
+Founder & Lead Architect — LEO AI
+
+Building scalable intelligence systems focused on reasoning, memory, verification, autonomous improvement, and reality-aligned AI.
