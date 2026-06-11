@@ -7,6 +7,7 @@ import { QualityAmplifierDashboard } from "./src/dashboards/QualityAmplifierDash
 import { FrontierOptimizationDashboard } from "./src/dashboards/FrontierOptimizationDashboard";
 import { ConvergenceDashboard } from "./src/dashboards/ConvergenceDashboard";
 import { CertificationDashboard } from "./src/dashboards/CertificationDashboard";
+import { RealityExecutionDashboard } from "./src/dashboards/RealityExecutionDashboard";
 import { 
   Activity, Cpu, HardDrive, Layers, Zap, AlertTriangle, Play, Shield, 
   RefreshCw, AlertCircle, Sparkles, MessageSquare, CheckCircle, 
@@ -97,7 +98,7 @@ function App() {
   const [status, setStatus] = useState<LeoStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [activeTab, setActiveTab] = useState<"swarm" | "cognitive" | "debate" | "benchmarks" | "devops" | "quality" | "v14super" | "v15substrate" | "v16substrate" | "v17dominance" | "v18validation" | "failureHunting" | "v22quality" | "v23frontier" | "v24convergence" | "v25certification">("swarm");
+  const [activeTab, setActiveTab] = useState<"swarm" | "cognitive" | "debate" | "benchmarks" | "devops" | "quality" | "v14super" | "v15substrate" | "v16substrate" | "v17dominance" | "v18validation" | "failureHunting" | "v22quality" | "v23frontier" | "v24convergence" | "v25certification" | "v26reality">("swarm");
 
   // --- V17 Domain Dominance States ---
   const [v17QueryInput, setV17QueryInput] = useState("Issue transaction refund invoice");
@@ -854,6 +855,7 @@ function App() {
             { id: "v23frontier", label: "V23 Frontier Optimization", icon: Gauge },
             { id: "v24convergence", label: "V24 Convergence Engine", icon: LineChart },
             { id: "v25certification", label: "V25 Certification Core", icon: Award },
+            { id: "v26reality", label: "V26 Reality Core", icon: Sparkles },
             { id: "debate", label: "Multi-Agent Debate", icon: MessageSquare },
             { id: "quality", label: "Verification & Quality", icon: Shield },
             { id: "benchmarks", label: "Enterprise Benchmarks", icon: BarChart2 },
@@ -3543,6 +3545,13 @@ function App() {
         {activeTab === "v25certification" && (
           <div className="-mx-4 -my-8 animate-in fade-in duration-300">
             <CertificationDashboard />
+          </div>
+        )}
+
+        {/* TAB 14: V26 REALITY-GRADE EXECUTION ENGINE */}
+        {activeTab === "v26reality" && (
+          <div className="-mx-4 -my-8 animate-in fade-in duration-300">
+            <RealityExecutionDashboard />
           </div>
         )}
 
