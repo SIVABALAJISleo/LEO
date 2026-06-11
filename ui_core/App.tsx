@@ -11,6 +11,7 @@ import { RealityExecutionDashboard } from "./src/dashboards/RealityExecutionDash
 import { ScientificCertificationDashboard } from "./src/dashboards/ScientificCertificationDashboard";
 import { ScientificValidationDashboard } from "./src/dashboards/ScientificValidationDashboard";
 import { FrontierIntelligenceDashboard } from "./src/dashboards/FrontierIntelligenceDashboard";
+import { FrontierIntelligenceDashboardV2 } from "./src/dashboards/FrontierIntelligenceDashboardV2";
 import { 
   Activity, Cpu, HardDrive, Layers, Zap, AlertTriangle, Play, Shield, 
   RefreshCw, AlertCircle, Sparkles, MessageSquare, CheckCircle, 
@@ -101,7 +102,7 @@ function App() {
   const [status, setStatus] = useState<LeoStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [activeTab, setActiveTab] = useState<"swarm" | "cognitive" | "debate" | "benchmarks" | "devops" | "quality" | "v14super" | "v15substrate" | "v16substrate" | "v17dominance" | "v18validation" | "failureHunting" | "v22quality" | "v23frontier" | "v24convergence" | "v25certification" | "v26reality" | "v27certification" | "v28validation" | "v29frontier">("swarm");
+  const [activeTab, setActiveTab] = useState<"swarm" | "cognitive" | "debate" | "benchmarks" | "devops" | "quality" | "v14super" | "v15substrate" | "v16substrate" | "v17dominance" | "v18validation" | "failureHunting" | "v22quality" | "v23frontier" | "v24convergence" | "v25certification" | "v26reality" | "v27certification" | "v28validation" | "v29frontier" | "v30frontier">("swarm");
 
   // --- V17 Domain Dominance States ---
   const [v17QueryInput, setV17QueryInput] = useState("Issue transaction refund invoice");
@@ -862,6 +863,7 @@ function App() {
             { id: "v27certification", label: "V27 Scientific Proof", icon: Scale },
             { id: "v28validation", label: "V28 Validation Lab", icon: ShieldCheck },
             { id: "v29frontier", label: "V29 Frontier Core", icon: Cpu },
+            { id: "v30frontier", label: "V30 Frontier Acceleration", icon: Cpu },
             { id: "debate", label: "Multi-Agent Debate", icon: MessageSquare },
             { id: "quality", label: "Verification & Quality", icon: Shield },
             { id: "benchmarks", label: "Enterprise Benchmarks", icon: BarChart2 },
@@ -3579,6 +3581,13 @@ function App() {
         {activeTab === "v29frontier" && (
           <div className="-mx-4 -my-8 animate-in fade-in duration-300">
             <FrontierIntelligenceDashboard />
+          </div>
+        )}
+
+        {/* TAB 18: LEO V30 FRONTIER ACCELERATION */}
+        {activeTab === "v30frontier" && (
+          <div className="-mx-4 -my-8 animate-in fade-in duration-300">
+            <FrontierIntelligenceDashboardV2 />
           </div>
         )}
 
