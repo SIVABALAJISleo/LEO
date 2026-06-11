@@ -8,10 +8,11 @@ import { FrontierOptimizationDashboard } from "./src/dashboards/FrontierOptimiza
 import { ConvergenceDashboard } from "./src/dashboards/ConvergenceDashboard";
 import { CertificationDashboard } from "./src/dashboards/CertificationDashboard";
 import { RealityExecutionDashboard } from "./src/dashboards/RealityExecutionDashboard";
+import { ScientificCertificationDashboard } from "./src/dashboards/ScientificCertificationDashboard";
 import { 
   Activity, Cpu, HardDrive, Layers, Zap, AlertTriangle, Play, Shield, 
   RefreshCw, AlertCircle, Sparkles, MessageSquare, CheckCircle, 
-  Terminal, HelpCircle, ArrowRight, Settings, BarChart2, Brain, GitBranch, Crosshair, FlaskConical, Gauge, LineChart, Award
+  Terminal, HelpCircle, ArrowRight, Settings, BarChart2, Brain, GitBranch, Crosshair, FlaskConical, Gauge, LineChart, Award, Scale
 } from "lucide-react";
 import { 
   IntentCanonicalizer, LanguageRecoveryEngine, ReasoningValidator, 
@@ -98,7 +99,7 @@ function App() {
   const [status, setStatus] = useState<LeoStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [activeTab, setActiveTab] = useState<"swarm" | "cognitive" | "debate" | "benchmarks" | "devops" | "quality" | "v14super" | "v15substrate" | "v16substrate" | "v17dominance" | "v18validation" | "failureHunting" | "v22quality" | "v23frontier" | "v24convergence" | "v25certification" | "v26reality">("swarm");
+  const [activeTab, setActiveTab] = useState<"swarm" | "cognitive" | "debate" | "benchmarks" | "devops" | "quality" | "v14super" | "v15substrate" | "v16substrate" | "v17dominance" | "v18validation" | "failureHunting" | "v22quality" | "v23frontier" | "v24convergence" | "v25certification" | "v26reality" | "v27certification">("swarm");
 
   // --- V17 Domain Dominance States ---
   const [v17QueryInput, setV17QueryInput] = useState("Issue transaction refund invoice");
@@ -856,6 +857,7 @@ function App() {
             { id: "v24convergence", label: "V24 Convergence Engine", icon: LineChart },
             { id: "v25certification", label: "V25 Certification Core", icon: Award },
             { id: "v26reality", label: "V26 Reality Core", icon: Sparkles },
+            { id: "v27certification", label: "V27 Scientific Proof", icon: Scale },
             { id: "debate", label: "Multi-Agent Debate", icon: MessageSquare },
             { id: "quality", label: "Verification & Quality", icon: Shield },
             { id: "benchmarks", label: "Enterprise Benchmarks", icon: BarChart2 },
@@ -3552,6 +3554,13 @@ function App() {
         {activeTab === "v26reality" && (
           <div className="-mx-4 -my-8 animate-in fade-in duration-300">
             <RealityExecutionDashboard />
+          </div>
+        )}
+
+        {/* TAB 15: V27 SCIENTIFIC PROOF & CERTIFICATION */}
+        {activeTab === "v27certification" && (
+          <div className="-mx-4 -my-8 animate-in fade-in duration-300">
+            <ScientificCertificationDashboard />
           </div>
         )}
 
