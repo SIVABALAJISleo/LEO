@@ -12,6 +12,14 @@ import { ScientificCertificationDashboard } from "./src/dashboards/ScientificCer
 import { ScientificValidationDashboard } from "./src/dashboards/ScientificValidationDashboard";
 import { FrontierIntelligenceDashboard } from "./src/dashboards/FrontierIntelligenceDashboard";
 import { FrontierIntelligenceDashboardV2 } from "./src/dashboards/FrontierIntelligenceDashboardV2";
+import { ComputeIrrelevanceDashboard } from "./src/dashboards/ComputeIrrelevanceDashboard";
+import { EngineeringCeilingDashboard } from "./src/dashboards/EngineeringCeilingDashboard";
+import { RealityLearningDashboard } from "./src/dashboards/RealityLearningDashboard";
+import { ComputeIrrelevanceV33Dashboard } from "./src/dashboards/ComputeIrrelevanceV33Dashboard";
+import { ComputeIrrelevanceV34Dashboard } from "./src/dashboards/ComputeIrrelevanceV34Dashboard";
+import { LEOAIv35Scoreboard } from "./src/dashboards/LEOAIv35Scoreboard";
+import { LEOAIv36Dashboard } from "./src/dashboards/LEOAIv36Dashboard";
+import { LEOAIv37Dashboard } from "./src/dashboards/LEOAIv37Dashboard";
 import { 
   Activity, Cpu, HardDrive, Layers, Zap, AlertTriangle, Play, Shield, 
   RefreshCw, AlertCircle, Sparkles, MessageSquare, CheckCircle, 
@@ -102,7 +110,7 @@ function App() {
   const [status, setStatus] = useState<LeoStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [activeTab, setActiveTab] = useState<"swarm" | "cognitive" | "debate" | "benchmarks" | "devops" | "quality" | "v14super" | "v15substrate" | "v16substrate" | "v17dominance" | "v18validation" | "failureHunting" | "v22quality" | "v23frontier" | "v24convergence" | "v25certification" | "v26reality" | "v27certification" | "v28validation" | "v29frontier" | "v30frontier">("swarm");
+  const [activeTab, setActiveTab] = useState<"swarm" | "cognitive" | "debate" | "benchmarks" | "devops" | "quality" | "v14super" | "v15substrate" | "v16substrate" | "v17dominance" | "v18validation" | "failureHunting" | "v22quality" | "v23frontier" | "v24convergence" | "v25certification" | "v26reality" | "v27certification" | "v28validation" | "v29frontier" | "v30frontier" | "v31irrelevance" | "v32ceiling" | "v32reality" | "v33compute" | "v34compute" | "v35parity" | "v36ceiling" | "v37evolution">("swarm");
 
   // --- V17 Domain Dominance States ---
   const [v17QueryInput, setV17QueryInput] = useState("Issue transaction refund invoice");
@@ -864,6 +872,14 @@ function App() {
             { id: "v28validation", label: "V28 Validation Lab", icon: ShieldCheck },
             { id: "v29frontier", label: "V29 Frontier Core", icon: Cpu },
             { id: "v30frontier", label: "V30 Frontier Acceleration", icon: Cpu },
+            { id: "v31irrelevance", label: "V31 Compute Avoidance", icon: Gauge },
+            { id: "v32ceiling", label: "V32 Engineering Ceiling", icon: Cpu },
+            { id: "v32reality", label: "V32 Reality Learning", icon: Gauge },
+            { id: "v33compute", label: "V33 Compute Irrelevance", icon: Gauge },
+            { id: "v34compute", label: "V34 Compute Irrelevance", icon: Cpu },
+            { id: "v35parity", label: "V35 Scoreboard", icon: Award },
+            { id: "v36ceiling", label: "V36 Scoreboard", icon: Gauge },
+            { id: "v37evolution", label: "V37 Cockpit", icon: Sparkles },
             { id: "debate", label: "Multi-Agent Debate", icon: MessageSquare },
             { id: "quality", label: "Verification & Quality", icon: Shield },
             { id: "benchmarks", label: "Enterprise Benchmarks", icon: BarChart2 },
@@ -3588,6 +3604,62 @@ function App() {
         {activeTab === "v30frontier" && (
           <div className="-mx-4 -my-8 animate-in fade-in duration-300">
             <FrontierIntelligenceDashboardV2 />
+          </div>
+        )}
+
+        {/* TAB 19: LEO V31 COMPUTE IRRELEVANCE */}
+        {activeTab === "v31irrelevance" && (
+          <div className="-mx-4 -my-8 animate-in fade-in duration-300">
+            <ComputeIrrelevanceDashboard />
+          </div>
+        )}
+
+        {/* TAB 20: LEO V32 ENGINEERING CEILING */}
+        {activeTab === "v32ceiling" && (
+          <div className="-mx-4 -my-8 animate-in fade-in duration-300">
+            <EngineeringCeilingDashboard />
+          </div>
+        )}
+
+        {/* TAB 21: LEO V32 REALITY LEARNING */}
+        {activeTab === "v32reality" && (
+          <div className="-mx-4 -my-8 animate-in fade-in duration-300">
+            <RealityLearningDashboard />
+          </div>
+        )}
+
+        {/* TAB 22: LEO V33 COMPUTE IRRELEVANCE */}
+        {activeTab === "v33compute" && (
+          <div className="-mx-4 -my-8 animate-in fade-in duration-300">
+            <ComputeIrrelevanceV33Dashboard />
+          </div>
+        )}
+
+        {/* TAB 23: LEO V34 COMPUTE IRRELEVANCE */}
+        {activeTab === "v34compute" && (
+          <div className="-mx-4 -my-8 animate-in fade-in duration-300">
+            <ComputeIrrelevanceV34Dashboard />
+          </div>
+        )}
+
+        {/* TAB 24: LEO V35 FUNCTIONAL PARITY SCOREBOARD */}
+        {activeTab === "v35parity" && (
+          <div className="-mx-4 -my-8 animate-in fade-in duration-300">
+            <LEOAIv35Scoreboard />
+          </div>
+        )}
+
+        {/* TAB 25: LEO V36 PRACTICAL CEILING CONVERGENCE */}
+        {activeTab === "v36ceiling" && (
+          <div className="-mx-4 -my-8 animate-in fade-in duration-300">
+            <LEOAIv36Dashboard />
+          </div>
+        )}
+
+        {/* TAB 26: LEO V37 MASTER EVOLUTION COCKPIT */}
+        {activeTab === "v37evolution" && (
+          <div className="-mx-4 -my-8 animate-in fade-in duration-300">
+            <LEOAIv37Dashboard />
           </div>
         )}
 
