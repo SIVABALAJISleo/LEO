@@ -212,6 +212,66 @@ Reality Alignment Framework
 
 ---
 
+⚡ LEO AI V40 — Ultimate Intelligence Maximization (15-Phase Substrate)
+
+LEO AI V40 upgrades the platform to the **Ultimate Intelligence Maximization Substrate**, a software-first layout aiming to achieve 97-99% of the capability of frontier datacenter AI models on consumer-grade CPU/iGPU/NPU systems using only 1-10% of the computational resources.
+
+### ⚙️ 15 Upgraded Subsystems
+LEO AI V40 implements 15 subsystems under [ui_core/src/v40/engines/](file:///c:/Users/sivab/OneDrive/Documents/HYPER/LEO-main/ui_core/src/v40/engines/):
+1. **Advanced Memory System**: Manages episodic, semantic, project, user, and scientific memories, along with prompt caches and summaries.
+2. **Graph Intelligence Engine**: Traces Knowledge Graphs, concept links, causal pathways, and multi-hop node paths.
+3. **Multi-Agent System**: Coordinates a structured debate pipeline across 10 specialized agent roles.
+4. **Scientific Reasoning Engine**: Evaluates claim hypotheses, proposed experiments, evidence ranking, and contradictions.
+5. **World Model Engine**: Simulates multi-step actions across physical, social, economic, business, and engineering scenarios.
+6. **Mamba Hybrid Engine**: Simulates O(n) linear complexity context scaling and sparse attention speedups.
+7. **Sparse Computation Engine**: Dictates conditional activations, sparse attention heads, and prunes compute layers.
+8. **Mixture of Experts Engine**: Routes incoming queries across 10 specialized expert models.
+9. **Model Compression Engine**: Formulates 4-bit, 2-bit, or 1.58-bit Ternary precision BitNet layouts and structured prunings.
+10. **Speculative Decoding Engine**: Runs parallel draft token predictions and verifier model accept/reject speedups.
+11. **Self-Improvement Engine**: Logs exceptions and critique feedback, patching logic boundaries automatically.
+12. **Autonomous Research System**: Analyzes literature gap matrices and generates automated experimental recommendations.
+13. **Active Learning Engine**: Evaluates entropy uncertainty parameters to prioritize training inputs.
+14. **Curriculum Learning Engine**: Manages easy-to-hard progressions and tracks acquired skill sets.
+15. **Intelligence Per Compute Optimizer**: Aggregates accuracy per Watt, reasoning per FLOP, and utility per Dollar scores.
+
+### 🎛️ V40 Ultimate Dashboard
+Accessible via `"v40ultimate"` tab route in the React-Vite front-end, the cockpit includes:
+- Telemetry dials for target successes: Scientific Reasoning (99%), Enterprise (99%), Robotics (98%), and Intelligence per Watt/Dollar multipliers.
+- Interactive deck controls for query prompts, system RAM limits, power profiles, and curriculum training stages.
+- Simulator panels showing MoE router logs, Mamba O(n) context linear plot comparisons, 10-Agent debate logs, world model simulation steps, and active patch upgrades.
+- A printable **LEO V40 Ultimate Verification Seal**.
+
+---
+
+⚡ LEO AI V38 — Master Architecture (13-Subsystem Core Substrate)
+
+LEO AI V38 expands the intelligence footprint into a **13-Subsystem Core Substrate** aimed at maximizing resource minimization (CPU, iGPU, RAM, cache, and disk) while accelerating scientific reasoning (99%), robotics (98%), and autonomous systems (98%) on consumer platforms.
+
+### ⚙️ 13 Integrated Subsystems
+LEO AI V38 implements 13 subsystems under [ui_core/src/v38/engines/](file:///c:/Users/sivab/OneDrive/Documents/HYPER/LEO-main/ui_core/src/v38/engines/):
+1. **Intelligence Per Compute Engine**: Manages MoE sparse expert routing, lazy evaluation, and speculative accepting thresholds.
+2. **GraphRAG Engine**: Performs semantic graph searches, temporal updates, and multi-hop relationship discovery.
+3. **Long Term Memory Engine**: Maintains episodic, semantic, procedural, working, reflection, and failure memory segments.
+4. **Scientific Reasoning Engine**: Executes multi-agent debates and chains of verification checking.
+5. **Causal Reasoning Engine**: Implements structural causal models (SCMs) and counterfactual analysis to distinguish correlation from causation.
+6. **Self Improvement Engine**: Tracks runtime errors and auto-generates benchmark scripts to fix weaknesses.
+7. **Reality Adaptation Engine**: Performs sensor fusion and dynamic path replanning under high-variance states.
+8. **Discovery Engine**: Measures unknown-unknowns gap variables, scoring research opportunities and experiments.
+9. **Hardware Efficiency Engine**: Integrates 1-bit Ternary precision model maps, dynamic scheduling threads, and kernel fusions.
+10. **World Model Engine**: Projects action consequences via multi-step future state forecasting.
+11. **Frontier Training Efficiency**: Prescribes synthetic training data proportions, curriculums, and active batch sizes.
+12. **Autonomous Intelligence**: Executes goal decomposition plans and resource tokens allocation.
+13. **Safety and Verification**: Validates fact citations, scores source reliability, and checks consistency.
+
+### 🎛️ V38 Cockpit Dashboard
+Accessible via `"v38architecture"` tab route in the React-Vite front-end, the V38 Cockpit dashboard includes:
+- Live telemetry dials for Intelligence Density, goals progress bars, and training efficiency gains.
+- Interactive controls for power modes, workspace RAM constraints, and active learning curriculum levels.
+- Simulator widgets displaying MoE routing parameters, counterfactual SCM interventions, world simulation step traces, and self-upgrades logs.
+- A printable **LEO V38 Master Verification Seal**.
+
+---
+
 ⚡ LEO AI V37 — Master Evolution (Intelligence Density Substrate)
 
 LEO AI V37 introduces the **Intelligence Density Substrate**, a software-first architecture designed to maximize useful intelligence per unit of resource consumed: `Useful Intelligence / (Compute + Memory + Energy + Time)`. This is explicitly optimized for running resource-constrained agent pipelines on Intel CPU/iGPU/NPU systems.
