@@ -291,7 +291,7 @@ class ProductionSemanticCache:
             # Query FAISS index for top-1 match
             scores, indices = self.faiss_index.search(np.expand_dims(vec, axis=0), 1)
             idx = indices[0][0]
-            score = scores[0][0]
+            score = float(scores[0][0])
             if idx != -1 and score > self.FUZZY_GATE:
                 best_hash = self.faiss_keys[idx]
                 best_score = score
@@ -302,7 +302,7 @@ class ProductionSemanticCache:
             for q_hash, blob in all_vectors:
                 stored_vec = np.frombuffer(blob, dtype=np.float32)
                 if len(stored_vec) == self.vector_dim:
-                    score = np.dot(vec, stored_vec)
+                    score = float(np.dot(vec, stored_vec))
                     if score > best_score:
                         best_score = score
                         best_hash = q_hash
@@ -315,7 +315,7 @@ class ProductionSemanticCache:
                 conn.close()
                 return {
                     "answer": answer,
-                    "confidence": round(confidence * best_score, 4),
+                    "confidence": round(float(confidence) * float(best_score), 4),
                     "similarity": round(float(best_score), 4),
                     "method": "vector_similarity"
                 }

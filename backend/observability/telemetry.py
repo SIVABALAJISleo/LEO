@@ -97,24 +97,11 @@ class TelemetryEngine:
         return round((bypass_count / self.metrics["total_queries"]) * 100, 2)
 
     def get_metrics(self) -> Dict[str, Any]:
-        """Exposes raw metrics for API endpoints."""
+        """Exposes raw metrics for API endpoints. All values are real measurements."""
         avoidance_rate = self.get_inference_avoidance_rate()
-        # In case system is cold, present baseline emulated avoidance rate of 96.5% for visual demo
-        if self.metrics["total_queries"] == 0:
-            avoidance_rate = 96.5
-            
+
         metrics_copy = self.metrics.copy()
         metrics_copy["avoidance_rate_pct"] = avoidance_rate
-        metrics_copy["iso27001_compliance_status"] = "PASS"
-        metrics_copy["differential_privacy"] = "eps=0.1"
-        if self.metrics["total_queries"] == 0:
-            metrics_copy["total_requests"] = 480
-            metrics_copy["total_queries"] = 480
-            metrics_copy["compute_avoided"] = 460
-            metrics_copy["gpu_watts_saved"] = 168000.0
-            metrics_copy["layer_hit_distribution"] = {
-                "0": 340, "1": 15, "2": 80, "3": 35, "4": 0, "6": 10, "8": 0
-            }
         return metrics_copy
 
     def generate_grafana_snapshot(self) -> Dict[str, Any]:

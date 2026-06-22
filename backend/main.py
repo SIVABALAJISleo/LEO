@@ -51,6 +51,9 @@ TelemetryInstrumentor.instrument_app(app)
 from backend.routers.benchmark import router as benchmark_router
 app.include_router(benchmark_router)
 
+from backend.routers.systems import router as systems_router
+app.include_router(systems_router)
+
 
 
 # ── Request / Response Models ─────────────────────────────────────────────── #
