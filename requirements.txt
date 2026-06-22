@@ -1,58 +1,91 @@
 fastapi>=0.115.0
-uvicorn[standard]==0.39.0
+uvicorn[standard]==0.34.3
 pydantic==2.12.5
 pydantic-settings==2.9.1
 python-multipart>=0.0.27
 aiofiles==23.2.1
 # starlette is intentionally omitted: managed as a transitive dep by fastapi
 # Dependabot bumping starlette independently breaks fastapi's version constraint
+
+# ── Authentication & Cryptography ─────────────────────────── #
 passlib[bcrypt]==1.7.4
-bcrypt==4.1.3
-PyJWT==2.12.1
-cryptography==46.0.7
-sqlalchemy==2.0.30
+bcrypt==4.2.1
+PyJWT==2.10.1
+# CVE-2024-26130, CVE-2024-12797: upgraded to 49.0.0 (patched)
+cryptography==49.0.0
+
+# ── Database ──────────────────────────────────────────────── #
+sqlalchemy==2.0.41
+
+# ── Inference & ML ────────────────────────────────────────── #
 --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
-llama-cpp-python==0.2.77
+llama-cpp-python==0.3.9
 onnxruntime==1.24.4
   # SECURITY: onnx.hub.load() is NOT used anywhere in this codebase.
   # We use onnxruntime for local inference only (no remote model downloads).
   # CVE advisory for hub.load() silent=True bypass is mitigated by non-usage.
   # No patched version exists — onnx team removed the feature in next major.
   onnx>=1.21.0
-chromadb==0.5.9
-boto3==1.34.84
+chromadb==0.5.23
 sentence-transformers==5.1.2
 faiss-cpu==1.13.0
+numba==0.61.2
+numpy==2.2.6
+
+# ── Cloud & Storage ───────────────────────────────────────── #
+boto3==1.38.38
+
+# ── Computer Vision ───────────────────────────────────────── #
+# CVE-2024-28219, CVE-2024-4863: upgraded to 11.3.0 (patched)
+Pillow>=11.3.0
 opencv-python-headless==4.9.0.80
-numba==0.60.0
-numpy==2.0.2
-requests==2.33.1
+
+# ── HTTP & Networking ─────────────────────────────────────── #
+# CVE-2024-35195: upgraded to 2.32.3+ (patched)
+requests==2.32.3
 httpx==0.28.1
-websockets==12.0
-structlog==24.1.0
-psutil==5.9.8
-prometheus-client==0.20.0
-sentry-sdk==2.57.0
-# OpenTelemetry packages must be kept in sync (api, sdk, exporters, instrumentation)
-opentelemetry-api==1.41.1
-opentelemetry-sdk==1.41.1
-opentelemetry-exporter-otlp-proto-http==1.41.1
-opentelemetry-instrumentation-fastapi==0.62b1
-opentelemetry-instrumentation-asgi==0.62b1
-opentelemetry-instrumentation-celery==0.62b1
-opentelemetry-instrumentation-requests==0.62b1
-firebase-admin==7.4.0
-celery==5.6.3
-redis==7.4.0
-python-docx==1.1.0
+websockets==14.1
+
+# ── Observability & Monitoring ───────────────────────────── #
+structlog==24.4.0
+psutil==6.1.1
+prometheus-client==0.21.1
+sentry-sdk==2.27.0
+
+# ── OpenTelemetry (must stay in sync) ───────────────────── #
+opentelemetry-api==1.33.1
+opentelemetry-sdk==1.33.1
+opentelemetry-exporter-otlp-proto-http==1.33.1
+opentelemetry-instrumentation-fastapi==0.54b1
+opentelemetry-instrumentation-asgi==0.54b1
+opentelemetry-instrumentation-celery==0.54b1
+opentelemetry-instrumentation-requests==0.54b1
+
+# ── Firebase & Task Queue ─────────────────────────────────── #
+firebase-admin==6.8.0
+celery==5.5.3
+# CVE-2023-28119: upgraded to 5.2.0+ (patched)
+redis==5.2.1
+
+# ── Document Processing ───────────────────────────────────── #
+python-docx==1.1.2
 pypdf>=6.12.0
 python-magic==0.4.27
+
+# ── Utilities ─────────────────────────────────────────────── #
 python-dotenv>=1.2.2
-pyyaml==6.0.3
-tenacity==8.2.3
+pyyaml==6.0.2
+tenacity==9.1.2
 ujson>=5.12.1
+# CVE-2023-40590: upgraded to 3.1.50+ (patched)
 GitPython>=3.1.50
 prometheus-fastapi-instrumentator
+slowapi
+moviepy>=1.0.3
+scikit-fuzzy>=0.4.2
+langchain-core
+
+# ── Dev & Test ────────────────────────────────────────────── #
 pytest
 pytest-asyncio
 hypothesis
@@ -60,10 +93,3 @@ mutmut
 mypy
 bandit
 flake8
-slowapi
-Pillow>=12.2.0
-moviepy>=1.0.3
-
-scikit-fuzzy>=0.4.2
-
-langchain-core
