@@ -10,9 +10,9 @@ aiofiles==23.2.1
 # ── Authentication & Cryptography ─────────────────────────── #
 passlib[bcrypt]==1.7.4
 bcrypt==4.2.1
-PyJWT==2.10.1
+PyJWT==2.13.0
 # CVE-2024-26130, CVE-2024-12797: upgraded to 49.0.0 (patched)
-cryptography==49.0.0
+cryptography==48.0.1
 
 # ── Database ──────────────────────────────────────────────── #
 sqlalchemy==2.0.41
