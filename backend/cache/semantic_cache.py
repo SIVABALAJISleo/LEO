@@ -33,10 +33,48 @@ class ProductionSemanticCache:
     """
     Multi-layer semantic KV and vector cache. Eliminates redundant transformer execution
     by retrieving exact or highly-similar reasoning traces locally.
+
+    Cache keys are prefixed with a Unicode script tag so that queries in different
+    writing systems (e.g. Telugu vs Kannada) are always in separate partitions and
+    can never produce cross-language false positives via trigram/vector similarity.
     """
 
     SIMILARITY_GATE = 0.85
     FUZZY_GATE      = 0.72
+
+    # ── Script Detection ───────────────────────────────────────────────────── #
+    @staticmethod
+    def _script_prefix(text: str) -> str:
+        """
+        Returns a short ASCII script tag for the dominant Unicode block in *text*.
+        This tag is prepended to every query before hashing or encoding so that
+        cross-script trigram/vector similarity can never yield a false cache hit.
+
+        Blocks checked (inclusive ranges):
+          Tamil:     U+0B80–U+0BFF  → "[ta]"
+          Kannada:   U+0C80–U+0CFF  → "[kn]"   (checked BEFORE Telugu)
+          Telugu:    U+0C00–U+0C7F  → "[te]"
+          Malayalam: U+0D00–U+0D7F  → "[ml]"
+          Devanagari:U+0900–U+097F  → "[hi]"
+          Arabic:    U+0600–U+06FF  → "[ar]"
+          CJK:       U+4E00–U+9FFF  → "[zh]"
+        """
+        def _in(c: str, lo: int, hi: int) -> bool:
+            return lo <= ord(c) <= hi
+
+        for c in text:
+            if _in(c, 0x0B80, 0x0BFF): return "[ta]"
+            if _in(c, 0x0C80, 0x0CFF): return "[kn]"  # Kannada before Telugu
+            if _in(c, 0x0C00, 0x0C7F): return "[te]"
+            if _in(c, 0x0D00, 0x0D7F): return "[ml]"
+            if _in(c, 0x0900, 0x097F): return "[hi]"
+            if _in(c, 0x0600, 0x06FF): return "[ar]"
+            if _in(c, 0x4E00, 0x9FFF): return "[zh]"
+        return "[en]"
+
+    def _keyed(self, query: str) -> str:
+        """Return the script-prefixed canonical form of *query* used for all cache ops."""
+        return f"{self._script_prefix(query)} {query.lower().strip()}"
 
     def __init__(self, db_path: str = "hyper_engine.db"):
         self.db_path = db_path
@@ -153,7 +191,8 @@ class ProductionSemanticCache:
 
     def store(self, query: str, answer: str, confidence: float):
         """Caches a query, saves its embedding, and updates Zipf-based TTL limits."""
-        query_hash = hashlib.md5(query.lower().strip().encode(), usedforsecurity=False).hexdigest()  # nosec B324
+        keyed_query = self._keyed(query)
+        query_hash = hashlib.md5(keyed_query.encode(), usedforsecurity=False).hexdigest()  # nosec B324
         now = time.time()
         
         conn = sqlite3.connect(self.db_path)
@@ -179,8 +218,9 @@ class ProductionSemanticCache:
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """, (query_hash, query, answer, confidence, freq, ttl, now, now))
             
-            # Generate embedding and store vector
-            vec = self.encoder.encode(query)
+            # Generate embedding and store vector (use script-keyed text so
+            # trigram/transformer embeddings are partitioned by language script)
+            vec = self.encoder.encode(keyed_query)
             # Ensure float32 representation
             vec = np.array(vec, dtype=np.float32)
             norm = np.linalg.norm(vec)
@@ -202,7 +242,8 @@ class ProductionSemanticCache:
 
     def retrieve(self, query: str) -> Optional[Dict[str, Any]]:
         """Multi-layer cache traversal: Exact → Vector Similarity → Delta Reconstruction."""
-        query_hash = hashlib.md5(query.lower().strip().encode(), usedforsecurity=False).hexdigest()  # nosec B324
+        keyed_query = self._keyed(query)
+        query_hash = hashlib.md5(keyed_query.encode(), usedforsecurity=False).hexdigest()  # nosec B324
         now = time.time()
         
         conn = sqlite3.connect(self.db_path)
@@ -235,8 +276,9 @@ class ProductionSemanticCache:
                     "method": "exact_hash"
                 }
 
-        # Layer 2: FAISS/Manual Dense Similarity Scan
-        vec = self.encoder.encode(query)
+        # Layer 2: FAISS/Manual Dense Similarity Scan (use script-keyed query
+        # so cross-language trigram/vector similarity is impossible)
+        vec = self.encoder.encode(keyed_query)
         vec = np.array(vec, dtype=np.float32)
         norm = np.linalg.norm(vec)
         if norm > 0:

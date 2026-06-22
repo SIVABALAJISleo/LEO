@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { fetchLeoStatus, LeoStatus, fetchDevOpsStatus, configureDevOps, sendStripeWebhook, DevOpsSettings } from "./lib/api";
 import { QuerySimulationConsole } from "./components/dashboard/QuerySimulationConsole";
+import { BenchmarkLeaderboard } from "./components/dashboard/BenchmarkLeaderboard";
 import { ValidationDashboard } from "./src/dashboards/ValidationDashboard";
 import { FailureHuntingDashboard } from "./src/dashboards/FailureHuntingDashboard";
 import { QualityAmplifierDashboard } from "./src/dashboards/QualityAmplifierDashboard";
@@ -1954,74 +1955,7 @@ function App() {
 
         {/* TAB 5: ENTERPRISE COMPARATIVE LEADERBOARD */}
         {activeTab === "benchmarks" && (
-          <div className="space-y-6 animate-in fade-in duration-300">
-            <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-6">
-              <h3 className="text-lg font-bold mb-2 flex items-center gap-2 text-blue-400">
-                <BarChart2 className="h-5 w-5" />
-                V11 Enterprise Comparative Leaderboard
-              </h3>
-              <p className="text-xs text-slate-400 mb-6">
-                UCS platform is automatically benchmarked against centralized models. Measurements reflect accuracy, local vs cloud cost, and latency.
-              </p>
-
-              <div className="border border-slate-800 rounded-lg overflow-hidden">
-                <table className="w-full text-xs text-left">
-                  <thead className="bg-[#020813] border-b border-slate-800 text-slate-400 uppercase tracking-wider text-[10px]">
-                    <tr>
-                      <th className="p-4">Rank</th>
-                      <th className="p-4">Model Name</th>
-                      <th className="p-4">Accuracy</th>
-                      <th className="p-4">Avg Latency</th>
-                      <th className="p-4">Resource Cost / Request</th>
-                      <th className="p-4">Reasoning Score</th>
-                      <th className="p-4">Planning Score</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-800 text-slate-200">
-                    <tr className="bg-blue-500/5">
-                      <td className="p-4 font-bold text-blue-400">1</td>
-                      <td className="p-4 font-bold flex items-center gap-1.5">
-                        Antigravity UCS V11
-                        <span className="text-[9px] bg-blue-500 text-white px-1.5 py-0.5 rounded font-mono uppercase font-bold">Local-First</span>
-                      </td>
-                      <td className="p-4 text-emerald-400 font-bold">94.2%</td>
-                      <td className="p-4 font-mono">2.5ms – 42ms</td>
-                      <td className="p-4 text-emerald-400 font-bold">$0.0000 (Local DDR5/iGPU)</td>
-                      <td className="p-4 font-mono font-bold">96.5%</td>
-                      <td className="p-4 font-mono font-bold">94.2%</td>
-                    </tr>
-                    <tr>
-                      <td className="p-4 font-semibold text-slate-400">2</td>
-                      <td className="p-4 font-semibold text-slate-300">Claude 3.5 Sonnet (Cloud)</td>
-                      <td className="p-4 font-semibold">92.5%</td>
-                      <td className="p-4 font-mono text-slate-400">650ms</td>
-                      <td className="p-4 text-rose-500 font-mono">$0.0150 (Dense Cloud)</td>
-                      <td className="p-4 font-mono">92.2%</td>
-                      <td className="p-4 font-mono">90.5%</td>
-                    </tr>
-                    <tr>
-                      <td className="p-4 font-semibold text-slate-400">3</td>
-                      <td className="p-4 font-semibold text-slate-300">GPT-4 (Cloud)</td>
-                      <td className="p-4 font-semibold">91.8%</td>
-                      <td className="p-4 font-mono text-slate-400">820ms</td>
-                      <td className="p-4 text-rose-500 font-mono">$0.0300 (Dense Cloud)</td>
-                      <td className="p-4 font-mono">90.8%</td>
-                      <td className="p-4 font-mono">88.5%</td>
-                    </tr>
-                    <tr>
-                      <td className="p-4 font-semibold text-slate-400">4</td>
-                      <td className="p-4 font-semibold text-slate-300">Gemini 1.5 Pro (Cloud)</td>
-                      <td className="p-4 font-semibold">90.1%</td>
-                      <td className="p-4 font-mono text-slate-400">710ms</td>
-                      <td className="p-4 text-rose-500 font-mono">$0.0125 (Dense Cloud)</td>
-                      <td className="p-4 font-mono">89.5%</td>
-                      <td className="p-4 font-mono">87.0%</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
+          <BenchmarkLeaderboard />
         )}
 
         {/* TAB 6: DEVOPS STAGE CONTROLS */}

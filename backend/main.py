@@ -12,7 +12,7 @@ from pydantic import BaseModel, Field
 from typing import Optional, List, Dict, Any
 from sqlalchemy.orm import Session
 
-from backend.layers.v10_beta_orchestrator import global_v10_beta_orchestrator
+from backend.layers.v42_ultimate_orchestrator import global_v42_ultimate_orchestrator
 from backend.core.database import get_db, PolicyDocument, PolicyChunk, PolicyRelationship, AuditProvenanceLog, init_db
 from backend.core.policy_system import PolicyParser, GovernanceContradictionEngine, GovernanceRouter
 
@@ -48,6 +48,9 @@ app.add_middleware(
 app.include_router(openai_router)
 TelemetryInstrumentor.instrument_app(app)
 
+from backend.routers.benchmark import router as benchmark_router
+app.include_router(benchmark_router)
+
 
 
 # ── Request / Response Models ─────────────────────────────────────────────── #
@@ -80,8 +83,8 @@ async def leo_orchestrate(request: OrchestrateRequest):
       L5 Novelty Firewall → L6 iGPU Mesh → L7 Surrogate Compute → L8 Graphics →
       L9 Adaptive Quality → L10 Observability
     """
-    logger.info(f"[V10-BETA] Orchestrating: workspace={request.workspace_id} query_len={len(request.query)}")
-    result = global_v10_beta_orchestrator.execute_semantic_workflow(
+    logger.info(f"[V42-ULTIMATE] Orchestrating: workspace={request.workspace_id} query_len={len(request.query)}")
+    result = global_v42_ultimate_orchestrator.execute_semantic_workflow(
         query=request.query,
         context={"workspace_id": request.workspace_id, "quality_hint": request.quality_hint},
     )
@@ -105,7 +108,7 @@ async def legacy_query(request: OrchestrateRequest):
 @app.get("/api/v1/leo/status", tags=["Observability"])
 async def leo_status():
     """Return full system status and Layer 10 telemetry."""
-    status = global_v10_beta_orchestrator.get_system_status()
+    status = global_v42_ultimate_orchestrator.get_system_status()
     status["timestamp"] = time.time()
     return status
 

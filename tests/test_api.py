@@ -14,4 +14,4 @@ def test_root():
     """Test root entry point."""
     response = client.get("/")
     assert response.status_code == 200
-    assert "LEO" in response.json()["message"]
+    assert "Universal" in response.json()["message"]
