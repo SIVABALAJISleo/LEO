@@ -23,7 +23,6 @@ class ObservabilityLayer:
         self.layer_name = "Layer 11: Observability"
 
     def execute(self, query: str, context: Dict[str, Any]) -> Dict[str, Any]:
-        global _observability_registry
         
         # 1. Measure real system usage
         mem = psutil.virtual_memory()

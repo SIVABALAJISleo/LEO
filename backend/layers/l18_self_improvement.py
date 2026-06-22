@@ -17,7 +17,6 @@ class SelfImprovementLayer:
         self.layer_name = "Layer 18: Self Improvement"
 
     def record_failure(self, query: str, context: Dict[str, Any], exception_msg: str):
-        global _v19_self_improvement_log
         _v19_self_improvement_log.append({
             "timestamp": time.time(),
             "query": query,
@@ -29,7 +28,6 @@ class SelfImprovementLayer:
         logger.info(f"[{self.layer_name}] Logged failure trace.")
 
     def execute(self, query: str, context: Dict[str, Any]) -> Dict[str, Any]:
-        global _v19_self_improvement_log
         unpatched = [f for f in _v19_self_improvement_log if not f["patched"]]
         
         if unpatched:

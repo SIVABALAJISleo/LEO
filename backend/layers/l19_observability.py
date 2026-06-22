@@ -25,7 +25,6 @@ class ObservabilityLayer:
         self.latency_slo_ms = 50.0  # Latency SLO set at 50ms
 
     def execute(self, query: str, context: Dict[str, Any]) -> Dict[str, Any]:
-        global _v19_observability_registry
         
         mem = psutil.virtual_memory()
         cpu = psutil.cpu_percent()
