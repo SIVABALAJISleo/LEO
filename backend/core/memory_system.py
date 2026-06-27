@@ -168,21 +168,27 @@ class MemorySystem:
         vec = self._encode(query)
         now = time.time()
 
-        type_clause = "AND memory_type = ?" if memory_type else ""
-        params = (memory_type,) if memory_type else ()
-
-        conn = sqlite3.connect(self.db_path)
-        cursor = conn.cursor()
-        cursor.execute(
-            f"""
+        if memory_type:
+            query_str = """
             SELECT memory_id, memory_type, content, confidence, access_count,
                    created_at, last_accessed, ttl_seconds, vector, tags
             FROM memory_system
             WHERE (ttl_seconds = -1 OR (? - created_at) < ttl_seconds)
-            {type_clause}
-            """,
-            (now,) + params,
-        )
+            AND memory_type = ?
+            """
+            params = (now, memory_type)
+        else:
+            query_str = """
+            SELECT memory_id, memory_type, content, confidence, access_count,
+                   created_at, last_accessed, ttl_seconds, vector, tags
+            FROM memory_system
+            WHERE (ttl_seconds = -1 OR (? - created_at) < ttl_seconds)
+            """
+            params = (now,)
+
+        conn = sqlite3.connect(self.db_path)
+        cursor = conn.cursor()
+        cursor.execute(query_str, params)
         rows = cursor.fetchall()
         conn.close()
 

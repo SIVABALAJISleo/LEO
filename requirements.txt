@@ -10,7 +10,7 @@ aiofiles==23.2.1
 # ── Authentication & Cryptography ─────────────────────────── #
 passlib[bcrypt]==1.7.4
 bcrypt==4.2.1
-PyJWT==2.10.1
+PyJWT==2.13.0
 # CVE-2024-26130, CVE-2024-12797: upgraded to 49.0.0 (patched)
 cryptography==49.0.0
 
@@ -42,7 +42,7 @@ opencv-python-headless==4.9.0.80
 
 # ── HTTP & Networking ─────────────────────────────────────── #
 # CVE-2024-35195: upgraded to 2.32.3+ (patched)
-requests==2.32.3
+requests==2.33.1
 httpx==0.28.1
 websockets==14.1
 

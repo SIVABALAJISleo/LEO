@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Search, Command, Zap, Database, RefreshCw, Layers, Activity, Clock, ShieldCheck, X, ChevronRight, Binary } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Zap, Database, RefreshCw, ShieldCheck, X, ChevronRight, Binary } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as Y from 'yjs';
-import { LocalIntentEngine, Node, NodeType } from './engine';
+import { LocalIntentEngine } from './engine';
+import type { Node, NodeType } from './engine';
 
 // --- LOCAL ENGINE INSTANCE ---
 const engine = new LocalIntentEngine();

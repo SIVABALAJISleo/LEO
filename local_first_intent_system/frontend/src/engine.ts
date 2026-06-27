@@ -73,7 +73,7 @@ export class LocalIntentEngine {
    * LAYER 4: EXECUTION
    * Pure Graph Traversal Validation
    */
-  public execute(intentIds: string[]): { status: string; result?: any; error?: string } {
+  public execute(intentIds: string[]): { status: string; result?: any; error?: string; details?: string } {
     if (intentIds.length === 0) return { status: "ERROR", error: "EMPTY_INTENT" };
 
     // Validate chain

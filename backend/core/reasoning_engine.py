@@ -38,9 +38,10 @@ class ChainOfThoughtEngine:
         t0 = time.perf_counter()
 
         # Step 1: generate a reasoning plan
+        context_str = f"Context:\n{context}" if context else ""
         plan_prompt = (
             f"You are a precise reasoning engine. Given this question:\n\"{query}\"\n"
-            f"{'Context:\n' + context if context else ''}\n"
+            f"{context_str}\n"
             "Break the problem down into exactly 3 numbered reasoning steps. Be concise."
         )
         plan = self._call(plan_prompt)
@@ -92,9 +93,10 @@ class TreeOfThoughtsEngine:
 
         branches_text = []
         for i in range(self.branches):
+            context_str = f"Context:\n{context}" if context else ""
             branch_prompt = (
                 f"You are reasoning agent {i+1}. Given:\n\"{query}\"\n"
-                f"{'Context:\n' + context if context else ''}\n"
+                f"{context_str}\n"
                 f"Produce hypothesis {i+1}. Be concise and give a confidence score 0-1."
             )
             branch_result = self._call(branch_prompt)
@@ -146,9 +148,10 @@ class MultiAgentDebateEngine:
         transcript = []
 
         # Round 0: Initial claim
+        context_str = f"Context:\n{context}" if context else ""
         proposer_prompt = (
             f"You are the PROPOSER agent. Answer this confidently and directly:\n"
-            f"\"{query}\"\n{'Context:\n' + context if context else ''}"
+            f"\"{query}\"\n{context_str}"
         )
         claim = self._call(proposer_prompt)
         transcript.append({"role": "Proposer", "content": claim})
