@@ -106,17 +106,27 @@ class ProductionSemanticCache:
         except Exception as e:
             logger.warning(f"FAISS not loaded, falling back to manual similarity scans: {e}")
 
-    @property
-    def _store(self):
+    def get_count(self) -> int:
         try:
             conn = sqlite3.connect(self.db_path)
             cursor = conn.cursor()
             cursor.execute("SELECT count(*) FROM semantic_cache")
             count = cursor.fetchone()[0]
             conn.close()
-            return [None] * count
+            return count
         except Exception:
-            return []
+            return 0
+
+    def save_index(self, path: str = "cache_index.faiss"):
+        if self.use_faiss:
+            import faiss
+            faiss.write_index(self.faiss_index, path)
+
+    def load_index(self, path: str = "cache_index.faiss"):
+        if os.path.exists(path):
+            import faiss
+            self.faiss_index = faiss.read_index(path)
+            self.use_faiss = True
 
 
     def _initialize_sqlite(self):

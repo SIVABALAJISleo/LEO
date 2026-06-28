@@ -135,7 +135,10 @@ class SemanticCache:
     def __init__(self, dimension: int = 384, threshold: float = 0.98):
         from backend.core.logging import logger as struct_logger
         self.logger = struct_logger
-        self.model = SentenceTransformer('all-MiniLM-L6-v2') 
+        # Lazy — never load the model at import / construction time so that
+        # test collection works offline without network access.
+        self._encoder = None
+        self._dimension = dimension
         if HAS_FAISS:
              self.index = faiss.IndexFlatL2(dimension)
         else:
@@ -144,6 +147,28 @@ class SemanticCache:
         # Redis-backed persistent storage for cache results
         from backend.core.middleware import redis_client
         self.redis = redis_client
+
+    def _get_encoder(self):
+        """Return encoder, lazily loading on first use."""
+        if self._encoder is None:
+            import os
+            offline = (
+                os.getenv("TRANSFORMERS_OFFLINE", "0") == "1"
+                or os.getenv("LEO_OFFLINE", "0") == "1"
+            )
+            if offline or not HAS_TRANSFORMERS:
+                self._encoder = TFIDFLite(self._dimension)
+            else:
+                try:
+                    self._encoder = SentenceTransformer('all-MiniLM-L6-v2')
+                except Exception as e:
+                    import logging
+                    logging.getLogger(__name__).warning(
+                        f"SemanticCache: SentenceTransformer load failed ({e}), using TFIDFLite"
+                    )
+                    self._encoder = TFIDFLite(self._dimension)
+        return self._encoder
+
 
     def get(self, cache_key: str) -> Optional[Dict[str, Any]]:
         """
@@ -165,7 +190,7 @@ class SemanticCache:
             return None
         
         # We use a sub-string or hash for the actual vector storage reference
-        query_vec = np.asarray(self.model.encode([cache_key])).astype('float32')
+        query_vec = np.asarray(self._get_encoder().encode([cache_key])).astype('float32')
         distances, indices = self.index.search(query_vec, k=1) # type: ignore
         
         distance = float(distances[0][0])
@@ -198,7 +223,7 @@ class SemanticCache:
         self.redis.set(f"exact_cache:{cache_key}", result_json, ex=86400) # 24h
 
         # 2. Add to semantic index
-        query_vec = np.asarray(self.model.encode([cache_key])).astype('float32')
+        query_vec = np.asarray(self._get_encoder().encode([cache_key])).astype('float32')
         idx = self.index.ntotal
         self.index.add(query_vec) # type: ignore
         self.redis.set(f"semantic_val:{idx}", result_json, ex=86400)

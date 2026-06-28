@@ -16,6 +16,18 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/v1", tags=["OpenAI API Gateway"])
 
+_ENCODER = None
+def _get_encoder():
+    global _ENCODER
+    if _ENCODER is None:
+        try:
+            from sentence_transformers import SentenceTransformer
+            _ENCODER = SentenceTransformer("all-MiniLM-L6-v2")
+        except Exception:
+            from backend.cache.semantic_cache import TrigramEmbedder
+            _ENCODER = TrigramEmbedder()
+    return _ENCODER
+
 # ── OpenAI Schema Specifications ────────────────────────────────────────── #
 
 class ChatMessage(BaseModel):
@@ -116,14 +128,8 @@ async def embeddings(req: EmbeddingRequest):
         
     logger.info(f"[GATEWAY] Intercepted embedding request: inputs={len(inputs)}")
     
-    # Retrieve LEO embedder dynamically
-    from backend.cache.semantic_cache import TrigramEmbedder
-    encoder = None
-    try:
-        from sentence_transformers import SentenceTransformer
-        encoder = SentenceTransformer("all-MiniLM-L6-v2")
-    except Exception:
-        encoder = TrigramEmbedder()
+    # Retrieve LEO embedder dynamically using singleton
+    encoder = _get_encoder()
         
     data = []
     total_tokens = 0

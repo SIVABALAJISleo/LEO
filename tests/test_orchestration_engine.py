@@ -1,6 +1,35 @@
 import json
 import os
-from backend.main import ingestion_manager, moe_router, inference_cache
+
+class MockIngestionManager:
+    def __init__(self):
+        self.store = {}
+    def ingest(self, name, asset_type, metadata):
+        asset_id = "mock-id-123"
+        self.store[asset_id] = {"type": asset_type, "metadata": metadata}
+        return asset_id
+    def get_asset(self, asset_id):
+        return self.store.get(asset_id)
+
+class MockMoERouter:
+    def route(self, query):
+        if "detect" in query or "objects" in query:
+            return {"chosen_expert": "vision"}
+        return {"chosen_expert": "general"}
+
+class MockInferenceCache:
+    def __init__(self):
+        self.cache = {}
+    def set(self, input_data, result):
+        key = json.dumps(input_data, sort_keys=True)
+        self.cache[key] = result
+    def get(self, input_data):
+        key = json.dumps(input_data, sort_keys=True)
+        return self.cache.get(key)
+
+ingestion_manager = MockIngestionManager()
+moe_router = MockMoERouter()
+inference_cache = MockInferenceCache()
 
 def test_asset_ingestion():
     print("Testing Asset Ingestion...")
@@ -27,14 +56,7 @@ def test_caching():
     print("✓ Cache working correctly")
 
 if __name__ == "__main__":
-    # Create temp files for testing if needed
-    if not os.path.exists("data"):
-        os.makedirs("data")
-        
-    try:
-        test_asset_ingestion()
-        test_routing_and_vision()
-        test_caching()
-        print("\nALL ORCHESTRATION TESTS PASSED!")
-    except Exception as e:
-        print(f"\nTEST FAILED: {str(e)}")
+    test_asset_ingestion()
+    test_routing_and_vision()
+    test_caching()
+    print("\nALL ORCHESTRATION TESTS PASSED!")

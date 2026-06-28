@@ -1,18 +1,32 @@
 import os
 from sqlalchemy import create_engine, Column, Integer, String, DateTime, Text, Boolean, Float, LargeBinary
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import declarative_base, sessionmaker
 import datetime
+
+from sqlalchemy.pool import StaticPool, QueuePool
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./hyper_test.db")
 
-print("Debug: Creating engine...")
-engine = create_engine(DATABASE_URL)
-print("Debug: Engine created.")
+if DATABASE_URL.startswith("postgresql"):
+    engine = create_engine(
+        DATABASE_URL,
+        poolclass=QueuePool,
+        pool_size=10,
+        max_overflow=20,
+        pool_pre_ping=True
+    )
+else:
+    engine = create_engine(
+        DATABASE_URL,
+        poolclass=StaticPool,
+        connect_args={"check_same_thread": False},
+        pool_pre_ping=True,
+        echo=False
+    )
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-print("Debug: Creating base...")
 Base = declarative_base()
-print("Debug: Base created.")
+
 
 class User(Base):
     __tablename__ = "users"

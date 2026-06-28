@@ -377,7 +377,7 @@ class V10BetaOrchestrator:
                 "blocked_queries": self._blocked_queries,
                 "avoidance_rate_pct": round(avoidance, 2),
             },
-            "semantic_store_size": len(cache_store),
+            "semantic_store_size": self.cache.get_count(),
             "knowledge_graph": kg_stats,
             "memory_system": mem_summary,
             "fingerprint_store_size": 0,

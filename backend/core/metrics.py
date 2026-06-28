@@ -10,7 +10,7 @@ PPE_HITS = PromCounter('hyper_ppe_hits_total', 'Total Layer 1 PPE cache hits')
 SHADOW_HITS = PromCounter('hyper_shadow_hits_total', 'Total Layer 0 Shadow cache hits')
 TWIN_HITS = PromCounter('hyper_twin_hits_total', 'Total Layer 9 Digital Twin hits')
 MODEL_INVOCATIONS = PromCounter('hyper_model_invocations_total', 'Total LLM ladder escalations')
-AVOIDANCE_RATIO = Gauge('hyper_inference_avoidance_ratio', 'Ratio of requests avoiding full inference')
+AVOIDANCE_RATIO = Gauge('hyper_inference_avoidance_ratio_v1', 'Ratio of requests avoiding full inference')
 GPU_COST_SAVED = Gauge('hyper_gpu_cost_saved_total', 'Estimated GPU cost saved in USD')
 
 # Optimization Layer Metrics
