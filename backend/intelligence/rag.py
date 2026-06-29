@@ -75,15 +75,16 @@ def normalize_L2(x: np.ndarray):
         x[mask] /= norm[mask]
     return x
 
+class FakeSentenceTransformer:
+    def __init__(self, model_name: str = ""):
+        self._impl = TFIDFLite()
+    def encode(self, texts: List[str]) -> np.ndarray:
+        return self._impl.encode(texts)
+
 try:
     from sentence_transformers import SentenceTransformer
     HAS_TRANSFORMERS = True
 except ImportError:
-    class FakeSentenceTransformer:
-        def __init__(self, model_name: str = ""):
-            self._impl = TFIDFLite()
-        def encode(self, texts: List[str]) -> np.ndarray:
-            return self._impl.encode(texts)
     SentenceTransformer = FakeSentenceTransformer
     HAS_TRANSFORMERS = False
 
@@ -140,8 +141,15 @@ class RAGEngine:
     def __init__(self, dimension: int = 384, persist_dir: str = "rag_data"):
         self.persist_dir = persist_dir
         self.docs_path = os.path.join(persist_dir, "documents.json")
-        
-        self.model = SentenceTransformer('all-MiniLM-L6-v2') 
+        if os.getenv("LEO_OFFLINE", "0") == "1" or os.getenv("TRANSFORMERS_OFFLINE", "0") == "1":
+            logger.info("RAGEngine: Running in offline mode - using FakeSentenceTransformer.")
+            self.model = FakeSentenceTransformer()
+        else:
+            try:
+                self.model = SentenceTransformer('all-MiniLM-L6-v2')
+            except Exception as e:
+                logger.warning(f"RAGEngine: SentenceTransformer unavailable ({e}). Falling back to FakeSentenceTransformer.")
+                self.model = FakeSentenceTransformer()
         
         # Select storage mode: 'local' (FAISS) or 'distributed' (Qdrant/Milvus)
         db_mode = os.getenv("VECTOR_DB_MODE", "local")

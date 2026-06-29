@@ -66,15 +66,16 @@ class TFIDFLite:
             
         return embeddings
 
+class FakeSentenceTransformer:
+    def __init__(self, model_name: str = ""):
+        self._impl = TFIDFLite()
+    def encode(self, texts: List[str]) -> np.ndarray:
+        return self._impl.encode(texts)
+
 try:
     from sentence_transformers import SentenceTransformer
     HAS_TRANSFORMERS = True
 except ImportError:
-    class FakeSentenceTransformer:
-        def __init__(self, model_name: str = ""):
-            self._impl = TFIDFLite()
-        def encode(self, texts: List[str]) -> np.ndarray:
-            return self._impl.encode(texts)
     SentenceTransformer = FakeSentenceTransformer
     HAS_TRANSFORMERS = False
 

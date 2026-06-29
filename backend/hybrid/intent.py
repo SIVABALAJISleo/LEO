@@ -1,12 +1,27 @@
 import re
 import logging
+import os
 from typing import Dict, Any, List, Optional
 import numpy as np
-from sentence_transformers import SentenceTransformer
 import skfuzzy as fuzzy
 from skfuzzy import control as ctrl
 
 logger = logging.getLogger(__name__)
+
+try:
+    from sentence_transformers import SentenceTransformer
+    HAS_TRANSFORMERS = True
+except ImportError:
+    HAS_TRANSFORMERS = False
+
+class FakeSentenceTransformer:
+    def __init__(self, model_name: str = ""):
+        pass
+    def encode(self, texts: List[str]) -> np.ndarray:
+        if isinstance(texts, str):
+            texts = [texts]
+        # Return random dummy embeddings of size 384 for offline mode compatibility
+        return np.random.randn(len(texts), 384).astype(np.float32)
 
 class IntentEngine:
     """
@@ -14,7 +29,15 @@ class IntentEngine:
     Uses sentence-transformers for embeddings and fuzzy logic for confidence tolerance.
     """
     def __init__(self, model_name: str = "all-MiniLM-L6-v2"):
-        self.model = SentenceTransformer(model_name)
+        if os.getenv("LEO_OFFLINE", "0") == "1" or os.getenv("TRANSFORMERS_OFFLINE", "0") == "1" or not HAS_TRANSFORMERS:
+            logger.info("IntentEngine: Running in offline mode - using FakeSentenceTransformer.")
+            self.model = FakeSentenceTransformer()
+        else:
+            try:
+                self.model = SentenceTransformer(model_name)
+            except Exception as e:
+                logger.warning(f"IntentEngine: SentenceTransformer unavailable ({e}). Falling back to FakeSentenceTransformer.")
+                self.model = FakeSentenceTransformer()
         # Predefined canonical intents for comparison
         self.canonical_intents = {
             "information": "Request for general information or knowledge",

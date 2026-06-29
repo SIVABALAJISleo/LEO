@@ -38,7 +38,7 @@ boto3==1.38.38
 # ── Computer Vision ───────────────────────────────────────── #
 # CVE-2024-28219, CVE-2024-4863: upgraded to 11.3.0 (patched)
 Pillow>=11.3.0
-opencv-python-headless==4.9.0.80
+opencv-python-headless==4.10.0.84
 
 # ── HTTP & Networking ─────────────────────────────────────── #
 # CVE-2024-35195: upgraded to 2.32.3+ (patched)
