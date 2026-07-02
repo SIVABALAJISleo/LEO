@@ -158,7 +158,7 @@ class ZeroComputeControl:
         primitives = global_atomic_parser.parse(query)
         atom_hit = self.zrs.lookup_atom(primitives["atomic_hash"])
         if atom_hit:
-            result = self._wrap(atom_hit, "SYMBOLIC", start_time, 0.99, clean)
+            result = await self._wrap(atom_hit, "SYMBOLIC", start_time, 0.99, clean)
             return result
 
         # ─────────────────────────────────────────────────────────────────── #
@@ -166,7 +166,7 @@ class ZeroComputeControl:
         # ─────────────────────────────────────────────────────────────────── #
         route_hit = global_address_router.get_route(query)
         if route_hit:
-            result = self._wrap(route_hit["answer"], "ADDRESS_JUMP", start_time, 1.0, clean)
+            result = await self._wrap(route_hit["answer"], "ADDRESS_JUMP", start_time, 1.0, clean)
             global_experience_optimizer.record("FAST_PATH", result["latency_ms"])
             return result
 
@@ -178,7 +178,7 @@ class ZeroComputeControl:
         
         hit = mmap_res or dedup_hit
         if hit and hit.get("confidence", 0) >= CONFIDENCE_FLOOR:
-            result = self._wrap(hit["answer"], "MMAP" if mmap_res else "CACHE",
+            result = await self._wrap(hit["answer"], "MMAP" if mmap_res else "CACHE",
                                 start_time, hit["confidence"], clean)
             global_experience_optimizer.record("MMAP", result["latency_ms"])
             self._track(request_id, clean, family_id, result, False, True, global_avoidance_tracker)
@@ -193,7 +193,7 @@ class ZeroComputeControl:
             if topo_addr is not None:
                 topo_hit = global_bit_topology.resolve_address(topo_addr)
                 if topo_hit:
-                    result = self._wrap(topo_hit["answer"], "AUTOMATON", start_time, 0.98, clean)
+                    result = await self._wrap(topo_hit["answer"], "AUTOMATON", start_time, 0.98, clean)
                     global_experience_optimizer.record("AUTOMATON", result["latency_ms"])
                     self._track(request_id, clean, family_id, result, False, True, global_avoidance_tracker)
                     return result
@@ -216,7 +216,7 @@ class ZeroComputeControl:
             
             hit = bit_hit or (symbolic_hit["answer"] if symbolic_hit else None)
             if hit:
-                result = self._wrap(hit, "SYMBOLIC", start_time, 0.96, clean)
+                result = await self._wrap(hit, "SYMBOLIC", start_time, 0.96, clean)
                 global_experience_optimizer.record("SYMBOLIC", result["latency_ms"])
                 self._track(request_id, clean, family_id, result, False, True, global_avoidance_tracker)
                 return result
@@ -229,7 +229,7 @@ class ZeroComputeControl:
             try:
                 pending = await asyncio.wait_for(self._in_flight[family_id], timeout=remaining(500))
                 if pending:
-                    result = self._wrap(pending.get("result", ""), "CACHE", start_time, pending.get("confidence", 1.0), clean)
+                    result = await self._wrap(pending.get("result", ""), "CACHE", start_time, pending.get("confidence", 1.0), clean)
                     self._track(request_id, clean, family_id, result, False, True, global_avoidance_tracker)
                     return result
             except Exception: pass
@@ -252,7 +252,7 @@ class ZeroComputeControl:
                 if not valid:
                     logger.info(f"zero_compute: SEMANTIC candidate REJECTED by constraints ({reason})")
                 else:
-                    result = self._wrap(sem_hit["answer"], "SEMANTIC", start_time, sem_hit["confidence"], clean)
+                    result = await self._wrap(sem_hit["answer"], "SEMANTIC", start_time, sem_hit["confidence"], clean)
                     global_experience_optimizer.record("SEMANTIC", result["latency_ms"])
                     return await self._persist_and_return(
                         result, query, family_id, user_id, session_id, intent, entity,
@@ -271,7 +271,7 @@ class ZeroComputeControl:
             prob_hit = global_memory.lookup(query, canonical_form=family_id)
             pred_hit = spec_hit or prob_hit
             if pred_hit and pred_hit.get("confidence", 0) >= CONFIDENCE_FLOOR:
-                result = self._wrap(pred_hit["answer"], "PREDICTED", start_time, pred_hit["confidence"], clean)
+                result = await self._wrap(pred_hit["answer"], "PREDICTED", start_time, pred_hit["confidence"], clean)
                 global_experience_optimizer.record("PREDICTED", result["latency_ms"])
                 return await self._persist_and_return(
                     result, query, family_id, user_id, session_id, intent, entity,
@@ -290,7 +290,7 @@ class ZeroComputeControl:
                 stitch_res = await global_atomic_stitcher.stitch(query)
                 assembly = global_atomic_stitcher.assemble(query, entity, intent)
                 if assembly:
-                    result = self._wrap(assembly, "ASSEMBLY", start_time, 0.88, clean)
+                    result = await self._wrap(assembly, "ASSEMBLY", start_time, 0.88, clean)
                     global_experience_optimizer.record("ASSEMBLY", result["latency_ms"])
                     return await self._persist_and_return(
                         result, query, family_id, user_id, session_id, intent, entity,
@@ -307,7 +307,7 @@ class ZeroComputeControl:
                     query, global_memory, global_bg_compute, tenant_id, session_id, global_delta_engine
                 )
                 if comp_res:
-                    result = self._wrap(comp_res["answer"], "ASSEMBLY", start_time, 0.85, clean)
+                    result = await self._wrap(comp_res["answer"], "ASSEMBLY", start_time, 0.85, clean)
                     return await self._persist_and_return(
                         result, query, family_id, user_id, session_id, intent, entity,
                         tenant_id, False, False, True, request_id, clean,
@@ -325,7 +325,7 @@ class ZeroComputeControl:
             try:
                 logic_res = global_symbolic_engine.partial_evaluate(entity, "interact", "context", intent)
                 if logic_res and len(logic_res) > 20:
-                    result = self._wrap(logic_res, "SYMBOLIC", start_time, 0.88, clean)
+                    result = await self._wrap(logic_res, "SYMBOLIC", start_time, 0.88, clean)
                     global_experience_optimizer.record("SYMBOLIC", result["latency_ms"])
                     return await self._persist_and_return(
                         result, query, family_id, user_id, session_id, intent, entity,
@@ -346,7 +346,7 @@ class ZeroComputeControl:
                 # Still subject to constraint validation
                 valid, reason = global_constraint_filter.validate(query, hdc_hit["answer"], {"entity": entity})
                 if valid:
-                    result = self._wrap(hdc_hit["answer"], "HDC", start_time, hdc_hit["confidence"], clean)
+                    result = await self._wrap(hdc_hit["answer"], "HDC", start_time, hdc_hit["confidence"], clean)
                     global_experience_optimizer.record("HDC", result["latency_ms"])
                     return await self._persist_and_return(
                         result, query, family_id, user_id, session_id, intent, entity,
@@ -360,7 +360,7 @@ class ZeroComputeControl:
 
             approx_res = global_approximation_engine.approximate(query, intent, entity, family_id)
             if approx_res and approx_res.get("confidence", 0) >= 0.70:
-                result = self._wrap(approx_res["answer"], "APPROX",
+                result = await self._wrap(approx_res["answer"], "APPROX",
                                     start_time, approx_res["confidence"], clean)
                 global_experience_optimizer.record("APPROX", result["latency_ms"])
 
@@ -393,7 +393,7 @@ class ZeroComputeControl:
                     "mode": "ASSEMBLY_PENDING",
                     "confidence": 0.5
                 }
-                result = self._wrap(skeleton["answer"], "ILLUSION", start_time, 0.5, clean)
+                result = await self._wrap(skeleton["answer"], "ILLUSION", start_time, 0.5, clean)
                 if not inflight_fut.done(): inflight_fut.set_result(result)
                 
                 # Resolve in background and update cache
@@ -410,7 +410,7 @@ class ZeroComputeControl:
                 asyncio.create_task(global_compute_deferral.defer_and_resolve(
                     query, request_id, tenant_id, session_id, global_bg_compute
                 ))
-                result = self._wrap(deferred["result"], "APPROX", start_time, 0.4, clean)
+                result = await self._wrap(deferred["result"], "APPROX", start_time, 0.4, clean)
                 if not inflight_fut.done(): inflight_fut.set_result(result)
                 return result
 
@@ -423,7 +423,7 @@ class ZeroComputeControl:
             if final_check:
                 # This means we missed a cache hit. Log as BUG and return it.
                 global_zero_repeat_store.log_recompute_violation(family_id, query, "missed_prev_gates")
-                result = self._wrap(final_check["answer"], "CACHE", start_time, 1.0, clean)
+                result = await self._wrap(final_check["answer"], "CACHE", start_time, 1.0, clean)
                 if not inflight_fut.done(): inflight_fut.set_result(result)
                 return result
 
@@ -440,7 +440,7 @@ class ZeroComputeControl:
             model_answer = await self._call_model(
                 query, tenant_id, global_micro_router, global_rag_engine, reasoning_expert
             )
-            result = self._wrap(model_answer, "MODEL",
+            result = await self._wrap(model_answer, "MODEL",
                                 start_time, 0.97, clean)
             global_experience_optimizer.record("MODEL", result["latency_ms"])
             return await self._persist_and_return(
@@ -676,7 +676,7 @@ class ZeroComputeControl:
 
         except Exception as exc:
             logger.error(f"zcc.stream_error: {exc}")
-            yield self._wrap(f"Error: {exc}", "ERROR", start_time, 0.0, query)
+            yield await self._wrap(f"Error: {exc}", "ERROR", start_time, 0.0, query)
 
     def avoidance_rate(self) -> float:
         if self._total == 0:

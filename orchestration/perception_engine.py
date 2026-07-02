@@ -27,7 +27,7 @@ except (ImportError, ValueError):
     except ImportError:
         class Mock:
             def __init__(self, *args, **kwargs): pass
-            def request_visibility(self, q): return {"appearance": "MOCK"}
+            def request_visibility(self, q): return {"appearance": "MOCK", "region_id": q}
             def query_specular_field(self, p, d): return [1,1,1]
             def analyze_trajectory(self, s, st, l): return {}
             def touch_object(self, id): pass

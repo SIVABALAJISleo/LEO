@@ -55,6 +55,10 @@ class MemoryMappedLogicEngine:
         qhash = self._fast_hash(query)
         return self._mmap_store.get(qhash)
 
+    async def lookup(self, query: str) -> Optional[Dict[str, Any]]:
+        """Async wrapper for direct_lookup to satisfy zero_compute pipeline."""
+        return self.direct_lookup(query)
+
     def register_logic(self, query: str, answer: str, atoms: Optional[List[str]] = None):
         """Registers logic into both the hash-store and bitmask-store."""
         qhash = self._fast_hash(query)

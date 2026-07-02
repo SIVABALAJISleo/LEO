@@ -83,7 +83,7 @@ class TestGlobalMemory:
             query="How to deploy on Railway?",
             answer="Use railway.toml config.",
             mode="CANONICAL",
-            shape_key="deploy_railway",
+            canonical_form="deploy_railway",
             confidence=0.98,
             latency_ms=12.5
         )

@@ -75,6 +75,11 @@ class InferenceHub:
         
         return "LLM Engine Offline. (Please download models/tinyllama... and ensure llama-cpp-python is installed)"
 
+    def run_vision_inference(self, frame: Any) -> Dict[str, Any]:
+        if self.vision_backend == "mock":
+            return {"status": "mock_vision_success", "detections": []}
+        return {"status": f"unsupported_vision_backend_{self.vision_backend}", "detections": []}
+
     def get_status(self) -> Dict[str, Any]:
         available_models = [f for f in os.listdir(self.model_root) if f.endswith('.gguf')]
         return {

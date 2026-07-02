@@ -177,6 +177,13 @@ class ZeroRepeatStore:
 
         return None  # Proceed with compute
 
+    def lookup_atom(self, atomic_hash: str) -> Optional[Dict[str, Any]]:
+        """
+        Fast lookup for symbolic atoms to prevent re-execution of identical logic primitives.
+        Currently returns None until atom-level caching is fully implemented.
+        """
+        return None
+
     # ── Stats ──────────────────────────────────────────────────────────────── #
 
     def stats(self) -> Dict[str, Any]:

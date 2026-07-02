@@ -19,7 +19,7 @@ class TestPerceptionEngineIntegration(unittest.TestCase):
             events=[{"type": "interaction", "target_id": "obj_A"}]
         )
         
-        self.assertEqual(result["engine_mode"], "PERCEPTION_SYNTHESIS")
+        self.assertEqual(result["engine_mode"], "REALITY_CONTROLLED_SYNTHESIS")
         self.assertIn("world_status", result)
         self.assertIn("visibility_context", result)
         self.assertIn("ambient_light", result)

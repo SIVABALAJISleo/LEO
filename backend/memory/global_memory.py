@@ -92,7 +92,7 @@ class GlobalMemory:
             dist, indices = self._index.search(np.array([emb]), k=1) # type: ignore
             
             if indices[0][0] != -1:
-                similarity = 1.0 - (dist[0][0] / 2.0)
+                similarity = float(1.0 - (dist[0][0] / 2.0))
                 # Enforce REUSE_THRESHOLD (Point 2: Semantic similarity >= 0.90)
                 if similarity >= REUSE_THRESHOLD: 
                     match_hash = self._id_map[indices[0][0]]
@@ -161,7 +161,7 @@ class GlobalMemory:
             for dist, idx in zip(dists[0], indices[0]):
                 if idx == -1:
                     continue
-                similarity = 1.0 - (dist / 2.0)
+                similarity = float(1.0 - (dist / 2.0))
                 if similarity < threshold:
                     continue
                 if idx >= len(self._id_map):
@@ -172,7 +172,7 @@ class GlobalMemory:
                     continue
                 results.append({
                     "answer":     entry.get("answer", ""),
-                    "confidence": max(entry.get("confidence", similarity), similarity),
+                    "confidence": float(max(entry.get("confidence", similarity), similarity)),
                     "similarity": round(similarity, 4),
                     "canonical":  entry.get("canonical", ""),
                     "mode":       entry.get("mode", "memory"),

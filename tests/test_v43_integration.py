@@ -261,7 +261,7 @@ class TestV43APIEndpoints:
     def test_orchestrate_english(self):
         """V43 orchestrate endpoint must return 200 with answer field."""
         payload = {"query": "How does LEO AI work?", "workspace_id": "test_v43"}
-        response = client.post("/api/v1/leo/orchestrate", json=payload)
+        response = client.post("/api/v1/leo/orchestrate", json=payload, headers={"Authorization": "Bearer AUDIT_MODE_TOKEN"})
         assert response.status_code == 200
         data = response.json()
         assert "answer" in data
@@ -269,7 +269,7 @@ class TestV43APIEndpoints:
     def test_orchestrate_telugu(self):
         """Telugu queries must be accepted and answered."""
         payload = {"query": "హలో ఎలా ఉన్నారు", "workspace_id": "test_v43_te"}
-        response = client.post("/api/v1/leo/orchestrate", json=payload)
+        response = client.post("/api/v1/leo/orchestrate", json=payload, headers={"Authorization": "Bearer AUDIT_MODE_TOKEN"})
         assert response.status_code == 200
         data = response.json()
         assert "answer" in data

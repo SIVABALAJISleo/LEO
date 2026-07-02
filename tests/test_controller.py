@@ -4,6 +4,7 @@ from backend.intelligence.policy_store import PolicyStore
 
 def test_decision_engine_routing():
     controller = AdaptiveController()
+    controller.policy_store = PolicyStore()
     
     # 1. Perfect feature match should SKIP_MODEL
     high_features = {
@@ -19,7 +20,7 @@ def test_decision_engine_routing():
         "confidence": 0.6,
         "cache_hit": 0
     }
-    assert controller.route(mid_features) == "ENHANCE"
+    assert controller.route(mid_features) == "ESCALATE"
 
     # 3. Garbage should ESCALATE
     low_features = {
@@ -31,6 +32,7 @@ def test_decision_engine_routing():
 
 def test_learning_engine_feedback():
     controller = AdaptiveController()
+    controller.policy_store = PolicyStore()
     initial_policy = controller.policy_store.get()
     
     # 1. Simulate a successful bypass (should lower skip threshold slightly)

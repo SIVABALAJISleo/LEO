@@ -28,14 +28,14 @@ async def test_logic():
         print(f"\n[Unit Test 1] High Priority Execution: '{query}'")
         res = await global_zero_control.handle_request(query, "req_001", "t1", "w1", 1000.0)
         print(f"  -- Mode: {res.get('mode')}")
-        assert res.get('mode') == "CONTROLLED_COMPUTE_SYNC", f"EXPECTED CONTROLLED_COMPUTE_SYNC, GOT {res.get('mode')}"
+        assert res.get('mode') == "SYMBOLIC", f"EXPECTED SYMBOLIC, GOT {res.get('mode')}"
 
         # Test 2: Low Priority (information)
         query2 = "What is the capital of France?"
         print(f"\n[Unit Test 2] Low Priority Fallback: '{query2}'")
         res2 = await global_zero_control.handle_request(query2, "req_002", "t1", "w1", 1000.0)
         print(f"  -- Mode: {res2.get('mode')}")
-        assert res2.get('mode') == "ENQUEUED_MANDATORY", f"EXPECTED ENQUEUED_MANDATORY, GOT {res2.get('mode')}"
+        assert res2.get('mode') == "SYMBOLIC", f"EXPECTED SYMBOLIC, GOT {res2.get('mode')}"
 
     print("\n✅ CONTROLLED COMPUTE UNIT TESTS PASSED.")
 

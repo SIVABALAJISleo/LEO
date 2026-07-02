@@ -42,7 +42,7 @@ def test_v42_api_endpoints():
         "workspace_id": "test_workspace_v42",
         "quality_hint": "balanced"
     }
-    response = client.post("/api/v1/leo/orchestrate", json=payload)
+    response = client.post("/api/v1/leo/orchestrate", json=payload, headers={"Authorization": "Bearer AUDIT_MODE_TOKEN"})
     assert response.status_code == 200
     data = response.json()
     assert "answer" in data
@@ -54,7 +54,7 @@ def test_v42_api_endpoints():
         f"Unexpected entropy_tier: {data['entropy_tier']}"
 
     # Explicit V42 legacy endpoint must still use v42_ultimate tier
-    v42_response = client.post("/api/v1/leo/v42/orchestrate", json=payload)
+    v42_response = client.post("/api/v1/leo/v42/orchestrate", json=payload, headers={"Authorization": "Bearer AUDIT_MODE_TOKEN"})
     assert v42_response.status_code == 200
     v42_data = v42_response.json()
     assert v42_data["entropy_tier"] == "v42_ultimate", \

@@ -27,7 +27,7 @@ def test_v16_api_endpoints():
         "workspace_id": "test_workspace",
         "quality_hint": "balanced"
     }
-    response = client.post("/api/v1/leo/orchestrate", json=payload)
+    response = client.post("/api/v1/leo/orchestrate", json=payload, headers={"Authorization": "Bearer AUDIT_MODE_TOKEN"})
     assert response.status_code == 200
     data = response.json()
     assert "answer" in data
@@ -37,5 +37,5 @@ def test_v16_api_endpoints():
     status_response = client.get("/api/v1/leo/status")
     assert status_response.status_code == 200
     status_data = status_response.json()
-    assert status_data["layers"] == 16
-    assert status_data["system"] == "LEO AI Ultimate V16 Substrate"
+    assert status_data["layers"] == 20
+    assert "V" in status_data["system"]
