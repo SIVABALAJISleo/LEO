@@ -1,0 +1,790 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.11.9, pytest-9.1.1, pluggy-1.6.0
+rootdir: C:\Users\sivab\OneDrive\Documents\HYPER\LEO-main
+configfile: pytest.ini
+plugins: anyio-4.13.0, asyncio-1.4.0, env-1.6.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collected 105 items
+
+tests\gpu_bypass\test_python_modules.py F.                               [  1%]
+tests\test_api.py ..                                                     [  3%]
+tests\test_controlled_compute_unit.py F                                  [  4%]
+tests\test_controller.py F.                                              [  6%]
+tests\test_cpu_compute.py ..                                             [  8%]
+tests\test_cpu_orchestration.py .F..                                     [ 12%]
+tests\test_engine_integration.py F                                       [ 13%]
+tests\test_enhancement.py F.F.                                           [ 17%]
+tests\test_event_ai.py ..                                                [ 19%]
+tests\test_final_safety.py .....                                         [ 23%]
+tests\test_orchestration_engine.py ...                                   [ 26%]
+tests\test_perception_synthesis.py ....                                  [ 30%]
+tests\test_phase6_validation.py ...F..F                                  [ 37%]
+tests\test_policy_system.py ....                                         [ 40%]
+tests\test_rag.py .                                                      [ 41%]
+tests\test_reality_control.py .......                                    [ 48%]
+tests\test_reality_dispatch.py ...                                       [ 51%]
+tests\test_saas_full_flow.py FF.                                         [ 54%]
+tests\test_stability_chaos.py FFF                                        [ 57%]
+tests\test_system_extension.py F.F.                                      [ 60%]
+tests\test_v16_integration.py .F                                         [ 62%]
+tests\test_v19_integration.py .F                                         [ 64%]
+tests\test_v42_integration.py ..F                                        [ 67%]
+tests\test_v43_integration.py ..........................FF.              [ 95%]
+tests\test_vibethinker_engine.py ....                                    [ 99%]
+tests\test_zero_compute.py F                                             [100%]
+
+================================== FAILURES ===================================
+_______________________________ test_rag_query ________________________________
+
+    def test_rag_query():
+>       engine = RagQueryEngine()
+                 ^^^^^^^^^^^^^^^^
+
+tests\gpu_bypass\test_python_modules.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+rag\query.py:12: in __init__
+    self.index = RagIndex()
+                 ^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <rag.index.RagIndex object at 0x000002884F48FB10>, dimension = 384
+index_path = 'rag_index.faiss', metadata_path = 'metadata.json'
+
+    def __init__(self, dimension=384, index_path='rag_index.faiss', metadata_path='metadata.json'):
+        self.dimension = dimension
+        self.index_path = index_path
+        self.metadata_path = metadata_path
+        self.index = faiss.IndexFlatL2(dimension)
+        self.metadata = []
+    
+        if os.path.exists(index_path):
+            print(f"[RagIndex] Loading existing index from {index_path}")
+            self.index = faiss.read_index(index_path)
+>           with open(metadata_path, 'r') as f:
+                 ^^^^^^^^^^^^^^^^^^^^^^^^
+E           FileNotFoundError: [Errno 2] No such file or directory: 'metadata.json'
+
+rag\index.py:17: FileNotFoundError
+---------------------------- Captured stdout call -----------------------------
+[RagIndex] Loading existing index from rag_index.faiss
+---------------------------- Captured stderr call -----------------------------
+\rLoading weights:   0%|          | 0/103 [00:00<?, ?it/s]\rLoading weights: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 103/103 [00:00<00:00, 3519.31it/s]
+_________________________________ test_logic __________________________________
+
+    async def test_logic():
+        print("Testing ZeroComputeControl Logic...")
+    
+        # Mock dependencies to avoid timeouts
+        with patch('backend.shadow.shadow_store.global_shadow_store.lookup', return_value=None), \
+             patch('backend.intelligence.delta_engine.global_delta_engine_v2.find_delta', return_value=None), \
+             patch('backend.optimization.soft_match.global_soft_match.find_match', return_value=None), \
+             patch('backend.runtime.composer.global_runtime_composer.compose_response', return_value=None), \
+             patch('backend.optimization.heat_scheduler.global_heat_scheduler.should_skip_heavy_logic', return_value=False), \
+             patch('backend.optimization.compute_budget.global_compute_budget.has_capacity', return_value=True), \
+             patch('backend.background.compute_engine.global_bg_compute.enqueue', new_callable=AsyncMock):
+    
+            # Test 1: High Priority (how_to)
+            query = "What are the steps to install hyper?"
+            print(f"\n[Unit Test 1] High Priority Execution: '{query}'")
+>           res = await global_zero_control.handle_request(query, "req_001", "t1", "w1", 1000.0)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_controlled_compute_unit.py:29: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <backend.core.zero_compute.ZeroComputeControl object at 0x00000288A57FE790>
+query = 'What are the steps to install hyper?', request_id = 'req_001'
+tenant_id = 't1', workspace_id = 'w1', start_time = 1000.0, user_id = 'default'
+
+    async def handle_request(
+        self,
+        query:        str,
+        request_id:   str,
+        tenant_id:    str,
+        workspace_id: str,
+        start_time:   float,
+        user_id:      str = "default",
+    ) -> Dict[str, Any]:
+        """
+        Single entry point for ALL requests.
+        Returns structured response ù never raises.
+        """
+        self._total += 1
+        self._pre_warm()
+    
+        # \u2500\u2500 Step 0: ZERO-COPY NORMALIZE (Hardware Aligned) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 #
+        # Treat input as raw bytes to minimize transformation surface
+        raw_bytes = query.encode('utf-8')
+        norm      = global_query_family_mapper.normalize(query)
+        family_id = norm["family_id"]
+        intent    = norm["intent"]
+        entity    = norm["entity"]
+        clean     = norm["clean"]
+        session_id = request_id.split("_")[1] if "_" in request_id else "default"
+    
+        def elapsed() -> float:
+            return (time.time() - start_time) * 1000
+    
+        def remaining(limit_ms: float) -> float:
+            rem = (limit_ms - elapsed()) / 1000.0
+            return max(0.01, rem)
+    
+        # 0. NORMALIZE (Deterministic Entry)
+        global_intent_trajectory.log_query(session_id, query)
+    
+        # \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 #
+        # TRIATTENTION GATE 0 ù SYMBOLIC ATOMS (DECOMPOSE)                    #
+        # \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 #
+        primitives = global_atomic_parser.parse(query)
+>       atom_hit = self.zrs.lookup_atom(primitives["atomic_hash"])
+                   ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'ZeroRepeatStore' object has no attribute 'lookup_atom'
+
+backend\core\zero_compute.py:159: AttributeError
+---------------------------- Captured stdout call -----------------------------
+Testing ZeroComputeControl Logic...
+
+[Unit Test 1] High Priority Execution: 'What are the steps to install hyper?'
+---------------------------- Captured stderr call -----------------------------
+\rLoading weights:   0%|          | 0/103 [00:00<?, ?it/s]\rLoading weights: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 103/103 [00:00<00:00, 3726.44it/s]
+________________________ test_decision_engine_routing _________________________
+
+    def test_decision_engine_routing():
+        controller = AdaptiveController()
+    
+        # 1. Perfect feature match should SKIP_MODEL
+        high_features = {
+            "quality": 1.0,
+            "confidence": 0.9,
+            "cache_hit": 1
+        }
+        assert controller.route(high_features) == "SKIP_MODEL"
+    
+        # 2. Borderline should ENHANCE
+        mid_features = {
+            "quality": 0.6,
+            "confidence": 0.6,
+            "cache_hit": 0
+        }
+>       assert controller.route(mid_features) == "ENHANCE"
+E       AssertionError: assert 'ESCALATE' == 'ENHANCE'
+E         
+E         - ENHANCE
+E         + ESCALATE
+
+tests\test_controller.py:22: AssertionError
+___________________ TestCPUOrchestration.test_inference_hub ___________________
+
+self = <tests.test_cpu_orchestration.TestCPUOrchestration testMethod=test_inference_hub>
+
+    def test_inference_hub(self):
+        status = self.inference.get_status()
+        self.assertIn("vision_backend", status)
+        self.assertIn("llm_loaded", status)
+    
+        # Test mock vision
+>       res = self.inference.run_vision_inference("mock_frame")
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'InferenceHub' object has no attribute 'run_vision_inference'
+
+tests\test_cpu_orchestration.py:69: AttributeError
+------------------------------ Captured log call ------------------------------
+WARNING  orchestration.proxy_workflow:proxy_workflow.py:19 FFmpeg not found in PATH. Proxy generation will be mocked.
+WARNING  orchestration.inference_hub:inference_hub.py:66 llama-cpp-python not found (required for local LLM)
+______________ TestPerceptionEngineIntegration.test_engine_tick _______________
+
+self = <tests.test_engine_integration.TestPerceptionEngineIntegration testMethod=test_engine_tick>
+
+    def test_engine_tick(self):
+        """Test the unified engine tick."""
+        engine = PerceptionSynthesisEngine()
+    
+        # Test a tick with an interaction
+        result = engine.frame_tick(
+            view_position=[10.5, 20.2, 0.0],
+            view_direction=[0.0, 0.0, 1.0],
+            events=[{"type": "interaction", "target_id": "obj_A"}]
+        )
+    
+>       self.assertEqual(result["engine_mode"], "PERCEPTION_SYNTHESIS")
+E       AssertionError: 'REALITY_CONTROLLED_SYNTHESIS' != 'PERCEPTION_SYNTHESIS'
+E       - REALITY_CONTROLLED_SYNTHESIS
+E       + PERCEPTION_SYNTHESIS
+
+tests\test_engine_integration.py:22: AssertionError
+_____________________________ test_quality_scorer _____________________________
+
+    def test_quality_scorer():
+        scorer = QualityScorer()
+    
+        # Needs to be > 0.5 to trigger enhancement
+        good_text = "This is a detailed explanation. It covers the core concepts clearly. For example, it ensures high reliability."
+>       assert scorer.score(good_text) > 0.5
+E       AssertionError: assert 0.272 > 0.5
+E        +  where 0.272 = score('This is a detailed explanation. It covers the core concepts clearly. For example, it ensures high reliability.')
+E        +    where score = <backend.enhancement.quality_scorer.QualityScorer object at 0x00000288A65C8CD0>.score
+
+tests\test_enhancement.py:11: AssertionError
+______________________ test_enhancement_pipeline_success ______________________
+
+    def test_enhancement_pipeline_success():
+        raw_answer = "RAG retrieval output system architecture. It refers to the pipeline layer."
+        query = "What is the RAG architecture?"
+    
+        final, status = global_enhancement_pipeline.run(raw_answer, query, ["Extra RAG doc context 1"], "definition")
+    
+        # Format and expansion should have applied
+>       assert status == "enhancement_success"
+E       AssertionError: assert 'fallback_required' == 'enhancement_success'
+E         
+E         - enhancement_success
+E         + fallback_required
+
+tests\test_enhancement.py:33: AssertionError
+_________________ TestGlobalMemory.test_log_and_exact_lookup __________________
+
+self = <tests.test_phase6_validation.TestGlobalMemory object at 0x00000288A6336750>
+
+    def test_log_and_exact_lookup(self):
+        from backend.memory.global_memory import global_memory
+>       global_memory.log(
+            query="How to deploy on Railway?",
+            answer="Use railway.toml config.",
+            mode="CANONICAL",
+            shape_key="deploy_railway",
+            confidence=0.98,
+            latency_ms=12.5
+        )
+E       TypeError: GlobalMemory.log() got an unexpected keyword argument 'shape_key'
+
+tests\test_phase6_validation.py:82: TypeError
+____________ TestAvoidanceBenchmark.test_avoidance_ratio_benchmark ____________
+
+self = <tests.test_phase6_validation.TestAvoidanceBenchmark object at 0x00000288A6335350>
+engine = <backend.core.orchestrator.UnifiedSaaSEngine object at 0x00000288A62FBA10>
+
+    @pytest.mark.asyncio
+    async def test_avoidance_ratio_benchmark(self, engine):
+        """
+        Sends 50 queries (mix of repeated and unique) and asserts
+        that the system avoids full compute on >50% of them.
+        """
+        patterns = [
+            "How do I set up billing?",
+            "What is GPU cost savings?",
+            "How does RAG retrieval work?",
+            "Explain the SaaS optimization pipeline.",
+            "What is inference avoidance?",
+        ]
+    
+        modes = []
+        for i in range(50):
+            # 70% repeated queries, 30% unique
+            if i % 10 < 7:
+                query = patterns[i % len(patterns)]
+            else:
+                query = f"Unique benchmark query number {i}"
+    
+>           result = await engine.process(
+                query,
+                f"bench_{i}",
+                tenant_id="bench_tenant",
+                workspace_id="ws_bench"
+            )
+
+tests\test_phase6_validation.py:144: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+backend\core\orchestrator.py:222: in process
+    return await global_query_batcher.get_batched_result(query, run_internal)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\optimization\batcher.py:43: in get_batched_result
+    raise e
+backend\optimization\batcher.py:38: in get_batched_result
+    result = await processor_func(query)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\core\orchestrator.py:217: in run_internal
+    res = await self._process_core(q, request_id, tenant_id, workspace_id, start_time)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\core\orchestrator.py:232: in _process_core
+    result = await global_zero_control.handle_request(query, request_id, tenant_id, workspace_id, start_time)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <backend.core.zero_compute.ZeroComputeControl object at 0x00000288A57FE790>
+query = 'How do I set up billing?', request_id = 'bench_0'
+tenant_id = 'bench_tenant', workspace_id = 'ws_bench'
+start_time = 1782993048.8351595, user_id = 'default'
+
+    async def handle_request(
+        self,
+        query:        str,
+        request_id:   str,
+        tenant_id:    str,
+        workspace_id: str,
+        start_time:   float,
+        user_id:      str = "default",
+    ) -> Dict[str, Any]:
+        """
+        Single entry point for ALL requests.
+        Returns structured response ù never raises.
+        """
+        self._total += 1
+        self._pre_warm()
+    
+        # \u2500\u2500 Step 0: ZERO-COPY NORMALIZE (Hardware Aligned) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 #
+        # Treat input as raw bytes to minimize transformation surface
+        raw_bytes = query.encode('utf-8')
+        norm      = global_query_family_mapper.normalize(query)
+        family_id = norm["family_id"]
+        intent    = norm["intent"]
+        entity    = norm["entity"]
+        clean     = norm["clean"]
+        session_id = request_id.split("_")[1] if "_" in request_id else "default"
+    
+        def elapsed() -> float:
+            return (time.time() - start_time) * 1000
+    
+        def remaining(limit_ms: float) -> float:
+            rem = (limit_ms - elapsed()) / 1000.0
+            return max(0.01, rem)
+    
+        # 0. NORMALIZE (Deterministic Entry)
+        global_intent_trajectory.log_query(session_id, query)
+    
+        # \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 #
+        # TRIATTENTION GATE 0 ù SYMBOLIC ATOMS (DECOMPOSE)                    #
+        # \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 #
+        primitives = global_atomic_parser.parse(query)
+>       atom_hit = self.zrs.lookup_atom(primitives["atomic_hash"])
+                   ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'ZeroRepeatStore' object has no attribute 'lookup_atom'
+
+backend\core\zero_compute.py:159: AttributeError
+___________________________ test_saas_optimize_flow ___________________________
+
+    def test_saas_optimize_flow():
+        # 1. First Request: Cold Start (Retrieval + Fusion + Enhancement)
+        query = "What is Project HYPER's core value proposition?"
+        payload = {
+            "query": query,
+            "tier": "pro"
+        }
+    
+        # Mocking the token dependency if necessary, but assuming TestClient handles the setup or we use a demo token
+        # For this test, we assume the server is in 'test mode' or accepts the mock environment
+    
+        headers = {"Authorization": "Bearer demo-token-123"}
+    
+        response = client.post("/api/v1/optimize", json=payload, headers=headers)
+>       assert response.status_code == 200
+E       assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+
+tests\test_saas_full_flow.py:25: AssertionError
+_________________________ test_saas_tier_enforcement __________________________
+
+    def test_saas_tier_enforcement():
+        # Test rate limiting / tier checks
+        user_id = "test_user_limited"
+        from backend.core.usage_metering import global_usage_meter
+    
+        # Force limit exceeded for 'free' tier (mocking 100+ requests)
+        for _ in range(101):
+            global_usage_meter.record_usage(user_id)
+    
+        payload = {"query": "test query", "tier": "free"}
+        headers = {"Authorization": f"Bearer token-{user_id}"}
+    
+        response = client.post("/api/v1/optimize", json=payload, headers=headers)
+>       assert response.status_code == 429
+E       assert 404 == 429
+E        +  where 404 = <Response [404 Not Found]>.status_code
+
+tests\test_saas_full_flow.py:57: AssertionError
+__________________________ test_chaos_mode_switching __________________________
+
+    @pytest.mark.asyncio
+    async def test_chaos_mode_switching():
+        """Verify that system degrades gracefully under high cpu/latency."""
+        global_chaos_controller.mode = ChaosMode.NORMAL
+    
+        # Simulate high latency
+        global_chaos_controller.check_health(cpu_usage=95.0, recent_latency=60.0)
+        assert global_chaos_controller.get_mode() == ChaosMode.MINIMAL
+    
+        # Simulate recovery
+        global_chaos_controller.check_health(cpu_usage=10.0, recent_latency=5.0)
+        # Note: recovery requires multiple stable pulses in my new logic,
+        # but for simplicity in test I'll check if it moves towards Normal
+        # Current logic requires avg < 20.
+>       assert global_chaos_controller.get_mode() == ChaosMode.NORMAL
+E       assert <ChaosMode.MINIMAL: 3> == <ChaosMode.NORMAL: 1>
+E        +  where <ChaosMode.MINIMAL: 3> = get_mode()
+E        +    where get_mode = <backend.core.chaos_controller.ChaosController object at 0x00000288A56E59D0>.get_mode
+E        +  and   <ChaosMode.NORMAL: 1> = ChaosMode.NORMAL
+
+tests\test_stability_chaos.py:22: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  backend.core.chaos_controller:chaos_controller.py:67 chaos_controller: SYSTEM MODE SHIFT NORMAL -> MINIMAL (CPU: 95.0%, MEM: 76.6%)
+____________________ test_zero_compute_stability_guarantee ____________________
+
+    @pytest.mark.asyncio
+    async def test_zero_compute_stability_guarantee():
+        """Verify that requests never exceed 50ms and handle chaos."""
+        start_time = time.time()
+        query = "What is the chaotic trajectory of a 3-body system?"
+    
+        # Submit query that triggers ChaosContainment
+>       result = await global_zero_control.handle_request(
+            query,
+            "test_request_123",
+            "test_tenant",
+            "test_workspace",
+            start_time
+        )
+
+tests\test_stability_chaos.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <backend.core.zero_compute.ZeroComputeControl object at 0x00000288A57FE790>
+query = 'What is the chaotic trajectory of a 3-body system?'
+request_id = 'test_request_123', tenant_id = 'test_tenant'
+workspace_id = 'test_workspace', start_time = 1782993050.002347
+user_id = 'default'
+
+    async def handle_request(
+        self,
+        query:        str,
+        request_id:   str,
+        tenant_id:    str,
+        workspace_id: str,
+        start_time:   float,
+        user_id:      str = "default",
+    ) -> Dict[str, Any]:
+        """
+        Single entry point for ALL requests.
+        Returns structured response ù never raises.
+        """
+        self._total += 1
+        self._pre_warm()
+    
+        # \u2500\u2500 Step 0: ZERO-COPY NORMALIZE (Hardware Aligned) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 #
+        # Treat input as raw bytes to minimize transformation surface
+        raw_bytes = query.encode('utf-8')
+        norm      = global_query_family_mapper.normalize(query)
+        family_id = norm["family_id"]
+        intent    = norm["intent"]
+        entity    = norm["entity"]
+        clean     = norm["clean"]
+        session_id = request_id.split("_")[1] if "_" in request_id else "default"
+    
+        def elapsed() -> float:
+            return (time.time() - start_time) * 1000
+    
+        def remaining(limit_ms: float) -> float:
+            rem = (limit_ms - elapsed()) / 1000.0
+            return max(0.01, rem)
+    
+        # 0. NORMALIZE (Deterministic Entry)
+        global_intent_trajectory.log_query(session_id, query)
+    
+        # \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 #
+        # TRIATTENTION GATE 0 ù SYMBOLIC ATOMS (DECOMPOSE)                    #
+        # \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 #
+        primitives = global_atomic_parser.parse(query)
+>       atom_hit = self.zrs.lookup_atom(primitives["atomic_hash"])
+                   ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'ZeroRepeatStore' object has no attribute 'lookup_atom'
+
+backend\core\zero_compute.py:159: AttributeError
+________________________ test_emergency_simplification ________________________
+
+    @pytest.mark.asyncio
+    async def test_emergency_simplification():
+        """Verify that system returns simplified responses under stress."""
+        global_chaos_controller.mode = ChaosMode.MINIMAL
+        start_time = time.time()
+    
+>       result = await global_zero_control.handle_request(
+            "Complex logic query",
+            "test_stress_456",
+            "test_tenant",
+            "test_workspace",
+            start_time
+        )
+
+tests\test_stability_chaos.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <backend.core.zero_compute.ZeroComputeControl object at 0x00000288A57FE790>
+query = 'Complex logic query', request_id = 'test_stress_456'
+tenant_id = 'test_tenant', workspace_id = 'test_workspace'
+start_time = 1782993050.0178359, user_id = 'default'
+
+    async def handle_request(
+        self,
+        query:        str,
+        request_id:   str,
+        tenant_id:    str,
+        workspace_id: str,
+        start_time:   float,
+        user_id:      str = "default",
+    ) -> Dict[str, Any]:
+        """
+        Single entry point for ALL requests.
+        Returns structured response ù never raises.
+        """
+        self._total += 1
+        self._pre_warm()
+    
+        # \u2500\u2500 Step 0: ZERO-COPY NORMALIZE (Hardware Aligned) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 #
+        # Treat input as raw bytes to minimize transformation surface
+        raw_bytes = query.encode('utf-8')
+        norm      = global_query_family_mapper.normalize(query)
+        family_id = norm["family_id"]
+        intent    = norm["intent"]
+        entity    = norm["entity"]
+        clean     = norm["clean"]
+        session_id = request_id.split("_")[1] if "_" in request_id else "default"
+    
+        def elapsed() -> float:
+            return (time.time() - start_time) * 1000
+    
+        def remaining(limit_ms: float) -> float:
+            rem = (limit_ms - elapsed()) / 1000.0
+            return max(0.01, rem)
+    
+        # 0. NORMALIZE (Deterministic Entry)
+        global_intent_trajectory.log_query(session_id, query)
+    
+        # \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 #
+        # TRIATTENTION GATE 0 ù SYMBOLIC ATOMS (DECOMPOSE)                    #
+        # \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 #
+        primitives = global_atomic_parser.parse(query)
+>       atom_hit = self.zrs.lookup_atom(primitives["atomic_hash"])
+                   ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'ZeroRepeatStore' object has no attribute 'lookup_atom'
+
+backend\core\zero_compute.py:159: AttributeError
+___________________________ test_visibility_manager ___________________________
+
+    def test_visibility_manager():
+        """Module 40: Verify visibility cost accounting."""
+        vm = VisibilityManager()
+    
+        # Test 1: Register known region
+        vm.register_region("region_1", VisibilityRegionType.KNOWN)
+    
+        # Test 2: Request known region (should be cheap)
+        res1 = vm.request_visibility("region_1")
+        assert res1["status"] == "visible"
+        assert res1["compute_cost"] == 0.01
+    
+        # Test 3: Request unknown region (should be expensive)
+        res2 = vm.request_visibility("region_unknown")
+        assert res2["status"] == "visible"
+>       assert res2["compute_cost"] == 1.0 # Expensive creation
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert 0.2 == 1.0
+
+tests\test_system_extension.py:28: AssertionError
+___________________________ test_chaos_containment ____________________________
+
+    def test_chaos_containment():
+        """Module 42: Verify chaos stability enforcement."""
+        chaos = ChaosContainment(lyapunov_threshold=0.5)
+    
+        # Test 1: Stable System (Low Lyapunov)
+        res_stable = chaos.analyze_trajectory(initial_state=1.0, time_steps=100, lyapunov_exponent=0.1)
+        assert res_stable["mode"] == "DETERMINISTIC_TRAJECTORY"
+    
+        # Test 2: Chaotic System (High Lyapunov)
+        res_chaos = chaos.analyze_trajectory(initial_state=1.0, time_steps=100, lyapunov_exponent=1.2)
+>       assert res_chaos["mode"] == "STATISTICAL_ENVELOPE"
+E       AssertionError: assert 'PATTERN_PLAYBACK' == 'STATISTICAL_ENVELOPE'
+E         
+E         - STATISTICAL_ENVELOPE
+E         + PATTERN_PLAYBACK
+
+tests\test_system_extension.py:65: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  orchestration.chaos_containment:chaos_containment.py:59 System Detected as CHAOTIC (??=1.2). Snapping to Motion Library.
+___________________________ test_v16_api_endpoints ____________________________
+
+    def test_v16_api_endpoints():
+        # Test /api/v1/leo/orchestrate
+        payload = {
+            "query": "What is the relation between Vulkan and llama.cpp?",
+            "workspace_id": "test_workspace",
+            "quality_hint": "balanced"
+        }
+        response = client.post("/api/v1/leo/orchestrate", json=payload)
+>       assert response.status_code == 200
+E       assert 401 == 200
+E        +  where 401 = <Response [401 Unauthorized]>.status_code
+
+tests\test_v16_integration.py:31: AssertionError
+___________________________ test_v19_api_endpoints ____________________________
+
+    def test_v19_api_endpoints():
+        payload = {
+            "query": "Compare Mamba and Transformer contexts",
+            "workspace_id": "test_workspace",
+            "quality_hint": "balanced"
+        }
+        response = client.post("/api/v1/leo/orchestrate", json=payload)
+>       assert response.status_code == 200
+E       assert 401 == 200
+E        +  where 401 = <Response [401 Unauthorized]>.status_code
+
+tests\test_v19_integration.py:30: AssertionError
+___________________________ test_v42_api_endpoints ____________________________
+
+    def test_v42_api_endpoints():
+        payload = {
+            "query": "\u0c39\u0c32\u0c4b \u0c0e\u0c32\u0c3e \u0c09\u0c28\u0c4d\u0c28\u0c3e\u0c30\u0c41",
+            "workspace_id": "test_workspace_v42",
+            "quality_hint": "balanced"
+        }
+        response = client.post("/api/v1/leo/orchestrate", json=payload)
+>       assert response.status_code == 200
+E       assert 401 == 200
+E        +  where 401 = <Response [401 Unauthorized]>.status_code
+
+tests\test_v42_integration.py:46: AssertionError
+________________ TestV43APIEndpoints.test_orchestrate_english _________________
+
+self = <tests.test_v43_integration.TestV43APIEndpoints object at 0x00000288A6A58B10>
+
+    def test_orchestrate_english(self):
+        """V43 orchestrate endpoint must return 200 with answer field."""
+        payload = {"query": "How does LEO AI work?", "workspace_id": "test_v43"}
+        response = client.post("/api/v1/leo/orchestrate", json=payload)
+>       assert response.status_code == 200
+E       assert 401 == 200
+E        +  where 401 = <Response [401 Unauthorized]>.status_code
+
+tests\test_v43_integration.py:265: AssertionError
+_________________ TestV43APIEndpoints.test_orchestrate_telugu _________________
+
+self = <tests.test_v43_integration.TestV43APIEndpoints object at 0x00000288A6A59310>
+
+    def test_orchestrate_telugu(self):
+        """Telugu queries must be accepted and answered."""
+        payload = {"query": "\u0c39\u0c32\u0c4b \u0c0e\u0c32\u0c3e \u0c09\u0c28\u0c4d\u0c28\u0c3e\u0c30\u0c41", "workspace_id": "test_v43_te"}
+        response = client.post("/api/v1/leo/orchestrate", json=payload)
+>       assert response.status_code == 200
+E       assert 401 == 200
+E        +  where 401 = <Response [401 Unauthorized]>.status_code
+
+tests\test_v43_integration.py:273: AssertionError
+___________________ test_zero_compute_latency_and_avoidance ___________________
+
+    @pytest.mark.asyncio
+    async def test_zero_compute_latency_and_avoidance():
+        """
+        Verifies that the Final System Strength Layer:
+        1. Returns responses in <50ms.
+        2. Identifies reuse opportunities (Shadow, Memory, Graph).
+        3. Handles unknowns via Adaptive Approximation.
+        """
+        request_id = "test_req_123"
+        tenant_id = "test"
+        workspace_id = "test"
+    
+        # --- Test 1: Total Unknown (Enqueue) ---
+        start = time.time()
+>       res = await global_zero_control.handle_request("Unknown topic X1", request_id, tenant_id, workspace_id, start)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_zero_compute.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <backend.core.zero_compute.ZeroComputeControl object at 0x00000288A57FE790>
+query = 'Unknown topic X1', request_id = 'test_req_123', tenant_id = 'test'
+workspace_id = 'test', start_time = 1782993135.5410893, user_id = 'default'
+
+    async def handle_request(
+        self,
+        query:        str,
+        request_id:   str,
+        tenant_id:    str,
+        workspace_id: str,
+        start_time:   float,
+        user_id:      str = "default",
+    ) -> Dict[str, Any]:
+        """
+        Single entry point for ALL requests.
+        Returns structured response ù never raises.
+        """
+        self._total += 1
+        self._pre_warm()
+    
+        # \u2500\u2500 Step 0: ZERO-COPY NORMALIZE (Hardware Aligned) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 #
+        # Treat input as raw bytes to minimize transformation surface
+        raw_bytes = query.encode('utf-8')
+        norm      = global_query_family_mapper.normalize(query)
+        family_id = norm["family_id"]
+        intent    = norm["intent"]
+        entity    = norm["entity"]
+        clean     = norm["clean"]
+        session_id = request_id.split("_")[1] if "_" in request_id else "default"
+    
+        def elapsed() -> float:
+            return (time.time() - start_time) * 1000
+    
+        def remaining(limit_ms: float) -> float:
+            rem = (limit_ms - elapsed()) / 1000.0
+            return max(0.01, rem)
+    
+        # 0. NORMALIZE (Deterministic Entry)
+        global_intent_trajectory.log_query(session_id, query)
+    
+        # \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 #
+        # TRIATTENTION GATE 0 ù SYMBOLIC ATOMS (DECOMPOSE)                    #
+        # \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 #
+        primitives = global_atomic_parser.parse(query)
+>       atom_hit = self.zrs.lookup_atom(primitives["atomic_hash"])
+                   ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'ZeroRepeatStore' object has no attribute 'lookup_atom'
+
+backend\core\zero_compute.py:159: AttributeError
+============================== warnings summary ===============================
+<frozen importlib._bootstrap>:241
+  <frozen importlib._bootstrap>:241: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
+
+<frozen importlib._bootstrap>:241
+  <frozen importlib._bootstrap>:241: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
+
+<frozen importlib._bootstrap>:241
+  <frozen importlib._bootstrap>:241: DeprecationWarning: builtin type swigvarlink has no __module__ attribute
+
+venv\Lib\site-packages\fastapi\testclient.py:1
+  C:\Users\sivab\OneDrive\Documents\HYPER\LEO-main\venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/gpu_bypass/test_python_modules.py::test_rag_query - FileNotFound...
+FAILED tests/test_controlled_compute_unit.py::test_logic - AttributeError: 'Z...
+FAILED tests/test_controller.py::test_decision_engine_routing - AssertionErro...
+FAILED tests/test_cpu_orchestration.py::TestCPUOrchestration::test_inference_hub
+FAILED tests/test_engine_integration.py::TestPerceptionEngineIntegration::test_engine_tick
+FAILED tests/test_enhancement.py::test_quality_scorer - AssertionError: asser...
+FAILED tests/test_enhancement.py::test_enhancement_pipeline_success - Asserti...
+FAILED tests/test_phase6_validation.py::TestGlobalMemory::test_log_and_exact_lookup
+FAILED tests/test_phase6_validation.py::TestAvoidanceBenchmark::test_avoidance_ratio_benchmark
+FAILED tests/test_saas_full_flow.py::test_saas_optimize_flow - assert 404 == 200
+FAILED tests/test_saas_full_flow.py::test_saas_tier_enforcement - assert 404 ...
+FAILED tests/test_stability_chaos.py::test_chaos_mode_switching - assert <Cha...
+FAILED tests/test_stability_chaos.py::test_zero_compute_stability_guarantee
+FAILED tests/test_stability_chaos.py::test_emergency_simplification - Attribu...
+FAILED tests/test_system_extension.py::test_visibility_manager - assert 0.2 =...
+FAILED tests/test_system_extension.py::test_chaos_containment - AssertionErro...
+FAILED tests/test_v16_integration.py::test_v16_api_endpoints - assert 401 == 200
+FAILED tests/test_v19_integration.py::test_v19_api_endpoints - assert 401 == 200
+FAILED tests/test_v42_integration.py::test_v42_api_endpoints - assert 401 == 200
+FAILED tests/test_v43_integration.py::TestV43APIEndpoints::test_orchestrate_english
+FAILED tests/test_v43_integration.py::TestV43APIEndpoints::test_orchestrate_telugu
+FAILED tests/test_zero_compute.py::test_zero_compute_latency_and_avoidance - ...
+============ 22 failed, 83 passed, 4 warnings in 143.44s (0:02:23) ============

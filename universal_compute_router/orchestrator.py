@@ -3,6 +3,7 @@ import logging
 from typing import Dict, Any
 from universal_compute_router.hw_detector import HardwareDetector
 from universal_compute_router.router_logic import UniversalComputeRouter
+from universal_compute_router.meta_compiler import MetaCompiler
 from intel_core_ai.inference import IntelInferenceEngine
 
 logger = logging.getLogger(__name__)
@@ -16,6 +17,7 @@ class UniversalOrchestrator:
         self.engine = engine
         self.hw = HardwareDetector()
         self.router = UniversalComputeRouter()
+        self.meta_compiler = MetaCompiler()
 
     async def execute_task(self, query: str) -> Dict[str, Any]:
         start_time = time.time()
@@ -26,9 +28,10 @@ class UniversalOrchestrator:
         # [2] CACHE FIRST (Placeholder for actual implementation)
         # result = self.router.check_cache(query) ...
         
-        # [3] ROUTING DECISION
+        # [3] ROUTING DECISION & META COMPILATION
         route = self.router.decide_route(task_metadata)
-        logger.info(f"Routing {task_metadata['task_type']} task to {route}")
+        execution_graph = self.meta_compiler.generate_execution_graph(task_metadata)
+        logger.info(f"Routing {task_metadata['task_type']} task to {route} with graph {execution_graph}")
         
         # [4] EXECUTION LAYER
         try:
@@ -54,6 +57,9 @@ class UniversalOrchestrator:
 
         latency = time.time() - start_time
         
+        # Feed back execution metrics into Living Meta-Evolutionary Orchestrator AutoML loop
+        self.meta_compiler.evaluate_fitness(latency * 1000.0)
+        
         # [9] ROUTER LEARNING UPDATE
         self.router.update_learning(task_metadata, route, success, latency)
         
@@ -64,6 +70,7 @@ class UniversalOrchestrator:
             "task_metadata": task_metadata,
             "latency_ms": f"{latency*1000:.1f}ms"
         }
+
 
     def _execute_video_task(self, query: str) -> str:
         """[4] VIDEO: FFmpeg (CPU) / AI upscaling (ONNX)"""
