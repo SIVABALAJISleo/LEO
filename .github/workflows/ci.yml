@@ -25,16 +25,26 @@ jobs:
         pip install pytest pytest-cov bandit flake8
         
     - name: Lint with flake8
+      env:
+        TRANSFORMERS_OFFLINE: "1"
+        HF_DATASETS_OFFLINE: "1"
+        LEO_OFFLINE: "1"
       run: |
         flake8 backend/ --count --select=E9,F63,F7,F82 --show-source --statistics
-        
+
     - name: Security scan with bandit
       run: |
-        bandit -r backend/ -ll -ii
-        
+        bandit -r backend/ -ll -c bandit.toml
+
     - name: Run tests with pytest
       env:
         ENVIRONMENT: test
         LEO_CACHE_SIZE: 1GB
+        APP_ENV: test
+        SECRET_KEY: test-secret-key-for-ci-only
+        TRANSFORMERS_OFFLINE: "1"
+        HF_DATASETS_OFFLINE: "1"
+        LEO_OFFLINE: "1"
+        PYTHONPATH: .
       run: |
         pytest tests/ -v --cov=backend --cov-report=xml

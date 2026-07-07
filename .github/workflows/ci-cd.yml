@@ -51,6 +51,10 @@ jobs:
           APP_ENV: test
           SECRET_KEY: test-secret-key-for-ci-only
           ALLOWED_ORIGINS: http://localhost:5173
+          TRANSFORMERS_OFFLINE: "1"
+          HF_DATASETS_OFFLINE: "1"
+          LEO_OFFLINE: "1"
+          PYTHONPATH: .
         run: python -m pytest tests/ -v --tb=short 2>/dev/null || echo "No tests found"
       - name: Verify server starts cleanly
         env:
@@ -58,6 +62,9 @@ jobs:
           SECRET_KEY: test-secret-key-for-ci-only
           ALLOWED_ORIGINS: http://localhost:5173
           PYTHONPATH: .
+          TRANSFORMERS_OFFLINE: "1"
+          HF_DATASETS_OFFLINE: "1"
+          LEO_OFFLINE: "1"
         run: |
           uvicorn backend.main:app --host 0.0.0.0 --port 8005 &
           SERVER_PID=$!

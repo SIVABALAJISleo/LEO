@@ -51,15 +51,57 @@ class SemanticCrystallizer:
         conn.close()
 
     def _load_embedder(self):
+        """Load a local embedding model. Falls back to deterministic mock when offline (CI/CD)."""
+        # Skip network downloads entirely in offline / CI mode
+        offline = (
+            os.environ.get("TRANSFORMERS_OFFLINE", "0") == "1"
+            or os.environ.get("HF_DATASETS_OFFLINE", "0") == "1"
+            or os.environ.get("LEO_OFFLINE", "0") == "1"
+        )
         try:
-            from sentence_transformers import SentenceTransformer
-            # Try bge-small-en-v1.5 or fallback to nomic-embed-text
+            from sentence_transformers import SentenceTransformer  # type: ignore
+            if offline:
+                # Attempt to load from disk cache only; do NOT make any network requests
+                try:
+                    self.embedding_model = SentenceTransformer(
+                        'BAAI/bge-small-en-v1.5',
+                        local_files_only=True,
+                    )
+                    logger.info("Loaded bge-small-en-v1.5 (offline cache).")
+                    return
+                except Exception:
+                    pass
+                try:
+                    self.embedding_model = SentenceTransformer(
+                        'nomic-ai/nomic-embed-text-v1.5',
+                        trust_remote_code=True,
+                        local_files_only=True,
+                    )
+                    logger.info("Loaded nomic-embed-text-v1.5 (offline cache).")
+                    return
+                except Exception:
+                    pass
+                # No cached model found — use deterministic mock (CI/offline safe)
+                logger.warning(
+                    "No cached embedding model found and offline mode is active. "
+                    "Using deterministic mock embedder for CI/testing."
+                )
+                self.embedding_model = None
+                return
+            # Online mode: try primary then fallback model
             try:
                 self.embedding_model = SentenceTransformer('BAAI/bge-small-en-v1.5')
-                logger.info("Loaded bge-small-en-v1.5 embedding model for semantic caching.")
+                logger.info("Loaded bge-small-en-v1.5 embedding model.")
             except Exception:
-                self.embedding_model = SentenceTransformer('nomic-ai/nomic-embed-text-v1.5', trust_remote_code=True)
-                logger.info("Loaded nomic-embed-text-v1.5 embedding model for semantic caching.")
+                try:
+                    self.embedding_model = SentenceTransformer(
+                        'nomic-ai/nomic-embed-text-v1.5',
+                        trust_remote_code=True,
+                    )
+                    logger.info("Loaded nomic-embed-text-v1.5 embedding model.")
+                except Exception as e2:
+                    logger.warning(f"Both embedding models failed to load: {e2}. Using mock embedder.")
+                    self.embedding_model = None
         except ImportError:
             logger.warning("sentence-transformers not installed. Using mocked local embedder.")
             self.embedding_model = None
