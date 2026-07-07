@@ -1,7 +1,6 @@
 import sys
 import os
 import time
-import json
 import logging
 
 # Allow running from project root
@@ -55,7 +54,6 @@ class LEO_MVP_Pipeline:
         routing_tier = novelty_data["routing_tier"]
         
         output_tokens = []
-        flops_saved = 0.0
         fallback_triggered = False
         
         # Mocking input state for sparse routing later

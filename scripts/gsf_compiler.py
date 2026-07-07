@@ -1,7 +1,6 @@
 import json
 import os
 import hashlib
-from itertools import combinations
 
 class GSFDataCompiler:
     """

@@ -18,11 +18,12 @@ Features:
 import time
 import hashlib
 import sqlite3
+from backend.core.db_utils import get_concurrent_db_connection
 import logging
 import json
 import numpy as np
 from typing import Dict, Any, Optional, List, Tuple
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 
 logger = logging.getLogger(__name__)
 
@@ -77,7 +78,7 @@ class MemorySystem:
             logger.warning(f"[MemorySystem] Fallback TrigramEmbedder: {e}")
 
     def _init_db(self):
-        conn = sqlite3.connect(self.db_path)
+        conn = get_concurrent_db_connection(self.db_path)
         conn.execute("""
             CREATE TABLE IF NOT EXISTS memory_system (
                 memory_id      TEXT PRIMARY KEY,
@@ -139,7 +140,7 @@ class MemorySystem:
                     f"with existing memory: {entry['content'][:60]}…"
                 )
 
-        conn = sqlite3.connect(self.db_path)
+        conn = get_concurrent_db_connection(self.db_path)
         conn.execute(
             """
             INSERT OR REPLACE INTO memory_system
@@ -186,7 +187,7 @@ class MemorySystem:
             """
             params = (now,)
 
-        conn = sqlite3.connect(self.db_path)
+        conn = get_concurrent_db_connection(self.db_path)
         cursor = conn.cursor()
         cursor.execute(query_str, params)
         rows = cursor.fetchall()
@@ -219,7 +220,7 @@ class MemorySystem:
     def _find_similar(
         self, vec: np.ndarray, memory_type: str, top_k: int = 5
     ) -> List[Dict[str, Any]]:
-        conn = sqlite3.connect(self.db_path)
+        conn = get_concurrent_db_connection(self.db_path)
         cursor = conn.cursor()
         cursor.execute(
             "SELECT memory_id, content, vector FROM memory_system WHERE memory_type = ?",
@@ -240,7 +241,7 @@ class MemorySystem:
         return scored[:top_k]
 
     def _bump_access(self, memory_id: str, new_confidence: float):
-        conn = sqlite3.connect(self.db_path)
+        conn = get_concurrent_db_connection(self.db_path)
         conn.execute(
             """
             UPDATE memory_system
@@ -257,7 +258,7 @@ class MemorySystem:
     def decay_and_purge(self) -> int:
         """Purges expired memories (TTL elapsed). Returns count deleted."""
         now = time.time()
-        conn = sqlite3.connect(self.db_path)
+        conn = get_concurrent_db_connection(self.db_path)
         cursor = conn.cursor()
         cursor.execute(
             """
@@ -273,7 +274,7 @@ class MemorySystem:
         return deleted
 
     def get_summary(self) -> Dict[str, Any]:
-        conn = sqlite3.connect(self.db_path)
+        conn = get_concurrent_db_connection(self.db_path)
         cursor = conn.cursor()
         cursor.execute(
             "SELECT memory_type, COUNT(*) FROM memory_system GROUP BY memory_type"

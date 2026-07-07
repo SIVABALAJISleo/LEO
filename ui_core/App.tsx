@@ -23,6 +23,7 @@ import { LEOAIv36Dashboard } from "./src/dashboards/LEOAIv36Dashboard";
 import { LEOAIv37Dashboard } from "./src/dashboards/LEOAIv37Dashboard";
 import { LEOAIv38Dashboard } from "./src/dashboards/LEOAIv38Dashboard";
 import { LEOAIv40Dashboard } from "./src/dashboards/LEOAIv40Dashboard";
+import { LEOAIvInfinityDashboard } from "./src/dashboards/LEOAIvInfinityDashboard";
 import { 
   Activity, Cpu, HardDrive, Layers, Zap, AlertTriangle, Play, Shield, 
   RefreshCw, AlertCircle, Sparkles, MessageSquare, CheckCircle, 
@@ -113,7 +114,7 @@ function App() {
   const [status, setStatus] = useState<LeoStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [activeTab, setActiveTab] = useState<"swarm" | "cognitive" | "debate" | "benchmarks" | "devops" | "quality" | "v14super" | "v15substrate" | "v16substrate" | "v17dominance" | "v18validation" | "failureHunting" | "v22quality" | "v23frontier" | "v24convergence" | "v25certification" | "v26reality" | "v27certification" | "v28validation" | "v29frontier" | "v30frontier" | "v31irrelevance" | "v32ceiling" | "v32reality" | "v33compute" | "v34compute" | "v35parity" | "v36ceiling" | "v37evolution" | "v38architecture" | "v40ultimate">("swarm");
+  const [activeTab, setActiveTab] = useState<"swarm" | "cognitive" | "debate" | "benchmarks" | "devops" | "quality" | "v14super" | "v15substrate" | "v16substrate" | "v17dominance" | "v18validation" | "failureHunting" | "v22quality" | "v23frontier" | "v24convergence" | "v25certification" | "v26reality" | "v27certification" | "v28validation" | "v29frontier" | "v30frontier" | "v31irrelevance" | "v32ceiling" | "v32reality" | "v33compute" | "v34compute" | "v35parity" | "v36ceiling" | "v37evolution" | "v38architecture" | "v40ultimate" | "vinfinity">("swarm");
 
   // --- V17 Domain Dominance States ---
   const [v17QueryInput, setV17QueryInput] = useState("Issue transaction refund invoice");
@@ -885,6 +886,7 @@ function App() {
             { id: "v37evolution", label: "V37 Cockpit", icon: Sparkles },
             { id: "v38architecture", label: "V38 Cockpit", icon: Sparkles },
             { id: "v40ultimate", label: "V40 Cockpit", icon: Sparkles },
+            { id: "vinfinity", label: "v∞ Cockpit", icon: Zap },
             { id: "debate", label: "Multi-Agent Debate", icon: MessageSquare },
             { id: "quality", label: "Verification & Quality", icon: Shield },
             { id: "benchmarks", label: "Enterprise Benchmarks", icon: BarChart2 },
@@ -3612,6 +3614,13 @@ function App() {
         {activeTab === "v40ultimate" && (
           <div className="-mx-4 -my-8 animate-in fade-in duration-300">
             <LEOAIv40Dashboard />
+          </div>
+        )}
+
+        {/* TAB 29: LEO v∞ OPTIMIZATION COCKPIT */}
+        {activeTab === "vinfinity" && (
+          <div className="-mx-4 -my-8 animate-in fade-in duration-300">
+            <LEOAIvInfinityDashboard />
           </div>
         )}
 

@@ -1,7 +1,7 @@
 import json
 import logging
 from typing import Dict, Any, List, Optional
-from backend.core.database import SessionLocal, CompressedKnowledge, CompressedFragment
+from backend.core.database import SessionLocal, CompressedKnowledge
 
 logger = logging.getLogger(__name__)
 

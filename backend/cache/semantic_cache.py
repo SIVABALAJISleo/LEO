@@ -8,9 +8,10 @@ import os
 import time
 import hashlib
 import sqlite3
+from backend.core.db_utils import get_concurrent_db_connection
 import numpy as np
 import logging
-from typing import Dict, Any, Optional, Tuple, List
+from typing import Dict, Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -108,7 +109,7 @@ class ProductionSemanticCache:
 
     def get_count(self) -> int:
         try:
-            conn = sqlite3.connect(self.db_path)
+            conn = get_concurrent_db_connection(self.db_path)
             cursor = conn.cursor()
             cursor.execute("SELECT count(*) FROM semantic_cache")
             count = cursor.fetchone()[0]
@@ -131,7 +132,7 @@ class ProductionSemanticCache:
 
     def _initialize_sqlite(self):
         """Prepares the database for local persistent caching, indexing, and analytics."""
-        conn = sqlite3.connect(self.db_path)
+        conn = get_concurrent_db_connection(self.db_path)
         cursor = conn.cursor()
         
         # Table for exact match and TTL analytics
@@ -172,7 +173,7 @@ class ProductionSemanticCache:
         if not self.use_faiss:
             return
         
-        conn = sqlite3.connect(self.db_path)
+        conn = get_concurrent_db_connection(self.db_path)
         cursor = conn.cursor()
         cursor.execute("SELECT query_hash, vector FROM vector_cache")
         rows = cursor.fetchall()
@@ -205,7 +206,7 @@ class ProductionSemanticCache:
         query_hash = hashlib.md5(keyed_query.encode(), usedforsecurity=False).hexdigest()  # nosec B324
         now = time.time()
         
-        conn = sqlite3.connect(self.db_path)
+        conn = get_concurrent_db_connection(self.db_path)
         cursor = conn.cursor()
         
         # Check current frequency for Zipf-law updates
@@ -256,7 +257,7 @@ class ProductionSemanticCache:
         query_hash = hashlib.md5(keyed_query.encode(), usedforsecurity=False).hexdigest()  # nosec B324
         now = time.time()
         
-        conn = sqlite3.connect(self.db_path)
+        conn = get_concurrent_db_connection(self.db_path)
         cursor = conn.cursor()
         
         # Layer 1: Exact Query Hashing (O(1))

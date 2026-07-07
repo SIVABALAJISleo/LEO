@@ -1,6 +1,5 @@
 import logging
 from typing import Dict, Any
-from backend.core.database import SessionLocal, Workspace
 
 logger = logging.getLogger(__name__)
 

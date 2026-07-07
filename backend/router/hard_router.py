@@ -6,7 +6,7 @@ Priority: precomputed → canonical → template → graph → retrieval → mod
 This is the EXECUTION CONTROLLER for the entire pipeline.
 """
 import logging
-from typing import Dict, Any, Optional, Callable, List
+from typing import Dict, Any, Callable, List
 
 logger = logging.getLogger(__name__)
 

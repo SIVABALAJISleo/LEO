@@ -9,7 +9,7 @@ their base_url to this server, seamlessly dropping cloud inference for local pro
 import time
 import uuid
 from typing import List, Dict, Any, Optional, Union
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 from backend.api.universal_adapter import api_runtime
 

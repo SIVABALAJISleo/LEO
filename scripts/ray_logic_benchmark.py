@@ -1,6 +1,5 @@
 import time
 import requests
-import json
 
 def run_ray_logic_benchmark():
     url = "http://localhost:8005/api/orchestrate"

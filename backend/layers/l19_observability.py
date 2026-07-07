@@ -5,7 +5,6 @@ latency, cache hits, and tracks Service Level Objectives (SLOs).
 """
 import logging
 import psutil
-import time
 from typing import Dict, Any
 
 logger = logging.getLogger(__name__)

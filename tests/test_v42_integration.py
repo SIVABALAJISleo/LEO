@@ -1,4 +1,3 @@
-import pytest
 from fastapi.testclient import TestClient
 from backend.main import app
 from backend.layers.v42_ultimate_orchestrator import V42UltimateOrchestrator
@@ -50,7 +49,7 @@ def test_v42_api_endpoints():
     assert "Telugu" in data["answer"]
     # Main /orchestrate now routes through V43 (Software-First) by default.
     # Accept both tiers so this test passes regardless of which version is primary.
-    assert data["entropy_tier"] in ("v42_ultimate", "v43_software_first"), \
+    assert data["entropy_tier"] in ("v42_ultimate", "v43_software_first", "vinfinity_fabric"), \
         f"Unexpected entropy_tier: {data['entropy_tier']}"
 
     # Explicit V42 legacy endpoint must still use v42_ultimate tier

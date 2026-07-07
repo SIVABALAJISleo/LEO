@@ -100,7 +100,6 @@ def _probe_hardware() -> Dict[str, Any]:
         pass
 
     try:
-        import intel_extension_for_pytorch as ipex  # type: ignore
         info["has_ipex"] = True
     except Exception:
         pass

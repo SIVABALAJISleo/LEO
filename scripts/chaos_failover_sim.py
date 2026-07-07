@@ -1,7 +1,6 @@
 import time
-import requests
 import logging
-from colorama import Fore, Style, init
+from colorama import Fore, init
 
 init(autoreset=True)
 logger = logging.getLogger("chaos.sim")

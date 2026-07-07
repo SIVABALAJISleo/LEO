@@ -2,7 +2,6 @@ import sys
 import os
 import time
 import numpy as np
-import json
 
 # Allow running from project root
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
@@ -39,9 +38,9 @@ def run_benchmark():
     naive_cache_misses = (M * K * N) # Extremely naive unblocked approach causes massive cache thrashing
     
     # Run our Tiled Matmul (pinned to P-Cores)
-    t0 = time.perf_counter()
+    time.perf_counter()
     C, telemetry = orchestrator.run_tiled_matmul(A, B)
-    t1 = time.perf_counter()
+    time.perf_counter()
     
     print(f"  Matrix Dimensions: {M}x{K} @ {K}x{N}")
     print(f"  Optimal L2 Tile Size: {telemetry['tile_size']}x{telemetry['tile_size']}")

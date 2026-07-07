@@ -1,7 +1,6 @@
-import time
 from starlette.middleware.base import BaseHTTPMiddleware
 from fastapi import Request
-from backend.core.database import SessionLocal, UsageMetric
+from backend.core.database import UsageMetric
 from backend.core.logging import logger
 
 class UsageMeteringMiddleware(BaseHTTPMiddleware):

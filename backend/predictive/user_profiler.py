@@ -3,7 +3,6 @@ User Behavior Predictor
 Tracks per-user query sequences and predicts next queries.
 Uses these predictions to warm caches proactively.
 """
-import hashlib
 import logging
 import time
 from typing import Dict, List, Optional, Any

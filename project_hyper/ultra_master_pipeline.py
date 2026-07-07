@@ -1,5 +1,4 @@
 import asyncio
-import numpy as np
 import time
 
 # Mocking external libraries for structural completeness

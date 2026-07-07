@@ -13,7 +13,7 @@ import logging
 import time
 import re
 import hashlib
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Dict, List, Any, Optional
 
 logger = logging.getLogger(__name__)
 

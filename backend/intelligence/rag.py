@@ -181,8 +181,16 @@ class RAGEngine:
 
     async def add_documents(self, docs: List[str], tenant_id: str = "default"):
         """Ingests and indexes documents with tenant isolation and chunking."""
+        from backend.security.prompt_guard import global_prompt_guard
+        
         processed_docs = []
         for doc in docs:
+            # RAG Memory Poisoning Defense: Scan document
+            security_result = global_prompt_guard.check_document(doc, f"rag_ingest_{tenant_id}")
+            if not security_result["is_safe"]:
+                logger.warning(f"RAG Poisoning Detected! Dropping document for tenant {tenant_id}. Threats: {security_result['threats']}")
+                continue
+
             # Simple chunking for documents > 2000 chars
             if len(doc) > 2000:
                 chunks = [doc[i:i+2000] for i in range(0, len(doc), 1500)] # 500 char overlap

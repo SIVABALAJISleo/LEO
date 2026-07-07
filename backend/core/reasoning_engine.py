@@ -9,9 +9,8 @@ Implements:
   - Verification loop: critic pass before committing final answer
 """
 import time
-import re
 import logging
-from typing import Dict, Any, List, Optional, Callable
+from typing import Dict, Any, Optional, Callable
 
 logger = logging.getLogger(__name__)
 

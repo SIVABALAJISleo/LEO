@@ -7,10 +7,11 @@ and document parsing (PDF via pypdf, DOCX via python-docx, and CSV).
 import os
 import math
 import sqlite3
+from backend.core.db_utils import get_concurrent_db_connection
 import hashlib
 import numpy as np
 import logging
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Any
 from backend.cache.semantic_cache import TrigramEmbedder
 
 logger = logging.getLogger(__name__)
@@ -80,7 +81,7 @@ class HybridRetrievalSystem:
             logger.warning("TrigramEmbedder fallback loaded for Hybrid Retrieval.")
 
     def _initialize_sqlite(self):
-        conn = sqlite3.connect(self.db_path)
+        conn = get_concurrent_db_connection(self.db_path)
         cursor = conn.cursor()
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS document_chunks (
@@ -121,7 +122,7 @@ class HybridRetrievalSystem:
         # Semantic Chunking (split by paragraphs or double newlines)
         raw_chunks = [c.strip() for c in text_content.split("\n\n") if len(c.strip()) > 30]
         
-        conn = sqlite3.connect(self.db_path)
+        conn = get_concurrent_db_connection(self.db_path)
         cursor = conn.cursor()
         
         for idx, chunk in enumerate(raw_chunks):
@@ -146,7 +147,7 @@ class HybridRetrievalSystem:
 
     def retrieve(self, query: str, top_k: int = 3) -> List[Dict[str, Any]]:
         """Executes reciprocal rank fusion (RRF) over BM25 + FAISS Vector Search."""
-        conn = sqlite3.connect(self.db_path)
+        conn = get_concurrent_db_connection(self.db_path)
         cursor = conn.cursor()
         cursor.execute("SELECT chunk_id, document_name, section_header, content, vector FROM document_chunks")
         rows = cursor.fetchall()

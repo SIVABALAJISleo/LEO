@@ -1,6 +1,5 @@
 import asyncio
 import time
-import uuid
 import json
 import os
 import sys
@@ -8,7 +7,6 @@ import sys
 # Add the project root to sys.path
 sys.path.append(os.getcwd())
 
-from backend.core.orchestrator import hyper_engine
 from backend.core.stability_layer import global_stability_layer
 from backend.analytics.metrics import global_metrics
 

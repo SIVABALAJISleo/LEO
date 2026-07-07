@@ -1,14 +1,17 @@
 """
-Early Exit Controller
-Stops model computation early if confidence from a simpler/faster method is high enough.
-Prevents unnecessary processing once a good-enough answer is found.
+backend/inference/early_exit.py
+Layer 3 — Skip Sequential Token Steps: Early Exit Controller.
+
+Decides whether to terminate transformer forward pass early at an intermediate
+layer once intermediate output distribution confidence exceeds a threshold.
 """
+
 import logging
 from typing import Optional, Dict, Any
 
 logger = logging.getLogger(__name__)
 
-# Thresholds by mode
+# Thresholds by execution block / mode
 CONFIDENCE_THRESHOLDS = {
     "ANSWER_GRAPH":       0.90,
     "PREDICTIVE_STORE":   0.88,
@@ -22,8 +25,8 @@ CONFIDENCE_THRESHOLDS = {
 
 class EarlyExitController:
     """
-    Decides whether to exit from the pipeline early with the current answer.
-    Called at each pipeline layer to check if we've found a good-enough answer.
+    Decides whether to exit from the pipeline early with the current answer,
+    or terminate a model's forward pass at an intermediate transformer layer.
     """
 
     def should_exit(self, result: Optional[Dict[str, Any]], mode: str) -> bool:
@@ -40,6 +43,22 @@ class EarlyExitController:
             logger.info(f"early_exit: mode={mode} confidence={confidence:.2f} threshold={threshold}")
             return True
 
+        return False
+
+    def should_exit_layer(self, layer_idx: int, total_layers: int, confidence: float, threshold: float = 0.80) -> bool:
+        """
+        CALM-style early exit for intermediate layers.
+        If confidence at layer_idx exceeds the threshold, exit forward pass early.
+        """
+        # Ensure we do at least 25% of the model layers for basic representation stability
+        min_layers = max(1, total_layers // 4)
+        if layer_idx < min_layers:
+            return False
+            
+        if confidence >= threshold:
+            logger.info(f"layer_early_exit: layer={layer_idx}/{total_layers} confidence={confidence:.4f} threshold={threshold} -> EXITING EARLY")
+            return True
+            
         return False
 
     def best_result(self, results: list) -> Optional[Dict[str, Any]]:

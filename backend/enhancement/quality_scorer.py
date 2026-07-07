@@ -3,7 +3,6 @@ Quality Scorer Module
 Evaluates raw answers based on length, structure, and clarity markers.
 Returns a score from 0.0 to 1.0 representing intrinsic quality.
 """
-import re
 
 class QualityScorer:
     """

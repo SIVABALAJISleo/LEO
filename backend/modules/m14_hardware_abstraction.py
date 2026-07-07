@@ -6,7 +6,6 @@ Auto-selects CPU, iGPU, NPU to run everywhere.
 import time
 import logging
 from typing import Dict, Any, Optional
-import psutil
 
 logger = logging.getLogger(__name__)
 

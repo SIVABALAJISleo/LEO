@@ -1,5 +1,4 @@
 import logging
-import json
 import numpy as np
 from typing import Optional, Dict, Any
 from backend.core.database import SessionLocal, PrecomputedAnswer

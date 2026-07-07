@@ -28,7 +28,7 @@ import time
 import json
 import os
 from typing import Dict, Any, List, Optional
-from collections import defaultdict, deque
+from collections import deque
 
 logger = logging.getLogger(__name__)
 

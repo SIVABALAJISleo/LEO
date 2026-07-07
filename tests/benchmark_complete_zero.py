@@ -11,7 +11,6 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 
 from backend.core.orchestrator import hyper_engine
 from backend.analytics.metrics import global_metrics
-from backend.background.compute_engine import global_bg_compute
 
 async def run_benchmark():
     print("Starting FINAL Zero-Runtime-Compute Validation...")

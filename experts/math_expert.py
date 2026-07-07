@@ -1,4 +1,3 @@
-import math
 
 def run(query):
     # Try to find numbers/ops

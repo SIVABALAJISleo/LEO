@@ -1,7 +1,6 @@
-from typing import Dict, Any, Tuple
+from typing import Dict, Any
 from sentence_transformers import SentenceTransformer
 import faiss
-import numpy as np
 
 class IntentLayer:
     """

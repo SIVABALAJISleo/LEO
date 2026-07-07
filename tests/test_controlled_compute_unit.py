@@ -5,7 +5,7 @@ Unit test for Controlled Compute logic in ZeroComputeControl.
 import sys
 import os
 import asyncio
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, patch
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 

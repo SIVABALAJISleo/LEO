@@ -10,7 +10,6 @@ print(" LEO SECURITY AUDIT — GitPython CVE-2026-42215 PATCH")
 print("======================================================")
 
 # Load security module — applies the monkeypatch at import time
-from backend.core import security
 
 try:
     import git
@@ -31,7 +30,7 @@ def run_test(label, fn, expect_blocked):
         else:
             print(f"  [SAFE]   {label:<45} -> Accepted (clean input).")
             passed += 1
-    except ValueError as e:
+    except ValueError:
         # ValueError = our patch caught it
         if expect_blocked:
             print(f"  [SAFE]   {label:<45} -> Blocked by LEO patch.")

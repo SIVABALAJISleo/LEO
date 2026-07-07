@@ -1,7 +1,7 @@
 import time
 import numpy as np
 from .kv_store import PersistentKVCache
-from .kv_compression import quantize_kv, dequantize_kv
+from .kv_compression import quantize_kv
 
 class KVReplayRuntime:
     def __init__(self):

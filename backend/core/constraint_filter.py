@@ -14,7 +14,7 @@ Rules:
 """
 import logging
 import re
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Dict, Any, Tuple
 
 logger = logging.getLogger(__name__)
 

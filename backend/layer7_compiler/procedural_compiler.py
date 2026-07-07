@@ -38,7 +38,7 @@ def execute_procedural_graph(query_context):
 """
         try:
             # Generate the AST
-            tree = ast.parse(source_code)
+            ast.parse(source_code)
             
             # Serialize the AST string for CDN distribution
             ast_payload = {

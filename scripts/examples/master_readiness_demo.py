@@ -1,8 +1,7 @@
 import asyncio
 import logging
 import json
-from backend.main import app
-from orchestration.intelligence.task_router import TaskRouter
+from archive_engines.orchestration.intelligence.task_router import TaskRouter
 from scripts.maintenance.readiness_report import ReadinessReporter
 from backend.chaos import chaos_manager
 

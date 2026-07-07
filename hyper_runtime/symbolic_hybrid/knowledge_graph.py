@@ -1,6 +1,5 @@
-import json
 import logging
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Optional
 
 logger = logging.getLogger("HyperCore.KnowledgeGraph")
 

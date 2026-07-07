@@ -1,0 +1,12 @@
+{
+  "benchmark_timestamp": 1783417503.7518847,
+  "total_queries_tested": 8,
+  "avoidance_rate_pct": 98.97,
+  "gpu_irrelevance_score": 99.59,
+  "watts_saved_per_query": 425.0,
+  "hardware_active": {
+    "cores": 8,
+    "igpu_vendor": "Intel(R) UHD Graphics",
+    "npu_tops": 10
+  }
+}

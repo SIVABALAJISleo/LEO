@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import List, Dict
 
 class CognitivePrimitive:
     def __init__(self, name: str, layer: int, description: str):

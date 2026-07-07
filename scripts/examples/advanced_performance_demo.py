@@ -1,10 +1,9 @@
 import asyncio
 import numpy as np
 import logging
-from orchestration.intelligence.adaptive_downgrade import AdaptiveDowngradeEngine
-from orchestration.intelligence.fallback_graph import FallbackGraph
-from engine_hv.advanced.progressive_compute import ProgressiveCompute
-from engine_hv.advanced.perceptual_metric import PerceptualValidationMetric
+from archive_engines.orchestration.intelligence.adaptive_downgrade import AdaptiveDowngradeEngine
+from archive_engines.orchestration.intelligence.fallback_graph import FallbackGraph
+from archive_engines.engine_hv.advanced.perceptual_metric import PerceptualValidationMetric
 
 # Setup Logging
 logging.basicConfig(level=logging.INFO, format='%(name)s: %(message)s')

@@ -3,7 +3,6 @@ import json
 import logging
 import httpx
 from fastapi import APIRouter, Request, HTTPException, Header, Depends
-from typing import Dict, Any
 from pydantic import BaseModel
 from backend.core.security import verify_token
 

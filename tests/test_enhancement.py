@@ -1,4 +1,3 @@
-import pytest
 from backend.enhancement.enhancement_pipeline import global_enhancement_pipeline
 from backend.enhancement.quality_scorer import QualityScorer
 from backend.enhancement.confidence_estimator import ConfidenceEstimator

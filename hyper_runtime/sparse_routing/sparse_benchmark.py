@@ -1,6 +1,5 @@
 import sys
 import os
-import json
 import numpy as np
 
 # Allow running from project root

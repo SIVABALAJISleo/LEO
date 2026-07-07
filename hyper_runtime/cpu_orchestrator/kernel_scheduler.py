@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, Any, Callable
+from typing import Any, Callable
 
 from .topology_analyzer import TopologyAnalyzer
 from .thread_pinner import ThreadPinner

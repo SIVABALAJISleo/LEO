@@ -2,7 +2,7 @@ import asyncio
 import time
 import logging
 import json
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, Optional
 from pydantic import BaseModel
 
 # Actual Stack Imports
@@ -13,8 +13,6 @@ try:
 except ImportError:
     Llama = None
     
-from langchain_core.prompts import PromptTemplate # type: ignore
-from langchain_core.output_parsers import JsonOutputParser # type: ignore
 
 logger = logging.getLogger(__name__)
 

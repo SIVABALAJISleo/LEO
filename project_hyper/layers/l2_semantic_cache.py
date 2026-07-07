@@ -1,5 +1,5 @@
 import faiss
-import numpy as np
+
 from sentence_transformers import SentenceTransformer
 from typing import Optional, List, Dict
 
@@ -37,4 +37,4 @@ class SemanticCache:
 if __name__ == "__main__":
     cache = SemanticCache()
     cache.add("What is the capital of France?", "Paris is the capital of France.")
-    print(f"Similar Hit: {cache.get('Tell me France's capital city')}")
+    print("Similar Hit: {}".format(cache.get("Tell me France's capital city")))

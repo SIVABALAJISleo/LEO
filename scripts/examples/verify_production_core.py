@@ -1,6 +1,5 @@
 import requests
 import time
-import sys
 
 BASE_URL = "http://127.0.0.1:8005"
 
@@ -64,8 +63,6 @@ def test_production_core():
     print("="*50 + "\n")
 
 if __name__ == "__main__":
-    import uvicorn
-    import threading
     
     # Check if server is already running, if not, we can't easily test in this one-shot
     # I'll just assume the user or I will run it.

@@ -27,8 +27,7 @@ Rules:
 import logging
 import time
 import asyncio
-import uuid
-from typing import Optional, Dict, Any
+from typing import Dict, Any
 
 logger = logging.getLogger(__name__)
 
@@ -79,7 +78,6 @@ class AISPipeline:
         from backend.core.zero_repeat_store           import global_zero_repeat_store
         from backend.analytics.avoidance_tracker      import global_avoidance_tracker
         from backend.background.compute_engine        import global_bg_compute
-        from backend.intelligence.knowledge_field     import global_knowledge_field
         from backend.shadow.shadow_store              import global_shadow_store
 
         # ── Step -1: Task Elimination Engine ──────────────────────────── #
@@ -367,7 +365,7 @@ class AISPipeline:
         # Register in query graph
         try:
             from backend.router.query_family_mapper import global_query_family_mapper
-            norm = global_query_family_mapper.normalize(query)
+            global_query_family_mapper.normalize(query)
             global_query_graph.register(
                 family_id, query, answer, entity, intent, confidence
             )

@@ -2,7 +2,6 @@ import asyncio
 import httpx
 import time
 import statistics
-from typing import List
 
 # Configuration
 BASE_URL = "http://127.0.0.1:8005"
@@ -34,7 +33,6 @@ async def run_load_test():
     print(f"Starting Load Test: {TOTAL_REQUESTS} total requests, {CONCURRENT_REQUESTS} concurrency...")
     
     async with httpx.AsyncClient() as client:
-        tasks = []
         semaphore = asyncio.Semaphore(CONCURRENT_REQUESTS)
         
         async def sem_request():

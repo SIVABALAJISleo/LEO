@@ -3,8 +3,6 @@ Phase 6: End-to-End Avoidance Validation
 Tests all optimization layers including upgraded Phase 3 modules.
 """
 import pytest
-import asyncio
-import time
 from collections import Counter
 
 
@@ -23,7 +21,6 @@ def reasoning_store():
 
 @pytest.fixture
 def memory():
-    from backend.memory.global_memory import global_memory
     return memory
 
 

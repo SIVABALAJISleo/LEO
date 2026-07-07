@@ -2,7 +2,7 @@
 import unittest
 import logging
 import time
-from orchestration.reality_dispatcher import RealityDispatcher
+from archive_engines.orchestration.reality_dispatcher import RealityDispatcher
 
 # Configure logging to swallow info logs during testing
 logging.basicConfig(level=logging.CRITICAL)

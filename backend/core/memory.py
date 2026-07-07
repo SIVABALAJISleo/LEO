@@ -1,9 +1,9 @@
 import sqlite3
-import os
+from backend.core.db_utils import get_concurrent_db_connection
 import logging
 import json
 from datetime import datetime
-from typing import List, Dict, Any, Optional
+from typing import List, Dict
 from backend.core.middleware import redis_client
 
 logger = logging.getLogger(__name__)
@@ -18,7 +18,7 @@ class ConversationMemory:
     def _init_sqlite(self):
         """Initializes local SQLite database for persistent fallback."""
         try:
-            conn = sqlite3.connect(self.db_path)
+            conn = get_concurrent_db_connection(self.db_path)
             conn.execute("""
                 CREATE TABLE IF NOT EXISTS conversation_memory (
                     id TEXT PRIMARY KEY,
@@ -55,7 +55,7 @@ class ConversationMemory:
         
         # 2. Update persistent SQLite fallback
         try:
-            conn = sqlite3.connect(self.db_path)
+            conn = get_concurrent_db_connection(self.db_path)
             conn.execute("""
                 INSERT OR REPLACE INTO conversation_memory (id, tenant_id, session_id, history, updated_at)
                 VALUES (?, ?, ?, ?, ?)
@@ -80,7 +80,7 @@ class ConversationMemory:
         
         # 2. Fallback to SQLite
         try:
-            conn = sqlite3.connect(self.db_path)
+            conn = get_concurrent_db_connection(self.db_path)
             cursor = conn.execute("SELECT history FROM conversation_memory WHERE id = ?", (key,))
             row = cursor.fetchone()
             conn.close()
@@ -101,7 +101,7 @@ class ConversationMemory:
                 pass
             
         try:
-            conn = sqlite3.connect(self.db_path)
+            conn = get_concurrent_db_connection(self.db_path)
             conn.execute("DELETE FROM conversation_memory WHERE id = ?", (key,))
             conn.commit()
             conn.close()

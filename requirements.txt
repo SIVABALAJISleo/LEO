@@ -32,6 +32,18 @@ faiss-cpu==1.13.0
 numba==0.61.2
 numpy==2.2.6
 
+# ── Layer 1: Silicon Awakening — hardware detection & iGPU inference ── #
+# CPU ISA detection (py-cpuinfo)
+py-cpuinfo>=9.0.0
+# Vulkan iGPU inference backend (optional — only installed if Vulkan present)
+# llama-cpp-python[vulkan]  # install manually: CMAKE_ARGS="-DGGML_VULKAN=on" pip install llama-cpp-python
+# Intel OpenVINO (iGPU/NPU inference on Intel hardware)
+# openvino-genai  # optional: pip install openvino-genai
+# Apple MLX (macOS Apple Silicon iGPU/ANE)
+# mlx-lm  # optional: pip install mlx-lm  (macOS only)
+# Windows DirectML ONNX Runtime (iGPU/NPU fallback on Windows)
+# onnxruntime-directml  # optional: pip install onnxruntime-directml (Windows only)
+
 # ── Cloud & Storage ───────────────────────────────────────── #
 boto3==1.38.38
 

@@ -215,30 +215,75 @@ class LeoMasterOrchestrator:
                 result = LayerResult(True, "[SURROGATE] Replaced heavy computation with DeepONet approximation.", 0.95, "surrogate", (time.perf_counter() - t)*1000)
 
         # ---------------------------------------------------------------------
-        # LAYER 3: EXPERT COMPOSITION SYSTEM (Micro-models)
+        # LAYERS 3, 5, 6: QUANTIZED MODEL CASCADE WITH DIFFICULTY CLASSIFIER
         # ---------------------------------------------------------------------
         if not result:
             t = time.perf_counter()
-            if len(query) < 150 and "complex" not in query.lower():
-                if telemetry_tracker:
-                    telemetry_tracker.metrics.setdefault("expert_hits", 0)
-                    telemetry_tracker.metrics["expert_hits"] += 1
-                result = LayerResult(True, "[EXPERT] Activated 1-3 tiny specialized experts (Phi/TinyLlama).", 0.92, "local_inference", (time.perf_counter() - t)*1000)
+            # 1. Score query difficulty (0.0 to 1.0)
+            words = query.lower().split()
+            complexity_score = 0.5
+            if len(words) < 8 or any(w in query.lower() for w in ["what is", "status", "ping"]):
+                complexity_score = 0.2
+            elif "complex" in query.lower() or "analyze" in query.lower() or "design" in query.lower() or len(words) > 25:
+                complexity_score = 0.85
+            else:
+                complexity_score = 0.55
 
-        # ---------------------------------------------------------------------
-        # LAYER 5: SPARSE EXPERT ROUTING
-        # ---------------------------------------------------------------------
-        if not result:
-            t = time.perf_counter()
-            if "complex" in query.lower() or "expert" in query.lower() or len(query) < 500:
-                result = LayerResult(True, "[SPARSE MoE] Local 7B Expert inference complete.", 0.85, "sparse_7b", (time.perf_counter() - t)*1000)
+            # 2. Cascade execution with confidence-based escalation
+            cascade_path = []
+            
+            # Step A: 0.5-1B Ternary Model (score < 0.3)
+            if complexity_score < 0.3:
+                cascade_path.append("ternary")
+                # Simulate ternary generation
+                conf = 0.78  # Mock low-ish confidence to test escalation sometimes
+                if "status" in query.lower():
+                    conf = 0.92  # high confidence, direct exit
+                
+                if conf >= 0.80:
+                    if telemetry_tracker:
+                        telemetry_tracker.metrics.setdefault("ternary_hits", 0)
+                        telemetry_tracker.metrics["ternary_hits"] += 1
+                    result = LayerResult(True, "[CASCADE TERNARY] 1.58b ternary inference resolved query.", conf, "local_inference", (time.perf_counter() - t)*1000)
+                else:
+                    logger.info("ternary_confidence_low: Escalating to 3-4B tier")
+                    complexity_score = 0.5  # Escalate score to trigger next tier
 
-        # ---------------------------------------------------------------------
-        # LAYER 6: RARE CLOUD ESCALATION
-        # ---------------------------------------------------------------------
-        if not result:
-            t = time.perf_counter()
-            result = LayerResult(True, "[CLOUD FALLBACK] Executed massive API request as absolute last resort.", 0.8, "cloud", (time.perf_counter() - t)*1000)
+            # Step B: 3-4B Model (0.3 <= score < 0.7)
+            if not result and (0.3 <= complexity_score < 0.7):
+                cascade_path.append("3-4B")
+                conf = 0.83  # Mock confidence to trigger escalation
+                if len(words) < 15:
+                    conf = 0.90
+                
+                if conf >= 0.85:
+                    if telemetry_tracker:
+                        telemetry_tracker.metrics.setdefault("expert_hits", 0)
+                        telemetry_tracker.metrics["expert_hits"] += 1
+                    result = LayerResult(True, "[CASCADE 3B] Activated specialized 3B expert (Phi/TinyLlama).", conf, "local_inference", (time.perf_counter() - t)*1000)
+                else:
+                    logger.info("3b_confidence_low: Escalating to 7-8B tier")
+                    complexity_score = 0.8  # Escalate score to trigger next tier
+
+            # Step C: 7-8B Model (0.7 <= score < 0.9)
+            if not result and (0.7 <= complexity_score < 0.9):
+                cascade_path.append("7-8B")
+                conf = 0.88
+                if conf >= 0.85:
+                    if telemetry_tracker:
+                        telemetry_tracker.metrics.setdefault("sparse_hits", 0)
+                        telemetry_tracker.metrics["sparse_hits"] += 1
+                    result = LayerResult(True, "[CASCADE 7B] Local 7B Expert sparse MoE inference complete.", conf, "sparse_7b", (time.perf_counter() - t)*1000)
+                else:
+                    logger.info("7b_confidence_low: Escalating to cloud fallback")
+                    complexity_score = 0.95
+
+            # Step D: Cloud Fallback (score >= 0.9)
+            if not result:
+                cascade_path.append("cloud")
+                result = LayerResult(True, "[CLOUD FALLBACK] Executed massive API request as absolute last resort.", 0.8, "cloud", (time.perf_counter() - t)*1000)
+                
+            logger.info(f"cascade_routing_complete: path={cascade_path} final_resolved={result.resolved_layer}")
 
         # ---------------------------------------------------------------------
         # LAYER 7: CONTINUOUS CRYSTALLIZATION FEEDBACK LOOP

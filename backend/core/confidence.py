@@ -5,7 +5,6 @@ Only escalates to large model if confidence < 0.85.
 This is the LAST gate before model escalation.
 """
 import logging
-from typing import Dict, Any, Optional
 
 logger = logging.getLogger(__name__)
 

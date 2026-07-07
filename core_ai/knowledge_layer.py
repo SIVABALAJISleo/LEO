@@ -1,5 +1,5 @@
 import chromadb
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 import logging
 import asyncio
 

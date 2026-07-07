@@ -28,7 +28,7 @@ def verify_supabase_connection():
             print("Testing database connectivity via API client...")
             supabase: Client = create_client(url, key)
             # Try a lightweight query - checking auth configuration logic
-            res = supabase.auth.get_session()
+            supabase.auth.get_session()
             print("SUCCESS: Supabase Edge API is reachable.")
             return True
         except Exception as e:

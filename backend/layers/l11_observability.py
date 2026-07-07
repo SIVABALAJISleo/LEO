@@ -3,7 +3,6 @@ Layer 11: Observability
 Exports real metrics including CPU/iGPU utilization, request counters,
 latency, cache hits, and OpenTelemetry spans.
 """
-import time
 import logging
 import psutil
 from typing import Dict, Any

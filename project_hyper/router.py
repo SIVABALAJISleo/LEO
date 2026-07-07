@@ -1,4 +1,3 @@
-import re
 
 class QueryRouter:
     """LAYER 1 — QUERY ROUTER"""

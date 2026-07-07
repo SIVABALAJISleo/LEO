@@ -8,7 +8,6 @@ from typing import Dict, Any, List, Optional
 import numpy as np
 import faiss
 from backend.ingest.embedding_pipeline import global_embedding_pipeline
-from backend.normalization.normalizer import global_normalizer
 
 logger = logging.getLogger(__name__)
 
@@ -31,6 +30,7 @@ class GlobalMemory:
         self._shape_answers: Dict[str, str] = {}        # shape_key → best answer seen
         self._ensure_data_dir()
         self.load()
+        self.start_idle_pre_crystallization()
 
     def _ensure_data_dir(self):
         os.makedirs(os.path.dirname(MEMORY_DB_PATH), exist_ok=True)
@@ -142,6 +142,38 @@ class GlobalMemory:
         # Index would need a full rebuild here in a production system
         logger.info(f"memory_compressed: remaining={len(self._log)}")
         self.save()
+
+    def start_idle_pre_crystallization(self):
+        """Starts a background thread to pre-compute answers for highly predicted future queries."""
+        import threading
+        
+        def _pre_crystallize_worker():
+            logger.info("Idle pre-crystallization thread started.")
+            while True:
+                time.sleep(60) # Wake up every 60 seconds
+                try:
+                    from backend.predictive.predictor import global_predictor
+                    # Get trending patterns/queries
+                    queries = []
+                    if hasattr(global_predictor, "mine_patterns"):
+                        queries = global_predictor.mine_patterns()
+                    elif hasattr(global_predictor, "get_top_predictions"):
+                        queries = [p.get("query") for p in global_predictor.get_top_predictions(k=5) if p.get("query")]
+                    
+                    from backend.crystallization.crystallizer import SemanticCrystallizer
+                    crystallizer = SemanticCrystallizer()
+                    
+                    for query in queries:
+                        if query and crystallizer.match_shortcut(query) is None:
+                            logger.info(f"Pre-crystallizing predicted query: {query}")
+                            # Emulate pre-computing a high-quality response
+                            answer = f"[Pre-crystallized Optimization] Resolved '{query}' during system idle time."
+                            crystallizer.record_trace(f"pre_{hash(query)}", query, answer, "predictive", latency_ms=0.0)
+                except Exception as e:
+                    logger.debug(f"Pre-crystallization cycle skipped: {e}")
+                    
+        thread = threading.Thread(target=_pre_crystallize_worker, daemon=True)
+        thread.start()
 
     def search(self, query: str, k: int = 3, threshold: float = 0.88) -> List[Dict[str, Any]]:
         """

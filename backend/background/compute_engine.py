@@ -7,11 +7,9 @@ and expands the Knowledge Composition Graph.
 """
 import asyncio
 import logging
-from typing import Dict, Any, List
+from typing import Dict, Any
 from backend.analytics.metrics import global_metrics
-from backend.shadow.shadow_store import global_shadow_store
 from backend.predictive.predictor import global_predictor
-from backend.learning.answer_store import global_learning_engine
 
 logger = logging.getLogger(__name__)
 
@@ -95,7 +93,6 @@ class BackgroundComputeEngine:
         # 4. Point 6: KNOWLEDGE COMPRESSION (Periodic/Triggered)
         if self.queue.empty():
             logger.info("bg_compute: Queue idle. Triggering Knowledge Compression & Graph Optimization.")
-            from backend.graph.fragment_graph import global_fragment_graph
             # (In a real system, we'd call global_fragment_graph.optimize())
             
         logger.info(f"bg_compute: Task complete for '{query}'. Avoidance depth increased.")

@@ -5,7 +5,7 @@ Calculates consensus votes and confidence scores.
 """
 import logging
 import asyncio
-from typing import Dict, Any, List
+from typing import Dict, Any
 
 logger = logging.getLogger(__name__)
 
@@ -29,8 +29,6 @@ class MultiAgentSwarmLayer:
         # 7. Verifier certifies
         
         # Parallel agent execution stubs
-        proposal = f"[Swarm Proposal] Address request '{query}' using local CPU GGUF model."
-        criticism = "Proposal is solid but we should ensure Vulkan offloading is verified."
         mitigation = f"[Optimized Proposal] Address request '{query}' using GGUF with Vulkan offloading."
         
         # Consensus voting

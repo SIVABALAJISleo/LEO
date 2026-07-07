@@ -4,7 +4,7 @@ Routes unknown problems through Analogy -> Expert -> Crystal -> Evolutionary -> 
 """
 import time
 import logging
-from typing import Dict, Any, List
+from typing import Dict, Any
 
 logger = logging.getLogger(__name__)
 
@@ -47,7 +47,7 @@ class NoveltyEliminationSystem:
         """
         The Master Pipeline. Target: 99%+ computation elimination.
         """
-        start_time = time.perf_counter()
+        time.perf_counter()
         layer_trace = []
         result = None
         

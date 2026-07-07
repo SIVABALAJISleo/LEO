@@ -1,5 +1,5 @@
 import httpx
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 from tenacity import retry, wait_exponential, stop_after_attempt, retry_if_exception_type
 
 from .vision import VisionClient

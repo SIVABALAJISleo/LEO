@@ -1,6 +1,5 @@
 import asyncio
 import logging
-import base64
 from backend.core.orchestrator import hyper_engine
 
 logging.basicConfig(level=logging.INFO)

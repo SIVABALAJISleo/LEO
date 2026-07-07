@@ -1,7 +1,7 @@
 import re
 import logging
 import os
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List
 import numpy as np
 import skfuzzy as fuzzy
 from skfuzzy import control as ctrl
@@ -88,7 +88,6 @@ class IntentEngine:
         query = query.lower().strip()
         query = re.sub(r'[^\w\s\?]', '', query)
         # Simple rewrite: remove filler words
-        fillers = ["please", "could", "you", "tell", "me", "what", "is"]
         # but don't remove if it makes the query empty
         return query
 

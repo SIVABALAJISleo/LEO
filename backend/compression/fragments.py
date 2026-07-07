@@ -6,7 +6,7 @@ Fragment Compression Engine: breaks complex answers into specific intents
 import hashlib
 import logging
 import re
-from typing import List, Dict
+from typing import List
 
 logger = logging.getLogger(__name__)
 

@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 from backend.domain.workspace_manager import global_workspace_manager
 
 logger = logging.getLogger(__name__)

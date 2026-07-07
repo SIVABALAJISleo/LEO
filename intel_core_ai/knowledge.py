@@ -1,7 +1,7 @@
 import faiss
 import numpy as np
 import logging
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Optional
 from sentence_transformers import SentenceTransformer
 
 logger = logging.getLogger(__name__)

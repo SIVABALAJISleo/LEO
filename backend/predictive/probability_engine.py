@@ -24,7 +24,7 @@ import logging
 import asyncio
 import time
 import heapq
-from typing import Dict, List, Optional, Any, Tuple
+from typing import Dict, List, Optional, Any
 from collections import defaultdict
 
 logger = logging.getLogger(__name__)

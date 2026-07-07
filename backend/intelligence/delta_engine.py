@@ -4,7 +4,6 @@ Real Delta Query Engine: detects semantic overlap and extracts only missing part
 """
 import re
 import logging
-import asyncio
 from typing import Optional, Dict, Any, List
 import numpy as np
 from backend.rag.embedding_model import encode

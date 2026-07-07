@@ -1,5 +1,5 @@
 import sqlite3
-from typing import Dict, Any
+from backend.core.db_utils import get_concurrent_db_connection
 
 class LearningLoop:
     """
@@ -7,7 +7,7 @@ class LearningLoop:
     Stores query/response pairs to improve future performance.
     """
     def __init__(self, db_path: str = "project_hyper/data/learning.db"):
-        self.conn = sqlite3.connect(db_path)
+        self.conn = get_concurrent_db_connection(db_path)
         self._create_tables()
 
     def _create_tables(self):

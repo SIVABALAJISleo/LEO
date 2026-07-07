@@ -22,7 +22,7 @@ Rules:
 import logging
 import asyncio
 import time
-from typing import Dict, List, Set, Optional, Any
+from typing import Dict, List, Set, Any
 from collections import defaultdict
 
 logger = logging.getLogger(__name__)

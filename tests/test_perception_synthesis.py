@@ -1,10 +1,10 @@
 
 import unittest
 import logging
-from orchestration.visibility_manager import VisibilityManager, VisibilityRegionType
-from orchestration.specular_governor import SpecularGovernor
-from orchestration.chaos_containment import ChaosContainment
-from orchestration.lazy_world import LazyWorldManager
+from archive_engines.orchestration.visibility_manager import VisibilityManager, VisibilityRegionType
+from archive_engines.orchestration.specular_governor import SpecularGovernor
+from archive_engines.orchestration.chaos_containment import ChaosContainment
+from archive_engines.orchestration.lazy_world import LazyWorldManager
 
 # Configure logging to swallow info logs during testing
 logging.basicConfig(level=logging.CRITICAL)

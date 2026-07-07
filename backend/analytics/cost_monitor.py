@@ -1,6 +1,5 @@
 import logging
 from backend.core.database import SessionLocal, UsageLog
-from sqlalchemy import func
 
 logger = logging.getLogger(__name__)
 

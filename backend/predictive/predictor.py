@@ -1,8 +1,6 @@
 import logging
-import hashlib
 import asyncio
-from typing import List, Dict, Any, Optional
-import numpy as np
+from typing import List, Dict
 from backend.normalization.normalizer import global_normalizer
 
 logger = logging.getLogger(__name__)

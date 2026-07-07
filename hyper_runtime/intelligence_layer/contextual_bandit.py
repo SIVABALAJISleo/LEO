@@ -1,6 +1,6 @@
 import numpy as np
 import logging
-from typing import Dict, Any, List
+from typing import Dict
 
 logger = logging.getLogger("HyperCore.ContextualBandit")
 

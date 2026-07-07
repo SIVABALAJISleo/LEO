@@ -23,7 +23,7 @@ import logging
 import time
 import json
 import os
-from typing import Dict, List, Optional, Any
+from typing import Dict, Optional, Any
 from collections import defaultdict
 
 logger = logging.getLogger(__name__)

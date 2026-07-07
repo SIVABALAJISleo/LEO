@@ -6,7 +6,6 @@ Evaluates the composed/simulated answer quality.
 Determines if we can return early, trigger micro-compute, or fallback to the heavy LLM.
 """
 import logging
-import re
 from typing import Dict, Any
 
 logger = logging.getLogger(__name__)

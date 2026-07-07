@@ -15,7 +15,7 @@ Primal Units:
 """
 import re
 import logging
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 

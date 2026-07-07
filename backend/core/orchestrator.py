@@ -1,82 +1,30 @@
 import logging
 logger = logging.getLogger(__name__)
 
-from typing import Optional, Dict, List, Any
+from typing import Optional, Dict, Any
 from backend.intelligence.router import MoERouter, SemanticCache, HallucinationGuard, TraceEngine
 from backend.intelligence.rag import RAGEngine
-from backend.intelligence.reasoning import reasoning_expert
 from backend.performance.caching import MultiLevelCache, PredictiveEngine
-from backend.performance.memo import global_memo
 from backend.performance.scheduler import scheduler
-from backend.performance.embedding_cache import global_embedding_cache
 from backend.core.reliability import CircuitBreaker, ReliabilityOrchestrator
 from backend.data_efficiency.probabilistic import BloomFilter
 import time
 import asyncio
-import psutil
 import numpy as np
-from backend.core.prompt_cache import check_cache, save_cache
-from backend.predictive.answer_store import global_predictive_store
-from backend.predictive.predictor import global_predictor
-from backend.shadow.shadow_store import global_shadow_store
-from backend.shadow.shadow_worker import global_shadow_worker
-from backend.shadow.conversation_tracker import global_tracker
 from backend.core.metrics import (
-    PPE_HITS, SHADOW_HITS, MODEL_INVOCATIONS, RAG_HITS, MICRO_MODEL_HITS, CACHE_HITS,
-    GRAPH_HITS, TEMPLATE_HITS, MODEL_CALLS_TOTAL,
-    REASONING_REUSES, EARLY_EXIT_TOTAL, TOKEN_SAVINGS,
-    CANONICAL_HITS, PRECOMPUTE_HITS, FAILURE_RATE, DOMAIN_REJECTIONS,
-    COST_FORCED_SAVES, LATENCY_SKIPS, AVOIDANCE_RATIO, COST_SAVED_TOTAL, ENHANCEMENT_HITS,
-    CPU_USAGE, EMBEDDING_CACHE_HITS, TINY_MODEL_SUCCESS, LAST_RESORT_MODEL_USAGE,
-    FUSION_HITS, CONFIDENCE_BYPASS_RATE,
-    AIC_ESCALATION_TOTAL, ENHANCEMENT_ATTEMPTS, ENHANCEMENT_SUCCESS, MODEL_BYPASS_VIA_ENHANCEMENT
+    MODEL_INVOCATIONS, MODEL_CALLS_TOTAL,
+    EMBEDDING_CACHE_HITS, TINY_MODEL_SUCCESS, LAST_RESORT_MODEL_USAGE
 )
-from backend.analytics.query_logger import global_query_logger
 
-from backend.inference.kv_cache import global_kv_cache
-from backend.inference.speculative_decoder import global_speculative_decoder
-from backend.rag.context_compression import global_compressor
-from backend.reasoning.query_planner import global_query_planner
-from backend.micro_models.router import global_micro_router
-from backend.learning.answer_store import global_learning_engine
-from backend.inference.distributed_router import global_inference_controller
 
 # Next-Gen 10-Layer Pipeline Imports
-from backend.normalization.normalizer import global_normalizer
-from backend.graph.answer_graph_engine import global_age
-from backend.templates.template_engine import global_template_engine
-from backend.router.query_complexity import global_complexity_estimator
 from backend.memory.reasoning_store import global_reasoning_store
-from backend.optimization.token_optimizer import global_token_optimizer
-from backend.inference.early_exit import global_early_exit
-from backend.planner.execution_planner import global_execution_planner
-from backend.enhancement.enhancer import global_enhancer
 
 # Compute-Controlled System Imports (12-Module Architecture)
-from backend.domain.domain_guard import global_domain_guard
-from backend.normalization.query_shaper import global_query_shaper
-from backend.answers.canonical_store import global_canonical_store
-from backend.answers.diff_engine import global_diff_engine
 from backend.memory.global_memory import global_memory
-from backend.memory.failure_store import global_failure_store
-from backend.core.confidence import global_confidence_gate
-from backend.core.cost_controller import global_cost_controller
-from backend.core.latency_controller import global_latency_controller
-from backend.predictive.precompute_expander import global_precompute_expander
-from backend.predictive.user_profiler import global_user_profiler
-from backend.intelligence.reasoning_templates import global_templates
 
-from backend.intelligence.tiny_model_guard import global_tiny_guard
 
 # SaaS Optimization Engine Imports (Phase 8-10)
-from backend.enhancement.answer_fusion import global_answer_fusion
-from backend.enhancement.answer_enhancer import global_aee
-from backend.enhancement.temporal_memory import global_temporal_memory
-from backend.intelligence.confidence_engine import global_acce
-from backend.intelligence.feedback_store import global_feedback_store
-from backend.core.cost_tracker import global_cost_tracker
-from backend.core.usage_metering import global_usage_meter
-from backend.core.chaos_controller import global_chaos_controller, ChaosMode
 
 # Phase 3: High-Avoidance Core
 try:
@@ -112,8 +60,6 @@ except ImportError:
         logger.warning("some_composition_engines_missing")
 
 # Phase 20: Unified Zero-Runtime Control Layer
-from backend.core.zero_compute import global_zero_control
-from backend.optimization.batcher import global_query_batcher
 
 class UnifiedSaaSEngine:
     """
@@ -223,7 +169,6 @@ class UnifiedSaaSEngine:
 
     async def _process_core(self, query: str, request_id: str, tenant_id: str, workspace_id: str, start_time: float):
         """ Hardened Zero-Runtime Pipeline routing through Unified Control Layer. """
-        from backend.analytics.metrics import global_metrics
         from backend.core.zero_compute import global_zero_control
 
         logger.info(f"zero_runtime_request: id={request_id} query={query}")
@@ -240,7 +185,7 @@ class UnifiedSaaSEngine:
 
     async def process_stream(self, query: str, request_id: str, tenant_id: str = "default"):
         """Streaming version that follows the full optimization pipeline."""
-        start_time = time.time()
+        time.time()
         
         # 1. ATTEMPT FULL RESULT PRE-DETECTION (Bypass stream if possible)
         # This is the 'holy grail' of avoidance: stream an already fully computed result instantly.

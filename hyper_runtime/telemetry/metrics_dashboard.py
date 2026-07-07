@@ -1,6 +1,5 @@
 import json
 import os
-import argparse
 
 def generate_html_report(metrics_file):
     if not os.path.exists(metrics_file):

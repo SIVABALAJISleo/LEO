@@ -4,7 +4,7 @@ LEO: STAGE 13 — OBSERVABILITY + EXPLAINABILITY
 Exposes the Universal Adapter and traceability endpoints.
 """
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import Dict, Any, List
 

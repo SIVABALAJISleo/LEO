@@ -4,7 +4,7 @@ Real embedding model using SentenceTransformers + FAISS/NumPy index.
 """
 import logging
 import numpy as np
-from typing import List, Optional
+from typing import List
 
 logger = logging.getLogger(__name__)
 

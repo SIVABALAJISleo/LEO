@@ -1,7 +1,7 @@
 import chromadb
 import logging
 import httpx
-from typing import List, Dict, Any, Optional
+from typing import List
 
 logger = logging.getLogger(__name__)
 

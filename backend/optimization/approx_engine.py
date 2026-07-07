@@ -6,11 +6,7 @@ Map unknown queries to the closest known concept in the Knowledge Graph.
 Provides 80-90% correct responses instantly to avoid deep compute.
 """
 import logging
-from typing import Dict, Any, List, Optional
-import numpy as np
-from backend.normalization.normalizer import global_normalizer
-from backend.graph.fragment_graph import global_fragment_graph
-from backend.answers.fragment_engine import global_fragment_composer
+from typing import Dict, Any, Optional
 from backend.core.chaos_controller import global_chaos_controller, ChaosMode
 
 logger = logging.getLogger(__name__)

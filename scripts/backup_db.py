@@ -4,7 +4,6 @@ Project HYPER - Nightly Database & State Backup Script
 Automates snapshotting of the internal SQL/NoSQL structures and syncs to S3.
 """
 import os
-import shutil
 import tarfile
 from datetime import datetime
 import logging

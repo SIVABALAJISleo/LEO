@@ -6,8 +6,8 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from core.input_logic import parse_input
 from execution.reasoning_loop import start_loop
-from verifier.validation import validate_output
-from router.routing_logic import get_compute_node
+from archive_engines.verifier.validation import validate_output
+from archive_engines.router.routing_logic import get_compute_node
 from memory.knowledge import resolve_entity
 
 def run_system(user_query: str):

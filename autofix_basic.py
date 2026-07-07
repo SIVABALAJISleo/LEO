@@ -1,4 +1,3 @@
-import re
 import os
 
 def autofix():
@@ -36,7 +35,7 @@ def autofix():
                 try:
                     with open(filepath, "w", encoding="utf-8") as file:
                         file.write(content)
-                except Exception as e:
+                except Exception:
                     pass
 
 if __name__ == "__main__":

@@ -1,5 +1,4 @@
 import random
-from typing import Dict, Any
 
 class ChaosEngine:
     """Injects simulated failures to test system resilience."""

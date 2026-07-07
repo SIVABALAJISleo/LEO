@@ -7,7 +7,7 @@ lightweight local models/OCR into structured text representations to bypass clou
 import os
 import time
 import logging
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +23,6 @@ class LocalMultimodalProcessor:
 
     def _initialize_pil(self):
         try:
-            from PIL import Image
             self.pil_available = True
             logger.info("Pillow (PIL) image processor initialized successfully for Multimodal.")
         except Exception:

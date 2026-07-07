@@ -3,7 +3,7 @@ Layer 14: Scientific Validation
 Implements fact checking, source validation, evidence ranking, and red team confidence scoring.
 """
 import logging
-from typing import Dict, Any, List
+from typing import Dict, Any
 
 logger = logging.getLogger(__name__)
 

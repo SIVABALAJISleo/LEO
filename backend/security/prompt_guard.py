@@ -14,7 +14,7 @@ import time
 import hashlib
 import logging
 import json
-from typing import Dict, Any, Optional, List, Tuple
+from typing import Dict, Any, List, Tuple
 from collections import deque
 
 logger = logging.getLogger(__name__)

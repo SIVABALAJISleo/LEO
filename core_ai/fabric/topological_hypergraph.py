@@ -31,4 +31,12 @@ class TopologicalHypergraph:
         Matches interference patterns to reconstruct knowledge without direct lookup.
         """
         self.logger.info("Reconstructing knowledge from holographic interference pattern...")
-        return {"reconstructed_data": "Emergent knowledge synthesis", "confidence": 0.999}
+        try:
+            query_str = query_signature.decode('utf-8')
+        except Exception:
+            query_str = None
+
+        if query_str and query_str in self.nodes:
+            val = self.nodes[query_str].decode('utf-8')
+            return {"reconstructed_data": val, "confidence": 0.999}
+        return {"reconstructed_data": None, "confidence": 0.0}

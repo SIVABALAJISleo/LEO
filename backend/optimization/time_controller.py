@@ -6,7 +6,6 @@ Enforces a strict 50ms processing limit for runtime requests.
 """
 import time
 import logging
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 

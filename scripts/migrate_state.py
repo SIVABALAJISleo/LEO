@@ -1,4 +1,3 @@
-import os
 import logging
 from backend.core.middleware import redis_client
 from backend.core.database import SessionLocal, User

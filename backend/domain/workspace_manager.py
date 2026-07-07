@@ -1,5 +1,5 @@
 import logging
-from typing import List, Dict, Any, Optional
+from typing import Dict, Any, Optional
 from uuid import uuid4
 
 logger = logging.getLogger(__name__)

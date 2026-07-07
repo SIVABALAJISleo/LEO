@@ -10,7 +10,6 @@ from typing import Dict, Any, Optional
 from backend.normalization.normalizer import global_normalizer
 from backend.graph.fragment_graph import global_fragment_graph
 from backend.answers.fragment_engine import global_fragment_composer
-from backend.analytics.metrics import global_metrics
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +40,7 @@ class RuntimeComposer:
             if fragments:
                 # 2. Context Adaptation (Point 10): Select style based on user_context
                 # In this system, we filter or prioritize fragments based on style tags
-                style = self._get_target_style(user_context)
+                self._get_target_style(user_context)
                 
                 # Assembly using FragmentComposer
                 composition = global_fragment_composer.compose(fragments) # Can be extended for style

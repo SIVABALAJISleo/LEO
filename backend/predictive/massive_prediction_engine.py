@@ -13,7 +13,6 @@ Rules:
 """
 import logging
 import asyncio
-import itertools
 from typing import Dict, List, Any, Set
 
 logger = logging.getLogger(__name__)

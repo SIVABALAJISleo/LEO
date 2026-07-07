@@ -6,7 +6,6 @@ and Hardware Power Savings. Exposes metrics for Prometheus, Grafana, and the fro
 """
 
 import logging
-import time
 from typing import Dict, Any
 
 logger = logging.getLogger(__name__)

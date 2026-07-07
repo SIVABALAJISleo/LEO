@@ -27,7 +27,7 @@ class QualityEstimator:
         score = 1.0
 
         word_count = len(answer.split())
-        char_count = len(answer.strip())
+        len(answer.strip())
 
         # Issue: Too short
         if word_count < 10:

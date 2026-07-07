@@ -1,5 +1,4 @@
 import pytest
-import asyncio
 from backend.intelligence.rag import RAGEngine
 
 @pytest.mark.asyncio

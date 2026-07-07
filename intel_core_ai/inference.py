@@ -1,7 +1,6 @@
 import os
 import logging
-import time
-from typing import Dict, Any, List, Optional, Generator
+from typing import Generator
 try:
     from llama_cpp import Llama
 except ImportError:

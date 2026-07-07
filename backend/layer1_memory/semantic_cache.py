@@ -6,13 +6,13 @@ Production-grade Multi-Layer Semantic Cache.
 Integrates exact hashing, Qdrant vector database for dense vector similarity,
 Zipf-law TTL dynamics, reasoning-path caches, and semantic delta reconstruction.
 """
-import os
 import time
 import hashlib
 import sqlite3
+from backend.core.db_utils import get_concurrent_db_connection
 import numpy as np
 import logging
-from typing import Dict, Any, Optional, Tuple, List
+from typing import Dict, Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -47,19 +47,6 @@ class ProductionSemanticCache:
             self.encoder = TrigramEmbedder()
             self.vector_dim = 384
 
-    @property
-    def _store(self):
-        try:
-            conn = sqlite3.connect(self.db_path)
-            cursor = conn.cursor()
-            cursor.execute("SELECT count(*) FROM semantic_cache")
-            count = cursor.fetchone()[0]
-            conn.close()
-            return [None] * count
-        except Exception:
-            return []
-
-
         # Connect to Qdrant Docker Container
         self.qdrant = None
         self.qdrant_collection = "semantic_fabric"
@@ -78,8 +65,20 @@ class ProductionSemanticCache:
         except Exception as e:
             logger.warning(f"Qdrant client not available, semantic searches will degrade to local FAISS/SQLite: {e}")
 
+    @property
+    def _store(self):
+        try:
+            conn = get_concurrent_db_connection(self.db_path)
+            cursor = conn.cursor()
+            cursor.execute("SELECT count(*) FROM semantic_cache")
+            count = cursor.fetchone()[0]
+            conn.close()
+            return [None] * count
+        except Exception:
+            return []
+
     def _initialize_sqlite(self):
-        conn = sqlite3.connect(self.db_path)
+        conn = get_concurrent_db_connection(self.db_path)
         cursor = conn.cursor()
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS semantic_cache (
@@ -101,7 +100,7 @@ class ProductionSemanticCache:
         query_hash = hashlib.md5(query.lower().strip().encode(), usedforsecurity=False).hexdigest()  # nosec B324
         now = time.time()
         
-        conn = sqlite3.connect(self.db_path)
+        conn = get_concurrent_db_connection(self.db_path)
         cursor = conn.cursor()
         
         cursor.execute("SELECT frequency FROM semantic_cache WHERE query_hash = ?", (query_hash,))
@@ -137,7 +136,7 @@ class ProductionSemanticCache:
         query_hash = hashlib.md5(query.lower().strip().encode(), usedforsecurity=False).hexdigest()  # nosec B324
         now = time.time()
         
-        conn = sqlite3.connect(self.db_path)
+        conn = get_concurrent_db_connection(self.db_path)
         cursor = conn.cursor()
         
         # Layer 1: Exact Hash

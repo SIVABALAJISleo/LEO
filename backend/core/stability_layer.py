@@ -12,12 +12,9 @@ This layer coordinates:
 import logging
 import time
 import os
-import psutil
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 
-from backend.core.chaos_controller import global_chaos_controller, ChaosMode
 from backend.core.zero_compute import global_zero_control
-from orchestration.chaos_containment import global_chaos_containment
 
 logger = logging.getLogger(__name__)
 

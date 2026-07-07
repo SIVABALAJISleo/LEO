@@ -4,10 +4,9 @@ When the pipeline fails (falls through to model or returns low-confidence answer
 store the failure pattern so the system can avoid it next time.
 Turn every failure into future avoidance.
 """
-import hashlib
 import logging
 import time
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List
 
 logger = logging.getLogger(__name__)
 

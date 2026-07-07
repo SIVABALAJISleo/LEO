@@ -8,11 +8,9 @@ embed(), retrieve(), generate(), execute(), crystallize(), proceduralize()
 """
 
 import logging
-import time
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 
 from backend.layer4_router.adaptive_router import leo_master
-from backend.layer10_metrics.telemetry import telemetry_tracker
 
 logger = logging.getLogger(__name__)
 

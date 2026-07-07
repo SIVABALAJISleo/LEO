@@ -7,7 +7,6 @@ Continuously tracks latency and CPU usage to trigger automatic adjustments.
 import asyncio
 import logging
 import psutil
-import time
 from typing import List
 
 logger = logging.getLogger(__name__)

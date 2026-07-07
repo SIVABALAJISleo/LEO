@@ -4,8 +4,6 @@ One optimized answer per concept. All similar queries reuse it.
 This is the HIGHEST PRIORITY bypass layer — checked before everything else.
 Storing here means zero compute for that concept forever.
 """
-import hashlib
-import json
 import logging
 from typing import Optional, Dict, Any
 

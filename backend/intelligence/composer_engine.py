@@ -5,7 +5,7 @@ Knowledge Composition Engine
 Fetches known fragments for sub-components and combines them using templates.
 """
 import logging
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, Optional
 from backend.rag.embedding_model import search as rag_search
 
 logger = logging.getLogger(__name__)

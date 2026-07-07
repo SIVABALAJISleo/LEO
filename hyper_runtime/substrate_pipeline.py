@@ -6,7 +6,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 
 import hashlib
 import logging
-from typing import Dict, Any, List
+from typing import Dict, Any
 
 from hyper_runtime.primitive_decomposition.decomposition_engine import PrimitiveDecompositionEngine
 from hyper_runtime.semantic_action_protocol.sap_engine import SAPEngine

@@ -1,5 +1,5 @@
 import asyncio
-from typing import List, Callable, Dict, Any
+from typing import Callable
 from backend.observability.telemetry import logger
 
 class PrecomputationScheduler:

@@ -3,9 +3,7 @@ backend/core/policy_system.py
 ECOS: Enterprise Policy Relationship Intelligence & Semantic Audit Memory Engine
 """
 import re
-import hashlib
 from typing import List, Dict, Any, Tuple, Optional
-import datetime
 from sqlalchemy.orm import Session
 from backend.core.database import PolicyDocument, PolicyChunk, PolicyRelationship, AuditProvenanceLog
 

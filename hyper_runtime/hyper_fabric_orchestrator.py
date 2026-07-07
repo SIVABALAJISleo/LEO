@@ -150,7 +150,7 @@ class DragonLogicEngine:
         if self.weight_synthesis and self.jit_compiler:
             # Generate weights ephemerally and JIT compile the routing graph
             self.weight_synthesis.materialize_tensor("layer_1", {})
-            opt_graph = self.jit_compiler.jit_graph_rewrite("compute_graph")
+            self.jit_compiler.jit_graph_rewrite("compute_graph")
             self.telemetry.log("cascade", "procedural_jit_execution", 1)
 
         # 9. Mamba State Space

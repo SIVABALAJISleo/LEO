@@ -5,7 +5,6 @@ seeding the canonical store and graph engine before users ask.
 This is the PROACTIVE layer — build reuse before demand arrives.
 """
 import logging
-import hashlib
 from typing import List, Dict, Any
 
 logger = logging.getLogger(__name__)

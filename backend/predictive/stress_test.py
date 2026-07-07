@@ -2,7 +2,6 @@ import asyncio
 import time
 from collections import Counter
 from backend.core.orchestrator import hyper_engine
-from backend.shadow.shadow_store import global_shadow_store
 from backend.predictive.answer_store import global_predictive_store
 
 async def simulate_user(user_id, num_requests=10):

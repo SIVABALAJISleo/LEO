@@ -1,8 +1,5 @@
 import requests
-import json
 import uuid
-import time
-import os
 
 BASE_URL = "http://127.0.0.1:8005"
 USERNAME = f"test_user_{uuid.uuid4().hex[:8]}"

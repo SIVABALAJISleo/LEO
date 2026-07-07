@@ -5,7 +5,7 @@ security checks, and anomaly detection.
 """
 import logging
 import numpy as np
-from typing import Dict, Any, List
+from typing import Dict, Any
 
 logger = logging.getLogger(__name__)
 

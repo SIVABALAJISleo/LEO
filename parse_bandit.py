@@ -1,5 +1,4 @@
 import json
-import sys
 
 try:
     with open('bandit_results.json', 'r') as f:

@@ -15,7 +15,7 @@ This module is the FIRST step in the pipeline.
 import re
 import hashlib
 import logging
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List
 
 logger = logging.getLogger(__name__)
 

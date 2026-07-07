@@ -1,6 +1,4 @@
 import os
-import mmap
-import struct
 import numpy as np
 
 class PersistentKVCache:

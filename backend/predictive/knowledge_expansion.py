@@ -1,7 +1,5 @@
 import logging
-import asyncio
-from typing import List, Dict, Any
-from backend.core.model_manager import model_manager
+from typing import List
 from backend.answers.canonical_store import global_canonical_store
 from backend.intelligence.rag import RAGEngine
 

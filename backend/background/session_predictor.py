@@ -10,7 +10,6 @@ import asyncio
 from typing import List, Dict
 from collections import deque
 from backend.predictive.predictor import global_predictor
-from backend.shadow.shadow_store import global_shadow_store
 
 logger = logging.getLogger(__name__)
 

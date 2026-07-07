@@ -20,8 +20,7 @@ Every module wired here in strict order.
 import logging
 import time
 import asyncio
-import uuid
-from typing import Optional, Dict, Any, Set
+from typing import Dict, Any
 
 # Elite Architecture Imports (Top-level for static analysis and immediate pre-warm)
 from backend.router.query_family_mapper import global_query_family_mapper
@@ -45,7 +44,7 @@ from backend.shadow.shadow_store import global_shadow_store
 from backend.intelligence.intent_trajectory import global_intent_trajectory
 from backend.intelligence.knowledge_field import global_knowledge_field
 from backend.predictive.massive_prediction_engine import global_massive_predictor
-from orchestration.chaos_containment import global_chaos_containment
+from archive_engines.orchestration.chaos_containment import global_chaos_containment
 from backend.micro_models.router import global_micro_router
 from backend.intelligence.rag import global_rag_engine
 from backend.intelligence.reasoning import reasoning_expert
@@ -134,7 +133,7 @@ class ZeroComputeControl:
 
         # ── Step 0: ZERO-COPY NORMALIZE (Hardware Aligned) ──────────────── #
         # Treat input as raw bytes to minimize transformation surface
-        raw_bytes = query.encode('utf-8') 
+        query.encode('utf-8') 
         norm      = global_query_family_mapper.normalize(query)
         family_id = norm["family_id"]
         intent    = norm["intent"]
@@ -203,7 +202,7 @@ class ZeroComputeControl:
         # STAGE 3 — BIT-OP IDENTITY (GATE 1c: XOR/BITMASK)                    #
         # ─────────────────────────────────────────────────────────────────── #
         try:
-            sym_res = await global_symbolic_engine.resolve(query)
+            await global_symbolic_engine.resolve(query)
             atom_list = query.lower().split()[:5]
             
             # 1. Bitmask 
@@ -287,7 +286,7 @@ class ZeroComputeControl:
             # TRIATTENTION GATE 4 — ASSEMBLY (ATOMIC STITCH)                      #
             # ─────────────────────────────────────────────────────────────────── #
             try:
-                stitch_res = await global_atomic_stitcher.stitch(query)
+                await global_atomic_stitcher.stitch(query)
                 assembly = global_atomic_stitcher.assemble(query, entity, intent)
                 if assembly:
                     result = await self._wrap(assembly, "ASSEMBLY", start_time, 0.88, clean)
@@ -551,7 +550,7 @@ class ZeroComputeControl:
             hit = global_memory.lookup(query, canonical_form=family_id)
             if hit:
                 # 1. Automaton & Bit-Topology (AIS++ Module 14)
-                bit_res = await global_bit_topology.query(query)
+                await global_bit_topology.query(query)
                 addr = global_bit_topology.store_logic({"answer": hit["answer"], "query": query})
                 global_automaton.add_query(query, addr)
                 
@@ -604,7 +603,7 @@ class ZeroComputeControl:
         latency = (time.time() - start_time) * 1000
         # Check health
         try:
-            health = await global_health_monitor.check()
+            await global_health_monitor.check()
             global_health_monitor.log_latency(latency)
         except Exception: pass
         return {

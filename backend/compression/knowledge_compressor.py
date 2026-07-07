@@ -45,7 +45,6 @@ class KnowledgeCompressor:
         if not fragments: return []
         
         merged = []
-        seen = set()
         
         for f in sorted(fragments, key=len, reverse=True):
             # Check for high overlap with already merged fragments

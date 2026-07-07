@@ -1,13 +1,13 @@
 
 import unittest
 import logging
-from orchestration.world_axioms import WorldAxioms
-from orchestration.deterministic_chaos import DeterministicChaos
-from orchestration.consistency_enforcer import ConsistencyEnforcer
-from orchestration.locality_manager import LocalityManager, LocalityViolation
-from orchestration.outcome_lookup import OutcomeLookup
-from orchestration.authorship_boundary import AuthorshipBoundary
-from orchestration.perception_engine import PerceptionSynthesisEngine
+from archive_engines.orchestration.world_axioms import WorldAxioms
+from archive_engines.orchestration.deterministic_chaos import DeterministicChaos
+from archive_engines.orchestration.consistency_enforcer import ConsistencyEnforcer
+from archive_engines.orchestration.locality_manager import LocalityManager, LocalityViolation
+from archive_engines.orchestration.outcome_lookup import OutcomeLookup
+from archive_engines.orchestration.authorship_boundary import AuthorshipBoundary
+from archive_engines.orchestration.perception_engine import PerceptionSynthesisEngine
 
 # Configure logging to swallow info logs during testing
 logging.basicConfig(level=logging.CRITICAL)

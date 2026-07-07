@@ -1,6 +1,5 @@
-import asyncio
 import time
-from typing import Callable, Any, Dict, Optional
+from typing import Callable, Any, Dict
 from backend.observability.telemetry import logger
 
 class CircuitBreaker:

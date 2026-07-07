@@ -106,7 +106,7 @@ class LeoMasterOrchestrator:
         # ---------------------------------------------------------------------
         t_route = time.perf_counter()
         route_decision = self.prod_router.select_backend(intent_res["workload_class"], intent_res["entropy"])
-        latency_route = (time.perf_counter() - t_route) * 1000
+        (time.perf_counter() - t_route) * 1000
         logger.info(f"[ROUTER] Workload class '{intent_res['workload_class']}' routed to: {route_decision['target']}")
 
         result = None
@@ -263,7 +263,7 @@ class LeoMasterOrchestrator:
         }
         telemetry_tracker.log_query_trace(trace_data)
         
-        metrics = telemetry_tracker.get_metrics()
+        telemetry_tracker.get_metrics()
         
         # Determine energy saved
         gpu_saved = 350.0 if result.resolved_layer != "cloud" else 0.0

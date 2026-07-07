@@ -10,7 +10,6 @@ import time
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from backend.core.orchestrator import hyper_engine
-from backend.analytics.metrics import global_metrics
 from backend.optimization.compute_budget import global_compute_budget
 
 async def run_benchmark():
@@ -58,7 +57,6 @@ async def run_benchmark():
     # 4. CPU Throttling (Phase 39)
     print("\n[Test 4] CPU Throttling Check")
     # Simulate high load
-    import psutil
     from unittest.mock import patch
     with patch('psutil.cpu_percent', return_value=85.0):
         capacity = global_compute_budget.has_capacity()

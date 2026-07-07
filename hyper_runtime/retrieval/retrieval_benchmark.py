@@ -106,7 +106,7 @@ def run_benchmark():
 
     for query in queries:
         print(f"\n  Query: '{query}'")
-        context = index.assemble_context(query, max_tokens=150, top_k=3)
+        index.assemble_context(query, max_tokens=150, top_k=3)
         chunks = index.retrieve(query, top_k=2)
         if chunks:
             for i, chunk in enumerate(chunks):

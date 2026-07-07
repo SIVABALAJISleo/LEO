@@ -15,7 +15,7 @@ def run_benchmark():
     
     # Initialize Node A (e.g., Edge Device in New York)
     bus_a = DeltaCoherenceBus(node_id="Node_NY_01")
-    memory_a = FederatedRoutingMemory()
+    FederatedRoutingMemory()
     
     # Initialize Node B (e.g., Edge Device in London)
     bus_b = DeltaCoherenceBus(node_id="Node_LDN_02")

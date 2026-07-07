@@ -1,6 +1,6 @@
 import asyncio
 import time
-from typing import List, Callable, Any
+from typing import Callable
 
 class BatchProcessor:
     """Processes requests in batches to reduce CPU context switching."""

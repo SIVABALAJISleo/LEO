@@ -1,6 +1,5 @@
 import os
 import requests
-from typing import Optional, List, Dict, Any
 from fastapi import HTTPException
 
 # Transactional Email configuration

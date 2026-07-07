@@ -6,8 +6,8 @@ import numpy as np
 # Ensure backend modules are importable
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from orchestration.event_vision import EventVisionSystem
-from orchestration.symbolic_core import SymbolicAICore, create_proximity_rule
+from archive_engines.orchestration.event_vision import EventVisionSystem
+from archive_engines.orchestration.symbolic_core import SymbolicAICore, create_proximity_rule
 
 def test_event_vision_scaling():
     """Feature A: Verify zero cost for static scenes."""
@@ -36,7 +36,7 @@ def test_event_vision_scaling():
         new_events = evs.process_frame(cam_id, frame)
         total_events += new_events
         
-    duration = time.time() - start_time
+    time.time() - start_time
     
     # Check 1: Zero events generated
     assert total_events == 0, f"Expected 0 events for static scene, got {total_events}"

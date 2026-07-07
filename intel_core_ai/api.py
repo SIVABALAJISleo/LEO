@@ -1,9 +1,8 @@
 import time
 import json
 import logging
-import asyncio
 from typing import Dict, Any
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.responses import StreamingResponse
 
 # Intel Optimized Components

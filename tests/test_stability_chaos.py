@@ -1,9 +1,7 @@
 import pytest
-import asyncio
 import time
 from backend.core.chaos_controller import global_chaos_controller, ChaosMode
 from backend.core.zero_compute import global_zero_control
-from orchestration.chaos_containment import ChaosContainment
 from unittest.mock import patch, MagicMock
 
 @pytest.mark.asyncio

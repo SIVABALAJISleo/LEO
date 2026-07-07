@@ -1,15 +1,14 @@
 import unittest
 import os
 import shutil
-import json
 import sys
 # Add parent dir to path to import modules
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from orchestration.ingestion import IngestionManager
-from orchestration.proxy_workflow import ProxyWorkflow
-from orchestration.inference_hub import InferenceHub
-from orchestration.fallback_renderer import FallbackRenderer
+from archive_engines.orchestration.ingestion import IngestionManager
+from archive_engines.orchestration.proxy_workflow import ProxyWorkflow
+from archive_engines.orchestration.inference_hub import InferenceHub
+from archive_engines.orchestration.fallback_renderer import FallbackRenderer
 
 class TestCPUOrchestration(unittest.TestCase):
 

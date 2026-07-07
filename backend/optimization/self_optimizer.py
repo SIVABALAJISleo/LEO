@@ -6,7 +6,6 @@ Monitors performance metrics (reuse_rate, latency) and
 adjusts semantic clustering thresholds and pipeline execution.
 """
 import logging
-from typing import Dict, Any, List
 
 logger = logging.getLogger(__name__)
 

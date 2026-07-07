@@ -22,8 +22,7 @@ Rules:
 import logging
 import hashlib
 import time
-from typing import Dict, Any, Optional, Set
-from collections import defaultdict
+from typing import Dict, Any, Optional
 
 logger = logging.getLogger(__name__)
 

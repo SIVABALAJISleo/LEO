@@ -7,6 +7,7 @@ import hashlib
 import json
 import logging
 import sqlite3
+from backend.core.db_utils import get_concurrent_db_connection
 import os
 from typing import Optional, Dict, Any, List
 import numpy as np
@@ -29,7 +30,7 @@ class ReasoningStore:
 
     def __init__(self):
         self._ensure_data_dir()
-        self._conn = sqlite3.connect(REASONING_DB_PATH, check_same_thread=False)
+        self._conn = get_concurrent_db_connection(REASONING_DB_PATH)
         self._init_db()
         self._index = faiss.IndexFlatL2(DIMENSION)
         self._id_map: List[str] = []  # Maps FAISS index to query_hash

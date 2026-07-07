@@ -1,5 +1,5 @@
 import os
-from typing import Dict, Any, List
+from typing import List
 from backend.observability.telemetry import logger
 
 class ProxyManager:

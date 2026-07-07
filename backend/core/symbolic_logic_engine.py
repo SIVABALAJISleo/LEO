@@ -14,9 +14,8 @@ Rules:
 """
 import logging
 import time
-import hashlib
 import random
-from typing import Dict, List, Any, Optional, Set
+from typing import Dict, List, Any, Optional
 
 logger = logging.getLogger(__name__)
 

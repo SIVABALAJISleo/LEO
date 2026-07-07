@@ -18,9 +18,7 @@ Rules:
 """
 import logging
 import asyncio
-import time
 from typing import Dict, List, Optional, Any, Set
-from collections import defaultdict
 
 logger = logging.getLogger(__name__)
 
@@ -81,7 +79,7 @@ def _string_similarity(a: str, b: str) -> float:
     a, b = a.lower(), b.lower()
     if not a or not b:
         return 0.0
-    m, n = len(a), len(b)
+    _m, _n = len(a), len(b)
     # Use a simple character overlap ratio for speed
     a_chars = set(a.split())
     b_chars = set(b.split())

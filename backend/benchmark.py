@@ -2,8 +2,6 @@ import asyncio
 import time
 import logging
 import uuid
-import os
-import copy
 
 from backend.core.ais_pipeline import global_ais_pipeline
 from backend.analytics.avoidance_tracker import global_avoidance_tracker
@@ -139,7 +137,7 @@ async def start_benchmark():
     
     # System B (EME++)
     metrics = global_avoidance_tracker.get_live_metrics()
-    real_avoidance = float(metrics.get("avoidance_rate_raw", 0))
+    float(metrics.get("avoidance_rate_raw", 0))
     real_calls = metrics["model_calls"]
     real_avg_lat = float(metrics["avg_latency_ms"].replace("ms", ""))
     

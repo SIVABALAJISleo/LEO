@@ -59,6 +59,21 @@ export const simulateQuery = async (req: OrchestrateRequest): Promise<Orchestrat
   return res.data;
 };
 
+export const simulateVInfinityQuery = async (req: OrchestrateRequest): Promise<any> => {
+  const res = await leoApi.post("/leo/vinfinity/orchestrate", req);
+  return res.data;
+};
+
+export const fetchHardwareSummary = async (): Promise<any> => {
+  const res = await leoApi.get("/leo/hardware");
+  return res.data;
+};
+
+export const fetchSwarmStatus = async (): Promise<any[]> => {
+  const res = await leoApi.get("/leo/swarm");
+  return res.data;
+};
+
 export interface DevOpsSettings {
   sentry_dsn?: string;
   pagerduty_integration_key?: string;

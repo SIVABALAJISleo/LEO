@@ -15,7 +15,7 @@ Each layer short-circuits on resolution. All metrics are measured, never faked.
 """
 import time
 import logging
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 
 logger = logging.getLogger(__name__)
 
@@ -357,7 +357,6 @@ class V10BetaOrchestrator:
         avoidance = ((total - self._cloud_fallbacks) / total) * 100
 
         # Get real counts from subsystems
-        cache_store = self.cache._store
         kg_stats = self.kg.get_stats()
         mem_summary = self.memory.get_summary()
 

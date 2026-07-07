@@ -9,7 +9,6 @@ import logging
 import enum
 import time
 import psutil
-from typing import Dict, Any
 
 logger = logging.getLogger(__name__)
 

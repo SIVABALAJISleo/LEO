@@ -14,9 +14,10 @@ import re
 import time
 import hashlib
 import sqlite3
+from backend.core.db_utils import get_concurrent_db_connection
 import logging
 import json
-from typing import Dict, Any, Optional, List, Tuple, Set
+from typing import Dict, Any, Optional, List, Set
 from collections import deque
 
 logger = logging.getLogger(__name__)
@@ -43,7 +44,7 @@ class KnowledgeGraph:
         self._init_db()
 
     def _init_db(self):
-        conn = sqlite3.connect(self.db_path)
+        conn = get_concurrent_db_connection(self.db_path)
         conn.executescript("""
             CREATE TABLE IF NOT EXISTS kg_entities (
                 entity_id   TEXT PRIMARY KEY,
@@ -82,7 +83,7 @@ class KnowledgeGraph:
         ).hexdigest()
         now = time.time()
 
-        conn = sqlite3.connect(self.db_path)
+        conn = get_concurrent_db_connection(self.db_path)
         conn.execute(
             """
             INSERT OR IGNORE INTO kg_entities (entity_id, name, entity_type, properties, created_at)
@@ -95,7 +96,7 @@ class KnowledgeGraph:
         return entity_id
 
     def get_entity(self, name: str) -> Optional[Dict[str, Any]]:
-        conn = sqlite3.connect(self.db_path)
+        conn = get_concurrent_db_connection(self.db_path)
         cursor = conn.cursor()
         cursor.execute(
             "SELECT entity_id, name, entity_type, properties FROM kg_entities WHERE LOWER(name) = ?",
@@ -129,7 +130,7 @@ class KnowledgeGraph:
         ).hexdigest()
         now = time.time()
 
-        conn = sqlite3.connect(self.db_path)
+        conn = get_concurrent_db_connection(self.db_path)
         conn.execute(
             """
             INSERT OR REPLACE INTO kg_relationships
@@ -149,7 +150,7 @@ class KnowledgeGraph:
             return []
 
         eid = entity["entity_id"]
-        conn = sqlite3.connect(self.db_path)
+        conn = get_concurrent_db_connection(self.db_path)
         cursor = conn.cursor()
 
         results = []
@@ -247,7 +248,7 @@ class KnowledgeGraph:
         t0 = time.perf_counter()
 
         # Add source node
-        source_id = self.add_entity(source_label, "DOCUMENT")
+        self.add_entity(source_label, "DOCUMENT")
 
         # 1. Extract capitalized multi-word noun phrases (e.g. "Machine Learning")
         cap_phrases = re.findall(r'\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\b', text)
@@ -267,7 +268,7 @@ class KnowledgeGraph:
         added = []
 
         for ent_name in all_entities[:50]:  # cap at 50 entities per document
-            eid = self.add_entity(ent_name, "CONCEPT")
+            self.add_entity(ent_name, "CONCEPT")
             self.add_relationship(source_label, ent_name, "HAS", weight=0.8)
             added.append(ent_name)
 
@@ -290,7 +291,7 @@ class KnowledgeGraph:
     # ── Graph Statistics ─────────────────────────────────────────────────────
 
     def get_stats(self) -> Dict[str, Any]:
-        conn = sqlite3.connect(self.db_path)
+        conn = get_concurrent_db_connection(self.db_path)
         cursor = conn.cursor()
         cursor.execute("SELECT COUNT(*) FROM kg_entities")
         entity_count = cursor.fetchone()[0]
@@ -303,7 +304,7 @@ class KnowledgeGraph:
 
     def validate_and_repair(self) -> Dict[str, Any]:
         """Removes orphan relationships pointing to deleted entities."""
-        conn = sqlite3.connect(self.db_path)
+        conn = get_concurrent_db_connection(self.db_path)
         cursor = conn.cursor()
         cursor.execute("""
             DELETE FROM kg_relationships

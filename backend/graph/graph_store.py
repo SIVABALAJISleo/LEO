@@ -23,7 +23,6 @@ class GraphStore:
 
     def _try_connect_redis(self):
         try:
-            import redis
             from backend.core.middleware import redis_client
             self._redis = redis_client
         except Exception:

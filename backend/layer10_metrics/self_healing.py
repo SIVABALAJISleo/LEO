@@ -8,6 +8,7 @@ recalibrating confidence profiles, and detecting semantic drift.
 """
 
 import sqlite3
+from backend.core.db_utils import get_concurrent_db_connection
 import time
 import logging
 from typing import Dict, Any
@@ -25,7 +26,7 @@ class SelfHealingEngine:
         and eliminate stale procedural artifacts.
         """
         now = time.time()
-        conn = sqlite3.connect(self.db_path)
+        conn = get_concurrent_db_connection(self.db_path)
         cursor = conn.cursor()
         
         results = {

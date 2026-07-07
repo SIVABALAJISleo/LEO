@@ -5,7 +5,6 @@ import logging
 from collections import Counter
 from backend.core.orchestrator import hyper_engine
 from backend.predictive.answer_store import global_predictive_store
-from backend.shadow.shadow_store import global_shadow_store
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

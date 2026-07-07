@@ -1,6 +1,6 @@
 import logging
 import time
-from typing import List, Dict, Any
+from typing import Dict, Any
 
 from .draft_model import DraftModel
 from .verifier_model import VerifierModel

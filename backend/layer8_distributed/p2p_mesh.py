@@ -7,7 +7,7 @@ and sharding execution across local CPU/iGPU devices (using Ray/Petals).
 import time
 import random
 import logging
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List
 
 logger = logging.getLogger(__name__)
 

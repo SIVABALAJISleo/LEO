@@ -98,25 +98,25 @@ export function LEOAIv40Dashboard() {
 
   const runV40Sweep = useCallback((currentQuery: string) => {
     setIsProcessing(true);
-    setTimeout(() => {
+    setTimeout(async () => {
       try {
         const qLower = currentQuery.toLowerCase();
 
         // 1. Advanced Memory System
-        const cacheRes = memorySystem.queryCache(currentQuery);
+        const cacheRes = await memorySystem.queryCache(currentQuery);
         setCacheResult(cacheRes);
-        memorySystem.addMemory("scientific", `Simulated query assertion: ${currentQuery}`, 0.95);
+        await memorySystem.addMemory("scientific", `Simulated query assertion: ${currentQuery}`, 0.95);
 
         // 2. Graph Intelligence
-        const graphRes = graphEngine.traceCausality("State Space Recurrence", "O(n) Scaling");
+        const graphRes = await graphEngine.traceCausality("State Space Recurrence", "O(n) Scaling");
         setGraphReport(graphRes);
 
         // 3. Multi-Agent workflow
-        const debateRes = agentSystem.executeAgentWorkflow(currentQuery);
+        const debateRes = await agentSystem.executeAgentWorkflow(currentQuery);
         setDebateReport(debateRes);
 
         // 4. Scientific claims
-        const sciRes = scientificEngine.evaluateResearchClaim(currentQuery);
+        const sciRes = await scientificEngine.evaluateResearchClaim(currentQuery);
         setScientificReport(sciRes);
 
         // 5. World Model simulation paths
@@ -128,46 +128,46 @@ export function LEOAIv40Dashboard() {
         if (qLower.includes("fail") || qLower.includes("leak")) {
           steps.push("Trigger memory leakage scenario");
         }
-        const worldRes = worldEngine.runSimulation(steps);
+        const worldRes = await worldEngine.runSimulation(steps);
         setWorldReport(worldRes);
 
         // 6. Mamba Hybrid telemetry
-        const mambaRes = mambaEngine.projectScalingMetrics(qLower.includes("large") ? 100000 : 16000);
+        const mambaRes = await mambaEngine.projectScalingMetrics(qLower.includes("large") ? 100000 : 16000);
         setMambaTelemetry(mambaRes);
 
         // 7. Sparse computation directives
-        const sparseRes = sparseEngine.prescribeSparsity(8, ramLimitGb);
+        const sparseRes = await sparseEngine.prescribeSparsity(8, ramLimitGb);
         setSparsityDirectives(sparseRes);
 
         // 8. MoE gate selector
-        const expertRes = moeEngine.routeToExperts(currentQuery);
+        const expertRes = await moeEngine.routeToExperts(currentQuery);
         setExpertReport(expertRes);
 
         // 9. Model Compression Quantization
-        const compressionRes = compressionEngine.evaluateCompression(ramLimitGb);
+        const compressionRes = await compressionEngine.evaluateCompression(ramLimitGb);
         setCompressionDirectives(compressionRes);
 
         // 10. Speculative Decoding speedups
-        const speculativeRes = speculativeEngine.verifyTokens(100, powerMode === "BatterySaver");
+        const speculativeRes = await speculativeEngine.verifyTokens(100, powerMode === "BatterySaver");
         setSpeculativeReport(speculativeRes);
 
         // 11. Autonomous Research gaps
-        const researchRes = researchSystem.analyzeLiterature("State Space Models");
+        const researchRes = await researchSystem.analyzeLiterature("State Space Models");
         setResearchReport(researchRes);
 
         // 12. Active Learning priorities
-        const learningRes = learningEngine.evaluatePriority(currentQuery);
+        const learningRes = await learningEngine.evaluatePriority(currentQuery);
         setLearningPriority(learningRes);
 
         // 13. Curriculum steps
         if (worldRes.overallSafetyScore > 0.85) {
-          curriculumEngine.completeStep("c-01");
+          await curriculumEngine.completeStep("c-01");
         }
-        const curriculumRes = curriculumEngine.evaluateCurriculumProgress();
+        const curriculumRes = await curriculumEngine.evaluateCurriculumProgress();
         setCurriculumReport(curriculumRes);
 
         // 14. Intelligence Per Compute optimizer
-        const optRes = optimizerEngine.aggregateOptimizerMetrics(
+        const optRes = await optimizerEngine.aggregateOptimizerMetrics(
           ramLimitGb,
           powerMode,
           compressionRes.quantizationBitrate
@@ -176,9 +176,9 @@ export function LEOAIv40Dashboard() {
 
         // 15. Self Improvement logging
         if (qLower.includes("fail") || qLower.includes("leak")) {
-          improvementEngine.logException("WorldModel", "Causal simulation crash test");
+          await improvementEngine.logException("WorldModel", "Causal simulation crash test");
         }
-        const improveRes = improvementEngine.logException("ModelCompression", "Synchronize LoRA weight rank buffers");
+        const improveRes = await improvementEngine.logException("ModelCompression", "Synchronize LoRA weight rank buffers");
         setImprovementReport(improveRes);
 
         // Core Intelligence Density calculations

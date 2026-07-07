@@ -3,7 +3,7 @@ import faiss
 import time
 import math
 import logging
-from typing import Dict, Any, Tuple, Optional, List
+from typing import Dict, Any, Tuple, Optional
 
 logger = logging.getLogger("HyperCore.SemanticCache")
 

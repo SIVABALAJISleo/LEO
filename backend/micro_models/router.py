@@ -3,7 +3,6 @@ backend/micro_models/router.py
 Real micro-model router using llm_loader (no fake imports).
 """
 import logging
-import json
 import asyncio
 from typing import Optional
 from backend.models.llm_loader import generate_response  # type: ignore

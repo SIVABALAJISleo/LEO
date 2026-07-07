@@ -1,4 +1,4 @@
-from typing import List, Dict, Set
+from typing import List, Dict
 from backend.vibethinker.ir.models import ReasoningGraph
 
 class GraphValidationError(Exception):

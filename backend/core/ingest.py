@@ -1,6 +1,4 @@
-import os
 import csv
-from typing import List, Optional
 from fastapi import UploadFile, HTTPException
 import io
 

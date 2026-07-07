@@ -50,6 +50,5 @@ def migrate_project(root_dir):
     print(f"Migration complete. {count} files refactored to Firebase architectures.")
 
 if __name__ == "__main__":
-    import sys
     # Use current directory
     migrate_project(".")

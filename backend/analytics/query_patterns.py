@@ -2,7 +2,6 @@ import logging
 import numpy as np
 from typing import List, Dict, Any
 from backend.intelligence.router import SemanticCache
-from backend.analytics.query_logger import global_query_logger
 
 logger = logging.getLogger(__name__)
 

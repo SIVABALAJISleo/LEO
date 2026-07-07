@@ -1,5 +1,4 @@
 import logging
-import time
 from backend.core.database import SessionLocal, UsageLog
 
 logger = logging.getLogger(__name__)

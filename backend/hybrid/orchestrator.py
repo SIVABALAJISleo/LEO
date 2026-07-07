@@ -1,8 +1,7 @@
 ﻿import time
-import asyncio
 import logging
 import uuid
-from typing import Dict, Any, AsyncGenerator, Optional
+from typing import Dict, Any, AsyncGenerator
 
 from backend.hybrid.intent import global_intent_engine
 from backend.hybrid.cache import global_hybrid_cache

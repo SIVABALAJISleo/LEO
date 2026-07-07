@@ -1,10 +1,9 @@
-import pytest
 import time
 from core_ai.fabric.topological_hypergraph import TopologicalHypergraph
 from core_ai.fabric.delta_reality_engine import DeltaRealityEngine
 from core_ai.ternary.ternary_engine import TernaryEngine
 from core_ai.speculative.speculative_decoder import SpeculativeSwarmDecoder
-from verifier.validation import validate_output
+from archive_engines.verifier.validation import validate_output
 
 # Blackwell reference baselines (public hardware reference points)
 BLACKWELL_GPU_METRICS = {
@@ -19,9 +18,9 @@ def test_absolute_transcendence_vs_blackwell():
     Automated benchmark comparing local Intel CPU/iGPU/NPU software execution 
     using the v∞ Absolute Cosmic Singularity Fabric against Blackwell hardware.
     """
-    hypergraph = TopologicalHypergraph()
+    TopologicalHypergraph()
     delta_engine = DeltaRealityEngine()
-    ternary_engine = TernaryEngine()
+    TernaryEngine()
     speculative_decoder = SpeculativeSwarmDecoder()
     
     # 1. Measure Throughput & Latency of Software Avoidance

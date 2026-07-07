@@ -1,5 +1,4 @@
 import pytest
-import asyncio
 from backend.vibethinker.ir.models import ReasoningGraph, ReasonNode
 from backend.vibethinker.execution.validator import GraphValidator, GraphValidationError
 from backend.vibethinker.execution.engine import LocalSandboxEngine

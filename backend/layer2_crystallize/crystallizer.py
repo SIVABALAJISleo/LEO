@@ -6,9 +6,9 @@ and lookups to permanently minimize GPU computation costs.
 """
 import re
 import sqlite3
+from backend.core.db_utils import get_concurrent_db_connection
 import logging
 from typing import Dict, Any, List, Optional, Tuple
-import os
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +26,8 @@ class TraceCompiler:
     def _decisions(self):
         try:
             import sqlite3
-            conn = sqlite3.connect(self.db_path)
+            from backend.core.db_utils import get_concurrent_db_connection
+            conn = get_concurrent_db_connection(self.db_path)
             cursor = conn.cursor()
             cursor.execute("SELECT count(*) FROM compiled_shortcuts")
             count = cursor.fetchone()[0]
@@ -37,7 +38,7 @@ class TraceCompiler:
 
 
     def _initialize_sqlite(self):
-        conn = sqlite3.connect(self.db_path)
+        conn = get_concurrent_db_connection(self.db_path)
         cursor = conn.cursor()
         
         # Table to store raw logs of neural reasoning passes
@@ -70,7 +71,7 @@ class TraceCompiler:
     def record_trace(self, trace_id: str, query: str, response: str, w_class: str, latency: float):
         """Records an execution trace from the orchestrator for off-peak crystallization review."""
         import time
-        conn = sqlite3.connect(self.db_path)
+        conn = get_concurrent_db_connection(self.db_path)
         cursor = conn.cursor()
         try:
             cursor.execute("""
@@ -117,7 +118,7 @@ class TraceCompiler:
         and compiles them into deterministic rule sets in SQLite.
         """
         import time
-        conn = sqlite3.connect(self.db_path)
+        conn = get_concurrent_db_connection(self.db_path)
         cursor = conn.cursor()
         
         cursor.execute("SELECT query, response FROM reasoning_traces")
@@ -167,7 +168,7 @@ class TraceCompiler:
 
     def match_shortcut(self, query: str) -> Optional[Dict[str, Any]]:
         """Compares incoming queries directly against crystallized FSM shortcuts to bypass neural loops."""
-        conn = sqlite3.connect(self.db_path)
+        conn = get_concurrent_db_connection(self.db_path)
         cursor = conn.cursor()
         cursor.execute("SELECT shortcut_id, pattern_regex, response_template, variable_keys FROM compiled_shortcuts")
         shortcuts = cursor.fetchall()

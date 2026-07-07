@@ -7,7 +7,7 @@ while strictly adhering to the compute budget.
 """
 import logging
 import asyncio
-from typing import Optional, Dict, Any
+from typing import Optional
 
 from backend.optimization.compute_budget import global_compute_budget
 

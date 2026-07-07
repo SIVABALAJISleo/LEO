@@ -1,7 +1,7 @@
 import logging
 import numpy as np
 import re
-from typing import Optional, Dict, Any
+from typing import Dict
 from backend.core.database import SessionLocal, PrecomputedAnswer
 from backend.intelligence.router import SemanticCache
 from backend.graph.fragment_graph import global_fragment_graph

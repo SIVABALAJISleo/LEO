@@ -22,20 +22,22 @@ except Exception as e:
         """Persistent fallback. Survives server restarts unlike FakeRedis."""
         def __init__(self, db_path=None): # nosec B108
             import sqlite3, json, time
+            from backend.core.db_utils import get_concurrent_db_connection
             if db_path is None:
                 db_path = os.environ.get("HYPER_CACHE_DB", "hyper_cache.db")
             self._db = db_path
             self._sqlite3 = sqlite3
             self._json = json
             self._time = time
-            with sqlite3.connect(db_path) as c:
+            with get_concurrent_db_connection(db_path) as c:
                 c.execute("CREATE TABLE IF NOT EXISTS cache (key TEXT PRIMARY KEY, value TEXT, expires_at REAL)")
                 c.commit()
 
         def set(self, key, value, ex=None):
             import sqlite3, json, time
+            from backend.core.db_utils import get_concurrent_db_connection
             exp = (time.time() + ex) if ex else None
-            with sqlite3.connect(self._db) as c:
+            with get_concurrent_db_connection(self._db) as c:
                 c.execute("INSERT OR REPLACE INTO cache VALUES (?,?,?)", (key, json.dumps(value), exp))
             return True
 
@@ -47,7 +49,8 @@ except Exception as e:
 
         def get(self, key):
             import sqlite3, json, time
-            with sqlite3.connect(self._db) as c:
+            from backend.core.db_utils import get_concurrent_db_connection
+            with get_concurrent_db_connection(self._db) as c:
                 row = c.execute("SELECT value, expires_at FROM cache WHERE key=?", (key,)).fetchone()
             if not row: return None
             val, exp = row
@@ -57,7 +60,8 @@ except Exception as e:
 
         def expire(self, key, seconds):
             import sqlite3, time
-            with sqlite3.connect(self._db) as c:
+            from backend.core.db_utils import get_concurrent_db_connection
+            with get_concurrent_db_connection(self._db) as c:
                 c.execute("UPDATE cache SET expires_at=? WHERE key=?", (time.time()+seconds, key))
             return True
 

@@ -1,5 +1,6 @@
 import numpy as np
 import sqlite3
+from backend.core.db_utils import get_concurrent_db_connection
 import os
 import json
 import logging
@@ -120,7 +121,7 @@ class SQLiteDocumentStore:
     """
     def __init__(self, db_path: str = ".hyper_cache/doc_store.db"):
         os.makedirs(os.path.dirname(db_path), exist_ok=True)
-        self.conn = sqlite3.connect(db_path, check_same_thread=False)
+        self.conn = get_concurrent_db_connection(db_path)
         self._create_tables()
 
     def _create_tables(self):

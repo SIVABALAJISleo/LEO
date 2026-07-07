@@ -1,17 +1,14 @@
 import asyncio
 import time
-import uuid
 import json
 import os
 import sys
-from typing import List
 
 # Mock/Setup Environment
 sys.path.append(os.getcwd())
 
 from backend.core.zero_compute import global_zero_control
 from backend.normalization.normalizer import global_normalizer
-from backend.analytics.metrics import global_metrics
 
 async def run_benchmark():
     print("STARTING PRECISION HIT-RATE BENCHMARK (CIS++)")

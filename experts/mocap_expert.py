@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, Any, List
+from typing import Dict, Any
 try:
     import mediapipe as mp
 except ImportError:

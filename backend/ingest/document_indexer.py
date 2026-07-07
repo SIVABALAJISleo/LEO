@@ -1,9 +1,7 @@
 import logging
-from typing import List, Dict, Any
+from typing import List
 from backend.ingest.document_loader import global_document_loader
-from backend.ingest.embedding_pipeline import global_embedding_pipeline
 from backend.intelligence.rag import RAGEngine
-from backend.data_efficiency.graph import global_graph
 
 logger = logging.getLogger(__name__)
 
@@ -17,6 +15,13 @@ class DocumentIndexer:
     async def index_document(self, file_path: str, workspace_id: str, tenant_id: str):
         logger.info(f"indexing_document: {file_path} [workspace={workspace_id}]")
         
+        # Invalidate existing crystallized answers relying on this document
+        try:
+            from backend.graph.answer_graph_engine import global_age
+            global_age.invalidate_by_document(file_path)
+        except Exception as e:
+            logger.warning(f"Failed to invalidate by document path: {e}")
+
         # 1. LOAD
         text = global_document_loader.load(file_path)
         

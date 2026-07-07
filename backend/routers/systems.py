@@ -5,7 +5,7 @@ API endpoints for LEO AI subsystems:
   - Knowledge Graph (add entity, add relationship, query, extract, stats)
   - Security (scan query, scan document, audit log)
 """
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 from pydantic import BaseModel, Field
 from typing import Optional, List, Dict, Any
 

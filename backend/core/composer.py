@@ -2,7 +2,7 @@ import os
 import base64
 import logging
 import io
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any
 from PIL import Image, ImageDraw, ImageFont
 
 # SECURITY WORKAROUND: Prevent Pillow out-of-bounds write vulnerability

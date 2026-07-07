@@ -1,6 +1,5 @@
 import asyncio
 import hashlib
-import zlib
 from typing import List, Generator, Any
 
 class BloomFilter:

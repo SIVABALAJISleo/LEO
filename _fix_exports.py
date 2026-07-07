@@ -10,7 +10,7 @@ For each barrel *index.ts in ui_core/src, this script:
        export { ValueA, ValueB } from "path"          <- values
        export type { TypeA, TypeB } from "path"       <- types
 """
-import re, os, pathlib, sys
+import re, pathlib
 
 ROOT = pathlib.Path(__file__).parent
 UI_SRC = ROOT / "ui_core" / "src"

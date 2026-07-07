@@ -14,7 +14,7 @@ Jump to nearest known structure.
 import logging
 import numpy as np
 import hashlib
-from typing import Dict, List, Any, Optional
+from typing import Dict, Any, Optional
 
 logger = logging.getLogger(__name__)
 

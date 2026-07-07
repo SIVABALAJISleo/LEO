@@ -1,5 +1,4 @@
 import os
-import mmap
 import json
 
 class KVCachePersistenceLayer:

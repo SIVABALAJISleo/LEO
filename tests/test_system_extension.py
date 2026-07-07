@@ -5,10 +5,10 @@ import os
 # Ensure backend modules are importable
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from orchestration.visibility_manager import VisibilityManager, VisibilityRegionType
-from orchestration.specular_governor import SpecularGovernor
-from orchestration.chaos_containment import ChaosContainment
-from orchestration.entropy_accounting import EntropyAccountant, ComputeType
+from archive_engines.orchestration.visibility_manager import VisibilityManager, VisibilityRegionType
+from archive_engines.orchestration.specular_governor import SpecularGovernor
+from archive_engines.orchestration.chaos_containment import ChaosContainment
+from archive_engines.orchestration.entropy_accounting import EntropyAccountant, ComputeType
 
 def test_visibility_manager():
     """Module 40: Verify visibility cost accounting."""

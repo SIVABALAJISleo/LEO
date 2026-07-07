@@ -1,7 +1,7 @@
 import functools
 import hashlib
 import json
-from typing import Any, Callable, Dict, Optional
+from typing import Any, Callable, Dict
 import time
 
 class GlobalMemo:

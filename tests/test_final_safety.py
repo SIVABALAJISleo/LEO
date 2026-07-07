@@ -1,10 +1,9 @@
 
 import unittest
 import logging
-import time
-from orchestration.authorship_boundary import AuthorshipBoundary
-from orchestration.world_axioms import WorldAxioms
-from orchestration.reality_dispatcher import RealityDispatcher
+from archive_engines.orchestration.authorship_boundary import AuthorshipBoundary
+from archive_engines.orchestration.world_axioms import WorldAxioms
+from archive_engines.orchestration.reality_dispatcher import RealityDispatcher
 
 # Configure logging to swallow info logs during testing
 logging.basicConfig(level=logging.CRITICAL)

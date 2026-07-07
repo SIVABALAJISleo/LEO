@@ -4,7 +4,7 @@ Projects and simulates multi-step execution outcomes.
 Performs counterfactual logic and safety risk assessments before triggering LLM routines.
 """
 import logging
-from typing import Dict, Any, List
+from typing import Dict, Any
 
 logger = logging.getLogger(__name__)
 

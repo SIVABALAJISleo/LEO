@@ -1,16 +1,15 @@
 import unittest
 import asyncio
-import time
 import os
 import sys
 
 # Ensure project root is in path
 sys.path.append(os.path.abspath("."))
 
-from router.expert_router import MoEExpertRouter
+from archive_engines.router.expert_router import MoEExpertRouter
 from cache.cache_hub import UniversalCacheHub
-from fallback_modes.reliability import ReliabilityManager
-from orchestration.event_bus import EventBus
+from archive_engines.fallback_modes.reliability import ReliabilityManager
+from archive_engines.orchestration.event_bus import EventBus
 
 class TestHyperArchitecture(unittest.TestCase):
     """
@@ -47,7 +46,7 @@ class TestHyperArchitecture(unittest.TestCase):
         # Force high load
         self.reliability.high_load_threshold = -1.0
         mode = self.reliability.get_current_mode("accurate")
-        from fallback_modes.reliability import SystemMode
+        from archive_engines.fallback_modes.reliability import SystemMode
         self.assertEqual(mode, SystemMode.FAST)
 
     def test_event_bus(self):

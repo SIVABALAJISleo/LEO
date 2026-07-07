@@ -1,7 +1,7 @@
 
 import unittest
 import logging
-from orchestration.perception_engine import PerceptionSynthesisEngine
+from archive_engines.orchestration.perception_engine import PerceptionSynthesisEngine
 
 # Configure logging to swallow info logs during testing
 logging.basicConfig(level=logging.CRITICAL)

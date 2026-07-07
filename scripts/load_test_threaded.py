@@ -25,7 +25,7 @@ def send_request(session):
         else:
             print(f"Failed: {response.status_code}")
             return -1
-    except Exception as e:
+    except Exception:
         # print(f"Error: {e}")
         return -1
 

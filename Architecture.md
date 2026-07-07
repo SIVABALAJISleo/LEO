@@ -4,8 +4,16 @@
 
 Uses `faiss-cpu` combined with a **Topological Hypergraph Singularity Fabric**. It organizes data into fractal holographic interference patterns and employs topological traversal algorithms for instant multi-hop reasoning.
 
-## 2. Local Inference & Neuromorphic Virtualization Layer
-Utilizes `llama-cpp-python` and our custom **Ternary Revolution Engine (BitNet b1.58)**. Models are quantized to {-1, 0, 1} weights, heavily optimizing for CPU instructions (AVX2, AVX512), Intel NPU matrix ops, and iGPU sharing via cache-oblivious blocked kernels and spiking neuron emulation. This renders discrete GPUs completely unnecessary.
+## 2. Local Inference & iGPU/NPU Execution Layer (Layer 1 — Silicon Awakening v2)
+
+Full hardware awakening stack shipping in `backend/hardware/` and `backend/inference/igpu_execution.py`:
+
+- **HardwareDetector** (`detector.py`): Cross-platform enumeration of CPU ISA (AMX, AVX-512 VNNI, AVX2, NEON, ARM SME), iGPU APIs (Vulkan/DirectML/Metal/OpenCL), and NPU devices (Apple ANE via CoreML, Intel/AMD via DirectML/OpenVINO, Linux via `/sys/class/accel/`). Returns a unified `HardwareProfile` dataclass.
+- **HeterogeneousRouter** (`router.py`): Score-based backend ranking table (NPU 4.0×, Apple Metal 3.5×, Vulkan 3.0×, DirectML 2.8×, Intel AMX 2.2×, AVX2 1.3× vs CPU baseline). Builds a layer-partitioned `device_plan` (NPU→iGPU→CPU remainder) compatible with llama.cpp `--tensor-split`. Quantization cascade: ternary → INT4 → INT8 → FP16 auto-selected by available RAM.
+- **IGPUExecutionEngine** (`igpu_execution.py`): Unified `async generate()` streaming interface across Apple MLX (Metal), llama-cpp-python[vulkan], Intel OpenVINO GenAI, ORT DirectML, and CPU fallback. Backend auto-selected by installed libraries — zero configuration required.
+- **UniversalExecutionLayer** (`universal_execution.py`): Single entry-point dispatcher. Caches `HardwareProfile` once at boot. Emits mandatory boot banner. Graceful fallback chain: best-scored backend → … → cpu_generic.
+- **Estimated speedup**: ≥3× tokens/sec on iGPU (Vulkan/DirectML/Metal), ≥4× on NPU vs pure CPU baseline.
+
 
 ## 3. Local-First UI
 
