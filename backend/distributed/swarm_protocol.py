@@ -8,6 +8,7 @@ and dynamic fallback routing.
 
 from __future__ import annotations
 
+import os
 import asyncio
 import logging
 import time
@@ -44,7 +45,7 @@ class SwarmProtocol:
         self.local_node_id = local_node_id or f"node_{uuid.uuid4().hex[:8]}"
         self.opted_in = False
         self.peers: Dict[str, SwarmPeerNode] = {}
-        self.encryption_key = os.urandom(32) if "os" in globals() else b"static_secure_test_key_32_bytes!"
+        self.encryption_key = os.urandom(32)
         
     def opt_in(self) -> bool:
         """User explicitly opts-in to swarm sharing."""
