@@ -74,3 +74,17 @@ async def leo_query_alias(request: Request, body: OrchestrateRequest, token: dic
 @router.post("/api/v1/query", tags=["LEO Orchestration"])
 async def legacy_query(request: Request, body: OrchestrateRequest, token: dict = Depends(PermissionChecker("orchestrate"))):
     return await _do_orchestrate(body)
+
+# --- On-device Training Endpoint (Layer 7) ---
+class TrainRequest(BaseModel):
+    pairs: list[tuple[str, str]] = Field(..., description="Prompt-response pairs to train on")
+    output_dir: str = Field("models/adapters/local_node", description="Output directory for adapters")
+    epochs: int = Field(8, description="Number of training epochs")
+    lr: float = Field(5e-4, description="Learning rate")
+
+@router.post("/api/v1/train", tags=["LEO Training"], summary="Fine-tune LoRA adapters on CPU/iGPU")
+async def run_on_device_training(body: TrainRequest, token: dict = Depends(PermissionChecker("orchestrate"))):
+    from backend.training.lora_trainer import LoRATrainer
+    trainer = LoRATrainer()
+    metrics = trainer.train(body.pairs, output_dir=body.output_dir, epochs=body.epochs, lr=body.lr)
+    return metrics

@@ -31,6 +31,9 @@ sentence-transformers==5.1.2
 faiss-cpu==1.13.0
 numba==0.61.2
 numpy==2.2.6
+peft>=0.10
+transformers>=4.40
+accelerate>=0.21.0
 
 # ── Layer 1: Silicon Awakening — hardware detection & iGPU inference ── #
 # CPU ISA detection (py-cpuinfo)

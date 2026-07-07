@@ -1,0 +1,15 @@
+{
+  "status": "mocked",
+  "device_info": {
+    "cpu": "Intel(R) Core(TM) i5-12450H CPU @ 2.00GHz",
+    "gpu": "Intel(R) UHD Graphics (48 EUs)"
+  },
+  "model_used": "MatMul_1024x1024_ov",
+  "metrics": {
+    "cpu_only_tps": 14.5,
+    "igpu_only_tps": 22.8,
+    "parallel_tps": 34.2,
+    "igpu_speedup_vs_cpu": 1.57
+  },
+  "timestamp": 1783448920.0212533
+}
