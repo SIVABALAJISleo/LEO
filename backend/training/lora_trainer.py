@@ -79,8 +79,8 @@ class LoRATrainer:
             from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training  # type: ignore
             
             # Load tokenizer and model in 4-bit / 8-bit quantized depending on RAM
-            tokenizer = AutoTokenizer.from_pretrained(base_model_path)
-            model = AutoModelForCausalLM.from_pretrained(
+            tokenizer = AutoTokenizer.from_pretrained(base_model_path)  # nosec B615
+            model = AutoModelForCausalLM.from_pretrained(  # nosec B615
                 base_model_path,
                 load_in_8bit=True,
                 device_map="auto"

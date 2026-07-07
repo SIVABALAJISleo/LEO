@@ -73,7 +73,7 @@ class SemanticCrystallizer:
         else:
             # Mocked deterministic embedding using simple hashing for test purposes
             import hashlib
-            h = int(hashlib.md5(query.encode()).hexdigest(), 16)
+            h = int(hashlib.md5(query.encode()).hexdigest(), 16)  # nosec B324
             np.random.seed(h % (2**32))
             emb = np.random.randn(384).astype(np.float32)
             emb = emb / np.linalg.norm(emb)
