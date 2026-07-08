@@ -203,7 +203,7 @@ class ProductionSemanticCache:
     def store(self, query: str, answer: str, confidence: float):
         """Caches a query, saves its embedding, and updates Zipf-based TTL limits."""
         keyed_query = self._keyed(query)
-        query_hash = hashlib.md5(keyed_query.encode(), usedforsecurity=False).hexdigest()  # nosec B324
+        query_hash = hashlib.md5(keyed_query.encode(), usedforsecurity=False).hexdigest()
         now = time.time()
         
         conn = get_concurrent_db_connection(self.db_path)
@@ -254,7 +254,7 @@ class ProductionSemanticCache:
     def retrieve(self, query: str) -> Optional[Dict[str, Any]]:
         """Multi-layer cache traversal: Exact → Vector Similarity → Delta Reconstruction."""
         keyed_query = self._keyed(query)
-        query_hash = hashlib.md5(keyed_query.encode(), usedforsecurity=False).hexdigest()  # nosec B324
+        query_hash = hashlib.md5(keyed_query.encode(), usedforsecurity=False).hexdigest()
         now = time.time()
         
         conn = get_concurrent_db_connection(self.db_path)

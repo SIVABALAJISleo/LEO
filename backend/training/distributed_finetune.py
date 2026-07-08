@@ -144,7 +144,7 @@ class DistributedFinetuner:
             from safetensors.torch import load_file
             return load_file(safetensors_path)
         elif os.path.exists(bin_path):
-            return torch.load(bin_path, map_location="cpu")
+            return torch.load(bin_path, map_location="cpu", weights_only=True)  # nosec B614
         return {}
 
     def _save_adapter_weights(self, adapter_dir: str, weights: Dict[str, torch.Tensor], template_dir: str):

@@ -64,9 +64,9 @@ class LoRATrainer:
             from transformers import AutoModelForCausalLM, AutoTokenizer
             from peft import LoraConfig, get_peft_model
 
-            tok = AutoTokenizer.from_pretrained(self.base_model)  # nosec B615
+            tok = AutoTokenizer.from_pretrained(self.base_model)
             tok.pad_token = tok.eos_token
-            model = AutoModelForCausalLM.from_pretrained(self.base_model)  # nosec B615
+            model = AutoModelForCausalLM.from_pretrained(self.base_model)
 
             cfg = LoraConfig(r=self.rank, lora_alpha=self.alpha,
                              target_modules=self.target_modules,
@@ -158,11 +158,11 @@ class LoRATrainer:
         import torch
         from transformers import AutoModelForCausalLM, AutoTokenizer
 
-        tok = AutoTokenizer.from_pretrained(self.base_model)  # nosec B615
-        model = AutoModelForCausalLM.from_pretrained(self.base_model)  # nosec B615
+        tok = AutoTokenizer.from_pretrained(self.base_model)
+        model = AutoModelForCausalLM.from_pretrained(self.base_model)
         if adapter_dir:
             from peft import PeftModel
-            model = PeftModel.from_pretrained(model, adapter_dir)  # nosec B615
+            model = PeftModel.from_pretrained(model, adapter_dir)
         model = model.to(self.device).eval()
         ids = tok(f"Q: {prompt}\nA:", return_tensors="pt").input_ids.to(self.device)
         with torch.no_grad():

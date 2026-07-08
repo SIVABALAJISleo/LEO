@@ -78,7 +78,7 @@ class CognitiveCDN:
             local_vars = {}
             
             # 2. Execute to load function into memory
-            exec(code_obj, globals(), local_vars)  # nosec B102
+            exec(code_obj, globals(), local_vars)
             
             # 3. Call the generated function
             func = local_vars.get('execute_procedural_graph')

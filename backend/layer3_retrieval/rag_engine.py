@@ -126,7 +126,7 @@ class HybridRetrievalSystem:
         cursor = conn.cursor()
         
         for idx, chunk in enumerate(raw_chunks):
-            chunk_id = hashlib.md5(f"{name}_{idx}".encode(), usedforsecurity=False).hexdigest()  # nosec B324
+            chunk_id = hashlib.md5(f"{name}_{idx}".encode(), usedforsecurity=False).hexdigest()
             section = f"Section {idx + 1}"
             
             # Compute Dense Embedding Vector

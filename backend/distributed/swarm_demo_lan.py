@@ -36,7 +36,7 @@ def main():
                          {"igpu": {"vendor": "Intel UHD 48EU", "vram_shared_mb": 8192}, "cores": 8})
         srv = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         srv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        srv.bind(("0.0.0.0", PORT))
+        srv.bind(("0.0.0.0", PORT))  # nosec B104
         srv.listen(1)
         print(f"[A] listening on 0.0.0.0:{PORT} — give the client this machine's LAN IP", flush=True)
         conn, addr = srv.accept()

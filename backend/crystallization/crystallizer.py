@@ -115,10 +115,10 @@ class SemanticCrystallizer:
         else:
             # Mocked deterministic embedding using simple hashing for test purposes
             import hashlib
-            h = int(hashlib.md5(query.encode()).hexdigest(), 16)  # nosec B324
+            h = int(hashlib.md5(query.encode(), usedforsecurity=False).hexdigest(), 16)
             np.random.seed(h % (2**32))
             emb = np.random.randn(384).astype(np.float32)
-            emb = emb / np.linalg.norm(emb)
+            emb = emb / float(np.linalg.norm(emb))
             return emb
 
     def _build_index(self):
@@ -148,7 +148,7 @@ class SemanticCrystallizer:
             
             if embeddings:
                 embeddings_np = np.vstack(embeddings)
-                if self.faiss_available:
+                if self.faiss_available and hasattr(self.index, 'add'):
                     self.index.add(embeddings_np)
                 else:
                     self.index = embeddings_np
@@ -173,13 +173,13 @@ class SemanticCrystallizer:
             conn.close()
             
         # Update in-memory index
-        if self.faiss_available:
+        if self.faiss_available and hasattr(self.index, 'add'):
             self.index.add(np.expand_dims(emb, axis=0))
         else:
-            if isinstance(self.index, list):
-                self.index = np.expand_dims(emb, axis=0)
+            if isinstance(self.index, np.ndarray) and self.index.size > 0:
+                self.index = np.vstack((self.index, emb))
             else:
-                self.index = np.vstack([self.index, emb])
+                self.index = np.expand_dims(emb, axis=0)
         self.trace_ids.append(trace_id)
 
     def invalidate_trace(self, trace_id: str):
@@ -212,12 +212,12 @@ class SemanticCrystallizer:
         best_idx = -1
         best_score = -1.0
         
-        if self.faiss_available:
+        if self.faiss_available and hasattr(self.index, 'search'):
             scores, indices = self.index.search(np.expand_dims(emb, axis=0), 1)
             best_score = float(scores[0][0])
             best_idx = int(indices[0][0])
         else:
-            if not isinstance(self.index, list) and self.index.shape[0] > 0:
+            if isinstance(self.index, np.ndarray) and self.index.shape[0] > 0:
                 scores = np.dot(self.index, emb)
                 best_idx = int(np.argmax(scores))
                 best_score = float(scores[best_idx])
@@ -240,9 +240,9 @@ class SemanticCrystallizer:
                 # Track in global avoidance tracker
                 try:
                     from backend.analytics.avoidance_tracker import global_avoidance_tracker
-                    global_avoidance_tracker.log_request(
+                    global_avoidance_tracker.record(
                         request_id=f"cryst_{trace_id}_{int(time.time())}",
-                        query=query,
+                        normalized_query=query,
                         family_id="crystallization",
                         path_taken="crystallization",
                         latency_ms=1.5,
