@@ -41,6 +41,7 @@ import {
 } from "./src/cognitive";
 import "./index.css";
 import { V42Dashboard } from "./components/v42/V42Dashboard";
+import { OmegaDashboard } from "./src/v43/dashboard/OmegaDashboard";
 
 
 // Import V14 Engines
@@ -116,7 +117,7 @@ function App() {
   const [status, setStatus] = useState<LeoStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [activeTab, setActiveTab] = useState<"swarm" | "cognitive" | "debate" | "benchmarks" | "devops" | "quality" | "v14super" | "v15substrate" | "v16substrate" | "v17dominance" | "v18validation" | "failureHunting" | "v22quality" | "v23frontier" | "v24convergence" | "v25certification" | "v26reality" | "v27certification" | "v28validation" | "v29frontier" | "v30frontier" | "v31irrelevance" | "v32ceiling" | "v32reality" | "v33compute" | "v34compute" | "v35parity" | "v36ceiling" | "v37evolution" | "v38architecture" | "v40ultimate" | "vinfinity" | "v42irrelevance">("v42irrelevance");
+  const [activeTab, setActiveTab] = useState<"swarm" | "cognitive" | "debate" | "benchmarks" | "devops" | "quality" | "v14super" | "v15substrate" | "v16substrate" | "v17dominance" | "v18validation" | "failureHunting" | "v22quality" | "v23frontier" | "v24convergence" | "v25certification" | "v26reality" | "v27certification" | "v28validation" | "v29frontier" | "v30frontier" | "v31irrelevance" | "v32ceiling" | "v32reality" | "v33compute" | "v34compute" | "v35parity" | "v36ceiling" | "v37evolution" | "v38architecture" | "v40ultimate" | "vinfinity" | "v42irrelevance" | "v43omega">("v43omega");
 
   // --- V17 Domain Dominance States ---
   const [v17QueryInput, setV17QueryInput] = useState("Issue transaction refund invoice");
@@ -890,6 +891,7 @@ function App() {
             { id: "v40ultimate", label: "V40 Cockpit", icon: Sparkles },
             { id: "vinfinity", label: "v∞ Cockpit", icon: Zap },
             { id: "v42irrelevance", label: "V42 Cockpit", icon: Sparkles },
+            { id: "v43omega", label: "V43 OMEGA", icon: Zap },
             { id: "debate", label: "Multi-Agent Debate", icon: MessageSquare },
             { id: "quality", label: "Verification & Quality", icon: Shield },
             { id: "benchmarks", label: "Enterprise Benchmarks", icon: BarChart2 },
@@ -3631,6 +3633,13 @@ function App() {
         {activeTab === "v42irrelevance" && (
           <div className="-mx-4 -my-8 animate-in fade-in duration-300">
             <V42Dashboard />
+          </div>
+        )}
+
+        {/* TAB 31: LEO V43 OMEGA PROTOCOL */}
+        {activeTab === "v43omega" && (
+          <div className="-mx-4 -my-8 animate-in fade-in duration-300">
+            <OmegaDashboard />
           </div>
         )}
 

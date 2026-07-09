@@ -1,14 +1,13 @@
 """
-LEO AI V42 - The Irrelevance Engine
-Phase 3: Mamba O(n) + Speculative Decoding Stack
-
-PEARL (Parallel Speculative Decoding) + EAGLE-3 Fallback
+LEO AI V43 - The Irrelevance Engine
+Phase 3: PEARL (Parallel Speculative Decoding) + EAGLE-3 Fallback
 Accelerates generation by 3-4x on CPU by using early layers as a drafter, 
 verifying candidate tokens in a single parallel batch pass.
 """
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
 class Eagle3Drafter(nn.Module):
     """
@@ -50,83 +49,104 @@ class PearlSpeculativeDecoder:
         self.draft_layers = draft_layers
         self.gamma = gamma # Number of draft tokens to generate
         
-        # Assuming the model exposes layers as `layers`
-        self.layers = getattr(self.base_model, 'layers', getattr(self.base_model, 'h', None))
-        
-        # Determine hidden size
+        # Determine hidden size for drafter
         try:
-            d_model = self.layers[0].in_proj.in_features
+            d_model = self.base_model.embedding.weight.shape[1]
         except:
             d_model = 4096 # fallback default
             
         self.eagle_fallback = eagle_fallback
         if self.eagle_fallback:
-            vocab_size = getattr(self.base_model, 'vocab_size', 32000)
+            try:
+                vocab_size = self.base_model.lm_head.out_features
+            except:
+                vocab_size = 32000
             self.eagle_drafter = Eagle3Drafter(d_model=d_model, vocab_size=vocab_size)
             
         self.acceptance_history = []
 
-    def _get_draft_tokens_pearl(self, input_ids: torch.Tensor, kv_cache) -> torch.Tensor:
+    def _get_draft_tokens_pearl(self, input_ids: torch.Tensor) -> tuple:
         """
-        Uses only the first `draft_layers` of the base model to cheaply draft tokens.
+        Drafts tokens by only executing the first N layers of the base model.
+        Returns: draft_tokens, draft_logits
         """
-        # This is highly model-architecture dependent.
-        # Conceptually:
-        # 1. Run embedding
-        # 2. Run first N layers
-        # 3. Project to logits using a shallow head (or the original head if tied)
-        
-        # Mocking the draft generation for this implementation scaffold:
+        # MOCK IMPLEMENTATION: In a real architecture, we would have a custom forward
+        # that exits early after `self.draft_layers` and applies an auxiliary LM head.
         batch_size = input_ids.shape[0]
-        # Generate `gamma` draft tokens (mocked random for now)
-        draft_tokens = torch.randint(0, 32000, (batch_size, self.gamma), device=input_ids.device)
-        return draft_tokens
-
-    def _get_draft_tokens_eagle(self, hidden_states: torch.Tensor) -> torch.Tensor:
-        """
-        Uses the tiny EAGLE-3 drafter on the latest hidden state.
-        """
-        logits = self.eagle_drafter(hidden_states[:, -1:])
-        draft_tokens = torch.argmax(logits, dim=-1)
-        return draft_tokens
+        vocab_size = 32000
+        
+        draft_tokens = []
+        draft_logits = []
+        
+        current_input = input_ids
+        for _ in range(self.gamma):
+            # Simulated cheap forward pass
+            logits = torch.randn(batch_size, 1, vocab_size, device=input_ids.device)
+            next_token = torch.argmax(logits, dim=-1)
+            
+            draft_tokens.append(next_token)
+            draft_logits.append(logits)
+            current_input = torch.cat([current_input, next_token], dim=1)
+            
+        return torch.cat(draft_tokens, dim=1), torch.cat(draft_logits, dim=1)
 
     @torch.no_grad()
     def generate(self, input_ids: torch.Tensor, max_new_tokens: int) -> torch.Tensor:
         """
         Generates tokens using speculative decoding to drastically reduce latency.
+        Implements rigorous rejection sampling for token acceptance.
         """
         generated = input_ids.clone()
-        kv_cache = None
+        vocab_size = 32000
         
         for _ in range(0, max_new_tokens, self.gamma):
-            # Check historical acceptance rate to choose drafter
-            acc_rate = sum(self.acceptance_history[-10:]) / 10 if len(self.acceptance_history) >= 10 else 1.0
+            # 1. Draft Phase
+            draft_tokens, draft_logits = self._get_draft_tokens_pearl(generated)
+            draft_probs = F.softmax(draft_logits, dim=-1)
             
-            if acc_rate >= 0.7 or not self.eagle_fallback:
-                draft_tokens = self._get_draft_tokens_pearl(generated, kv_cache)
-            else:
-                # Need last hidden state for eagle (simulated here)
-                hidden_state = torch.zeros((generated.shape[0], generated.shape[1], self.eagle_drafter.d_model), device=generated.device)
-                draft_tokens = self._get_draft_tokens_eagle(hidden_state)
-                # Expand eagle draft to gamma tokens (simulated auto-regressive)
-                draft_tokens = draft_tokens.repeat(1, self.gamma)
-                
-            # Verification step: run the full model ONCE on the drafted tokens
+            # 2. Verification Phase
+            # Pass both the context and the draft tokens through the full model IN PARALLEL
             verify_input = torch.cat([generated, draft_tokens], dim=1)
             
-            # In a real implementation, we pass the draft through the full model
-            # to get the exact logits, and compare them.
-            # logits = self.base_model(verify_input)
+            # Mocking full model forward pass
+            # target_logits = self.base_model(verify_input)[:, -self.gamma-1:] 
+            target_logits = torch.randn(verify_input.shape[0], self.gamma + 1, vocab_size, device=generated.device)
+            target_probs = F.softmax(target_logits, dim=-1)
             
-            # Simulated verification (accepts 3/4 tokens on average)
-            accepted_count = min(self.gamma, 3) 
-            self.acceptance_history.append(accepted_count / self.gamma)
+            # 3. Acceptance Phase (Rejection Sampling)
+            n_accepted = 0
+            for t in range(self.gamma):
+                # Standard speculative decoding acceptance criterion
+                r = torch.rand(1).item()
+                p = target_probs[0, t, draft_tokens[0, t]].item()
+                q = draft_probs[0, t, draft_tokens[0, t]].item()
+                
+                if r < min(1.0, p / max(q, 1e-8)):
+                    n_accepted += 1
+                else:
+                    break
+                    
+            self.acceptance_history.append(n_accepted / self.gamma)
             
             # Append accepted tokens
-            generated = torch.cat([generated, draft_tokens[:, :accepted_count]], dim=1)
-            
-            # Append the one token that the full model would have generated after the rejection
-            next_token = torch.randint(0, 32000, (generated.shape[0], 1), device=generated.device)
+            if n_accepted > 0:
+                generated = torch.cat([generated, draft_tokens[:, :n_accepted]], dim=1)
+                
+            # If we rejected a token, sample from the residual distribution
+            # If we accepted all, we just take the last token the target model predicted
+            if n_accepted < self.gamma:
+                # Sample from max(0, p - q)
+                p_dist = target_probs[0, n_accepted]
+                q_dist = draft_probs[0, n_accepted]
+                residual = torch.clamp(p_dist - q_dist, min=0)
+                if residual.sum() > 0:
+                    residual = residual / residual.sum()
+                    next_token = torch.multinomial(residual, 1).view(1, 1)
+                else:
+                    next_token = torch.argmax(p_dist).view(1, 1)
+            else:
+                next_token = torch.argmax(target_probs[0, -1]).view(1, 1)
+                
             generated = torch.cat([generated, next_token], dim=1)
             
         return generated
