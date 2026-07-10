@@ -1,0 +1,60 @@
+{
+  "total_generations": 2,
+  "best_fitness": 0.54,
+  "best_params": {
+    "confidence_floor": 0.5952,
+    "max_spec_tokens": 8,
+    "sparsity_threshold": 0.3357,
+    "allocated_experts_budget": 2,
+    "dreamer_branches": 9,
+    "dreamer_depth": 6
+  },
+  "history": [
+    {
+      "generation": 1,
+      "fitness": 0.54,
+      "weaknesses": [
+        "low_avoidance",
+        "high_latency",
+        "low_throughput",
+        "low_density"
+      ],
+      "mutations": {
+        "confidence_floor": 0.5952,
+        "max_spec_tokens": 8,
+        "sparsity_threshold": 0.3357,
+        "allocated_experts_budget": 2,
+        "dreamer_branches": 9,
+        "dreamer_depth": 6
+      },
+      "curriculum_level": "basic",
+      "active_classes": [
+        "cacheable"
+      ],
+      "timestamp": 1783693433.6600406
+    },
+    {
+      "generation": 2,
+      "fitness": 0.54,
+      "weaknesses": [
+        "low_avoidance",
+        "high_latency",
+        "low_throughput",
+        "low_density"
+      ],
+      "mutations": {
+        "confidence_floor": 0.536,
+        "max_spec_tokens": 8,
+        "sparsity_threshold": 0.4144,
+        "allocated_experts_budget": 2,
+        "dreamer_branches": 10,
+        "dreamer_depth": 7
+      },
+      "curriculum_level": "basic",
+      "active_classes": [
+        "cacheable"
+      ],
+      "timestamp": 1783693433.6736138
+    }
+  ]
+}

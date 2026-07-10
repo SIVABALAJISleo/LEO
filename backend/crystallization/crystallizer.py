@@ -7,12 +7,59 @@ import os
 import time
 import json
 import sqlite3
+import hashlib
 import numpy as np
 import logging
 from typing import Dict, Any, List, Optional, Tuple
 from backend.core.db_utils import get_concurrent_db_connection
 
 logger = logging.getLogger(__name__)
+
+
+# ── Hyper-Predictive screening layer ──────────────────────────────────────────
+
+class BloomFilter:
+    """Lightweight pure-Python Bloom Filter for quick membership screening."""
+    def __init__(self, size: int = 10000, hash_count: int = 5):
+        self.size = size
+        self.hash_count = hash_count
+        self.bit_array = [0] * size
+
+    def add(self, item: str):
+        for i in range(self.hash_count):
+            digest = hashlib.md5(f"{item}_{i}".encode()).hexdigest()
+            index = int(digest, 16) % self.size
+            self.bit_array[index] = 1
+
+    def contains(self, item: str) -> bool:
+        for i in range(self.hash_count):
+            digest = hashlib.md5(f"{item}_{i}".encode()).hexdigest()
+            index = int(digest, 16) % self.size
+            if self.bit_array[index] == 0:
+                return False
+        return True
+
+
+class HyperLogLog:
+    """Lightweight pure-Python HyperLogLog for cardinality verification."""
+    def __init__(self, p: int = 6):
+        self.p = p
+        self.m = 1 << p
+        self.registers = [0] * self.m
+
+    def add(self, item: str):
+        val = int(hashlib.sha256(item.encode()).hexdigest(), 16)
+        idx = val & (self.m - 1)
+        w = val >> self.p
+        rho = (len(bin(w)) - len(bin(w).rstrip('0'))) + 1 if w > 0 else 1
+        self.registers[idx] = max(self.registers[idx], rho)
+
+    def estimate(self) -> float:
+        alpha_m = 0.7213 / (1 + 1.079 / self.m)
+        sum_val = sum(2.0 ** -r for r in self.registers)
+        estimate = alpha_m * (self.m ** 2) / sum_val
+        return round(estimate, 1)
+
 
 class SemanticCrystallizer:
     """
@@ -26,6 +73,8 @@ class SemanticCrystallizer:
         self.index = None
         self.trace_ids = []
         self.threshold = 0.92
+        self.bloom_filter = BloomFilter()
+        self.hll = HyperLogLog()
         self._initialize_sqlite()
         self._load_embedder()
         self._build_index()
@@ -124,7 +173,7 @@ class SemanticCrystallizer:
     def _build_index(self):
         conn = get_concurrent_db_connection(self.db_path)
         cursor = conn.cursor()
-        cursor.execute("SELECT trace_id, embedding_json FROM crystallized_answers")
+        cursor.execute("SELECT trace_id, embedding_json, query FROM crystallized_answers")
         rows = cursor.fetchall()
         conn.close()
 
@@ -140,11 +189,14 @@ class SemanticCrystallizer:
         self.trace_ids = []
         if rows:
             embeddings = []
-            for trace_id, emb_json in rows:
+            for trace_id, emb_json, query in rows:
                 if emb_json:
                     emb = np.array(json.loads(emb_json), dtype=np.float32)
                     embeddings.append(emb)
                     self.trace_ids.append(trace_id)
+                    if query:
+                        self.bloom_filter.add(query)
+                        self.hll.add(query)
             
             if embeddings:
                 embeddings_np = np.vstack(embeddings)
@@ -172,6 +224,10 @@ class SemanticCrystallizer:
         finally:
             conn.close()
             
+        # Register in Bloom screening filter and HLL
+        self.bloom_filter.add(query)
+        self.hll.add(query)
+
         # Update in-memory index
         if self.faiss_available and hasattr(self.index, 'add'):
             self.index.add(np.expand_dims(emb, axis=0))
@@ -204,6 +260,11 @@ class SemanticCrystallizer:
         """
         Searches the semantic cache. If cosine similarity > threshold, returns cached answer.
         """
+        # Step 0: Quick screening via Bloom Filter to avoid vector lookups
+        if not self.bloom_filter.contains(query):
+            logger.debug(f"[Crystallizer] Bloom screening negative. Fast escape.")
+            return None
+
         if not self.trace_ids:
             return None
             

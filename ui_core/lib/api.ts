@@ -64,6 +64,31 @@ export const simulateVInfinityQuery = async (req: OrchestrateRequest): Promise<a
   return res.data;
 };
 
+export const runVInfinityBenchmark = async (): Promise<any> => {
+  const res = await leoApi.post("/leo/vinfinity/benchmark");
+  return res.data;
+};
+
+export const triggerVInfinityEvolution = async (): Promise<any> => {
+  const res = await leoApi.post("/leo/vinfinity/evolve");
+  return res.data;
+};
+
+export const fetchEvolutionHistory = async (): Promise<any> => {
+  const res = await leoApi.get("/leo/vinfinity/evolution/history");
+  return res.data;
+};
+
+export const submitTelemetry = async (entry: {
+  prompt_class: string;
+  latency_ms: number;
+  was_avoided: boolean;
+  hardware_hash?: string;
+}): Promise<any> => {
+  const res = await leoApi.post("/leo/vinfinity/telemetry", entry);
+  return res.data;
+};
+
 export const fetchHardwareSummary = async (): Promise<any> => {
   const res = await leoApi.get("/leo/hardware");
   return res.data;
@@ -98,6 +123,16 @@ export const sendStripeWebhook = async (payload: any, signature: string): Promis
       "stripe-signature": signature,
     },
   });
+  return res.data;
+};
+
+export const fetchPoiLedger = async (): Promise<any> => {
+  const res = await leoApi.get("/leo/v44/poi/ledger");
+  return res.data;
+};
+
+export const verifySeal = async (signature: string): Promise<any> => {
+  const res = await leoApi.get("/leo/v44/poi/verify", { params: { signature } });
   return res.data;
 };
 

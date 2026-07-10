@@ -31,3 +31,41 @@ OTEL_EXPORTER_OTLP_ENDPOINT=http://<jaeger-collector-svc>:4318/v1/traces
 The `HorizontalPodAutoscaler` is designed to trigger new pods at **70% CPU Utilization**.
 
 If the `celery_task_failed_total` Prometheus metric spikes alongside pod creation, it indicates you are triggering OOM (Out-of-Memory) kills. In this scenario, increase your pod memory limit via `k8s-deployment.yml` `resources.limits.memory`.
+
+## 6. Standalone Kernel Packaging
+The low-level CPU/iGPU execution kernels can be extracted and run standalone using our pip-installable package:
+```bash
+cd leo_infinity_kernels
+pip install -e .
+```
+
+## 7. Performance Benchmarks
+To run the automated LEO Infinity benchmark suite locally:
+```bash
+python -m backend.benchmarks.infinity_bench
+```
+This runs cognitive workloads, prints the Verification Seal, and registers performance metrics.
+
+## 8. Nightly Evolution Scheduling
+Run the autonomous self-improvement loop overnight:
+```bash
+python -m backend.learning.nightly_evolve --generations 10
+```
+This executes N evolution cycles, each analyzing benchmark weaknesses, mutating parameters via Bayesian+genetic search, and hot-reloading improvements. Results are saved to `reports/evolution_history.json`.
+
+For automated scheduling (Linux cron / Windows Task Scheduler):
+```bash
+# Linux cron (run at 2 AM daily)
+0 2 * * * cd /path/to/HYPER && python -m backend.learning.nightly_evolve --generations 10
+```
+
+## 9. Telemetry Configuration
+Telemetry is opt-in and privacy-first. All data is anonymized (SHA-256 hashed hardware profiles, no raw queries).
+
+To disable telemetry:
+```python
+from backend.analytics.telemetry_collector import get_telemetry_collector
+get_telemetry_collector().opt_in = False
+```
+
+Telemetry data is stored locally at `backend/analytics/telemetry_inferences.jsonl` and feeds into the evolution loop for weakness prioritization.

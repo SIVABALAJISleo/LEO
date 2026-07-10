@@ -19,7 +19,9 @@ logger = logging.getLogger(__name__)
 
 # ── Backend scoring constants (relative tokens/sec multipliers vs CPU baseline) ──
 _BACKEND_SCORE: Dict[str, float] = {
+    "ternary_lookup": 4.5,  # Optimized element-wise table lookup
     "npu":       4.0,   # NPU: lowest power, fast for small models
+    "moe_spec":  3.8,   # Speculative Expert Budgeting verification
     "metal":     3.5,   # Apple Silicon GPU (Metal)
     "mlx":       3.5,   # Apple MLX (uses Metal internally)
     "vulkan":    3.0,   # iGPU Vulkan (Intel Iris/Arc, AMD Radeon)
@@ -87,6 +89,11 @@ class HeterogeneousRouter:
         if cpu.avx2 or cpu.neon:
             scores["cpu_avx2"] = _BACKEND_SCORE["cpu_avx2"]
         scores["cpu_generic"] = _BACKEND_SCORE["cpu_generic"]
+
+        # Optimized Software Substrates
+        if cpu.avx2 or cpu.neon or cpu.amx or cpu.avx512:
+            scores["ternary_lookup"] = _BACKEND_SCORE["ternary_lookup"]
+            scores["moe_spec"] = _BACKEND_SCORE["moe_spec"]
 
         # Sort descending by score
         return sorted(scores.items(), key=lambda x: x[1], reverse=True)

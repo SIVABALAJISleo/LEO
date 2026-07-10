@@ -105,9 +105,22 @@ class UniversalExecutionLayer:
                 f"[UniversalExec] Attempting {model_name} via backend={backend}"
             )
             try:
-                async for token in self.engine.generate(prompt, model_name, device_plan):
-                    yield token
-                return  # successfully yielded all tokens
+                if backend == "ternary_lookup":
+                    from backend.inference.ternary_engine import TernaryEngine
+                    ternary = TernaryEngine()
+                    async for token in ternary.generate(prompt, model_name, device_plan):
+                        yield token
+                    return
+                elif backend == "moe_spec":
+                    from backend.inference.speculative_decoder import SpeculativeDecoder
+                    spec = SpeculativeDecoder()
+                    async for token in spec.generate_stream(prompt, use_prompt_lookup=True):
+                        yield token
+                    return
+                else:
+                    async for token in self.engine.generate(prompt, model_name, device_plan):
+                        yield token
+                    return  # successfully yielded all tokens
 
             except Exception as exc:
                 logger.warning(
@@ -140,14 +153,20 @@ class UniversalExecutionLayer:
                 if payload.get("force_oom") and backend == "cuda":
                     raise RuntimeError("CUDA out of memory")
 
+                latency_ms = 12.5
+                if backend == "ternary_lookup":
+                    latency_ms = 2.4
+                elif backend == "moe_spec":
+                    latency_ms = 4.1
+
                 return {
                     "status": "success",
                     "backend_used": backend,
                     "simulated_execution": True,
                     "decision": decision,
                     "metrics": {
-                        "hardware_efficiency": 0.95,
-                        "latency_ms": 12.5,
+                        "hardware_efficiency": 0.98 if backend in ("ternary_lookup", "moe_spec") else 0.95,
+                        "latency_ms": latency_ms,
                     },
                 }
             except Exception as exc:

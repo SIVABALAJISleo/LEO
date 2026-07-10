@@ -27,6 +27,26 @@ class SelfImprovementLayer:
         })
         logger.info(f"[{self.layer_name}] Logged failure trace for self-improvement.")
 
+    def run_automl_tune(self, metrics: Dict[str, Any], current_params: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        AutoML parameter optimization tuner.
+        Observes recent execution latency and accuracy drift, and shifts thresholds.
+        """
+        tuned = dict(current_params)
+        latency = metrics.get("latency_ms", 100.0)
+        success = metrics.get("success", True)
+        
+        # Simple policy gradient search heuristic
+        if latency > 1500.0:
+            tuned["confidence_floor"] = max(0.4, current_params.get("confidence_floor", 0.65) - 0.05)
+            tuned["max_spec_tokens"] = max(3, current_params.get("max_spec_tokens", 8) - 1)
+        if not success:
+            tuned["confidence_floor"] = min(0.9, current_params.get("confidence_floor", 0.65) + 0.05)
+            tuned["max_spec_tokens"] = min(15, current_params.get("max_spec_tokens", 8) + 2)
+            
+        logger.info(f"[{self.layer_name}] AutoML tuned parameters: confidence_floor={tuned.get('confidence_floor', 0.65):.2f}")
+        return tuned
+
     def execute(self, query: str, context: Dict[str, Any]) -> Dict[str, Any]:
         unpatched_failures = [f for f in _self_improvement_log if not f["patched"]]
         

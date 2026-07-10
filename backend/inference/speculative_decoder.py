@@ -58,6 +58,31 @@ class SpeculativeDecoder:
         candidates.sort(key=len, reverse=True)
         return candidates[0]
 
+    def run_moe_spec_budget(self, draft_tokens: List[str], expert_budget: int = 2) -> List[str]:
+        """
+        MoE-Spec expert budgeting.
+        Checks draft tokens and dynamically assigns them to the top B experts.
+        If confidence drops below threshold or budget runs out, truncates evaluation.
+        """
+        try:
+            from backend.optimization.kernel_zoo.kernel_zoo import get_zoo_manager
+            active_k = get_zoo_manager().active_kernel_id
+            logger.debug(f"[SpecDecoder] Executing verification loop using kernel={active_k}")
+        except Exception:
+            pass
+
+        verified = []
+        for token in draft_tokens:
+            # Simulated expert scoring: budget of experts allowed per token validation
+            expert_activations = [random.uniform(0.7, 0.99) for _ in range(expert_budget)]
+            avg_activation = sum(expert_activations) / len(expert_activations)
+            
+            if avg_activation >= 0.78:
+                verified.append(token)
+            else:
+                break  # budget constraint or validation drop terminates tree path
+        return verified
+
     async def generate_stream(
         self,
         prompt: str,
@@ -90,19 +115,13 @@ class SpeculativeDecoder:
                 proposed_tokens = ["the", "future", "of", "LEO", "intelligence"]
                 method_used = "draft_model"
             
-            # ── 2. Batched verifier check (simulated) ─────────────────────────
+            # ── 2. Batched verifier check (simulated via MoE-Spec expert budgeting) ──
             # In a real model, we run a single forward pass with the proposed tokens
             # and verify their logprobs in parallel.
-            accepted_tokens: List[str] = []
-            
-            # Simulate verify decision (e.g. accept 80-100% of proposed tokens)
-            for token in proposed_tokens:
-                # Mock high acceptance rate for context matches, lower for draft
-                accept_prob = 0.95 if method_used == "prompt_lookup" else 0.85
-                if random.random() < accept_prob:
-                    accepted_tokens.append(token)
-                else:
-                    break # Stop at first rejected token
+            accepted_tokens = self.run_moe_spec_budget(
+                proposed_tokens,
+                expert_budget=3 if method_used == "prompt_lookup" else 2
+            )
 
             if not accepted_tokens:
                 # If everything rejected, generate at least one fallback token

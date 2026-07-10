@@ -50,6 +50,21 @@ class PeerNode:
         }
 
 
+class SwarmCRDTState:
+    """Lightweight conflict-free replicated state tracking mesh node profiles."""
+    def __init__(self):
+        self.state: Dict[str, Dict[str, Any]] = {}
+
+    def merge(self, incoming: Dict[str, Dict[str, Any]]):
+        """Merge incoming state choosing the latest timestamp (LWW CRDT)."""
+        for k, v in incoming.items():
+            if k not in self.state:
+                self.state[k] = v
+            else:
+                if v.get("timestamp", 0) > self.state[k].get("timestamp", 0):
+                    self.state[k] = v
+
+
 class DistributedComputeMesh:
     """
     Coordinates split-layer model sharding, federated tasks, and peer-to-peer
@@ -61,6 +76,7 @@ class DistributedComputeMesh:
         self.use_ray = False
         self.swarm_protocol = SwarmProtocol()
         self.swarm_protocol.opt_in()  # Opt-in by default for mesh initialization
+        self.crdt_state = SwarmCRDTState()
         self._discover_peers()
         self._initialize_ray()
 
@@ -95,6 +111,12 @@ class DistributedComputeMesh:
         for pid, peer in self.peers.items():
             self.swarm_protocol.handle_handshake(peer.ip, {"node_id": pid, "hardware_profile": profile_dict})
 
+    def check_consent_and_thermals(self, cpu_load: float, available_vram: float) -> bool:
+        """Throttles participation in swarm if CPU/thermal levels are too high or VRAM is low."""
+        if cpu_load > 85.0 or available_vram < 1.5:
+            return False
+        return True
+
     def execute_sharded_workload(self, task_description: str) -> Dict[str, Any]:
         """
         Splits a neural workload into sequential layers, dispatches to active intranet
@@ -108,7 +130,23 @@ class DistributedComputeMesh:
             self.swarm_protocol.process_heartbeat(pid)
             
         self.swarm_protocol.prune_dead_nodes(timeout_seconds=60.0)
-        active_workers = [p for p in self.peers.values() if p.status == "ACTIVE"]
+
+        # CRDT merge updates
+        self.crdt_state.merge({
+            peer.node_id: {
+                "cpu_load": peer.cpu_load,
+                "vram": peer.available_vram_gb,
+                "timestamp": time.time(),
+                "consented": self.check_consent_and_thermals(peer.cpu_load, peer.available_vram_gb)
+            }
+            for peer in self.peers.values()
+        })
+
+        # Filter active workers based on CRDT and consent state
+        active_workers = [
+            p for p in self.peers.values() 
+            if p.status == "ACTIVE" and self.crdt_state.state.get(p.node_id, {}).get("consented", True)
+        ]
 
         # Dynamic layerwise partitioning
         total_model_layers = 32

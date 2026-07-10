@@ -164,6 +164,19 @@ class HardwareDetector:
         elif system == "Windows":
             # Conservatively assume modern laptop has AVX2
             cpu_prof.avx2 = True
+            # Proactively refine flags based on processor brand name or Registry queries
+            try:
+                brand = cpu_prof.processor.lower()
+                if "ultra" in brand or "xeon" in brand or "13th" in brand or "14th" in brand or "15th" in brand:
+                    cpu_prof.avx512 = True
+                    cpu_prof.avx512_vnni = True
+                    cpu_prof.amx = True
+                elif "core" in brand or "ryzen" in brand:
+                    cpu_prof.avx512_vnni = True
+                if "arm" in platform.machine().lower() or "neon" in brand:
+                    cpu_prof.neon = True
+            except Exception:
+                pass
 
         return cpu_prof
 

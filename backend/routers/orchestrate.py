@@ -88,3 +88,69 @@ async def run_on_device_training(body: TrainRequest, token: dict = Depends(Permi
     trainer = LoRATrainer()
     metrics = trainer.train(body.pairs, output_dir=body.output_dir, epochs=body.epochs, lr=body.lr)
     return metrics
+
+# --- LEO v∞ Telemetry & Self-Evolution Endpoints (Layer 15 & 18) ---
+@router.post("/api/v1/leo/vinfinity/benchmark", tags=["LEO v∞ Telemetry"])
+async def run_vinfinity_benchmark(token: dict = Depends(PermissionChecker("orchestrate"))):
+    from backend.benchmarks.infinity_bench import run_benchmark
+    report = run_benchmark()
+    return report
+
+@router.post("/api/v1/leo/vinfinity/evolve", tags=["LEO v∞ Telemetry"])
+async def trigger_vinfinity_evolution(token: dict = Depends(PermissionChecker("orchestrate"))):
+    from backend.learning.self_improvement import get_evolution_loop
+    evo_result = get_evolution_loop().run_evolution_cycle()
+    return evo_result
+
+@router.get("/api/v1/leo/vinfinity/evolution/history", tags=["LEO v∞ Telemetry"])
+async def get_evolution_history(token: dict = Depends(PermissionChecker("orchestrate"))):
+    from backend.learning.self_improvement import get_evolution_loop
+    return {
+        "total_generations": get_evolution_loop().generation,
+        "best_fitness": get_evolution_loop()._best_fitness,
+        "history": get_evolution_loop().get_history()
+    }
+
+class TelemetryEntry(BaseModel):
+    prompt_class: str = Field(..., description="The class of the prompt (e.g. cacheable, novel)")
+    latency_ms: float = Field(..., description="End-to-end latency in ms")
+    was_avoided: bool = Field(False, description="Whether compute was avoided via cache/surrogate")
+    hardware_hash: Optional[str] = Field(None, description="Anonymized hardware identifier")
+
+@router.post("/api/v1/leo/vinfinity/telemetry", tags=["LEO v∞ Telemetry"])
+async def submit_telemetry(entry: TelemetryEntry, token: dict = Depends(PermissionChecker("orchestrate"))):
+    from backend.analytics.telemetry_collector import get_telemetry_collector
+    collector = get_telemetry_collector()
+    collector.record_inference(
+        prompt_class=entry.prompt_class,
+        latency_ms=entry.latency_ms,
+        was_avoided=entry.was_avoided,
+        hardware_hash=entry.hardware_hash,
+    )
+    return {"status": "recorded"}
+
+# --- LEO V44 "OMNISCIENCE" Cryptographic Proof of Intelligence Endpoints ---
+@router.get("/api/v1/leo/v44/poi/ledger", tags=["LEO V44 Omniscience"])
+async def get_poi_ledger_endpoint(token: dict = Depends(PermissionChecker("orchestrate"))):
+    from backend.security.poi_ledger import get_poi_ledger
+    ledger = get_poi_ledger()
+    return {
+        "verified": ledger.verify_chain(),
+        "blocks": [b.to_dict() for b in ledger.chain]
+    }
+
+@router.get("/api/v1/leo/v44/poi/verify", tags=["LEO V44 Omniscience"])
+async def verify_seal_endpoint(signature: str, token: dict = Depends(PermissionChecker("orchestrate"))):
+    from backend.security.poi_ledger import get_poi_ledger
+    ledger = get_poi_ledger()
+    for block in ledger.chain:
+        if block.seal_signature == signature:
+            return {
+                "authentic": True,
+                "block_index": block.index,
+                "timestamp": block.timestamp,
+                "metrics": block.metrics
+            }
+    return {"authentic": False}
+
+
