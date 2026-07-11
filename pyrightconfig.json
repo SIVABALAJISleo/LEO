@@ -12,11 +12,11 @@
     "executionEnvironments": [
         {
             "root": ".",
-            "extraPaths": ["."]
+            "extraPaths": [".", "leo_infinity_kernels", "leo_infinity_kernels/leo_infinity_kernels"]
         }
     ],
     "extraPaths": [
-        "."
+        ".", "leo_infinity_kernels", "leo_infinity_kernels/leo_infinity_kernels"
     ],
     "venvPath": ".",
     "venv": "venv",
