@@ -27,13 +27,13 @@ class BloomFilter:
 
     def add(self, item: str):
         for i in range(self.hash_count):
-            digest = hashlib.md5(f"{item}_{i}".encode()).hexdigest()
+            digest = hashlib.md5(f"{item}_{i}".encode(), usedforsecurity=False).hexdigest()  # nosec B324
             index = int(digest, 16) % self.size
             self.bit_array[index] = 1
 
     def contains(self, item: str) -> bool:
         for i in range(self.hash_count):
-            digest = hashlib.md5(f"{item}_{i}".encode()).hexdigest()
+            digest = hashlib.md5(f"{item}_{i}".encode(), usedforsecurity=False).hexdigest()  # nosec B324
             index = int(digest, 16) % self.size
             if self.bit_array[index] == 0:
                 return False
