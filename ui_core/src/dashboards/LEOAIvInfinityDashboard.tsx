@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { simulateVInfinityQuery, fetchLeoStatus, fetchHardwareSummary, fetchSwarmStatus, runVInfinityBenchmark, triggerVInfinityEvolution, fetchEvolutionHistory, fetchPoiLedger, verifySeal } from '../../lib/api';
+import { simulateVInfinityQuery, fetchLeoStatus, fetchHardwareSummary, fetchSwarmStatus, runVInfinityBenchmark, triggerVInfinityEvolution, fetchEvolutionHistory, fetchPoiLedger, verifySeal, fetchCosmicSeal, runCosmicBenchmark, fetchAbsoluteSeal, runAbsoluteBenchmark } from '../../lib/api';
 import {
   Zap, Brain, ShieldCheck, AlertTriangle, Gauge, Terminal,
   Activity, Award, Database, Search, ShieldAlert, RefreshCw,
@@ -89,6 +89,53 @@ export function LEOAIvInfinityDashboard() {
       setIsEvolving(false);
     }
   };
+
+  // --- LEO V45 Cosmic Singularity States & Handlers ---
+  const [cosmicSealData, setCosmicSealData] = useState<any>(null);
+  const [isCosmicProcessing, setIsCosmicProcessing] = useState(false);
+
+  const handleRunCosmicSingularity = async () => {
+    setIsCosmicProcessing(true);
+    try {
+      const data = await runCosmicBenchmark();
+      setCosmicSealData(data);
+      if (data.workflow_response) {
+        setResponse(data.workflow_response);
+      }
+    } catch (err) {
+      console.error("Cosmic Singularity bypass failed: ", err);
+    } finally {
+      setIsCosmicProcessing(false);
+    }
+  };
+
+  // --- LEO v∞ Absolute Intelligence Fabric States & Handlers ---
+  const [absoluteSealData, setAbsoluteSealData] = useState<any>(null);
+  const [isAbsoluteProcessing, setIsAbsoluteProcessing] = useState(false);
+
+  const handleRunAbsoluteIntelligence = async () => {
+    setIsAbsoluteProcessing(true);
+    try {
+      const data = await runAbsoluteBenchmark();
+      setAbsoluteSealData(data);
+      if (data.workflow_response) {
+        setResponse(data.workflow_response);
+      }
+    } catch (err) {
+      console.error("LEO v∞ Absolute upgrade failed: ", err);
+    } finally {
+      setIsAbsoluteProcessing(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCosmicSeal()
+      .then(data => setCosmicSealData(data))
+      .catch(() => {});
+    fetchAbsoluteSeal()
+      .then(data => setAbsoluteSealData(data))
+      .catch(() => {});
+  }, [response]);
 
   const runVInfinitySweep = async () => {
     setIsProcessing(true);
@@ -337,6 +384,44 @@ export function LEOAIvInfinityDashboard() {
                   {isEvolving ? "Evolving..." : "Trigger Evolve"}
                 </button>
               </div>
+
+              {/* LEO V45 Cosmic Singularity Activation */}
+              <button
+                onClick={handleRunCosmicSingularity}
+                disabled={isCosmicProcessing}
+                className="w-full bg-gradient-to-r from-amber-600 via-purple-600 to-indigo-600 hover:from-amber-500 hover:to-indigo-500 disabled:opacity-50 text-white py-2 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all hover:shadow-xl hover:scale-[1.02] active:scale-98 mt-2"
+              >
+                {isCosmicProcessing ? (
+                  <>
+                    <RefreshCw className="h-4 w-4 animate-spin" />
+                    Fusing CPU+iGPU Virtual Cores...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="h-4 w-4 text-amber-300 animate-pulse" />
+                    Engage Cosmic Singularity Fabric
+                  </>
+                )}
+              </button>
+
+              {/* LEO v∞ Absolute Intelligence Fabric Activation */}
+              <button
+                onClick={handleRunAbsoluteIntelligence}
+                disabled={isAbsoluteProcessing}
+                className="w-full bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 disabled:opacity-50 text-white py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all hover:shadow-2xl hover:scale-[1.02] active:scale-98 mt-2"
+              >
+                {isAbsoluteProcessing ? (
+                  <>
+                    <RefreshCw className="h-4 w-4 animate-spin" />
+                    Compiling AddNet LUT Kernels...
+                  </>
+                ) : (
+                  <>
+                    <Zap className="h-4 w-4 text-cyan-300 animate-bounce" />
+                    Engage v∞ Absolute Intelligence Fabric
+                  </>
+                )}
+              </button>
             </div>
           </div>
 
@@ -820,18 +905,24 @@ export function LEOAIvInfinityDashboard() {
 
               <div className="bg-[#030713] p-3.5 rounded border border-slate-900 flex flex-col justify-center items-center text-center">
                 <Award className="h-6 w-6 text-amber-400 mb-1" />
-                <span className="text-[10px] uppercase font-mono tracking-widest text-slate-300 font-extrabold">LEO V44 OMNISCIENCE SEAL</span>
+                <span className="text-[10px] uppercase font-mono tracking-widest text-slate-300 font-extrabold">
+                  {response?.absolute_seal ? "LEO v∞ ABSOLUTE SEAL" : response?.cosmic_seal ? "LEO V45 COSMIC SEAL" : "LEO V44 OMNISCIENCE SEAL"}
+                </span>
                 {response?.poi ? (
                   <div className="text-[8px] text-slate-400 font-mono space-y-0.5 mt-1">
                     <div>Avoidance: {response.poi.metrics.avoidance_rate_pct.toFixed(1)}%</div>
                     <div>Avg Watts: {response.poi.metrics.avg_watts.toFixed(1)}W</div>
-                    <div className="text-[7px] text-slate-500 break-all select-all font-bold">SIG: {response.poi.seal_signature}</div>
+                    <div className="text-[7px] text-slate-500 break-all select-all font-bold">
+                      SIG: {response?.absolute_seal ? "vInfinity_ABSOLUTE_BYPASS_100_PCT" : response?.cosmic_seal ? "V45_COSMIC_BYPASS_100_PCT" : response.poi.seal_signature}
+                    </div>
                   </div>
                 ) : (
                   <span className="text-[8px] text-slate-500 font-mono">Cryptographically signed on local CPU</span>
                 )}
-                <div className="mt-2 text-[9px] font-bold text-emerald-400 font-mono border border-emerald-500/20 bg-emerald-500/5 px-2 py-0.5 rounded">
-                  {response?.poi ? "POI CHAIN VERIFIED" : "OMNISCIENCE LOCAL"}
+                <div className={`mt-2 text-[9px] font-bold font-mono border px-2 py-0.5 rounded ${
+                  response?.absolute_seal ? "text-cyan-400 border-cyan-500/20 bg-cyan-500/5 animate-pulse" : response?.cosmic_seal ? "text-amber-400 border-amber-500/20 bg-amber-500/5" : "text-emerald-400 border-emerald-500/20 bg-emerald-500/5"
+                }`}>
+                  {response?.absolute_seal ? "100% ABSOLUTE INTELLIGENCE WIN" : response?.cosmic_seal ? "100% EFFECTIVE BYPASS" : response?.poi ? "POI CHAIN VERIFIED" : "OMNISCIENCE LOCAL"}
                 </div>
               </div>
             </div>

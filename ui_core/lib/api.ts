@@ -136,3 +136,23 @@ export const verifySeal = async (signature: string): Promise<any> => {
   return res.data;
 };
 
+export const fetchCosmicSeal = async (): Promise<any> => {
+  const res = await leoApi.get("/leo/v45/cosmic/seal");
+  return res.data;
+};
+
+export const runCosmicBenchmark = async (): Promise<any> => {
+  const res = await leoApi.post("/leo/v45/cosmic/benchmark");
+  return res.data;
+};
+
+export const fetchAbsoluteSeal = async (): Promise<any> => {
+  const res = await leoApi.get("/leo/vinfinity/absolute/seal");
+  return res.data;
+};
+
+export const runAbsoluteBenchmark = async (): Promise<any> => {
+  const res = await leoApi.post("/leo/vinfinity/absolute/benchmark");
+  return res.data;
+};
+

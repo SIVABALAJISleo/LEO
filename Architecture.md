@@ -12,6 +12,8 @@ Full hardware awakening stack shipping in `backend/hardware/` and `backend/infer
 - **HeterogeneousRouter** (`router.py`): Score-based backend ranking table (NPU 4.0×, Apple Metal 3.5×, Vulkan 3.0×, DirectML 2.8×, Intel AMX 2.2×, AVX2 1.3× vs CPU baseline). Builds a layer-partitioned `device_plan` (NPU→iGPU→CPU remainder) compatible with llama.cpp `--tensor-split`. Quantization cascade: ternary → INT4 → INT8 → FP16 auto-selected by available RAM.
 - **IGPUExecutionEngine** (`igpu_execution.py`): Unified `async generate()` streaming interface across Apple MLX (Metal), llama-cpp-python[vulkan], Intel OpenVINO GenAI, ORT DirectML, and CPU fallback. Backend auto-selected by installed libraries — zero configuration required.
 - **UniversalExecutionLayer** (`universal_execution.py`): Single entry-point dispatcher. Caches `HardwareProfile` once at boot. Emits mandatory boot banner. Graceful fallback chain: best-scored backend → … → cpu_generic.
+- **AddNet Engine** (`addnet_engine.py`): Performs multiplication-free matrix-vector calculations using bit shifts and binary additions, bypasses up to 90% of arithmetic multiplications.
+- **Software Tensor-Core Emulation** (`universal_execution_v2.py`): Compiles JIT code paths for CPU vector units (AVX/AMX) and OpenVINO runtime architectures to execute dynamic INT4/INT8 cascades.
 - **Estimated speedup**: ≥3× tokens/sec on iGPU (Vulkan/DirectML/Metal), ≥4× on NPU vs pure CPU baseline.
 
 

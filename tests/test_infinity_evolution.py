@@ -355,18 +355,225 @@ def test_v44_poi_ledger():
 
 
 def test_v44_orchestrator_omniscience_loop():
-    """Verify the V44 self-refinement loop runs successfully in the orchestrator workflow."""
+    """Verify the V44/V45/v∞ self-refinement loop runs successfully in the orchestrator workflow."""
     orch = VInfinityOrchestrator()
-    res = orch.execute_semantic_workflow("Standard reasoning prompt for V44", {})
+    res = orch.execute_semantic_workflow("Standard reasoning prompt for V44/V45", {})
     
     assert res["confidence"] == 0.999
-    assert "Omniscience Engine" in res["resolved_by"]
+    assert "LEO v∞ Absolute Intelligence Fabric" in res["resolved_by"]
     assert "poi" in res
     assert res["poi"]["index"] > 0
     assert "seal_signature" in res["poi"]
     
-    # Verify the trace has the V44 layer names
+    # Verify the trace has the correct layer names
     layer_names = [layer["layer_name"] for layer in res["layer_trace"]]
     assert "Recursive Reasoning Omniscience Substrate" in layer_names
     assert "LUT_Linear Multiplication-Free Layer" in layer_names
+
+
+# ──────────────────── Component 6: LEO V45 COSMIC SINGULARITY ────────────────────
+
+def test_v45_fractal_lattice():
+    """Verify FractalPredictiveLattice lookup matching and recursive variants generation."""
+    from cosmic_singularity.predictive_lattice import FractalPredictiveLattice
+    lat = FractalPredictiveLattice()
+    lat.register_node("Bypass raw compute", "Response: Success")
+    
+    metrics = lat.get_lattice_metrics()
+    assert metrics["total_nodes"] == 5  # 1 base + 4 variants
+    assert metrics["total_hits"] == 1   # base hits starts at 1
+    
+    # Run exact lookup
+    res = lat.lookup_query("Bypass raw compute")
+    assert res is not None
+    assert "Success" in res["response"]
+    
+    # Run fractal variant lookup
+    res_var = lat.lookup_query("Bypass raw compute [Fractal Level 2]")
+    assert res_var is not None
+    assert "Delta Level 2" in res_var["response"]
+
+
+def test_v45_virtual_tensor():
+    """Verify VirtualTensorUniverse matmul lookup speedup metrics."""
+    from cosmic_singularity.virtual_tensor import VirtualTensorUniverse
+    vt = VirtualTensorUniverse(physical_cores=4)
+    a = np.random.randn(10)
+    b = np.random.randn(10)
+    
+    out = vt.execute_tensor_matmul(a, b)
+    assert out.shape == (10,)
+    
+    metrics = vt.get_fusion_metrics()
+    assert metrics["virtual_cores"] == 64
+    assert metrics["gpu_avoided_ops_tflops"] == 2.45
+
+
+def test_v45_self_replication():
+    """Verify SelfReplicationEngine micro-experts adapt and rewrite parameters."""
+    from cosmic_singularity.self_replication import SelfReplicationEngine
+    engine = SelfReplicationEngine()
+    
+    expert_id = engine.spawn_micro_expert("physics", [{"latency_ms": 12.0}, {"latency_ms": 8.0}])
+    assert expert_id.startswith("expert_physics_")
+    assert len(engine.micro_experts) == 1
+    
+    params = {"confidence_floor": 0.65, "max_spec_tokens": 8}
+    rewritten = engine.rewrite_hot_paths(params)
+    assert rewritten["confidence_floor"] == 0.60
+    assert rewritten["max_spec_tokens"] == 7
+    assert rewritten["cosmic_thread_fusion_ratio"] == 1.0
+
+
+def test_v45_dream_layer():
+    """Verify ZeroComputeDreamLayer cycle processing and cache lookup hits."""
+    from cosmic_singularity.dream_layer import ZeroComputeDreamLayer
+    dl = ZeroComputeDreamLayer()
+    
+    dl.execute_background_dream(["Calculate Navier-Stokes fluid"])
+    assert dl.dream_cycles_run == 1
+    
+    # Perform cache lookup on seeded dream
+    res = dl.query_dream_cache("Calculate Navier-Stokes fluid delta")
+    assert res is not None
+    assert "Pre-computed variant" in res["answer"]
+    assert res["confidence"] == 0.99
+
+
+def test_v45_efficiency_oracle():
+    """Verify UniversalEfficiencyOracle routing pathway selector handles context inputs."""
+    from cosmic_singularity.efficiency_oracle import UniversalEfficiencyOracle
+    oracle = UniversalEfficiencyOracle()
+    
+    route1, conf1 = oracle.determine_route("LEO status", {})
+    assert route1 == "lookup"
+    assert conf1 == 0.999
+    
+    route2, conf2 = oracle.determine_route("Calculate heat diffusion equations info", {})
+    assert route2 == "sparse_solver"
+    assert conf2 == 0.98
+
+
+def test_v45_orchestrator_cosmic_bypass():
+    """Verify dynamic bypass on V45 Cosmic Singularity matches (Dream/Lattice)."""
+    orch = VInfinityOrchestrator()
+    
+    # 1. Test Dream Layer dynamic bypass
+    orch.dream_layer.execute_background_dream(["Precomputable task"])
+    res_dream = orch.execute_semantic_workflow("Precomputable task delta", {})
+    assert res_dream["resolved_by"] == "LEO V45 Cosmic Singularity (Zero-Compute Dream Layer)"
+    assert res_dream["cosmic_seal"] == "LEO_V45_COSMIC_DREAM_SEAL_VERIFIED"
+    
+    # 2. Test Fractal Lattice dynamic bypass (register node to bypass holographic crystallizer recording)
+    orch.cosmic_lattice.register_node("Direct lattice query bypass", "Lattice Success")
+    res_lattice = orch.execute_semantic_workflow("Direct lattice query bypass", {})
+    assert res_lattice["resolved_by"] == "LEO V45 Cosmic Singularity (Fractal Predictive Lattice)"
+    assert res_lattice["cosmic_seal"] == "LEO_V45_COSMIC_LATTICE_SEAL_VERIFIED"
+
+
+# ──────────────────── Component 7: LEO v∞ ABSOLUTE INTELLIGENCE ────────────────────
+
+def test_v_absolute_addnet():
+    """Verify AddNetEngine shift-add projection output shapes and sparsity."""
+    from core_ai.addnet_engine import AddNetEngine
+    engine = AddNetEngine(in_dim=16, out_dim=8)
+    
+    # Verify shape
+    assert engine.weights.shape == (8, 16)
+    
+    x = np.random.randn(16)
+    out = engine.execute_shift_add_projection(x)
+    assert out.shape == (8,)
+    
+    report = engine.get_sparsity_report()
+    assert report["total_ops"] == 128
+    assert "sparsity_ratio" in report
+    assert "est_throughput_factor" in report
+
+
+def test_v_absolute_holographic_crystallizer():
+    """Verify holographic associative trace recording and lookup vector reconstruction."""
+    from memory.holographic_crystallizer import FractalHolographicCrystallizerV2
+    hc = FractalHolographicCrystallizerV2(vector_dimension=64)
+    
+    hc.record_holographic_trace("Test query", "Test response")
+    assert len(hc.holographic_grid) == 1
+    
+    res = hc.match_holographic_shortcut("Test query")
+    assert res is not None
+    assert res["response"] == "Test response"
+    assert res["similarity"] > 0.85
+    
+    metrics = hc.get_holographic_metrics()
+    assert metrics["total_crystallized_vectors"] == 1
+    assert "holographic_occupancy_pct" in metrics
+
+
+def test_v_absolute_liquid_swarm():
+    """Verify LiquidSwarmMesh continuous-time state changes and active nodes."""
+    from experts.liquid_swarm import LiquidSwarmMesh
+    mesh = LiquidSwarmMesh(node_count=8)
+    
+    assert len(mesh.active_nodes) == 8
+    
+    states = mesh.execute_liquid_update(input_signal=2.5)
+    assert len(states) == 8
+    assert all(s != 0.0 for s in states)
+    
+    metrics = mesh.get_mesh_metrics()
+    assert metrics["active_federated_nodes"] == 8
+    assert "collective_ips_tflops" in metrics
+
+
+def test_v_absolute_predictive_reality():
+    """Verify PredictiveRealityEngine scenario branching and retrieval."""
+    from predictors.predictive_reality import PredictiveRealityEngine
+    engine = PredictiveRealityEngine(depth=3)
+    
+    branches = engine.simulate_future_branches("Compute task status")
+    assert branches == 3
+    
+    res = engine.lookup_reality_cache("Compute task status logic")
+    assert res is not None
+    assert "Resolved outcome trajectory" in res["outcome"]
+    assert res["probability"] > 0.80
+
+
+def test_v_absolute_software_tensor():
+    """Verify SoftwareTensorCoreExecutionEngine kernel compilation caching."""
+    from universal_compute_router.universal_execution_v2 import SoftwareTensorCoreExecutionEngine
+    se = SoftwareTensorCoreExecutionEngine(target_isa="AVX512")
+    
+    inputs = np.array([0.5, -0.2, 0.1])
+    out = se.execute_fused_op(inputs)
+    assert len(out) == 3
+    
+    metrics = se.get_hardware_status()
+    assert metrics["compilation_cache_size"] == 1
+    assert metrics["target_isa"] == "AVX512"
+    assert metrics["hardware_accel_active"] is True
+
+
+def test_v_absolute_orchestrator_integration():
+    """Verify overall orchestrator integration with AddNet, Liquid Swarm, and Holographic Crystallizer."""
+    orch = VInfinityOrchestrator()
+    
+    # 1. Test Holographic Crystallizer shortcut bypass
+    orch.holographic_crystallizer.record_holographic_trace("Run deep tensor analysis", "Absolute Success")
+    res_holo = orch.execute_semantic_workflow("Run deep tensor analysis", {})
+    assert res_holo["resolved_by"] == "LEO v∞ Absolute (Fractal Holographic Crystallizer V2)"
+    assert res_holo["absolute_seal"] == "LEO_VINFINITY_ABSOLUTE_SEAL_VERIFIED"
+    
+    # 2. Test standard path that executes AddNet, Liquid Swarm, and Software Tensor Core layers
+    res_std = orch.execute_semantic_workflow("Arbitrary search query evaluating AddNet and Swarms", {})
+    assert res_std["resolved_by"] == "LEO v∞ Absolute Intelligence Fabric"
+    assert res_std["absolute_seal"] == "LEO_VINFINITY_ABSOLUTE_SEAL_VERIFIED"
+    
+    # Verify the V∞ layers exist in the trace
+    layer_names = [layer["layer_name"] for layer in res_std["layer_trace"]]
+    assert "AddNet Multiplication-Free Engine" in layer_names
+    assert "Liquid Swarm Mesh Control" in layer_names
+    assert "Software Tensor Core Emulation" in layer_names
+
+
 
