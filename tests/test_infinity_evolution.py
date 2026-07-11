@@ -576,4 +576,69 @@ def test_v_absolute_orchestrator_integration():
     assert "Software Tensor Core Emulation" in layer_names
 
 
+# ──────────────────── Component 8: TESLA RESONANCE PROTOCOL ────────────────────
+
+def test_tesla_semantic_cache():
+    """Verify semantic cache energy capture threshold and intercept checks."""
+    from core_ai.resonance.semantic_cache import LEOSemanticCache
+    cache = LEOSemanticCache()
+    
+    # Store query response pair
+    cache.store_query("Calculate quantum wave probability", "Mock Response: Wave function collapsed")
+    
+    # Check intercept of same query
+    hit = cache.intercept_query("Calculate quantum wave probability")
+    assert hit is not None
+    assert "Mock Response: Wave function collapsed" in hit
+    
+    # Check mismatch query
+    miss = cache.intercept_query("Unrelated topic text query")
+    assert miss is None
+
+
+def test_tesla_hetero_scheduler():
+    """Verify dynamic device compilation and task routing mappings."""
+    from core_ai.resonance.hetero_scheduler import HeteroFrequencyScheduler
+    sched = HeteroFrequencyScheduler()
+    
+    r_emb = sched.route_compute("embedding", "models/leo-mini-lm")
+    assert r_emb["device"] == "CPU"
+    assert r_emb["performance_hint"] == "LATENCY"
+    
+    r_inf = sched.route_compute("inference", "models/leo-3b-1.58bit")
+    assert r_inf["device"] == "HETERO:GPU,CPU"
+    assert r_inf["performance_hint"] == "THROUGHPUT"
+
+
+def test_tesla_knowledge_graph():
+    """Verify O(1) knowledge graph fact node edge retrieval."""
+    from memory.resonance_graph import LEOKnowledgeGraph
+    kg = LEOKnowledgeGraph()
+    
+    # Retrieve relations seeded on creation
+    results = kg.retrieve_context("LEO")
+    assert len(results) > 0
+    assert results[0]["relation"] == "supports"
+    assert results[0]["target"] == "Tesla Protocol"
+    
+    # Mismatch check
+    miss = kg.retrieve_context("NonexistentEntity")
+    assert len(miss) == 0
+
+
+def test_tesla_speculative_decoder():
+    """Verify CPU-draft + iGPU-verify model initialization and mock pipeline generation."""
+    from core_ai.resonance.speculative_decoder import TeslaSpeculativeDecoder
+    decoder = TeslaSpeculativeDecoder()
+    
+    pipe, config = decoder.init_speculative_pipeline()
+    assert pipe.target == "models/leo-3b-1.58bit"
+    assert pipe.draft == "models/leo-0.6b-int4"
+    assert config.num_assistant_tokens == 3
+    
+    res = pipe.generate("Verify test")
+    assert "[Tesla Speculative Decoded]" in res
+
+
+
 
