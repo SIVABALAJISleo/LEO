@@ -62,7 +62,7 @@ class LoRATrainer:
                 raise OSError("Running in offline mode. Falling back to CPU simulation.")
 
             from transformers import AutoModelForCausalLM, AutoTokenizer
-            from peft import LoraConfig, get_peft_model
+            from peft import LoraConfig, get_peft_model  # type: ignore
 
             tok = AutoTokenizer.from_pretrained(self.base_model)  # nosec B615
             tok.pad_token = tok.eos_token
@@ -161,7 +161,7 @@ class LoRATrainer:
         tok = AutoTokenizer.from_pretrained(self.base_model)  # nosec B615
         model = AutoModelForCausalLM.from_pretrained(self.base_model)  # nosec B615
         if adapter_dir:
-            from peft import PeftModel
+            from peft import PeftModel  # type: ignore
             model = PeftModel.from_pretrained(model, adapter_dir)
         model = model.to(self.device).eval()
         ids = tok(f"Q: {prompt}\nA:", return_tensors="pt").input_ids.to(self.device)

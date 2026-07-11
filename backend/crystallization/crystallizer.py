@@ -114,7 +114,7 @@ class SemanticCrystallizer:
                 try:
                     self.embedding_model = SentenceTransformer(
                         'BAAI/bge-small-en-v1.5',
-                        local_files_only=True,
+                        model_kwargs={"local_files_only": True},
                     )
                     logger.info("Loaded bge-small-en-v1.5 (offline cache).")
                     return
@@ -124,7 +124,7 @@ class SemanticCrystallizer:
                     self.embedding_model = SentenceTransformer(
                         'nomic-ai/nomic-embed-text-v1.5',
                         trust_remote_code=True,
-                        local_files_only=True,
+                        model_kwargs={"local_files_only": True},
                     )
                     logger.info("Loaded nomic-embed-text-v1.5 (offline cache).")
                     return
@@ -201,7 +201,7 @@ class SemanticCrystallizer:
             if embeddings:
                 embeddings_np = np.vstack(embeddings)
                 if self.faiss_available and hasattr(self.index, 'add'):
-                    self.index.add(embeddings_np)
+                    self.index.add(embeddings_np)  # type: ignore
                 else:
                     self.index = embeddings_np
         logger.info(f"Crystallization index built with {len(self.trace_ids)} cached answers.")
