@@ -465,7 +465,7 @@ class VInfinityOrchestrator:
                 "compute_avoided": True,
                 "latency_ms": 0.15,
                 "entropy_tier": "holographic_interference",
-                "version": "vInfinity_Absolute",
+                "version": self.VERSION,
                 "hardware": self.hw,
                 "efficiency": {
                     "active_watts": 0.05,
@@ -496,7 +496,7 @@ class VInfinityOrchestrator:
                 "compute_avoided": True,
                 "latency_ms": 0.25,
                 "entropy_tier": "reality_simulation",
-                "version": "vInfinity_Absolute",
+                "version": self.VERSION,
                 "hardware": self.hw,
                 "efficiency": {
                     "active_watts": 0.08,
@@ -916,7 +916,7 @@ class VInfinityOrchestrator:
             "compute_avoided": True,
             "latency_ms": round(tot_lat, 2),
             "entropy_tier": "vinfinity_fabric",
-            "version": "vInfinity_Absolute",
+            "version": self.VERSION,
             "poi": poi_block.to_dict(),
             "cosmic_seal": "LEO_V45_COSMIC_SINGULARITY_SEAL_VERIFIED",
             "absolute_seal": "LEO_VINFINITY_ABSOLUTE_SEAL_VERIFIED",

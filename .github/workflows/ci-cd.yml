@@ -99,6 +99,8 @@ jobs:
           echo "Lock file is correctly synchronized."
       - name: Update Browserslist database
         run: npx update-browserslist-db@latest --yes
+      - name: Auto-fix imports for Vite 8 / rolldown compliance
+        run: python _fix_exports.py
       - name: TypeScript type check
         run: npx tsc --noEmit || true
       - name: Build

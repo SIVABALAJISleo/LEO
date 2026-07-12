@@ -79,6 +79,15 @@ class SemanticCrystallizer:
         self._load_embedder()
         self._build_index()
 
+    def _normalize_query(self, query: str) -> str:
+        import re
+        norm = query.lower()
+        norm = re.sub(r'[^\w\s]', '', norm)  # remove punctuation
+        stop_words = {'what', 'is', 'tell', 'me', 'explain', 'hello', 'hi', 'hey', 'the', 'a', 'an', 'of', 'in', 'on', 'to', 'for', 'about'}
+        words = [w for w in norm.split() if w not in stop_words]
+        words.sort()
+        return " ".join(words)
+
     def _initialize_sqlite(self):
         conn = get_concurrent_db_connection(self.db_path)
         cursor = conn.cursor()
@@ -164,7 +173,8 @@ class SemanticCrystallizer:
         else:
             # Mocked deterministic embedding using simple hashing for test purposes
             import hashlib
-            h = int(hashlib.md5(query.encode(), usedforsecurity=False).hexdigest(), 16)
+            norm_query = self._normalize_query(query)
+            h = int(hashlib.md5(norm_query.encode(), usedforsecurity=False).hexdigest(), 16)
             np.random.seed(h % (2**32))
             emb = np.random.randn(384).astype(np.float32)
             emb = emb / float(np.linalg.norm(emb))
@@ -195,7 +205,7 @@ class SemanticCrystallizer:
                     embeddings.append(emb)
                     self.trace_ids.append(trace_id)
                     if query:
-                        self.bloom_filter.add(query)
+                        self.bloom_filter.add(self._normalize_query(query))
                         self.hll.add(query)
             
             if embeddings:
@@ -225,7 +235,7 @@ class SemanticCrystallizer:
             conn.close()
             
         # Register in Bloom screening filter and HLL
-        self.bloom_filter.add(query)
+        self.bloom_filter.add(self._normalize_query(query))
         self.hll.add(query)
 
         # Update in-memory index
@@ -261,7 +271,8 @@ class SemanticCrystallizer:
         Searches the semantic cache. If cosine similarity > threshold, returns cached answer.
         """
         # Step 0: Quick screening via Bloom Filter to avoid vector lookups
-        if not self.bloom_filter.contains(query):
+        norm_query = self._normalize_query(query)
+        if not self.bloom_filter.contains(norm_query):
             logger.debug(f"[Crystallizer] Bloom screening negative. Fast escape.")
             return None
 
