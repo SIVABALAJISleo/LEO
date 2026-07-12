@@ -42,6 +42,12 @@ import {
 import "./index.css";
 import { V42Dashboard } from "./components/v42/V42Dashboard";
 import { OmegaDashboard } from "./src/v43/dashboard/OmegaDashboard";
+import { IntelliGPUHome } from "./components/IntelliGPUHome";
+import { IntelliGPUDocs } from "./components/IntelliGPUDocs";
+import { IntelliGPUPlayground } from "./components/IntelliGPUPlayground";
+import { IntelliGPUAuth } from "./components/IntelliGPUAuth";
+import { IntelliGPUOnboarding } from "./components/IntelliGPUOnboarding";
+import { IntelliGPUDashboard } from "./components/IntelliGPUDashboard";
 
 
 // Import V14 Engines
@@ -118,6 +124,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState<"swarm" | "cognitive" | "debate" | "benchmarks" | "devops" | "quality" | "v14super" | "v15substrate" | "v16substrate" | "v17dominance" | "v18validation" | "failureHunting" | "v22quality" | "v23frontier" | "v24convergence" | "v25certification" | "v26reality" | "v27certification" | "v28validation" | "v29frontier" | "v30frontier" | "v31irrelevance" | "v32ceiling" | "v32reality" | "v33compute" | "v34compute" | "v35parity" | "v36ceiling" | "v37evolution" | "v38architecture" | "v40ultimate" | "vinfinity" | "v42irrelevance" | "v43omega">("v43omega");
+  const [currentView, setCurrentView] = useState<"home" | "docs" | "playground" | "swarms" | "auth" | "onboarding" | "legacy_swarms">("home");
 
   // --- V17 Domain Dominance States ---
   const [v17QueryInput, setV17QueryInput] = useState("Issue transaction refund invoice");
@@ -828,28 +835,79 @@ function App() {
       {/* Top Navbar Banner */}
       <header className="border-b border-slate-800 sticky top-0 bg-[#020813]/95 backdrop-blur z-50 shadow-md">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="bg-blue-600 p-2 rounded-lg shadow-inner shadow-blue-400/50">
-              <Zap className="h-5 w-5 text-white" />
-            </div>
-            <div>
-              <h1 className="text-lg font-bold tracking-wider text-slate-100 flex items-center gap-2">
-                UCSIP v11 <span className="text-blue-500 font-semibold text-xs border border-blue-500/30 px-1.5 py-0.5 rounded uppercase">Cognitive Evolution</span>
-              </h1>
-              <p className="text-[10px] text-slate-400">Universal Crystal Swarm Intelligence Platform</p>
+          <div className="flex items-center gap-6">
+            <button 
+              onClick={() => setCurrentView("home")}
+              className="flex items-center gap-3 hover:opacity-90 transition-opacity"
+            >
+              <div className="bg-[#76B900]/10 border border-[#76B900]/30 p-2 rounded-lg shadow-[0_0_15px_rgba(118,185,0,0.2)]">
+                <Cpu className="h-5 w-5 text-[#76B900]" />
+              </div>
+              <div className="text-left">
+                <h1 className="text-lg font-black tracking-tight text-white font-display flex items-center gap-1.5">
+                  IntelliGPU
+                </h1>
+                <p className="text-[9px] text-slate-500 font-semibold uppercase tracking-wider">Software Engine</p>
+              </div>
+            </button>
+
+            {/* Main Navigation Links */}
+            <div className="hidden md:flex items-center gap-1">
+              {[
+                { id: "home", label: "Overview" },
+                { id: "docs", label: "Documentation" },
+                { id: "playground", label: "API Playground" },
+                { id: "pricing", label: "Pricing" },
+                { id: "swarms", label: "LEO Swarms" }
+              ].map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    if (item.id === "pricing") {
+                      setCurrentView("home");
+                      setTimeout(() => {
+                        window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+                      }, 100);
+                    } else {
+                      setCurrentView(item.id as any);
+                    }
+                  }}
+                  className={`px-3 py-1.5 rounded text-xs font-bold uppercase tracking-wider transition-all ${
+                    (item.id === "pricing" && currentView === "home" && window.scrollY > 1000) || currentView === item.id
+                      ? "text-[#76B900] bg-[#76B900]/5"
+                      : "text-slate-400 hover:text-slate-200"
+                  }`}
+                >
+                  {item.label}
+                </button>
+              ))}
             </div>
           </div>
+
           <div className="flex items-center gap-4">
+            <button 
+              onClick={() => setCurrentView("auth")}
+              className="text-xs text-slate-300 font-bold hover:text-white transition-colors"
+            >
+              Sign In
+            </button>
+            <button 
+              onClick={() => setCurrentView("onboarding")}
+              className="bg-[#76B900] hover:bg-[#659e00] text-black font-extrabold text-xs px-4 py-2 rounded shadow-[0_0_10px_rgba(118,185,0,0.2)] transition-all"
+            >
+              Get Started
+            </button>
+            <span className="h-4 w-px bg-slate-800" />
             {error ? (
               <span className="flex items-center gap-1.5 text-xs text-rose-500 bg-rose-500/10 px-3 py-1 rounded-full border border-rose-500/20 font-medium">
                 <AlertTriangle className="h-3.5 w-3.5" />
                 Backend Offline
               </span>
             ) : status ? (
-              <span className="flex items-center gap-1.5 text-xs text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 font-medium">
+              <span className="flex items-center gap-1.5 text-xs text-[#76B900] bg-[#76B900]/10 px-3 py-1 rounded-full border border-[#76B900]/20 font-medium">
                 <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#76B900] opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#76B900]"></span>
                 </span>
                 {status.system} Active
               </span>
@@ -858,67 +916,87 @@ function App() {
         </div>
       </header>
 
-      {/* Tab Navigation Menu */}
-      <nav className="border-b border-slate-800 bg-[#030d1d] py-1 shadow-inner">
-        <div className="container mx-auto px-4 flex gap-2 overflow-x-auto">
-          {[
-            { id: "swarm", label: "Swarm Console", icon: Terminal },
-            { id: "cognitive", label: "Cognitive Engine", icon: Cpu },
-            { id: "v14super", label: "V14 Cognitive Breakthrough", icon: Sparkles },
-            { id: "v15substrate", label: "V15 Cognitive Substrate", icon: Brain },
-            { id: "v16substrate", label: "V16 Cognitive Substrate", icon: Sparkles },
-            { id: "v17dominance", label: "V17 Domain Dominance", icon: Zap },
-            { id: "v18validation", label: "V18 Validation Universe", icon: Shield },
-            { id: "failureHunting", label: "Failure Hunting", icon: Crosshair },
-            { id: "v22quality", label: "V22 Quality Amplifier", icon: FlaskConical },
-            { id: "v23frontier", label: "V23 Frontier Optimization", icon: Gauge },
-            { id: "v24convergence", label: "V24 Convergence Engine", icon: LineChart },
-            { id: "v25certification", label: "V25 Certification Core", icon: Award },
-            { id: "v26reality", label: "V26 Reality Core", icon: Sparkles },
-            { id: "v27certification", label: "V27 Scientific Proof", icon: Scale },
-            { id: "v28validation", label: "V28 Validation Lab", icon: ShieldCheck },
-            { id: "v29frontier", label: "V29 Frontier Core", icon: Cpu },
-            { id: "v30frontier", label: "V30 Frontier Acceleration", icon: Cpu },
-            { id: "v31irrelevance", label: "V31 Compute Avoidance", icon: Gauge },
-            { id: "v32ceiling", label: "V32 Engineering Ceiling", icon: Cpu },
-            { id: "v32reality", label: "V32 Reality Learning", icon: Gauge },
-            { id: "v33compute", label: "V33 Compute Irrelevance", icon: Gauge },
-            { id: "v34compute", label: "V34 Compute Irrelevance", icon: Cpu },
-            { id: "v35parity", label: "V35 Scoreboard", icon: Award },
-            { id: "v36ceiling", label: "V36 Scoreboard", icon: Gauge },
-            { id: "v37evolution", label: "V37 Cockpit", icon: Sparkles },
-            { id: "v38architecture", label: "V38 Cockpit", icon: Sparkles },
-            { id: "v40ultimate", label: "V40 Cockpit", icon: Sparkles },
-            { id: "vinfinity", label: "v∞ Cockpit", icon: Zap },
-            { id: "v42irrelevance", label: "V42 Cockpit", icon: Sparkles },
-            { id: "v43omega", label: "V43 OMEGA", icon: Zap },
-            { id: "debate", label: "Multi-Agent Debate", icon: MessageSquare },
-            { id: "quality", label: "Verification & Quality", icon: Shield },
-            { id: "benchmarks", label: "Enterprise Benchmarks", icon: BarChart2 },
-            { id: "devops", label: "DevOps Stage", icon: Settings },
-          ].map((tab) => {
-            const Icon = tab.icon;
-            const active = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
-                className={`flex items-center gap-2 px-4 py-3 text-xs font-semibold uppercase tracking-wider transition-all border-b-2 rounded-t-md hover:bg-slate-800/40 ${
-                  active 
-                    ? "border-blue-500 text-blue-400 bg-blue-500/5 font-bold" 
-                    : "border-transparent text-slate-400 hover:text-slate-200"
-                }`}
-              >
-                <Icon className="h-4 w-4" />
-                {tab.label}
-              </button>
-            );
-          })}
-        </div>
-      </nav>
+      {/* Tab Navigation Menu (only for original Swarm dashboards) */}
+      {currentView === "swarms" && (
+        <nav className="border-b border-slate-800 bg-[#030d1d] py-1 shadow-inner">
+          <div className="container mx-auto px-4 flex gap-2 overflow-x-auto">
+            {[
+              { id: "swarm", label: "Swarm Console", icon: Terminal },
+              { id: "cognitive", label: "Cognitive Engine", icon: Cpu },
+              { id: "v14super", label: "V14 Cognitive Breakthrough", icon: Sparkles },
+              { id: "v15substrate", label: "V15 Cognitive Substrate", icon: Brain },
+              { id: "v16substrate", label: "V16 Cognitive Substrate", icon: Sparkles },
+              { id: "v17dominance", label: "V17 Domain Dominance", icon: Zap },
+              { id: "v18validation", label: "V18 Validation Universe", icon: Shield },
+              { id: "failureHunting", label: "Failure Hunting", icon: Crosshair },
+              { id: "v22quality", label: "V22 Quality Amplifier", icon: FlaskConical },
+              { id: "v23frontier", label: "V23 Frontier Optimization", icon: Gauge },
+              { id: "v24convergence", label: "V24 Convergence Engine", icon: LineChart },
+              { id: "v25certification", label: "V25 Certification Core", icon: Award },
+              { id: "v26reality", label: "V26 Reality Core", icon: Sparkles },
+              { id: "v27certification", label: "V27 Scientific Proof", icon: Scale },
+              { id: "v28validation", label: "V28 Validation Lab", icon: ShieldCheck },
+              { id: "v29frontier", label: "V29 Frontier Core", icon: Cpu },
+              { id: "v30frontier", label: "V30 Frontier Acceleration", icon: Cpu },
+              { id: "v31irrelevance", label: "V31 Compute Avoidance", icon: Gauge },
+              { id: "v32ceiling", label: "V32 Engineering Ceiling", icon: Cpu },
+              { id: "v32reality", label: "V32 Reality Learning", icon: Gauge },
+              { id: "v33compute", label: "V33 Compute Irrelevance", icon: Gauge },
+              { id: "v34compute", label: "V34 Compute Irrelevance", icon: Cpu },
+              { id: "v35parity", label: "V35 Scoreboard", icon: Award },
+              { id: "v36ceiling", label: "V36 Scoreboard", icon: Gauge },
+              { id: "v37evolution", label: "V37 Cockpit", icon: Sparkles },
+              { id: "v38architecture", label: "V38 Cockpit", icon: Sparkles },
+              { id: "v40ultimate", label: "V40 Cockpit", icon: Sparkles },
+              { id: "vinfinity", label: "v∞ Cockpit", icon: Zap },
+              { id: "v42irrelevance", label: "V42 Cockpit", icon: Sparkles },
+              { id: "v43omega", label: "V43 OMEGA", icon: Zap },
+              { id: "debate", label: "Multi-Agent Debate", icon: MessageSquare },
+              { id: "quality", label: "Verification & Quality", icon: Shield },
+              { id: "benchmarks", label: "Enterprise Benchmarks", icon: BarChart2 },
+              { id: "devops", label: "DevOps Stage", icon: Settings },
+            ].map((tab) => {
+              const Icon = tab.icon;
+              const active = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as any)}
+                  className={`flex items-center gap-2 px-4 py-3 text-xs font-semibold uppercase tracking-wider transition-all border-b-2 rounded-t-md hover:bg-slate-800/40 ${
+                    active 
+                      ? "border-blue-500 text-blue-400 bg-blue-500/5 font-bold" 
+                      : "border-transparent text-slate-400 hover:text-slate-200"
+                  }`}
+                >
+                  <Icon className="h-4 w-4" />
+                  {tab.label}
+                </button>
+              );
+            })}
+          </div>
+        </nav>
+      )}
 
-      {/* Main Container */}
-      <main className="flex-1 container mx-auto px-4 py-8">
+      <main className="flex-1">
+        {currentView === "home" && <IntelliGPUHome onNavigate={setCurrentView} />}
+        {currentView === "docs" && <IntelliGPUDocs />}
+        {currentView === "playground" && <IntelliGPUPlayground />}
+        {currentView === "auth" && (
+          <IntelliGPUAuth onNavigate={setCurrentView} onSuccess={() => setCurrentView("swarms")} />
+        )}
+        {currentView === "onboarding" && (
+          <IntelliGPUOnboarding onNavigate={setCurrentView} onComplete={() => setCurrentView("swarms")} />
+        )}
+
+        {currentView === "swarms" && (
+          <IntelliGPUDashboard 
+            onSignOut={() => setCurrentView("home")} 
+            onNavigateToLegacy={() => setCurrentView("legacy_swarms")}
+          />
+        )}
+
+        {currentView === "legacy_swarms" && (
+          <div className="container mx-auto px-4 py-8">
         
         {/* TAB 1: SWARM RUNTIME CONSOLE */}
         {activeTab === "swarm" && (
@@ -3643,6 +3721,8 @@ function App() {
           </div>
         )}
 
+          </div>
+        )}
       </main>
     </div>
   );

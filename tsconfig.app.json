@@ -25,12 +25,12 @@
     "baseUrl": ".",
     "paths": {
       "@/*": [
-        "./src/*"
+        "./ui_core/*"
       ]
     }
   },
   "include": [
-    "src",
+    "ui_core",
     "scripts",
     "tests"
   ]

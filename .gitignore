@@ -51,3 +51,8 @@ chroma_db/
 *.db-journal
 cache_index.faiss
 .hyper_cache/
+
+# Model Weights and OpenVINO XMLs
+models/*.pt
+models/*.gguf
+models/*.xml
