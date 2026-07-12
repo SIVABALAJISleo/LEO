@@ -67,7 +67,8 @@ try:
         "workspace_id": "test_workspace_v42",
         "quality_hint": "balanced"
     }
-    response = client.post("/api/v1/leo/orchestrate", json=payload)
+    headers = {"Authorization": "Bearer token-admin"}
+    response = client.post("/api/v1/leo/v42/orchestrate", json=payload, headers=headers)
     assert response.status_code == 200, f"status={response.status_code}, body={response.text[:200]}"
     data = response.json()
     assert "answer" in data, f"No 'answer' in: {data}"
@@ -75,7 +76,7 @@ try:
     assert "Telugu" in data["answer"], f"Telugu not in answer: {data['answer']!r}"
     assert data["entropy_tier"] == "v42_ultimate", f"entropy_tier={data['entropy_tier']}"
 
-    status_response = client.get("/api/v1/leo/status")
+    status_response = client.get("/api/v1/leo/status?version=v42")
     assert status_response.status_code == 200
     status_data = status_response.json()
     assert status_data["layers"] == 12, f"layers={status_data['layers']}"

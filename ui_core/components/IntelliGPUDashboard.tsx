@@ -45,9 +45,21 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({ onSign
 
   // Modules Enabled/Disabled Toggles
   const [modulesState, setModulesState] = useState<Record<string, boolean>>({
-    precision: false,
+    quantization: false,
+    kernel: false,
+    approx: false,
+    compression: false,
     cache: false,
+    parallel: false,
     distributed: false,
+    serving: false,
+    streaming: false,
+    jit: false,
+    memory: false,
+    speculative: false,
+    precision: false,
+    graph: false,
+    sparsity: false,
   });
 
   const toggleModule = (id: string) => {
@@ -488,21 +500,21 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({ onSign
               {/* GPU Modules List */}
               <div className="space-y-4">
                 {[
-                  {
-                    id: "precision",
-                    label: "Adaptive Precision",
-                    desc: "Dynamically adjust precision based on input characteristics.",
-                  },
-                  {
-                    id: "cache",
-                    label: "Cache Optimization",
-                    desc: "Intelligent caching of repeated computations and activations.",
-                  },
-                  {
-                    id: "distributed",
-                    label: "Distributed Computing",
-                    desc: "Scale inference across multiple GPUs and nodes.",
-                  },
+                  { id: "quantization", label: "Quantization", desc: "Reduce model precision to INT8/FP16 for faster inference with minimal accuracy loss." },
+                  { id: "kernel", label: "Kernel Optimization", desc: "Optimize CUDA kernels for maximum GPU utilization and throughput." },
+                  { id: "approx", label: "Neural Approximation", desc: "Replace expensive operations with learned approximations." },
+                  { id: "compression", label: "Memory Compression", desc: "Compress intermediate tensors to reduce memory footprint." },
+                  { id: "cache", label: "Cache Optimization", desc: "Intelligent caching of repeated computations and activations." },
+                  { id: "parallel", label: "Parallel Execution", desc: "Execute independent operations concurrently on GPU streams." },
+                  { id: "distributed", label: "Distributed Computing", desc: "Scale inference across multiple GPUs and nodes." },
+                  { id: "serving", label: "Model Serving", desc: "Optimized model loading and request batching for production." },
+                  { id: "streaming", label: "Streaming Inference", desc: "Stream model weights and outputs for low-latency pipelines." },
+                  { id: "jit", label: "JIT Compilation", desc: "Just-in-time compilation of model graphs for target hardware." },
+                  { id: "memory", label: "Memory Management", desc: "Advanced memory allocation and defragmentation strategies." },
+                  { id: "speculative", label: "Speculative Execution", desc: "Predict and pre-compute likely execution paths." },
+                  { id: "precision", label: "Adaptive Precision", desc: "Dynamically adjust precision based on input characteristics." },
+                  { id: "graph", label: "Graph Optimization", desc: "Fuse operations and eliminate redundancies in computation graphs." },
+                  { id: "sparsity", label: "Sparsity & Pruning", desc: "Remove unnecessary weights and leverage sparse computation." }
                 ].map((mod) => (
                   <Card key={mod.id} className="bg-[#0b1329]/40 border-slate-800/80 shadow-md">
                     <CardContent className="p-6">
