@@ -81,7 +81,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
           cache: "npm"
       - name: Verify Lock File Synchronization
         run: |
@@ -90,8 +90,14 @@ jobs:
           # which cause false positives in strict git diff checks.
           npm ci --legacy-peer-deps
           echo "Lock file is correctly synchronized."
-      - run: npx tsc --noEmit || true
-      - run: npm run build
+      - name: Update Browserslist database
+        run: npx update-browserslist-db@latest --yes
+      - name: Auto-fix imports for Vite 8 / rolldown compliance
+        run: python _fix_exports.py
+      - name: TypeScript type check
+        run: npx tsc --noEmit || true
+      - name: Build
+        run: npm run build
       - uses: actions/upload-artifact@v4
         with:
           name: frontend-dist
