@@ -79,3 +79,6 @@ app.include_router(prefetch_router)
 
 from backend.routers.scoreboard import router as scoreboard_router
 app.include_router(scoreboard_router)
+
+from backend.ira_router import router as ira_router
+app.include_router(ira_router)

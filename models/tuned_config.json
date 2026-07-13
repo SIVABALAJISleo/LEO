@@ -1,0 +1,18 @@
+{
+  "fingerprint": "Windows_Intel64 Family 6 Model 186 Stepping 2, GenuineIntel_12cores",
+  "sweep_date": "2026-07-13 19:22:22",
+  "modes": {
+    "performance": {
+      "threads": 8,
+      "batch_size": 32,
+      "context_size": 2048,
+      "use_igpu": false
+    },
+    "power_saving": {
+      "threads": 4,
+      "batch_size": 8,
+      "context_size": 1024,
+      "use_igpu": false
+    }
+  }
+}

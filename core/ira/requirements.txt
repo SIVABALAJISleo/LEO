@@ -1,0 +1,9 @@
+numpy
+openvino
+transformers
+tokenizers
+scipy
+sentencepiece
+protobuf
+aiofiles
+watchdog
