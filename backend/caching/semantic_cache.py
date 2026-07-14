@@ -27,7 +27,7 @@ class MultiLevelSemanticCache:
 
     def _hash_query(self, query: str) -> str:
         """Normalized string hash for L1 cache."""
-        return hashlib.md5(query.lower().strip().encode()).hexdigest()
+        return hashlib.sha256(query.lower().strip().encode()).hexdigest()
 
     def check_cache(self, query: str, query_vector: Optional[np.ndarray] = None, similarity_threshold: float = 0.95) -> Optional[str]:
         """Checks Level 1 then Level 2 for a cached response."""

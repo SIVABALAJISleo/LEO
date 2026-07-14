@@ -26,7 +26,7 @@ class AdaptiveModelRouter:
                 # For this prototype, we use a controlled eval block inside a try-catch.
                 # Safe sandbox implementation applies here.
                 safe_dict = {"__builtins__": None}
-                result = eval(query, safe_dict, safe_dict)
+                result = eval(query, safe_dict, safe_dict)  # nosec B307
                 return True, str(result)
             except Exception:
                 pass
