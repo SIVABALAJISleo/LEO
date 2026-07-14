@@ -1,1 +1,14 @@
-{"model_type": "ternary_bitnet", "bits": 1.58, "size_mb": 192}
+{
+  "architectures": ["LlamaForCausalLM"],
+  "model_type": "llama",
+  "hidden_size": 3072,
+  "intermediate_size": 8192,
+  "num_attention_heads": 24,
+  "num_hidden_layers": 32,
+  "num_key_value_heads": 8,
+  "vocab_size": 32000,
+  "use_bitnet_avx2": true,
+  "quantization": "1.58-bit",
+  "attention_type": "standard",
+  "memory_bypass_eligible": true
+}

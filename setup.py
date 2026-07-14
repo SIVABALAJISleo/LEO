@@ -1,20 +1,32 @@
-from setuptools import setup, find_packages
+from setuptools import setup, Extension
+from torch.utils import cpp_extension
+import os
+
+# Detect if we are on Windows
+is_windows = os.name == 'nt'
+
+# Compilation flags
+extra_compile_args = []
+if is_windows:
+    # MSVC flags for AVX2
+    extra_compile_args = ['/O2', '/arch:AVX2']
+else:
+    # GCC/Clang flags for AVX2
+    extra_compile_args = ['-O3', '-mavx2', '-mfma']
 
 setup(
-    name="hyper-sdk",
-    version="1.0.0",
-    description="Official Python Developer SDK for Project HYPER Enterprise AI Platform",
-    author="Project HYPER SRE",
-    packages=find_packages(),
-    install_requires=[
-        "httpx>=0.27.0",
-        "tenacity>=8.3.0"
+    name='bitnet_avx2_ext',
+    ext_modules=[
+        cpp_extension.CppExtension(
+            name='core_ai.kernels.bitnet_avx2_ext',
+            sources=[
+                'core_ai/kernels/bindings.cpp',
+                'core_ai/kernels/bitnet_avx2.cpp'
+            ],
+            extra_compile_args=extra_compile_args
+        )
     ],
-    python_requires=">=3.8",
-    classifiers=[
-        "Development Status :: 5 - Production/Stable",
-        "Intended Audience :: Developers",
-        "License :: OSI Approved :: MIT License",
-        "Programming Language :: Python :: 3.11",
-    ]
+    cmdclass={
+        'build_ext': cpp_extension.BuildExtension
+    }
 )
