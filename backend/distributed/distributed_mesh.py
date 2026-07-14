@@ -102,7 +102,7 @@ class DistributedMesh:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         try:
-            sock.bind(("0.0.0.0", self.tcp_port))
+            sock.bind((self.local_ip, self.tcp_port))
             sock.listen(10)
         except Exception as e:
             logger.error(f"[DistributedMesh] Failed binding TCP listener: {e}")

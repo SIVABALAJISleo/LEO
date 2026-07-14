@@ -92,7 +92,7 @@ class SecuritySandbox:
         try:
             sys.stdout = stdout_capture
             local_scope = {}
-            exec(compile(tree, filename="<sandbox>", mode="exec"), safe_globals, local_scope)
+            exec(compile(tree, filename="<sandbox>", mode="exec"), safe_globals, local_scope)  # nosec B102
             sys.stdout = old_stdout
             
             output = stdout_capture.getvalue()

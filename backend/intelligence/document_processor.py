@@ -10,7 +10,7 @@ import csv
 import json
 import zipfile
 import re
-import xml.etree.ElementTree as ET
+import defusedxml.ElementTree as ET
 from html.parser import HTMLParser
 from typing import Dict, Any, List, Optional
 
