@@ -216,32 +216,84 @@ class PhoenixRuntime:
         logger.info("Shutdown complete.")
 
 
-# ── CLI Entry Point ────────────────────────────────────────────────────────────
+# ── Web Server & CLI Entry Point ───────────────────────────────────────────────
+from aiohttp import web
+import json
+
+async def handle_index(request):
+    try:
+        with open(os.path.join(os.path.dirname(__file__), 'chat_ui', 'index.html'), 'r', encoding='utf-8') as f:
+            html = f.read()
+        return web.Response(text=html, content_type='text/html')
+    except Exception as e:
+        return web.Response(text=f"Error loading UI: {e}", status=500)
+
+async def handle_chat(request):
+    runtime = request.app['runtime']
+    try:
+        data = await request.json()
+        query = data.get("query", "")
+        if not query:
+            return web.json_response({"error": "Empty query"}, status=400)
+            
+        response = await runtime.process(query)
+        return web.json_response(response)
+    except Exception as e:
+        logger.error(f"Chat API Error: {e}")
+        return web.json_response({"error": str(e)}, status=500)
+
+async def start_web_server(runtime):
+    app = web.Application()
+    app['runtime'] = runtime
+    app.router.add_get('/', handle_index)
+    app.router.add_post('/api/chat', handle_chat)
+    
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(runner, 'localhost', 8767)
+    await site.start()
+    logger.info("Chat UI Server running at: http://localhost:8767")
+    return runner
+
 async def main():
     runtime = PhoenixRuntime()
-    print("\n🔥 PHOENIX RUNTIME active. Type 'quit' to exit, 'stats' for telemetry.\n")
+    print("\n🔥 PHOENIX RUNTIME active.")
+    
+    # Start web server in the background
+    await start_web_server(runtime)
+    
+    print("   Chat UI  : http://localhost:8767")
+    print("   Telemetry: http://localhost:8766")
+    print("\nType 'quit' to exit, 'stats' for telemetry.\n")
 
     session_id = f"session_{int(time.time())}"
-    while True:
-        try:
-            query = input("You: ").strip()
-        except (EOFError, KeyboardInterrupt):
-            break
-        if not query:
-            continue
-        if query.lower() == "quit":
-            break
-        if query.lower() == "stats":
-            import json
-            print(json.dumps(runtime.get_runtime_stats(), indent=2))
-            continue
+    
+    # Run CLI in executor so it doesn't block the async web server loop
+    loop = asyncio.get_running_loop()
+    import concurrent.futures
+    with concurrent.futures.ThreadPoolExecutor() as pool:
+        while True:
+            try:
+                query = await loop.run_in_executor(pool, input, "You: ")
+                query = query.strip()
+            except (EOFError, KeyboardInterrupt):
+                break
+            if not query:
+                continue
+            if query.lower() == "quit":
+                break
+            if query.lower() == "stats":
+                print(json.dumps(runtime.get_runtime_stats(), indent=2))
+                continue
 
-        response = await runtime.process(query, session_id)
-        print(f"\n🔥 PHOENIX [{response['inference']} | {response['latency_ms']}ms]: "
-              f"{response['answer']}\n")
+            response = await runtime.process(query, session_id)
+            print(f"\n🔥 PHOENIX [{response['inference']} | {response['latency_ms']}ms]: "
+                  f"{response['answer']}\n")
 
     runtime.shutdown()
 
-
 if __name__ == "__main__":
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("\nShutdown requested.")
