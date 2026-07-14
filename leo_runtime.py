@@ -45,6 +45,9 @@ from phoenix.task_graph import DAGExecutor
 from phoenix.predictive_engine import PredictiveEngine
 from phoenix.gguf_mmap_loader import GGUFMemoryMappedLoader
 from phoenix.compiler_opt import CompilerOptimizer
+from phoenix.sparse_attention import BlockSparseAttention
+from phoenix.memory_manager import TripleBufferPipeline
+from phoenix.oneapi_backend import OneAPIBackend
 
 
 class PhoenixRuntime:
@@ -113,7 +116,12 @@ class PhoenixRuntime:
         if os.path.exists(self.gguf_loader.model_path):
             self.gguf_loader.load()
 
-        logger.info("[PHOENIX] Runtime initialized with 15 advanced optimization subsystems (Research-Grade).")
+        # Phase 7: Ultimate Structural Sparsity & Triple Buffering
+        self.sparse_attention = BlockSparseAttention(embed_dim=1024, num_heads=16)
+        self.triple_buffer = TripleBufferPipeline()
+        self.oneapi_backend = OneAPIBackend()
+
+        logger.info("[PHOENIX] Runtime initialized with 18 advanced optimization subsystems (ULTIMATE RESEARCH EDITION).")
 
         startup_ms = (time.perf_counter() - t0) * 1000
         logger.info(f"✅ PHOENIX RUNTIME ready in {startup_ms:.0f}ms")
