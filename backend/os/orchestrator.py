@@ -8,6 +8,9 @@ from backend.routing.adaptive_router import AdaptiveModelRouter
 from backend.compute.heterogeneous import HeterogeneousComputeEngine
 from backend.execution.parallel_framework import ParallelExecutionFramework
 
+import aiohttp
+import json
+
 logger = logging.getLogger(__name__)
 
 class LEOOperatingSystem:
@@ -23,6 +26,10 @@ class LEOOperatingSystem:
         self.compute = HeterogeneousComputeEngine()
         self.parallel_executor = ParallelExecutionFramework(max_workers=6) # Fits i5-12450H 8c/12t comfortably
         
+        # Ollama connection settings
+        self.ollama_url = "http://localhost:11434/api/generate"
+        self.ollama_model = None # Will auto-detect on first run
+
         # Start background telemetry
         self.resource_manager.start()
         
@@ -40,6 +47,43 @@ class LEOOperatingSystem:
         # Placeholder for Subsystem 6 (Knowledge Graph)
         time.sleep(0.02)
         return [f"Mock entity matching {query}"]
+
+    async def _get_ollama_model(self) -> str:
+        if self.ollama_model is not None:
+            return self.ollama_model
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get("http://localhost:11434/api/tags") as resp:
+                    if resp.status == 200:
+                        data = await resp.json()
+                        models = data.get("models", [])
+                        if models:
+                            self.ollama_model = models[0]["name"]
+                            logger.info(f"Ollama auto-detected model: {self.ollama_model}")
+                            return self.ollama_model
+        except Exception as e:
+            logger.warning(f"Could not connect to Ollama to detect models: {e}")
+        return "llama3" # Default fallback
+
+    async def _query_ollama(self, prompt: str) -> str:
+        model = await self._get_ollama_model()
+        payload = {
+            "model": model,
+            "prompt": prompt,
+            "stream": False,
+            # Let Ollama handle its own context window and optimization for the demo
+            "options": {"num_predict": 512, "temperature": 0.2}
+        }
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.post(self.ollama_url, json=payload, timeout=60) as resp:
+                    if resp.status == 200:
+                        data = await resp.json()
+                        return data.get("response", "").strip()
+                    else:
+                        return f"[Ollama Error: {resp.status}]"
+        except Exception as e:
+            return f"[Ollama Connection Failed: Ensure Ollama is running on localhost:11434]"
 
     async def execute_request(self, query: str) -> Dict[str, Any]:
         """The main entrypoint for any AI request."""
@@ -81,11 +125,14 @@ class LEOOperatingSystem:
             
             # Step 5: Execute Model (Heterogeneous Compute)
             if route_destination == "LARGE_MODEL":
-                # Simulated large model invocation
-                # self.compute.execute_inference(model_id="llama3", input_dict=...)
-                response_payload["answer"] = f"[LARGE_MODEL Simulated Response] Synthesized context for: {query}"
+                # Call local Ollama
+                full_prompt = f"Context: {context.get('retrieval_results', [])}\n\nQuery: {query}"
+                ollama_ans = await self._query_ollama(full_prompt)
+                response_payload["answer"] = ollama_ans
             elif route_destination == "TINY_MODEL":
-                response_payload["answer"] = f"[TINY_MODEL Simulated Response] Fast answer for: {query}"
+                # For Tiny, we can also use Ollama but ask for extreme brevity, or assume a tiny local model.
+                ollama_ans = await self._query_ollama(f"Answer very briefly in one sentence: {query}")
+                response_payload["answer"] = ollama_ans
             elif route_destination == "RETRIEVAL_ENGINE":
                 response_payload["answer"] = f"Here is what I found in memory: {context['retrieval_results'][0]}"
 
