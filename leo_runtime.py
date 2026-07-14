@@ -41,6 +41,10 @@ from phoenix.context_manager import HierarchicalContextManager
 from phoenix.medusa_heads import MedusaHeads
 from phoenix.pabee_early_exit import PABEEEarlyExit
 from phoenix.extreme_sparsity import WandaPruner
+from phoenix.task_graph import DAGExecutor
+from phoenix.predictive_engine import PredictiveEngine
+from phoenix.gguf_mmap_loader import GGUFMemoryMappedLoader
+from phoenix.compiler_opt import CompilerOptimizer
 
 
 class PhoenixRuntime:
@@ -97,7 +101,19 @@ class PhoenixRuntime:
         # Phase 4: Extreme Sparsity (Wanda Pruning)
         self.wanda_pruner = WandaPruner(sparsity_ratio=0.5)
 
-        logger.info("[PHOENIX] Runtime initialized with 11 advanced optimization subsystems.")
+        # Phase 5: Predictive & DAG Execution
+        self.dag_executor = DAGExecutor()
+        self.predictive_engine = PredictiveEngine()
+        self.predictive_engine.start()
+        
+        # Phase 6: Compiler & GGUF
+        self.compiler_opt = CompilerOptimizer()
+        self.gguf_loader = GGUFMemoryMappedLoader("models/llama-3-8b.Q4_K_M.gguf")
+        # Self-optimization check: only attempt to load if model exists to prevent crash
+        if os.path.exists(self.gguf_loader.model_path):
+            self.gguf_loader.load()
+
+        logger.info("[PHOENIX] Runtime initialized with 15 advanced optimization subsystems (Research-Grade).")
 
         startup_ms = (time.perf_counter() - t0) * 1000
         logger.info(f"✅ PHOENIX RUNTIME ready in {startup_ms:.0f}ms")
@@ -220,6 +236,7 @@ class PhoenixRuntime:
 
     def shutdown(self):
         logger.info("PHOENIX RUNTIME shutting down...")
+        self.predictive_engine.stop()
         self.self_optimizer.stop()
         self.leo_os.shutdown()
         logger.info("Shutdown complete.")

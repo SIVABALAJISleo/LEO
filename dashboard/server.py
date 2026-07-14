@@ -33,13 +33,15 @@ class TelemetrySimulator:
         self._t0 = time.time()
         self._tokens_generated = 0
         self._cache_hits = 0
-        self._total_requests = 0
+        self.total_queries = 0
+        self.cache_hits = 0
+        self.history = []
         self._route_counts = {"RULE_ENGINE": 0, "CALCULATOR": 0,
                               "RETRIEVAL_ENGINE": 0, "TINY_MODEL": 0,
                               "LARGE_MODEL": 0, "CACHE_HIT": 0}
 
     def tick(self) -> dict:
-        import math, random
+        import math, random, psutil
         elapsed = time.time() - self._t0
 
         # Simulate tokens/sec with some noise
@@ -59,6 +61,14 @@ class TelemetrySimulator:
                 self._cache_hits += 1
 
         cache_rate = self._cache_hits / max(1, self._total_requests) * 100
+        cpu_perc = psutil.cpu_percent()
+        ram_perc = psutil.virtual_memory().percent
+
+        # Energy Observability (Subsystem 18)
+        # i5-12450H TDP is 45W. Assume base 10W idle + (35W * cpu%).
+        power_watts = 10.0 + (35.0 * (cpu_perc / 100.0))
+        # Joules per Token = Power (Joules/sec) / Tokens per sec
+        energy_per_token = power_watts / tps if tps > 0 else 0
 
         return {
             "timestamp":           round(elapsed, 1),
@@ -66,8 +76,10 @@ class TelemetrySimulator:
             "total_tokens":        self._tokens_generated,
             "total_requests":      self._total_requests,
             "cache_hit_rate_pct":  round(cache_rate, 1),
-            "cpu_percent":         round(30 + 20 * abs(math.sin(elapsed * 0.2)) + random.uniform(0,5), 1),
-            "ram_percent":         round(68 + 5  * math.sin(elapsed * 0.1)  + random.uniform(0,2), 1),
+            "cpu_percent":         cpu_perc,
+            "ram_percent":         ram_perc,
+            "power_watts":         round(power_watts, 2),
+            "energy_per_token_j":  round(energy_per_token, 3),
             "early_exit_savings":  round(55 + 10 * math.sin(elapsed * 0.15) + random.uniform(0,5), 1),
             "avg_latency_ms":      round(max(1, 45 - tps * 0.5 + random.uniform(-5,5)), 1),
             "active_experts":      random.randint(2, 4),
