@@ -1,51 +1,167 @@
 """
 backend/optimization/self_optimizer.py
-Self-Optimization Engine (Point 14).
-
-Monitors performance metrics (reuse_rate, latency) and 
-adjusts semantic clustering thresholds and pipeline execution.
+Subsystem 12: Continuous Self-Optimization Engine.
+Runs as a background daemon that:
+  1. Profiles every inference call (latency, memory, route)
+  2. Detects bottlenecks (high-latency routes, low cache hit rate)
+  3. Auto-tunes parameters (cache thresholds, speculation depth, exit thresholds)
+  4. Logs findings for reproducible analysis
 """
+
+import time
+import threading
+import statistics
 import logging
+import json
+import os
+from collections import defaultdict, deque
+from typing import Dict, List, Any, Optional
 
 logger = logging.getLogger(__name__)
 
-class SelfOptimizer:
+_REPORT_PATH = os.path.join(os.path.dirname(__file__), "self_optimizer_report.json")
+
+
+class ProfilerRecord:
+    __slots__ = ("route", "latency_ms", "cache_hit", "layers_skipped", "timestamp")
+
+    def __init__(self, route: str, latency_ms: float,
+                 cache_hit: bool = False, layers_skipped: int = 0):
+        self.route = route
+        self.latency_ms = latency_ms
+        self.cache_hit = cache_hit
+        self.layers_skipped = layers_skipped
+        self.timestamp = time.time()
+
+
+class ContinuousSelfOptimizer:
     """
-    Self-Optimization: Auto-adjust thresholds and pipeline.
+    Runtime profiler + bottleneck detector + auto-tuner.
+    Attach to the Orchestrator to continuously improve the system.
     """
-    def __init__(self, target_latency_ms: float = 200.0):
-        self.target_latency_ms = target_latency_ms
-        self.target_avoidance = 0.98  # Point 14 target
-        self.current_threshold = 0.90
-        self.prediction_depth = 12
-        self.cache_ttl_policy = "standard"
 
-    def update_metrics(self, avoidance_rate: float, avg_latency: float):
-        """
-        Point 7: Auto-adjust thresholds, prediction depth, and cache policies.
-        """
-        logger.info(f"self_optimizer: Analyzing metrics (Avoidance={avoidance_rate:.2f}, Latency={avg_latency:.2f}ms)")
+    # Rolling window: last 500 calls
+    WINDOW = 500
 
-        # 1. REACHING 98% DOMINANCE: If avoidance is low, increase prediction depth
-        if avoidance_rate < self.target_avoidance:
-            self.prediction_depth = min(self.prediction_depth + 1, 25)
-            # Relax threshold slightly to find more semantic matches
-            self.current_threshold = max(self.current_threshold - 0.005, 0.85)
-            logger.info(f"self_optimizer: INCREASING prediction depth to {self.prediction_depth} via Point 7.")
+    def __init__(self, optimization_interval_sec: float = 30.0):
+        self.interval = optimization_interval_sec
+        self.records: deque = deque(maxlen=self.WINDOW)
+        self.running = False
+        self._thread: Optional[threading.Thread] = None
 
-        # 2. STABILITY PROTECTION: If latency is high, reduce depth and tighten thresholds
-        if avg_latency > self.target_latency_ms:
-            self.prediction_depth = max(self.prediction_depth - 2, 5)
-            self.current_threshold = min(self.current_threshold + 0.01, 0.95)
-            self.cache_ttl_policy = "aggressive_pruning"
-            logger.info("self_optimizer: TIGHTENING stability guards due to latency pressure.")
-        else:
-            self.cache_ttl_policy = "persistent"
+        # Tunable parameters (modified by auto-tuner)
+        self.params: Dict[str, Any] = {
+            "cache_similarity_threshold": 0.95,
+            "early_exit_threshold": 0.90,
+            "speculate_k": 4,
+            "max_context_tokens": 500,
+        }
 
-    def get_threshold(self) -> float:
-        return self.current_threshold
+        # Per-route latency tracking
+        self.route_latencies: Dict[str, deque] = defaultdict(lambda: deque(maxlen=200))
 
-    def get_prediction_depth(self) -> int:
-        return self.prediction_depth
+    def record(self, route: str, latency_ms: float,
+               cache_hit: bool = False, layers_skipped: int = 0):
+        """Called by orchestrator after every inference."""
+        rec = ProfilerRecord(route, latency_ms, cache_hit, layers_skipped)
+        self.records.append(rec)
+        self.route_latencies[route].append(latency_ms)
 
-global_self_optimizer = SelfOptimizer()
+    def get_live_stats(self) -> Dict[str, Any]:
+        """Returns rolling-window statistics."""
+        if not self.records:
+            return {}
+
+        all_latencies = [r.latency_ms for r in self.records]
+        cache_hits = sum(1 for r in self.records if r.cache_hit)
+        route_counts = defaultdict(int)
+        for r in self.records:
+            route_counts[r.route] += 1
+
+        return {
+            "total_calls": len(self.records),
+            "avg_latency_ms": round(statistics.mean(all_latencies), 2),
+            "p95_latency_ms": round(sorted(all_latencies)[int(len(all_latencies) * 0.95)], 2),
+            "cache_hit_rate": round(cache_hits / len(self.records), 3),
+            "route_distribution": dict(route_counts),
+            "current_params": dict(self.params),
+        }
+
+    def _detect_bottlenecks(self) -> List[str]:
+        """Identifies performance issues from current profiling window."""
+        bottlenecks = []
+        stats = self.get_live_stats()
+        if not stats:
+            return bottlenecks
+
+        if stats["avg_latency_ms"] > 500:
+            bottlenecks.append(f"HIGH_LATENCY: avg {stats['avg_latency_ms']}ms > 500ms threshold")
+
+        if stats["cache_hit_rate"] < 0.20:
+            bottlenecks.append(f"LOW_CACHE_HIT: {stats['cache_hit_rate']*100:.1f}% < 20% target")
+
+        # Check if LARGE_MODEL is being over-used
+        dist = stats.get("route_distribution", {})
+        total = sum(dist.values()) or 1
+        large_model_pct = dist.get("LARGE_MODEL", 0) / total
+        if large_model_pct > 0.40:
+            bottlenecks.append(
+                f"OVERUSING_LARGE_MODEL: {large_model_pct*100:.1f}% of calls — expand rule/tiny model coverage"
+            )
+
+        return bottlenecks
+
+    def _auto_tune(self, bottlenecks: List[str]):
+        """Adjusts tunable parameters based on detected bottlenecks."""
+        for b in bottlenecks:
+            if "LOW_CACHE_HIT" in b:
+                # Lower similarity threshold → more permissive cache matches
+                old = self.params["cache_similarity_threshold"]
+                self.params["cache_similarity_threshold"] = max(0.75, old - 0.02)
+                logger.info(f"[SelfOptimizer] AUTO-TUNE: cache threshold {old:.2f} → {self.params['cache_similarity_threshold']:.2f}")
+
+            elif "HIGH_LATENCY" in b:
+                # Increase early exit aggressiveness
+                old = self.params["early_exit_threshold"]
+                self.params["early_exit_threshold"] = max(0.60, old - 0.05)
+                logger.info(f"[SelfOptimizer] AUTO-TUNE: early_exit_threshold {old:.2f} → {self.params['early_exit_threshold']:.2f}")
+
+    def _optimization_loop(self):
+        while self.running:
+            time.sleep(self.interval)
+            if not self.records:
+                continue
+
+            stats = self.get_live_stats()
+            bottlenecks = self._detect_bottlenecks()
+
+            logger.info(
+                f"[SelfOptimizer] Cycle: avg={stats.get('avg_latency_ms')}ms "
+                f"p95={stats.get('p95_latency_ms')}ms "
+                f"cache={stats.get('cache_hit_rate', 0)*100:.1f}% "
+                f"bottlenecks={len(bottlenecks)}"
+            )
+
+            if bottlenecks:
+                for b in bottlenecks:
+                    logger.warning(f"[SelfOptimizer] BOTTLENECK: {b}")
+                self._auto_tune(bottlenecks)
+
+            # Persist report
+            report = {"stats": stats, "bottlenecks": bottlenecks, "timestamp": time.time()}
+            try:
+                with open(_REPORT_PATH, "w") as f:
+                    json.dump(report, f, indent=2)
+            except Exception:
+                pass
+
+    def start(self):
+        self.running = True
+        self._thread = threading.Thread(target=self._optimization_loop, daemon=True)
+        self._thread.start()
+        logger.info("[SelfOptimizer] Continuous Self-Optimization Engine started.")
+
+    def stop(self):
+        self.running = False
+        if self._thread:
+            self._thread.join(timeout=2.0)
