@@ -94,6 +94,7 @@ async def ws_handler(websocket):
 
 
 async def broadcast_loop():
+    global _connected_clients
     while True:
         if _connected_clients:
             data = _telemetry.tick()
@@ -127,7 +128,7 @@ async def main():
 
 
 if __name__ == "__main__":
-    print("🔥 PHOENIX RUNTIME Dashboard")
+    print("PHOENIX RUNTIME Dashboard")
     print(f"   Open: http://localhost:{HTTP_PORT}")
     print(f"   WebSocket: ws://localhost:{WS_PORT}")
     asyncio.run(main())
