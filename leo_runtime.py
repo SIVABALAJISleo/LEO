@@ -36,9 +36,11 @@ from backend.optimization.self_optimizer       import ContinuousSelfOptimizer
 from backend.optimization.benchmark_framework  import BenchmarkFramework
 
 # ── PHOENIX modules ────────────────────────────────────────────────────────────
-from phoenix.context_manager  import HierarchicalContextManager
-from phoenix.paged_kv_cache   import PagedKVCacheManager
-from phoenix.kv_compression   import StreamingKVCache
+from phoenix.moe_offloader import MoEOffloader
+from phoenix.context_manager import HierarchicalContextManager
+from phoenix.medusa_heads import MedusaHeads
+from phoenix.pabee_early_exit import PABEEEarlyExit
+from phoenix.extreme_sparsity import WandaPruner
 
 
 class PhoenixRuntime:
@@ -89,6 +91,13 @@ class PhoenixRuntime:
 
         # ── Start background services ──────────────────────────────────────────
         self.self_optimizer.start()
+
+        self.moe_offload = MoEOffloader(num_experts=8, active_experts=2)
+        
+        # Phase 4: Extreme Sparsity (Wanda Pruning)
+        self.wanda_pruner = WandaPruner(sparsity_ratio=0.5)
+
+        logger.info("[PHOENIX] Runtime initialized with 11 advanced optimization subsystems.")
 
         startup_ms = (time.perf_counter() - t0) * 1000
         logger.info(f"✅ PHOENIX RUNTIME ready in {startup_ms:.0f}ms")
