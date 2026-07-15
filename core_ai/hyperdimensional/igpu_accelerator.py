@@ -96,12 +96,7 @@ class IGPUAccelerator:
             return distances
             
         else:
-            # CPU Fallback via NumPy broadcasting
-            # XOR broadcast: memory_matrix is (N, 1250), query is (1250,)
-            xor_res = np.bitwise_xor(memory_matrix, query_vec)
-            
-            # Fast popcount via look-up table or unpackbits
-            # Using unpackbits is standard NumPy approach for popcount
-            unpacked = np.unpackbits(xor_res, axis=1)
-            diff_counts = np.sum(unpacked, axis=1)
-            return diff_counts / (vec_len * 8.0)
+            # Fallback to Colibri C-Engine or AVX2 if OpenCL is not ready
+            from ..colibri_bridge import ColibriBridge
+            bridge = ColibriBridge()
+            return bridge.batch_hamming_distance(query_vec, memory_matrix)

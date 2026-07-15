@@ -34,10 +34,12 @@ class HyperdimensionalEncoder:
     @staticmethod
     def bind(hv1: np.ndarray, hv2: np.ndarray) -> np.ndarray:
         """
-        Binds two hypervectors using bitwise XOR.
+        Binds two hypervectors using Colibri bitwise XOR.
         Associates two concepts (e.g., Key XOR Value).
         """
-        return np.bitwise_xor(hv1, hv2)
+        from ..colibri_bridge import ColibriBridge
+        bridge = ColibriBridge()
+        return bridge.bind_hypervectors(hv1, hv2)
 
     @staticmethod
     def bundle(hv_list: list[np.ndarray]) -> np.ndarray:
