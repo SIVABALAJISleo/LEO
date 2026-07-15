@@ -10,9 +10,39 @@ from archive_engines.verifier.validation import validate_output
 from archive_engines.router.routing_logic import get_compute_node
 from memory.knowledge import resolve_entity
 
+from core_ai.hyperdimensional.resonance_cache import ResonanceCache
+from core_ai.hyperdimensional.crystallizer import StateCrystallizer
+import time
+
+# Initialize HDC singletons
+hdc_cache = ResonanceCache(threshold=0.3)
+hdc_crystallizer = StateCrystallizer()
+
 def run_system(user_query: str):
     print(f"--- HYPER AI SYSTEM START ---")
+    t0 = time.perf_counter()
     
+    # [HDC INTERCEPTION]
+    is_hit, response = hdc_cache.check_resonance(user_query)
+    if is_hit:
+        elapsed = (time.perf_counter() - t0) * 1000
+        print(f"[HDC Cache Hit] {elapsed:.2f}ms")
+        print(f"Response: {response}")
+        print(f"--- SYSTEM SHUTDOWN ---")
+        return response
+        
+    print("[HDC Cache Miss] Routing to Non-Autoregressive Crystallizer...")
+    response = hdc_crystallizer.generate_response(user_query)
+    
+    # Save to cache for next time
+    hdc_cache.update_cache(user_query, response)
+    
+    elapsed = (time.perf_counter() - t0) * 1000
+    print(f"[HDC Crystallizer] Generated in {elapsed:.2f}ms")
+    print(f"Response: {response}")
+    print(f"--- SYSTEM SHUTDOWN ---")
+    return response
+
     # 1. Route Compute
     node = get_compute_node(0.1)
     print(f"Routing to: {node}")
