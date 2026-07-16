@@ -95,7 +95,7 @@ class ProductionSemanticCache:
                 if "DmlExecutionProvider" in providers:
                     provider = "DmlExecutionProvider"
                 
-                self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_path)
+                self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_path)  # nosec B615 - loading from local path, not HuggingFace Hub
                 self.onnx_session = ort.InferenceSession(onnx_path, providers=[provider])
                 self.vector_dim = 384
                 self.use_onnx = True

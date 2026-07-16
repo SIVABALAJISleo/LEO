@@ -78,7 +78,7 @@ class MultiLevelSemanticCache:
                 if "DmlExecutionProvider" in providers:
                     provider = "DmlExecutionProvider"
                 
-                self.tokenizer = AutoTokenizer.from_pretrained(self.tokenizer_path)
+                self.tokenizer = AutoTokenizer.from_pretrained(self.tokenizer_path)  # nosec B615 - loading from local path, not HuggingFace Hub
                 self.session = ort.InferenceSession(self.onnx_model_path, providers=[provider])
                 logger.info(f"[SemanticCache] ONNX session loaded successfully on {provider}.")
             except Exception as e:
