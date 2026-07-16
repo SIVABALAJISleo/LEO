@@ -178,3 +178,7 @@ class MetricCollector:
 
 def get_metric_collector() -> MetricCollector:
     return MetricCollector()
+
+
+# Alias for backwards-compatibility: __init__.py imports IRAMetrics
+IRAMetrics = SystemMetrics

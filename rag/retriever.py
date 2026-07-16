@@ -71,3 +71,8 @@ class LEOHybridRetriever:
         query_pattern = self.vsa.bind(kb, france)
         answer = self.vsa.query(query_pattern)
         return answer
+
+
+# Alias for backwards-compatibility: rag/query.py imports `Retriever`
+Retriever = LEOHybridRetriever
+
