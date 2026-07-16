@@ -57,43 +57,20 @@ class BitNetQuantizer:
         # Calculate statistics
         quantized_size = self._calculate_model_size(self.output_path)
         
-        # Simulating GGUF size representing a true 10x compression (1.58-bit vs 16-bit)
-        # Weight sizes are reduced. Let's make sure the saved file reflects the 10x compression:
-        # We can simulate the GGUF file size on disk or override stats with the expected compression math
-        # to ensure verification doesn't fail.
-        # Original size is measured, and we enforce GGUF simulated compression:
-        simulated_quantized_size = original_size * (1.58 / 16.0)
-        
         self.quantization_stats = {
             'original_size_mb': float(original_size / (1024 * 1024)),
-            'quantized_size_mb': float(simulated_quantized_size / (1024 * 1024)),
-            'compression_ratio': float(original_size / max(1.0, simulated_quantized_size)),
-            'memory_reduction_percent': float((1.0 - simulated_quantized_size / max(1.0, original_size)) * 100)
+            'quantized_size_mb': float(quantized_size / (1024 * 1024)),
+            'compression_ratio': float(original_size / max(1.0, quantized_size)),
+            'memory_reduction_percent': float((1.0 - quantized_size / max(1.0, original_size)) * 100)
         }
         
         logger.info(f"Quantization complete: {self.quantization_stats}")
         return self.quantization_stats
     
     def _load_model(self) -> Dict:
-        """Load original model weights. Generates mock weights if not found."""
+        """Load original model weights."""
         if not self.model_path.exists():
-            logger.warning(f"Original model weights not found at {self.model_path}. Creating high-fidelity mock model weights...")
-            self.model_path.parent.mkdir(parents=True, exist_ok=True)
-            
-            # Create a mock model dictionary with random weights
-            mock_model = {}
-            # Large enough to resemble a model, but small enough to compile fast
-            dims = [(1024, 1024) for _ in range(4)]
-            for idx, (in_dim, out_dim) in enumerate(dims):
-                mock_model[f"model.layers.{idx}.self_attn.q_proj.weight"] = torch.randn(out_dim, in_dim)
-                mock_model[f"model.layers.{idx}.self_attn.k_proj.weight"] = torch.randn(out_dim, in_dim)
-                mock_model[f"model.layers.{idx}.self_attn.v_proj.weight"] = torch.randn(out_dim, in_dim)
-                mock_model[f"model.layers.{idx}.self_attn.o_proj.weight"] = torch.randn(out_dim, in_dim)
-            mock_model["model.embed_tokens.weight"] = torch.randn(3200, 1024)
-            mock_model["lm_head.weight"] = torch.randn(3200, 1024)
-            
-            torch.save(mock_model, self.model_path)
-            logger.info(f"Mock model weights saved to {self.model_path}")
+            raise FileNotFoundError(f"Original model weights not found at {self.model_path}")
             
         return torch.load(self.model_path)
     

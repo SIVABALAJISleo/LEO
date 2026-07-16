@@ -176,10 +176,14 @@ def main():
     bench_parser.add_argument("--profile", default="laptop", help="Compute profile (laptop)")
     bench_parser.add_argument("--suite", default="smoke", choices=["smoke", "full"], help="Benchmark execution suite")
     bench_parser.add_argument("--output", help="Save run results as JSON file")
+    bench_parser.add_argument("--real", action="store_true", help="Run real speculative/OpenVINO benchmarking and generate comparison reports")
 
     # Validate
     val_parser = subparsers.add_parser("validate", help="Validate GGUF model files against validation contract")
     val_parser.add_argument("--model", required=True, help="Path to the model file to validate")
+
+    # Download Model
+    subparsers.add_parser("download-model", help="Download all real GGUF, OpenVINO IR, and ONNX models")
 
     args = parser.parse_args()
 
@@ -226,22 +230,39 @@ def main():
         logger.info(f"Executing LEO benchmark suite '{args.suite}' on profile '{args.profile}'...")
         from core_ai.benchmarker import LEOBenchmarker
         
-        model_path = os.environ.get("LEO_MODEL_PATH", "models/qwen2.5-0.5b-instruct.gguf")
         use_gpu = os.environ.get("LEO_DEVICE", "cpu").lower() == "igpu"
         threads = int(os.environ.get("LEO_THREADS", "8"))
         
-        bench = LEOBenchmarker(model_path=model_path, threads=threads, use_gpu=use_gpu)
-        results = bench.run_inference_benchmark(runs_count=3)
-        results["profile"] = args.profile
-        results["suite"] = args.suite
-        
-        if args.output:
-            os.makedirs(os.path.dirname(args.output) or ".", exist_ok=True)
-            with open(args.output, "w") as f:
-                json.dump(results, f, indent=2)
-            logger.info(f"Benchmark results saved to {args.output}")
-        else:
+        if args.real:
+            logger.info("Executing real comparative benchmark (Standard vs Speculative vs OpenVINO)...")
+            bench = LEOBenchmarker(
+                target_model_path="models/qwen2.5-1.5b-instruct-q4_k_m.gguf",
+                draft_model_path="models/qwen2.5-0.5b-instruct-q4_k_m.gguf",
+                openvino_model_path="models/Qwen2.5-1.5B-Instruct-int4-ov",
+                threads=threads,
+                use_gpu=use_gpu
+            )
+            results = bench.run_inference_benchmark(runs_count=3)
+            
+            # Generate JSON reports and HTML dashboard
+            bench.generate_dashboard("competitiveness_report.json", "competitiveness_dashboard.html", results)
+            bench.generate_dashboard("competitiveness_proof.json", "competitiveness_proof.html", results)
+            
             print(json.dumps(results, indent=2))
+        else:
+            model_path = os.environ.get("LEO_MODEL_PATH", "models/qwen2.5-1.5b-instruct-q4_k_m.gguf")
+            bench = LEOBenchmarker(target_model_path=model_path, threads=threads, use_gpu=use_gpu)
+            results = bench.run_inference_benchmark(runs_count=3)
+            results["profile"] = args.profile
+            results["suite"] = args.suite
+            
+            if args.output:
+                os.makedirs(os.path.dirname(args.output) or ".", exist_ok=True)
+                with open(args.output, "w") as f:
+                    json.dump(results, f, indent=2)
+                logger.info(f"Benchmark results saved to {args.output}")
+            else:
+                print(json.dumps(results, indent=2))
 
     elif args.command == "validate":
         logger.info(f"Validating model at '{args.model}'...")
@@ -255,6 +276,46 @@ def main():
             sys.exit(1)
         except Exception as e:
             logger.error(f"Unexpected error during validation: {e}")
+            sys.exit(1)
+
+    elif args.command == "download-model":
+        logger.info("Starting model download pipeline (Target GGUF, Draft GGUF, OpenVINO IR, ONNX Embeddings)...")
+        from huggingface_hub import hf_hub_download, snapshot_download
+        os.makedirs("models", exist_ok=True)
+        try:
+            logger.info("Downloading Target Model: Qwen2.5-1.5B-Instruct Q4_K_M...")
+            hf_hub_download(
+                repo_id="Qwen/Qwen2.5-1.5B-Instruct-GGUF",
+                filename="qwen2.5-1.5b-instruct-q4_k_m.gguf",
+                local_dir="models",
+                local_dir_use_symlinks=False
+            )
+            
+            logger.info("Downloading Draft Model: Qwen2.5-0.5B-Instruct Q4_K_M...")
+            hf_hub_download(
+                repo_id="Qwen/Qwen2.5-0.5B-Instruct-GGUF",
+                filename="qwen2.5-0.5b-instruct-q4_k_m.gguf",
+                local_dir="models",
+                local_dir_use_symlinks=False
+            )
+            
+            logger.info("Downloading OpenVINO IR Model: Qwen2.5-1.5B-Instruct-int4-ov...")
+            snapshot_download(
+                repo_id="OpenVINO/Qwen2.5-1.5B-Instruct-int4-ov",
+                local_dir="models/Qwen2.5-1.5B-Instruct-int4-ov",
+                local_dir_use_symlinks=False
+            )
+            
+            logger.info("Downloading ONNX Embedding Model: Xenova/all-MiniLM-L6-v2...")
+            snapshot_download(
+                repo_id="Xenova/all-MiniLM-L6-v2",
+                local_dir="models/all-MiniLM-L6-v2",
+                allow_patterns=["*.onnx", "*.json", "*.txt"],
+                local_dir_use_symlinks=False
+            )
+            logger.info("All model files downloaded successfully!")
+        except Exception as e:
+            logger.error(f"Download failed: {e}")
             sys.exit(1)
 
     else:

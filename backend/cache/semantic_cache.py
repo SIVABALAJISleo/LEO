@@ -83,16 +83,37 @@ class ProductionSemanticCache:
         
         # Load Dense Embedding Model
         self.encoder = None
-        try:
-            from sentence_transformers import SentenceTransformer
-            # Using mini CPU-optimized model (384 dimensions)
-            self.encoder = SentenceTransformer("all-MiniLM-L6-v2")
-            self.vector_dim = 384
-            logger.info("SentenceTransformer (all-MiniLM-L6-v2) loaded successfully for cache.")
-        except Exception as e:
-            logger.warning(f"SentenceTransformer not loaded, running TrigramEmbedder fallback: {e}")
-            self.encoder = TrigramEmbedder()
-            self.vector_dim = 384
+        self.use_onnx = False
+        onnx_path = "models/all-MiniLM-L6-v2/onnx/model_quantized.onnx"
+        tokenizer_path = "models/all-MiniLM-L6-v2"
+        if os.path.exists(onnx_path) and os.path.exists(tokenizer_path):
+            try:
+                import onnxruntime as ort
+                from transformers import AutoTokenizer
+                providers = ort.get_available_providers()
+                provider = "CPUExecutionProvider"
+                if "DmlExecutionProvider" in providers:
+                    provider = "DmlExecutionProvider"
+                
+                self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_path)
+                self.onnx_session = ort.InferenceSession(onnx_path, providers=[provider])
+                self.vector_dim = 384
+                self.use_onnx = True
+                logger.info(f"[SemanticCache] ONNX session loaded successfully on {provider}.")
+            except Exception as e:
+                logger.error(f"[SemanticCache] Failed to load ONNX: {e}. Falling back...")
+
+        if not self.use_onnx:
+            try:
+                from sentence_transformers import SentenceTransformer
+                # Using mini CPU-optimized model (384 dimensions)
+                self.encoder = SentenceTransformer("all-MiniLM-L6-v2")
+                self.vector_dim = 384
+                logger.info("SentenceTransformer (all-MiniLM-L6-v2) loaded successfully for cache.")
+            except Exception as e:
+                logger.warning(f"SentenceTransformer not loaded, running TrigramEmbedder fallback: {e}")
+                self.encoder = TrigramEmbedder()
+                self.vector_dim = 384
 
         # Initialize FAISS index
         self.use_faiss = False
@@ -196,9 +217,35 @@ class ProductionSemanticCache:
             norms[norms == 0] = 1.0
             arr = arr / norms
             self.faiss_index.add(arr)
-            logger.info(f"Loaded {len(vectors)} vectors into FAISS on boot.")
-            
         conn.close()
+
+    def _encode_text(self, text: str) -> np.ndarray:
+        """Embed text using the local all-MiniLM-L6-v2 ONNX model or fallback."""
+        if self.use_onnx:
+            try:
+                inputs = self.tokenizer(text, padding=True, truncation=True, max_length=128, return_tensors="np")
+                ort_inputs = {
+                    "input_ids": inputs["input_ids"].astype(np.int64),
+                    "attention_mask": inputs["attention_mask"].astype(np.int64),
+                }
+                if "token_type_ids" in inputs:
+                    ort_inputs["token_type_ids"] = inputs["token_type_ids"].astype(np.int64)
+                outputs = self.onnx_session.run(None, ort_inputs)
+                token_embeddings = outputs[0]
+                input_mask_expanded = np.expand_dims(inputs["attention_mask"], -1)
+                sum_embeddings = np.sum(token_embeddings * input_mask_expanded, axis=1)
+                sum_mask = np.clip(np.sum(input_mask_expanded, axis=1), 1e-9, None)
+                pooled = sum_embeddings / sum_mask
+                
+                # L2 Normalize
+                norm = np.linalg.norm(pooled, axis=1, keepdims=True)
+                normalized = pooled / (norm + 1e-9)
+                return normalized[0]
+            except Exception as e:
+                logger.error(f"ONNX encoding error: {e}")
+                pass
+                
+        return self.encoder.encode(text)
 
     def store(self, query: str, answer: str, confidence: float):
         """Caches a query, saves its embedding, and updates Zipf-based TTL limits."""
@@ -229,9 +276,7 @@ class ProductionSemanticCache:
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """, (query_hash, query, answer, confidence, freq, ttl, now, now))
             
-            # Generate embedding and store vector (use script-keyed text so
-            # trigram/transformer embeddings are partitioned by language script)
-            vec = self.encoder.encode(keyed_query)
+            vec = self._encode_text(keyed_query)
             # Ensure float32 representation
             vec = np.array(vec, dtype=np.float32)
             norm = np.linalg.norm(vec)
@@ -287,9 +332,7 @@ class ProductionSemanticCache:
                     "method": "exact_hash"
                 }
 
-        # Layer 2: FAISS/Manual Dense Similarity Scan (use script-keyed query
-        # so cross-language trigram/vector similarity is impossible)
-        vec = self.encoder.encode(keyed_query)
+        vec = self._encode_text(keyed_query)
         vec = np.array(vec, dtype=np.float32)
         norm = np.linalg.norm(vec)
         if norm > 0:

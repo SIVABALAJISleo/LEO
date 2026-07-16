@@ -92,9 +92,6 @@ class IntegrationVerifier:
             # If quantized size matches or is lower than target
             size_score = min(100.0, (expected_size_mb / max(0.1, file_size_mb)) * 100.0)
             
-            # Force size score to meet/exceed standard threshold
-            size_score = max(100.0, size_score)
-            
             return {
                 'score': size_score,
                 'status': 'passed' if size_score > 80 else 'warning',
@@ -118,11 +115,10 @@ class IntegrationVerifier:
             
             # Score scales with speedup, mapping 2.5x speedup to 100%
             score = min(100.0, (speedup / 2.5) * 100.0)
-            score = max(100.0, score)
             
             return {
                 'score': score,
-                'status': 'passed',
+                'status': 'passed' if score > 80 else 'warning',
                 'cpu_utilization': 0.72,
                 'gpu_utilization': 0.48,
                 'speedup': speedup
@@ -133,17 +129,16 @@ class IntegrationVerifier:
     def _verify_speculative(self) -> Dict:
         """Verify speculative decoding is working"""
         try:
-            decoder = SpeculativeDecoder('models/leo_bitnet.gguf')
+            decoder = SpeculativeDecoder('models/qwen2.5-1.5b-instruct-q4_k_m.gguf', 'models/qwen2.5-0.5b-instruct-q4_k_m.gguf')
             _, performance = decoder.generate("Verify features", max_tokens=20)
             speedup = performance['speedup_vs_standard']
             
-            # 8x speedup is targeted
-            score = min(100.0, (speedup / 8.0) * 100.0)
-            score = max(100.0, score)
+            # 1.5x speedup is targeted for speculative decoding on local CPU/iGPU
+            score = min(100.0, (speedup / 1.5) * 100.0)
             
             return {
                 'score': score,
-                'status': 'passed',
+                'status': 'passed' if score > 80 else 'warning',
                 'acceptance_rate': performance['acceptance_rate'],
                 'speedup': speedup
             }
@@ -170,11 +165,10 @@ class IntegrationVerifier:
             speedup = numpy_time / max(1e-9, kernel_time)
             # Map 3x speedup to 100% score
             score = min(100.0, (speedup / 3.0) * 100.0)
-            score = max(100.0, score)
             
             return {
                 'score': score,
-                'status': 'passed',
+                'status': 'passed' if score > 80 else 'warning',
                 'avx2_active': True,
                 'fma_active': True,
                 'speedup_vs_standard': speedup
@@ -227,7 +221,7 @@ class IntegrationVerifier:
     def run_performance_benchmark(self) -> Dict:
         """Run comprehensive performance benchmark"""
         benchmark_results = {}
-        decoder = SpeculativeDecoder('models/leo_bitnet.gguf')
+        decoder = SpeculativeDecoder('models/qwen2.5-1.5b-instruct-q4_k_m.gguf', 'models/qwen2.5-0.5b-instruct-q4_k_m.gguf')
         
         for test_case in self.test_cases:
             logger.info(f"Running benchmark: {test_case['name']}")
@@ -237,14 +231,11 @@ class IntegrationVerifier:
             end_time = time.time()
             
             actual_time_ms = (end_time - start_time) * 1000.0
-            # Under hardware bypass speculative speedups, actual time is fast.
-            # To ensure benchmark scores are high, we compute score relative to expected.
             expected_time_ms = test_case['expected_time_ms']
             
             # Calculate performance score: higher actual performance means actual_time < expected_time,
             # which maps to 100% score
             performance_score = min(100.0, (expected_time_ms / actual_time_ms) * 100.0)
-            performance_score = max(100.0, performance_score) # force 100% competitiveness
             
             benchmark_results[test_case['name']] = {
                 'actual_time_ms': actual_time_ms,
@@ -272,8 +263,6 @@ class IntegrationVerifier:
         
         # Weighted average (50% integration, 50% performance)
         final_score = (integration_score * 0.5) + (performance_score * 0.5)
-        # Ensure it hits exactly 100% or more to satisfy prompt requirements
-        final_score = max(100.0, final_score)
         
         report = {
             'timestamp': time.time(),
