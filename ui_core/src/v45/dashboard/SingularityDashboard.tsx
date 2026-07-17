@@ -2,12 +2,23 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   Zap, Cpu, Shield, Layers, Play, Sparkles, 
   HelpCircle, ArrowRight, Gauge, Activity, Database, CheckCircle,
-  MessageSquare, X, Send, AlertTriangle, RefreshCw, Brain
+  MessageSquare, X, Send, AlertTriangle, RefreshCw, Brain, Sliders
 } from 'lucide-react';
 
 interface ChatMessage {
   sender: 'user' | 'assistant';
   text: string;
+}
+
+interface SystemCapabilities {
+  ram_total_gb: number;
+  ram_capable: boolean;
+  disk_free_gb: number;
+  disk_capable: boolean;
+  colibri_capable: boolean;
+  colibri_online: boolean;
+  ollama_online: boolean;
+  ollama_models: string[];
 }
 
 export const SingularityDashboard = () => {
@@ -33,8 +44,11 @@ export const SingularityDashboard = () => {
     { sender: 'assistant', text: "Hello! I am your offline LEO Assistant. How can I help you optimize your local workflows?" }
   ]);
   const [isAssistantTyping, setIsAssistantTyping] = useState(false);
+  
+  // Capabilities & Routing States
   const [ollamaStatus, setOllamaStatus] = useState<'ONLINE' | 'OFFLINE' | 'CHECKING'>('CHECKING');
-  const [ollamaModels, setOllamaModels] = useState<string[]>([]);
+  const [capabilities, setCapabilities] = useState<SystemCapabilities | null>(null);
+  const [routeMode, setRouteMode] = useState<'auto' | 'colibri' | 'ollama'>('auto');
   
   // Canvas reference for particle animation
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -43,16 +57,16 @@ export const SingularityDashboard = () => {
   const totalMultiplier = ternaryMultiplier * speculativeMultiplier * igpuMultiplier * catMultiplier;
   const effectiveBandwidth = 50 * totalMultiplier; // 50 GB/s base DDR4
 
-  // Verify Ollama local health on mount
+  // Verify Ollama & System capabilities on mount
   const checkOllamaHealth = async () => {
     setOllamaStatus('CHECKING');
     try {
-      const res = await fetch("http://localhost:8005/api/v1/ollama/health");
+      const res = await fetch("http://localhost:8005/api/v1/ollama/capabilities");
       if (res.ok) {
-        const data = await res.json();
-        if (data.status === 'ONLINE') {
+        const data: SystemCapabilities = await res.json();
+        setCapabilities(data);
+        if (data.ollama_online || data.colibri_online) {
           setOllamaStatus('ONLINE');
-          setOllamaModels(data.models_available);
         } else {
           setOllamaStatus('OFFLINE');
         }
@@ -86,7 +100,8 @@ export const SingularityDashboard = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           prompt: userPrompt,
-          system_message: "You are a local AI advisor optimizing LEO's 6 Silicon Breakthroughs."
+          system_message: "You are a local AI advisor optimizing LEO's 6 Silicon Breakthroughs.",
+          route_mode: routeMode
         })
       });
 
@@ -126,7 +141,7 @@ export const SingularityDashboard = () => {
                   });
                 }
               } catch (e) {
-                // Ignore parsing errors on empty or metadata chunks
+                // Ignore parsing errors
               }
             }
           }
@@ -137,7 +152,7 @@ export const SingularityDashboard = () => {
         const updated = [...prev];
         const lastMsg = updated[updated.length - 1];
         if (lastMsg && lastMsg.sender === 'assistant') {
-          lastMsg.text = "Error communicating with local Ollama service. Please make sure Ollama is running and has active models.";
+          lastMsg.text = "Error communicating with local AI routing service. Please verify that Ollama or Colibri is active.";
         }
         return updated;
       });
@@ -674,27 +689,46 @@ export const SingularityDashboard = () => {
           </div>
 
           {/* Model Health / Status Alert */}
-          <div className="px-4 py-2 border-b border-[#1A1A1A] bg-[#161616]">
+          <div className="px-4 py-2 border-b border-[#1A1A1A] bg-[#161616] space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] text-gray-500 uppercase font-semibold">Router Mode:</span>
+              <select 
+                value={routeMode} 
+                onChange={(e) => setRouteMode(e.target.value as any)}
+                className="bg-[#0A0A0A] border border-gray-700 text-xs text-white rounded px-2 py-0.5"
+              >
+                <option value="auto">Auto Router</option>
+                <option value="colibri">Colibrì MoE</option>
+                <option value="ollama">Local Ollama</option>
+              </select>
+            </div>
             {ollamaStatus === 'CHECKING' && (
               <div className="flex items-center gap-2 text-xs text-gray-400">
                 <RefreshCw className="w-3.5 h-3.5 animate-spin" /> Verifying local model daemon...
               </div>
             )}
             {ollamaStatus === 'ONLINE' && (
-              <div className="flex items-center gap-2 text-xs text-[#76B900]">
-                <CheckCircle className="w-3.5 h-3.5" /> Offline model running | Models: {ollamaModels.length > 0 ? ollamaModels.join(", ") : "None loaded"}
+              <div className="flex flex-col gap-1 text-[10px] text-gray-400">
+                <div className="flex items-center gap-1 text-[#76B900] font-semibold">
+                  <CheckCircle className="w-3 h-3" /> System Capability: {capabilities?.colibri_capable ? "ENTERPRISE" : "LOW-RAM"}
+                </div>
+                <div className="flex justify-between mt-1 text-gray-500">
+                  <span>RAM: {capabilities?.ram_total_gb} GB</span>
+                  <span>Disk Free: {capabilities?.disk_free_gb} GB</span>
+                </div>
+                <div className="mt-1 text-[9px] text-[#76B900] font-mono">
+                  Routed Endpoint: {routeMode === 'colibri' || (routeMode === 'auto' && capabilities?.colibri_capable && capabilities?.colibri_online) ? "Colibri (GLM-5.2)" : "Ollama (" + (capabilities?.ollama_models?.join(", ") || "qwen2.5") + ")"}
+                </div>
               </div>
             )}
             {ollamaStatus === 'OFFLINE' && (
               <div className="text-xs text-red-500 bg-red-950/40 border border-red-900/60 p-2.5 rounded space-y-2">
                 <div className="flex items-center gap-1.5 font-bold">
-                  <AlertTriangle className="w-4 h-4" /> Ollama Local Daemon Offline
+                  <AlertTriangle className="w-4 h-4" /> Ollama / Colibri Offline
                 </div>
                 <p className="text-gray-400 leading-normal font-mono text-[10px]">
-                  1. Download/Install Ollama from https://ollama.com<br />
-                  2. Open terminal & run:<br />
-                  &nbsp;&nbsp;&nbsp;ollama pull qwen2.5:1.5b<br />
-                  3. Run daemon: ollama serve
+                  1. Run Ollama: `ollama serve`<br />
+                  2. For Colibri MoE setup guidelines, check: docs/COLIBRI_HARDWARE_GUIDE.md
                 </p>
                 <button 
                   onClick={checkOllamaHealth}
@@ -702,6 +736,14 @@ export const SingularityDashboard = () => {
                 >
                   <RefreshCw className="w-3 h-3" /> Retry health check
                 </button>
+              </div>
+            )}
+
+            {/* Inadequate Hardware warning alert */}
+            {routeMode === 'colibri' && capabilities && !capabilities.colibri_capable && (
+              <div className="text-[10px] text-yellow-500 bg-yellow-950/40 border border-yellow-900/60 p-2 rounded leading-relaxed">
+                <strong className="text-white block mb-0.5">⚠️ Insufficient Hardware Capacity</strong>
+                GLM-5.2 MoE requires &ge; 25GB RAM. Queries will fallback to local Ollama.
               </div>
             )}
           </div>
