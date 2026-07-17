@@ -82,3 +82,7 @@ app.include_router(scoreboard_router)
 
 from backend.ira_router import router as ira_router
 app.include_router(ira_router)
+
+from backend.routers.ollama_chat import router as ollama_router
+app.include_router(ollama_router)
+
