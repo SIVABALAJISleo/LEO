@@ -38,13 +38,13 @@ export const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/docs" className="text-foreground/80 hover:text-primary transition-colors">
+            <Link to="/documentation" className="text-foreground/80 hover:text-primary transition-colors">
               Documentation
             </Link>
             <Link to="/playground" className="text-foreground/80 hover:text-primary transition-colors">
               API Playground
             </Link>
-            <Link to="/billing/pricing" className="text-foreground/80 hover:text-primary transition-colors">
+            <Link to="/pricing" className="text-foreground/80 hover:text-primary transition-colors">
               Pricing
             </Link>
           </div>
@@ -53,10 +53,10 @@ export const Navbar = () => {
             <Button variant="ghost" size="icon" onClick={toggleTheme} className="rounded-full">
               {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </Button>
-            <Link to="/auth/login">
+            <Link to="/auth">
               <Button variant="ghost">Sign In</Button>
             </Link>
-            <Link to="/auth/signup">
+            <Link to="/auth">
               <Button className="bg-gradient-primary shadow-glow">Get Started</Button>
             </Link>
           </div>
@@ -79,7 +79,7 @@ export const Navbar = () => {
         {isOpen && (
           <div className="md:hidden py-4 space-y-4 border-t border-border animate-fade-in">
             <Link
-              to="/docs"
+              to="/documentation"
               className="block text-foreground/80 hover:text-primary transition-colors"
               onClick={() => setIsOpen(false)}
             >
@@ -93,16 +93,16 @@ export const Navbar = () => {
               API Playground
             </Link>
             <Link
-              to="/billing/pricing"
+              to="/pricing"
               className="block text-foreground/80 hover:text-primary transition-colors"
               onClick={() => setIsOpen(false)}
             >
               Pricing
             </Link>
-            <Link to="/auth/login" onClick={() => setIsOpen(false)}>
+            <Link to="/auth" onClick={() => setIsOpen(false)}>
               <Button variant="ghost" className="w-full">Sign In</Button>
             </Link>
-            <Link to="/auth/signup" onClick={() => setIsOpen(false)}>
+            <Link to="/auth" onClick={() => setIsOpen(false)}>
               <Button className="w-full bg-gradient-primary">Get Started</Button>
             </Link>
           </div>
