@@ -27,7 +27,7 @@ import { LEOAIvInfinityDashboard } from "./src/dashboards/LEOAIvInfinityDashboar
 import { 
   Activity, Cpu, HardDrive, Layers, Zap, AlertTriangle, Play, Shield, 
   RefreshCw, AlertCircle, Sparkles, MessageSquare, CheckCircle, 
-  Terminal, HelpCircle, ArrowRight, Settings, BarChart2, Brain, GitBranch, Crosshair, FlaskConical, Gauge, LineChart, Award, Scale, ShieldCheck
+  Terminal, HelpCircle, ArrowRight, Settings, BarChart2, Brain, GitBranch, Crosshair, FlaskConical, Gauge, LineChart, Award, Scale, ShieldCheck, Sliders
 } from "lucide-react";
 import { 
   IntentCanonicalizer, LanguageRecoveryEngine, ReasoningValidator, 
@@ -127,6 +127,7 @@ function App() {
   const [activeTab, setActiveTab] = useState<"swarm" | "cognitive" | "debate" | "benchmarks" | "devops" | "quality" | "v14super" | "v15substrate" | "v16substrate" | "v17dominance" | "v18validation" | "failureHunting" | "v22quality" | "v23frontier" | "v24convergence" | "v25certification" | "v26reality" | "v27certification" | "v28validation" | "v29frontier" | "v30frontier" | "v31irrelevance" | "v32ceiling" | "v32reality" | "v33compute" | "v34compute" | "v35parity" | "v36ceiling" | "v37evolution" | "v38architecture" | "v40ultimate" | "vinfinity" | "v42irrelevance" | "v43omega" | "v45singularity">("v45singularity");
   const [currentView, setCurrentView] = useState<"home" | "docs" | "playground" | "swarms" | "auth" | "onboarding" | "legacy_swarms">("home");
   const [activeSection, setActiveSection] = useState<string>("dashboard");
+  const [isSelectorOpen, setIsSelectorOpen] = useState(false);
 
   // --- V17 Domain Dominance States ---
   const [v17QueryInput, setV17QueryInput] = useState("Issue transaction refund invoice");
@@ -918,33 +919,54 @@ function App() {
         </div>
       </header>
 
-      {/* Tab Navigation Menu (only for original Swarm dashboards) */}
-      {(currentView === "swarms" || currentView === "legacy_swarms") && (
-        <nav className="border-b border-slate-800 bg-[#030d1d] py-1 shadow-inner">
-          <div className="container mx-auto px-4 flex gap-2 overflow-x-auto no-scrollbar">
-            {[
+      {/* Sticky Sub-Header bar */}
+      {(currentView === "swarms" || currentView === "legacy_swarms") && (() => {
+        const versionCategories = [
+          {
+            title: "Foundational Cognitive",
+            items: [
               { id: "swarm", label: "Swarm Console", icon: Terminal },
               { id: "cognitive", label: "Cognitive Engine", icon: Cpu },
-              { id: "v14super", label: "V14 Cognitive Breakthrough", icon: Sparkles },
-              { id: "v15substrate", label: "V15 Cognitive Substrate", icon: Brain },
-              { id: "v16substrate", label: "V16 Cognitive Substrate", icon: Sparkles },
-              { id: "v17dominance", label: "V17 Domain Dominance", icon: Zap },
-              { id: "v18validation", label: "V18 Validation Universe", icon: Shield },
+              { id: "v14super", label: "V14 Breakthrough", icon: Sparkles },
+              { id: "v15substrate", label: "V15 Substrate", icon: Brain },
+              { id: "v16substrate", label: "V16 Substrate", icon: Sparkles },
+              { id: "v17dominance", label: "V17 Dominance", icon: Zap }
+            ]
+          },
+          {
+            title: "Validation & Stability",
+            items: [
+              { id: "v18validation", label: "V18 Validation", icon: Shield },
               { id: "failureHunting", label: "Failure Hunting", icon: Crosshair },
-              { id: "v22quality", label: "V22 Quality Amplifier", icon: FlaskConical },
-              { id: "v23frontier", label: "V23 Frontier Optimization", icon: Gauge },
-              { id: "v24convergence", label: "V24 Convergence Engine", icon: LineChart },
-              { id: "v25certification", label: "V25 Certification Core", icon: Award },
+              { id: "v22quality", label: "V22 Quality", icon: FlaskConical },
+              { id: "v23frontier", label: "V23 Frontier", icon: Gauge },
+              { id: "v24convergence", label: "V24 Convergence", icon: LineChart }
+            ]
+          },
+          {
+            title: "Product Verification",
+            items: [
+              { id: "v25certification", label: "V25 Certification", icon: Award },
               { id: "v26reality", label: "V26 Reality Core", icon: Sparkles },
               { id: "v27certification", label: "V27 Scientific Proof", icon: Scale },
               { id: "v28validation", label: "V28 Validation Lab", icon: ShieldCheck },
               { id: "v29frontier", label: "V29 Frontier Core", icon: Cpu },
-              { id: "v30frontier", label: "V30 Frontier Acceleration", icon: Cpu },
+              { id: "v30frontier", label: "V30 Acceleration", icon: Cpu }
+            ]
+          },
+          {
+            title: "Compute Efficiency",
+            items: [
               { id: "v31irrelevance", label: "V31 Compute Avoidance", icon: Gauge },
-              { id: "v32ceiling", label: "V32 Engineering Ceiling", icon: Cpu },
+              { id: "v32ceiling", label: "V32 Eng Ceiling", icon: Cpu },
               { id: "v32reality", label: "V32 Reality Learning", icon: Gauge },
-              { id: "v33compute", label: "V33 Compute Irrelevance", icon: Gauge },
-              { id: "v34compute", label: "V34 Compute Irrelevance", icon: Cpu },
+              { id: "v33compute", label: "V33 Irrelevance", icon: Gauge },
+              { id: "v34compute", label: "V34 Irrelevance", icon: Cpu }
+            ]
+          },
+          {
+            title: "Convergence & Cockpits",
+            items: [
               { id: "v35parity", label: "V35 Scoreboard", icon: Award },
               { id: "v36ceiling", label: "V36 Scoreboard", icon: Gauge },
               { id: "v37evolution", label: "V37 Cockpit", icon: Sparkles },
@@ -952,36 +974,87 @@ function App() {
               { id: "v40ultimate", label: "V40 Cockpit", icon: Sparkles },
               { id: "vinfinity", label: "v∞ Cockpit", icon: Zap },
               { id: "v42irrelevance", label: "V42 Cockpit", icon: Sparkles },
-              { id: "v43omega", label: "V43 OMEGA", icon: Zap },
+              { id: "v43omega", label: "V43 OMEGA", icon: Zap }
+            ]
+          },
+          {
+            title: "Quantum Frontier & Utils",
+            items: [
               { id: "v45singularity", label: "V45 SINGULARITY", icon: Zap },
               { id: "debate", label: "Multi-Agent Debate", icon: MessageSquare },
               { id: "quality", label: "Verification & Quality", icon: Shield },
-              { id: "benchmarks", label: "Enterprise Benchmarks", icon: BarChart2 },
-              { id: "devops", label: "DevOps Stage", icon: Settings },
-            ].map((tab) => {
-              const Icon = tab.icon;
-              const active = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => {
-                    setActiveTab(tab.id as any);
-                    setCurrentView("legacy_swarms");
-                  }}
-                  className={`flex items-center gap-2 px-4 py-3 text-xs font-semibold uppercase tracking-wider transition-all border-b-2 rounded-t-md hover:bg-slate-800/40 ${
-                    active 
-                      ? "border-blue-500 text-blue-400 bg-blue-500/5 font-bold" 
-                      : "border-transparent text-slate-400 hover:text-slate-200"
-                  }`}
-                >
-                  <Icon className="h-4 w-4" />
-                  {tab.label}
-                </button>
-              );
-            })}
+              { id: "benchmarks", label: "Benchmarks", icon: BarChart2 },
+              { id: "devops", label: "DevOps Stage", icon: Settings }
+            ]
+          }
+        ];
+
+        const activeTabItem = versionCategories
+          .flatMap(cat => cat.items)
+          .find(item => item.id === activeTab);
+        const activeTabLabel = activeTabItem ? activeTabItem.label : "V45 SINGULARITY";
+
+        return (
+          <div className="relative border-b border-slate-800 bg-[#020813] py-3 px-8 flex items-center justify-between z-30">
+            <div className="flex items-center gap-2 text-xs font-semibold text-slate-400">
+              <Sliders className="h-4 w-4 text-[#76B900]" />
+              <span>Active Substrate Mode:</span>
+              <span className="text-[#76B900] font-extrabold uppercase tracking-wider bg-[#76B900]/10 px-2 py-0.5 rounded border border-[#76B900]/20">
+                {activeTabLabel}
+              </span>
+            </div>
+
+            <div className="relative">
+              <button
+                onClick={() => setIsSelectorOpen(!isSelectorOpen)}
+                className="flex items-center gap-2 border border-slate-800 bg-[#0b1329]/60 hover:bg-[#0b1329]/95 text-slate-200 text-xs px-4 py-2 rounded transition-all font-bold uppercase tracking-wider shadow-[0_0_10px_rgba(0,0,0,0.5)]"
+              >
+                <span>Explore Substrates</span>
+                <span className={`text-[10px] transition-transform duration-200 ${isSelectorOpen ? 'rotate-180' : ''}`}>▼</span>
+              </button>
+
+              {isSelectorOpen && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setIsSelectorOpen(false)} />
+                  <div className="absolute right-0 mt-2 bg-[#050e1f]/95 border border-slate-800 rounded-xl p-6 shadow-2xl z-50 grid grid-cols-2 md:grid-cols-3 gap-6 w-[760px] animate-in fade-in zoom-in-95 duration-200 backdrop-blur-md">
+                    {versionCategories.map((category, catIdx) => (
+                      <div key={catIdx} className="space-y-2.5">
+                        <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest border-b border-slate-800/80 pb-1.5">
+                          {category.title}
+                        </div>
+                        <div className="space-y-1">
+                          {category.items.map((item) => {
+                            const Icon = item.icon;
+                            const active = activeTab === item.id;
+                            return (
+                              <button
+                                key={item.id}
+                                onClick={() => {
+                                  setActiveTab(item.id as any);
+                                  setCurrentView("legacy_swarms");
+                                  setIsSelectorOpen(false);
+                                }}
+                                className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded text-[11px] font-semibold tracking-wide transition-all text-left ${
+                                  active
+                                    ? "bg-[#76B900]/10 text-[#76B900] border-l-2 border-[#76B900] font-bold"
+                                    : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/20"
+                                }`}
+                              >
+                                <Icon className={`h-3.5 w-3.5 ${active ? 'text-[#76B900]' : 'text-slate-500'}`} />
+                                <span>{item.label}</span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
           </div>
-        </nav>
-      )}
+        );
+      })()}
 
       <main className="flex-1">
         {currentView === "home" && <IntelliGPUHome onNavigate={setCurrentView} />}
