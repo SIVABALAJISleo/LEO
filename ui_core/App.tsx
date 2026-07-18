@@ -918,9 +918,9 @@ function App() {
       </header>
 
       {/* Tab Navigation Menu (only for original Swarm dashboards) */}
-      {currentView === "swarms" && (
+      {(currentView === "swarms" || currentView === "legacy_swarms") && (
         <nav className="border-b border-slate-800 bg-[#030d1d] py-1 shadow-inner">
-          <div className="container mx-auto px-4 flex gap-2 overflow-x-auto">
+          <div className="container mx-auto px-4 flex gap-2 overflow-x-auto no-scrollbar">
             {[
               { id: "swarm", label: "Swarm Console", icon: Terminal },
               { id: "cognitive", label: "Cognitive Engine", icon: Cpu },
@@ -963,7 +963,10 @@ function App() {
               return (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
+                  onClick={() => {
+                    setActiveTab(tab.id as any);
+                    setCurrentView("legacy_swarms");
+                  }}
                   className={`flex items-center gap-2 px-4 py-3 text-xs font-semibold uppercase tracking-wider transition-all border-b-2 rounded-t-md hover:bg-slate-800/40 ${
                     active 
                       ? "border-blue-500 text-blue-400 bg-blue-500/5 font-bold" 
