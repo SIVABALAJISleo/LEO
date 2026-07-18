@@ -10,10 +10,28 @@ import { Card, CardContent } from "./ui/card";
 interface IntelliGPUDashboardProps {
   onSignOut: () => void;
   onNavigateToLegacy?: () => void;
+  activeSection?: string;
+  setActiveSection?: (section: any) => void;
+  children?: React.ReactNode;
 }
 
-export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({ onSignOut, onNavigateToLegacy }) => {
-  const [activeSection, setActiveSection] = useState<"dashboard" | "inference" | "results" | "modules" | "monitoring" | "settings">("dashboard");
+export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({ 
+  onSignOut, 
+  onNavigateToLegacy,
+  activeSection: propActiveSection,
+  setActiveSection: propSetActiveSection,
+  children
+}) => {
+  const [localActiveSection, setLocalActiveSection] = useState<"dashboard" | "inference" | "results" | "modules" | "monitoring" | "settings">("dashboard");
+  const activeSection = propActiveSection || localActiveSection;
+  const setActiveSection = (section: any) => {
+    if (propSetActiveSection) {
+      propSetActiveSection(section);
+    } else {
+      setLocalActiveSection(section);
+    }
+  };
+
   const [activeSettingsTab, setActiveSettingsTab] = useState<"profile" | "api" | "notifications" | "advanced">("profile");
   const [fullName, setFullName] = useState("");
   const [company, setCompany] = useState("");
@@ -135,7 +153,11 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({ onSign
                 <nav className="space-y-1">
                   <button
                     onClick={onNavigateToLegacy}
-                    className="w-full flex items-center gap-3 px-3 py-2 rounded text-xs font-bold text-slate-400 hover:text-slate-200 hover:bg-slate-800/20 transition-all animate-pulse"
+                    className={`w-full flex items-center gap-3 px-3 py-2 rounded text-xs font-bold transition-all ${
+                      activeSection === "legacy" || activeSection === "legacy_swarms"
+                        ? "bg-[#76B900]/10 text-[#76B900] border-l-2 border-[#76B900]" 
+                        : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/20 animate-pulse"
+                    }`}
                   >
                     <Layers className="h-4 w-4" />
                     Legacy Swarms
@@ -189,9 +211,9 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({ onSign
 
         {/* Workspace Body */}
         <main className="flex-1 overflow-y-auto p-8">
+          {children}
           
-          {/* VIEW 1: Dashboard System Overview */}
-          {activeSection === "dashboard" && (
+          {!children && activeSection === "dashboard" && (
             <div className="space-y-6 max-w-6xl mx-auto animate-in fade-in duration-300">
               <div className="flex items-center justify-between">
                 <h1 className="text-xl font-black text-white tracking-tight">System Overview</h1>

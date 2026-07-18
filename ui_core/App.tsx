@@ -126,6 +126,7 @@ function App() {
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState<"swarm" | "cognitive" | "debate" | "benchmarks" | "devops" | "quality" | "v14super" | "v15substrate" | "v16substrate" | "v17dominance" | "v18validation" | "failureHunting" | "v22quality" | "v23frontier" | "v24convergence" | "v25certification" | "v26reality" | "v27certification" | "v28validation" | "v29frontier" | "v30frontier" | "v31irrelevance" | "v32ceiling" | "v32reality" | "v33compute" | "v34compute" | "v35parity" | "v36ceiling" | "v37evolution" | "v38architecture" | "v40ultimate" | "vinfinity" | "v42irrelevance" | "v43omega" | "v45singularity">("v45singularity");
   const [currentView, setCurrentView] = useState<"home" | "docs" | "playground" | "swarms" | "auth" | "onboarding" | "legacy_swarms">("home");
+  const [activeSection, setActiveSection] = useState<string>("dashboard");
 
   // --- V17 Domain Dominance States ---
   const [v17QueryInput, setV17QueryInput] = useState("Issue transaction refund invoice");
@@ -996,12 +997,29 @@ function App() {
         {currentView === "swarms" && (
           <IntelliGPUDashboard 
             onSignOut={() => setCurrentView("home")} 
-            onNavigateToLegacy={() => setCurrentView("legacy_swarms")}
+            onNavigateToLegacy={() => {
+              setCurrentView("legacy_swarms");
+              setActiveSection("legacy");
+            }}
+            activeSection={activeSection}
+            setActiveSection={setActiveSection}
           />
         )}
 
         {currentView === "legacy_swarms" && (
-          <div className="container mx-auto px-4 py-8">
+          <IntelliGPUDashboard
+            onSignOut={() => setCurrentView("home")}
+            onNavigateToLegacy={() => {
+              setCurrentView("legacy_swarms");
+              setActiveSection("legacy");
+            }}
+            activeSection="legacy"
+            setActiveSection={(sec) => {
+              setCurrentView("swarms");
+              setActiveSection(sec);
+            }}
+          >
+            <div className="container mx-auto px-4 py-8">
         
         {/* TAB 1: SWARM RUNTIME CONSOLE */}
         {activeTab === "swarm" && (
@@ -3733,7 +3751,8 @@ function App() {
           </div>
         )}
 
-          </div>
+            </div>
+          </IntelliGPUDashboard>
         )}
       </main>
     </div>
