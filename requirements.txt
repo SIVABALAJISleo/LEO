@@ -21,7 +21,7 @@ onnxruntime==1.24.4
 onnx>=1.21.0
 chromadb==0.5.23
 --extra-index-url https://download.pytorch.org/whl/cpu
-torch==2.9.0
+torch>=2.12.1
 sentence-transformers==5.1.2
 faiss-cpu==1.13.0
 numba==0.61.2

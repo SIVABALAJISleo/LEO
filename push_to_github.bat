@@ -18,10 +18,10 @@ if %errorlevel% neq 0 (
 )
 
 echo.
-echo Staging all project changes, Lovable AI v2.0 files, and platform stability updates...
+echo Staging all project changes, PyTorch security updates, and npm ci lockfile sync...
 cd /d "%~dp0"
 git add -A
-git commit -m "feat: complete platform stability tasks (CPU wheels, backend import fixes, .gitignore hygiene, route lazy-loading, & Dependabot security patches)"
+git commit -m "fix(ci): bump PyTorch >=2.12.1 (#174,#175,#176), patch websocket-driver (#172,#173), and sync package.json with package-lock.json for clean npm ci"
 
 echo.
 echo Pushing all commits to GitHub...
