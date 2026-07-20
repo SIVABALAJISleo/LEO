@@ -18,10 +18,10 @@ if %errorlevel% neq 0 (
 )
 
 echo.
-echo Staging all project changes and npm ci package-lock.json synchronization...
+echo Staging NVIDIA Quantum Design System, MNC-Style UI components, and API integration layers...
 cd /d "%~dp0"
 git add -A
-git commit -m "fix(ci): synchronize package.json and package-lock.json for clean npm ci run"
+git commit -m "feat(ui): implement LEO Quantum NVIDIA-style MNC UI design system, components, WebSockets & PWA Service Worker"
 
 echo.
 echo Pushing all commits to GitHub...

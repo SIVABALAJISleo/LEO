@@ -1,9 +1,5 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { AlertTriangle, RefreshCw, Home, ArrowRight } from 'lucide-react';
-import { logError } from '@/lib/logging';
-import { toExplainableError, type ExplainableError } from '@/lib/production';
+import { nvidiaTokens } from '../design_system/nvidiaTokens';
 
 interface Props {
   children: ReactNode;
@@ -13,46 +9,21 @@ interface Props {
 interface State {
   hasError: boolean;
   error: Error | null;
-  errorInfo: ErrorInfo | null;
-  explainableError: ExplainableError | null;
 }
 
 export class ErrorBoundary extends Component<Props, State> {
   public state: State = {
     hasError: false,
     error: null,
-    errorInfo: null,
-    explainableError: null,
   };
 
-  public static getDerivedStateFromError(error: Error): Partial<State> {
-    const explainableError = toExplainableError(error);
-    return { hasError: true, error, explainableError };
+  public static getDerivedStateFromError(error: Error): State {
+    return { hasError: true, error };
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    this.setState({ errorInfo });
-    
-    // Log the error to our logging service
-    logError({
-      message: error.message,
-      stack: error.stack,
-      componentName: errorInfo.componentStack?.split('\n')[1]?.trim() || 'Unknown',
-      metadata: {
-        componentStack: errorInfo.componentStack,
-        url: window.location.href,
-        userAgent: navigator.userAgent,
-      },
-    });
+    console.error('LEO Quantum Error Boundary caught an exception:', error, errorInfo);
   }
-
-  private handleReset = () => {
-    this.setState({ hasError: false, error: null, errorInfo: null, explainableError: null });
-  };
-
-  private handleGoHome = () => {
-    window.location.href = '/';
-  };
 
   public render() {
     if (this.state.hasError) {
@@ -60,68 +31,46 @@ export class ErrorBoundary extends Component<Props, State> {
         return this.props.fallback;
       }
 
-      const { explainableError, error } = this.state;
-
       return (
-        <div className="min-h-screen bg-background flex items-center justify-center p-4">
-          <Card className="max-w-lg w-full p-8 text-center">
-            <div className="flex justify-center mb-6">
-              <div className="p-4 rounded-full bg-destructive/10">
-                <AlertTriangle className="h-12 w-12 text-destructive" />
-              </div>
-            </div>
-            
-            <h1 className="text-2xl font-bold mb-2">
-              {explainableError?.title || 'Something went wrong'}
+        <div
+          style={{
+            minHeight: '100vh',
+            background: nvidiaTokens.colors.primary.black,
+            color: nvidiaTokens.colors.primary.white,
+            fontFamily: nvidiaTokens.typography.fontFamily.primary,
+          }}
+          className="flex flex-col items-center justify-center p-6 text-center space-y-6"
+        >
+          <div className="p-4 rounded-full bg-red-500/10 border border-red-500/30 text-red-400">
+            <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+
+          <div className="space-y-2 max-w-md">
+            <h1
+              className="text-2xl font-bold tracking-tight"
+              style={{ color: nvidiaTokens.colors.accent.nvidiaGreen }}
+            >
+              Quantum Runtime Excursion Captured
             </h1>
-            <p className="text-muted-foreground mb-4">
-              {explainableError?.explanation || 'An unexpected error occurred. Our team has been notified.'}
+            <p className="text-xs text-slate-400 font-mono">
+              {this.state.error?.message || 'An unexpected rendering error occurred inside the LEO execution kernel.'}
             </p>
+          </div>
 
-            {explainableError?.nextAction && (
-              <div className="mb-6 p-4 bg-muted rounded-lg text-left">
-                <p className="text-sm font-medium text-foreground flex items-center gap-2">
-                  <ArrowRight className="h-4 w-4 text-primary" />
-                  Next Step
-                </p>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {explainableError.nextAction}
-                </p>
-              </div>
-            )}
-
-            {process.env.NODE_ENV === 'development' && error && (
-              <div className="mb-6 p-4 bg-muted rounded-lg text-left">
-                <p className="font-mono text-xs text-muted-foreground mb-1">
-                  Error Code: {explainableError?.code || 'UNKNOWN'}
-                </p>
-                <p className="font-mono text-sm text-destructive mb-2">
-                  {error.message}
-                </p>
-                <pre className="text-xs text-muted-foreground overflow-auto max-h-32">
-                  {error.stack}
-                </pre>
-              </div>
-            )}
-
-            <div className="flex gap-4 justify-center">
-              <Button
-                variant="outline"
-                onClick={this.handleGoHome}
-                className="gap-2"
-              >
-                <Home className="h-4 w-4" />
-                Go Home
-              </Button>
-              <Button
-                onClick={this.handleReset}
-                className="gap-2"
-              >
-                <RefreshCw className="h-4 w-4" />
-                Try Again
-              </Button>
-            </div>
-          </Card>
+          <button
+            onClick={() => window.location.reload()}
+            style={{
+              background: nvidiaTokens.colors.accent.nvidiaGreen,
+              color: nvidiaTokens.colors.primary.black,
+              fontFamily: nvidiaTokens.typography.fontFamily.primary,
+              fontWeight: nvidiaTokens.typography.fontWeight.bold,
+            }}
+            className="px-6 py-2.5 rounded uppercase tracking-wider text-xs cursor-pointer hover:bg-emerald-400 transition-colors duration-200"
+          >
+            Reload Quantum Session
+          </button>
         </div>
       );
     }
@@ -129,5 +78,3 @@ export class ErrorBoundary extends Component<Props, State> {
     return this.props.children;
   }
 }
-
-export default ErrorBoundary;
