@@ -18,10 +18,10 @@ if %errorlevel% neq 0 (
 )
 
 echo.
-echo Staging all project changes, PyTorch security updates, and npm ci lockfile sync...
+echo Staging all project changes and npm ci package-lock.json synchronization...
 cd /d "%~dp0"
 git add -A
-git commit -m "fix(ci): bump PyTorch >=2.12.1 (#174,#175,#176), patch websocket-driver (#172,#173), and sync package.json with package-lock.json for clean npm ci"
+git commit -m "fix(ci): synchronize package.json and package-lock.json for clean npm ci run"
 
 echo.
 echo Pushing all commits to GitHub...
