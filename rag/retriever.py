@@ -12,12 +12,25 @@ class LEOHybridRetriever:
     Uses Algorithmic Gold (80s/90s architecture).
     Bypasses FAISS. Routes exact queries to LSH, and complex reasoning queries to VSA.
     """
-    def __init__(self, vector_dim: int = 384):
+    def __init__(self, index=None, embedder=None, vector_dim: int = 384):
+        self.index = index
+        self.embedder = embedder
         self.lsh = LSHEngine(vector_dim=vector_dim)
         self.vsa = VectorSymbolicArchitecture(dim=10000)
-        self.embedding_model = None # Assume an external fast embedder like MiniLM is passed here
+        self.embedding_model = embedder
         
         logger.info("LEO Hybrid Retriever initialized. Hashing and VSA engines online.")
+
+    def retrieve(self, text: str, k: int = 3):
+        if self.index and hasattr(self.index, 'search') and self.embedder:
+            emb = self.embedder.get_embeddings(text)
+            return self.index.search(emb, k=k)
+        if self.embedder:
+            emb = self.embedder.get_embeddings(text)
+            res = self.route_query(text, emb)
+            context = " ".join([r.get("text", "") for r in res if "text" in r])
+            return context, res
+        return "Default Context", []
 
     def add_document(self, doc_id: str, text: str, vector: np.ndarray):
         """Adds a document to the exact lookup LSH engine."""

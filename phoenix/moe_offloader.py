@@ -133,3 +133,5 @@ class MoEOffloadingLayer(nn.Module):
             "total_experts": self.num_experts,
             "experts_on_cpu": self.num_experts - len(self._loaded_experts),
         }
+
+MoEOffloader = MoEOffloadingLayer

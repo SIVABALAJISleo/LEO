@@ -51,7 +51,7 @@ def validate_model_integrity(model_path: str) -> None:
     if not os.path.exists(model_path):
         raise ModelValidationError(
             f"Model file missing at '{model_path}'!\n"
-            f"Please run 'python leo.py download-model' to fetch the real models."
+            f"Please run 'python leo.py download-model' to fetch the real models from https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF."
         )
 
     # If it is a directory (like OpenVINO IR directory), skip GGUF validation

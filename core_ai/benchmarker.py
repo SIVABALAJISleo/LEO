@@ -30,9 +30,11 @@ class LEOBenchmarker:
         draft_model_path: str = "models/qwen2.5-0.5b-instruct-q4_k_m.gguf",
         openvino_model_path: str = "models/Qwen2.5-1.5B-Instruct-int4-ov",
         threads: int = 8,
-        use_gpu: bool = False
+        use_gpu: bool = False,
+        model_path: Optional[str] = None,
+        **kwargs
     ):
-        self.target_model_path = target_model_path
+        self.target_model_path = model_path if model_path is not None else target_model_path
         self.draft_model_path = draft_model_path
         self.openvino_model_path = openvino_model_path
         self.threads = threads

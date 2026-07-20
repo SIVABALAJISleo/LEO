@@ -25,7 +25,7 @@ from experts.domain_experts import (
 logger = logging.getLogger(__name__)
 
 class MoERouter:
-    def __init__(self, fallback_threshold: float = 0.35):
+    def __init__(self, fallback_threshold: float = 0.25):
         self.fallback_threshold = fallback_threshold
         self.experts = {
             "reasoning": ReasoningExpert(),
@@ -47,7 +47,7 @@ class MoERouter:
             # mathematics
             "plus", "minus", "sum", "multiply", "divide", "sqrt", "equation", "calculate", "solve", "math",
             # coding
-            "def ", "class ", "function", "import ", "const ", "let ", "return ", "compile", "refactor", "loop",
+            "def", "class", "function", "import", "const", "let", "return", "compile", "refactor", "loop", "code",
             # cybersecurity
             "sql injection", "xss", "cross site", "vulnerability", "audit", "security", "exploit", "owasp", "cve",
             # creative
@@ -75,7 +75,7 @@ class MoERouter:
         domain_keywords = {
             "reasoning": ["prove", "verify", "deduce", "logic", "premise", "conclusion", "if then", "implies", "therefore"],
             "mathematics": ["plus", "minus", "sum", "multiply", "divide", "sqrt", "equation", "calculate", "solve", "math"],
-            "coding": ["def ", "class ", "function", "import ", "const ", "let ", "return ", "compile", "refactor", "loop"],
+            "coding": ["def", "class", "function", "import", "const", "let", "return", "compile", "refactor", "loop", "code"],
             "cybersecurity": ["sql injection", "xss", "cross site", "vulnerability", "audit", "security", "exploit", "owasp", "cve"],
             "creative": ["story", "poem", "metaphor", "write a creative", "novel", "narrative", "melancholy", "creative"],
             "summarization": ["summarize", "synopsis", "compaction", "extractive", "shorten", "gist", "brief", "summary"],

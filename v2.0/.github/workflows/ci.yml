@@ -1,0 +1,160 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  build:
+    name: Typecheck · Lint · Test · Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    env:
+      VITE_LEO_API_BASE_URL: ${{ vars.VITE_LEO_API_BASE_URL || 'http://localhost:8000' }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Lint
+        run: bun run lint
+
+      - name: Typecheck
+        run: bunx tsc --noEmit
+
+      - name: Unit tests
+        run: bunx vitest run
+
+      - name: Build (production)
+        run: bun run build
+
+      - name: Upload production artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: leo-frontend-dist
+          path: |
+            dist
+            .output
+          if-no-files-found: ignore
+          retention-days: 14
+
+  e2e:
+    name: Playwright E2E (mocked backend)
+    runs-on: ubuntu-latest
+    needs: build
+    timeout-minutes: 20
+    env:
+      VITE_LEO_API_BASE_URL: http://localhost:8000
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with: { bun-version: latest }
+      - run: bun install --frozen-lockfile
+      - name: Install Playwright browsers
+        run: bunx playwright install --with-deps chromium
+      - name: Build
+        run: bun run build
+      - name: Run Playwright tests
+        run: bunx playwright test
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
+          if-no-files-found: ignore
+          retention-days: 14
+
+  smoke:
+    name: Deployment smoke test
+    runs-on: ubuntu-latest
+    needs: build
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with: { bun-version: latest }
+      - run: bun install --frozen-lockfile
+      - name: Install Playwright browsers
+        run: bunx playwright install --with-deps chromium
+      - name: Download built artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: leo-frontend-dist
+          path: .
+      - name: Boot preview server
+        run: |
+          nohup bun run preview --port 4173 --strictPort > preview.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:4173 > /dev/null; then
+              echo "Preview up"; break
+            fi
+            sleep 1
+          done
+      - name: Health check
+        run: |
+          curl -fsS http://127.0.0.1:4173 > /dev/null
+          curl -fsS -o /dev/null -w "home:%{http_code}\n" http://127.0.0.1:4173/
+          curl -fsS -o /dev/null -w "docs:%{http_code}\n" http://127.0.0.1:4173/docs
+      - name: Authenticated-route smoke (via Playwright)
+        env:
+          SMOKE_BASE_URL: http://127.0.0.1:4173
+        run: bunx playwright test e2e/smoke.spec.ts
+      - name: Upload preview log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-preview-log
+          path: preview.log
+          if-no-files-found: ignore
+
+  perf-budget:
+    name: Web Vitals budget (LCP/INP/CLS)
+    runs-on: ubuntu-latest
+    needs: build
+    timeout-minutes: 15
+    env:
+      VITALS_BUDGET_LCP: "2500"
+      VITALS_BUDGET_INP: "200"
+      VITALS_BUDGET_CLS: "0.10"
+      VITALS_ROUTES: "/,/features,/benchmarks,/docs"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with: { bun-version: latest }
+      - run: bun install --frozen-lockfile
+      - name: Install Playwright browsers
+        run: bunx playwright install --with-deps chromium
+      - name: Download built artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: leo-frontend-dist
+          path: .
+      - name: Boot preview server
+        run: |
+          nohup bun run preview --port 4173 --strictPort > preview.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:4173 > /dev/null; then
+              echo "Preview up"; break
+            fi
+            sleep 1
+          done
+      - name: Check performance budget
+        run: bun run perf:budget
+      - name: Upload preview log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: perf-preview-log
+          path: preview.log
+          if-no-files-found: ignore
+

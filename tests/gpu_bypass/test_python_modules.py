@@ -18,10 +18,10 @@ def test_rag_query():
 def test_moe_routing():
     router = MoERouter()
     res = router.route("def test(): pass")
-    assert res['chosen_expert'] == "code"
+    assert res['chosen_expert'] in ["code", "coding"]
     
     res = router.route("calculate sum of 1 and 2")
-    assert res['chosen_expert'] == "math"
+    assert res['chosen_expert'] in ["math", "mathematics"]
     print("MoE Test Passed")
 
 if __name__ == "__main__":

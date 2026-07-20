@@ -26,7 +26,8 @@ class SpeculativeDecoder:
         max_draft_tokens: int = 5,
         n_ctx: int = 512,
         n_threads: int = 8,
-        n_gpu_layers: int = 0
+        n_gpu_layers: int = 0,
+        **kwargs
     ):
         self.target_model_path = target_model_path
         self.draft_model_path = draft_model_path

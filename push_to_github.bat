@@ -18,8 +18,13 @@ if %errorlevel% neq 0 (
 )
 
 echo.
-echo Pushing all commits to GitHub...
+echo Staging all project changes, Lovable AI v2.0 files, and platform stability updates...
 cd /d "%~dp0"
+git add -A
+git commit -m "feat: complete platform stability tasks (CPU wheels, backend import fixes, .gitignore hygiene, route lazy-loading, & Dependabot security patches)"
+
+echo.
+echo Pushing all commits to GitHub...
 git push origin main
 
 if %errorlevel% equ 0 (

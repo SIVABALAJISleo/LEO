@@ -156,10 +156,11 @@ class MultiLevelSemanticCache:
     def check_cache(self, query: str, query_vector: Optional[np.ndarray] = None, similarity_threshold: float = 0.85) -> Optional[str]:
         """Checks Level 1 then Level 2 for a cached response."""
         self.total_requests += 1
+        query_norm = " ".join(query.lower().split())
         
         # 1. Exact string match check (L1 cache)
         cursor = self.conn.cursor()
-        cursor.execute("SELECT response FROM cache WHERE query = ?", (query,))
+        cursor.execute("SELECT response FROM cache WHERE lower(trim(query)) = ?", (query_norm,))
         row = cursor.fetchone()
         if row:
             self.cache_hits += 1

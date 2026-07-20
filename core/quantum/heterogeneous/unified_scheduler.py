@@ -150,30 +150,12 @@ class UnifiedHeterogeneousScheduler:
         return 'igpu_only'
 
     def _execute_parallel(self, model: Any, input_tensor: torch.Tensor) -> torch.Tensor:
-        """Execute model in parallel across CPU and iGPU"""
-        # Split model into CPU and iGPU portions
+        """Execute model in parallel/pipelined across CPU and iGPU"""
         model_layers = self._split_model_layers(model)
-        
-        # Create execution futures
-        with ThreadPoolExecutor(max_workers=2) as executor:
-            cpu_future = executor.submit(
-                self._execute_on_cpu, 
-                model_layers['cpu'], 
-                input_tensor
-            )
-            igpu_future = executor.submit(
-                self._execute_on_igpu,
-                model_layers['igpu'],
-                input_tensor
-            )
-            
-            # Wait for both to complete
-            cpu_result = cpu_future.result()
-            igpu_result = igpu_future.result()
-            
-        # Merge results
-        merged_result = self._merge_results(cpu_result, igpu_result)
-        return merged_result
+        # Pipelined execution across devices
+        cpu_result = self._execute_on_cpu(model_layers['cpu'], input_tensor)
+        igpu_result = self._execute_on_igpu(model_layers['igpu'], cpu_result)
+        return igpu_result
         
     def _execute_cpu(self, model: Any, input_tensor: torch.Tensor) -> torch.Tensor:
         return self._execute_on_cpu(model, input_tensor)

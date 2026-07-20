@@ -57,3 +57,16 @@ models/
 *.pt
 *.gguf
 *.xml
+yolov8n-seg.pt
+Nvidia Clone Project.zip
+proof-artifacts.tar.gz
+
+# Test, Audit & Generated Artifacts
+test_output*.txt
+*_utf8.txt
+symbolic_*_results*.json
+all_bandit_findings.txt
+audit_pytest*.txt
+*_REPORT.md
+*_CERTIFICATION_REPORT.md
+vite.config.ts.timestamp-*.mjs

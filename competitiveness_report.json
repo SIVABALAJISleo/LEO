@@ -1,85 +1,20 @@
 {
-  "timestamp": 1783853873.3896384,
-  "final_competitiveness_score": 100.0,
-  "integration_score": 100.0,
-  "performance_score": 100.0,
-  "feature_verification": {
-    "bitnet_quantization": {
-      "score": 100.0,
-      "status": "passed",
-      "model_size_mb": 8.789380315542221,
-      "expected_size_mb": 400.0
-    },
-    "heterogeneous_execution": {
-      "score": 100.0,
-      "status": "passed",
-      "cpu_utilization": 0.72,
-      "gpu_utilization": 0.48,
-      "speedup": 2.5
-    },
-    "speculative_decoding": {
-      "score": 100.0,
-      "status": "passed",
-      "acceptance_rate": 0.875,
-      "speedup": 251.65824
-    },
-    "custom_kernels": {
-      "score": 100.0,
-      "status": "passed",
-      "avx2_active": true,
-      "fma_active": true,
-      "speedup_vs_standard": 0.0032827539670714904
-    },
-    "performance_monitoring": {
-      "score": 100.0,
-      "status": "passed",
-      "monitoring_active": true,
-      "metrics_collected": 3
-    },
-    "autonomous_optimization": {
-      "score": 100.0,
-      "status": "passed",
-      "optimizations_applied": 4,
-      "average_improvement": 15.0
-    },
-    "overall_integration_score": 100.0
-  },
-  "performance_benchmark": {
-    "short_prompt": {
-      "actual_time_ms": 19.800662994384766,
-      "expected_time_ms": 500,
-      "performance_score": 100.0,
-      "tokens_generated": 50,
-      "tokens_per_second": 2856.912047679864
-    },
-    "medium_prompt": {
-      "actual_time_ms": 71.40111923217773,
-      "expected_time_ms": 2000,
-      "performance_score": 100.0,
-      "tokens_generated": 200,
-      "tokens_per_second": 2850.1925203861656
-    },
-    "long_context": {
-      "actual_time_ms": 40.51685333251953,
-      "expected_time_ms": 1500,
-      "performance_score": 100.0,
-      "tokens_generated": 100,
-      "tokens_per_second": 2640.0935178912914
-    },
-    "reasoning_task": {
-      "actual_time_ms": 39.98303413391113,
-      "expected_time_ms": 1000,
-      "performance_score": 100.0,
-      "tokens_generated": 100,
-      "tokens_per_second": 2641.0592976396083
-    },
-    "overall_score": 100.0
-  },
-  "system_info": {
-    "cpu": "Intel Core i5-12450H",
-    "gpu": "Intel UHD Graphics",
-    "ram": "16GB",
-    "os": "Windows 11"
-  },
-  "target_achieved": true
+  "environment_fingerprint": "Windows_Intel64 Family 6 Model 186 Stepping 2, GenuineIntel",
+  "system_cpu": "Intel64 Family 6 Model 186 Stepping 2, GenuineIntel",
+  "system_gpu": "Intel Core i5-12450H CPU Only",
+  "system_ram": "15.7 GB",
+  "device": "CPU",
+  "threads": 8,
+  "leo_standard_tps": 17.27,
+  "leo_speculative_tps": 0.4,
+  "leo_speculative_ttft_ms": 21683.45,
+  "openvino_tps": 2.67,
+  "openvino_available": true,
+  "acceptance_rate": 0.13,
+  "peak_ram_footprint_mb": 14222.4,
+  "cpu_utilization_pct": 94.0,
+  "leo_power_watts": 15.0,
+  "h100_ttft_ms": 120.0,
+  "h100_tps": 150.0,
+  "h100_cost_usd_per_1m": 2.0
 }
