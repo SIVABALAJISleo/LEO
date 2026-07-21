@@ -2,12 +2,24 @@
 // Base URL is configurable via VITE_LEO_API_BASE_URL or per-user via localStorage.
 import { toast } from "sonner";
 
-const DEFAULT_BASE = "http://localhost:8000";
+// Default port is 8005 (LEO backend). Override via:
+//   1. localStorage key "leo.api_base"  (Settings panel — highest priority)
+//   2. VITE_LEO_API_BASE_URL env var    (.env file)
+//   3. This default                     (local dev fallback)
+const DEFAULT_BASE = "http://localhost:8005";
+
+// Stale value guard: if localStorage still points to the old default port
+// (8000), silently migrate it so requests go to the correct backend.
+const STALE_DEFAULTS = new Set(["http://localhost:8000", "http://127.0.0.1:8000"]);
 
 export function getApiBase(): string {
   if (typeof window !== "undefined") {
     const stored = window.localStorage.getItem("leo.api_base");
-    if (stored) return stored;
+    if (stored && !STALE_DEFAULTS.has(stored.trim())) return stored.trim();
+    // Auto-migrate stale value
+    if (stored && STALE_DEFAULTS.has(stored.trim())) {
+      window.localStorage.removeItem("leo.api_base");
+    }
   }
   return (import.meta.env.VITE_LEO_API_BASE_URL as string | undefined) ?? DEFAULT_BASE;
 }

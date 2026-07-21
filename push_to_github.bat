@@ -25,9 +25,9 @@ git commit -m "update(colibri): sync engine modifications"
 cd /d "%~dp0"
 
 echo.
-echo Staging Layer 1-5 hardware optimization modules...
+echo Staging networking and CORS fixes...
 git add -A
-git commit -m "feat(hardware): implement iGPU accelerator, cache residency, OS affinity + Colibri tiered router (Layers 1-5)"
+git commit -m "fix(network): migrate localStorage port 8000->8005, wildcard CORS for tunnels, add start_tunnel.bat"
 
 echo.
 echo Pushing all commits to GitHub...

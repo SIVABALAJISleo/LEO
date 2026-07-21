@@ -30,13 +30,24 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
+
+_raw_origins = os.getenv("ALLOWED_ORIGINS", "")
+# In development, accept all origins so Cloudflare/ngrok tunnel URLs work.
+# In production, set ALLOWED_ORIGINS to a comma-separated list of allowed domains.
+if _raw_origins.strip():
+    _allowed_origins = [o.strip() for o in _raw_origins.split(",") if o.strip()]
+else:
+    # Default: allow local dev hosts and any HTTPS tunnel (wildcard for *.trycloudflare.com, *.ngrok-free.app, etc.)
+    _allowed_origins = ["*"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=os.getenv("ALLOWED_ORIGINS", "http://localhost:5173").split(","),
-    allow_credentials=True,
+    allow_origins=_allowed_origins,
+    allow_credentials=_allowed_origins != ["*"],  # credentials not compatible with wildcard
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 limiter = Limiter(key_func=get_remote_address)
 app.state.limiter = limiter
