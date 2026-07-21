@@ -25,9 +25,9 @@ git commit -m "update(colibri): sync engine modifications"
 cd /d "%~dp0"
 
 echo.
-echo Staging IDE type fixes and unit test updates...
+echo Staging Layer 1-5 hardware optimization modules...
 git add -A
-git commit -m "fix(types): resolve Pyright Optional type annotations and numpy int conversion warnings"
+git commit -m "feat(hardware): implement iGPU accelerator, cache residency, OS affinity + Colibri tiered router (Layers 1-5)"
 
 echo.
 echo Pushing all commits to GitHub...
