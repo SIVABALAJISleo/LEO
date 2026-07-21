@@ -18,8 +18,14 @@ if %errorlevel% neq 0 (
 )
 
 echo.
-echo Staging IDE type fixes and unit test updates...
+echo Staging submodule updates...
+cd /d "%~dp0core_ai\colibri_engine"
+git add -A
+git commit -m "update(colibri): sync engine modifications"
 cd /d "%~dp0"
+
+echo.
+echo Staging IDE type fixes and unit test updates...
 git add -A
 git commit -m "fix(types): resolve Pyright Optional type annotations and numpy int conversion warnings"
 
