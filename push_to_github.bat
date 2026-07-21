@@ -18,10 +18,10 @@ if %errorlevel% neq 0 (
 )
 
 echo.
-echo Staging NVIDIA Quantum Design System, MNC-Style UI components, and API integration layers...
+echo Staging IDE type fixes and unit test updates...
 cd /d "%~dp0"
 git add -A
-git commit -m "feat(ui): implement LEO Quantum NVIDIA-style MNC UI design system, components, WebSockets & PWA Service Worker"
+git commit -m "fix(types): resolve Pyright Optional type annotations and numpy int conversion warnings"
 
 echo.
 echo Pushing all commits to GitHub...

@@ -24,11 +24,13 @@ class LEOHybridRetriever:
     def retrieve(self, text: str, k: int = 3):
         if self.index and hasattr(self.index, 'search') and self.embedder:
             emb = self.embedder.get_embeddings(text)
-            return self.index.search(emb, k=k)
+            res = self.index.search(emb, k=k)
+            context = " ".join([r.get("text", "") for r in res if isinstance(r, dict) and "text" in r])
+            return context, res
         if self.embedder:
             emb = self.embedder.get_embeddings(text)
             res = self.route_query(text, emb)
-            context = " ".join([r.get("text", "") for r in res if "text" in r])
+            context = " ".join([r.get("text", "") for r in res if isinstance(r, dict) and "text" in r])
             return context, res
         return "Default Context", []
 

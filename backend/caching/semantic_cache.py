@@ -170,7 +170,7 @@ class MultiLevelSemanticCache:
         # 2. FAISS Semantic Similarity check (L2 cache)
         if self.faiss_index and self.faiss_index.ntotal > 0:
             vec = query_vector if query_vector is not None else self._embed_query_local(query)
-            if vec is not None:
+            if vec is not None and len(vec) == self.faiss_index.d:
                 vec_arr = np.array([vec], dtype=np.float32)
                 similarities, ids = self.faiss_index.search(vec_arr, 1)
                 
@@ -203,6 +203,12 @@ class MultiLevelSemanticCache:
                 row_id = row[0]
                 vec = query_vector if query_vector is not None else self._embed_query_local(query)
                 if vec is not None:
+                    if self.faiss_index.d != len(vec):
+                        try:
+                            import faiss
+                            self.faiss_index = faiss.IndexIDMap(faiss.IndexFlatIP(len(vec)))
+                        except Exception:
+                            pass
                     try:
                         self.faiss_index.remove_ids(np.array([row_id], dtype=np.int64))
                     except Exception:
