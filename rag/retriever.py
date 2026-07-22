@@ -25,7 +25,10 @@ class LEOHybridRetriever:
         if self.index and hasattr(self.index, 'search') and self.embedder:
             emb = self.embedder.get_embeddings(text)
             res = self.index.search(emb, k=k)
-            context = " ".join([r.get("text", "") for r in res if isinstance(r, dict) and "text" in r])
+            context = " ".join([
+                (r.get("metadata", {}).get("text", "") if "metadata" in r else r.get("text", ""))
+                for r in res if isinstance(r, dict)
+            ])
             return context, res
         if self.embedder:
             emb = self.embedder.get_embeddings(text)

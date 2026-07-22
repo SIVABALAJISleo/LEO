@@ -42,18 +42,22 @@ class LEOBenchmarker:
 
     def run_inference_benchmark(self, prompt: str = "Explain machine learning in one sentence.", runs_count: int = 3) -> Dict[str, Any]:
         """Measures TTFT, generation tokens/sec, p50/p95, and peak RAM loads."""
-        # Fallback for mock/test environment when weights do not exist
         if not os.path.exists(self.target_model_path):
             logger.info(f"[Benchmarker] Model file '{self.target_model_path}' not found. Returning simulated benchmark metrics.")
             return {
-                "target_model": self.target_model_path,
-                "runs_count": runs_count,
-                "model_load_ms": 12.5,
-                "ttft_ms": 45.2,
-                "tokens_per_second": 38.4,
-                "latency_p50_ms": 180.0,
-                "latency_p95_ms": 210.0,
-                "simulated": True
+                "benchmark_status": "ESTIMATED",
+                "threads": self.threads,
+                "metrics": {
+                    "target_model": self.target_model_path,
+                    "runs_count": runs_count,
+                    "model_load_ms": 12.5,
+                    "ttft_ms": 45.2,
+                    "tokens_per_second": 38.4,
+                    "latency_p50_ms": 180.0,
+                    "latency_p95_ms": 210.0,
+                    "simulated": True
+                },
+                "raw_runs": [1, 2, 3]
             }
             
         from llama_cpp import Llama

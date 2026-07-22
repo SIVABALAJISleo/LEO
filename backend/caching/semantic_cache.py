@@ -160,7 +160,7 @@ class MultiLevelSemanticCache:
         
         # 1. Exact string match check (L1 cache)
         cursor = self.conn.cursor()
-        cursor.execute("SELECT response FROM cache WHERE lower(trim(query)) = ?", (query_norm,))
+        cursor.execute("SELECT response FROM cache WHERE query = ?", (query_norm,))
         row = cursor.fetchone()
         if row:
             self.cache_hits += 1
@@ -169,7 +169,7 @@ class MultiLevelSemanticCache:
             
         # 2. FAISS Semantic Similarity check (L2 cache)
         if self.faiss_index and self.faiss_index.ntotal > 0:
-            vec = query_vector if query_vector is not None else self._embed_query_local(query)
+            vec = query_vector if query_vector is not None else self._embed_query_local(query_norm)
             if vec is not None and len(vec) == self.faiss_index.d:
                 vec_arr = np.array([vec], dtype=np.float32)
                 similarities, ids = self.faiss_index.search(vec_arr, 1)
@@ -189,19 +189,20 @@ class MultiLevelSemanticCache:
 
     def add_to_cache(self, query: str, response: str, query_vector: Optional[np.ndarray] = None):
         """Adds a new query/response pair to SQLite and updates FAISS index."""
+        query_norm = " ".join(query.lower().split())
         cursor = self.conn.cursor()
         try:
             cursor.execute(
                 "INSERT OR REPLACE INTO cache (query, response, timestamp) VALUES (?, ?, ?)",
-                (query, response, time.time())
+                (query_norm, response, time.time())
             )
             self.conn.commit()
             
-            cursor.execute("SELECT id FROM cache WHERE query = ?", (query,))
+            cursor.execute("SELECT id FROM cache WHERE query = ?", (query_norm,))
             row = cursor.fetchone()
             if row and self.faiss_index:
                 row_id = row[0]
-                vec = query_vector if query_vector is not None else self._embed_query_local(query)
+                vec = query_vector if query_vector is not None else self._embed_query_local(query_norm)
                 if vec is not None:
                     if self.faiss_index.d != len(vec):
                         try:
