@@ -25,9 +25,9 @@ git commit -m "update(colibri): sync engine modifications"
 cd /d "%~dp0"
 
 echo.
-echo Staging networking and CORS fixes...
+echo Staging frontend backend URL fix...
 git add -A
-git commit -m "fix(network): migrate localStorage port 8000->8005, wildcard CORS for tunnels, add start_tunnel.bat"
+git commit -m "fix(frontend): create v2.0/.env with VITE_LEO_API_BASE_URL=localhost:8005, fix .env.example port"
 
 echo.
 echo Pushing all commits to GitHub...
