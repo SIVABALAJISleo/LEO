@@ -25,9 +25,9 @@ git commit -m "update(colibri): sync engine modifications"
 cd /d "%~dp0"
 
 echo.
-echo Staging frontend backend URL fix...
+echo Staging TestSprite test scripts and onboarding tools...
 git add -A
-git commit -m "fix(frontend): create v2.0/.env with VITE_LEO_API_BASE_URL=localhost:8005, fix .env.example port"
+git commit -m "feat(testsprite): add backend test files and onboard automation script"
 
 echo.
 echo Pushing all commits to GitHub...
