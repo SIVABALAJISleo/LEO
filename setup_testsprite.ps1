@@ -18,11 +18,8 @@ if ($LASTEXITCODE -ne 0) {
 # Step 2: Initialize testsprite setup
 Write-Host ""
 Write-Host "[2/3] Running 'testsprite setup'..." -ForegroundColor Cyan
-Write-Host "Please paste your API key when prompted:" -ForegroundColor Yellow
-Write-Host "  sk-user-Cun0GGzgFhL11K7y8nkcpzeosh_xl46LAavoWip3mX_h1g_1ZdYX4CLIw_Ew4VyKY4_1tLQN_9oX-xaZrCohFVAHF7skQlrtfMVWmmu5T_sSMqq35hg4vep300nlpa_2jLU" -ForegroundColor Green
-Write-Host ""
-
-testsprite setup
+$env:TESTSPRITE_API_KEY="sk-user-Cun0GGzgFhL11K7y8nkcpzeosh_xl46LAavoWip3mX_h1g_1ZdYX4CLIw_Ew4VyKY4_1tLQN_9oX-xaZrCohFVAHF7skQlrtfMVWmmu5T_sSMqq35hg4vep300nlpa_2jLU"
+testsprite setup --from-env
 
 if ($LASTEXITCODE -ne 0) {
     Write-Host "[ERROR] TestSprite setup failed." -ForegroundColor Red
