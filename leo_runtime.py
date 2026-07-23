@@ -36,10 +36,12 @@ from backend.optimization.self_optimizer       import ContinuousSelfOptimizer
 from backend.optimization.benchmark_framework  import BenchmarkFramework
 
 # ── PHOENIX modules ────────────────────────────────────────────────────────────
-from phoenix.moe_offloader import MoEOffloader
+from phoenix.moe_offloader import MoEOffloadingLayer
 from phoenix.context_manager import HierarchicalContextManager
-from phoenix.medusa_heads import MedusaHeads
-from phoenix.pabee_early_exit import PABEEEarlyExit
+from phoenix.medusa_heads import MedusaDecoder
+from phoenix.pabee_early_exit import PABEEController
+from phoenix.paged_kv_cache import PagedKVCacheManager
+from phoenix.kv_compression import StreamingKVCache
 from phoenix.extreme_sparsity import WandaPruner
 from phoenix.task_graph import DAGExecutor
 from phoenix.predictive_engine import PredictiveEngine
@@ -99,7 +101,7 @@ class PhoenixRuntime:
         # ── Start background services ──────────────────────────────────────────
         self.self_optimizer.start()
 
-        self.moe_offload = MoEOffloader(num_experts=8, active_experts=2)
+        self.moe_offload = MoEOffloadingLayer(num_experts=8, hidden_dim=4096, ffn_dim=14336, top_k=2)
         
         # Phase 4: Extreme Sparsity (Wanda Pruning)
         self.wanda_pruner = WandaPruner(sparsity_ratio=0.5)

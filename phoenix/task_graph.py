@@ -35,11 +35,32 @@ class DAGExecutor:
                 await self.nodes[dep].event.wait()
         
         try:
-            # Pass context containing previous results if needed
-            if asyncio.iscoroutinefunction(node.func):
-                node.result = await node.func(context)
+            # Anomaly bypass check
+            # For this paradigm, we use a simple hash of context to represent state
+            current_state_hash = str(hash(frozenset([(k, str(v)) for k, v in context.items()])))
+            bypass = False
+            
+            # Simulated anomaly driven bypass check
+            if hasattr(self, 'anomaly_processor') and node.name in getattr(self, 'anomaly_processor_states', {}):
+                if getattr(self, 'anomaly_processor_states')[node.name] == current_state_hash:
+                    bypass = True
+            
+            if bypass:
+                logger.debug(f"[DAG] Anomaly Bypass: Skipping {node.name} (zero compute)")
+                node.result = getattr(self, 'anomaly_processor_results')[node.name]
             else:
-                node.result = node.func(context)
+                # Pass context containing previous results if needed
+                if asyncio.iscoroutinefunction(node.func):
+                    node.result = await node.func(context)
+                else:
+                    node.result = node.func(context)
+                    
+                # Store state and result for future bypass
+                if not hasattr(self, 'anomaly_processor_states'):
+                    setattr(self, 'anomaly_processor_states', {})
+                    setattr(self, 'anomaly_processor_results', {})
+                getattr(self, 'anomaly_processor_states')[node.name] = current_state_hash
+                getattr(self, 'anomaly_processor_results')[node.name] = node.result
         except Exception as e:
             logger.error(f"[DAG] Error in node {node.name}: {e}")
             node.result = {"error": str(e)}

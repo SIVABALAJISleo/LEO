@@ -1,19 +1,27 @@
 # Hot-cache memory state with Topological Hypergraph backing
 from core_ai.fabric.topological_hypergraph import TopologicalHypergraph
 
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from core.paradigm_bypass.layer3_virtual_memory import InfiniteMemoryArchitecture
+
 HOT_CACHE = {}
-HYPERGRAPH = TopologicalHypergraph()
+INFINITE_MEM = InfiniteMemoryArchitecture()
 
 def get_state(key: str):
-    # Try hypergraph reconstruction first
-    holographic_sig = key.encode('utf-8')
-    recon = HYPERGRAPH.reconstruct_from_interference(holographic_sig)
-    if recon and recon.get("reconstructed_data"):
-        return recon["reconstructed_data"]
+    # Try infinite memory reconstruction first
+    recon = INFINITE_MEM.retrieve(key)
+    if recon is not None:
+        return recon
     return HOT_CACHE.get(key, "NULL")
 
 def set_state(key: str, value: str):
     HOT_CACHE[key] = value
-    # Register fractal node in hypergraph
-    HYPERGRAPH.insert_fractal_node(key, value.encode('utf-8'))
+    # Register in infinite memory
+    import numpy as np
+    # Convert string to mock float array for HD encoding
+    arr = np.array([float(ord(c)) for c in value[:100]], dtype=np.float32)
+    if len(arr) == 0: arr = np.zeros(1)
+    INFINITE_MEM.store(key, arr)
 

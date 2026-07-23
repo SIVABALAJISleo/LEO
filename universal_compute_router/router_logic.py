@@ -2,6 +2,10 @@ import logging
 import json
 import random
 from typing import Dict, Any
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from core.paradigm_bypass.layer4_system_parallelism import IntelligentParallelismEngine
 
 logger = logging.getLogger(__name__)
 
@@ -14,8 +18,10 @@ class UniversalComputeRouter:
         self.state_path = state_path
         self.routes = [
             "tiny_model", "main_model", "video_engine", 
-            "data_engine", "solver_engine", "api_fallback"
+            "data_engine", "solver_engine", "api_fallback", "binary_resonance"
         ]
+        self.state = self._load_state()
+        self.parallel_engine = IntelligentParallelismEngine()
         self.state = self._load_state()
 
     def _load_state(self) -> Dict[str, Any]:
@@ -41,6 +47,8 @@ class UniversalComputeRouter:
             task_type = "DATA"
         elif any(w in query_lower for w in ["optimize", "solver", "path", "route", "constraint", "schedule"]):
             task_type = "OPTIMIZATION"
+        elif any(w in query_lower for w in ["binary", "xnor", "resonance", "hamming"]):
+            task_type = "BINARY_RESONANCE"
             
         complexity = "medium"
         if len(query) < 50: complexity = "simple"

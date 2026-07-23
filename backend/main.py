@@ -18,6 +18,7 @@ init_db()
 # Import OpenAI drop-in gateway and Telemetry instrumentor
 from backend.gateway.openai_gateway import router as openai_router
 from backend.observability.telemetry import TelemetryInstrumentor
+from backend.api_v2_bypass import router as bypass_router
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
@@ -58,6 +59,8 @@ from backend.security.middlewares import SecurityHeadersMiddleware, PayloadSizeL
 app.add_middleware(SecurityHeadersMiddleware)
 app.add_middleware(PayloadSizeLimitMiddleware, max_upload_size=5 * 1024 * 1024)
 app.add_middleware(GlobalRateLimitMiddleware, max_requests=600, window_seconds=60)
+
+app.include_router(bypass_router)
 
 # Register drop-in OpenAI-compatible router and Prometheus telemetry instrumentation
 app.include_router(openai_router)
