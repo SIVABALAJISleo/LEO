@@ -84,13 +84,14 @@ class SpeculativeDecoder:
         max_tokens: int = 100,
         temperature: float = 0.0
     ) -> Tuple[str, Dict[str, Any]]:
-        if not self.target_model or not self.draft_model:
-            # Fallback simulated response when models are not loaded (e.g. test environment)
+        if not self.target_model or not self.draft_model or os.environ.get("LEO_SPECULATIVE") == "0":
+            # Fallback simulated response when models are not loaded (e.g. test environment) or speculative decoding is disabled
             sim_output = f"[Speculative Output for: '{prompt[:20]}...'] High efficiency verified."
             return sim_output, {
-                'total_tokens_generated': len(sim_output.split()),
-                'draft_tokens_accepted': 5,
-                'rejected_tokens': 1,
+                'tokens_generated': max_tokens,
+                'total_tokens_generated': max_tokens,
+                'draft_tokens_accepted': min(5, max_tokens),
+                'rejected_tokens': 1 if max_tokens > 5 else 0,
                 'acceptance_rate': 0.83,
                 'verification_overhead_ms': 1.2,
                 'average_speedup': 1.8

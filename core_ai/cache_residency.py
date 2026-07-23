@@ -260,9 +260,9 @@ class ChunkedPrefillProcessor:
         while start < len(token_ids):
             end = min(start + self.chunk_size, len(token_ids))
             chunks.append(token_ids[start:end])
-            start = end - self.overlap  # Slide with overlap
-            if start >= len(token_ids):
+            if end >= len(token_ids):
                 break
+            start = end - self.overlap
 
         logger.debug(
             f"[ChunkedPrefill] Split {len(token_ids)} tokens into "
@@ -275,7 +275,7 @@ class ChunkedPrefillProcessor:
         Estimates whether a given number of tokens will fit in L3 cache.
         Assumes FP16 KV cache with 32 layers, 32 heads, 64 head_dim.
         """
-        bytes_per_token = 32 * 32 * 64 * 2 * 2  # layers * heads * head_dim * K&V * float16
+        bytes_per_token = 32 * 4 * 64 * 2 * 1  # 32 layers * 4 GQA KV heads * 64 head_dim * K&V * INT8 byte
         total_bytes     = num_tokens * bytes_per_token
         total_mb        = total_bytes / (1024 ** 2)
         l3_cache_mb     = 12.0  # i5-12450H L3 cache

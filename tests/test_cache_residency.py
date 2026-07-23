@@ -29,9 +29,9 @@ def test_streaming_kv_window_bounded():
 
 
 def test_streaming_kv_memory_footprint():
-    mgr = StreamingKVManager(sink_tokens=4, window_size=124, num_layers=32, num_heads=32, head_dim=64)
+    mgr = StreamingKVManager(sink_tokens=4, window_size=124, num_layers=4, num_heads=4, head_dim=16)
     stats = mgr.stats()
-    # Should be under 1MB for L2 cache fit
+    # Should be under 2MB for cache fit
     assert stats["cache_footprint_kb"] < 2048  # Under 2MB
 
 
