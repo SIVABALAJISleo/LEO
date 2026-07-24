@@ -70,3 +70,6 @@ audit_pytest*.txt
 *_REPORT.md
 *_CERTIFICATION_REPORT.md
 vite.config.ts.timestamp-*.mjs
+ffmpeg-*.tar.xz
+ffmpeg-*.zip
+ffmpeg-release/
