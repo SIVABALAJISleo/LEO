@@ -20,8 +20,7 @@ llama-cpp-python==0.3.30
 onnxruntime==1.24.4
 onnx>=1.21.0
 chromadb==0.5.23
-directml>=1.15.2; sys_platform == 'win32'
-vulkankompute>=0.1.0
+
 --extra-index-url https://download.pytorch.org/whl/cpu
 torch>=2.12.1
 sentence-transformers==5.1.2
