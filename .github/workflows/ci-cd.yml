@@ -90,6 +90,9 @@ jobs:
         with:
           node-version: "22"
           cache: "npm"
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
       - name: Verify Lock File Synchronization
         run: |
           echo "Checking if package-lock.json is fundamentally in sync with package.json..."
