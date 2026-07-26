@@ -1,11 +1,13 @@
 import { z } from "zod";
 
 // Polyfill prefault method on ZodType prototype if using Zod v3 with TanStack Start v1.171+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 if (typeof (z.ZodType.prototype as any).prefault !== "function") {
   (z.ZodType.prototype as any).prefault = function (defaultValue: any) {
     return this.default(defaultValue);
   };
 }
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
