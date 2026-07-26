@@ -1,0 +1,3 @@
+# Git submodules configuration
+# Note: colibri_engine submodule is currently not initialized
+# If needed, add it with: git submodule add <url> core_ai/colibri_engine
