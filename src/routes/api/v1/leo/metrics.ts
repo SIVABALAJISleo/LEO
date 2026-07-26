@@ -4,7 +4,7 @@ import { createFileRoute } from "@tanstack/react-router";
 // the external Python backend is unreachable. Single-instance semantics only.
 const STARTED_AT = Date.now();
 let total = 0;
-let last60: number[] = []; // request timestamps (ms) in the trailing minute
+const last60: number[] = []; // request timestamps (ms) in the trailing minute
 let lastLatencyMs = 0;
 
 function trim(now: number) {
