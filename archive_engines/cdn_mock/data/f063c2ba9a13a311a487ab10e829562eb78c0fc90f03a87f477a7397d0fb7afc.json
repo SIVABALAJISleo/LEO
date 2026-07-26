@@ -1,10 +1,10 @@
 {
-    "intent_id": "f063c2ba9a13a311a487ab10e829562eb78c0fc90f03a87f477a7397d0fb7afc",
-    "data": {
-        "output": "CPU: 42%, Mem: 1.2GB",
-        "latency": "0.4ms"
-    },
-    "wasm_ref": null,
-    "type": "EXACT",
-    "version": "1.0.0_immutable"
+  "intent_id": "f063c2ba9a13a311a487ab10e829562eb78c0fc90f03a87f477a7397d0fb7afc",
+  "data": {
+    "output": "CPU: 42%, Mem: 1.2GB",
+    "latency": "0.4ms"
+  },
+  "wasm_ref": null,
+  "type": "EXACT",
+  "version": "1.0.0_immutable"
 }

@@ -1,11 +1,6 @@
 {
   "id": 70,
   "domain": "SYSTEM",
-  "signature": [
-    "database",
-    "semantic",
-    "silently",
-    "synchronize"
-  ],
+  "signature": ["database", "semantic", "silently", "synchronize"],
   "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: synchronize."
 }

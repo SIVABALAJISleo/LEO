@@ -1,16 +1,9 @@
 {
   "id": "CONTROL_402",
-  "signature": [
-    "cooling",
-    "stop",
-    "system"
-  ],
+  "signature": ["cooling", "stop", "system"],
   "domain": "CONTROL",
   "context": null,
   "response": "Resolution: Accessing CONTROL for 'cooling system'. Action: stop.",
-  "tags": [
-    "control",
-    "system"
-  ],
+  "tags": ["control", "system"],
   "sh": "0xaf3558971cd6bcfc"
 }

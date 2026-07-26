@@ -1,10 +1,6 @@
 {
   "id": 357,
   "domain": "SYSTEM",
-  "signature": [
-    "files",
-    "log",
-    "restore"
-  ],
+  "signature": ["files", "log", "restore"],
   "response": "Resolution: Accessing SYSTEM for 'log files'. Action: restore."
 }

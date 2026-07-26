@@ -29,9 +29,7 @@ test.describe("chat page — axe-core accessibility across breakpoints", () => {
     test(`chat empty state passes axe @ ${bp.name}`, async ({ page }) => {
       await page.setViewportSize({ width: bp.width, height: bp.height });
       await page.goto("/app/chat");
-      await expect(
-        page.getByRole("heading", { name: /start a conversation/i }),
-      ).toBeVisible();
+      await expect(page.getByRole("heading", { name: /start a conversation/i })).toBeVisible();
 
       const results = await new AxeBuilder({ page })
         .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
@@ -48,9 +46,7 @@ test.describe("chat page — axe-core accessibility across breakpoints", () => {
       });
       expect(
         results.violations,
-        results.violations
-          .map((v) => `${v.id} — ${v.help} (${v.nodes.length})`)
-          .join("\n"),
+        results.violations.map((v) => `${v.id} — ${v.help} (${v.nodes.length})`).join("\n"),
       ).toEqual([]);
     });
 
@@ -59,10 +55,9 @@ test.describe("chat page — axe-core accessibility across breakpoints", () => {
       await page.goto("/app/chat");
       await page.getByTestId("chat-input").fill("hello");
       await page.getByTestId("chat-send").click();
-      await expect(page.getByTestId("chat-assistant").last()).toContainText(
-        "Hello from LEO.",
-        { timeout: 10_000 },
-      );
+      await expect(page.getByTestId("chat-assistant").last()).toContainText("Hello from LEO.", {
+        timeout: 10_000,
+      });
       await expect(page.getByTestId("chat-send")).toBeVisible({ timeout: 5_000 });
 
       const results = await new AxeBuilder({ page })
@@ -75,9 +70,7 @@ test.describe("chat page — axe-core accessibility across breakpoints", () => {
       });
       expect(
         results.violations,
-        results.violations
-          .map((v) => `${v.id} — ${v.help} (${v.nodes.length})`)
-          .join("\n"),
+        results.violations.map((v) => `${v.id} — ${v.help} (${v.nodes.length})`).join("\n"),
       ).toEqual([]);
     });
   }

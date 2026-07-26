@@ -1,17 +1,9 @@
 {
   "id": "INFO_218",
-  "signature": [
-    "alpha",
-    "locally",
-    "node",
-    "show"
-  ],
+  "signature": ["alpha", "locally", "node", "show"],
   "domain": "INFO",
   "context": null,
   "response": "Resolution: Accessing INFO for 'node alpha'. Action: show.",
-  "tags": [
-    "info",
-    "alpha"
-  ],
+  "tags": ["info", "alpha"],
   "sh": "0x0ecd37baa2a7622f"
 }

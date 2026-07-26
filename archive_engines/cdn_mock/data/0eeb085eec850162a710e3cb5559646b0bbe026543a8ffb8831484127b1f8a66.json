@@ -1,10 +1,10 @@
 {
-    "intent_id": "0eeb085eec850162a710e3cb5559646b0bbe026543a8ffb8831484127b1f8a66",
-    "data": {
-        "output": "Reboot sequence initiated.",
-        "prio": "high"
-    },
-    "wasm_ref": "safety_auth_v2",
-    "type": "MIP_MAP",
-    "version": "1.0.0_immutable"
+  "intent_id": "0eeb085eec850162a710e3cb5559646b0bbe026543a8ffb8831484127b1f8a66",
+  "data": {
+    "output": "Reboot sequence initiated.",
+    "prio": "high"
+  },
+  "wasm_ref": "safety_auth_v2",
+  "type": "MIP_MAP",
+  "version": "1.0.0_immutable"
 }

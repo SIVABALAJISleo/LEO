@@ -1,17 +1,9 @@
 {
   "id": "CONTROL_344",
-  "signature": [
-    "cooling",
-    "immediately",
-    "shutdown",
-    "system"
-  ],
+  "signature": ["cooling", "immediately", "shutdown", "system"],
   "domain": "CONTROL",
   "context": null,
   "response": "Resolution: Accessing CONTROL for 'cooling system'. Action: shutdown.",
-  "tags": [
-    "control",
-    "system"
-  ],
+  "tags": ["control", "system"],
   "sh": "0x3c3458c70c4600a8"
 }

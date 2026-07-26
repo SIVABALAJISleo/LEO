@@ -1,16 +1,9 @@
 {
   "id": "CMD_REBOOT_CONTEXTUAL_BETA",
-  "signature": [
-    "it",
-    "reboot"
-  ],
+  "signature": ["it", "reboot"],
   "domain": "CONTROL",
   "context": "beta_node",
   "response": "Context: BETA. Rebooting 'Beta Node' as requested.",
-  "tags": [
-    "reboot",
-    "beta",
-    "contextual"
-  ],
+  "tags": ["reboot", "beta", "contextual"],
   "sh": "0xbc5d28a6b1b4f832"
 }

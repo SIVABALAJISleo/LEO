@@ -1,11 +1,6 @@
 {
   "id": 263,
   "domain": "SYSTEM",
-  "signature": [
-    "forcefully",
-    "identity",
-    "patch",
-    "table"
-  ],
+  "signature": ["forcefully", "identity", "patch", "table"],
   "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: patch."
 }

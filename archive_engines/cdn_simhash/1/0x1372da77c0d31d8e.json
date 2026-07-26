@@ -1,15 +1,9 @@
 {
   "id": "SYSTEM_446",
-  "signature": [
-    "index",
-    "registry"
-  ],
+  "signature": ["index", "registry"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'registry'. Action: index.",
-  "tags": [
-    "system",
-    "registry"
-  ],
+  "tags": ["system", "registry"],
   "sh": "0x1372da77c0d31d8e"
 }

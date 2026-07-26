@@ -1,17 +1,9 @@
 {
   "id": "INFO_371",
-  "signature": [
-    "alpha",
-    "metrics",
-    "node",
-    "overall"
-  ],
+  "signature": ["alpha", "metrics", "node", "overall"],
   "domain": "INFO",
   "context": null,
   "response": "Resolution: Accessing INFO for 'node alpha'. Action: metrics for.",
-  "tags": [
-    "info",
-    "alpha"
-  ],
+  "tags": ["info", "alpha"],
   "sh": "0x1a0e01b2b58e101a"
 }

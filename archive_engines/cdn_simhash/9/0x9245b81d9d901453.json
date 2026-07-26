@@ -1,17 +1,9 @@
 {
   "id": "SYSTEM_107",
-  "signature": [
-    "files",
-    "index",
-    "log",
-    "silently"
-  ],
+  "signature": ["files", "index", "log", "silently"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'log files'. Action: index.",
-  "tags": [
-    "system",
-    "files"
-  ],
+  "tags": ["system", "files"],
   "sh": "0x9245b81d9d901453"
 }

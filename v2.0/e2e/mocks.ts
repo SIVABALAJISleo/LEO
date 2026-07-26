@@ -324,7 +324,6 @@ export async function mockTelemetry(page: import("@playwright/test").Page) {
   });
   return {
     getEvents: () => events.slice(),
-    getEventsOfKind: (kind: string) =>
-      events.filter((e) => (e as { kind?: string }).kind === kind),
+    getEventsOfKind: (kind: string) => events.filter((e) => (e as { kind?: string }).kind === kind),
   };
 }

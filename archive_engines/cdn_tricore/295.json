@@ -1,11 +1,6 @@
 {
   "id": 295,
   "domain": "SYSTEM",
-  "signature": [
-    "files",
-    "log",
-    "silently",
-    "update"
-  ],
+  "signature": ["files", "log", "silently", "update"],
   "response": "Resolution: Accessing SYSTEM for 'log files'. Action: update."
 }

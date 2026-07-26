@@ -20,8 +20,12 @@
 }
 
 @keyframes flow {
-  from { stroke-dashoffset: 10; }
-  to { stroke-dashoffset: 0; }
+  from {
+    stroke-dashoffset: 10;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 
 .react-flow__edge.animated path {

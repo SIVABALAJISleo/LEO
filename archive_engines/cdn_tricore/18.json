@@ -1,9 +1,6 @@
 {
   "id": 18,
   "domain": "SYSTEM",
-  "signature": [
-    "registry",
-    "restore"
-  ],
+  "signature": ["registry", "restore"],
   "response": "Resolution: Accessing SYSTEM for 'registry'. Action: restore."
 }

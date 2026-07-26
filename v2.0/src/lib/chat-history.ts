@@ -114,7 +114,9 @@ export function setSyncPath(path: string) {
 
 // -------- Local persistence --------
 
-function normalize(s: Partial<ChatSession> & { id: string; messages: ChatHistoryMessage[] }): ChatSession {
+function normalize(
+  s: Partial<ChatSession> & { id: string; messages: ChatHistoryMessage[] },
+): ChatSession {
   return {
     id: s.id,
     title: s.title ?? "New chat",
@@ -141,9 +143,7 @@ function safeParse(raw: string | null): ChatSession[] {
 
 export function listSessions(): ChatSession[] {
   if (typeof window === "undefined") return [];
-  return safeParse(window.localStorage.getItem(KEY)).sort(
-    (a, b) => b.updatedAt - a.updatedAt,
-  );
+  return safeParse(window.localStorage.getItem(KEY)).sort((a, b) => b.updatedAt - a.updatedAt);
 }
 
 export function getSession(id: string): ChatSession | null {
@@ -152,8 +152,7 @@ export function getSession(id: string): ChatSession | null {
 
 function writeAll(sessions: ChatSession[]) {
   if (typeof window === "undefined") return;
-  const trimmed =
-    sessions.length > MAX_SESSIONS ? sessions.slice(0, MAX_SESSIONS) : sessions;
+  const trimmed = sessions.length > MAX_SESSIONS ? sessions.slice(0, MAX_SESSIONS) : sessions;
   window.localStorage.setItem(KEY, JSON.stringify(trimmed));
 }
 
@@ -168,7 +167,8 @@ export function saveSessionLocal(session: ChatSession): ChatSession {
   const next: ChatSession = {
     ...session,
     version: Math.max(session.version ?? 0, existingVersion + 1),
-    lastSyncedVersion: session.lastSyncedVersion ?? (idx >= 0 ? all[idx].lastSyncedVersion : undefined),
+    lastSyncedVersion:
+      session.lastSyncedVersion ?? (idx >= 0 ? all[idx].lastSyncedVersion : undefined),
   };
   if (idx >= 0) all[idx] = next;
   else all.unshift(next);
@@ -334,8 +334,7 @@ export function clearAllSessions(): void {
 // -------- Server pull, pagination + merge --------
 
 type ServerListResponse =
-  | { sessions?: ChatSession[]; items?: ChatSession[]; nextCursor?: string | null }
-  | ChatSession[];
+  { sessions?: ChatSession[]; items?: ChatSession[]; nextCursor?: string | null } | ChatSession[];
 
 function normalizeListResponse(res: ServerListResponse): {
   sessions: ChatSession[];
@@ -368,8 +367,7 @@ export async function pullPage(
     const all = listSessions();
     const startIdx = opts.cursor ? Number(opts.cursor) || 0 : 0;
     const slice = all.slice(startIdx, startIdx + limit);
-    const nextCursor =
-      startIdx + limit < all.length ? String(startIdx + limit) : undefined;
+    const nextCursor = startIdx + limit < all.length ? String(startIdx + limit) : undefined;
     return { sessions: slice, nextCursor };
   }
 
@@ -377,10 +375,9 @@ export async function pullPage(
     const qs = new URLSearchParams();
     qs.set("limit", String(limit));
     if (opts.cursor) qs.set("cursor", opts.cursor);
-    const res = await leoJson<ServerListResponse>(
-      `${getSyncPath()}?${qs.toString()}`,
-      { method: "GET" },
-    );
+    const res = await leoJson<ServerListResponse>(`${getSyncPath()}?${qs.toString()}`, {
+      method: "GET",
+    });
     const { sessions: remote, nextCursor } = normalizeListResponse(res);
 
     // Merge each remote session against its local counterpart.
@@ -390,10 +387,7 @@ export async function pullPage(
       const localBefore = byId.get(r.id);
       const merged = mergeSession(localBefore, r);
       if (merged) {
-        merged.lastSyncedVersion = Math.max(
-          merged.lastSyncedVersion ?? 0,
-          r.version,
-        );
+        merged.lastSyncedVersion = Math.max(merged.lastSyncedVersion ?? 0, r.version);
         byId.set(r.id, merged);
         if (localBefore) {
           const diff = diffMessages(localBefore.messages, merged.messages);
@@ -411,15 +405,11 @@ export async function pullPage(
         }
       }
     }
-    const combined = Array.from(byId.values()).sort(
-      (a, b) => b.updatedAt - a.updatedAt,
-    );
+    const combined = Array.from(byId.values()).sort((a, b) => b.updatedAt - a.updatedAt);
     writeAll(combined);
     // Return the merged versions of the page we just pulled.
     return {
-      sessions: remote
-        .map((r) => byId.get(r.id))
-        .filter((s): s is ChatSession => Boolean(s)),
+      sessions: remote.map((r) => byId.get(r.id)).filter((s): s is ChatSession => Boolean(s)),
       nextCursor,
     };
   } catch (err) {
@@ -431,8 +421,7 @@ export async function pullPage(
     const slice = all.slice(startIdx, startIdx + limit);
     return {
       sessions: slice,
-      nextCursor:
-        startIdx + limit < all.length ? String(startIdx + limit) : undefined,
+      nextCursor: startIdx + limit < all.length ? String(startIdx + limit) : undefined,
     };
   }
 }
@@ -490,11 +479,7 @@ export function searchSessions(query: string): ChatSession[] {
 }
 
 export function exportSessionsAsJson(sessions: ChatSession[]): string {
-  return JSON.stringify(
-    { exported_at: new Date().toISOString(), sessions },
-    null,
-    2,
-  );
+  return JSON.stringify({ exported_at: new Date().toISOString(), sessions }, null, 2);
 }
 
 /**
@@ -526,9 +511,7 @@ export function exportSessionsAsCsv(sessions: ChatSession[]): string {
     return s;
   };
   const rows = unique.map((s) => {
-    const transcript = s.messages
-      .map((m) => `${m.role}: ${m.content}`)
-      .join("\n");
+    const transcript = s.messages.map((m) => `${m.role}: ${m.content}`).join("\n");
     return [
       s.id,
       s.title,

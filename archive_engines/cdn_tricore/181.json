@@ -1,10 +1,6 @@
 {
   "id": 181,
   "domain": "CONTROL",
-  "signature": [
-    "grid",
-    "power",
-    "reset"
-  ],
+  "signature": ["grid", "power", "reset"],
   "response": "Resolution: Accessing CONTROL for 'power grid'. Action: reset."
 }

@@ -18,6 +18,7 @@ This document details the metrics, setups, and measurement processes of the LEO 
 ## 2. Measurement Safety Controls
 
 To guarantee authentic and transparent results, LEO implements these rules:
+
 - **Warm-Up Execution**: The benchmark runs 3 warm-up prompts before measuring to trigger JIT compilation and memory pre-allocation.
 - **Simulated Metrics Marking**: If the target model GGUF file is missing, the suite reports estimations based on i5-12450H CPU profiles, tagged clearly as `ESTIMATED` to distinguish from `MEASURED` data.
 - **Separate Cache Metrics**: Avoids inflating throughput numbers by tracking cache hit latency independently from active generation.

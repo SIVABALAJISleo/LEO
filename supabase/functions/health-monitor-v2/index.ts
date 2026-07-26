@@ -33,13 +33,16 @@ Deno.serve(async (req) => {
         .select("id")
         .eq("status", "queued");
 
-      return new Response(JSON.stringify({
-        success: true,
-        overall_status: (stuckJobs?.length || 0) > 0 ? "degraded" : "healthy",
-        stuck_jobs: stuckJobs?.length || 0,
-        queue_depth: queuedJobs?.length || 0,
-        timestamp: new Date().toISOString(),
-      }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(
+        JSON.stringify({
+          success: true,
+          overall_status: (stuckJobs?.length || 0) > 0 ? "degraded" : "healthy",
+          stuck_jobs: stuckJobs?.length || 0,
+          queue_depth: queuedJobs?.length || 0,
+          timestamp: new Date().toISOString(),
+        }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
     }
 
     if (action === "heal") {
@@ -56,24 +59,29 @@ Deno.serve(async (req) => {
         healed++;
       }
 
-      return new Response(JSON.stringify({ success: true, healed }), 
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ success: true, healed }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     if (action === "cleanup") {
       const threshold = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
       await supabase.from("system_metrics").delete().lt("recorded_at", threshold);
-      return new Response(JSON.stringify({ success: true }), 
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ success: true }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
-    return new Response(JSON.stringify({ error: "Unknown action" }), 
-      { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-
+    return new Response(JSON.stringify({ error: "Unknown action" }), {
+      status: 400,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   } catch (error) {
     console.error("[health-monitor-v2] Error:", error);
     // Return generic error to client, log details server-side only
-    return new Response(JSON.stringify({ error: "An internal error occurred" }), 
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    return new Response(JSON.stringify({ error: "An internal error occurred" }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });

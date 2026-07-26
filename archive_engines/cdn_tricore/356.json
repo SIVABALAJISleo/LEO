@@ -1,9 +1,6 @@
 {
   "id": 356,
   "domain": "SYSTEM",
-  "signature": [
-    "verify",
-    "version"
-  ],
+  "signature": ["verify", "version"],
   "response": "Resolution: Accessing SYSTEM for 'version'. Action: verify."
 }

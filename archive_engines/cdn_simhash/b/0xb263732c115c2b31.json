@@ -1,16 +1,9 @@
 {
   "id": "SYSTEM_040",
-  "signature": [
-    "forcefully",
-    "restore",
-    "version"
-  ],
+  "signature": ["forcefully", "restore", "version"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'version'. Action: restore.",
-  "tags": [
-    "system",
-    "version"
-  ],
+  "tags": ["system", "version"],
   "sh": "0xb263732c115c2b31"
 }

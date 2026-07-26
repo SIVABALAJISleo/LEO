@@ -1,10 +1,6 @@
 {
   "id": 195,
   "domain": "INFO",
-  "signature": [
-    "all",
-    "bandwidth",
-    "check"
-  ],
+  "signature": ["all", "bandwidth", "check"],
   "response": "Resolution: Accessing INFO for 'bandwidth'. Action: check."
 }

@@ -114,13 +114,10 @@ test.describe("live backend", () => {
     expect(sessions.some((s: { id: string }) => s.id === id)).toBeTruthy();
 
     // Confirm the frontend surfaces it after enabling sync.
-    await page.addInitScript(
-      (path: string) => {
-        window.localStorage.setItem("leo.chat.sync", "on");
-        window.localStorage.setItem("leo.chat.sync_path", path);
-      },
-      syncPath,
-    );
+    await page.addInitScript((path: string) => {
+      window.localStorage.setItem("leo.chat.sync", "on");
+      window.localStorage.setItem("leo.chat.sync_path", path);
+    }, syncPath);
     await page.goto("/app/chat");
     // Open history panel via ⌘/Ctrl+K.
     const isMac = process.platform === "darwin";
@@ -190,7 +187,10 @@ test.describe("live backend", () => {
       .or(page.getByTestId("chat-reconnect-manual"));
     await expect(reconnectBanner).toBeVisible({ timeout: 30_000 });
     await page.context().setOffline(false);
-    await page.getByRole("button", { name: /reconnect/i }).first().click();
+    await page
+      .getByRole("button", { name: /reconnect/i })
+      .first()
+      .click();
     await expect
       .poll(async () => (await assistant.innerText()).trim().length, { timeout: 60_000 })
       .toBeGreaterThan(0);

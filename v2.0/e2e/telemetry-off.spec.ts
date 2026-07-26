@@ -23,19 +23,16 @@ test.describe("privacy — telemetry mode 'off' suppresses non-essential events"
     const telemetry = await mockTelemetry(page);
 
     await page.goto("/app/chat");
-    await expect(
-      page.getByRole("heading", { name: /start a conversation/i }),
-    ).toBeVisible();
+    await expect(page.getByRole("heading", { name: /start a conversation/i })).toBeVisible();
 
     // Send a chat message so we would normally emit reconnect / assistant-
     // metadata style domain events. With telemetry off, none of these
     // must reach the endpoint.
     await page.getByTestId("chat-input").fill("hi");
     await page.getByTestId("chat-send").click();
-    await expect(page.getByTestId("chat-assistant").last()).toContainText(
-      "Hello from LEO.",
-      { timeout: 10_000 },
-    );
+    await expect(page.getByTestId("chat-assistant").last()).toContainText("Hello from LEO.", {
+      timeout: 10_000,
+    });
 
     // Also dispatch a fake background merge — normally emits a merge-banner
     // telemetry event; must be dropped under mode=off.

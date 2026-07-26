@@ -18,13 +18,13 @@
 
 Tested on Intel Core Ultra (Meteor Lake) with 16GB RAM, no discrete GPU:
 
-| Kernel | Operation | Standard (ms) | LEO Kernel (ms) | Speedup |
-|--------|-----------|---------------|-----------------|---------|
-| Ternary LUT | 512×512 MatVec | 0.45 | 0.32 | **1.4x** |
-| Ternary LUT | 1024×1024 MatVec | 1.80 | 1.25 | **1.44x** |
-| Ternary LUT | 512×512 Batch×64 | 2.10 | 1.55 | **1.35x** |
-| MoE-Spec | 100-token verify ×1000 | N/A | 12.5ms | **80K tok/s** |
-| Dreamer | 8-branch ×5-depth ×500 | N/A | 45ms | **11K dreams/s** |
+| Kernel      | Operation              | Standard (ms) | LEO Kernel (ms) | Speedup          |
+| ----------- | ---------------------- | ------------- | --------------- | ---------------- |
+| Ternary LUT | 512×512 MatVec         | 0.45          | 0.32            | **1.4x**         |
+| Ternary LUT | 1024×1024 MatVec       | 1.80          | 1.25            | **1.44x**        |
+| Ternary LUT | 512×512 Batch×64       | 2.10          | 1.55            | **1.35x**        |
+| MoE-Spec    | 100-token verify ×1000 | N/A           | 12.5ms          | **80K tok/s**    |
+| Dreamer     | 8-branch ×5-depth ×500 | N/A           | 45ms            | **11K dreams/s** |
 
 > **Key insight**: Ternary quantization eliminates ALL multiply operations. On CPU architectures where multiplier units are the bottleneck, this translates to significant throughput gains with minimal accuracy loss for inference workloads.
 
@@ -83,15 +83,19 @@ python -m leo_infinity_kernels.benchmarks.bench_kernels
 ## How It Works
 
 ### Ternary LUT MatMul
+
 Standard neural network inference computes `output = W @ x` using expensive floating-point multiplications. LEO's ternary approach:
+
 1. Quantizes weights to `{-1, 0, +1}`
 2. Replaces multiplication with conditional addition/subtraction
 3. Uses vectorized NumPy boolean masking for speed
 
 ### Predictive Dreamer
+
 Instead of executing queries cold, the dreamer simulates N candidate execution branches ahead of time, scores each by confidence × inverse-latency, and pre-warms the winner into cache.
 
 ### Kernel Zoo Lite
+
 Generates optimized kernel configurations for different ISA targets (AVX2, AVX-512, AMX, VNNI, Vulkan), runs comparative A/B micro-benchmarks, and hot-swaps the active kernel at runtime.
 
 ## Architecture

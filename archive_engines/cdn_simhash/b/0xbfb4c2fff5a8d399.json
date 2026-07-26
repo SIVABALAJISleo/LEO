@@ -1,19 +1,9 @@
 {
   "id": "CONTROL_304",
-  "signature": [
-    "engine",
-    "high",
-    "kill",
-    "primary",
-    "priority",
-    "with"
-  ],
+  "signature": ["engine", "high", "kill", "primary", "priority", "with"],
   "domain": "CONTROL",
   "context": null,
   "response": "Resolution: Accessing CONTROL for 'primary engine'. Action: kill.",
-  "tags": [
-    "control",
-    "engine"
-  ],
+  "tags": ["control", "engine"],
   "sh": "0xbfb4c2fff5a8d399"
 }

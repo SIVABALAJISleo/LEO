@@ -1,16 +1,9 @@
 {
   "id": "SYSTEM_463",
-  "signature": [
-    "backup",
-    "identity",
-    "table"
-  ],
+  "signature": ["backup", "identity", "table"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: backup.",
-  "tags": [
-    "system",
-    "table"
-  ],
+  "tags": ["system", "table"],
   "sh": "0xef25160dfb33a93f"
 }

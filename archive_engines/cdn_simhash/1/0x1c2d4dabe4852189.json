@@ -1,18 +1,9 @@
 {
   "id": "CONTROL_235",
-  "signature": [
-    "at",
-    "beta",
-    "initialize",
-    "node",
-    "once"
-  ],
+  "signature": ["at", "beta", "initialize", "node", "once"],
   "domain": "CONTROL",
   "context": null,
   "response": "Resolution: Accessing CONTROL for 'beta node'. Action: initialize.",
-  "tags": [
-    "control",
-    "node"
-  ],
+  "tags": ["control", "node"],
   "sh": "0x1c2d4dabe4852189"
 }

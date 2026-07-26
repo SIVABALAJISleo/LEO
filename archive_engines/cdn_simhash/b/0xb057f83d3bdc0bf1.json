@@ -1,16 +1,9 @@
 {
   "id": "SYSTEM_205",
-  "signature": [
-    "manifest",
-    "restore",
-    "silently"
-  ],
+  "signature": ["manifest", "restore", "silently"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: restore.",
-  "tags": [
-    "system",
-    "manifest"
-  ],
+  "tags": ["system", "manifest"],
   "sh": "0xb057f83d3bdc0bf1"
 }

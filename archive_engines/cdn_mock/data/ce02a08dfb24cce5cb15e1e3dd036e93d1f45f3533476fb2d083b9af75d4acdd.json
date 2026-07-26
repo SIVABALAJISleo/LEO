@@ -1,10 +1,10 @@
 {
-    "intent_id": "ce02a08dfb24cce5cb15e1e3dd036e93d1f45f3533476fb2d083b9af75d4acdd",
-    "data": {
-        "output": "Reboot sequence initiated.",
-        "prio": "high"
-    },
-    "wasm_ref": "safety_auth_v2",
-    "type": "EXACT",
-    "version": "1.0.0_immutable"
+  "intent_id": "ce02a08dfb24cce5cb15e1e3dd036e93d1f45f3533476fb2d083b9af75d4acdd",
+  "data": {
+    "output": "Reboot sequence initiated.",
+    "prio": "high"
+  },
+  "wasm_ref": "safety_auth_v2",
+  "type": "EXACT",
+  "version": "1.0.0_immutable"
 }

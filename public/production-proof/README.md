@@ -14,14 +14,14 @@ This folder contains irreversible runtime evidence that the platform behaves lik
 
 ## Proof Summary
 
-| Proof | Status | Evidence |
-|-------|--------|----------|
-| Incident Auto-Handling | ✅ PASS | incident_001.log |
-| Backup & Restore | ✅ PASS | backup_restore_001.log |
-| Release Rollback | ✅ PASS | rollback_001.log |
-| Rate Limiting | ✅ PASS | ratelimit_001.log |
-| SLO Enforcement | ✅ PASS | slo_enforcement_001.log |
-| System Boundaries | ✅ LOCKED | boundaries.md |
+| Proof                  | Status    | Evidence                |
+| ---------------------- | --------- | ----------------------- |
+| Incident Auto-Handling | ✅ PASS   | incident_001.log        |
+| Backup & Restore       | ✅ PASS   | backup_restore_001.log  |
+| Release Rollback       | ✅ PASS   | rollback_001.log        |
+| Rate Limiting          | ✅ PASS   | ratelimit_001.log       |
+| SLO Enforcement        | ✅ PASS   | slo_enforcement_001.log |
+| System Boundaries      | ✅ LOCKED | boundaries.md           |
 
 ---
 
@@ -58,6 +58,7 @@ This folder contains irreversible runtime evidence that the platform behaves lik
 Live status available at: `/system/status`
 
 States supported:
+
 - UP
 - DEGRADED
 - DOWN

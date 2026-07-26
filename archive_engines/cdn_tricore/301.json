@@ -1,10 +1,6 @@
 {
   "id": 301,
   "domain": "SYSTEM",
-  "signature": [
-    "audit",
-    "database",
-    "semantic"
-  ],
+  "signature": ["audit", "database", "semantic"],
   "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: audit."
 }

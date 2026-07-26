@@ -1,15 +1,9 @@
 {
   "id": "SYSTEM_303",
-  "signature": [
-    "update",
-    "version"
-  ],
+  "signature": ["update", "version"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'version'. Action: update.",
-  "tags": [
-    "system",
-    "version"
-  ],
+  "tags": ["system", "version"],
   "sh": "0xa020402008080014"
 }

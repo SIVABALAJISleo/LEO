@@ -1,16 +1,9 @@
 {
   "id": "CONTROL_351",
-  "signature": [
-    "immediately",
-    "reset",
-    "uplink"
-  ],
+  "signature": ["immediately", "reset", "uplink"],
   "domain": "CONTROL",
   "context": null,
   "response": "Resolution: Accessing CONTROL for 'uplink'. Action: reset.",
-  "tags": [
-    "control",
-    "uplink"
-  ],
+  "tags": ["control", "uplink"],
   "sh": "0x0c143e7380b6a1e0"
 }

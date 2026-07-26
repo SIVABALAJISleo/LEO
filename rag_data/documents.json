@@ -1,1 +1,86 @@
-[{"content": "Project HYPER is a next-generation AI platform focused on compute avoidance and zero-runtime stability.", "tenant_id": "default"}, {"content": "The system uses a 12-module architecture including Global Memory, Fragment Graph Composition, and Chaos Control.", "tenant_id": "default"}, {"content": "Latency is strictly enforced below 50ms using a multi-layer caching and predictive execution system.", "tenant_id": "default"}, {"content": "Nvidia inspired design principles are used throughout the frontend to provide a premium user experience.", "tenant_id": "default"}, {"content": "The backend is built with FastAPI and uses llama.cpp for local CPU-optimized inference.", "tenant_id": "default"}, {"content": "Compute avoidance is achieved by reusing previously generated answers stored in the Semantic Canonical Answer Reuse layer.", "tenant_id": "default"}, {"content": "The Chaos Controller monitors system resources and switches to MINIMAL mode under extreme stress.", "tenant_id": "default"}, {"content": "Sentence Transformers are used to generate embeddings for semantic similarity search in the FAISS index.", "tenant_id": "default"}, {"content": "Project HYPER is the codename for the hardened, production-ready version of the HYPER platform.", "tenant_id": "default"}, {"content": "Digital Twin reasoning allows the system to simulate outcomes and bypass heavy LLM calls for known patterns.", "tenant_id": "default"}, {"content": "Project HYPER is a next-generation AI platform focused on compute avoidance and zero-runtime stability.", "tenant_id": "default"}, {"content": "The system uses a 12-module architecture including Global Memory, Fragment Graph Composition, and Chaos Control.", "tenant_id": "default"}, {"content": "Latency is strictly enforced below 50ms using a multi-layer caching and predictive execution system.", "tenant_id": "default"}, {"content": "Nvidia inspired design principles are used throughout the frontend to provide a premium user experience.", "tenant_id": "default"}, {"content": "The backend is built with FastAPI and uses llama.cpp for local CPU-optimized inference.", "tenant_id": "default"}, {"content": "Compute avoidance is achieved by reusing previously generated answers stored in the Semantic Canonical Answer Reuse layer.", "tenant_id": "default"}, {"content": "The Chaos Controller monitors system resources and switches to MINIMAL mode under extreme stress.", "tenant_id": "default"}, {"content": "Sentence Transformers are used to generate embeddings for semantic similarity search in the FAISS index.", "tenant_id": "default"}, {"content": "Project HYPER is the codename for the hardened, production-ready version of the HYPER platform.", "tenant_id": "default"}, {"content": "Digital Twin reasoning allows the system to simulate outcomes and bypass heavy LLM calls for known patterns.", "tenant_id": "default"}, {"content": "This is a completely normal document about state space models.", "tenant_id": "test_tenant"}]
+[
+  {
+    "content": "Project HYPER is a next-generation AI platform focused on compute avoidance and zero-runtime stability.",
+    "tenant_id": "default"
+  },
+  {
+    "content": "The system uses a 12-module architecture including Global Memory, Fragment Graph Composition, and Chaos Control.",
+    "tenant_id": "default"
+  },
+  {
+    "content": "Latency is strictly enforced below 50ms using a multi-layer caching and predictive execution system.",
+    "tenant_id": "default"
+  },
+  {
+    "content": "Nvidia inspired design principles are used throughout the frontend to provide a premium user experience.",
+    "tenant_id": "default"
+  },
+  {
+    "content": "The backend is built with FastAPI and uses llama.cpp for local CPU-optimized inference.",
+    "tenant_id": "default"
+  },
+  {
+    "content": "Compute avoidance is achieved by reusing previously generated answers stored in the Semantic Canonical Answer Reuse layer.",
+    "tenant_id": "default"
+  },
+  {
+    "content": "The Chaos Controller monitors system resources and switches to MINIMAL mode under extreme stress.",
+    "tenant_id": "default"
+  },
+  {
+    "content": "Sentence Transformers are used to generate embeddings for semantic similarity search in the FAISS index.",
+    "tenant_id": "default"
+  },
+  {
+    "content": "Project HYPER is the codename for the hardened, production-ready version of the HYPER platform.",
+    "tenant_id": "default"
+  },
+  {
+    "content": "Digital Twin reasoning allows the system to simulate outcomes and bypass heavy LLM calls for known patterns.",
+    "tenant_id": "default"
+  },
+  {
+    "content": "Project HYPER is a next-generation AI platform focused on compute avoidance and zero-runtime stability.",
+    "tenant_id": "default"
+  },
+  {
+    "content": "The system uses a 12-module architecture including Global Memory, Fragment Graph Composition, and Chaos Control.",
+    "tenant_id": "default"
+  },
+  {
+    "content": "Latency is strictly enforced below 50ms using a multi-layer caching and predictive execution system.",
+    "tenant_id": "default"
+  },
+  {
+    "content": "Nvidia inspired design principles are used throughout the frontend to provide a premium user experience.",
+    "tenant_id": "default"
+  },
+  {
+    "content": "The backend is built with FastAPI and uses llama.cpp for local CPU-optimized inference.",
+    "tenant_id": "default"
+  },
+  {
+    "content": "Compute avoidance is achieved by reusing previously generated answers stored in the Semantic Canonical Answer Reuse layer.",
+    "tenant_id": "default"
+  },
+  {
+    "content": "The Chaos Controller monitors system resources and switches to MINIMAL mode under extreme stress.",
+    "tenant_id": "default"
+  },
+  {
+    "content": "Sentence Transformers are used to generate embeddings for semantic similarity search in the FAISS index.",
+    "tenant_id": "default"
+  },
+  {
+    "content": "Project HYPER is the codename for the hardened, production-ready version of the HYPER platform.",
+    "tenant_id": "default"
+  },
+  {
+    "content": "Digital Twin reasoning allows the system to simulate outcomes and bypass heavy LLM calls for known patterns.",
+    "tenant_id": "default"
+  },
+  {
+    "content": "This is a completely normal document about state space models.",
+    "tenant_id": "test_tenant"
+  }
+]

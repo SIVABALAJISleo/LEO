@@ -1,15 +1,9 @@
 {
   "id": "SYSTEM_360",
-  "signature": [
-    "build",
-    "restore"
-  ],
+  "signature": ["build", "restore"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'build'. Action: restore.",
-  "tags": [
-    "system",
-    "build"
-  ],
+  "tags": ["system", "build"],
   "sh": "0xb0577b29135f0bb1"
 }

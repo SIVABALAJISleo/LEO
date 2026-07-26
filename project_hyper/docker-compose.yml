@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   api:
@@ -17,10 +17,10 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '8' # CPU-first architecture
+          cpus: "8" # CPU-first architecture
           memory: 16G
         reservations:
-          cpus: '4'
+          cpus: "4"
           memory: 8G
 
   redis:

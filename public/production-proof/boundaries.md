@@ -25,18 +25,21 @@ This system prepares, predicts, logs, and escalates.
 ## Detailed Boundary Definitions
 
 ### ❌ Frontier AI Training
+
 - No large language model training
 - No foundation model fine-tuning at scale
 - No distributed training across GPU clusters
 - **Reason:** Requires physics-bound compute that cannot be neutralized
 
 ### ❌ Photon Simulation
+
 - No real-time ray tracing at Hollywood pipeline scale
 - No photorealistic rendering requiring GPU brute force
 - No sub-millisecond physics simulation
 - **Reason:** Bound by laws of physics, not software optimization
 
 ### ❌ Legal/Medical/Safety Decisions
+
 - No final legal judgments
 - No medical diagnoses
 - No safety-critical autonomous decisions
@@ -47,22 +50,26 @@ This system prepares, predicts, logs, and escalates.
 ## What This System DOES Execute
 
 ### ✅ Prepare
+
 - Pre-compute likely outcomes
 - Cache predictable results
 - Stage resources for expected workloads
 
 ### ✅ Predict
+
 - Use master predictor for outcome anticipation
 - Apply similarity collapse for reusable results
 - Leverage knowledge vault for instant lookups
 
 ### ✅ Log
+
 - Every decision path recorded
 - Every execution reason documented
 - Every delegation labeled
 - Complete audit trail maintained
 
 ### ✅ Escalate
+
 - Authority-required tasks flagged
 - Human-in-the-loop enforced
 - Clear handoff to appropriate authority
@@ -71,15 +78,15 @@ This system prepares, predicts, logs, and escalates.
 
 ## Authority Boundary Enforcement
 
-| Category | System Authority | Human Authority Required |
-|----------|------------------|--------------------------|
-| Data Processing | ✅ Full | ❌ No |
-| Result Caching | ✅ Full | ❌ No |
-| Job Scheduling | ✅ Full | ❌ No |
-| Legal Decisions | ❌ None | ✅ Yes |
-| Medical Decisions | ❌ None | ✅ Yes |
-| Financial Final | ❌ None | ✅ Yes |
-| Safety Critical | ❌ None | ✅ Yes |
+| Category          | System Authority | Human Authority Required |
+| ----------------- | ---------------- | ------------------------ |
+| Data Processing   | ✅ Full          | ❌ No                    |
+| Result Caching    | ✅ Full          | ❌ No                    |
+| Job Scheduling    | ✅ Full          | ❌ No                    |
+| Legal Decisions   | ❌ None          | ✅ Yes                   |
+| Medical Decisions | ❌ None          | ✅ Yes                   |
+| Financial Final   | ❌ None          | ✅ Yes                   |
+| Safety Critical   | ❌ None          | ✅ Yes                   |
 
 ---
 

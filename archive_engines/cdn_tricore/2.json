@@ -1,10 +1,6 @@
 {
   "id": 2,
   "domain": "CONTROL",
-  "signature": [
-    "engine",
-    "kill",
-    "primary"
-  ],
+  "signature": ["engine", "kill", "primary"],
   "response": "Resolution: Accessing CONTROL for 'primary engine'. Action: kill."
 }

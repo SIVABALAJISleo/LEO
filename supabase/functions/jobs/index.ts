@@ -70,8 +70,11 @@ serve(async (req) => {
 
     // Verify user
     const token = authHeader.replace("Bearer ", "");
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-    
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser(token);
+
     if (authError || !user) {
       return new Response(JSON.stringify({ error: "Invalid token" }), {
         status: 401,
@@ -111,41 +114,58 @@ serve(async (req) => {
       }
 
       const reqBody = body as Record<string, unknown>;
-      
+
       // Validate required fields
       const job_type = validateString(reqBody.job_type, MAX_JOB_TYPE_LENGTH);
       if (!job_type) {
-        return new Response(JSON.stringify({ error: `job_type is required and must be 1-${MAX_JOB_TYPE_LENGTH} characters` }), {
-          status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+        return new Response(
+          JSON.stringify({
+            error: `job_type is required and must be 1-${MAX_JOB_TYPE_LENGTH} characters`,
+          }),
+          {
+            status: 400,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          },
+        );
       }
 
       const payload = validatePayload(reqBody.payload);
       if (!payload) {
-        return new Response(JSON.stringify({ error: `payload is required and must be an object under ${MAX_PAYLOAD_SIZE} bytes` }), {
-          status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+        return new Response(
+          JSON.stringify({
+            error: `payload is required and must be an object under ${MAX_PAYLOAD_SIZE} bytes`,
+          }),
+          {
+            status: 400,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          },
+        );
       }
 
       // Validate optional fields
       const job_name = validateString(reqBody.job_name, MAX_JOB_NAME_LENGTH) || `${job_type} Job`;
-      const priority = validatePositiveInt(reqBody.priority as number, MIN_PRIORITY, MAX_PRIORITY, 5);
+      const priority = validatePositiveInt(
+        reqBody.priority as number,
+        MIN_PRIORITY,
+        MAX_PRIORITY,
+        5,
+      );
       const tier = validateJobTier(reqBody.job_tier);
-      const memory_required_mb = reqBody.memory_required_mb !== undefined 
-        ? validatePositiveInt(reqBody.memory_required_mb as number, 1, MAX_MEMORY_MB, 4096)
-        : undefined;
-      const estimated_duration_sec = reqBody.estimated_duration_sec !== undefined
-        ? validatePositiveInt(reqBody.estimated_duration_sec as number, 1, MAX_DURATION_SEC, 300)
-        : undefined;
+      const memory_required_mb =
+        reqBody.memory_required_mb !== undefined
+          ? validatePositiveInt(reqBody.memory_required_mb as number, 1, MAX_MEMORY_MB, 4096)
+          : undefined;
+      const estimated_duration_sec =
+        reqBody.estimated_duration_sec !== undefined
+          ? validatePositiveInt(reqBody.estimated_duration_sec as number, 1, MAX_DURATION_SEC, 300)
+          : undefined;
 
       console.log(`Creating job: type=${job_type}, tier=${tier}, user=${user.id}`);
 
       // Light jobs: run immediately (text processing, metadata)
       if (tier === "light") {
         const result = await processLightJob(job_type, payload);
-        
+
         const { data: job, error } = await supabase
           .from("gpu_jobs")
           .insert({
@@ -209,7 +229,10 @@ serve(async (req) => {
 
     // GET /jobs - List user's jobs
     if (req.method === "GET" && !jobId) {
-      const limit = Math.min(Math.max(parseInt(url.searchParams.get("limit") || "50") || 50, 1), 100);
+      const limit = Math.min(
+        Math.max(parseInt(url.searchParams.get("limit") || "50") || 50, 1),
+        100,
+      );
       const offset = Math.max(parseInt(url.searchParams.get("offset") || "0") || 0, 0);
       const status = url.searchParams.get("status");
       const tier = url.searchParams.get("tier");
@@ -316,7 +339,6 @@ serve(async (req) => {
       status: 404,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
-
   } catch (error) {
     console.error("Jobs function error:", error);
     // Return generic error to client, log details server-side only
@@ -331,7 +353,7 @@ serve(async (req) => {
 async function processLightJob(jobType: string, payload: Record<string, unknown>) {
   switch (jobType) {
     case "text_analysis":
-      return { 
+      return {
         word_count: String(payload.text || "").split(/\s+/).length,
         char_count: String(payload.text || "").length,
         processed_at: new Date().toISOString(),

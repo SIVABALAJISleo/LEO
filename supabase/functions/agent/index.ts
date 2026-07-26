@@ -1,10 +1,11 @@
 // @ts-nocheck
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "@supabase/supabase-js";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-agent-token",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-agent-token",
   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
 };
 
@@ -96,17 +97,23 @@ serve(async (req: Request) => {
       const secret = validateString(reqBody.secret, MAX_SECRET_LENGTH);
 
       if (!agent_name) {
-        return new Response(JSON.stringify({ error: `agent_name is required (max ${MAX_AGENT_NAME_LENGTH} chars)` }), {
-          status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+        return new Response(
+          JSON.stringify({ error: `agent_name is required (max ${MAX_AGENT_NAME_LENGTH} chars)` }),
+          {
+            status: 400,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          },
+        );
       }
 
       if (!secret || secret.length < 32) {
-        return new Response(JSON.stringify({ error: "secret is required and must be at least 32 characters" }), {
-          status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+        return new Response(
+          JSON.stringify({ error: "secret is required and must be at least 32 characters" }),
+          {
+            status: 400,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          },
+        );
       }
 
       // Hash the secret
@@ -114,7 +121,7 @@ serve(async (req: Request) => {
       const data = encoder.encode(secret);
       const hashBuffer = await crypto.subtle.digest("SHA-256", data);
       const hashArray = Array.from(new Uint8Array(hashBuffer));
-      const secretHash = hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+      const secretHash = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
 
       const { data: token, error } = await supabase
         .from("agent_tokens")
@@ -129,14 +136,17 @@ serve(async (req: Request) => {
       if (error) throw error;
 
       console.log(`Agent registered: ${agent_name}`);
-      return new Response(JSON.stringify({
-        token_id: token.id,
-        agent_name: token.agent_name,
-        message: "Agent registered. Store your secret securely - it cannot be retrieved later."
-      }), {
-        status: 201,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({
+          token_id: token.id,
+          agent_name: token.agent_name,
+          message: "Agent registered. Store your secret securely - it cannot be retrieved later.",
+        }),
+        {
+          status: 201,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
     }
 
     // Validate agent token for other endpoints
@@ -153,7 +163,7 @@ serve(async (req: Request) => {
     const tokenData = encoder.encode(agentToken);
     const tokenHashBuffer = await crypto.subtle.digest("SHA-256", tokenData);
     const tokenHashArray = Array.from(new Uint8Array(tokenHashBuffer));
-    const tokenHash = tokenHashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+    const tokenHash = tokenHashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
 
     // Find matching agent
     const { data: agent, error: agentError } = await supabase
@@ -229,13 +239,9 @@ serve(async (req: Request) => {
       });
 
       // Get system settings
-      const { data: settings } = await supabase
-        .from("system_settings")
-        .select("*");
+      const { data: settings } = await supabase.from("system_settings").select("*");
 
-      const settingsMap = Object.fromEntries(
-        (settings || []).map(s => [s.key, s.value])
-      );
+      const settingsMap = Object.fromEntries((settings || []).map((s) => [s.key, s.value]));
 
       const thermalWarning = settingsMap.gpu_thermal_warning?.celsius || 80;
       const thermalCritical = settingsMap.gpu_thermal_critical?.celsius || 85;
@@ -244,18 +250,21 @@ serve(async (req: Request) => {
       // Check thermal status
       if (gpu_temp && gpu_temp >= thermalCritical) {
         console.log(`Agent ${agent.agent_name} thermal critical: ${gpu_temp}°C`);
-        return new Response(JSON.stringify({
-          job: null,
-          reason: "thermal_critical",
-          message: `GPU temperature ${gpu_temp}°C exceeds critical threshold ${thermalCritical}°C`
-        }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+        return new Response(
+          JSON.stringify({
+            job: null,
+            reason: "thermal_critical",
+            message: `GPU temperature ${gpu_temp}°C exceeds critical threshold ${thermalCritical}°C`,
+          }),
+          {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          },
+        );
       }
 
       // Check VRAM availability
-      const vramAvailable = gpu_vram_total ? (gpu_vram_total - (gpu_vram_used || 0)) : 24576;
-      const maxJobVram = gpu_vram_total ? (gpu_vram_total * vramLimitPercent / 100) : 19660;
+      const vramAvailable = gpu_vram_total ? gpu_vram_total - (gpu_vram_used || 0) : 24576;
+      const maxJobVram = gpu_vram_total ? (gpu_vram_total * vramLimitPercent) / 100 : 19660;
 
       // Check if agent is already processing a job
       const { data: runningJobs } = await supabase
@@ -266,22 +275,27 @@ serve(async (req: Request) => {
         .limit(1);
 
       if (runningJobs && runningJobs.length > 0) {
-        return new Response(JSON.stringify({
-          job: null,
-          reason: "already_processing",
-          current_job_id: runningJobs[0].id
-        }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+        return new Response(
+          JSON.stringify({
+            job: null,
+            reason: "already_processing",
+            current_job_id: runningJobs[0].id,
+          }),
+          {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          },
+        );
       }
 
       // Get next job from queue
       const { data: queueItems, error: queueError } = await supabase
         .from("job_queue")
-        .select(`
+        .select(
+          `
           *,
           job:gpu_jobs(*)
-        `)
+        `,
+        )
         .order("priority", { ascending: false })
         .order("enqueued_at", { ascending: true })
         .limit(10);
@@ -302,14 +316,17 @@ serve(async (req: Request) => {
       }
 
       if (!selectedJob) {
-        return new Response(JSON.stringify({
-          job: null,
-          reason: "no_suitable_jobs",
-          vram_available_mb: vramAvailable,
-          max_job_vram_mb: maxJobVram
-        }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+        return new Response(
+          JSON.stringify({
+            job: null,
+            reason: "no_suitable_jobs",
+            vram_available_mb: vramAvailable,
+            max_job_vram_mb: maxJobVram,
+          }),
+          {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          },
+        );
       }
 
       // Claim the job
@@ -350,12 +367,15 @@ serve(async (req: Request) => {
       });
 
       console.log(`Job ${selectedJob.id} claimed by ${agent.agent_name}`);
-      return new Response(JSON.stringify({
-        job: selectedJob,
-        thermal_warning: gpu_temp !== undefined && gpu_temp >= thermalWarning,
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({
+          job: selectedJob,
+          thermal_warning: gpu_temp !== undefined && gpu_temp >= thermalWarning,
+        }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
     }
 
     // POST /agent/complete - Mark job as completed
@@ -426,17 +446,13 @@ serve(async (req: Request) => {
 
       const job_id = reqBody.job_id as string;
       const level = validateLogLevel(reqBody.level);
-      const metadata = typeof reqBody.metadata === "object" && reqBody.metadata !== null
-        ? reqBody.metadata
-        : {};
+      const metadata =
+        typeof reqBody.metadata === "object" && reqBody.metadata !== null ? reqBody.metadata : {};
 
       // Also update progress if provided
       const progress = validateOptionalNumber(reqBody.progress, 0, 100);
       if (progress !== undefined) {
-        await supabase
-          .from("gpu_jobs")
-          .update({ progress })
-          .eq("id", job_id);
+        await supabase.from("gpu_jobs").update({ progress }).eq("id", job_id);
       }
 
       const { error } = await supabase.from("job_logs").insert({
@@ -464,10 +480,13 @@ serve(async (req: Request) => {
 
       const checkpoint_data = validateCheckpointData(reqBody.checkpoint_data);
       if (!checkpoint_data) {
-        return new Response(JSON.stringify({ error: `checkpoint_data required (max ${MAX_CHECKPOINT_SIZE} bytes)` }), {
-          status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+        return new Response(
+          JSON.stringify({ error: `checkpoint_data required (max ${MAX_CHECKPOINT_SIZE} bytes)` }),
+          {
+            status: 400,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          },
+        );
       }
 
       const job_id = reqBody.job_id as string;
@@ -506,15 +525,12 @@ serve(async (req: Request) => {
       }
 
       const job_id = reqBody.job_id as string;
-      const error_message = validateString(reqBody.error_message, MAX_MESSAGE_LENGTH) || "Unknown error";
+      const error_message =
+        validateString(reqBody.error_message, MAX_MESSAGE_LENGTH) || "Unknown error";
       const should_retry = reqBody.should_retry !== false;
 
       // Get current job state
-      const { data: job } = await supabase
-        .from("gpu_jobs")
-        .select("*")
-        .eq("id", job_id)
-        .single();
+      const { data: job } = await supabase.from("gpu_jobs").select("*").eq("id", job_id).single();
 
       if (!job) {
         return new Response(JSON.stringify({ error: "Job not found" }), {
@@ -551,9 +567,12 @@ serve(async (req: Request) => {
         });
 
         console.log(`Job ${job_id} failed, retry ${retryCount}/${maxRetries}`);
-        return new Response(JSON.stringify({ success: true, retried: true, retry_count: retryCount }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+        return new Response(
+          JSON.stringify({ success: true, retried: true, retry_count: retryCount }),
+          {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          },
+        );
       }
 
       // Mark as permanently failed
@@ -618,7 +637,6 @@ serve(async (req: Request) => {
       status: 404,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
-
   } catch (error) {
     console.error("Agent function error:", error);
     // Return generic error to client, log details server-side only

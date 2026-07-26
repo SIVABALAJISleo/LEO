@@ -1,16 +1,9 @@
 {
   "id": "SYSTEM_234",
-  "signature": [
-    "background",
-    "backup",
-    "build"
-  ],
+  "signature": ["background", "backup", "build"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'build'. Action: backup.",
-  "tags": [
-    "system",
-    "build"
-  ],
+  "tags": ["system", "build"],
   "sh": "0x8d6556e7d8050b1f"
 }

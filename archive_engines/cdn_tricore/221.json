@@ -1,10 +1,6 @@
 {
   "id": 221,
   "domain": "SYSTEM",
-  "signature": [
-    "audit",
-    "identity",
-    "table"
-  ],
+  "signature": ["audit", "identity", "table"],
   "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: audit."
 }

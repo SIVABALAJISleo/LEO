@@ -2,6 +2,7 @@
 name: testsprite-verify
 description: TestSprite verification loop — after finishing a feature or fix in a TestSprite-tested repo, use the `testsprite` CLI to run the relevant TestSprite tests against the change and inspect any failure artifacts before reporting the work as done. Use whenever code has changed outside docs/config and is about to be reported complete — by running an existing test that covers the change, or by creating a new TestSprite test (a frontend plan, or a backend Python assertion) and running it to a terminal verdict.
 ---
+
 <!-- testsprite-skill: testsprite-verify v0.4.0 sha256:321fe3712725 -->
 
 # TestSprite Verification Loop
@@ -489,4 +490,3 @@ When you tell the user the feature is done, include:
 - If failed, a one-line summary of the bundle's root-cause hypothesis and
   recommended fix target. **Don't auto-fix** on that alone — the recommendation
   can be wrong; the human should look.
-

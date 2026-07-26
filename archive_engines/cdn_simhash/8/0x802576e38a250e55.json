@@ -1,16 +1,9 @@
 {
   "id": "SYSTEM_037",
-  "signature": [
-    "background",
-    "build",
-    "update"
-  ],
+  "signature": ["background", "build", "update"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'build'. Action: update.",
-  "tags": [
-    "system",
-    "build"
-  ],
+  "tags": ["system", "build"],
   "sh": "0x802576e38a250e55"
 }

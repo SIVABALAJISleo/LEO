@@ -1,17 +1,9 @@
 {
   "id": "SYSTEM_455",
-  "signature": [
-    "forcefully",
-    "identity",
-    "patch",
-    "table"
-  ],
+  "signature": ["forcefully", "identity", "patch", "table"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: patch.",
-  "tags": [
-    "system",
-    "table"
-  ],
+  "tags": ["system", "table"],
   "sh": "0x3321304c2272ab39"
 }

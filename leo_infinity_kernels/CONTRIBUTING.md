@@ -7,6 +7,7 @@ Thank you for your interest in contributing to the LEO Infinity Kernels project!
 We welcome benchmark results from different hardware configurations. To submit:
 
 1. Run the benchmark suite:
+
    ```bash
    python -m leo_infinity_kernels.benchmarks.bench_kernels > my_benchmark.txt
    ```
@@ -29,6 +30,7 @@ We welcome benchmark results from different hardware configurations. To submit:
 6. Submit a pull request
 
 ### Kernel Requirements
+
 - Must be pure Python (NumPy allowed) — no compiled extensions
 - Must include a benchmark showing speedup over baseline
 - Must include docstrings and type hints
@@ -37,16 +39,19 @@ We welcome benchmark results from different hardware configurations. To submit:
 ## Feedback Ingestion
 
 User feedback (benchmark results, edge cases, hardware reports) is automatically ingested into the evolution loop when submitted via:
+
 - The `/api/v1/leo/vinfinity/telemetry` API endpoint
 - The `TelemetryCollector.record_inference()` method
 
 This data drives automated weakness detection and parameter evolution.
 
 ## Code Style
+
 - Python 3.8+ compatible
 - Type hints required
 - Docstrings for all public methods
 - Follow existing patterns in the codebase
 
 ## License
+
 All contributions are licensed under MIT.

@@ -1,17 +1,9 @@
 {
   "id": "SYSTEM_179",
-  "signature": [
-    "background",
-    "identity",
-    "table",
-    "update"
-  ],
+  "signature": ["background", "identity", "table", "update"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: update.",
-  "tags": [
-    "system",
-    "table"
-  ],
+  "tags": ["system", "table"],
   "sh": "0xe90d78656a256edd"
 }

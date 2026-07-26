@@ -1,16 +1,9 @@
 {
   "id": "INFO_206",
-  "signature": [
-    "all",
-    "load",
-    "show"
-  ],
+  "signature": ["all", "load", "show"],
   "domain": "INFO",
   "context": null,
   "response": "Resolution: Accessing INFO for 'load'. Action: show.",
-  "tags": [
-    "info",
-    "load"
-  ],
+  "tags": ["info", "load"],
   "sh": "0xc6dcdf19609a71ac"
 }

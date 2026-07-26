@@ -1,15 +1,9 @@
 {
   "id": "SYSTEM_387",
-  "signature": [
-    "patch",
-    "version"
-  ],
+  "signature": ["patch", "version"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'version'. Action: patch.",
-  "tags": [
-    "system",
-    "version"
-  ],
+  "tags": ["system", "version"],
   "sh": "0xbb62c62c9808ea37"
 }

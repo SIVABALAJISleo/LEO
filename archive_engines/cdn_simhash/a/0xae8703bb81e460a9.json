@@ -1,16 +1,9 @@
 {
   "id": "CONTROL_171",
-  "signature": [
-    "alpha",
-    "kill",
-    "node"
-  ],
+  "signature": ["alpha", "kill", "node"],
   "domain": "CONTROL",
   "context": null,
   "response": "Resolution: Accessing CONTROL for 'alpha node'. Action: kill.",
-  "tags": [
-    "control",
-    "node"
-  ],
+  "tags": ["control", "node"],
   "sh": "0xae8703bb81e460a9"
 }

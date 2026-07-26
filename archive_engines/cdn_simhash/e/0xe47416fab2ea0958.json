@@ -1,17 +1,9 @@
 {
   "id": "CONTROL_147",
-  "signature": [
-    "after",
-    "reboot",
-    "uplink",
-    "verification"
-  ],
+  "signature": ["after", "reboot", "uplink", "verification"],
   "domain": "CONTROL",
   "context": null,
   "response": "Resolution: Accessing CONTROL for 'uplink'. Action: reboot.",
-  "tags": [
-    "control",
-    "uplink"
-  ],
+  "tags": ["control", "uplink"],
   "sh": "0xe47416fab2ea0958"
 }

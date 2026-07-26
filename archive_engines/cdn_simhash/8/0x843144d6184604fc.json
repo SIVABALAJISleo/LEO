@@ -1,17 +1,9 @@
 {
   "id": "CONTROL_409",
-  "signature": [
-    "cooling",
-    "reboot",
-    "safely",
-    "system"
-  ],
+  "signature": ["cooling", "reboot", "safely", "system"],
   "domain": "CONTROL",
   "context": null,
   "response": "Resolution: Accessing CONTROL for 'cooling system'. Action: reboot.",
-  "tags": [
-    "control",
-    "system"
-  ],
+  "tags": ["control", "system"],
   "sh": "0x843144d6184604fc"
 }

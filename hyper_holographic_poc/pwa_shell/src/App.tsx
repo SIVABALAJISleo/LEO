@@ -1,33 +1,33 @@
-import { useState, useEffect } from 'react'
-import './App.css'
+import { useState, useEffect } from "react";
+import "./App.css";
 
 function App() {
-  const [intent, setIntent] = useState('')
-  const [response, setResponse] = useState('')
-  const [crdtState, setCrdtState] = useState('Syncing...')
+  const [intent, setIntent] = useState("");
+  const [response, setResponse] = useState("");
+  const [crdtState, setCrdtState] = useState("Syncing...");
 
   useEffect(() => {
     // Mock CRDT Initialization
     setTimeout(() => {
-      setCrdtState('CRDT Actor Online: Perfect Consensus Reached')
-    }, 1000)
-  }, [])
+      setCrdtState("CRDT Actor Online: Perfect Consensus Reached");
+    }, 1000);
+  }, []);
 
   const handleManifest = async () => {
-    setResponse('Materializing intent...')
+    setResponse("Materializing intent...");
     try {
       // Connects to local cognitive engine
-      const res = await fetch('http://localhost:8080/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: intent, max_tokens: 128 })
-      })
-      const data = await res.json()
-      setResponse(data.response)
+      const res = await fetch("http://localhost:8080/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: intent, max_tokens: 128 }),
+      });
+      const data = await res.json();
+      setResponse(data.response);
     } catch (e) {
-      setResponse('[FALLBACK] The Cognitive Engine is offline. Please start it on port 8080.')
+      setResponse("[FALLBACK] The Cognitive Engine is offline. Please start it on port 8080.");
     }
-  }
+  };
 
   return (
     <div className="holographic-container">
@@ -39,7 +39,7 @@ function App() {
       <main>
         <section className="intent-section">
           <h2>Manifest Intent</h2>
-          <textarea 
+          <textarea
             value={intent}
             onChange={(e) => setIntent(e.target.value)}
             placeholder="Describe the software behavior to materialize..."
@@ -50,13 +50,11 @@ function App() {
 
         <section className="response-section">
           <h2>Execution Graph Output</h2>
-          <div className="output-box">
-            {response || 'Awaiting intent...'}
-          </div>
+          <div className="output-box">{response || "Awaiting intent..."}</div>
         </section>
       </main>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

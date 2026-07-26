@@ -1,9 +1,6 @@
 {
   "id": 5,
   "domain": "SYSTEM",
-  "signature": [
-    "backup",
-    "version"
-  ],
+  "signature": ["backup", "version"],
   "response": "Resolution: Accessing SYSTEM for 'version'. Action: backup."
 }

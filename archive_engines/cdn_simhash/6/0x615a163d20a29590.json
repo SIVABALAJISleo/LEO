@@ -1,16 +1,9 @@
 {
   "id": "CONTROL_250",
-  "signature": [
-    "activate",
-    "now",
-    "uplink"
-  ],
+  "signature": ["activate", "now", "uplink"],
   "domain": "CONTROL",
   "context": null,
   "response": "Resolution: Accessing CONTROL for 'uplink'. Action: activate.",
-  "tags": [
-    "control",
-    "uplink"
-  ],
+  "tags": ["control", "uplink"],
   "sh": "0x615a163d20a29590"
 }

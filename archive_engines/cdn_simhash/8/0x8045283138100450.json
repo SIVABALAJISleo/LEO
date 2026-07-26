@@ -1,17 +1,9 @@
 {
   "id": "SYSTEM_266",
-  "signature": [
-    "files",
-    "log",
-    "silently",
-    "update"
-  ],
+  "signature": ["files", "log", "silently", "update"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'log files'. Action: update.",
-  "tags": [
-    "system",
-    "files"
-  ],
+  "tags": ["system", "files"],
   "sh": "0x8045283138100450"
 }

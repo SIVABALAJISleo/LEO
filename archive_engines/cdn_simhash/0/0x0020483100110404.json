@@ -1,15 +1,9 @@
 {
   "id": "SYSTEM_338",
-  "signature": [
-    "registry",
-    "update"
-  ],
+  "signature": ["registry", "update"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'registry'. Action: update.",
-  "tags": [
-    "system",
-    "registry"
-  ],
+  "tags": ["system", "registry"],
   "sh": "0x0020483100110404"
 }

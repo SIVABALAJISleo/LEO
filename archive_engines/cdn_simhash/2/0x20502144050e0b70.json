@@ -1,17 +1,9 @@
 {
   "id": "SYSTEM_307",
-  "signature": [
-    "files",
-    "forcefully",
-    "log",
-    "verify"
-  ],
+  "signature": ["files", "forcefully", "log", "verify"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'log files'. Action: verify.",
-  "tags": [
-    "system",
-    "files"
-  ],
+  "tags": ["system", "files"],
   "sh": "0x20502144050e0b70"
 }

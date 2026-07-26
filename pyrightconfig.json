@@ -1,26 +1,16 @@
 {
-    "include": [
-        "."
-    ],
-    "exclude": [
-        "**/node_modules",
-        "**/__pycache__",
-        "venv",
-        "src",
-        "ui"
-    ],
-    "executionEnvironments": [
-        {
-            "root": ".",
-            "extraPaths": [".", "leo_infinity_kernels", "leo_infinity_kernels/leo_infinity_kernels"]
-        }
-    ],
-    "extraPaths": [
-        ".", "leo_infinity_kernels", "leo_infinity_kernels/leo_infinity_kernels"
-    ],
-    "venvPath": ".",
-    "venv": "venv",
-    "pythonVersion": "3.11",
-    "typeCheckingMode": "basic",
-    "reportMissingImports": "warning"
+  "include": ["."],
+  "exclude": ["**/node_modules", "**/__pycache__", "venv", "src", "ui"],
+  "executionEnvironments": [
+    {
+      "root": ".",
+      "extraPaths": [".", "leo_infinity_kernels", "leo_infinity_kernels/leo_infinity_kernels"]
+    }
+  ],
+  "extraPaths": [".", "leo_infinity_kernels", "leo_infinity_kernels/leo_infinity_kernels"],
+  "venvPath": ".",
+  "venv": "venv",
+  "pythonVersion": "3.11",
+  "typeCheckingMode": "basic",
+  "reportMissingImports": "warning"
 }

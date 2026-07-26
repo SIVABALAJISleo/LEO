@@ -1,14 +1,7 @@
 {
   "id": "STAT_001",
-  "signature": [
-    "report",
-    "status",
-    "system"
-  ],
+  "signature": ["report", "status", "system"],
   "response": "All modules operational. Core temperature 42C.",
-  "tags": [
-    "status",
-    "nominal"
-  ],
+  "tags": ["status", "nominal"],
   "sh": "0xadb549655cd2a42f"
 }

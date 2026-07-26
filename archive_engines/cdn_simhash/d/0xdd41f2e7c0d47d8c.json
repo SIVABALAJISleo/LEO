@@ -1,16 +1,9 @@
 {
   "id": "SYSTEM_450",
-  "signature": [
-    "audit",
-    "background",
-    "registry"
-  ],
+  "signature": ["audit", "background", "registry"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'registry'. Action: audit.",
-  "tags": [
-    "system",
-    "registry"
-  ],
+  "tags": ["system", "registry"],
   "sh": "0xdd41f2e7c0d47d8c"
 }

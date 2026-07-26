@@ -1,16 +1,9 @@
 {
   "id": "CONTROL_182",
-  "signature": [
-    "kill",
-    "safely",
-    "uplink"
-  ],
+  "signature": ["kill", "safely", "uplink"],
   "domain": "CONTROL",
   "context": null,
   "response": "Resolution: Accessing CONTROL for 'uplink'. Action: kill.",
-  "tags": [
-    "control",
-    "uplink"
-  ],
+  "tags": ["control", "uplink"],
   "sh": "0xec558657b170e1b9"
 }

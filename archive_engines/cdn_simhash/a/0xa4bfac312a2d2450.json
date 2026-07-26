@@ -1,16 +1,9 @@
 {
   "id": "SYSTEM_286",
-  "signature": [
-    "database",
-    "semantic",
-    "update"
-  ],
+  "signature": ["database", "semantic", "update"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: update.",
-  "tags": [
-    "system",
-    "database"
-  ],
+  "tags": ["system", "database"],
   "sh": "0xa4bfac312a2d2450"
 }

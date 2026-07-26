@@ -1,15 +1,9 @@
 {
   "id": "INFO_055",
-  "signature": [
-    "bandwidth",
-    "metrics"
-  ],
+  "signature": ["bandwidth", "metrics"],
   "domain": "INFO",
   "context": null,
   "response": "Resolution: Accessing INFO for 'bandwidth'. Action: metrics for.",
-  "tags": [
-    "info",
-    "bandwidth"
-  ],
+  "tags": ["info", "bandwidth"],
   "sh": "0x104c33a4050010d2"
 }

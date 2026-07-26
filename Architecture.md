@@ -16,7 +16,6 @@ Full hardware awakening stack shipping in `backend/hardware/` and `backend/infer
 - **Software Tensor-Core Emulation** (`universal_execution_v2.py`): Compiles JIT code paths for CPU vector units (AVX/AMX) and OpenVINO runtime architectures to execute dynamic INT4/INT8 cascades.
 - **Estimated speedup**: ≥3× tokens/sec on iGPU (Vulkan/DirectML/Metal), ≥4× on NPU vs pure CPU baseline.
 
-
 ## 3. Local-First UI
 
 Data is persisted to `IndexedDB` via Dexie. Sync logic handles eventual consistency with the server, allowing the UI to remain responsive even under high network latency or offline conditions.

@@ -35,14 +35,10 @@ test.describe("chat layout — NVIDIA-inspired visual regression", () => {
   });
 
   for (const bp of BREAKPOINTS) {
-    test(`chat empty state @ ${bp.name} (${bp.width}x${bp.height})`, async ({
-      page,
-    }) => {
+    test(`chat empty state @ ${bp.name} (${bp.width}x${bp.height})`, async ({ page }) => {
       await page.setViewportSize({ width: bp.width, height: bp.height });
       await page.goto("/app/chat");
-      await expect(
-        page.getByRole("heading", { name: /start a conversation/i }),
-      ).toBeVisible();
+      await expect(page.getByRole("heading", { name: /start a conversation/i })).toBeVisible();
       // Wait for fonts + any async layout to settle.
       await page.evaluate(() => document.fonts?.ready);
       await expect(page).toHaveScreenshot(`chat-empty-${bp.name}.png`, {

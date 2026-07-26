@@ -1,17 +1,9 @@
 {
   "id": "CONTROL_337",
-  "signature": [
-    "at",
-    "once",
-    "restart",
-    "uplink"
-  ],
+  "signature": ["at", "once", "restart", "uplink"],
   "domain": "CONTROL",
   "context": null,
   "response": "Resolution: Accessing CONTROL for 'uplink'. Action: restart.",
-  "tags": [
-    "control",
-    "uplink"
-  ],
+  "tags": ["control", "uplink"],
   "sh": "0x041c062520c18160"
 }

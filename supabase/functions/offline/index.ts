@@ -3,7 +3,8 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-agent-token",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-agent-token",
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
 };
 
@@ -31,7 +32,7 @@ serve(async (req) => {
     const tokenData = encoder.encode(agentToken);
     const tokenHashBuffer = await crypto.subtle.digest("SHA-256", tokenData);
     const tokenHashArray = Array.from(new Uint8Array(tokenHashBuffer));
-    const tokenHash = tokenHashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+    const tokenHash = tokenHashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
 
     // Find matching agent
     const { data: agent, error: agentError } = await supabase
@@ -57,53 +58,37 @@ serve(async (req) => {
       const { job_types, include_checkpoints = true } = body;
 
       // Define model requirements for each job type
-      const modelManifest: Record<string, { models: string[], files: string[], size_mb: number }> = {
-        inference: {
-          models: [
-            "models/llama-3.2-1b-instruct-q4_k_m.gguf",
-            "models/llama-3.2-3b-instruct-q4_k_m.gguf",
-          ],
-          files: [
-            "tokenizers/llama-tokenizer.json",
-          ],
-          size_mb: 2500,
-        },
-        training: {
-          models: [
-            "models/base-model-7b-fp16.safetensors",
-          ],
-          files: [
-            "configs/training-config.yaml",
-            "optimizers/adamw-state.pt",
-          ],
-          size_mb: 14000,
-        },
-        rendering: {
-          models: [
-            "models/upscaler-4x.onnx",
-            "models/denoiser-v2.onnx",
-          ],
-          files: [
-            "luts/filmic-lut.cube",
-          ],
-          size_mb: 800,
-        },
-        video_processing: {
-          models: [
-            "models/video-interpolation.onnx",
-            "models/frame-dedup.onnx",
-          ],
-          files: [],
-          size_mb: 1200,
-        },
-        compression: {
-          models: [
-            "models/quantizer-int8.onnx",
-          ],
-          files: [],
-          size_mb: 200,
-        },
-      };
+      const modelManifest: Record<string, { models: string[]; files: string[]; size_mb: number }> =
+        {
+          inference: {
+            models: [
+              "models/llama-3.2-1b-instruct-q4_k_m.gguf",
+              "models/llama-3.2-3b-instruct-q4_k_m.gguf",
+            ],
+            files: ["tokenizers/llama-tokenizer.json"],
+            size_mb: 2500,
+          },
+          training: {
+            models: ["models/base-model-7b-fp16.safetensors"],
+            files: ["configs/training-config.yaml", "optimizers/adamw-state.pt"],
+            size_mb: 14000,
+          },
+          rendering: {
+            models: ["models/upscaler-4x.onnx", "models/denoiser-v2.onnx"],
+            files: ["luts/filmic-lut.cube"],
+            size_mb: 800,
+          },
+          video_processing: {
+            models: ["models/video-interpolation.onnx", "models/frame-dedup.onnx"],
+            files: [],
+            size_mb: 1200,
+          },
+          compression: {
+            models: ["models/quantizer-int8.onnx"],
+            files: [],
+            size_mb: 200,
+          },
+        };
 
       // Build package list
       const requestedTypes = job_types || Object.keys(modelManifest);
@@ -161,36 +146,39 @@ serve(async (req) => {
         }
       }
 
-      return new Response(JSON.stringify({
-        package_items,
-        total_size_mb: totalSizeMb,
-        estimated_download_time_minutes: Math.ceil(totalSizeMb / 50), // Assume 50MB/min
-        generated_at: new Date().toISOString(),
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({
+          package_items,
+          total_size_mb: totalSizeMb,
+          estimated_download_time_minutes: Math.ceil(totalSizeMb / 50), // Assume 50MB/min
+          generated_at: new Date().toISOString(),
+        }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
     }
 
     // GET /offline/status - Check which models are available
     if (req.method === "GET" && action === "status") {
       // This would normally check actual file availability
       // For now, return a mock status
-      return new Response(JSON.stringify({
-        ready_models: [
-          "models/llama-3.2-1b-instruct-q4_k_m.gguf",
-        ],
-        pending_downloads: [],
-        last_sync: new Date().toISOString(),
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({
+          ready_models: ["models/llama-3.2-1b-instruct-q4_k_m.gguf"],
+          pending_downloads: [],
+          last_sync: new Date().toISOString(),
+        }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
     }
 
     return new Response(JSON.stringify({ error: "Not found" }), {
       status: 404,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
-
   } catch (error) {
     console.error("Error:", error);
     // Return generic error to client, log details server-side only

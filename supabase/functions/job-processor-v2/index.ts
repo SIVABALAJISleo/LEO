@@ -31,30 +31,40 @@ Deno.serve(async (req) => {
 
       const processed: string[] = [];
       for (const job of jobs || []) {
-        await supabase.from("gpu_jobs").update({ 
-          status: "running", 
-          started_at: new Date().toISOString(),
-          progress: 0 
-        }).eq("id", job.id);
+        await supabase
+          .from("gpu_jobs")
+          .update({
+            status: "running",
+            started_at: new Date().toISOString(),
+            progress: 0,
+          })
+          .eq("id", job.id);
 
         // Simulate processing
         for (let i = 1; i <= 5; i++) {
-          await new Promise(r => setTimeout(r, 100));
-          await supabase.from("gpu_jobs").update({ progress: i * 20 }).eq("id", job.id);
+          await new Promise((r) => setTimeout(r, 100));
+          await supabase
+            .from("gpu_jobs")
+            .update({ progress: i * 20 })
+            .eq("id", job.id);
         }
 
-        await supabase.from("gpu_jobs").update({
-          status: "completed",
-          progress: 100,
-          completed_at: new Date().toISOString(),
-          result_data: { completed: true, processing_time_ms: 500 },
-        }).eq("id", job.id);
+        await supabase
+          .from("gpu_jobs")
+          .update({
+            status: "completed",
+            progress: 100,
+            completed_at: new Date().toISOString(),
+            result_data: { completed: true, processing_time_ms: 500 },
+          })
+          .eq("id", job.id);
 
         processed.push(job.id);
       }
 
-      return new Response(JSON.stringify({ success: true, processed }), 
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ success: true, processed }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     if (action === "retry_failed") {
@@ -67,24 +77,31 @@ Deno.serve(async (req) => {
 
       const retried: string[] = [];
       for (const job of failedJobs || []) {
-        await supabase.from("gpu_jobs").update({
-          status: "queued",
-          retry_count: (job.retry_count || 0) + 1,
-        }).eq("id", job.id);
+        await supabase
+          .from("gpu_jobs")
+          .update({
+            status: "queued",
+            retry_count: (job.retry_count || 0) + 1,
+          })
+          .eq("id", job.id);
         retried.push(job.id);
       }
 
-      return new Response(JSON.stringify({ success: true, retried }), 
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ success: true, retried }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
-    return new Response(JSON.stringify({ error: "Unknown action" }), 
-      { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-
+    return new Response(JSON.stringify({ error: "Unknown action" }), {
+      status: 400,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   } catch (error) {
     console.error("[job-processor-v2] Error:", error);
     // Return generic error to client, log details server-side only
-    return new Response(JSON.stringify({ error: "An internal error occurred" }), 
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    return new Response(JSON.stringify({ error: "An internal error occurred" }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });

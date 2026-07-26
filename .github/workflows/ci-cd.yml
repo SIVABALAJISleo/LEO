@@ -12,7 +12,6 @@ env:
   IMAGE_NAME_LC: ""
 
 jobs:
-
   test-backend:
     name: Test Backend (Python)
     runs-on: ubuntu-latest
@@ -115,7 +114,6 @@ jobs:
           name: frontend-dist
           path: dist/
           retention-days: 7
-
 
   build-docker:
     name: Build Docker Image

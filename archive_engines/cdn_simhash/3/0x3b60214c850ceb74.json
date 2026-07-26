@@ -1,16 +1,9 @@
 {
   "id": "SYSTEM_296",
-  "signature": [
-    "forcefully",
-    "verify",
-    "version"
-  ],
+  "signature": ["forcefully", "verify", "version"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'version'. Action: verify.",
-  "tags": [
-    "system",
-    "version"
-  ],
+  "tags": ["system", "version"],
   "sh": "0x3b60214c850ceb74"
 }

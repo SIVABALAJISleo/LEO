@@ -1,9 +1,6 @@
 {
   "id": 305,
   "domain": "CONTROL",
-  "signature": [
-    "initialize",
-    "uplink"
-  ],
+  "signature": ["initialize", "uplink"],
   "response": "Resolution: Accessing CONTROL for 'uplink'. Action: initialize."
 }

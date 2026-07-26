@@ -1,16 +1,9 @@
 {
   "id": "INFO_375",
-  "signature": [
-    "metrics",
-    "overall",
-    "system"
-  ],
+  "signature": ["metrics", "overall", "system"],
   "domain": "INFO",
   "context": null,
   "response": "Resolution: Accessing INFO for 'system'. Action: metrics for.",
-  "tags": [
-    "info",
-    "system"
-  ],
+  "tags": ["info", "system"],
   "sh": "0xbe3c59863d4eb0de"
 }

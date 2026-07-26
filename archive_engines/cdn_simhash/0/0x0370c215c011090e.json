@@ -1,15 +1,9 @@
 {
   "id": "SYSTEM_444",
-  "signature": [
-    "backup",
-    "registry"
-  ],
+  "signature": ["backup", "registry"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'registry'. Action: backup.",
-  "tags": [
-    "system",
-    "registry"
-  ],
+  "tags": ["system", "registry"],
   "sh": "0x0370c215c011090e"
 }

@@ -1,17 +1,9 @@
 {
   "id": "SYSTEM_219",
-  "signature": [
-    "files",
-    "log",
-    "restore",
-    "silently"
-  ],
+  "signature": ["files", "log", "restore", "silently"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'log files'. Action: restore.",
-  "tags": [
-    "system",
-    "files"
-  ],
+  "tags": ["system", "files"],
   "sh": "0x9055382919520431"
 }

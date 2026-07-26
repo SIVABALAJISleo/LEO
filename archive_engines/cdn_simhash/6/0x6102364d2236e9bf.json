@@ -1,16 +1,9 @@
 {
   "id": "SYSTEM_185",
-  "signature": [
-    "identity",
-    "synchronize",
-    "table"
-  ],
+  "signature": ["identity", "synchronize", "table"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: synchronize.",
-  "tags": [
-    "system",
-    "table"
-  ],
+  "tags": ["system", "table"],
   "sh": "0x6102364d2236e9bf"
 }

@@ -9,14 +9,14 @@ const corsHeaders = {
 
 // Simulated processing speeds by job type
 const PROCESSING_SPEEDS: Record<string, number> = {
-  "text_generation": 50,
-  "image_classification": 100,
-  "object_detection": 150,
-  "sentiment_analysis": 30,
-  "translation": 80,
-  "summarization": 60,
-  "embedding": 20,
-  "custom": 100
+  text_generation: 50,
+  image_classification: 100,
+  object_detection: 150,
+  sentiment_analysis: 30,
+  translation: 80,
+  summarization: 60,
+  embedding: 20,
+  custom: 100,
 };
 
 serve(async (req) => {
@@ -46,8 +46,11 @@ serve(async (req) => {
     }
 
     const token = authHeader.replace("Bearer ", "");
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-    
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser(token);
+
     if (authError || !user) {
       return new Response(JSON.stringify({ error: "Invalid token" }), {
         status: 401,
@@ -81,20 +84,26 @@ serve(async (req) => {
     }
 
     if (!["queued", "pending"].includes(job.status)) {
-      return new Response(JSON.stringify({ error: "Job cannot be processed", current_status: job.status }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({ error: "Job cannot be processed", current_status: job.status }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
     }
 
     const startTime = Date.now();
 
     // Update job to running
-    await supabase.from("inference_jobs").update({
-      status: "running",
-      started_at: new Date().toISOString(),
-      progress: 0
-    }).eq("id", job_id);
+    await supabase
+      .from("inference_jobs")
+      .update({
+        status: "running",
+        started_at: new Date().toISOString(),
+        progress: 0,
+      })
+      .eq("id", job_id);
 
     // Get enabled modules
     const enabledModules = (job.enabled_modules as string[]) || [];
@@ -105,7 +114,7 @@ serve(async (req) => {
     if (simulate_progress) {
       const jobType = job.model?.model_type || "custom";
       const baseLatency = PROCESSING_SPEEDS[jobType] || 100;
-      
+
       // Calculate optimizations
       let speedup = 1.0;
       let compressionRatio = 1.0;
@@ -133,10 +142,13 @@ serve(async (req) => {
 
       // Progress simulation
       for (let i = 1; i <= steps; i++) {
-        await new Promise(resolve => setTimeout(resolve, stepDelay));
-        await supabase.from("inference_jobs").update({
-          progress: i * 10
-        }).eq("id", job_id);
+        await new Promise((resolve) => setTimeout(resolve, stepDelay));
+        await supabase
+          .from("inference_jobs")
+          .update({
+            progress: i * 10,
+          })
+          .eq("id", job_id);
       }
 
       // Generate output based on job type
@@ -144,15 +156,18 @@ serve(async (req) => {
       const totalLatency = Date.now() - startTime;
 
       // Complete the job
-      await supabase.from("inference_jobs").update({
-        status: "completed",
-        progress: 100,
-        output_data: output,
-        latency_ms: totalLatency,
-        speedup: Math.round(speedup * 100) / 100,
-        compression_ratio: Math.round(compressionRatio * 100) / 100,
-        completed_at: new Date().toISOString()
-      }).eq("id", job_id);
+      await supabase
+        .from("inference_jobs")
+        .update({
+          status: "completed",
+          progress: 100,
+          output_data: output,
+          latency_ms: totalLatency,
+          speedup: Math.round(speedup * 100) / 100,
+          compression_ratio: Math.round(compressionRatio * 100) / 100,
+          completed_at: new Date().toISOString(),
+        })
+        .eq("id", job_id);
 
       // Record performance metrics
       await supabase.from("performance_metrics").insert({
@@ -161,14 +176,14 @@ serve(async (req) => {
         metric_name: "inference_latency",
         metric_value: totalLatency,
         latency_ms: totalLatency,
-        throughput_rps: Math.round(1000 / totalLatency * 100) / 100,
+        throughput_rps: Math.round((1000 / totalLatency) * 100) / 100,
         cache_hit_ratio: enabledModules.includes("Cache Optimization") ? 0.85 : 0.5,
         module_name: enabledModules[0] || null,
         metadata: {
           speedup,
           compression_ratio: compressionRatio,
-          enabled_modules: enabledModules
-        }
+          enabled_modules: enabledModules,
+        },
       });
 
       // Update module stats
@@ -183,60 +198,75 @@ serve(async (req) => {
         if (config) {
           const currentSpeedup = config.speedup_achieved || 1;
           const currentCompression = config.compression_ratio_achieved || 1;
-          
-          await supabase.from("module_configs").update({
-            speedup_achieved: Math.max(currentSpeedup, speedup),
-            compression_ratio_achieved: Math.max(currentCompression, compressionRatio),
-            updated_at: new Date().toISOString()
-          }).eq("id", config.id);
+
+          await supabase
+            .from("module_configs")
+            .update({
+              speedup_achieved: Math.max(currentSpeedup, speedup),
+              compression_ratio_achieved: Math.max(currentCompression, compressionRatio),
+              updated_at: new Date().toISOString(),
+            })
+            .eq("id", config.id);
         }
       }
 
-      return new Response(JSON.stringify({
-        success: true,
-        job_id,
-        status: "completed",
-        latency_ms: totalLatency,
-        speedup,
-        compression_ratio: compressionRatio,
-        output
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({
+          success: true,
+          job_id,
+          status: "completed",
+          latency_ms: totalLatency,
+          speedup,
+          compression_ratio: compressionRatio,
+          output,
+        }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
     } else {
       // Quick processing without progress simulation
       const output = generateOutput(job, enabledModules);
       const latency = Date.now() - startTime;
 
-      await supabase.from("inference_jobs").update({
-        status: "completed",
-        progress: 100,
-        output_data: output,
-        latency_ms: latency,
-        speedup: 1.5,
-        compression_ratio: 1.2,
-        completed_at: new Date().toISOString()
-      }).eq("id", job_id);
+      await supabase
+        .from("inference_jobs")
+        .update({
+          status: "completed",
+          progress: 100,
+          output_data: output,
+          latency_ms: latency,
+          speedup: 1.5,
+          compression_ratio: 1.2,
+          completed_at: new Date().toISOString(),
+        })
+        .eq("id", job_id);
 
-      return new Response(JSON.stringify({
-        success: true,
-        job_id,
-        status: "completed",
-        latency_ms: latency,
-        output
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({
+          success: true,
+          job_id,
+          status: "completed",
+          latency_ms: latency,
+          output,
+        }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
     }
   } catch (error) {
     console.error("Process inference error:", error);
     // Return generic error to client, log details server-side only
-    return new Response(JSON.stringify({
-      error: "An internal error occurred"
-    }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({
+        error: "An internal error occurred",
+      }),
+      {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      },
+    );
   }
 });
 
@@ -251,32 +281,32 @@ function generateOutput(job: any, enabledModules: string[]) {
       return {
         generated_text: `AI-generated response for: "${inputData.prompt?.slice(0, 50) || "input"}..."`,
         tokens_generated: Math.floor(Math.random() * 200) + 50,
-        finish_reason: "stop"
+        finish_reason: "stop",
       };
-      
+
     case "image_classification":
       return {
         predictions: [
           { label: "category_a", confidence: 0.85 + Math.random() * 0.1 },
           { label: "category_b", confidence: 0.1 + Math.random() * 0.05 },
-          { label: "category_c", confidence: 0.02 + Math.random() * 0.03 }
+          { label: "category_c", confidence: 0.02 + Math.random() * 0.03 },
         ],
         processing_info: {
           modules_used: enabledModules,
-          optimizations_applied: enabledModules.length
-        }
+          optimizations_applied: enabledModules.length,
+        },
       };
-      
+
     case "object_detection":
       return {
         detections: [
           { class: "object_1", bbox: [100, 100, 200, 200], confidence: 0.92 },
-          { class: "object_2", bbox: [300, 150, 450, 350], confidence: 0.87 }
+          { class: "object_2", bbox: [300, 150, 450, 350], confidence: 0.87 },
         ],
         total_objects: 2,
-        inference_mode: enabledModules.includes("Quantization") ? "INT8" : "FP32"
+        inference_mode: enabledModules.includes("Quantization") ? "INT8" : "FP32",
       };
-      
+
     case "sentiment_analysis":
       // eslint-disable-next-line no-case-declarations
       const sentiments = ["positive", "negative", "neutral"];
@@ -285,38 +315,38 @@ function generateOutput(job: any, enabledModules: string[]) {
         confidence: 0.75 + Math.random() * 0.2,
         aspects: {
           quality: 0.8 + Math.random() * 0.2,
-          service: 0.7 + Math.random() * 0.25
-        }
+          service: 0.7 + Math.random() * 0.25,
+        },
       };
-      
+
     case "translation":
       return {
         translated_text: `[Translated] ${inputData.text?.slice(0, 100) || "Sample translation"}`,
         source_language: inputData.source_lang || "auto",
         target_language: inputData.target_lang || "en",
-        confidence: 0.9 + Math.random() * 0.1
+        confidence: 0.9 + Math.random() * 0.1,
       };
-      
+
     case "summarization":
       return {
         summary: `Summary of input: ${inputData.text?.slice(0, 50) || "content"}...`,
         compression_ratio: 0.3 + Math.random() * 0.2,
-        key_points: ["Point 1", "Point 2", "Point 3"]
+        key_points: ["Point 1", "Point 2", "Point 3"],
       };
-      
+
     case "embedding":
       return {
         embedding: Array.from({ length: 768 }, () => Math.random() * 2 - 1),
         dimension: 768,
-        model_version: "v2"
+        model_version: "v2",
       };
-      
+
     default:
       return {
         result: "processed",
         input_size: JSON.stringify(inputData).length,
         output_generated_at: new Date().toISOString(),
-        modules_applied: enabledModules
+        modules_applied: enabledModules,
       };
   }
 }

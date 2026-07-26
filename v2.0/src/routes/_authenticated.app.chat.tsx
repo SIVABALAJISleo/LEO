@@ -54,8 +54,7 @@ export const Route = createFileRoute("/_authenticated/app/chat")({
   component: ChatPage,
 });
 
-const isMac =
-  typeof navigator !== "undefined" && /Mac|iPhone|iPad/i.test(navigator.platform);
+const isMac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/i.test(navigator.platform);
 const modKeyLabel = isMac ? "⌘" : "Ctrl";
 
 function ChatPage() {
@@ -276,10 +275,7 @@ function ChatPage() {
       toast.error("No conversations to export yet.");
       return;
     }
-    downloadCsv(
-      `leo-chats-${new Date().toISOString().slice(0, 10)}.csv`,
-      exportSessionsAsCsv(all),
-    );
+    downloadCsv(`leo-chats-${new Date().toISOString().slice(0, 10)}.csv`, exportSessionsAsCsv(all));
     toast.success(`Exported ${all.length} conversation${all.length === 1 ? "" : "s"} as CSV.`);
   }, []);
 
@@ -430,13 +426,9 @@ function ChatPage() {
       abortRef.current?.abort();
     }
     const last = messages[messages.length - 1];
-    const priorPartial =
-      last && last.role === "assistant" ? last.content : "";
+    const priorPartial = last && last.role === "assistant" ? last.content : "";
     // Take the messages up to but not including the streaming assistant.
-    const priorConversation =
-      last && last.role === "assistant"
-        ? messages.slice(0, -1)
-        : messages;
+    const priorConversation = last && last.role === "assistant" ? messages.slice(0, -1) : messages;
     const history: ChatMessage[] = priorConversation.map((m) => ({
       role: m.role,
       content: m.content,
@@ -531,16 +523,7 @@ function ChatPage() {
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [
-    historyOpen,
-    filteredSessions,
-    selectedIdx,
-    status,
-    stop,
-    exportAll,
-    newChat,
-    loadSession,
-  ]);
+  }, [historyOpen, filteredSessions, selectedIdx, status, stop, exportAll, newChat, loadSession]);
 
   const isBusy = status !== "idle";
 
@@ -775,9 +758,7 @@ function ChatPage() {
                   </div>
                   <div className="mt-1 text-xs text-muted-foreground">
                     &quot;{mergeBanner.title}&quot; — merged{" "}
-                    <span className="font-mono text-foreground">
-                      {mergeBanner.addedFromRemote}
-                    </span>{" "}
+                    <span className="font-mono text-foreground">{mergeBanner.addedFromRemote}</span>{" "}
                     remote message{mergeBanner.addedFromRemote === 1 ? "" : "s"}
                     {mergeBanner.removedFromLocal > 0 && (
                       <>
@@ -788,8 +769,7 @@ function ChatPage() {
                         local duplicate{mergeBanner.removedFromLocal === 1 ? "" : "s"}
                       </>
                     )}
-                    . New version:{" "}
-                    <span className="font-mono">v{mergeBanner.mergedVersion}</span>.
+                    . New version: <span className="font-mono">v{mergeBanner.mergedVersion}</span>.
                   </div>
                 </div>
                 <button
@@ -916,9 +896,7 @@ function ChatPage() {
         </div>
       </div>
 
-      {showShortcuts && (
-        <ShortcutsDialog onClose={() => setShowShortcuts(false)} />
-      )}
+      {showShortcuts && <ShortcutsDialog onClose={() => setShowShortcuts(false)} />}
     </div>
   );
 }

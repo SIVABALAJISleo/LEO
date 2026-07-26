@@ -1,12 +1,14 @@
 # Kimi-K2.5 Deployment Guide
 
 > [!Note]
-> This guide only provides some examples of deployment commands for Kimi-K2.5, which may not be the optimal configuration. Since inference engines are still being updated frequenty,  please continue to follow the guidance from their homepage if you want to achieve better inference performance.
+> This guide only provides some examples of deployment commands for Kimi-K2.5, which may not be the optimal configuration. Since inference engines are still being updated frequenty, please continue to follow the guidance from their homepage if you want to achieve better inference performance.
 
 > kimi_k2 reasoning parser and other related features have been merged into vLLM/sglang and will be available in the next release. For now, please use the nightly build Docker image.
+
 ## vLLM Deployment
 
 This model is available in nightly vLLM wheel:
+
 ```
 uv pip install -U vllm \
     --torch-backend=auto \
@@ -14,10 +16,13 @@ uv pip install -U vllm \
 ```
 
 Here is the example to serve this model on a H200 single node with TP8 via vLLM:
+
 ```bash
 vllm serve $MODEL_PATH -tp 8 --mm-encoder-tp-mode data --trust-remote-code --tool-call-parser kimi_k2 --reasoning-parser kimi_k2
 ```
+
 **Key notes**
+
 - `--tool-call-parser kimi_k2`: Required for enabling tool calling
 - `--reasoning-parser kimi_k2`: Kimi-K2.5 enables thinking mode by default. Make sure to pass this for correct reasoning processing.
 
@@ -31,15 +36,20 @@ pip install nvidia-cudnn-cu12==9.16.0.29
 ```
 
 Similarly, here is the example for it to run with TP8 on H200 in a single node via SGLang:
-``` bash
+
+```bash
 sglang serve --model-path $MODEL_PATH --tp 8 --trust-remote-code --tool-call-parser kimi_k2 --reasoning-parser kimi_k2
 ```
+
 **Key parameter notes:**
+
 - `--tool-call-parser kimi_k2`: Required when enabling tool usage.
 - `--reasoning-parser kimi_k2`: Required for correctly processing reasoning content.
 
 ## KTransformers Deployment
+
 ### KTransformers+SGLang Inference Deployment
+
 Launch with KTransformers + SGLang for CPU+GPU heterogeneous inference:
 
 ```

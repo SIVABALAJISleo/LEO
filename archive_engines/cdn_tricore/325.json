@@ -1,11 +1,6 @@
 {
   "id": 325,
   "domain": "SYSTEM",
-  "signature": [
-    "background",
-    "build",
-    "in",
-    "update"
-  ],
+  "signature": ["background", "build", "in", "update"],
   "response": "Resolution: Accessing SYSTEM for 'build'. Action: update."
 }

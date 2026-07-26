@@ -21,9 +21,7 @@ test.describe("chat 409 conflict — optimistic rollback + de-dupe", () => {
     await enableSync(page);
   });
 
-  test("optimistic message is rolled back and merged without duplicates", async ({
-    page,
-  }) => {
+  test("optimistic message is rolled back and merged without duplicates", async ({ page }) => {
     const telemetry = await mockTelemetry(page);
     const conflict = await mockChatSyncConflict(page, {
       remoteMessage: "reply-from-other-device",
@@ -71,9 +69,7 @@ test.describe("chat 409 conflict — optimistic rollback + de-dupe", () => {
     const bannerEvents = telemetry.getEventsOfKind("chat-merge-banner") as Array<{
       merge_kind?: string;
     }>;
-    expect(bannerEvents.some((e) => e.merge_kind === "conflict-rollback")).toBe(
-      true,
-    );
+    expect(bannerEvents.some((e) => e.merge_kind === "conflict-rollback")).toBe(true);
 
     // The 409-triggering POST actually happened.
     expect(conflict.getPostCount()).toBeGreaterThanOrEqual(1);

@@ -1,16 +1,9 @@
 {
   "id": "CONTROL_330",
-  "signature": [
-    "alpha",
-    "node",
-    "reset"
-  ],
+  "signature": ["alpha", "node", "reset"],
   "domain": "CONTROL",
   "context": null,
   "response": "Resolution: Accessing CONTROL for 'alpha node'. Action: reset.",
-  "tags": [
-    "control",
-    "node"
-  ],
+  "tags": ["control", "node"],
   "sh": "0x0e072fbac1862229"
 }

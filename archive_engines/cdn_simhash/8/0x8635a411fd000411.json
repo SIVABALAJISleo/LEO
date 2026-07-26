@@ -1,17 +1,9 @@
 {
   "id": "SYSTEM_082",
-  "signature": [
-    "backup",
-    "database",
-    "semantic",
-    "silently"
-  ],
+  "signature": ["backup", "database", "semantic", "silently"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: backup.",
-  "tags": [
-    "system",
-    "database"
-  ],
+  "tags": ["system", "database"],
   "sh": "0x8635a411fd000411"
 }

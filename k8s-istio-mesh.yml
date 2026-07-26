@@ -14,5 +14,4 @@ kind: AuthorizationPolicy
 metadata:
   name: deny-all
   namespace: default
-spec:
-  {} # Empty spec means deny all traffic by default unless explicitly allowed
+spec: {} # Empty spec means deny all traffic by default unless explicitly allowed

@@ -5,10 +5,7 @@
     "expert": "general",
     "confidence": 0.5,
     "routing_logic": "HeuristicKeywordDensity",
-    "subtasks": [
-      "context_retrieval",
-      "logic_merge"
-    ]
+    "subtasks": ["context_retrieval", "logic_merge"]
   },
   "rag": {
     "query": "hello",

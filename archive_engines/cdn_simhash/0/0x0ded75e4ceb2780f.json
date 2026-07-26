@@ -1,16 +1,9 @@
 {
   "id": "INFO_073",
-  "signature": [
-    "locally",
-    "report",
-    "temperature"
-  ],
+  "signature": ["locally", "report", "temperature"],
   "domain": "INFO",
   "context": null,
   "response": "Resolution: Accessing INFO for 'temperature'. Action: report.",
-  "tags": [
-    "info",
-    "temperature"
-  ],
+  "tags": ["info", "temperature"],
   "sh": "0x0ded75e4ceb2780f"
 }

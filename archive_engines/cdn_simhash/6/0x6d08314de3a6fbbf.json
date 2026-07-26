@@ -1,16 +1,9 @@
 {
   "id": "SYSTEM_367",
-  "signature": [
-    "identity",
-    "table",
-    "verify"
-  ],
+  "signature": ["identity", "table", "verify"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: verify.",
-  "tags": [
-    "system",
-    "table"
-  ],
+  "tags": ["system", "table"],
   "sh": "0x6d08314de3a6fbbf"
 }

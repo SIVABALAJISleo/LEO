@@ -1,16 +1,9 @@
 {
   "id": "SYSTEM_084",
-  "signature": [
-    "forcefully",
-    "registry",
-    "synchronize"
-  ],
+  "signature": ["forcefully", "registry", "synchronize"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'registry'. Action: synchronize.",
-  "tags": [
-    "system",
-    "registry"
-  ],
+  "tags": ["system", "registry"],
   "sh": "0x336232d7047629fc"
 }

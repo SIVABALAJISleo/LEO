@@ -1,16 +1,9 @@
 {
   "id": "SYSTEM_466",
-  "signature": [
-    "audit",
-    "files",
-    "log"
-  ],
+  "signature": ["audit", "files", "log"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'log files'. Action: audit.",
-  "tags": [
-    "system",
-    "files"
-  ],
+  "tags": ["system", "files"],
   "sh": "0x6958738818967530"
 }

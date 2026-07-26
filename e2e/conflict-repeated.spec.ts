@@ -17,9 +17,7 @@ test.describe("chat sync — repeated 409s + server timeout stay recoverable", (
     await seedAuth(page);
   });
 
-  test("three back-to-back 409s de-duplicate the shared user message", async ({
-    page,
-  }) => {
+  test("three back-to-back 409s de-duplicate the shared user message", async ({ page }) => {
     const telemetry = await mockTelemetry(page);
     const conflict = await mockChatSyncRepeatedConflict(page, {
       conflictCount: 3,
@@ -32,10 +30,9 @@ test.describe("chat sync — repeated 409s + server timeout stay recoverable", (
     for (let i = 0; i < 3; i += 1) {
       await page.getByTestId("chat-input").fill(`echo ${i}`);
       await page.getByTestId("chat-send").click();
-      await expect(page.getByTestId("chat-assistant").last()).toContainText(
-        "Hello from LEO.",
-        { timeout: 10_000 },
-      );
+      await expect(page.getByTestId("chat-assistant").last()).toContainText("Hello from LEO.", {
+        timeout: 10_000,
+      });
       await expect(page.getByTestId("chat-send")).toBeVisible({ timeout: 5_000 });
     }
 
@@ -46,9 +43,8 @@ test.describe("chat sync — repeated 409s + server timeout stay recoverable", (
         () =>
           telemetry
             .getEventsOfKind("chat-merge-banner")
-            .filter(
-              (e) => (e as { merge_kind?: string }).merge_kind === "conflict-rollback",
-            ).length,
+            .filter((e) => (e as { merge_kind?: string }).merge_kind === "conflict-rollback")
+            .length,
         { timeout: 10_000 },
       )
       .toBeGreaterThanOrEqual(1);
@@ -63,9 +59,7 @@ test.describe("chat sync — repeated 409s + server timeout stay recoverable", (
     await expect(page.getByText(/remote-attempt-\d+/).first()).toBeVisible();
 
     // Rollback telemetry fired at least three times (one per conflict).
-    expect(
-      telemetry.getEventsOfKind("chat-optimistic-rollback").length,
-    ).toBeGreaterThanOrEqual(3);
+    expect(telemetry.getEventsOfKind("chat-optimistic-rollback").length).toBeGreaterThanOrEqual(3);
     expect(conflict.getPostCount()).toBeGreaterThanOrEqual(3);
   });
 
@@ -85,10 +79,9 @@ test.describe("chat sync — repeated 409s + server timeout stay recoverable", (
     await page.getByTestId("chat-send").click();
 
     // Assistant streamed reply completes (LLM call is independent of sync).
-    await expect(page.getByTestId("chat-assistant").last()).toContainText(
-      "Hello from LEO.",
-      { timeout: 10_000 },
-    );
+    await expect(page.getByTestId("chat-assistant").last()).toContainText("Hello from LEO.", {
+      timeout: 10_000,
+    });
 
     // The optimistic user bubble is still on screen and NOT duplicated
     // while the sync POST is still in flight.

@@ -1,12 +1,6 @@
 {
   "id": 49,
   "domain": "SYSTEM",
-  "signature": [
-    "audit",
-    "background",
-    "database",
-    "in",
-    "semantic"
-  ],
+  "signature": ["audit", "background", "database", "in", "semantic"],
   "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: audit."
 }

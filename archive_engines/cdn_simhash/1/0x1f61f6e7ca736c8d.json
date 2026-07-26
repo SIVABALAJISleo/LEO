@@ -1,16 +1,9 @@
 {
   "id": "SYSTEM_348",
-  "signature": [
-    "background",
-    "patch",
-    "registry"
-  ],
+  "signature": ["background", "patch", "registry"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'registry'. Action: patch.",
-  "tags": [
-    "system",
-    "registry"
-  ],
+  "tags": ["system", "registry"],
   "sh": "0x1f61f6e7ca736c8d"
 }

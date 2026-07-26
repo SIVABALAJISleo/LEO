@@ -1,17 +1,9 @@
 {
   "id": "CONTROL_342",
-  "signature": [
-    "activate",
-    "alpha",
-    "immediately",
-    "node"
-  ],
+  "signature": ["activate", "alpha", "immediately", "node"],
   "domain": "CONTROL",
   "context": null,
   "response": "Resolution: Accessing CONTROL for 'alpha node'. Action: activate.",
-  "tags": [
-    "control",
-    "node"
-  ],
+  "tags": ["control", "node"],
   "sh": "0x080608a900a741a1"
 }

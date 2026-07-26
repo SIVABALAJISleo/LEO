@@ -1,16 +1,9 @@
 {
   "id": "SYSTEM_485",
-  "signature": [
-    "identity",
-    "index",
-    "table"
-  ],
+  "signature": ["identity", "index", "table"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: index.",
-  "tags": [
-    "system",
-    "table"
-  ],
+  "tags": ["system", "table"],
   "sh": "0xe10f180c22a3eebb"
 }

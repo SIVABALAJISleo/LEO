@@ -8,11 +8,11 @@ This document outlines the strict hardware capabilities and instructions require
 
 Running a 744B parameter model locally is extremely resource-intensive. Do **NOT** attempt to run Colibrì/GLM-5.2 on underpowered development laptops.
 
-| Resource | Minimum | Recommended | Notes |
-| --- | --- | --- | --- |
-| **System RAM** | 25 GB free | 32 GB+ total | Margin required for resident attention, embeddings, and context window. |
-| **Disk Space** | 400 GB free | 900 GB+ (NVMe) | FP8/int4 model weights take hundreds of GB. Must be on fast storage (e.g. ext4 NVMe), never on slow network mounts. |
-| **CPU/GPU** | 8+ cores (AVX2 / AVX-VNNI) | Intel UHD iGPU / Discrete GPU | Core threads used for active weight additions. |
+| Resource       | Minimum                    | Recommended                   | Notes                                                                                                               |
+| -------------- | -------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| **System RAM** | 25 GB free                 | 32 GB+ total                  | Margin required for resident attention, embeddings, and context window.                                             |
+| **Disk Space** | 400 GB free                | 900 GB+ (NVMe)                | FP8/int4 model weights take hundreds of GB. Must be on fast storage (e.g. ext4 NVMe), never on slow network mounts. |
+| **CPU/GPU**    | 8+ cores (AVX2 / AVX-VNNI) | Intel UHD iGPU / Discrete GPU | Core threads used for active weight additions.                                                                      |
 
 ---
 
@@ -46,6 +46,7 @@ To set up and sanity test Colibrì:
 ## 3. Dynamic Router Logic & Fallbacks
 
 To ensure smooth runtime operations, the LEO AI Router:
+
 - **Capability Check:** Checks local system RAM and disk capacity on startup.
 - **Smart Gateway Routing:** Simple tasks route to lightweight local Ollama (`qwen2.5:1.5b` or `phi3:mini`), leaving heavier reasoning requests to Colibrì.
 - **Degradation Path:** If the hardware checklist fails or Colibrì's localhost gateway server (`http://localhost:8000`) is offline, LEO automatically routes all queries back to the lightweight Ollama instance, warning the user through UI alerts.

@@ -1,16 +1,9 @@
 {
   "id": "SYSTEM_428",
-  "signature": [
-    "forcefully",
-    "synchronize",
-    "version"
-  ],
+  "signature": ["forcefully", "synchronize", "version"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'version'. Action: synchronize.",
-  "tags": [
-    "system",
-    "version"
-  ],
+  "tags": ["system", "version"],
   "sh": "0x336236cc043c6b75"
 }

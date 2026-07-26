@@ -47,22 +47,25 @@ serve(async (req) => {
     if (req.method === "GET" && action === "health") {
       const results = await runHealthChecks(supabase);
       const overallStatus = determineOverallStatus(results);
-      
-      return new Response(JSON.stringify({
-        status: overallStatus,
-        timestamp: new Date().toISOString(),
-        checks: results,
-        automation_enabled: true,
-        version: "1.0.0"
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+
+      return new Response(
+        JSON.stringify({
+          status: overallStatus,
+          timestamp: new Date().toISOString(),
+          checks: results,
+          automation_enabled: true,
+          version: "1.0.0",
+        }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
     }
 
     // POST /system-automation/run - Run automation cycle
     if (req.method === "POST" && action === "run") {
       console.log("[Automation] Starting automation cycle...");
-      
+
       const healthResults = await runHealthChecks(supabase);
       const automationResults: AutomationResult[] = [];
 
@@ -92,48 +95,57 @@ serve(async (req) => {
 
       console.log("[Automation] Cycle completed:", automationResults);
 
-      return new Response(JSON.stringify({
-        success: true,
-        timestamp: new Date().toISOString(),
-        health: healthResults,
-        automation: automationResults
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({
+          success: true,
+          timestamp: new Date().toISOString(),
+          health: healthResults,
+          automation: automationResults,
+        }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
     }
 
     // POST /system-automation/self-heal - AI-powered self-healing
     if (req.method === "POST" && action === "self-heal") {
       console.log("[Self-Heal] Starting AI-powered self-healing...");
-      
+
       const healthResults = await runHealthChecks(supabase);
-      const unhealthyComponents = healthResults.filter(r => r.status !== "healthy");
-      
+      const unhealthyComponents = healthResults.filter((r) => r.status !== "healthy");
+
       if (unhealthyComponents.length === 0) {
-        return new Response(JSON.stringify({
-          success: true,
-          message: "All systems healthy, no healing required",
-          timestamp: new Date().toISOString()
-        }), {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+        return new Response(
+          JSON.stringify({
+            success: true,
+            message: "All systems healthy, no healing required",
+            timestamp: new Date().toISOString(),
+          }),
+          {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          },
+        );
       }
 
       // Use AI to analyze and suggest fixes
       const aiAnalysis = await analyzeWithAI(supabase, unhealthyComponents);
-      
+
       // Execute healing actions
       const healingResults = await executeHealingActions(supabase, aiAnalysis);
 
-      return new Response(JSON.stringify({
-        success: true,
-        timestamp: new Date().toISOString(),
-        unhealthy_components: unhealthyComponents,
-        ai_analysis: aiAnalysis,
-        healing_actions: healingResults
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({
+          success: true,
+          timestamp: new Date().toISOString(),
+          unhealthy_components: unhealthyComponents,
+          ai_analysis: aiAnalysis,
+          healing_actions: healingResults,
+        }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
     }
 
     // POST /system-automation/metrics - Generate metrics for a user
@@ -149,29 +161,34 @@ serve(async (req) => {
       }
 
       const metrics = await generateUserMetrics(supabase, userId);
-      
-      return new Response(JSON.stringify({
-        success: true,
-        metrics
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          metrics,
+        }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
     }
 
     return new Response(JSON.stringify({ error: "Not found" }), {
       status: 404,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
-
   } catch (error) {
     console.error("[Automation] Error:", error);
     // Return generic error to client, log details server-side only
-    return new Response(JSON.stringify({
-      error: "An internal error occurred"
-    }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({
+        error: "An internal error occurred",
+      }),
+      {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      },
+    );
   }
 });
 
@@ -188,14 +205,14 @@ async function runHealthChecks(supabase: any): Promise<HealthCheckResult[]> {
       component: "database",
       status: error ? "unhealthy" : "healthy",
       message: error ? error.message : "Database responding normally",
-      latency_ms: Date.now() - dbStart
+      latency_ms: Date.now() - dbStart,
     });
   } catch (e) {
     results.push({
       component: "database",
       status: "unhealthy",
       message: e instanceof Error ? e.message : "Database connection failed",
-      latency_ms: Date.now() - dbStart
+      latency_ms: Date.now() - dbStart,
     });
   }
 
@@ -212,21 +229,21 @@ async function runHealthChecks(supabase: any): Promise<HealthCheckResult[]> {
       : 0;
 
     const status = oldestJobAge > 3600000 ? "degraded" : "healthy"; // 1 hour threshold
-    
+
     results.push({
       component: "job_queue",
       status: error ? "unhealthy" : status,
       message: error ? error.message : `${queuedJobs?.length || 0} jobs in queue`,
       details: {
         queue_length: queuedJobs?.length || 0,
-        oldest_job_age_ms: oldestJobAge
-      }
+        oldest_job_age_ms: oldestJobAge,
+      },
     });
   } catch (e) {
     results.push({
       component: "job_queue",
       status: "unhealthy",
-      message: e instanceof Error ? e.message : "Failed to check job queue"
+      message: e instanceof Error ? e.message : "Failed to check job queue",
     });
   }
 
@@ -239,10 +256,11 @@ async function runHealthChecks(supabase: any): Promise<HealthCheckResult[]> {
       .eq("status", "running");
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const stuckJobs = runningJobs?.filter((job: any) => {
-      const runTime = Date.now() - new Date(job.started_at).getTime();
-      return runTime > 3600000 && (job.progress || 0) < 50; // Running > 1hr with < 50% progress
-    }) || [];
+    const stuckJobs =
+      runningJobs?.filter((job: any) => {
+        const runTime = Date.now() - new Date(job.started_at).getTime();
+        return runTime > 3600000 && (job.progress || 0) < 50; // Running > 1hr with < 50% progress
+      }) || [];
 
     results.push({
       component: "running_jobs",
@@ -250,14 +268,14 @@ async function runHealthChecks(supabase: any): Promise<HealthCheckResult[]> {
       message: `${runningJobs?.length || 0} running, ${stuckJobs.length} potentially stuck`,
       details: {
         running_count: runningJobs?.length || 0,
-        stuck_count: stuckJobs.length
-      }
+        stuck_count: stuckJobs.length,
+      },
     });
   } catch (e) {
     results.push({
       component: "running_jobs",
       status: "unhealthy",
-      message: e instanceof Error ? e.message : "Failed to check running jobs"
+      message: e instanceof Error ? e.message : "Failed to check running jobs",
     });
   }
 
@@ -271,20 +289,20 @@ async function runHealthChecks(supabase: any): Promise<HealthCheckResult[]> {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const uniqueAgents = new Set(recentHeartbeats?.map((h: any) => h.worker_id) || []);
-    
+
     results.push({
       component: "agents",
       status: error ? "unhealthy" : uniqueAgents.size > 0 ? "healthy" : "degraded",
       message: error ? error.message : `${uniqueAgents.size} active agents`,
       details: {
-        active_agents: uniqueAgents.size
-      }
+        active_agents: uniqueAgents.size,
+      },
     });
   } catch (e) {
     results.push({
       component: "agents",
       status: "unhealthy",
-      message: e instanceof Error ? e.message : "Failed to check agents"
+      message: e instanceof Error ? e.message : "Failed to check agents",
     });
   }
 
@@ -298,30 +316,32 @@ async function runHealthChecks(supabase: any): Promise<HealthCheckResult[]> {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const criticalAlerts = unresolvedAlerts?.filter((a: any) => a.severity === "critical") || [];
-    
+
     results.push({
       component: "alerts",
       status: criticalAlerts.length > 0 ? "degraded" : "healthy",
       message: `${unresolvedAlerts?.length || 0} unresolved, ${criticalAlerts.length} critical`,
       details: {
         unresolved_count: unresolvedAlerts?.length || 0,
-        critical_count: criticalAlerts.length
-      }
+        critical_count: criticalAlerts.length,
+      },
     });
   } catch (e) {
     results.push({
       component: "alerts",
       status: "unhealthy",
-      message: e instanceof Error ? e.message : "Failed to check alerts"
+      message: e instanceof Error ? e.message : "Failed to check alerts",
     });
   }
 
   return results;
 }
 
-function determineOverallStatus(results: HealthCheckResult[]): "healthy" | "degraded" | "unhealthy" {
-  if (results.some(r => r.status === "unhealthy")) return "unhealthy";
-  if (results.some(r => r.status === "degraded")) return "degraded";
+function determineOverallStatus(
+  results: HealthCheckResult[],
+): "healthy" | "degraded" | "unhealthy" {
+  if (results.some((r) => r.status === "unhealthy")) return "unhealthy";
+  if (results.some((r) => r.status === "degraded")) return "degraded";
   return "healthy";
 }
 
@@ -330,7 +350,7 @@ function determineOverallStatus(results: HealthCheckResult[]): "healthy" | "degr
 async function recoverStuckJobs(supabase: any): Promise<AutomationResult> {
   try {
     const oneHourAgo = new Date(Date.now() - 3600000).toISOString();
-    
+
     const { data: stuckJobs, error } = await supabase
       .from("gpu_jobs")
       .select("*")
@@ -344,18 +364,24 @@ async function recoverStuckJobs(supabase: any): Promise<AutomationResult> {
       // Check if job has checkpoint
       if (job.checkpoint_data) {
         // Re-queue with checkpoint
-        await supabase.from("gpu_jobs").update({
-          status: "queued",
-          worker_id: null,
-          error_message: "Auto-recovered from stuck state"
-        }).eq("id", job.id);
+        await supabase
+          .from("gpu_jobs")
+          .update({
+            status: "queued",
+            worker_id: null,
+            error_message: "Auto-recovered from stuck state",
+          })
+          .eq("id", job.id);
       } else {
         // Mark as failed
-        await supabase.from("gpu_jobs").update({
-          status: "failed",
-          error_message: "Job timed out without checkpoint",
-          completed_at: new Date().toISOString()
-        }).eq("id", job.id);
+        await supabase
+          .from("gpu_jobs")
+          .update({
+            status: "failed",
+            error_message: "Job timed out without checkpoint",
+            completed_at: new Date().toISOString(),
+          })
+          .eq("id", job.id);
       }
       recovered++;
 
@@ -363,7 +389,7 @@ async function recoverStuckJobs(supabase: any): Promise<AutomationResult> {
       await supabase.from("job_logs").insert({
         job_id: job.id,
         level: "warn",
-        message: `Job auto-recovered from stuck state after ${Math.round((Date.now() - new Date(job.started_at).getTime()) / 60000)} minutes`
+        message: `Job auto-recovered from stuck state after ${Math.round((Date.now() - new Date(job.started_at).getTime()) / 60000)} minutes`,
       });
     }
 
@@ -371,13 +397,13 @@ async function recoverStuckJobs(supabase: any): Promise<AutomationResult> {
       action: "recover_stuck_jobs",
       success: true,
       message: `Recovered ${recovered} stuck jobs`,
-      details: { recovered_count: recovered }
+      details: { recovered_count: recovered },
     };
   } catch (e) {
     return {
       action: "recover_stuck_jobs",
       success: false,
-      message: e instanceof Error ? e.message : "Failed to recover stuck jobs"
+      message: e instanceof Error ? e.message : "Failed to recover stuck jobs",
     };
   }
 }
@@ -387,9 +413,7 @@ async function recoverStuckJobs(supabase: any): Promise<AutomationResult> {
 async function cleanOrphanedQueueItems(supabase: any): Promise<AutomationResult> {
   try {
     // Find queue items for jobs that don't exist or are not queued
-    const { data: queueItems, error } = await supabase
-      .from("job_queue")
-      .select(`
+    const { data: queueItems, error } = await supabase.from("job_queue").select(`
         id,
         job_id,
         job:gpu_jobs(status)
@@ -398,9 +422,10 @@ async function cleanOrphanedQueueItems(supabase: any): Promise<AutomationResult>
     if (error) throw error;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const orphaned = queueItems?.filter((item: any) => 
-      !item.job || !["queued", "pending"].includes(item.job.status)
-    ) || [];
+    const orphaned =
+      queueItems?.filter(
+        (item: any) => !item.job || !["queued", "pending"].includes(item.job.status),
+      ) || [];
 
     for (const item of orphaned) {
       await supabase.from("job_queue").delete().eq("id", item.id);
@@ -410,13 +435,13 @@ async function cleanOrphanedQueueItems(supabase: any): Promise<AutomationResult>
       action: "clean_orphaned_queue",
       success: true,
       message: `Cleaned ${orphaned.length} orphaned queue items`,
-      details: { cleaned_count: orphaned.length }
+      details: { cleaned_count: orphaned.length },
     };
   } catch (e) {
     return {
       action: "clean_orphaned_queue",
       success: false,
-      message: e instanceof Error ? e.message : "Failed to clean orphaned queue items"
+      message: e instanceof Error ? e.message : "Failed to clean orphaned queue items",
     };
   }
 }
@@ -447,13 +472,13 @@ async function generateSystemMetrics(supabase: any): Promise<AutomationResult> {
       action: "generate_metrics",
       success: true,
       message: `Generated metrics for ${generated} active users`,
-      details: { users_processed: generated }
+      details: { users_processed: generated },
     };
   } catch (e) {
     return {
       action: "generate_metrics",
       success: false,
-      message: e instanceof Error ? e.message : "Failed to generate metrics"
+      message: e instanceof Error ? e.message : "Failed to generate metrics",
     };
   }
 }
@@ -463,7 +488,7 @@ async function generateSystemMetrics(supabase: any): Promise<AutomationResult> {
 async function generateUserMetrics(supabase: any, userId: string) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const now = new Date();
-  
+
   // Get job stats
   const { data: jobs } = await supabase
     .from("gpu_jobs")
@@ -473,13 +498,14 @@ async function generateUserMetrics(supabase: any, userId: string) {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const completedJobs = jobs?.filter((j: any) => j.status === "completed") || [];
-  const avgLatency = completedJobs.length > 0
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ? completedJobs.reduce((sum: number, j: any) => {
-        const latency = new Date(j.completed_at).getTime() - new Date(j.started_at).getTime();
-        return sum + latency;
-      }, 0) / completedJobs.length
-    : 0;
+  const avgLatency =
+    completedJobs.length > 0
+      ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        completedJobs.reduce((sum: number, j: any) => {
+          const latency = new Date(j.completed_at).getTime() - new Date(j.started_at).getTime();
+          return sum + latency;
+        }, 0) / completedJobs.length
+      : 0;
 
   // Get enabled modules
   const { data: modules } = await supabase
@@ -492,10 +518,10 @@ async function generateUserMetrics(supabase: any, userId: string) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const activeJobs = jobs?.filter((j: any) => j.status === "running").length || 0;
   const baseGpuUtil = 15 + Math.random() * 10;
-  const gpuUtilization = Math.min(95, baseGpuUtil + (activeJobs * 20));
-  const memoryUsage = Math.min(90, 30 + (activeJobs * 15) + Math.random() * 10);
-  const cpuPercent = Math.min(80, 20 + (activeJobs * 10) + Math.random() * 5);
-  const temperature = Math.min(85, 45 + (gpuUtilization * 0.4));
+  const gpuUtilization = Math.min(95, baseGpuUtil + activeJobs * 20);
+  const memoryUsage = Math.min(90, 30 + activeJobs * 15 + Math.random() * 10);
+  const cpuPercent = Math.min(80, 20 + activeJobs * 10 + Math.random() * 5);
+  const temperature = Math.min(85, 45 + gpuUtilization * 0.4);
 
   // Insert system metrics
   await supabase.from("system_metrics").insert({
@@ -505,11 +531,11 @@ async function generateUserMetrics(supabase: any, userId: string) {
     cpu_percent: Math.round(cpuPercent),
     disk_gb: Math.round(100 + Math.random() * 50),
     temperature: Math.round(temperature),
-    power_draw: Math.round(150 + (gpuUtilization * 2)),
+    power_draw: Math.round(150 + gpuUtilization * 2),
     throughput: Math.round(1000 + Math.random() * 500),
     active_jobs: activeJobs,
     total_requests: jobs?.length || 0,
-    status: gpuUtilization > 90 ? "high_load" : "normal"
+    status: gpuUtilization > 90 ? "high_load" : "normal",
   });
 
   // Insert performance metrics
@@ -528,8 +554,8 @@ async function generateUserMetrics(supabase: any, userId: string) {
       module_name: moduleName,
       metadata: {
         speedup: 1.5 + Math.random() * 2,
-        compression: 1.2 + Math.random() * 0.8
-      }
+        compression: 1.2 + Math.random() * 0.8,
+      },
     });
   }
 
@@ -538,7 +564,7 @@ async function generateUserMetrics(supabase: any, userId: string) {
     gpu_utilization: gpuUtilization,
     memory_usage: memoryUsage,
     active_jobs: activeJobs,
-    modules_enabled: enabledModuleNames.length
+    modules_enabled: enabledModuleNames.length,
   };
 }
 
@@ -547,13 +573,13 @@ async function generateUserMetrics(supabase: any, userId: string) {
 async function autoResolveAlerts(supabase: any): Promise<AutomationResult> {
   try {
     const oneDayAgo = new Date(Date.now() - 24 * 3600000).toISOString();
-    
+
     // Auto-resolve info alerts older than 24 hours
     const { data: oldAlerts, error } = await supabase
       .from("alerts")
-      .update({ 
-        resolved: true, 
-        resolved_at: new Date().toISOString() 
+      .update({
+        resolved: true,
+        resolved_at: new Date().toISOString(),
       })
       .eq("resolved", false)
       .eq("severity", "info")
@@ -566,13 +592,13 @@ async function autoResolveAlerts(supabase: any): Promise<AutomationResult> {
       action: "auto_resolve_alerts",
       success: true,
       message: `Auto-resolved ${oldAlerts?.length || 0} old info alerts`,
-      details: { resolved_count: oldAlerts?.length || 0 }
+      details: { resolved_count: oldAlerts?.length || 0 },
     };
   } catch (e) {
     return {
       action: "auto_resolve_alerts",
       success: false,
-      message: e instanceof Error ? e.message : "Failed to auto-resolve alerts"
+      message: e instanceof Error ? e.message : "Failed to auto-resolve alerts",
     };
   }
 }
@@ -598,29 +624,35 @@ async function processQueuedJobs(supabase: any): Promise<AutomationResult> {
       if (job.job_tier === "light") {
         // Process light jobs immediately
         const result = await processLightJob(job);
-        
-        await supabase.from("gpu_jobs").update({
-          status: "completed",
-          progress: 100,
-          result_data: result,
-          started_at: new Date().toISOString(),
-          completed_at: new Date().toISOString()
-        }).eq("id", job.id);
+
+        await supabase
+          .from("gpu_jobs")
+          .update({
+            status: "completed",
+            progress: 100,
+            result_data: result,
+            started_at: new Date().toISOString(),
+            completed_at: new Date().toISOString(),
+          })
+          .eq("id", job.id);
 
         await supabase.from("job_logs").insert({
           job_id: job.id,
           level: "info",
-          message: "Light job processed by automation system"
+          message: "Light job processed by automation system",
         });
 
         processed++;
       } else if (job.job_tier === "medium") {
         // Simulate medium job processing
-        await supabase.from("gpu_jobs").update({
-          status: "running",
-          progress: Math.floor(Math.random() * 50) + 25,
-          started_at: job.started_at || new Date().toISOString()
-        }).eq("id", job.id);
+        await supabase
+          .from("gpu_jobs")
+          .update({
+            status: "running",
+            progress: Math.floor(Math.random() * 50) + 25,
+            started_at: job.started_at || new Date().toISOString(),
+          })
+          .eq("id", job.id);
       }
       // Heavy jobs are left for real GPU agents
     }
@@ -629,16 +661,16 @@ async function processQueuedJobs(supabase: any): Promise<AutomationResult> {
       action: "process_jobs",
       success: true,
       message: `Processed ${processed} light jobs, updated ${(queuedJobs?.length || 0) - processed} medium jobs`,
-      details: { 
+      details: {
         processed_count: processed,
-        updated_count: (queuedJobs?.length || 0) - processed
-      }
+        updated_count: (queuedJobs?.length || 0) - processed,
+      },
     };
   } catch (e) {
     return {
       action: "process_jobs",
       success: false,
-      message: e instanceof Error ? e.message : "Failed to process jobs"
+      message: e instanceof Error ? e.message : "Failed to process jobs",
     };
   }
 }
@@ -647,7 +679,7 @@ async function processQueuedJobs(supabase: any): Promise<AutomationResult> {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function processLightJob(job: any) {
   const payload = job.payload || {};
-  
+
   switch (job.job_type) {
     case "text_analysis":
       // eslint-disable-next-line no-case-declarations
@@ -656,25 +688,25 @@ async function processLightJob(job: any) {
         word_count: text.split(/\s+/).filter(Boolean).length,
         char_count: text.length,
         sentence_count: text.split(/[.!?]+/).filter(Boolean).length,
-        processed_at: new Date().toISOString()
+        processed_at: new Date().toISOString(),
       };
     case "metadata_extraction":
       return {
         keys: Object.keys(payload),
         types: Object.fromEntries(Object.entries(payload).map(([k, v]) => [k, typeof v])),
-        processed_at: new Date().toISOString()
+        processed_at: new Date().toISOString(),
       };
     case "validation":
       return {
         is_valid: true,
         validation_passed: true,
-        processed_at: new Date().toISOString()
+        processed_at: new Date().toISOString(),
       };
     default:
       return {
         status: "processed",
         job_type: job.job_type,
-        processed_at: new Date().toISOString()
+        processed_at: new Date().toISOString(),
       };
   }
 }
@@ -684,7 +716,7 @@ async function processLightJob(job: any) {
 async function cleanupOldData(supabase: any): Promise<AutomationResult> {
   try {
     const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 3600000).toISOString();
-    
+
     // Clean old heartbeats
     const { data: deletedHeartbeats } = await supabase
       .from("agent_heartbeats")
@@ -701,11 +733,7 @@ async function cleanupOldData(supabase: any): Promise<AutomationResult> {
 
     let deletedLogs = 0;
     for (const job of oldJobs || []) {
-      const { data } = await supabase
-        .from("job_logs")
-        .delete()
-        .eq("job_id", job.id)
-        .select("id");
+      const { data } = await supabase.from("job_logs").delete().eq("job_id", job.id).select("id");
       deletedLogs += data?.length || 0;
     }
 
@@ -715,14 +743,14 @@ async function cleanupOldData(supabase: any): Promise<AutomationResult> {
       message: `Cleaned ${deletedHeartbeats?.length || 0} heartbeats, ${deletedLogs} logs`,
       details: {
         deleted_heartbeats: deletedHeartbeats?.length || 0,
-        deleted_logs: deletedLogs
-      }
+        deleted_logs: deletedLogs,
+      },
     };
   } catch (e) {
     return {
       action: "cleanup_old_data",
       success: false,
-      message: e instanceof Error ? e.message : "Failed to cleanup old data"
+      message: e instanceof Error ? e.message : "Failed to cleanup old data",
     };
   }
 }
@@ -731,14 +759,14 @@ async function cleanupOldData(supabase: any): Promise<AutomationResult> {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function analyzeWithAI(supabase: any, unhealthyComponents: HealthCheckResult[]) {
   const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-  
+
   if (!LOVABLE_API_KEY) {
     return {
       analysis: "AI analysis unavailable - API key not configured",
-      suggestions: unhealthyComponents.map(c => ({
+      suggestions: unhealthyComponents.map((c) => ({
         component: c.component,
-        action: "Manual investigation required"
-      }))
+        action: "Manual investigation required",
+      })),
     };
   }
 
@@ -757,17 +785,21 @@ Respond in JSON format with an array of suggestions.`;
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json"
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         model: "google/gemini-2.5-flash",
         messages: [
-          { role: "system", content: "You are a DevOps expert analyzing system health issues. Provide concise, actionable suggestions in JSON format." },
-          { role: "user", content: prompt }
+          {
+            role: "system",
+            content:
+              "You are a DevOps expert analyzing system health issues. Provide concise, actionable suggestions in JSON format.",
+          },
+          { role: "user", content: prompt },
         ],
-        max_tokens: 1000
-      })
+        max_tokens: 1000,
+      }),
     });
 
     if (!response.ok) {
@@ -776,14 +808,14 @@ Respond in JSON format with an array of suggestions.`;
 
     const data = await response.json();
     const content = data.choices?.[0]?.message?.content || "";
-    
+
     // Try to parse JSON from response
     try {
       const jsonMatch = content.match(/\[[\s\S]*\]/);
       if (jsonMatch) {
         return {
           analysis: "AI analysis completed",
-          suggestions: JSON.parse(jsonMatch[0])
+          suggestions: JSON.parse(jsonMatch[0]),
         };
       }
     } catch {
@@ -792,20 +824,20 @@ Respond in JSON format with an array of suggestions.`;
 
     return {
       analysis: content,
-      suggestions: unhealthyComponents.map(c => ({
+      suggestions: unhealthyComponents.map((c) => ({
         component: c.component,
-        action: "Check component status and logs"
-      }))
+        action: "Check component status and logs",
+      })),
     };
   } catch (e) {
     console.error("[AI Analysis] Error:", e);
     return {
       analysis: "AI analysis failed",
       error: e instanceof Error ? e.message : "Unknown error",
-      suggestions: unhealthyComponents.map(c => ({
+      suggestions: unhealthyComponents.map((c) => ({
         component: c.component,
-        action: "Manual investigation required"
-      }))
+        action: "Manual investigation required",
+      })),
     };
   }
 }
@@ -818,18 +850,18 @@ async function executeHealingActions(supabase: any, aiAnalysis: any): Promise<Au
   // Execute standard healing actions
   results.push(await recoverStuckJobs(supabase));
   results.push(await cleanOrphanedQueueItems(supabase));
-  
+
   // Create healing alert
   await supabase.from("alerts").insert({
     user_id: null, // System-wide alert
     title: "Self-Healing Executed",
-    message: `AI-powered self-healing completed. ${results.filter(r => r.success).length} actions successful.`,
+    message: `AI-powered self-healing completed. ${results.filter((r) => r.success).length} actions successful.`,
     severity: "info",
     alert_type: "automation",
     metadata: {
       ai_analysis: aiAnalysis,
-      actions: results
-    }
+      actions: results,
+    },
   });
 
   return results;

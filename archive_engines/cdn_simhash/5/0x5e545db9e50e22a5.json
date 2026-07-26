@@ -1,17 +1,9 @@
 {
   "id": "INFO_067",
-  "signature": [
-    "beta",
-    "detailed",
-    "node",
-    "show"
-  ],
+  "signature": ["beta", "detailed", "node", "show"],
   "domain": "INFO",
   "context": null,
   "response": "Resolution: Accessing INFO for 'node beta'. Action: show.",
-  "tags": [
-    "info",
-    "beta"
-  ],
+  "tags": ["info", "beta"],
   "sh": "0x5e545db9e50e22a5"
 }

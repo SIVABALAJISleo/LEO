@@ -25,9 +25,9 @@ test.describe("chat history — export-to-CSV across every cursor page", () => {
     const mod = process.platform === "darwin" ? "Meta" : "Control";
     // Open history so the first page is guaranteed to be loaded before we export.
     await page.keyboard.press(`${mod}+K`);
-    await expect(
-      page.getByLabel("Chat history").getByText("P1 session 0"),
-    ).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByLabel("Chat history").getByText("P1 session 0")).toBeVisible({
+      timeout: 10_000,
+    });
 
     const downloadPromise = page.waitForEvent("download");
     await page.getByTestId("chat-export-csv").click();

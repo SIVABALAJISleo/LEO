@@ -1,51 +1,64 @@
-# HYPER: Distributed Compute Protocol 
-### *End-to-End Project Documentation*
+# HYPER: Distributed Compute Protocol
+
+### _End-to-End Project Documentation_
 
 ---
 
 ## 1. Executive Summary
+
 **HYPER** is a next-generation distributed computing platform designed to "neutralize" the need for expensive local hardware. It allows users to offload heavy computational tasks (AI Training, 4K Rendering, Scientific Simulations) to a decentralized network of "Workers".
-*   **Vision**: "Zero Hardware Required" — run high-end modules on a basic laptop.
-*   **Status**: Production-Ready / High-Fidelity Prototype.
-*   **Core Promise**: Honest metrics, transparent execution, and seamless fallbacks.
+
+- **Vision**: "Zero Hardware Required" — run high-end modules on a basic laptop.
+- **Status**: Production-Ready / High-Fidelity Prototype.
+- **Core Promise**: Honest metrics, transparent execution, and seamless fallbacks.
 
 ---
 
 ## 2. System Architecture
 
 ### **A. tech Stack**
+
 Your project is built on a modern, scalable MNC-grade stack:
-*   **Frontend**: React v18 + TypeScript (Strict Mode) + Vite.
-*   **UI System**: Tailwind CSS + Shadcn UI (Premium "Glassmorphism" Design).
-*   **Backend**: Supabase (PostgreSQL) + Edge Functions (Serverless).
-*   **Testing**: Vitest (Unit) + React Testing Library.
-*   **CI/CD**: GitHub Actions (Automated Testing & Building).
+
+- **Frontend**: React v18 + TypeScript (Strict Mode) + Vite.
+- **UI System**: Tailwind CSS + Shadcn UI (Premium "Glassmorphism" Design).
+- **Backend**: Supabase (PostgreSQL) + Edge Functions (Serverless).
+- **Testing**: Vitest (Unit) + React Testing Library.
+- **CI/CD**: GitHub Actions (Automated Testing & Building).
 
 ### **B. The "Hybrid" Engine**
+
 HYPER uses a unique dual-mode engine to ensure reliability:
-1.  **Real Agent Mode**: If the `HyperAgent` (C++ binary) is installed on the user's machine, the dashboard connects to it to display *real* GPU metrics (Temp, Fan Speed, VRAM).
-2.  **Simulation Mode (The "Gap Filler")**: 
-    *   *If no agent is found* (e.g., during web demos), the system transparently switches to the **LocalAgentSimulation** module.
-    *   It generates *honest* simulated data (e.g., "Virtual H100 GPU") so the user can still explore the features without crashing.
+
+1.  **Real Agent Mode**: If the `HyperAgent` (C++ binary) is installed on the user's machine, the dashboard connects to it to display _real_ GPU metrics (Temp, Fan Speed, VRAM).
+2.  **Simulation Mode (The "Gap Filler")**:
+    - _If no agent is found_ (e.g., during web demos), the system transparently switches to the **LocalAgentSimulation** module.
+    - It generates _honest_ simulated data (e.g., "Virtual H100 GPU") so the user can still explore the features without crashing.
 
 ---
 
 ## 3. Installation & Setup Guide
+
 **⚠️ CRITICAL NOTE**: Your project is nested deep inside folders. You must navigate correctly to run it.
 
 ### **Step 1: Navigate to the Code**
+
 Open your terminal (PowerShell/Command Prompt) and run:
 `cd "c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\remix-of-remix-of-remix-of-nvidia-inspired-design-main"`
-*(If you run commands in `...\Documents\HYPER`, they will fail because `package.json` is in the subfolder above).*
+_(If you run commands in `...\Documents\HYPER`, they will fail because `package.json` is in the subfolder above)._
 
 ### **Step 2: Install Dependencies**
+
 `npm install`
 
 ### **Step 3: Run the Development Server**
+
 `npm run dev`
-*   Access the app at: `http://localhost:8080`
+
+- Access the app at: `http://localhost:8080`
 
 ### **Step 4: Run Tests (MNC Standard)**
+
 To verify the system integrity:
 `npm test`
 
@@ -54,24 +67,28 @@ To verify the system integrity:
 ## 4. Feature Manual
 
 ### **1. The Dashboard**
-*   **Universal Pipeline**: Visualizes the flow of data from "Input" to "Hyper-Compute" to "Output".
-*   **GPU Savings Score**: Calculates how much money you save by using HYPER instead of buying an RTX 4090.
-*   **Reality Audit**: A transparency log showing exactly *where* your job is running (Local vs Cloud).
+
+- **Universal Pipeline**: Visualizes the flow of data from "Input" to "Hyper-Compute" to "Output".
+- **GPU Savings Score**: Calculates how much money you save by using HYPER instead of buying an RTX 4090.
+- **Reality Audit**: A transparency log showing exactly _where_ your job is running (Local vs Cloud).
 
 ### **2. Admin System (Secret)**
-*   **Route**: `/hyper-admin-987654321-secret`
-*   **Capabilities**: Monitor global job queues, view active worker nodes, and analyze tier distribution (Light/Medium/Heavy jobs).
+
+- **Route**: `/hyper-admin-987654321-secret`
+- **Capabilities**: Monitor global job queues, view active worker nodes, and analyze tier distribution (Light/Medium/Heavy jobs).
 
 ### **3. Billing Engine**
-*   **Route**: `/billing/manage`
-*   **Features**: 
-    *   Real-time cost calculation (Tokens/Hours).
-    *   Enterprise Quote Request system.
-    *   Subscription Tier management (Free/Pro/Heavy).
+
+- **Route**: `/billing/manage`
+- **Features**:
+  - Real-time cost calculation (Tokens/Hours).
+  - Enterprise Quote Request system.
+  - Subscription Tier management (Free/Pro/Heavy).
 
 ---
 
 ## 5. Developer Quality Report
+
 This project adheres to **MNC (Multi-National Corporation)** coding standards:
 
 1.  **Strict Type Safety**: `tsconfig.json` is set to `strict: true`. No `any` types are allowed in critical business logic (`SecretAdminPage`, `useBillingData`).
@@ -80,4 +97,4 @@ This project adheres to **MNC (Multi-National Corporation)** coding standards:
 
 ---
 
-*Generated by Antigravity Agents for User sivab*
+_Generated by Antigravity Agents for User sivab_

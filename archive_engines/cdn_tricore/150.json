@@ -1,11 +1,6 @@
 {
   "id": 150,
   "domain": "CONTROL",
-  "signature": [
-    "cooling",
-    "immediately",
-    "shutdown",
-    "system"
-  ],
+  "signature": ["cooling", "immediately", "shutdown", "system"],
   "response": "Resolution: Accessing CONTROL for 'cooling system'. Action: shutdown."
 }

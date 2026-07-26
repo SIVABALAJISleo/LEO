@@ -6,13 +6,13 @@ This report outlines the boundaries of local CPU-first intelligence models on ge
 
 ## 1. Hardware Capability Comparison
 
-| Parameter | Intel Core i5-12450H (Laptop CPU) | NVIDIA RTX 4090 (Discrete GPU) | NVIDIA H100 (Server GPU) |
-| :--- | :--- | :--- | :--- |
-| **Compute Units** | 4 Performance cores / 4 Efficient cores | 16384 CUDA Cores / 512 Tensor Cores | 16896 CUDA Cores / 528 Tensor Cores |
-| **Memory Bandwidth** | ~50 - 75 GB/sec (DDR5 Dual Channel) | ~1,008 GB/sec (GDDR6X) | ~3,350 GB/sec (HBM3) |
-| **VRAM Capacity** | Shared System RAM (16 GB total) | 24 GB GDDR6X | 80 GB HBM3 |
-| **Supported Precision** | AVX2 (FP32/FP16), AMX (INT8) | FP32, FP16, BF16, INT8, FP8 | FP64, TF32, FP16, BF16, INT8, FP8 |
-| **Power Profile** | 45W - 95W (Full SoC Package) | 450W | 700W |
+| Parameter               | Intel Core i5-12450H (Laptop CPU)       | NVIDIA RTX 4090 (Discrete GPU)      | NVIDIA H100 (Server GPU)            |
+| :---------------------- | :-------------------------------------- | :---------------------------------- | :---------------------------------- |
+| **Compute Units**       | 4 Performance cores / 4 Efficient cores | 16384 CUDA Cores / 512 Tensor Cores | 16896 CUDA Cores / 528 Tensor Cores |
+| **Memory Bandwidth**    | ~50 - 75 GB/sec (DDR5 Dual Channel)     | ~1,008 GB/sec (GDDR6X)              | ~3,350 GB/sec (HBM3)                |
+| **VRAM Capacity**       | Shared System RAM (16 GB total)         | 24 GB GDDR6X                        | 80 GB HBM3                          |
+| **Supported Precision** | AVX2 (FP32/FP16), AMX (INT8)            | FP32, FP16, BF16, INT8, FP8         | FP64, TF32, FP16, BF16, INT8, FP8   |
+| **Power Profile**       | 45W - 95W (Full SoC Package)            | 450W                                | 700W                                |
 
 > [!CAUTION]
 > **Bandwidth Constraints**: Large Language Models are highly memory-bandwidth bound during token generation. The i5-12450H CPU is physically limited by the DDR5 memory bus (~50 GB/s), which is roughly 20x slower than the consumer RTX 4090 GDDR6X bus. No software JIT compiles can physically bridge this hardware channel bottleneck.
@@ -36,6 +36,7 @@ We evaluate local model efficiency using the following weighted formula:
 $$\text{LEO Score} = w_1 \cdot \text{Quality} + w_2 \cdot \text{Latency} + w_3 \cdot \text{Cost} + w_4 \cdot \text{Memory} + w_5 \cdot \text{Energy}$$
 
 Where:
+
 - $w_1 = 0.3$ (Answer Correctness / Groundedness)
 - $w_2 = 0.2$ (p50 / p95 Latency)
 - $w_3 = 0.2$ (Hardware Cost / Cloud API Expense)

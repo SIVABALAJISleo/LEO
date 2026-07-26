@@ -28,13 +28,10 @@ serve(async (req: Request) => {
   }
 
   if (req.method !== "GET") {
-    return new Response(
-      JSON.stringify({ error: "Method not allowed" }),
-      {
-        status: 405,
-        headers: { ...corsHeaders, "Content-Type": "application/json" }
-      }
-    );
+    return new Response(JSON.stringify({ error: "Method not allowed" }), {
+      status: 405,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 
   const response: HealthResponse = {
@@ -62,10 +59,7 @@ serve(async (req: Request) => {
       const supabase = createClient(supabaseUrl, supabaseKey);
 
       // Simple query to check database
-      const { error } = await supabase
-        .from("profiles")
-        .select("count")
-        .limit(1);
+      const { error } = await supabase.from("profiles").select("count").limit(1);
 
       if (error) {
         response.checks.database = "error";
@@ -86,24 +80,18 @@ serve(async (req: Request) => {
       response.status = "down";
     }
 
-    return new Response(
-      JSON.stringify(response),
-      {
-        status: response.status === "ok" ? 200 : response.status === "degraded" ? 200 : 503,
-        headers: { ...corsHeaders, "Content-Type": "application/json" }
-      }
-    );
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    return new Response(JSON.stringify(response), {
+      status: response.status === "ok" ? 200 : response.status === "degraded" ? 200 : 503,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     response.status = "down";
     response.checks.database = "error";
 
-    return new Response(
-      JSON.stringify(response),
-      {
-        status: 503,
-        headers: { ...corsHeaders, "Content-Type": "application/json" }
-      }
-    );
+    return new Response(JSON.stringify(response), {
+      status: 503,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });

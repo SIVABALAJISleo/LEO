@@ -155,7 +155,6 @@ export async function leoFetch(path: string, init: RequestInit = {}): Promise<Re
   const url = `${getApiBase()}${path}`;
   const startedAt = performance.now();
   if (debug !== "off") {
-    // eslint-disable-next-line no-console
     console.groupCollapsed(`%c[LEO] → ${init.method ?? "GET"} ${path}`, "color:#76B900");
     console.log("url:", url);
     console.log("headers:", redactHeaders(headers));
@@ -175,7 +174,7 @@ export async function leoFetch(path: string, init: RequestInit = {}): Promise<Re
 
   if (debug !== "off") {
     const ms = Math.round(performance.now() - startedAt);
-    // eslint-disable-next-line no-console
+
     console.groupCollapsed(
       `%c[LEO] ← ${res.status} ${init.method ?? "GET"} ${path} (${ms}ms)`,
       res.ok ? "color:#76B900" : "color:#ef4444",

@@ -1,19 +1,9 @@
 {
   "id": "CONTROL_313",
-  "signature": [
-    "cooling",
-    "high",
-    "priority",
-    "restart",
-    "system",
-    "with"
-  ],
+  "signature": ["cooling", "high", "priority", "restart", "system", "with"],
   "domain": "CONTROL",
   "context": null,
   "response": "Resolution: Accessing CONTROL for 'cooling system'. Action: restart.",
-  "tags": [
-    "control",
-    "system"
-  ],
+  "tags": ["control", "system"],
   "sh": "0xb6344c851cce1cec"
 }

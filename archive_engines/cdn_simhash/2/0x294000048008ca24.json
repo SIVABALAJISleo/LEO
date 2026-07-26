@@ -1,15 +1,9 @@
 {
   "id": "SYSTEM_350",
-  "signature": [
-    "verify",
-    "version"
-  ],
+  "signature": ["verify", "version"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'version'. Action: verify.",
-  "tags": [
-    "system",
-    "version"
-  ],
+  "tags": ["system", "version"],
   "sh": "0x294000048008ca24"
 }

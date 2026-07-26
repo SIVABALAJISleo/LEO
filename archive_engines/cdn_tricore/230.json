@@ -1,12 +1,6 @@
 {
   "id": 230,
   "domain": "SYSTEM",
-  "signature": [
-    "background",
-    "identity",
-    "in",
-    "synchronize",
-    "table"
-  ],
+  "signature": ["background", "identity", "in", "synchronize", "table"],
   "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: synchronize."
 }

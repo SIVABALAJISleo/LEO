@@ -1,10 +1,6 @@
 {
   "id": 36,
   "domain": "CONTROL",
-  "signature": [
-    "kill",
-    "safely",
-    "uplink"
-  ],
+  "signature": ["kill", "safely", "uplink"],
   "response": "Resolution: Accessing CONTROL for 'uplink'. Action: kill."
 }

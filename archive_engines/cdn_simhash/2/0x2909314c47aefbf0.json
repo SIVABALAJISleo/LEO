@@ -1,17 +1,9 @@
 {
   "id": "SYSTEM_364",
-  "signature": [
-    "forcefully",
-    "identity",
-    "table",
-    "verify"
-  ],
+  "signature": ["forcefully", "identity", "table", "verify"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'identity table'. Action: verify.",
-  "tags": [
-    "system",
-    "table"
-  ],
+  "tags": ["system", "table"],
   "sh": "0x2909314c47aefbf0"
 }

@@ -1,78 +1,127 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Zero-Compute Semantic System</title>
     <style>
-        body { font-family: 'Inter', sans-serif; background: #0b0e14; color: #e1e1e1; padding: 2rem; display: flex; flex-direction: column; align-items: center; }
-        .chat-container { width: 100%; max-width: 600px; background: #161b22; border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
-        .input-group { display: flex; gap: 0.5rem; margin-top: 1rem; }
-        input { flex: 1; background: #0d1117; border: 1px solid #30363d; padding: 0.8rem; color: white; border-radius: 6px; }
-        button { background: #238636; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 6px; cursor: pointer; font-weight: 600; }
-        .output { margin-top: 1.5rem; padding: 1rem; border-left: 3px solid #238636; background: #0d1117; display: none; }
-        .latency { font-size: 0.75rem; color: #8b949e; margin-top: 0.5rem; }
-        .badge { background: #1f6feb; font-size: 0.7rem; padding: 2px 6px; border-radius: 10px; margin-right: 5px; }
+      body {
+        font-family: "Inter", sans-serif;
+        background: #0b0e14;
+        color: #e1e1e1;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .chat-container {
+        width: 100%;
+        max-width: 600px;
+        background: #161b22;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      }
+      .input-group {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+      input {
+        flex: 1;
+        background: #0d1117;
+        border: 1px solid #30363d;
+        padding: 0.8rem;
+        color: white;
+        border-radius: 6px;
+      }
+      button {
+        background: #238636;
+        color: white;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+      .output {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        border-left: 3px solid #238636;
+        background: #0d1117;
+        display: none;
+      }
+      .latency {
+        font-size: 0.75rem;
+        color: #8b949e;
+        margin-top: 0.5rem;
+      }
+      .badge {
+        background: #1f6feb;
+        font-size: 0.7rem;
+        padding: 2px 6px;
+        border-radius: 10px;
+        margin-right: 5px;
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <div class="chat-container">
-        <h2>Zero-Compute AI</h2>
-        <p style="color: #8b949e; font-size: 0.9rem;">Intelligence precompiled. Runtime cost zero.</p>
-        
-        <div id="output" class="output"></div>
-        <div id="latency" class="latency"></div>
+      <h2>Zero-Compute AI</h2>
+      <p style="color: #8b949e; font-size: 0.9rem">Intelligence precompiled. Runtime cost zero.</p>
 
-        <div class="input-group">
-            <input type="text" id="queryInput" placeholder="Try: 'Status' or 'Check system'">
-            <button onclick="handleQuery()">Send</button>
-        </div>
+      <div id="output" class="output"></div>
+      <div id="latency" class="latency"></div>
+
+      <div class="input-group">
+        <input type="text" id="queryInput" placeholder="Try: 'Status' or 'Check system'" />
+        <button onclick="handleQuery()">Send</button>
+      </div>
     </div>
 
     <script>
-        // MOCK WASM/FST Mapping (In production, this is a WASM binary)
-        const FST_MAPPING = {
-            "status": 1001,
-            "how is the system": 1001,
-            "check system": 1002,
-            "reboot alpha": 5001
-        };
+      // MOCK WASM/FST Mapping (In production, this is a WASM binary)
+      const FST_MAPPING = {
+        status: 1001,
+        "how is the system": 1001,
+        "check system": 1002,
+        "reboot alpha": 5001,
+      };
 
-        // MOCK CDN (In production, this is Cloudflare/Akamai GET /data/ID.json)
-        const CDN_MOCK = {
-            "1001": { "title": "System Status", "message": "All modules NOMINAL." },
-            "1002": { "title": "Diagnostics", "message": "Zero errors detected in FST lattice." },
-            "5001": { "title": "Reboot", "message": "Rebooting Alpha node..." }
-        };
+      // MOCK CDN (In production, this is Cloudflare/Akamai GET /data/ID.json)
+      const CDN_MOCK = {
+        1001: { title: "System Status", message: "All modules NOMINAL." },
+        1002: { title: "Diagnostics", message: "Zero errors detected in FST lattice." },
+        5001: { title: "Reboot", message: "Rebooting Alpha node..." },
+      };
 
-        async function handleQuery() {
-            const input = document.getElementById('queryInput').value.toLowerCase().trim();
-            const start = performance.now();
-            
-            // 1. Client-side Semantic Parse (FST Logic)
-            const queryId = FST_MAPPING[input];
-            const parseTime = (performance.now() - start).toFixed(2);
+      async function handleQuery() {
+        const input = document.getElementById("queryInput").value.toLowerCase().trim();
+        const start = performance.now();
 
-            const display = document.getElementById('output');
-            const latencyDisp = document.getElementById('latency');
+        // 1. Client-side Semantic Parse (FST Logic)
+        const queryId = FST_MAPPING[input];
+        const parseTime = (performance.now() - start).toFixed(2);
 
-            if (queryId) {
-                // 2. Static CDN Fetch
-                const fetchStart = performance.now();
-                // Simulation: const response = await fetch(`/data/${queryId}.json`);
-                const response = CDN_MOCK[queryId];
-                const fetchTime = (performance.now() - fetchStart).toFixed(2);
+        const display = document.getElementById("output");
+        const latencyDisp = document.getElementById("latency");
 
-                display.style.display = 'block';
-                display.innerHTML = `<strong><span class="badge">CDN HIT</span> ${response.title}</strong><p>${response.message}</p>`;
-                latencyDisp.innerText = `Parse: ${parseTime}ms | Network: ${fetchTime}ms | Backend CPU: 0%`;
-            } else {
-                display.style.display = 'block';
-                display.innerHTML = `<span style="color: #f85149;">Intent not precompiled. Switching to Local Fallback (Transformers.js)...</span>`;
-                latencyDisp.innerText = `Zero Network Cost (Offline)`;
-            }
+        if (queryId) {
+          // 2. Static CDN Fetch
+          const fetchStart = performance.now();
+          // Simulation: const response = await fetch(`/data/${queryId}.json`);
+          const response = CDN_MOCK[queryId];
+          const fetchTime = (performance.now() - fetchStart).toFixed(2);
+
+          display.style.display = "block";
+          display.innerHTML = `<strong><span class="badge">CDN HIT</span> ${response.title}</strong><p>${response.message}</p>`;
+          latencyDisp.innerText = `Parse: ${parseTime}ms | Network: ${fetchTime}ms | Backend CPU: 0%`;
+        } else {
+          display.style.display = "block";
+          display.innerHTML = `<span style="color: #f85149;">Intent not precompiled. Switching to Local Fallback (Transformers.js)...</span>`;
+          latencyDisp.innerText = `Zero Network Cost (Offline)`;
         }
+      }
     </script>
-</body>
+  </body>
 </html>

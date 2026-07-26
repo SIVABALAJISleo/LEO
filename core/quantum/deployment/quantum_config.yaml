@@ -1,7 +1,7 @@
 quantum_system:
   version: "V45_QUANTUM_SINGULARITY"
-  target_competitiveness: 100.0  # Percentage
-  
+  target_competitiveness: 100.0 # Percentage
+
   heterogeneous_execution:
     enabled: true
     cpu_threads: 12
@@ -11,7 +11,7 @@ quantum_system:
     power_limit: 45
     pipeline_depth: 3
     dynamic_balancing: true
-  
+
   speculative_decoding:
     enabled: true
     draft_model: "bnn_1.58"
@@ -19,7 +19,7 @@ quantum_system:
     temperature: 0.8
     min_acceptance_rate: 0.5
     adaptive_draft_tokens: true
-    
+
   mixture_of_experts:
     enabled: true
     num_experts: 8
@@ -27,7 +27,7 @@ quantum_system:
     expert_dim: 512
     exploration_rate: 0.1
     offload_to_ram: true
-    
+
   multi_level_caching:
     enabled: true
     exact_cache_size: 1000
@@ -38,7 +38,7 @@ quantum_system:
     redis_enabled: true
     redis_host: "localhost"
     redis_port: 6379
-    
+
   self_optimization:
     enabled: true
     target_latency_ms: 100.0

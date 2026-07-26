@@ -1,12 +1,6 @@
 {
   "id": 27,
   "domain": "CONTROL",
-  "signature": [
-    "after",
-    "grid",
-    "kill",
-    "power",
-    "verification"
-  ],
+  "signature": ["after", "grid", "kill", "power", "verification"],
   "response": "Resolution: Accessing CONTROL for 'power grid'. Action: kill."
 }

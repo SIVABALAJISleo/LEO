@@ -1,16 +1,9 @@
 {
   "id": "INFO_122",
-  "signature": [
-    "all",
-    "memory",
-    "show"
-  ],
+  "signature": ["all", "memory", "show"],
   "domain": "INFO",
   "context": null,
   "response": "Resolution: Accessing INFO for 'memory'. Action: show.",
-  "tags": [
-    "info",
-    "memory"
-  ],
+  "tags": ["info", "memory"],
   "sh": "0x2678cb19a1012fac"
 }

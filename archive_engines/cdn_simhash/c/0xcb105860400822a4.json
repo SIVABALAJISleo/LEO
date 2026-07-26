@@ -1,15 +1,9 @@
 {
   "id": "INFO_269",
-  "signature": [
-    "detailed",
-    "storage"
-  ],
+  "signature": ["detailed", "storage"],
   "domain": "INFO",
   "context": null,
   "response": "Resolution: Accessing INFO for 'storage'. Action: check.",
-  "tags": [
-    "info",
-    "storage"
-  ],
+  "tags": ["info", "storage"],
   "sh": "0xcb105860400822a4"
 }

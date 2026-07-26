@@ -1,16 +1,9 @@
 {
   "id": "INFO_192",
-  "signature": [
-    "status",
-    "summary",
-    "system"
-  ],
+  "signature": ["status", "summary", "system"],
   "domain": "INFO",
   "context": null,
   "response": "Resolution: Accessing INFO for 'system'. Action: status of.",
-  "tags": [
-    "info",
-    "system"
-  ],
+  "tags": ["info", "system"],
   "sh": "0xa7d5496f4c50243f"
 }

@@ -26,9 +26,9 @@ spec:
       app: redis
   action: ALLOW
   rules:
-  - from:
-    - source:
-        principals: ["cluster.local/ns/default/sa/hyper-api-gateway-sa"]
+    - from:
+        - source:
+            principals: ["cluster.local/ns/default/sa/hyper-api-gateway-sa"]
 ---
 # Allow Workers to talk to Redis
 apiVersion: security.istio.io/v1beta1
@@ -42,9 +42,9 @@ spec:
       app: redis
   action: ALLOW
   rules:
-  - from:
-    - source:
-        principals: ["cluster.local/ns/default/sa/hyper-celery-worker-sa"]
+    - from:
+        - source:
+            principals: ["cluster.local/ns/default/sa/hyper-celery-worker-sa"]
 ---
 # Expose API Gateway to External Ingress
 apiVersion: security.istio.io/v1beta1
@@ -58,6 +58,6 @@ spec:
       app: hyper-backend
   action: ALLOW
   rules:
-  - from:
-    - source:
-        principals: ["cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account"]
+    - from:
+        - source:
+            principals: ["cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account"]

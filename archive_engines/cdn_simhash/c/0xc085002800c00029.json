@@ -1,15 +1,9 @@
 {
   "id": "INFO_382",
-  "signature": [
-    "status",
-    "uptime"
-  ],
+  "signature": ["status", "uptime"],
   "domain": "INFO",
   "context": null,
   "response": "Resolution: Accessing INFO for 'uptime'. Action: status of.",
-  "tags": [
-    "info",
-    "uptime"
-  ],
+  "tags": ["info", "uptime"],
   "sh": "0xc085002800c00029"
 }

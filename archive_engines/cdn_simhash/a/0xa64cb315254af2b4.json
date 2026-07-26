@@ -1,16 +1,9 @@
 {
   "id": "INFO_479",
-  "signature": [
-    "all",
-    "latency",
-    "metrics"
-  ],
+  "signature": ["all", "latency", "metrics"],
   "domain": "INFO",
   "context": null,
   "response": "Resolution: Accessing INFO for 'latency'. Action: metrics for.",
-  "tags": [
-    "info",
-    "latency"
-  ],
+  "tags": ["info", "latency"],
   "sh": "0xa64cb315254af2b4"
 }

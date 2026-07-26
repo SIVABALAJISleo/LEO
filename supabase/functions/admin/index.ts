@@ -3,7 +3,8 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.7";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-admin-secret",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-admin-secret",
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
 };
 
@@ -69,7 +70,10 @@ serve(async (req: Request) => {
       }
 
       const token = authHeader.replace("Bearer ", "");
-      const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser(token);
 
       if (authError || !user) {
         console.log("Admin access denied: Invalid token");
@@ -103,11 +107,11 @@ serve(async (req: Request) => {
       console.log("Admin: Fetching system summary");
 
       // Get job statistics
-      const { data: allJobs } = await supabase
+      const { data: allJobs } = (await supabase
         .from("gpu_jobs")
         .select("id, status, job_tier, created_at, started_at, completed_at")
         .order("created_at", { ascending: false })
-        .limit(1000) as { data: GPUJob[] | null };
+        .limit(1000)) as { data: GPUJob[] | null };
 
       const jobs = (allJobs || []) as GPUJob[];
 
@@ -127,7 +131,9 @@ serve(async (req: Request) => {
       };
 
       // Calculate average runtime for completed jobs
-      const completedJobs = jobs.filter((j: GPUJob) => j.status === "completed" && j.started_at && j.completed_at);
+      const completedJobs = jobs.filter(
+        (j: GPUJob) => j.status === "completed" && j.started_at && j.completed_at,
+      );
       let avgRuntimeMs = 0;
       if (completedJobs.length > 0) {
         const totalRuntime = completedJobs.reduce((acc: number, j: GPUJob) => {
@@ -142,11 +148,11 @@ serve(async (req: Request) => {
         .select("*", { count: "exact", head: true });
 
       // Get active agents
-      const { data: recentHeartbeats } = await supabase
+      const { data: recentHeartbeats } = (await supabase
         .from("agent_heartbeats")
         .select("worker_id, recorded_at, is_processing, current_job_id, gpu_temp_celsius")
         .order("recorded_at", { ascending: false })
-        .limit(100) as { data: AgentHeartbeat[] | null };
+        .limit(100)) as { data: AgentHeartbeat[] | null };
 
       // Get unique workers with recent heartbeats (last 60 seconds)
       const now = Date.now();
@@ -159,22 +165,25 @@ serve(async (req: Request) => {
       }
 
       // Get agent tokens
-      const { data: agents } = await supabase
+      const { data: agents } = (await supabase
         .from("agent_tokens")
         .select("id, agent_name, is_active, last_used_at")
-        .eq("is_active", true) as { data: AgentToken[] | null };
+        .eq("is_active", true)) as { data: AgentToken[] | null };
 
-      return new Response(JSON.stringify({
-        stats,
-        queue_depth: queueDepth || 0,
-        avg_runtime_ms: Math.round(avgRuntimeMs),
-        avg_runtime_formatted: formatDuration(avgRuntimeMs),
-        active_workers: Array.from(activeWorkers.values()),
-        registered_agents: agents || [],
-        timestamp: new Date().toISOString(),
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({
+          stats,
+          queue_depth: queueDepth || 0,
+          avg_runtime_ms: Math.round(avgRuntimeMs),
+          avg_runtime_formatted: formatDuration(avgRuntimeMs),
+          active_workers: Array.from(activeWorkers.values()),
+          registered_agents: agents || [],
+          timestamp: new Date().toISOString(),
+        }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
     }
 
     // GET /admin/jobs - Get all jobs (admin view)
@@ -184,12 +193,20 @@ serve(async (req: Request) => {
 
       console.log(`Admin: Fetching jobs (limit=${limit}, offset=${offset})`);
 
-      const { data: jobs, count, error } = await supabase
+      const {
+        data: jobs,
+        count,
+        error,
+      } = (await supabase
         .from("gpu_jobs")
         .select("*", { count: "exact" })
         .order("created_at", { ascending: false })
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .range(offset, offset + limit - 1) as { data: GPUJob[] | null, count: number | null, error: any };
+        .range(offset, offset + limit - 1)) as {
+        data: GPUJob[] | null;
+        count: number | null;
+        error: any;
+      };
 
       if (error) throw error;
 
@@ -202,30 +219,32 @@ serve(async (req: Request) => {
     if (req.method === "GET" && action === "agents") {
       console.log("Admin: Fetching agent status");
 
-      const { data: agents } = await supabase
+      const { data: agents } = (await supabase
         .from("agent_tokens")
         .select("*")
-        .order("last_used_at", { ascending: false }) as { data: AgentToken[] | null };
+        .order("last_used_at", { ascending: false })) as { data: AgentToken[] | null };
 
       // Get latest heartbeat for each agent
-      const agentsWithStatus = await Promise.all((agents || []).map(async (agent) => {
-        const { data: heartbeats } = await supabase
-          .from("agent_heartbeats")
-          .select("*")
-          .eq("agent_token_id", agent.id)
-          .order("recorded_at", { ascending: false })
-          .limit(1);
+      const agentsWithStatus = await Promise.all(
+        (agents || []).map(async (agent) => {
+          const { data: heartbeats } = await supabase
+            .from("agent_heartbeats")
+            .select("*")
+            .eq("agent_token_id", agent.id)
+            .order("recorded_at", { ascending: false })
+            .limit(1);
 
-        const latestHeartbeat = heartbeats?.[0];
-        const isOnline = latestHeartbeat &&
-          (Date.now() - new Date(latestHeartbeat.recorded_at).getTime()) < 60000;
+          const latestHeartbeat = heartbeats?.[0];
+          const isOnline =
+            latestHeartbeat && Date.now() - new Date(latestHeartbeat.recorded_at).getTime() < 60000;
 
-        return {
-          ...agent,
-          is_online: isOnline,
-          latest_heartbeat: latestHeartbeat,
-        };
-      }));
+          return {
+            ...agent,
+            is_online: isOnline,
+            latest_heartbeat: latestHeartbeat,
+          };
+        }),
+      );
 
       return new Response(JSON.stringify({ agents: agentsWithStatus }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -240,48 +259,57 @@ serve(async (req: Request) => {
       console.log(`Admin: Fetching metrics (hours=${hours})`);
 
       // Jobs created in time window
-      const { data: recentJobs } = await supabase
+      const { data: recentJobs } = (await supabase
         .from("gpu_jobs")
         .select("id, status, job_tier, created_at, completed_at")
-        .gte("created_at", since) as { data: GPUJob[] | null };
+        .gte("created_at", since)) as { data: GPUJob[] | null };
 
       // Agent heartbeats in time window
-      const { data: heartbeats } = await supabase
+      const { data: heartbeats } = (await supabase
         .from("agent_heartbeats")
         .select("gpu_temp_celsius, gpu_vram_used_mb, recorded_at")
         .gte("recorded_at", since)
-        .order("recorded_at", { ascending: true }) as { data: AgentHeartbeat[] | null };
+        .order("recorded_at", { ascending: true })) as { data: AgentHeartbeat[] | null };
 
       // Calculate metrics
       const jobs = recentJobs || [];
-      const successRate = jobs.length > 0
-        ? (jobs.filter((j: GPUJob) => j.status === "completed").length / jobs.length * 100).toFixed(1)
-        : "0.0";
+      const successRate =
+        jobs.length > 0
+          ? (
+              (jobs.filter((j: GPUJob) => j.status === "completed").length / jobs.length) *
+              100
+            ).toFixed(1)
+          : "0.0";
 
       // Average GPU temp over time
-      const temps = (heartbeats || []).map((h: AgentHeartbeat) => h.gpu_temp_celsius).filter((t: number) => t != null);
-      const avgTemp = temps.length > 0
-        ? (temps.reduce((a: number, b: number) => a + b, 0) / temps.length).toFixed(1)
-        : null;
+      const temps = (heartbeats || [])
+        .map((h: AgentHeartbeat) => h.gpu_temp_celsius)
+        .filter((t: number) => t != null);
+      const avgTemp =
+        temps.length > 0
+          ? (temps.reduce((a: number, b: number) => a + b, 0) / temps.length).toFixed(1)
+          : null;
 
-      return new Response(JSON.stringify({
-        time_window_hours: hours,
-        jobs_created: jobs.length,
-        jobs_completed: jobs.filter((j: GPUJob) => j.status === "completed").length,
-        jobs_failed: jobs.filter((j: GPUJob) => j.status === "failed").length,
-        success_rate_percent: successRate,
-        avg_gpu_temp: avgTemp,
-        heartbeat_count: heartbeats?.length || 0,
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({
+          time_window_hours: hours,
+          jobs_created: jobs.length,
+          jobs_completed: jobs.filter((j: GPUJob) => j.status === "completed").length,
+          jobs_failed: jobs.filter((j: GPUJob) => j.status === "failed").length,
+          success_rate_percent: successRate,
+          avg_gpu_temp: avgTemp,
+          heartbeat_count: heartbeats?.length || 0,
+        }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
     }
 
     return new Response(JSON.stringify({ error: "Not found" }), {
       status: 404,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
-
   } catch (error) {
     console.error("Admin function error:", error);
     // Return generic error to client, log details server-side only

@@ -1,12 +1,6 @@
 {
   "id": 229,
   "domain": "CONTROL",
-  "signature": [
-    "at",
-    "delta",
-    "kill",
-    "once",
-    "subsystem"
-  ],
+  "signature": ["at", "delta", "kill", "once", "subsystem"],
   "response": "Resolution: Accessing CONTROL for 'subsystem delta'. Action: kill."
 }

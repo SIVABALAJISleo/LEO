@@ -1,18 +1,9 @@
 {
   "id": "CONTROL_232",
-  "signature": [
-    "after",
-    "core",
-    "kill",
-    "reactor",
-    "verification"
-  ],
+  "signature": ["after", "core", "kill", "reactor", "verification"],
   "domain": "CONTROL",
   "context": null,
   "response": "Resolution: Accessing CONTROL for 'core reactor'. Action: kill.",
-  "tags": [
-    "control",
-    "reactor"
-  ],
+  "tags": ["control", "reactor"],
   "sh": "0xeeb289de19e0f999"
 }

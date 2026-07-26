@@ -59,7 +59,6 @@ function Page() {
     if (search.apiBase) {
       toast.message("Prefilled API base — review and save to apply");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search.apiBase]);
 
   function saveBase() {

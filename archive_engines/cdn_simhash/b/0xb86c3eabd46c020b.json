@@ -1,16 +1,9 @@
 {
   "id": "CONTROL_461",
-  "signature": [
-    "alpha",
-    "node",
-    "shutdown"
-  ],
+  "signature": ["alpha", "node", "shutdown"],
   "domain": "CONTROL",
   "context": null,
   "response": "Resolution: Accessing CONTROL for 'alpha node'. Action: shutdown.",
-  "tags": [
-    "control",
-    "node"
-  ],
+  "tags": ["control", "node"],
   "sh": "0xb86c3eabd46c020b"
 }

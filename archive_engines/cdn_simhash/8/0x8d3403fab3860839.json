@@ -1,15 +1,7 @@
 {
   "id": "CMD_002",
-  "signature": [
-    "alpha",
-    "node",
-    "primary",
-    "reboot"
-  ],
+  "signature": ["alpha", "node", "primary", "reboot"],
   "response": "Initiating reboot sequence for Alpha Node. Estimated time: 45s.",
-  "tags": [
-    "reboot",
-    "alpha"
-  ],
+  "tags": ["reboot", "alpha"],
   "sh": "0x8d3403fab3860839"
 }

@@ -1,16 +1,9 @@
 {
   "id": "CONTROL_362",
-  "signature": [
-    "core",
-    "initialize",
-    "reactor"
-  ],
+  "signature": ["core", "initialize", "reactor"],
   "domain": "CONTROL",
   "context": null,
   "response": "Resolution: Accessing CONTROL for 'core reactor'. Action: initialize.",
-  "tags": [
-    "control",
-    "reactor"
-  ],
+  "tags": ["control", "reactor"],
   "sh": "0xcffae9db19a0698b"
 }

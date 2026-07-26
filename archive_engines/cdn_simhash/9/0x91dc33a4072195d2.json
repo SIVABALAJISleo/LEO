@@ -1,14 +1,9 @@
 {
   "id": "INFO_473",
-  "signature": [
-    "bandwidth"
-  ],
+  "signature": ["bandwidth"],
   "domain": "INFO",
   "context": null,
   "response": "Resolution: Accessing INFO for 'bandwidth'. Action: check.",
-  "tags": [
-    "info",
-    "bandwidth"
-  ],
+  "tags": ["info", "bandwidth"],
   "sh": "0x91dc33a4072195d2"
 }

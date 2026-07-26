@@ -1,10 +1,6 @@
 {
   "id": 330,
   "domain": "SYSTEM",
-  "signature": [
-    "forcefully",
-    "restore",
-    "version"
-  ],
+  "signature": ["forcefully", "restore", "version"],
   "response": "Resolution: Accessing SYSTEM for 'version'. Action: restore."
 }

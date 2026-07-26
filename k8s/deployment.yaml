@@ -13,15 +13,15 @@ spec:
         app: hyper-api
     spec:
       containers:
-      - name: api
-        image: hyper/api:latest
-        ports:
-        - containerPort: 8000
-        env:
-        - name: REDIS_URL
-          value: "redis://hyper-redis-master:6379/0"
-        - name: APP_ENV
-          value: "production"
+        - name: api
+          image: hyper/api:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: REDIS_URL
+              value: "redis://hyper-redis-master:6379/0"
+            - name: APP_ENV
+              value: "production"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -38,19 +38,32 @@ spec:
         app: hyper-worker-llm
     spec:
       containers:
-      - name: worker
-        image: hyper/api:latest
-        command: ["celery", "-A", "backend.celery_app", "worker", "-Q", "celery", "-c", "2", "-l", "info", "--pool=prefork"]
-        env:
-        - name: REDIS_URL
-          value: "redis://hyper-redis-master:6379/0"
-        resources:
-          requests:
-            cpu: "2"
-            memory: "4Gi"
-          limits:
-            cpu: "4"
-            memory: "8Gi"
+        - name: worker
+          image: hyper/api:latest
+          command:
+            [
+              "celery",
+              "-A",
+              "backend.celery_app",
+              "worker",
+              "-Q",
+              "celery",
+              "-c",
+              "2",
+              "-l",
+              "info",
+              "--pool=prefork",
+            ]
+          env:
+            - name: REDIS_URL
+              value: "redis://hyper-redis-master:6379/0"
+          resources:
+            requests:
+              cpu: "2"
+              memory: "4Gi"
+            limits:
+              cpu: "4"
+              memory: "8Gi"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -67,16 +80,29 @@ spec:
         app: hyper-worker-vision
     spec:
       containers:
-      - name: worker
-        image: hyper/api:latest
-        command: ["celery", "-A", "backend.celery_app", "worker", "-Q", "celery", "-c", "4", "-l", "info", "--pool=prefork"]
-        env:
-        - name: REDIS_URL
-          value: "redis://hyper-redis-master:6379/0"
-        resources:
-          requests:
-            cpu: "2"
-            memory: "2Gi"
-          limits:
-            cpu: "4"
-            memory: "4Gi"
+        - name: worker
+          image: hyper/api:latest
+          command:
+            [
+              "celery",
+              "-A",
+              "backend.celery_app",
+              "worker",
+              "-Q",
+              "celery",
+              "-c",
+              "4",
+              "-l",
+              "info",
+              "--pool=prefork",
+            ]
+          env:
+            - name: REDIS_URL
+              value: "redis://hyper-redis-master:6379/0"
+          resources:
+            requests:
+              cpu: "2"
+              memory: "2Gi"
+            limits:
+              cpu: "4"
+              memory: "4Gi"

@@ -40,11 +40,11 @@ Deno.serve(async (req) => {
     // PROOF 1: INCIDENT AUTO-HANDLING
     if (action === "proof_incident_handling") {
       log("🔥 PROOF 1: Starting incident auto-handling test");
-      
+
       // Step 1: Force a failure state
       log("Step 1: Forcing DEGRADED state");
       const incidentId = crypto.randomUUID();
-      
+
       await supabase.from("system_metrics").insert({
         user_id: user_id || "system",
         metric_name: "incident_test",
@@ -65,8 +65,8 @@ Deno.serve(async (req) => {
 
       // Step 3: Simulate auto-retry
       log("Step 3: Executing auto-retry logic");
-      await new Promise(r => setTimeout(r, 500));
-      
+      await new Promise((r) => setTimeout(r, 500));
+
       // Step 4: Auto-recover
       log("Step 4: Auto-recovery triggered");
       await supabase.from("system_metrics").insert({
@@ -114,7 +114,7 @@ Deno.serve(async (req) => {
     // PROOF 2: BACKUP & RESTORE
     if (action === "proof_backup_restore") {
       log("💾 PROOF 2: Starting backup & restore test");
-      
+
       const backupId = crypto.randomUUID();
       const startTime = Date.now();
 
@@ -142,14 +142,17 @@ Deno.serve(async (req) => {
 
       // Step 3: Simulate restore
       log("Step 3: Executing restore drill");
-      await new Promise(r => setTimeout(r, 300));
+      await new Promise((r) => setTimeout(r, 300));
       const restoreDuration = Date.now() - startTime;
 
       // Step 4: Log restore success
       log("Step 4: Logging restore result");
-      await supabase.from("backup_metadata").update({
-        status: "verified",
-      }).eq("id", backupId);
+      await supabase
+        .from("backup_metadata")
+        .update({
+          status: "verified",
+        })
+        .eq("id", backupId);
 
       log("✅ PROOF 2 COMPLETE: Backup verified and restore tested");
 
@@ -176,14 +179,14 @@ Deno.serve(async (req) => {
     // PROOF 3: RATE LIMITING
     if (action === "proof_rate_limiting") {
       log("🛡️ PROOF 4: Starting rate limiting test");
-      
+
       const testIp = "192.168.1." + Math.floor(Math.random() * 255);
       const burstCount = 15;
       let blockedCount = 0;
 
       // Simulate burst requests
       log(`Step 1: Sending ${burstCount} burst requests from ${testIp}`);
-      
+
       for (let i = 0; i < burstCount; i++) {
         if (i >= 10) {
           blockedCount++;
@@ -201,8 +204,8 @@ Deno.serve(async (req) => {
         message: `IP ${testIp} exceeded rate limit: ${blockedCount} requests blocked`,
         severity: "warning",
         alert_type: "rate_limit",
-        metadata: { 
-          ip: testIp, 
+        metadata: {
+          ip: testIp,
           blocked_count: blockedCount,
           burst_detected: true,
           temporary_ban: true,
@@ -235,13 +238,13 @@ Deno.serve(async (req) => {
     // PROOF 4: AUTH DENIAL
     if (action === "proof_auth_denial") {
       log("🔐 PROOF: Starting authorization enforcement test");
-      
+
       const testUserId = crypto.randomUUID();
       const deniedAction = "admin.delete_all_users";
 
       // Attempt admin action as regular user
       log(`Step 1: User ${testUserId} attempting admin action: ${deniedAction}`);
-      
+
       // Check role (will fail for random user)
       const { data: roleData } = await supabase
         .from("user_roles")
@@ -295,10 +298,10 @@ Deno.serve(async (req) => {
     // PROOF 5: SLO ENFORCEMENT
     if (action === "proof_slo_enforcement") {
       log("📊 PROOF: Starting SLO enforcement test");
-      
+
       // Simulate high error rate
       const errorRate = 0.15; // 15% error rate
-      const threshold = 0.10; // 10% threshold
+      const threshold = 0.1; // 10% threshold
 
       log(`Step 1: Current error rate: ${(errorRate * 100).toFixed(1)}%`);
       log(`Step 2: SLO threshold: ${(threshold * 100).toFixed(1)}%`);
@@ -347,7 +350,7 @@ Deno.serve(async (req) => {
     // PROOF 6: AUDIT LOG EXPORT
     if (action === "proof_audit_export") {
       log("📋 PROOF: Starting audit log export test");
-      
+
       // Gather audit data
       const { data: recentAlerts } = await supabase
         .from("alerts")
@@ -378,7 +381,7 @@ Deno.serve(async (req) => {
       const data = encoder.encode(JSON.stringify(auditBundle.data));
       const hashBuffer = await crypto.subtle.digest("SHA-256", data);
       const hashArray = Array.from(new Uint8Array(hashBuffer));
-      const hashHex = hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+      const hashHex = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
 
       log(`Step 1: Collected ${auditBundle.alerts_count} alerts`);
       log(`Step 2: Collected ${auditBundle.metrics_count} metrics`);
@@ -389,7 +392,7 @@ Deno.serve(async (req) => {
       const verifyData = encoder.encode(JSON.stringify(auditBundle.data));
       const verifyBuffer = await crypto.subtle.digest("SHA-256", verifyData);
       const verifyArray = Array.from(new Uint8Array(verifyBuffer));
-      const verifyHex = verifyArray.map(b => b.toString(16).padStart(2, "0")).join("");
+      const verifyHex = verifyArray.map((b) => b.toString(16).padStart(2, "0")).join("");
       const integrityValid = hashHex === verifyHex;
 
       log(`Step 5: Integrity verification: ${integrityValid ? "PASSED" : "FAILED"}`);
@@ -433,10 +436,10 @@ Deno.serve(async (req) => {
     // RUN ALL PROOFS
     if (action === "run_all_proofs") {
       log("🚀 RUNNING ALL RUNTIME PROOFS");
-      
+
       const proofActions = [
         "proof_incident_handling",
-        "proof_backup_restore", 
+        "proof_backup_restore",
         "proof_rate_limiting",
         "proof_auth_denial",
         "proof_slo_enforcement",
@@ -465,26 +468,28 @@ Deno.serve(async (req) => {
         }
       }
 
-      const allPassed = results.every(r => r.success);
-      
-      return new Response(JSON.stringify({
-        all_proofs_passed: allPassed,
-        total_proofs: results.length,
-        passed_proofs: results.filter(r => r.success).length,
-        results,
-        final_verdict: allPassed 
-          ? "PRODUCTION-READY: All runtime proofs verified"
-          : "NOT READY: Some proofs failed",
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      const allPassed = results.every((r) => r.success);
+
+      return new Response(
+        JSON.stringify({
+          all_proofs_passed: allPassed,
+          total_proofs: results.length,
+          passed_proofs: results.filter((r) => r.success).length,
+          results,
+          final_verdict: allPassed
+            ? "PRODUCTION-READY: All runtime proofs verified"
+            : "NOT READY: Some proofs failed",
+        }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
     }
 
     return new Response(JSON.stringify({ error: "Unknown action" }), {
       status: 400,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
-
   } catch (error) {
     console.error("[runtime-proof] Error:", error);
     return new Response(JSON.stringify({ error: "Internal error" }), {
@@ -499,7 +504,7 @@ async function logProof(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   supabase: any,
   result: ProofResult,
-  user_id?: string
+  user_id?: string,
 ) {
   await supabase.from("analytics_events").insert({
     user_id: user_id || null,

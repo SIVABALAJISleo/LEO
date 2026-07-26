@@ -2,9 +2,9 @@ global:
   scrape_interval: 15s
 
 scrape_configs:
-  - job_name: 'hyper_api'
+  - job_name: "hyper_api"
     static_configs:
-      - targets: ['api:8000']
-  - job_name: 'hyper_workers'
+      - targets: ["api:8000"]
+  - job_name: "hyper_workers"
     static_configs:
-      - targets: ['worker-llm:8000', 'worker-vision:8000']
+      - targets: ["worker-llm:8000", "worker-vision:8000"]

@@ -1,16 +1,9 @@
 {
   "id": "SYSTEM_471",
-  "signature": [
-    "manifest",
-    "silently",
-    "verify"
-  ],
+  "signature": ["manifest", "silently", "verify"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: verify.",
-  "tags": [
-    "system",
-    "manifest"
-  ],
+  "tags": ["system", "manifest"],
   "sh": "0xa154b015ff8c9be4"
 }

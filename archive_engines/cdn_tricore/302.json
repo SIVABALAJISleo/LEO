@@ -1,9 +1,6 @@
 {
   "id": 302,
   "domain": "SYSTEM",
-  "signature": [
-    "update",
-    "version"
-  ],
+  "signature": ["update", "version"],
   "response": "Resolution: Accessing SYSTEM for 'version'. Action: update."
 }

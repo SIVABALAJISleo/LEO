@@ -83,14 +83,12 @@ export function useMarketplaceData() {
   const installPlugin = async (pluginId: string) => {
     if (!user) return;
     const plugin = plugins.find((p) => p.id === pluginId);
-    const { error } = await supabase
-      .from("integrations")
-      .insert({
-        user_id: user.id,
-        plugin_id: pluginId,
-        name: plugin?.name || "Integration",
-        integration_type: "plugin",
-      });
+    const { error } = await supabase.from("integrations").insert({
+      user_id: user.id,
+      plugin_id: pluginId,
+      name: plugin?.name || "Integration",
+      integration_type: "plugin",
+    });
     if (error) toast.error("Failed to install");
     else {
       toast.success("Plugin installed");

@@ -1,17 +1,9 @@
 {
   "id": "INFO_259",
-  "signature": [
-    "from",
-    "overall",
-    "storage",
-    "telemetry"
-  ],
+  "signature": ["from", "overall", "storage", "telemetry"],
   "domain": "INFO",
   "context": null,
   "response": "Resolution: Accessing INFO for 'storage'. Action: telemetry from.",
-  "tags": [
-    "info",
-    "storage"
-  ],
+  "tags": ["info", "storage"],
   "sh": "0xaa124a527ecf9382"
 }

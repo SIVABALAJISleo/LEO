@@ -1,11 +1,6 @@
 {
   "id": 328,
   "domain": "CONTROL",
-  "signature": [
-    "alpha",
-    "immediately",
-    "node",
-    "reboot"
-  ],
+  "signature": ["alpha", "immediately", "node", "reboot"],
   "response": "Resolution: Accessing CONTROL for 'alpha node'. Action: reboot."
 }

@@ -1,19 +1,9 @@
 {
   "id": "CONTROL_072",
-  "signature": [
-    "delta",
-    "high",
-    "kill",
-    "priority",
-    "subsystem",
-    "with"
-  ],
+  "signature": ["delta", "high", "kill", "priority", "subsystem", "with"],
   "domain": "CONTROL",
   "context": null,
   "response": "Resolution: Accessing CONTROL for 'subsystem delta'. Action: kill.",
-  "tags": [
-    "control",
-    "delta"
-  ],
+  "tags": ["control", "delta"],
   "sh": "0xe325069c15289689"
 }

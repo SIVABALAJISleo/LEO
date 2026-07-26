@@ -2,6 +2,7 @@
 name: testsprite-onboard
 description: Stand up a complete, runnable TestSprite test suite for the current repo at first use — create a project (with a target URL and auth), derive a coherent set of tests from the codebase, batch-create them, and smoke-run a few to a green verdict so the user immediately has something worth running. Use ONLY when a repo has no TestSprite tests yet (a fresh project), right after `testsprite setup`, or when the user asks to "set up / bootstrap / seed tests". This is first-run setup, NOT change verification — once a project already has tests, use the testsprite-verify skill instead.
 ---
+
 <!-- testsprite-skill: testsprite-onboard v0.4.0 sha256:141f35e4feb9 -->
 
 <!--
@@ -187,4 +188,3 @@ Tell the user, plainly:
 This skill's job ends once the project has a seeded suite and a first green run. From here on,
 the **`testsprite-verify`** skill takes over: after the user changes code, it runs the tests
 covering that change before they report the work done. Onboard once; verify continuously.
-

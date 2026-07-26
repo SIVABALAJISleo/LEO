@@ -67,4 +67,3 @@ volumes:
   leo_data:
   redis_data:
   postgres_data:
-

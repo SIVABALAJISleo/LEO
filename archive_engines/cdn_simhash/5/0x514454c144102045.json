@@ -1,15 +1,9 @@
 {
   "id": "INFO_016",
-  "signature": [
-    "detailed",
-    "temperature"
-  ],
+  "signature": ["detailed", "temperature"],
   "domain": "INFO",
   "context": null,
   "response": "Resolution: Accessing INFO for 'temperature'. Action: check.",
-  "tags": [
-    "info",
-    "temperature"
-  ],
+  "tags": ["info", "temperature"],
   "sh": "0x514454c144102045"
 }

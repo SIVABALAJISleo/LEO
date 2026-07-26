@@ -50,14 +50,31 @@ serve(async (req) => {
     const authHeader = req.headers.get("Authorization");
     if (authHeader) {
       const token = authHeader.replace("Bearer ", "");
-      const { data: { user } } = await supabase.auth.getUser(token);
-      
+      const {
+        data: { user },
+      } = await supabase.auth.getUser(token);
+
       if (user) {
         // Fetch user's recent activity for context
         const [jobsRes, alertsRes, metricsRes] = await Promise.all([
-          supabase.from("gpu_jobs").select("job_type, status, created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(5),
-          supabase.from("alerts").select("title, severity, resolved").eq("user_id", user.id).eq("resolved", false).limit(3),
-          supabase.from("system_metrics").select("gpu_utilization, memory_usage, active_jobs").eq("user_id", user.id).order("recorded_at", { ascending: false }).limit(1)
+          supabase
+            .from("gpu_jobs")
+            .select("job_type, status, created_at")
+            .eq("user_id", user.id)
+            .order("created_at", { ascending: false })
+            .limit(5),
+          supabase
+            .from("alerts")
+            .select("title, severity, resolved")
+            .eq("user_id", user.id)
+            .eq("resolved", false)
+            .limit(3),
+          supabase
+            .from("system_metrics")
+            .select("gpu_utilization, memory_usage, active_jobs")
+            .eq("user_id", user.id)
+            .order("recorded_at", { ascending: false })
+            .limit(1),
         ]);
 
         userContext = `
@@ -71,7 +88,7 @@ User Context:
 
     // Build system prompt based on type
     let systemPrompt = "";
-    
+
     switch (type) {
       case "job_optimization":
         systemPrompt = `You are an AI GPU optimization expert assistant for the HyperInference platform. 
@@ -80,7 +97,7 @@ ${userContext}
 Provide concise, actionable advice. When suggesting optimizations, explain the expected impact.
 Focus on practical GPU optimization techniques like quantization, kernel fusion, memory management, and batch processing.`;
         break;
-        
+
       case "troubleshooting":
         systemPrompt = `You are a technical support AI for the HyperInference GPU platform.
 You help diagnose and resolve issues with GPU jobs, system performance, and configuration.
@@ -91,7 +108,7 @@ When troubleshooting:
 3. Suggest preventive measures
 Be specific and reference actual system components like job queues, modules, and metrics.`;
         break;
-        
+
       case "system_analysis":
         systemPrompt = `You are a system performance analyst AI for the HyperInference platform.
 You analyze GPU utilization, job performance, and system health metrics.
@@ -103,7 +120,7 @@ Provide data-driven insights about:
 - Cost efficiency improvements
 Use specific numbers and percentages when available.`;
         break;
-        
+
       case "code_generation":
         systemPrompt = `You are an AI coding assistant specialized in GPU computing and ML optimization.
 You help users write code for:
@@ -114,7 +131,7 @@ You help users write code for:
 ${userContext}
 Provide clean, well-documented code examples. Explain key parts of the implementation.`;
         break;
-        
+
       default:
         systemPrompt = `You are a helpful AI assistant for the HyperInference GPU optimization platform.
 You can help with:
@@ -131,10 +148,7 @@ Be concise but thorough. Reference specific platform features when relevant.`;
       systemPrompt += `\n\nAdditional Context: ${JSON.stringify(context)}`;
     }
 
-    const aiMessages: ChatMessage[] = [
-      { role: "system", content: systemPrompt },
-      ...messages
-    ];
+    const aiMessages: ChatMessage[] = [{ role: "system", content: systemPrompt }, ...messages];
 
     // Check if streaming is requested
     const stream = body.stream === true;
@@ -144,7 +158,7 @@ Be concise but thorough. Reference specific platform features when relevant.`;
       const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${LOVABLE_API_KEY}`,
+          Authorization: `Bearer ${LOVABLE_API_KEY}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -152,22 +166,28 @@ Be concise but thorough. Reference specific platform features when relevant.`;
           messages: aiMessages,
           stream: true,
           max_tokens: body.max_tokens || 2000,
-          temperature: body.temperature || 0.7
+          temperature: body.temperature || 0.7,
         }),
       });
 
       if (!response.ok) {
         if (response.status === 429) {
-          return new Response(JSON.stringify({ error: "Rate limit exceeded. Please try again later." }), {
-            status: 429,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          });
+          return new Response(
+            JSON.stringify({ error: "Rate limit exceeded. Please try again later." }),
+            {
+              status: 429,
+              headers: { ...corsHeaders, "Content-Type": "application/json" },
+            },
+          );
         }
         if (response.status === 402) {
-          return new Response(JSON.stringify({ error: "AI usage limit reached. Please add credits." }), {
-            status: 402,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          });
+          return new Response(
+            JSON.stringify({ error: "AI usage limit reached. Please add credits." }),
+            {
+              status: 402,
+              headers: { ...corsHeaders, "Content-Type": "application/json" },
+            },
+          );
         }
         const errorText = await response.text();
         console.error("AI gateway error:", response.status, errorText);
@@ -182,29 +202,35 @@ Be concise but thorough. Reference specific platform features when relevant.`;
       const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${LOVABLE_API_KEY}`,
+          Authorization: `Bearer ${LOVABLE_API_KEY}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           model: body.model || "google/gemini-2.5-flash",
           messages: aiMessages,
           max_tokens: body.max_tokens || 2000,
-          temperature: body.temperature || 0.7
+          temperature: body.temperature || 0.7,
         }),
       });
 
       if (!response.ok) {
         if (response.status === 429) {
-          return new Response(JSON.stringify({ error: "Rate limit exceeded. Please try again later." }), {
-            status: 429,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          });
+          return new Response(
+            JSON.stringify({ error: "Rate limit exceeded. Please try again later." }),
+            {
+              status: 429,
+              headers: { ...corsHeaders, "Content-Type": "application/json" },
+            },
+          );
         }
         if (response.status === 402) {
-          return new Response(JSON.stringify({ error: "AI usage limit reached. Please add credits." }), {
-            status: 402,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          });
+          return new Response(
+            JSON.stringify({ error: "AI usage limit reached. Please add credits." }),
+            {
+              status: 402,
+              headers: { ...corsHeaders, "Content-Type": "application/json" },
+            },
+          );
         }
         const errorText = await response.text();
         console.error("AI gateway error:", response.status, errorText);
@@ -217,7 +243,9 @@ Be concise but thorough. Reference specific platform features when relevant.`;
       // Log AI interaction for analytics
       if (authHeader) {
         const token = authHeader.replace("Bearer ", "");
-        const { data: { user } } = await supabase.auth.getUser(token);
+        const {
+          data: { user },
+        } = await supabase.auth.getUser(token);
         if (user) {
           await supabase.from("analytics_events").insert({
             user_id: user.id,
@@ -225,28 +253,34 @@ Be concise but thorough. Reference specific platform features when relevant.`;
             event_data: {
               type,
               message_count: messages.length,
-              response_length: content.length
-            }
+              response_length: content.length,
+            },
           });
         }
       }
 
-      return new Response(JSON.stringify({
-        content,
-        model: data.model,
-        usage: data.usage
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({
+          content,
+          model: data.model,
+          usage: data.usage,
+        }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
     }
   } catch (error) {
     console.error("AI assistant error:", error);
     // Return generic error to client, log details server-side only
-    return new Response(JSON.stringify({
-      error: "An internal error occurred"
-    }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({
+        error: "An internal error occurred",
+      }),
+      {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      },
+    );
   }
 });

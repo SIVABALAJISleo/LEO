@@ -1,17 +1,9 @@
 {
   "id": "CONTROL_051",
-  "signature": [
-    "grid",
-    "now",
-    "power",
-    "shutdown"
-  ],
+  "signature": ["grid", "now", "power", "shutdown"],
   "domain": "CONTROL",
   "context": null,
   "response": "Resolution: Accessing CONTROL for 'power grid'. Action: shutdown.",
-  "tags": [
-    "control",
-    "grid"
-  ],
+  "tags": ["control", "grid"],
   "sh": "0xf878df7fecee9003"
 }

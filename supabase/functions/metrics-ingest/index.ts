@@ -2,7 +2,8 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-device-token",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-device-token",
 };
 
 interface MetricsPayload {
@@ -43,10 +44,10 @@ Deno.serve(async (req) => {
 
     if (!authHeader && !deviceToken) {
       console.error("[metrics-ingest] Missing authentication");
-      return new Response(
-        JSON.stringify({ error: "Authentication required" }),
-        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Authentication required" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     let userId: string | null = null;
@@ -55,13 +56,16 @@ Deno.serve(async (req) => {
     // Authenticate via JWT
     if (authHeader) {
       const token = authHeader.replace("Bearer ", "");
-      const { data: { user }, error } = await supabase.auth.getUser(token);
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser(token);
       if (error || !user) {
         console.error("[metrics-ingest] Invalid JWT:", error?.message);
-        return new Response(
-          JSON.stringify({ error: "Invalid token" }),
-          { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+        return new Response(JSON.stringify({ error: "Invalid token" }), {
+          status: 401,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
       }
       userId = user.id;
     }
@@ -76,17 +80,17 @@ Deno.serve(async (req) => {
 
       if (error || !device) {
         console.error("[metrics-ingest] Invalid device token");
-        return new Response(
-          JSON.stringify({ error: "Invalid device token" }),
-          { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+        return new Response(JSON.stringify({ error: "Invalid device token" }), {
+          status: 401,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
       }
 
       if (!device.is_active) {
-        return new Response(
-          JSON.stringify({ error: "Device is deactivated" }),
-          { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+        return new Response(JSON.stringify({ error: "Device is deactivated" }), {
+          status: 403,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
       }
 
       deviceId = device.id;
@@ -100,10 +104,10 @@ Deno.serve(async (req) => {
     }
 
     if (!userId) {
-      return new Response(
-        JSON.stringify({ error: "Could not determine user" }),
-        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Could not determine user" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     // Parse and validate metrics
@@ -115,26 +119,28 @@ Deno.serve(async (req) => {
       return typeof value === "number" && value >= min && value <= max;
     };
 
-    if (!validateRange(payload.cpu_usage_percent, 0, 100) ||
-        !validateRange(payload.memory_usage_percent, 0, 100) ||
-        !validateRange(payload.gpu_usage_percent, 0, 100) ||
-        !validateRange(payload.disk_usage_percent, 0, 100) ||
-        !validateRange(payload.gpu_temperature_celsius, -50, 150) ||
-        !validateRange(payload.cpu_temperature_celsius, -50, 150)) {
+    if (
+      !validateRange(payload.cpu_usage_percent, 0, 100) ||
+      !validateRange(payload.memory_usage_percent, 0, 100) ||
+      !validateRange(payload.gpu_usage_percent, 0, 100) ||
+      !validateRange(payload.disk_usage_percent, 0, 100) ||
+      !validateRange(payload.gpu_temperature_celsius, -50, 150) ||
+      !validateRange(payload.cpu_temperature_celsius, -50, 150)
+    ) {
       console.error("[metrics-ingest] Invalid metric values");
-      return new Response(
-        JSON.stringify({ error: "Invalid metric values - check ranges" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Invalid metric values - check ranges" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     // Check for completely empty payload
-    const hasData = Object.values(payload).some(v => v !== undefined && v !== null);
+    const hasData = Object.values(payload).some((v) => v !== undefined && v !== null);
     if (!hasData) {
-      return new Response(
-        JSON.stringify({ error: "Empty metrics payload" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Empty metrics payload" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     // Insert into system_metrics (supporting both new and legacy fields)
@@ -171,7 +177,7 @@ Deno.serve(async (req) => {
       console.error("[metrics-ingest] Insert error:", insertError);
       return new Response(
         JSON.stringify({ error: "Failed to store metrics", details: insertError.message }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
 
@@ -179,7 +185,9 @@ Deno.serve(async (req) => {
     const healthScore = calculateHealthScore(payload);
     await updateSystemHealth(supabase, userId, healthScore, payload);
 
-    console.log(`[metrics-ingest] Stored metrics for user ${userId}, device ${deviceId || 'direct'}`);
+    console.log(
+      `[metrics-ingest] Stored metrics for user ${userId}, device ${deviceId || "direct"}`,
+    );
 
     return new Response(
       JSON.stringify({
@@ -188,21 +196,20 @@ Deno.serve(async (req) => {
         health_score: healthScore,
         timestamp: new Date().toISOString(),
       }),
-      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
-
   } catch (error) {
     console.error("[metrics-ingest] Unexpected error:", error);
-    return new Response(
-      JSON.stringify({ error: "Internal server error" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ error: "Internal server error" }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });
 
 function calculateHealthScore(metrics: MetricsPayload): number {
   let score = 100;
-  
+
   // CPU penalties
   const cpu = metrics.cpu_usage_percent ?? 0;
   if (cpu > 90) score -= 30;
@@ -235,7 +242,7 @@ async function updateSystemHealth(
   supabase: any,
   userId: string,
   healthScore: number,
-  metrics: MetricsPayload
+  metrics: MetricsPayload,
 ) {
   const issues: string[] = [];
   const recommendations: string[] = [];
@@ -265,9 +272,8 @@ async function updateSystemHealth(
   const status = healthScore >= 80 ? "healthy" : healthScore >= 50 ? "degraded" : "critical";
 
   // Upsert system health
-  const { error } = await supabase
-    .from("system_health")
-    .upsert({
+  const { error } = await supabase.from("system_health").upsert(
+    {
       user_id: userId,
       health_score: healthScore,
       status,
@@ -276,7 +282,9 @@ async function updateSystemHealth(
       last_check_at: new Date().toISOString(),
       issues: JSON.stringify(issues),
       recommendations: JSON.stringify(recommendations),
-    }, { onConflict: "user_id" });
+    },
+    { onConflict: "user_id" },
+  );
 
   if (error) {
     console.error("[metrics-ingest] Failed to update system health:", error);

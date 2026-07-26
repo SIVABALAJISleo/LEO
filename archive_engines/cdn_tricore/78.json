@@ -1,10 +1,6 @@
 {
   "id": 78,
   "domain": "SYSTEM",
-  "signature": [
-    "manifest",
-    "restore",
-    "silently"
-  ],
+  "signature": ["manifest", "restore", "silently"],
   "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: restore."
 }

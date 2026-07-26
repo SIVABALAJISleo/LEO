@@ -3,6 +3,7 @@
 Place the built Microsoft `bitnet.cpp` binary (e.g., `llama-cli.exe` or `bitnet-cli`) inside this directory.
 
 ## Build Instructions (Windows)
+
 1. Clone Microsoft BitNet:
    ```powershell
    git clone --recursive https://github.com/microsoft/BitNet.git C:\bitnet
@@ -15,4 +16,5 @@ Place the built Microsoft `bitnet.cpp` binary (e.g., `llama-cli.exe` or `bitnet-
 3. Copy `build\bin\Release\llama-cli.exe` to this directory and rename/symlink it to `bitnet-cli` or leave it as `llama-cli.exe`.
 
 ## Expected Model Paths
+
 - Model GGUF files should be placed at `models/bitnet/` or configured in your environment under `LEO_BITNET_MODEL_PATH`.

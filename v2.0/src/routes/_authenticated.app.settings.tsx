@@ -88,8 +88,7 @@ function Page() {
     setTelemetry(mode);
     setTelemetryMode(mode);
     if (mode === "off") toast.success("Telemetry disabled. Nothing will be sent.");
-    else if (mode === "errors-only")
-      toast.success("Telemetry limited to runtime errors only.");
+    else if (mode === "errors-only") toast.success("Telemetry limited to runtime errors only.");
     else toast.success("Full telemetry enabled.");
   }
 
@@ -108,7 +107,6 @@ function Page() {
     clearTelemetryQueue();
     toast.success("Buffered telemetry cleared. Future errors will still be reported.");
   }
-
 
   return (
     <div className="p-10 max-w-2xl">
@@ -143,9 +141,8 @@ function Page() {
         <p className="eyebrow">Chat history</p>
         <h2 className="mt-2 font-display text-2xl font-bold">Sync across devices</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          When enabled, conversation logs are pushed to and pulled from your LEO backend so
-          they appear on every browser you sign into. When disabled, history stays on this
-          device only.
+          When enabled, conversation logs are pushed to and pulled from your LEO backend so they
+          appear on every browser you sign into. When disabled, history stays on this device only.
         </p>
         <label className="mt-4 flex items-center gap-3 cursor-pointer">
           <input
@@ -194,36 +191,32 @@ function Page() {
         <p className="eyebrow">Privacy</p>
         <h2 className="mt-2 font-display text-2xl font-bold">Telemetry</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          LEO collects anonymous performance metrics (Web Vitals) and runtime error reports
-          to catch regressions. Choose how much to share. Turning telemetry off also stops
-          all offline buffering.
+          LEO collects anonymous performance metrics (Web Vitals) and runtime error reports to catch
+          regressions. Choose how much to share. Turning telemetry off also stops all offline
+          buffering.
         </p>
         <fieldset className="mt-4 space-y-2" aria-label="Telemetry mode">
-          {(
-            [
-              {
-                v: "full" as TelemetryMode,
-                label: "Full",
-                desc: "Web Vitals + runtime errors + unhandled rejections",
-              },
-              {
-                v: "errors-only" as TelemetryMode,
-                label: "Errors only",
-                desc: "Skip performance metrics. Keep runtime errors so crashes stay reportable.",
-              },
-              {
-                v: "off" as TelemetryMode,
-                label: "Off",
-                desc: "Nothing is sent. Nothing is buffered.",
-              },
-            ]
-          ).map(({ v, label, desc }) => (
+          {[
+            {
+              v: "full" as TelemetryMode,
+              label: "Full",
+              desc: "Web Vitals + runtime errors + unhandled rejections",
+            },
+            {
+              v: "errors-only" as TelemetryMode,
+              label: "Errors only",
+              desc: "Skip performance metrics. Keep runtime errors so crashes stay reportable.",
+            },
+            {
+              v: "off" as TelemetryMode,
+              label: "Off",
+              desc: "Nothing is sent. Nothing is buffered.",
+            },
+          ].map(({ v, label, desc }) => (
             <label
               key={v}
               className={`flex cursor-pointer items-start gap-3 border p-3 text-sm ${
-                telemetry === v
-                  ? "border-leo bg-leo/5"
-                  : "border-border hover:border-leo"
+                telemetry === v ? "border-leo bg-leo/5" : "border-border hover:border-leo"
               }`}
             >
               <input
@@ -245,22 +238,17 @@ function Page() {
         <div className="mt-6 border-t border-border/60 pt-6">
           <p className="eyebrow">Data retention</p>
           <p className="mt-2 text-sm text-muted-foreground">
-            How long buffered performance events stay on this device before being
-            pruned. Runtime errors and unhandled rejections are always preserved
-            regardless of this setting so crashes remain reportable.
+            How long buffered performance events stay on this device before being pruned. Runtime
+            errors and unhandled rejections are always preserved regardless of this setting so
+            crashes remain reportable.
           </p>
-          <fieldset
-            className="mt-4 flex flex-wrap gap-2"
-            aria-label="Telemetry retention window"
-          >
-            {(
-              [
-                { v: 7 as RetentionDays, label: "7 days" },
-                { v: 30 as RetentionDays, label: "30 days" },
-                { v: 90 as RetentionDays, label: "90 days" },
-                { v: 0 as RetentionDays, label: "Forever" },
-              ]
-            ).map(({ v, label }) => (
+          <fieldset className="mt-4 flex flex-wrap gap-2" aria-label="Telemetry retention window">
+            {[
+              { v: 7 as RetentionDays, label: "7 days" },
+              { v: 30 as RetentionDays, label: "30 days" },
+              { v: 90 as RetentionDays, label: "90 days" },
+              { v: 0 as RetentionDays, label: "Forever" },
+            ].map(({ v, label }) => (
               <label
                 key={v}
                 className={`cursor-pointer border px-4 py-2 text-sm font-semibold ${

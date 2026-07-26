@@ -1,16 +1,9 @@
 {
   "id": "INFO_438",
-  "signature": [
-    "from",
-    "load",
-    "telemetry"
-  ],
+  "signature": ["from", "load", "telemetry"],
   "domain": "INFO",
   "context": null,
   "response": "Resolution: Accessing INFO for 'load'. Action: telemetry from.",
-  "tags": [
-    "info",
-    "load"
-  ],
+  "tags": ["info", "load"],
   "sh": "0xa002a851f67601c0"
 }

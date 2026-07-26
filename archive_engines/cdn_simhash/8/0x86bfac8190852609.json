@@ -1,16 +1,9 @@
 {
   "id": "SYSTEM_212",
-  "signature": [
-    "database",
-    "index",
-    "semantic"
-  ],
+  "signature": ["database", "index", "semantic"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'semantic database'. Action: index.",
-  "tags": [
-    "system",
-    "database"
-  ],
+  "tags": ["system", "database"],
   "sh": "0x86bfac8190852609"
 }

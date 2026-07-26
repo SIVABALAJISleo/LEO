@@ -26,6 +26,7 @@
 Kimi K2.5 is an open-source, native multimodal agentic model built through continual pretraining on approximately 15 trillion mixed visual and text tokens atop Kimi-K2-Base. It seamlessly integrates vision and language understanding with advanced agentic capabilities, instant and thinking modes, as well as conversational and agentic paradigms.
 
 ### Key Features
+
 - **Native Multimodality**: Pre-trained on vision–language tokens, K2.5 excels in visual knowledge, cross-modal reasoning, and agentic tool use grounded in visual inputs.
 - **Coding with Vision**: K2.5 generates code from visual specifications (UI designs, video workflows) and autonomously orchestrates tools for visual data processing.
 - **Agent Swarm**: K2.5 transitions from single-agent scaling to a self-directed, coordinated swarm-like execution scheme. It decomposes complex tasks into parallel sub-tasks executed by dynamically instantiated, domain-specific agents.
@@ -34,31 +35,29 @@ Kimi K2.5 is an open-source, native multimodal agentic model built through conti
 
 <div align="center">
 
+|                                             |                          |
+| :-----------------------------------------: | :----------------------: |
+|              **Architecture**               | Mixture-of-Experts (MoE) |
+|            **Total Parameters**             |            1T            |
+|          **Activated Parameters**           |           32B            |
+| **Number of Layers** (Dense layer included) |            61            |
+|         **Number of Dense Layers**          |            1             |
+|       **Attention Hidden Dimension**        |           7168           |
+|    **MoE Hidden Dimension** (per Expert)    |           2048           |
+|        **Number of Attention Heads**        |            64            |
+|            **Number of Experts**            |           384            |
+|       **Selected Experts per Token**        |            8             |
+|        **Number of Shared Experts**         |            1             |
+|             **Vocabulary Size**             |           160K           |
+|             **Context Length**              |           256K           |
+|           **Attention Mechanism**           |           MLA            |
+|           **Activation Function**           |          SwiGLU          |
+|             **Vision Encoder**              |         MoonViT          |
+|      **Parameters of Vision Encoder**       |           400M           |
 
-| | |
-|:---:|:---:|
-| **Architecture** | Mixture-of-Experts (MoE) |
-| **Total Parameters** | 1T |
-| **Activated Parameters** | 32B |
-| **Number of Layers** (Dense layer included) | 61 |
-| **Number of Dense Layers** | 1 |
-| **Attention Hidden Dimension** | 7168 |
-| **MoE Hidden Dimension** (per Expert) | 2048 |
-| **Number of Attention Heads** | 64 |
-| **Number of Experts** | 384 |
-| **Selected Experts per Token** | 8 |
-| **Number of Shared Experts** | 1 |
-| **Vocabulary Size** | 160K |
-| **Context Length** | 256K |
-| **Attention Mechanism** | MLA |
-| **Activation Function** | SwiGLU |
-| **Vision Encoder** | MoonViT |
-| **Parameters of Vision Encoder** | 400M |
 </div>
 
 ## 3. Evaluation Results
-
-
 
 <div align="center">
 <table>
@@ -517,28 +516,33 @@ Kimi K2.5 is an open-source, native multimodal agentic model built through conti
 </details>
 
 ## 4. Native INT4 Quantization
+
 Kimi-K2.5 adopts the same native int4 quantization method as [Kimi-K2-Thinking](https://huggingface.co/moonshotai/Kimi-K2-Thinking#4-native-int4-quantization).
 
 ## 5. Deployment
+
 > [!Note]
-> You can access Kimi-K2.5's API on https://platform.moonshot.ai and we provide OpenAI/Anthropic-compatible API for you. To verify the deployment is correct, we also provide the  [Kimi Vendor Verifier](https://kimi.com/blog/kimi-vendor-verifier.html).
-Currently, Kimi-K2.5 is recommended to run on the following inference engines:
-* vLLM
-* SGLang
-* KTransformers
+> You can access Kimi-K2.5's API on https://platform.moonshot.ai and we provide OpenAI/Anthropic-compatible API for you. To verify the deployment is correct, we also provide the [Kimi Vendor Verifier](https://kimi.com/blog/kimi-vendor-verifier.html).
+> Currently, Kimi-K2.5 is recommended to run on the following inference engines:
+
+- vLLM
+- SGLang
+- KTransformers
 
 The minimum version requirement for `transformers` is `4.57.1`.
 
 Deployment examples can be found in the [Model Deployment Guide](docs/deploy_guidance.md).
 
-
 ---
+
 ## 6. Model Usage
 
 The usage demos below demonstrate how to call our official API.
 
 For third-party APIs deployed with vLLM or SGLang, please note that:
+
 > [!Note]
+>
 > - Chat with video content is an experimental feature and is only supported in our official API for now.
 >
 > - The recommended `temperature` will be `1.0` for Thinking mode and `0.6` for Instant mode.
@@ -585,7 +589,6 @@ def simple_chat(client: openai.OpenAI, model_name: str):
     print('====== Below is response in Instant Mode ======')
     print(f'response: {response.choices[0].message.content}')
 ```
-
 
 ### Chat Completion with visual content
 
@@ -684,18 +687,15 @@ def chat_with_video(client: openai.OpenAI, model_name:str):
 
 K2.5 shares the same design of Interleaved Thinking and Multi-Step Tool Call as K2 Thinking. For usage example, please refer to the [K2 Thinking documentation](https://platform.moonshot.ai/docs/guide/use-kimi-k2-thinking-model#complete-example).
 
-
 ### Coding Agent Framework
 
 Kimi K2.5 works best with Kimi Code CLI as its agent framework — give it a try at https://www.kimi.com/code.
-
 
 ---
 
 ## 7. License
 
 Both the code repository and the model weights are released under the [Modified MIT License](LICENSE).
-
 
 ---
 

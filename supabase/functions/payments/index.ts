@@ -8,9 +8,9 @@ const corsHeaders = {
 
 // Validation constants
 const MAX_AMOUNT = 10000000; // 10 million max
-const VALID_PROVIDERS = ['stripe', 'razorpay'];
-const VALID_PLANS = ['free', 'pro', 'heavy', 'enterprise'];
-const VALID_CYCLES = ['monthly', 'yearly'];
+const VALID_PROVIDERS = ["stripe", "razorpay"];
+const VALID_PLANS = ["free", "pro", "heavy", "enterprise"];
+const VALID_CYCLES = ["monthly", "yearly"];
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -20,7 +20,7 @@ serve(async (req) => {
   try {
     const supabaseClient = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
     );
 
     const authHeader = req.headers.get("Authorization");
@@ -32,8 +32,11 @@ serve(async (req) => {
     }
 
     const token = authHeader.replace("Bearer ", "");
-    const { data: { user }, error: authError } = await supabaseClient.auth.getUser(token);
-    
+    const {
+      data: { user },
+      error: authError,
+    } = await supabaseClient.auth.getUser(token);
+
     if (authError || !user) {
       return new Response(JSON.stringify({ error: "Invalid token" }), {
         status: 401,
@@ -68,7 +71,7 @@ serve(async (req) => {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      if (typeof amount !== 'number' || amount <= 0 || amount > MAX_AMOUNT) {
+      if (typeof amount !== "number" || amount <= 0 || amount > MAX_AMOUNT) {
         return new Response(JSON.stringify({ error: "Invalid amount" }), {
           status: 400,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -99,15 +102,18 @@ serve(async (req) => {
       }
 
       // Return checkout session info (provider integration would go here)
-      return new Response(JSON.stringify({
-        payment_id: payment.id,
-        checkout_url: `/billing/checkout/${payment.id}`,
-        provider,
-        amount,
-        currency: "INR",
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({
+          payment_id: payment.id,
+          checkout_url: `/billing/checkout/${payment.id}`,
+          provider,
+          amount,
+          currency: "INR",
+        }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
     }
 
     // GET /payments/history
@@ -135,7 +141,7 @@ serve(async (req) => {
       const body = await req.json();
       const { payment_id, transaction_id } = body;
 
-      if (!payment_id || typeof payment_id !== 'string') {
+      if (!payment_id || typeof payment_id !== "string") {
         return new Response(JSON.stringify({ error: "Invalid payment_id" }), {
           status: 400,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -163,14 +169,15 @@ serve(async (req) => {
       }
 
       // Update subscription
-      await supabaseClient
-        .from("billing_subscriptions")
-        .upsert({
+      await supabaseClient.from("billing_subscriptions").upsert(
+        {
           user_id: user.id,
           plan: payment.plan,
           status: "active",
           renewed_at: new Date().toISOString(),
-        }, { onConflict: 'user_id' });
+        },
+        { onConflict: "user_id" },
+      );
 
       return new Response(JSON.stringify({ success: true, payment }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },

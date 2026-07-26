@@ -1,11 +1,6 @@
 {
   "id": 1,
   "domain": "INFO",
-  "signature": [
-    "alpha",
-    "from",
-    "node",
-    "telemetry"
-  ],
+  "signature": ["alpha", "from", "node", "telemetry"],
   "response": "Resolution: Accessing INFO for 'node alpha'. Action: telemetry from."
 }

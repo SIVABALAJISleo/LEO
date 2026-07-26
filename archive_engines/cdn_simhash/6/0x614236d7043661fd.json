@@ -1,15 +1,9 @@
 {
   "id": "SYSTEM_252",
-  "signature": [
-    "build",
-    "synchronize"
-  ],
+  "signature": ["build", "synchronize"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'build'. Action: synchronize.",
-  "tags": [
-    "system",
-    "build"
-  ],
+  "tags": ["system", "build"],
   "sh": "0x614236d7043661fd"
 }

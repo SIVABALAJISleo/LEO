@@ -1,16 +1,9 @@
 {
   "id": "CONTROL_400",
-  "signature": [
-    "engine",
-    "primary",
-    "stop"
-  ],
+  "signature": ["engine", "primary", "stop"],
   "domain": "CONTROL",
   "context": null,
   "response": "Resolution: Accessing CONTROL for 'primary engine'. Action: stop.",
-  "tags": [
-    "control",
-    "engine"
-  ],
+  "tags": ["control", "engine"],
   "sh": "0xbf3d527fd582f9d9"
 }

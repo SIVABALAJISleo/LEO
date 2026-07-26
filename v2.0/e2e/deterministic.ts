@@ -10,10 +10,7 @@ import type { Page } from "@playwright/test";
  *
  * Call BEFORE `page.goto(...)` so init hooks land in the page context.
  */
-export async function freezeNonVisual(
-  page: Page,
-  opts: { epochMs?: number } = {},
-) {
+export async function freezeNonVisual(page: Page, opts: { epochMs?: number } = {}) {
   const epoch = opts.epochMs ?? Date.parse("2026-01-15T12:00:00.000Z");
 
   await page.addInitScript((frozenEpoch: number) => {

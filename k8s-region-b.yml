@@ -18,27 +18,27 @@ spec:
         region: eu-central-1
     spec:
       containers:
-      - name: backend
-        image: hyper-saas-backend:latest
-        ports:
-        - containerPort: 8000
-        env:
-        - name: DEPLOYMENT_REGION
-          value: "eu-central-1"
-        envFrom:
-        - secretRef:
-            name: hyper-secrets
-        resources:
-          requests:
-            cpu: "500m"
-            memory: "1Gi"
-          limits:
-            cpu: "1000m"
-            memory: "2Gi"
-        healthCheck:
-          httpGet:
-            path: /health
-            port: 8000
+        - name: backend
+          image: hyper-saas-backend:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DEPLOYMENT_REGION
+              value: "eu-central-1"
+          envFrom:
+            - secretRef:
+                name: hyper-secrets
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+            limits:
+              cpu: "1000m"
+              memory: "2Gi"
+          healthCheck:
+            httpGet:
+              path: /health
+              port: 8000
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -52,9 +52,9 @@ spec:
   minReplicas: 2
   maxReplicas: 100 # Explode pod count immediately upon global DNS shift
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 60 # Aggressive scaling trigger during failover
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 60 # Aggressive scaling trigger during failover

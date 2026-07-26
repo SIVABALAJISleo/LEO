@@ -1,11 +1,6 @@
 {
   "id": 20,
   "domain": "INFO",
-  "signature": [
-    "detailed",
-    "health",
-    "of",
-    "temperature"
-  ],
+  "signature": ["detailed", "health", "of", "temperature"],
   "response": "Resolution: Accessing INFO for 'temperature'. Action: health of."
 }

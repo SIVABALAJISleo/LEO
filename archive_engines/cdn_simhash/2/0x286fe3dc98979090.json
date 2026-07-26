@@ -1,16 +1,9 @@
 {
   "id": "CMD_REBOOT_CONTEXTUAL",
-  "signature": [
-    "it",
-    "reboot"
-  ],
+  "signature": ["it", "reboot"],
   "domain": "CONTROL",
   "context": "alpha_node",
   "response": "Context: ALPHA. Rebooting 'Alpha Node' as requested.",
-  "tags": [
-    "reboot",
-    "alpha",
-    "contextual"
-  ],
+  "tags": ["reboot", "alpha", "contextual"],
   "sh": "0x286fe3dc98979090"
 }

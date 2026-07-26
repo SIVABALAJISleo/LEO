@@ -29,20 +29,23 @@ Deno.serve(async (req) => {
     // Authenticate user
     const authHeader = req.headers.get("authorization");
     if (!authHeader) {
-      return new Response(
-        JSON.stringify({ error: "Authorization required" }),
-        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Authorization required" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     const token = authHeader.replace("Bearer ", "");
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser(token);
 
     if (authError || !user) {
-      return new Response(
-        JSON.stringify({ error: "Invalid token" }),
-        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Invalid token" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     const userId = user.id;
@@ -197,16 +200,15 @@ Deno.serve(async (req) => {
         ...results,
         timestamp: new Date().toISOString(),
       }),
-      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
-
   } catch (error) {
     console.error("[system-bootstrap] Error:", error);
     // Return generic error to client, log details server-side only
-    return new Response(
-      JSON.stringify({ error: "An internal error occurred" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ error: "An internal error occurred" }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });
 
@@ -214,7 +216,7 @@ Deno.serve(async (req) => {
 async function runIntegrityChecks(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   supabase: any,
-  userId: string
+  userId: string,
 ): Promise<Record<string, boolean>> {
   const checks: Record<string, boolean> = {};
 
@@ -243,10 +245,7 @@ async function runIntegrityChecks(
   checks.health_tracking = !!health;
 
   // Check modules
-  const { data: modules } = await supabase
-    .from("module_status")
-    .select("id")
-    .eq("user_id", userId);
+  const { data: modules } = await supabase.from("module_status").select("id").eq("user_id", userId);
   checks.modules_configured = (modules?.length ?? 0) > 0;
 
   // Check metrics

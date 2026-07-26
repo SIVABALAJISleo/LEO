@@ -66,15 +66,11 @@ test.describe("telemetry — domain events reach /api/telemetry", () => {
     expect(typeof evt.session_id).toBe("string");
   });
 
-  test("merge-banner events fire when another device updates the session", async ({
-    page,
-  }) => {
+  test("merge-banner events fire when another device updates the session", async ({ page }) => {
     const telemetry = await mockTelemetry(page);
 
     await page.goto("/app/chat");
-    await expect(
-      page.getByRole("heading", { name: /start a conversation/i }),
-    ).toBeVisible();
+    await expect(page.getByRole("heading", { name: /start a conversation/i })).toBeVisible();
 
     // Simulate a background merge coming from the sync layer.
     await page.evaluate(() => {

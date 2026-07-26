@@ -1,13 +1,6 @@
 {
   "id": 176,
   "domain": "CONTROL",
-  "signature": [
-    "core",
-    "high",
-    "priority",
-    "reactor",
-    "shutdown",
-    "with"
-  ],
+  "signature": ["core", "high", "priority", "reactor", "shutdown", "with"],
   "response": "Resolution: Accessing CONTROL for 'core reactor'. Action: shutdown."
 }

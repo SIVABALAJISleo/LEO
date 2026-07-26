@@ -1,10 +1,6 @@
 {
   "id": 241,
   "domain": "INFO",
-  "signature": [
-    "check",
-    "locally",
-    "uptime"
-  ],
+  "signature": ["check", "locally", "uptime"],
   "response": "Resolution: Accessing INFO for 'uptime'. Action: check."
 }

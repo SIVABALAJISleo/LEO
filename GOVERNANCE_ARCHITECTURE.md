@@ -1,4 +1,5 @@
 # Enterprise Policy Relationship Intelligence System (Semantic Audit Memory)
+
 ## Production-Grade Architecture & Deployment Blueprint
 
 This document details the complete design, data structures, deployment, and testing workflows for the Enterprise Policy Relationship Intelligence System (Semantic Audit Memory). It describes a deterministic, CPU-first on-premises compliance governance intelligence platform.
@@ -51,6 +52,7 @@ LEO-main/
 ## 3. Database & Graph Schemas
 
 ### relational SQL schema (database.py)
+
 1. **policy_documents**
    - `id`: INTEGER (Primary Key)
    - `filename`: VARCHAR (Indexed)
@@ -111,6 +113,7 @@ All endpoints are hosted under `http://localhost:8005`:
 ## 5. Dockerized Air-Gapped Setup
 
 ### Dockerfile
+
 ```dockerfile
 FROM python:3.13-slim
 
@@ -131,8 +134,9 @@ CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8005"]
 ```
 
 ### docker-compose.yml
+
 ```yaml
-version: '3.8'
+version: "3.8"
 
 services:
   backend:
@@ -164,11 +168,13 @@ services:
 ## 6. Testing Suite
 
 The testing suite validates:
+
 1. **Hierarchical splitting logic** of inputs.
 2. **TF-IDF vocabulary overlap / Cosine similarity calculations**.
 3. **Symbolic logic transitions** for versioning (`SUPERSEDES`), overrides (`REGION_EXCEPTION`), and numeric constraint conflicts.
 
 Run the unit and API tests:
+
 ```bash
 python -m pytest tests/test_policy_system.py
 python -m pytest tests/test_api.py

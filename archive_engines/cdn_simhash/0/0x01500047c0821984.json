@@ -1,15 +1,9 @@
 {
   "id": "SYSTEM_291",
-  "signature": [
-    "registry",
-    "verify"
-  ],
+  "signature": ["registry", "verify"],
   "domain": "SYSTEM",
   "context": null,
   "response": "Resolution: Accessing SYSTEM for 'registry'. Action: verify.",
-  "tags": [
-    "system",
-    "registry"
-  ],
+  "tags": ["system", "registry"],
   "sh": "0x01500047c0821984"
 }

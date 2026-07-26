@@ -1,11 +1,6 @@
 {
   "id": 86,
   "domain": "CONTROL",
-  "signature": [
-    "delta",
-    "now",
-    "stop",
-    "subsystem"
-  ],
+  "signature": ["delta", "now", "stop", "subsystem"],
   "response": "Resolution: Accessing CONTROL for 'subsystem delta'. Action: stop."
 }

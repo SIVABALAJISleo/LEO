@@ -1,16 +1,9 @@
 {
   "id": "CONTROL_207",
-  "signature": [
-    "delta",
-    "reset",
-    "subsystem"
-  ],
+  "signature": ["delta", "reset", "subsystem"],
   "domain": "CONTROL",
   "context": null,
   "response": "Resolution: Accessing CONTROL for 'subsystem delta'. Action: reset.",
-  "tags": [
-    "control",
-    "delta"
-  ],
+  "tags": ["control", "delta"],
   "sh": "0x4b050637441496c0"
 }

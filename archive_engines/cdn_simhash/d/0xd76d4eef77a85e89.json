@@ -1,19 +1,9 @@
 {
   "id": "CONTROL_427",
-  "signature": [
-    "delta",
-    "high",
-    "initialize",
-    "priority",
-    "subsystem",
-    "with"
-  ],
+  "signature": ["delta", "high", "initialize", "priority", "subsystem", "with"],
   "domain": "CONTROL",
   "context": null,
   "response": "Resolution: Accessing CONTROL for 'subsystem delta'. Action: initialize.",
-  "tags": [
-    "control",
-    "delta"
-  ],
+  "tags": ["control", "delta"],
   "sh": "0xd76d4eef77a85e89"
 }

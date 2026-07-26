@@ -1,10 +1,6 @@
 {
   "id": 290,
   "domain": "SYSTEM",
-  "signature": [
-    "forcefully",
-    "manifest",
-    "synchronize"
-  ],
+  "signature": ["forcefully", "manifest", "synchronize"],
   "response": "Resolution: Accessing SYSTEM for 'manifest'. Action: synchronize."
 }

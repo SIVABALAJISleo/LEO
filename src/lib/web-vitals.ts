@@ -113,7 +113,6 @@ const DEFAULT_REPORTER: Reporter = (payload) => {
   const kind = typeof payload.kind === "string" ? payload.kind : "";
   if (!shouldSendKind(kind)) return; // respect user telemetry opt-out
   if (import.meta.env.DEV) {
-    // eslint-disable-next-line no-console
     console.info("[LEO vitals]", payload);
   }
   // Fast-path: try beacon so we don't block the main thread. If offline or
@@ -179,7 +178,6 @@ export function initWebVitals() {
     onFCP(sendMetric);
     onTTFB(sendMetric);
   } catch (err) {
-    // eslint-disable-next-line no-console
     console.warn("[LEO vitals] init failed", err);
   }
 

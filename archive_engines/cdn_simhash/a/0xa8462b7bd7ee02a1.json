@@ -1,17 +1,9 @@
 {
   "id": "INFO_300",
-  "signature": [
-    "alpha",
-    "from",
-    "node",
-    "telemetry"
-  ],
+  "signature": ["alpha", "from", "node", "telemetry"],
   "domain": "INFO",
   "context": null,
   "response": "Resolution: Accessing INFO for 'node alpha'. Action: telemetry from.",
-  "tags": [
-    "info",
-    "alpha"
-  ],
+  "tags": ["info", "alpha"],
   "sh": "0xa8462b7bd7ee02a1"
 }
