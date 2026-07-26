@@ -34,3 +34,15 @@ dist-ssr
 # Playwright
 playwright-report/
 test-results/
+
+# Python caching & DBs
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.venv/
+venv/
+*.db
+*.sqlite
+confidence_weights.json

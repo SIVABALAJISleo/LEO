@@ -26,36 +26,75 @@ if FIREBASE_AVAILABLE:
         except Exception as e:
             print(f"Warning: Firebase Admin not initialized. {e}")
 
-security = HTTPBearer()
+import jwt
+import time
+from typing import Optional
 
-async def verify_firebase_token(request: Request, auth_creds: HTTPAuthorizationCredentials = Security(security)):
-    """Verifies the Firebase ID Token. Fails back to mock if firebase-admin is missing or in DEV/TEST."""
+security = HTTPBearer(auto_error=False)
+
+async def verify_firebase_token(request: Request, auth_creds: Optional[HTTPAuthorizationCredentials] = Security(security)):
+    """Verifies the Firebase ID Token or local JWT. Fails back to mock only in DEV."""
     app_env = os.getenv("APP_ENV", "development")
     
+    token_str = None
+    if auth_creds and auth_creds.credentials:
+        token_str = auth_creds.credentials
+    else:
+        # Fallback to cookie
+        token_str = request.cookies.get("leo.jwt")
+
+    if not token_str:
+        raise HTTPException(
+            status_code=401,
+            detail="Missing authentication credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
     is_dev = app_env == "development"
-    is_audit_token = auth_creds.credentials == "AUDIT_MODE_TOKEN"
-    is_test_token = auth_creds.credentials.startswith("token-")
+    is_audit_token = token_str == "AUDIT_MODE_TOKEN"
+    is_test_token = token_str.startswith("token-")
     
-    if (is_dev and is_audit_token) or (is_dev and not FIREBASE_AVAILABLE) or is_test_token or os.getenv("LEO_OFFLINE") == "1":
-        # Development bypass logic
-        uid = auth_creds.credentials.replace("token-", "") if is_test_token else "dev_user"
+    # 1. Dev Mode Bypass Check (strictly restricted to APP_ENV == "development")
+    if is_dev and (is_audit_token or is_test_token or not FIREBASE_AVAILABLE or os.getenv("LEO_OFFLINE") == "1"):
+        uid = token_str.replace("token-", "") if is_test_token else "dev_user"
         decoded = {
             "uid": uid, 
             "email": f"{uid}@hyper-saas.com", 
             "role": "admin",
-            "tenant_id": f"tenant_{uid}"
+            "tenant_id": f"tenant_{uid}",
+            "exp": int(time.time()) + 3600
         }
-        # Attach to request state for middleware access
         request.state.user = decoded
         return decoded
     
+    # 2. Local JWT Signature Validation (for backend-issued custom JWTs)
+    jwt_secret = os.getenv("JWT_SECRET", "super_secret_hyper_jwt_key_2026")
     try:
-        decoded_token = auth.verify_id_token(auth_creds.credentials)
-        # Ensure tenant_id exists, fallback to uid if custom claim missing
+        decoded = jwt.decode(token_str, jwt_secret, algorithms=["HS256"])
+        if decoded.get("exp") and decoded["exp"] < time.time():
+            raise HTTPException(status_code=401, detail="Token has expired")
+        request.state.user = decoded
+        return decoded
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token has expired")
+    except jwt.InvalidTokenError:
+        pass
+
+    # 3. Firebase Token Validation
+    if not FIREBASE_AVAILABLE:
+        raise HTTPException(
+            status_code=401,
+            detail="Authentication failed: Firebase service unavailable and mock auth disabled.",
+        )
+        
+    try:
+        decoded_token = auth.verify_id_token(token_str)
+        if decoded_token.get("exp") and decoded_token["exp"] < time.time():
+            raise HTTPException(status_code=401, detail="Token has expired")
+            
         if "tenant_id" not in decoded_token:
             decoded_token["tenant_id"] = f"tenant_{decoded_token.get('uid')}"
         
-        # Attach to request state for middleware access
         request.state.user = decoded_token
         return decoded_token
     except Exception as e:

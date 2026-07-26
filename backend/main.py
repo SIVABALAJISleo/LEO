@@ -69,6 +69,9 @@ TelemetryInstrumentor.instrument_app(app)
 from backend.core.health import router as health_router
 app.include_router(health_router)
 
+from backend.routers.auth import router as auth_router
+app.include_router(auth_router)
+
 # Include Routers
 from backend.routers.benchmark import router as benchmark_router
 app.include_router(benchmark_router)

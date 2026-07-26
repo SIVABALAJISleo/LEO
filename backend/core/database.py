@@ -1,5 +1,5 @@
 import os
-from sqlalchemy import create_engine, Column, Integer, String, DateTime, Text, Boolean, Float, LargeBinary
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, Text, Boolean, Float, LargeBinary, ForeignKey, event
 from sqlalchemy.orm import declarative_base, sessionmaker
 import datetime
 
@@ -24,6 +24,12 @@ else:
         echo=False
     )
 
+@event.listens_for(engine, "connect")
+def set_sqlite_pragma(dbconn, _):
+    cursor = dbconn.cursor()
+    cursor.execute("PRAGMA foreign_keys=ON")
+    cursor.close()
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
@@ -35,12 +41,13 @@ class User(Base):
     tenant_id = Column(String, index=True) # Multi-tenant isolation ID
     email = Column(String, unique=True, index=True)
     tier = Column(String, default="free") # free, pro, enterprise
+    password_hash = Column(String, nullable=True) # For backend-owned auth
     created_at = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc))
 
 class Subscription(Base):
     __tablename__ = "subscriptions"
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
     tenant_id = Column(String, index=True)
     paypal_order_id = Column(String, unique=True)
     status = Column(String) # active, cancelled, expired
@@ -50,7 +57,7 @@ class DocumentMetadata(Base):
     __tablename__ = "document_metadata"
     id = Column(Integer, primary_key=True, index=True)
     filename = Column(String)
-    user_id = Column(Integer)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
     tenant_id = Column(String, index=True)
     content_hash = Column(String)
     created_at = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc))
@@ -166,7 +173,7 @@ class PolicyChunk(Base):
     """Hierarchical split of policy text clauses."""
     __tablename__ = "policy_chunks"
     id = Column(Integer, primary_key=True, index=True)
-    document_id = Column(Integer, index=True)
+    document_id = Column(Integer, ForeignKey("policy_documents.id", ondelete="CASCADE"), index=True)
     section_header = Column(String)
     clause_number = Column(String, index=True)
     content = Column(Text)
@@ -178,8 +185,8 @@ class PolicyRelationship(Base):
     """Evaluated semantic / logic links between policy chunks."""
     __tablename__ = "policy_relationships"
     id = Column(Integer, primary_key=True, index=True)
-    source_chunk_id = Column(Integer, index=True)
-    target_chunk_id = Column(Integer, index=True)
+    source_chunk_id = Column(Integer, ForeignKey("policy_chunks.id", ondelete="CASCADE"), index=True)
+    target_chunk_id = Column(Integer, ForeignKey("policy_chunks.id", ondelete="CASCADE"), index=True)
     relationship_type = Column(String, index=True) # CONTRADICTS, SUPERSEDES, DEPENDS_ON, etc.
     confidence = Column(Float)
     rationale = Column(Text)

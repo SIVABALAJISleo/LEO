@@ -49,8 +49,8 @@ class ConfidenceGate:
 
     def record_feedback(self, source: str, was_correct: bool):
         """Update source score using exponential moving average."""
-        import json, os
-        weights_path = "/tmp/confidence_weights.json" # nosec B108
+        import json, os, tempfile
+        weights_path = os.path.join(tempfile.gettempdir(), "confidence_weights.json")
         try:
             if os.path.exists(weights_path):
                 with open(weights_path) as f:
@@ -72,8 +72,8 @@ class ConfidenceGate:
 
     def score(self, answer, source="FULL_CALC", retrieval_similarity=0.5,
               graph_match_score=0.0, historical_accuracy=0.5):
-        import json, os
-        weights_path = "/tmp/confidence_weights.json" # nosec B108
+        import json, os, tempfile
+        weights_path = os.path.join(tempfile.gettempdir(), "confidence_weights.json")
         source_scores = SOURCE_SCORES.copy()
         try:
             if os.path.exists(weights_path):

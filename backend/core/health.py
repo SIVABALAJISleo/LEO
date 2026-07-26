@@ -20,7 +20,7 @@ def increment_hits():
 async def health_check():
     """Basic liveness probe."""
     return {
-        "status": "up",
+        "status": "ok",
         "timestamp": time.time(),
         "uptime": f"{time.time() - START_TIME:.2f}s"
     }

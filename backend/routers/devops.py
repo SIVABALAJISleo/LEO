@@ -95,8 +95,7 @@ async def get_security_status(token: dict = Depends(PermissionChecker("admin")))
 
 @router.post("/api/v1/billing/webhook", tags=["Billing"])
 async def stripe_webhook(request: Request):
-    import hmac
-    import hashlib
+    import stripe
     
     payload = await request.body()
     sig_header = request.headers.get("stripe-signature")
@@ -110,22 +109,12 @@ async def stripe_webhook(request: Request):
             raise HTTPException(status_code=400, detail="Missing stripe-signature header")
             
         try:
-            parts = {k: v for part in sig_header.split(",") for k, v in [part.split("=")]}
-            timestamp = parts.get("t")
-            signature = parts.get("v1")
-            if not timestamp or not signature:
-                raise ValueError()
-        except Exception:
-            raise HTTPException(status_code=400, detail="Malformed stripe-signature header")
-            
-        signed_payload = f"{timestamp}.".encode() + payload
-        computed_sig = hmac.new(
-            webhook_secret.encode(),
-            signed_payload,
-            hashlib.sha256
-        ).hexdigest()
-        
-        if not hmac.compare_digest(computed_sig, signature):
-            raise HTTPException(status_code=401, detail="Cryptographic signature mismatch")
+            stripe.Webhook.construct_event(
+                payload, sig_header, webhook_secret
+            )
+        except stripe.error.SignatureVerificationError as e:
+            raise HTTPException(status_code=401, detail=f"Cryptographic signature mismatch: {str(e)}")
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=f"Malformed stripe-signature header: {str(e)}")
             
     return {"status": "verified", "event_received": True}
