@@ -332,8 +332,11 @@ export function clearAllSessions(): void {
 
 // -------- Server pull, pagination + merge --------
 
+/* eslint-disable prettier/prettier */
 type ServerListResponse =
-  { sessions?: ChatSession[]; items?: ChatSession[]; nextCursor?: string | null } | ChatSession[];
+  | { sessions?: ChatSession[]; items?: ChatSession[]; nextCursor?: string | null }
+  | ChatSession[];
+/* eslint-enable prettier/prettier */
 
 function normalizeListResponse(res: ServerListResponse): {
   sessions: ChatSession[];

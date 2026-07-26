@@ -213,8 +213,11 @@ export function validateSchema(text: string, name: string): SchemaReport {
           ? (data as { runs: unknown[] }).runs
           : [data];
       rowCount = arr.length;
+      /* eslint-disable prettier/prettier */
       const first = arr.find((x) => x && typeof x === "object") as
-        Record<string, unknown> | undefined;
+        | Record<string, unknown>
+        | undefined;
+      /* eslint-enable prettier/prettier */
       detected = first ? Object.keys(first) : [];
       if (!first) {
         issues.push({
