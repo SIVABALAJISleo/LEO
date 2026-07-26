@@ -1,19 +1,25 @@
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Building2, Mail, User, Briefcase, Send, CheckCircle } from 'lucide-react';
-import { useBillingData } from '@/hooks/useBillingData';
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Building2, Mail, User, Briefcase, Send, CheckCircle } from "lucide-react";
+import { useBillingData } from "@/hooks/useBillingData";
 
 const BUDGET_RANGES = [
-  { value: 'under-10k', label: 'Under ₹10,000/month' },
-  { value: '10k-50k', label: '₹10,000 - ₹50,000/month' },
-  { value: '50k-200k', label: '₹50,000 - ₹2,00,000/month' },
-  { value: 'over-200k', label: 'Over ₹2,00,000/month' },
-  { value: 'not-sure', label: 'Not sure yet' },
+  { value: "under-10k", label: "Under ₹10,000/month" },
+  { value: "10k-50k", label: "₹10,000 - ₹50,000/month" },
+  { value: "50k-200k", label: "₹50,000 - ₹2,00,000/month" },
+  { value: "over-200k", label: "Over ₹2,00,000/month" },
+  { value: "not-sure", label: "Not sure yet" },
 ];
 
 const EnterpriseQuoteRequestPage = () => {
@@ -21,21 +27,22 @@ const EnterpriseQuoteRequestPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    company: '',
-    role: '',
-    expected_workload: '',
-    budget_range: '',
-    message: '',
+    name: "",
+    email: "",
+    company: "",
+    role: "",
+    expected_workload: "",
+    budget_range: "",
+    message: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
-    if (!formData.name.trim()) newErrors.name = 'Name is required';
-    if (!formData.email.trim()) newErrors.email = 'Email is required';
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = 'Invalid email format';
+    if (!formData.name.trim()) newErrors.name = "Name is required";
+    if (!formData.email.trim()) newErrors.email = "Email is required";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
+      newErrors.email = "Invalid email format";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -51,8 +58,8 @@ const EnterpriseQuoteRequestPage = () => {
   };
 
   const handleChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    if (errors[field]) setErrors(prev => ({ ...prev, [field]: '' }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    if (errors[field]) setErrors((prev) => ({ ...prev, [field]: "" }));
   };
 
   if (isSubmitted) {
@@ -65,7 +72,8 @@ const EnterpriseQuoteRequestPage = () => {
             </div>
             <h2 className="text-2xl font-bold mb-2">Quote Request Submitted</h2>
             <p className="text-muted-foreground mb-6">
-              Thank you for your interest in HYPER Enterprise. Our team will review your requirements and contact you within 24-48 hours.
+              Thank you for your interest in HYPER Enterprise. Our team will review your
+              requirements and contact you within 24-48 hours.
             </p>
             <Button onClick={() => setIsSubmitted(false)} variant="outline">
               Submit Another Request
@@ -103,9 +111,9 @@ const EnterpriseQuoteRequestPage = () => {
                 <Input
                   id="name"
                   value={formData.name}
-                  onChange={(e) => handleChange('name', e.target.value)}
+                  onChange={(e) => handleChange("name", e.target.value)}
                   placeholder="John Doe"
-                  className={errors.name ? 'border-destructive' : ''}
+                  className={errors.name ? "border-destructive" : ""}
                 />
                 {errors.name && <p className="text-xs text-destructive">{errors.name}</p>}
               </div>
@@ -118,9 +126,9 @@ const EnterpriseQuoteRequestPage = () => {
                   id="email"
                   type="email"
                   value={formData.email}
-                  onChange={(e) => handleChange('email', e.target.value)}
+                  onChange={(e) => handleChange("email", e.target.value)}
                   placeholder="john@company.com"
-                  className={errors.email ? 'border-destructive' : ''}
+                  className={errors.email ? "border-destructive" : ""}
                 />
                 {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
               </div>
@@ -134,7 +142,7 @@ const EnterpriseQuoteRequestPage = () => {
                 <Input
                   id="company"
                   value={formData.company}
-                  onChange={(e) => handleChange('company', e.target.value)}
+                  onChange={(e) => handleChange("company", e.target.value)}
                   placeholder="Acme Inc."
                 />
               </div>
@@ -146,7 +154,7 @@ const EnterpriseQuoteRequestPage = () => {
                 <Input
                   id="role"
                   value={formData.role}
-                  onChange={(e) => handleChange('role', e.target.value)}
+                  onChange={(e) => handleChange("role", e.target.value)}
                   placeholder="CTO, ML Engineer, etc."
                 />
               </div>
@@ -157,14 +165,17 @@ const EnterpriseQuoteRequestPage = () => {
               <Input
                 id="workload"
                 value={formData.expected_workload}
-                onChange={(e) => handleChange('expected_workload', e.target.value)}
+                onChange={(e) => handleChange("expected_workload", e.target.value)}
                 placeholder="e.g., 1M tokens, 100 training hours, 50 concurrent jobs"
               />
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="budget">Budget Range</Label>
-              <Select value={formData.budget_range} onValueChange={(v) => handleChange('budget_range', v)}>
+              <Select
+                value={formData.budget_range}
+                onValueChange={(v) => handleChange("budget_range", v)}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select your budget range" />
                 </SelectTrigger>
@@ -183,7 +194,7 @@ const EnterpriseQuoteRequestPage = () => {
               <Textarea
                 id="message"
                 value={formData.message}
-                onChange={(e) => handleChange('message', e.target.value)}
+                onChange={(e) => handleChange("message", e.target.value)}
                 placeholder="Tell us about your specific needs, integrations, compliance requirements, etc."
                 rows={4}
               />
@@ -191,7 +202,7 @@ const EnterpriseQuoteRequestPage = () => {
 
             <Button type="submit" className="w-full" disabled={isSubmitting}>
               <Send className="mr-2 h-4 w-4" />
-              {isSubmitting ? 'Submitting...' : 'Request Custom Quote'}
+              {isSubmitting ? "Submitting..." : "Request Custom Quote"}
             </Button>
           </form>
         </CardContent>

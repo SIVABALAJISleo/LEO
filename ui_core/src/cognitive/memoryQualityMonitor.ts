@@ -16,7 +16,7 @@ export interface MemoryAuditLog {
 export class MemoryQualityMonitor {
   public auditMemoryStore(): MemoryAuditLog {
     const issues: string[] = [];
-    
+
     // Simulate memory store scan
     const checkedCount = 450;
     let duplicatesRemoved = 0;
@@ -29,7 +29,9 @@ export class MemoryQualityMonitor {
 
     // Detect conflicts: e.g. different files mapping identical policy relations differently
     conflictsResolved = 3;
-    issues.push(`Resolved ${conflictsResolved} conflicting authority rules (Layer 12 Oracle overrides applied).`);
+    issues.push(
+      `Resolved ${conflictsResolved} conflicting authority rules (Layer 12 Oracle overrides applied).`,
+    );
 
     // Detect corrupted segments: e.g. empty strings or non-JSON files
     corruptedPruned = 1;

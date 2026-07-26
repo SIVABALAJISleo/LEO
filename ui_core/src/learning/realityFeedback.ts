@@ -23,24 +23,32 @@ export class RealityFeedbackSystem {
   private history: FeedbackLog[] = [];
   private weights: Record<string, number> = {
     intentAccuracyWeight: 0.95,
-    localInferenceConfidence: 0.90,
+    localInferenceConfidence: 0.9,
     activeResearchRate: 0.85,
     gpuAccelerationPriority: 0.88,
-    gossipMeshSyncTrust: 0.96
+    gossipMeshSyncTrust: 0.96,
   };
 
   /**
    * Log feedback entry, recalculating weights dynamically using gradient-descent style dampening.
    */
-  public logRealityFeedback(predictionId: string, metricType: string, predicted: number, observed: number): FeedbackLog {
-    const errorPct = predicted === 0 ? 0 : parseFloat((Math.abs(predicted - observed) / predicted * 100).toFixed(2));
+  public logRealityFeedback(
+    predictionId: string,
+    metricType: string,
+    predicted: number,
+    observed: number,
+  ): FeedbackLog {
+    const errorPct =
+      predicted === 0
+        ? 0
+        : parseFloat(((Math.abs(predicted - observed) / predicted) * 100).toFixed(2));
     const entry: FeedbackLog = {
       predictionId,
       metricType,
       predictedValue: predicted,
       observedValue: observed,
       errorPct,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
 
     this.history.push(entry);
@@ -50,10 +58,13 @@ export class RealityFeedbackSystem {
       const currentWeight = this.weights[metricType];
       const dampeningFactor = 0.05; // Learning rate
       // If error is high, decrease weight slightly. If error is low, reinforce weight slightly.
-      const correctionDelta = (1 - (errorPct / 100)) * dampeningFactor;
-      
+      const correctionDelta = (1 - errorPct / 100) * dampeningFactor;
+
       // Calibrate weight between [0.5, 0.99]
-      const nextWeight = Math.max(0.5, Math.min(0.99, currentWeight * (1 - dampeningFactor) + correctionDelta));
+      const nextWeight = Math.max(
+        0.5,
+        Math.min(0.99, currentWeight * (1 - dampeningFactor) + correctionDelta),
+      );
       this.weights[metricType] = parseFloat(nextWeight.toFixed(4));
     }
 
@@ -79,13 +90,15 @@ export class RealityFeedbackSystem {
     const avgError = this.history.reduce((sum, h) => sum + h.errorPct, 0) / this.history.length;
     const predictionAccuracy = parseFloat((100 - avgError).toFixed(2)) / 100;
 
-    const successfulTrials = this.history.filter(h => h.errorPct < 15).length;
+    const successfulTrials = this.history.filter((h) => h.errorPct < 15).length;
     const successRate = parseFloat((successfulTrials / this.history.length).toFixed(4));
 
     return {
       successRate,
       predictionAccuracy,
-      confidenceCalibration: parseFloat((1 - Math.abs(successRate - predictionAccuracy)).toFixed(4))
+      confidenceCalibration: parseFloat(
+        (1 - Math.abs(successRate - predictionAccuracy)).toFixed(4),
+      ),
     };
   }
 }

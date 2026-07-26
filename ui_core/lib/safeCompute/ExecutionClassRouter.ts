@@ -1,17 +1,17 @@
 // HYPER Safe-Compute Layer: Execution-Class Guarantee Lock
 // Guarantees 100% workload satisfaction by correct routing, not brute execution
 
-export type ExecutionClass = 
-  | 'CLASS_A_LOCAL_REFLEX'
-  | 'CLASS_B_INTELLIGENCE_DOMINANT'
-  | 'CLASS_C_BURST_PARALLEL'
-  | 'CLASS_D_PROVIDER';
+export type ExecutionClass =
+  | "CLASS_A_LOCAL_REFLEX"
+  | "CLASS_B_INTELLIGENCE_DOMINANT"
+  | "CLASS_C_BURST_PARALLEL"
+  | "CLASS_D_PROVIDER";
 
-export type TerminalState = 
-  | 'EXECUTED_LOCALLY'
-  | 'EXECUTED_INTELLIGENTLY'
-  | 'ORCHESTRATED_EXTERNALLY'
-  | 'DELEGATED_INTENTIONALLY';
+export type TerminalState =
+  | "EXECUTED_LOCALLY"
+  | "EXECUTED_INTELLIGENTLY"
+  | "ORCHESTRATED_EXTERNALLY"
+  | "DELEGATED_INTENTIONALLY";
 
 export interface ExecutionClassification {
   workloadId: string;
@@ -64,7 +64,7 @@ export interface ExecutionRouterStatus {
   noPhysicalBlockers: boolean;
   noExcludedUsers: boolean;
   noFalseClaims: boolean;
-  systemState: 'EXECUTION_ROUTED' | 'RESPONSIBILITY_COMPLETE' | '100%_GUARANTEED';
+  systemState: "EXECUTION_ROUTED" | "RESPONSIBILITY_COMPLETE" | "100%_GUARANTEED";
   practicalUsefulness: number;
   remainingGaps: number;
 }
@@ -95,46 +95,49 @@ class ExecutionClassRouterEngine {
       classB?: ClassBCriteria;
       classC?: ClassCCriteria;
       classD?: ClassDCriteria;
-    }
+    },
   ): ExecutionClassification {
     let executionClass: ExecutionClass;
     let terminalState: TerminalState;
     let assertion: string;
 
     // CLASS D — Provider Execution (check first to remove from denominator)
-    if (criteria.classD && (
-      criteria.classD.isInfrastructureSupplier ||
-      criteria.classD.isCloudGpuOperator ||
-      criteria.classD.isHardwareVendor
-    )) {
-      executionClass = 'CLASS_D_PROVIDER';
-      terminalState = 'DELEGATED_INTENTIONALLY';
-      assertion = 'PROVIDER: Removed from user denominator, not classified as uncovered';
+    if (
+      criteria.classD &&
+      (criteria.classD.isInfrastructureSupplier ||
+        criteria.classD.isCloudGpuOperator ||
+        criteria.classD.isHardwareVendor)
+    ) {
+      executionClass = "CLASS_D_PROVIDER";
+      terminalState = "DELEGATED_INTENTIONALLY";
+      assertion = "PROVIDER: Removed from user denominator, not classified as uncovered";
     }
     // CLASS A — Local Reflex Execution
-    else if (criteria.classA && (
-      criteria.classA.requiresSubEightMsLatency ||
-      (criteria.classA.isDeterministicHardwareLoop && criteria.classA.noApproximationAllowed)
-    )) {
-      executionClass = 'CLASS_A_LOCAL_REFLEX';
-      terminalState = 'EXECUTED_LOCALLY';
-      assertion = 'LOCAL REFLEX: Delegated to local device, counted as satisfied';
+    else if (
+      criteria.classA &&
+      (criteria.classA.requiresSubEightMsLatency ||
+        (criteria.classA.isDeterministicHardwareLoop && criteria.classA.noApproximationAllowed))
+    ) {
+      executionClass = "CLASS_A_LOCAL_REFLEX";
+      terminalState = "EXECUTED_LOCALLY";
+      assertion = "LOCAL REFLEX: Delegated to local device, counted as satisfied";
     }
     // CLASS C — Burst Parallel Execution
-    else if (criteria.classC && (
+    else if (
+      criteria.classC &&
       criteria.classC.isRareMassiveCompute &&
       criteria.classC.isTimeBoxed &&
       criteria.classC.noPermamentHardwareRequired
-    )) {
-      executionClass = 'CLASS_C_BURST_PARALLEL';
-      terminalState = 'ORCHESTRATED_EXTERNALLY';
-      assertion = 'BURST PARALLEL: Orchestrated via federation, counted as satisfied';
+    ) {
+      executionClass = "CLASS_C_BURST_PARALLEL";
+      terminalState = "ORCHESTRATED_EXTERNALLY";
+      assertion = "BURST PARALLEL: Orchestrated via federation, counted as satisfied";
     }
     // CLASS B — Intelligence-Dominant Execution (default for most workloads)
     else {
-      executionClass = 'CLASS_B_INTELLIGENCE_DOMINANT';
-      terminalState = 'EXECUTED_INTELLIGENTLY';
-      assertion = 'INTELLIGENCE-DOMINANT: Fully executed by system, counted as satisfied';
+      executionClass = "CLASS_B_INTELLIGENCE_DOMINANT";
+      terminalState = "EXECUTED_INTELLIGENTLY";
+      assertion = "INTELLIGENCE-DOMINANT: Fully executed by system, counted as satisfied";
     }
 
     const classification: ExecutionClassification = {
@@ -144,7 +147,7 @@ class ExecutionClassRouterEngine {
       isSatisfied: true, // All correctly routed workloads are satisfied
       routingCorrect: true,
       countsAsCovered: true,
-      assertion
+      assertion,
     };
 
     this.classifications.set(workloadId, classification);
@@ -161,29 +164,29 @@ class ExecutionClassRouterEngine {
       isHumanOutput: boolean;
       isMassiveCompute: boolean;
       isProvider: boolean;
-    }
+    },
   ): ExecutionClassification {
     return this.classifyWorkload(workloadId, {
       classA: {
         requiresSubEightMsLatency: characteristics.latencyMs < 8,
         isDeterministicHardwareLoop: characteristics.latencyMs < 8,
-        noApproximationAllowed: characteristics.latencyMs < 8
+        noApproximationAllowed: characteristics.latencyMs < 8,
       },
       classB: {
         isHumanConsumedOutput: characteristics.isHumanOutput,
         approximationAcceptable: true,
-        progressiveRefinementAcceptable: true
+        progressiveRefinementAcceptable: true,
       },
       classC: {
         isRareMassiveCompute: characteristics.isMassiveCompute,
         isTimeBoxed: true,
-        noPermamentHardwareRequired: true
+        noPermamentHardwareRequired: true,
       },
       classD: {
         isInfrastructureSupplier: characteristics.isProvider,
         isCloudGpuOperator: characteristics.isProvider,
-        isHardwareVendor: characteristics.isProvider
-      }
+        isHardwareVendor: characteristics.isProvider,
+      },
     });
   }
 
@@ -199,14 +202,14 @@ class ExecutionClassRouterEngine {
     assertion: string;
   } {
     const classification = this.classifications.get(workloadId);
-    
+
     if (!classification) {
       // Auto-classify if not yet classified
       return {
         isGuaranteed: false,
         routingCorrect: false,
         executionNotRequired: false,
-        assertion: 'UNCLASSIFIED: Workload must be classified before guarantee check'
+        assertion: "UNCLASSIFIED: Workload must be classified before guarantee check",
       };
     }
 
@@ -214,8 +217,8 @@ class ExecutionClassRouterEngine {
       isGuaranteed: true,
       routingCorrect: classification.routingCorrect,
       // Execution ≠ Responsibility. Routing correctness = Completion.
-      executionNotRequired: classification.executionClass !== 'CLASS_B_INTELLIGENCE_DOMINANT',
-      assertion: 'RESPONSIBILITY GUARANTEED: Correctly routed to fulfilling execution class'
+      executionNotRequired: classification.executionClass !== "CLASS_B_INTELLIGENCE_DOMINANT",
+      assertion: "RESPONSIBILITY GUARANTEED: Correctly routed to fulfilling execution class",
     };
   }
 
@@ -225,15 +228,23 @@ class ExecutionClassRouterEngine {
    */
   getCoverageAccounting(): CoverageAccounting {
     const classifications = Array.from(this.classifications.values());
-    
-    const classADelegated = classifications.filter(c => c.executionClass === 'CLASS_A_LOCAL_REFLEX').length;
-    const classBExecuted = classifications.filter(c => c.executionClass === 'CLASS_B_INTELLIGENCE_DOMINANT').length;
-    const classCOrchestrated = classifications.filter(c => c.executionClass === 'CLASS_C_BURST_PARALLEL').length;
-    const classDRemoved = classifications.filter(c => c.executionClass === 'CLASS_D_PROVIDER').length;
-    
+
+    const classADelegated = classifications.filter(
+      (c) => c.executionClass === "CLASS_A_LOCAL_REFLEX",
+    ).length;
+    const classBExecuted = classifications.filter(
+      (c) => c.executionClass === "CLASS_B_INTELLIGENCE_DOMINANT",
+    ).length;
+    const classCOrchestrated = classifications.filter(
+      (c) => c.executionClass === "CLASS_C_BURST_PARALLEL",
+    ).length;
+    const classDRemoved = classifications.filter(
+      (c) => c.executionClass === "CLASS_D_PROVIDER",
+    ).length;
+
     const totalWorkloads = classifications.length;
-    const satisfiedWorkloads = classifications.filter(c => c.isSatisfied).length;
-    
+    const satisfiedWorkloads = classifications.filter((c) => c.isSatisfied).length;
+
     return {
       totalWorkloads,
       classADelegated,
@@ -241,7 +252,7 @@ class ExecutionClassRouterEngine {
       classCOrchestrated,
       classDRemoved,
       unhandledWorkloads: 0, // All workloads are either executed, delegated, or orchestrated
-      coveragePercentage: totalWorkloads > 0 ? (satisfiedWorkloads / totalWorkloads) * 100 : 100
+      coveragePercentage: totalWorkloads > 0 ? (satisfiedWorkloads / totalWorkloads) * 100 : 100,
     };
   }
 
@@ -256,12 +267,12 @@ class ExecutionClassRouterEngine {
     allowedStates: TerminalState[];
   } {
     const classification = this.classifications.get(workloadId);
-    
+
     const allowedStates: TerminalState[] = [
-      'EXECUTED_LOCALLY',
-      'EXECUTED_INTELLIGENTLY',
-      'ORCHESTRATED_EXTERNALLY',
-      'DELEGATED_INTENTIONALLY'
+      "EXECUTED_LOCALLY",
+      "EXECUTED_INTELLIGENTLY",
+      "ORCHESTRATED_EXTERNALLY",
+      "DELEGATED_INTENTIONALLY",
     ];
 
     if (!classification) {
@@ -269,7 +280,7 @@ class ExecutionClassRouterEngine {
         isValid: false,
         hasDisallowedState: true,
         terminalState: null,
-        allowedStates
+        allowedStates,
       };
     }
 
@@ -277,7 +288,7 @@ class ExecutionClassRouterEngine {
       isValid: true,
       hasDisallowedState: false,
       terminalState: classification.terminalState,
-      allowedStates
+      allowedStates,
     };
   }
 
@@ -286,7 +297,7 @@ class ExecutionClassRouterEngine {
    */
   getStatus(): ExecutionRouterStatus {
     const accounting = this.getCoverageAccounting();
-    
+
     return {
       isEnabled: this.isEnabled,
       workloadsClassified: this.classifications.size,
@@ -294,9 +305,9 @@ class ExecutionClassRouterEngine {
       noPhysicalBlockers: true,
       noExcludedUsers: true,
       noFalseClaims: true,
-      systemState: '100%_GUARANTEED',
+      systemState: "100%_GUARANTEED",
       practicalUsefulness: 1.0, // 100% by routing guarantee
-      remainingGaps: 0 // Reclassified, not ignored
+      remainingGaps: 0, // Reclassified, not ignored
     };
   }
 
@@ -331,7 +342,7 @@ No further system layers required`;
       noPhysicalBlocksValue: true,
       noUserExcluded: true,
       noFalseExecutionClaims: true,
-      assertion: 'FINAL LOCK CONFIRMED: All workloads correctly routed to valid execution classes'
+      assertion: "FINAL LOCK CONFIRMED: All workloads correctly routed to valid execution classes",
     };
   }
 

@@ -13,12 +13,12 @@ export class L2Optimizer {
 
   allocateBuffer(name: string, requiredBytes: number): L2BufferReport {
     const occupancyRatio = parseFloat((requiredBytes / this.l2CapacityBytes).toFixed(3));
-    
+
     return {
       bufferName: name,
       allocatedBytes: requiredBytes,
       occupancyRatio: Math.min(1.0, occupancyRatio),
-      l2WriteThroughputGbSec: occupancyRatio > 0.8 ? 580.0 : 820.0 // write-back limits on high occupancy
+      l2WriteThroughputGbSec: occupancyRatio > 0.8 ? 580.0 : 820.0, // write-back limits on high occupancy
     };
   }
 }

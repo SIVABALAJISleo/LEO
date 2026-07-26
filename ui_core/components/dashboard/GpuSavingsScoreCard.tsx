@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import {
   Zap,
   TrendingUp,
@@ -11,9 +11,9 @@ import {
   Activity,
   CheckCircle2,
   AlertTriangle,
-  Server
-} from 'lucide-react';
-import { gpuSavingsTracker, GpuSavingsScore } from '@/lib/safeCompute/GpuSavingsTracker';
+  Server,
+} from "lucide-react";
+import { gpuSavingsTracker, GpuSavingsScore } from "@/lib/safeCompute/GpuSavingsTracker";
 
 interface GpuSavingsScoreCardProps {
   className?: string;
@@ -46,7 +46,8 @@ export const GpuSavingsScoreCard = ({ className, compact = false }: GpuSavingsSc
   }
 
   const overallEfficiency = score.computeAvoidedPercent + score.reusePercent;
-  const efficiencyLevel = overallEfficiency >= 70 ? 'excellent' : overallEfficiency >= 40 ? 'good' : 'building';
+  const efficiencyLevel =
+    overallEfficiency >= 70 ? "excellent" : overallEfficiency >= 40 ? "good" : "building";
 
   if (compact) {
     return (
@@ -57,7 +58,7 @@ export const GpuSavingsScoreCard = ({ className, compact = false }: GpuSavingsSc
               <Zap className="h-4 w-4 text-green-500" />
               <span className="font-medium">GPU Efficiency</span>
             </div>
-            <Badge variant={efficiencyLevel === 'excellent' ? 'default' : 'secondary'}>
+            <Badge variant={efficiencyLevel === "excellent" ? "default" : "secondary"}>
               {overallEfficiency}%
             </Badge>
           </div>
@@ -85,7 +86,7 @@ export const GpuSavingsScoreCard = ({ className, compact = false }: GpuSavingsSc
             </CardDescription>
           </div>
           <Badge
-            variant={efficiencyLevel === 'excellent' ? 'default' : 'secondary'}
+            variant={efficiencyLevel === "excellent" ? "default" : "secondary"}
             className="text-lg px-3 py-1"
           >
             {overallEfficiency}%
@@ -98,8 +99,12 @@ export const GpuSavingsScoreCard = ({ className, compact = false }: GpuSavingsSc
           <div className="flex justify-between text-sm mb-1">
             <span className="text-muted-foreground">Overall Efficiency</span>
             <span className="font-medium">
-              {efficiencyLevel === 'excellent' && <CheckCircle2 className="inline h-4 w-4 text-green-500 mr-1" />}
-              {efficiencyLevel === 'building' && <AlertTriangle className="inline h-4 w-4 text-yellow-500 mr-1" />}
+              {efficiencyLevel === "excellent" && (
+                <CheckCircle2 className="inline h-4 w-4 text-green-500 mr-1" />
+              )}
+              {efficiencyLevel === "building" && (
+                <AlertTriangle className="inline h-4 w-4 text-yellow-500 mr-1" />
+              )}
               {efficiencyLevel.charAt(0).toUpperCase() + efficiencyLevel.slice(1)}
             </span>
           </div>
@@ -123,7 +128,9 @@ export const GpuSavingsScoreCard = ({ className, compact = false }: GpuSavingsSc
               Cache/Reuse
             </div>
             <div className="text-2xl font-bold">{score.reusePercent}%</div>
-            <div className="text-xs text-muted-foreground">{score.jobsFromCache + score.jobsCollapsed} hits</div>
+            <div className="text-xs text-muted-foreground">
+              {score.jobsFromCache + score.jobsCollapsed} hits
+            </div>
           </div>
 
           <div className="bg-muted/50 rounded-lg p-3">
@@ -141,7 +148,9 @@ export const GpuSavingsScoreCard = ({ className, compact = false }: GpuSavingsSc
               Local Processing
             </div>
             <div className="text-2xl font-bold">{score.delegationPreventedPercent}%</div>
-            <div className="text-xs text-muted-foreground">{score.totalJobsProcessed - score.jobsDelegated} local</div>
+            <div className="text-xs text-muted-foreground">
+              {score.totalJobsProcessed - score.jobsDelegated} local
+            </div>
           </div>
         </div>
 
@@ -188,11 +197,9 @@ export const GpuSavingsScoreCard = ({ className, compact = false }: GpuSavingsSc
 
         {/* Status Footer */}
         <div className="text-xs text-muted-foreground text-center pt-2 border-t">
-          {score.totalJobsProcessed === 0 ? (
-            'Awaiting workloads. Metrics will populate after job execution.'
-          ) : (
-            `${score.totalJobsProcessed} jobs analyzed • Updated ${new Date(score.lastUpdatedAt).toLocaleTimeString()}`
-          )}
+          {score.totalJobsProcessed === 0
+            ? "Awaiting workloads. Metrics will populate after job execution."
+            : `${score.totalJobsProcessed} jobs analyzed • Updated ${new Date(score.lastUpdatedAt).toLocaleTimeString()}`}
         </div>
       </CardContent>
     </Card>

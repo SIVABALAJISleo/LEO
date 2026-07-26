@@ -27,6 +27,6 @@ export const runGraphRagValidation = async (): Promise<RagValidationResult> => {
     freshnessScore: parseFloat(freshness.toFixed(2)),
     citationAccuracy: parseFloat(citation.toFixed(2)),
     graphAccuracy: parseFloat(graph.toFixed(2)),
-    overallRagScore: parseFloat(overall.toFixed(2))
+    overallRagScore: parseFloat(overall.toFixed(2)),
   };
 };

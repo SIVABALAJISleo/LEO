@@ -1,11 +1,11 @@
-import { Link } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Footer } from '@/components/Footer';
-import { Navbar } from '@/components/Navbar';
+import { Link } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Footer } from "@/components/Footer";
+import { Navbar } from "@/components/Navbar";
 
-const TERMS_VERSION = '1.0.0';
-const EFFECTIVE_DATE = '2026-01-09';
+const TERMS_VERSION = "1.0.0";
+const EFFECTIVE_DATE = "2026-01-09";
 
 const TermsOfService = () => {
   return (
@@ -64,7 +64,7 @@ const TermsOfService = () => {
 
           <h2>6. Data and Privacy</h2>
           <p>
-            Your use of the Service is subject to our{' '}
+            Your use of the Service is subject to our{" "}
             <Link to="/legal/privacy" className="text-primary hover:underline">
               Privacy Policy
             </Link>
@@ -73,7 +73,7 @@ const TermsOfService = () => {
 
           <h2>7. Payment Terms</h2>
           <p>
-            Paid subscriptions are billed in advance. Refund eligibility is described in our{' '}
+            Paid subscriptions are billed in advance. Refund eligibility is described in our{" "}
             <Link to="/legal/refund" className="text-primary hover:underline">
               Refund Policy
             </Link>
@@ -95,7 +95,7 @@ const TermsOfService = () => {
 
           <h2>10. Contact</h2>
           <p>
-            For questions about these terms, contact us at{' '}
+            For questions about these terms, contact us at{" "}
             <a href="mailto:legal@hyper.app" className="text-primary hover:underline">
               legal@hyper.app
             </a>

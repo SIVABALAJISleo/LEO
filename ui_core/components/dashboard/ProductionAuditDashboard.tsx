@@ -1,10 +1,10 @@
 // Production Audit Dashboard Component
 // Displays all production hardening metrics in one view
 
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import {
   Shield,
   Database,
@@ -13,14 +13,14 @@ import {
   Lock,
   Activity,
   CheckCircle,
-  XCircle
-} from 'lucide-react';
-import { incidentAutoHandler } from '@/lib/production/IncidentAutoHandler';
-import { incidentStateMachine } from '@/lib/production/IncidentStateMachine';
-import { backupVerification } from '@/lib/production/BackupVerification';
-import { releaseRollback } from '@/lib/production/ReleaseRollback';
-import { authorityBoundaryEngine } from '@/lib/safeCompute/AuthorityBoundaryEngine';
-import { executionAuditLogger } from '@/lib/safeCompute/ExecutionAuditLogger';
+  XCircle,
+} from "lucide-react";
+import { incidentAutoHandler } from "@/lib/production/IncidentAutoHandler";
+import { incidentStateMachine } from "@/lib/production/IncidentStateMachine";
+import { backupVerification } from "@/lib/production/BackupVerification";
+import { releaseRollback } from "@/lib/production/ReleaseRollback";
+import { authorityBoundaryEngine } from "@/lib/safeCompute/AuthorityBoundaryEngine";
+import { executionAuditLogger } from "@/lib/safeCompute/ExecutionAuditLogger";
 
 interface ProductionAuditMetrics {
   incidentStats: Awaited<ReturnType<typeof incidentAutoHandler.getIncidentStats>>;
@@ -53,7 +53,7 @@ export const ProductionAuditDashboard = () => {
           auditStats: executionAuditLogger.getStats(),
         });
       } catch (error) {
-        console.error('Failed to fetch production metrics:', error);
+        console.error("Failed to fetch production metrics:", error);
       } finally {
         setLoading(false);
       }
@@ -74,11 +74,16 @@ export const ProductionAuditDashboard = () => {
 
   const getStateColor = (state: string) => {
     switch (state) {
-      case 'NORMAL': return 'bg-green-100 text-green-800';
-      case 'DEGRADED': return 'bg-yellow-100 text-yellow-800';
-      case 'LIMITED': return 'bg-orange-100 text-orange-800';
-      case 'LOCKDOWN': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case "NORMAL":
+        return "bg-green-100 text-green-800";
+      case "DEGRADED":
+        return "bg-yellow-100 text-yellow-800";
+      case "LIMITED":
+        return "bg-orange-100 text-orange-800";
+      case "LOCKDOWN":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -95,8 +100,8 @@ export const ProductionAuditDashboard = () => {
     };
 
     // Incident handling
-    if (metrics.incidentContext.state === 'NORMAL') score += weights.incidentHandling;
-    else if (metrics.incidentContext.state === 'DEGRADED') score += weights.incidentHandling * 0.7;
+    if (metrics.incidentContext.state === "NORMAL") score += weights.incidentHandling;
+    else if (metrics.incidentContext.state === "DEGRADED") score += weights.incidentHandling * 0.7;
 
     // Backups
     if (metrics.backupHealth.healthy) score += weights.backups;
@@ -130,16 +135,26 @@ export const ProductionAuditDashboard = () => {
             <Shield className="w-5 h-5" />
             Production Readiness Score
           </CardTitle>
-          <CardDescription>
-            Overall system hardening status
-          </CardDescription>
+          <CardDescription>Overall system hardening status</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-3xl font-bold">{readinessScore}%</span>
-              <Badge className={readinessScore >= 95 ? 'bg-green-500' : readinessScore >= 80 ? 'bg-yellow-500' : 'bg-red-500'}>
-                {readinessScore >= 95 ? 'Production Ready' : readinessScore >= 80 ? 'Near Ready' : 'Needs Work'}
+              <Badge
+                className={
+                  readinessScore >= 95
+                    ? "bg-green-500"
+                    : readinessScore >= 80
+                      ? "bg-yellow-500"
+                      : "bg-red-500"
+                }
+              >
+                {readinessScore >= 95
+                  ? "Production Ready"
+                  : readinessScore >= 80
+                    ? "Near Ready"
+                    : "Needs Work"}
               </Badge>
             </div>
             <Progress value={readinessScore} className="h-3" />
@@ -183,12 +198,14 @@ export const ProductionAuditDashboard = () => {
               ) : (
                 <XCircle className="w-5 h-5 text-red-500" />
               )}
-              <span>{metrics.backupHealth.healthy ? 'Healthy' : 'Issues Detected'}</span>
+              <span>{metrics.backupHealth.healthy ? "Healthy" : "Issues Detected"}</span>
             </div>
             {metrics.backupHealth.issues.length > 0 && (
               <ul className="mt-2 text-sm text-muted-foreground">
                 {metrics.backupHealth.issues.map((issue, i) => (
-                  <li key={i} className="text-amber-600">• {issue}</li>
+                  <li key={i} className="text-amber-600">
+                    • {issue}
+                  </li>
                 ))}
               </ul>
             )}
@@ -210,16 +227,10 @@ export const ProductionAuditDashboard = () => {
               ) : (
                 <AlertTriangle className="w-5 h-5 text-amber-500" />
               )}
-              <span>
-                {metrics.releaseHealth.needed
-                  ? 'Rollback Recommended'
-                  : 'Stable'}
-              </span>
+              <span>{metrics.releaseHealth.needed ? "Rollback Recommended" : "Stable"}</span>
             </div>
             {metrics.releaseHealth.reason && (
-              <p className="mt-2 text-sm text-muted-foreground">
-                {metrics.releaseHealth.reason}
-              </p>
+              <p className="mt-2 text-sm text-muted-foreground">{metrics.releaseHealth.reason}</p>
             )}
           </CardContent>
         </Card>

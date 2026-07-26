@@ -29,7 +29,7 @@ export class CrystalMemoryRouter {
       query,
       destination,
       searchLatencyMs,
-      routedKey
+      routedKey,
     };
   }
 }

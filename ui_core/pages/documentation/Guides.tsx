@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { Navbar } from '@/components/Navbar';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
-import { Badge } from '@/components/ui/badge';
-import { useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import { Navbar } from "@/components/Navbar";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import { useNavigate } from "react-router-dom";
 import {
   BookOpen,
   Key,
@@ -23,58 +23,70 @@ import {
   Zap,
   Settings,
   Play,
-} from 'lucide-react';
+} from "lucide-react";
 
 type Section =
-  | 'getting-started'
-  | 'authentication'
-  | 'core-concepts'
-  | 'gpu-modules'
-  | 'api-reference'
-  | 'tutorials'
-  | 'troubleshooting'
-  | 'faq'
-  | 'deployment';
+  | "getting-started"
+  | "authentication"
+  | "core-concepts"
+  | "gpu-modules"
+  | "api-reference"
+  | "tutorials"
+  | "troubleshooting"
+  | "faq"
+  | "deployment";
 
 type ModuleId =
-  | 'neural-compression'
-  | 'cuda-accelerator'
-  | 'job-queue'
-  | 'response-cache'
-  | 'model-streaming'
-  | 'neural-approximation'
-  | 'predictive-rendering'
-  | 'ray-tracing';
+  | "neural-compression"
+  | "cuda-accelerator"
+  | "job-queue"
+  | "response-cache"
+  | "model-streaming"
+  | "neural-approximation"
+  | "predictive-rendering"
+  | "ray-tracing";
 
 const sidebarItems = [
-  { id: 'getting-started', label: 'Getting Started', icon: BookOpen },
-  { id: 'authentication', label: 'Authentication', icon: Key },
-  { id: 'core-concepts', label: 'Core Concepts', icon: Cpu },
-  { id: 'gpu-modules', label: 'GPU Modules', icon: Layers },
-  { id: 'api-reference', label: 'API Reference', icon: Terminal },
-  { id: 'tutorials', label: 'Tutorials', icon: GraduationCap },
-  { id: 'troubleshooting', label: 'Troubleshooting', icon: AlertTriangle },
-  { id: 'faq', label: 'FAQ', icon: HelpCircle },
-  { id: 'deployment', label: 'Deployment', icon: Settings },
+  { id: "getting-started", label: "Getting Started", icon: BookOpen },
+  { id: "authentication", label: "Authentication", icon: Key },
+  { id: "core-concepts", label: "Core Concepts", icon: Cpu },
+  { id: "gpu-modules", label: "GPU Modules", icon: Layers },
+  { id: "api-reference", label: "API Reference", icon: Terminal },
+  { id: "tutorials", label: "Tutorials", icon: GraduationCap },
+  { id: "troubleshooting", label: "Troubleshooting", icon: AlertTriangle },
+  { id: "faq", label: "FAQ", icon: HelpCircle },
+  { id: "deployment", label: "Deployment", icon: Settings },
 ] as const;
 
 const gpuModules: { id: ModuleId; name: string; description: string }[] = [
-  { id: 'neural-compression', name: 'Neural Compression', description: '4/8-bit quantization for models' },
-  { id: 'cuda-accelerator', name: 'CUDA Accelerator', description: '640× matrix throughput improvement' },
-  { id: 'job-queue', name: 'Job Queue', description: 'Handle 1000s of concurrent jobs' },
-  { id: 'response-cache', name: 'Response Cache', description: '85% cache hit rate' },
-  { id: 'model-streaming', name: 'Model Streaming', description: 'Train 280GB models on 16GB RAM' },
-  { id: 'neural-approximation', name: 'Neural Approximation', description: '+5-7% performance gain' },
-  { id: 'predictive-rendering', name: 'Predictive Rendering', description: '+5-7% speedup' },
-  { id: 'ray-tracing', name: 'Neural Ray Tracing', description: '98-100% visual quality' },
+  {
+    id: "neural-compression",
+    name: "Neural Compression",
+    description: "4/8-bit quantization for models",
+  },
+  {
+    id: "cuda-accelerator",
+    name: "CUDA Accelerator",
+    description: "640× matrix throughput improvement",
+  },
+  { id: "job-queue", name: "Job Queue", description: "Handle 1000s of concurrent jobs" },
+  { id: "response-cache", name: "Response Cache", description: "85% cache hit rate" },
+  { id: "model-streaming", name: "Model Streaming", description: "Train 280GB models on 16GB RAM" },
+  {
+    id: "neural-approximation",
+    name: "Neural Approximation",
+    description: "+5-7% performance gain",
+  },
+  { id: "predictive-rendering", name: "Predictive Rendering", description: "+5-7% speedup" },
+  { id: "ray-tracing", name: "Neural Ray Tracing", description: "98-100% visual quality" },
 ];
 
 const CodeBlock = ({
   code,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  language = 'bash',
+  language = "bash",
   showPlayground = false,
-  playgroundEndpoint = ''
+  playgroundEndpoint = "",
 }: {
   code: string;
   language?: string;
@@ -111,12 +123,7 @@ const CodeBlock = ({
             Open in Playground
           </Button>
         )}
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={handleCopy}
-          className="h-7 w-7 p-0"
-        >
+        <Button size="sm" variant="outline" onClick={handleCopy} className="h-7 w-7 p-0">
           {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
         </Button>
       </div>
@@ -125,36 +132,32 @@ const CodeBlock = ({
 };
 
 const Guides = () => {
-  const [activeSection, setActiveSection] = useState<Section>('getting-started');
+  const [activeSection, setActiveSection] = useState<Section>("getting-started");
   const [activeModule, setActiveModule] = useState<ModuleId | null>(null);
 
   const renderContent = () => {
-    if (activeSection === 'gpu-modules' && activeModule) {
+    if (activeSection === "gpu-modules" && activeModule) {
       return renderModuleDetail(activeModule);
     }
 
     switch (activeSection) {
-      case 'getting-started':
+      case "getting-started":
         return <GettingStartedContent />;
-      case 'authentication':
+      case "authentication":
         return <AuthenticationContent />;
-      case 'core-concepts':
+      case "core-concepts":
         return <CoreConceptsContent />;
-      case 'gpu-modules':
-        return (
-          <GPUModulesContent
-            onSelectModule={(id) => setActiveModule(id)}
-          />
-        );
-      case 'api-reference':
+      case "gpu-modules":
+        return <GPUModulesContent onSelectModule={(id) => setActiveModule(id)} />;
+      case "api-reference":
         return <APIReferenceContent />;
-      case 'tutorials':
+      case "tutorials":
         return <TutorialsContent />;
-      case 'troubleshooting':
+      case "troubleshooting":
         return <TroubleshootingContent />;
-      case 'faq':
+      case "faq":
         return <FAQContent />;
-      case 'deployment':
+      case "deployment":
         return <DeploymentContent />;
       default:
         return <GettingStartedContent />;
@@ -178,10 +181,11 @@ const Guides = () => {
                     setActiveSection(item.id as Section);
                     setActiveModule(null);
                   }}
-                  className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${activeSection === item.id
-                      ? 'bg-primary text-primary-foreground'
-                      : 'text-foreground/70 hover:bg-muted hover:text-foreground'
-                    }`}
+                  className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
+                    activeSection === item.id
+                      ? "bg-primary text-primary-foreground"
+                      : "text-foreground/70 hover:bg-muted hover:text-foreground"
+                  }`}
                 >
                   <item.icon className="h-4 w-4" />
                   {item.label}
@@ -189,21 +193,20 @@ const Guides = () => {
               ))}
             </nav>
 
-            {activeSection === 'gpu-modules' && (
+            {activeSection === "gpu-modules" && (
               <>
                 <Separator className="my-4" />
-                <h3 className="text-sm font-medium mb-2 px-2 text-muted-foreground">
-                  Modules
-                </h3>
+                <h3 className="text-sm font-medium mb-2 px-2 text-muted-foreground">Modules</h3>
                 <nav className="space-y-1">
                   {gpuModules.map((module) => (
                     <button
                       key={module.id}
                       onClick={() => setActiveModule(module.id)}
-                      className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors ${activeModule === module.id
-                          ? 'bg-secondary text-secondary-foreground'
-                          : 'text-foreground/60 hover:bg-muted hover:text-foreground'
-                        }`}
+                      className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors ${
+                        activeModule === module.id
+                          ? "bg-secondary text-secondary-foreground"
+                          : "text-foreground/60 hover:bg-muted hover:text-foreground"
+                      }`}
                     >
                       <ChevronRight className="h-3 w-3" />
                       {module.name}
@@ -219,7 +222,7 @@ const Guides = () => {
         <main className="flex-1 min-h-[calc(100vh-4rem)]">
           <ScrollArea className="h-[calc(100vh-4rem)]">
             <div className="max-w-4xl mx-auto px-8 py-8">
-              {activeModule && activeSection === 'gpu-modules' && (
+              {activeModule && activeSection === "gpu-modules" && (
                 <Button
                   variant="ghost"
                   size="sm"
@@ -244,8 +247,8 @@ const GettingStartedContent = () => (
     <div>
       <h1 className="text-4xl font-bold mb-4">Getting Started</h1>
       <p className="text-lg text-muted-foreground">
-        Welcome to HYPER - the revolutionary software-only compute system that achieves
-        100% high-end GPU performance parity through intelligent algorithms.
+        Welcome to HYPER - the revolutionary software-only compute system that achieves 100%
+        high-end GPU performance parity through intelligent algorithms.
       </p>
     </div>
 
@@ -254,10 +257,7 @@ const GettingStartedContent = () => (
       <div className="space-y-4">
         <div>
           <h3 className="font-medium mb-2">1. Install the SDK</h3>
-          <CodeBlock
-            code="pip install hyper-sdk"
-            language="bash"
-          />
+          <CodeBlock code="pip install hyper-sdk" language="bash" />
         </div>
         <div>
           <h3 className="font-medium mb-2">2. Initialize the Engine</h3>
@@ -478,118 +478,121 @@ const GPUModulesContent = ({ onSelectModule }: { onSelectModule: (id: ModuleId) 
 );
 
 const renderModuleDetail = (moduleId: ModuleId) => {
-  const moduleDetails: Record<ModuleId, {
-    name: string;
-    description: string;
-    purpose: string;
-    config: object;
-    performance: string;
-    usage: string;
-  }> = {
-    'neural-compression': {
-      name: 'Neural Compression',
-      description: 'Advanced 4/8-bit quantization for models without significant quality loss.',
-      purpose: 'Reduce model size and memory footprint while maintaining accuracy.',
+  const moduleDetails: Record<
+    ModuleId,
+    {
+      name: string;
+      description: string;
+      purpose: string;
+      config: object;
+      performance: string;
+      usage: string;
+    }
+  > = {
+    "neural-compression": {
+      name: "Neural Compression",
+      description: "Advanced 4/8-bit quantization for models without significant quality loss.",
+      purpose: "Reduce model size and memory footprint while maintaining accuracy.",
       config: {
         enabled: true,
         bit_width: 4,
         calibration_samples: 512,
-        preserve_outliers: true
+        preserve_outliers: true,
       },
-      performance: '4-8× memory reduction, 2-4× speedup',
-      usage: 'Enable for large models (>7B parameters) when memory is constrained.'
+      performance: "4-8× memory reduction, 2-4× speedup",
+      usage: "Enable for large models (>7B parameters) when memory is constrained.",
     },
-    'cuda-accelerator': {
-      name: 'CUDA Accelerator',
-      description: 'Optimized matrix multiplication using vectorized CPU instructions.',
-      purpose: 'Maximize throughput for matrix-heavy operations.',
+    "cuda-accelerator": {
+      name: "CUDA Accelerator",
+      description: "Optimized matrix multiplication using vectorized CPU instructions.",
+      purpose: "Maximize throughput for matrix-heavy operations.",
       config: {
         enabled: true,
         use_avx512: true,
         thread_count: "auto",
-        batch_optimization: true
+        batch_optimization: true,
       },
-      performance: '640× speedup on matrix operations',
-      usage: 'Always enable for inference workloads on supported CPUs.'
+      performance: "640× speedup on matrix operations",
+      usage: "Always enable for inference workloads on supported CPUs.",
     },
-    'job-queue': {
-      name: 'Job Queue',
-      description: 'Intelligent request queuing and prioritization system.',
-      purpose: 'Handle thousands of concurrent requests with fair scheduling.',
+    "job-queue": {
+      name: "Job Queue",
+      description: "Intelligent request queuing and prioritization system.",
+      purpose: "Handle thousands of concurrent requests with fair scheduling.",
       config: {
         enabled: true,
         max_queue_size: 10000,
         priority_levels: 10,
-        timeout_ms: 60000
+        timeout_ms: 60000,
       },
-      performance: 'Handle 1000s of concurrent jobs',
-      usage: 'Essential for production deployments with multiple users.'
+      performance: "Handle 1000s of concurrent jobs",
+      usage: "Essential for production deployments with multiple users.",
     },
-    'response-cache': {
-      name: 'Response Cache',
-      description: 'Intelligent caching of inference results for repeated queries.',
-      purpose: 'Reduce latency and compute costs for common requests.',
+    "response-cache": {
+      name: "Response Cache",
+      description: "Intelligent caching of inference results for repeated queries.",
+      purpose: "Reduce latency and compute costs for common requests.",
       config: {
         enabled: true,
         cache_size_mb: 1024,
         ttl_seconds: 3600,
-        similarity_threshold: 0.95
+        similarity_threshold: 0.95,
       },
-      performance: '85% cache hit rate on typical workloads',
-      usage: 'Enable for workloads with repetitive or similar queries.'
+      performance: "85% cache hit rate on typical workloads",
+      usage: "Enable for workloads with repetitive or similar queries.",
     },
-    'model-streaming': {
-      name: 'Model Streaming',
-      description: 'Layer-by-layer model loading for memory-constrained environments.',
-      purpose: 'Run models larger than available RAM.',
+    "model-streaming": {
+      name: "Model Streaming",
+      description: "Layer-by-layer model loading for memory-constrained environments.",
+      purpose: "Run models larger than available RAM.",
       config: {
         enabled: true,
         chunk_size_mb: 256,
         prefetch_layers: 2,
-        swap_policy: "lru"
+        swap_policy: "lru",
       },
-      performance: 'Train 280GB models on 16GB RAM',
-      usage: 'Required for very large models or limited memory environments.'
+      performance: "Train 280GB models on 16GB RAM",
+      usage: "Required for very large models or limited memory environments.",
     },
-    'neural-approximation': {
-      name: 'Neural Approximation',
-      description: 'Replace expensive operations with learned approximations.',
-      purpose: 'Trade minimal accuracy for significant speedup.',
+    "neural-approximation": {
+      name: "Neural Approximation",
+      description: "Replace expensive operations with learned approximations.",
+      purpose: "Trade minimal accuracy for significant speedup.",
       config: {
         enabled: true,
         approximation_level: "medium",
         accuracy_threshold: 0.98,
-        fallback_on_complex: true
+        fallback_on_complex: true,
       },
-      performance: '+5-7% overall performance gain',
-      usage: 'Enable when speed is prioritized over maximum precision.'
+      performance: "+5-7% overall performance gain",
+      usage: "Enable when speed is prioritized over maximum precision.",
     },
-    'predictive-rendering': {
-      name: 'Predictive Rendering',
-      description: 'Predict and pre-compute likely next outputs.',
-      purpose: 'Reduce perceived latency through speculation.',
+    "predictive-rendering": {
+      name: "Predictive Rendering",
+      description: "Predict and pre-compute likely next outputs.",
+      purpose: "Reduce perceived latency through speculation.",
       config: {
         enabled: true,
         prediction_depth: 3,
         speculation_budget_ms: 10,
-        discard_on_mismatch: true
+        discard_on_mismatch: true,
       },
-      performance: '+5-7% effective speedup',
-      usage: 'Best for interactive applications with predictable patterns.'
+      performance: "+5-7% effective speedup",
+      usage: "Best for interactive applications with predictable patterns.",
     },
-    'ray-tracing': {
-      name: 'Neural Ray Tracing',
-      description: 'Neural network-accelerated ray tracing for rendering.',
-      purpose: 'Hardware-quality ray tracing without dedicated hardware.',
+    "ray-tracing": {
+      name: "Neural Ray Tracing",
+      description: "Neural network-accelerated ray tracing for rendering.",
+      purpose: "Hardware-quality ray tracing without dedicated hardware.",
       config: {
         enabled: true,
         quality_level: "high",
         samples_per_pixel: 4,
-        denoiser: "neural"
+        denoiser: "neural",
       },
-      performance: '98-100% visual quality vs hardware RT',
-      usage: 'Enable for graphics workloads requiring realistic lighting.'
-    }
+      performance: "98-100% visual quality vs hardware RT",
+      usage: "Enable for graphics workloads requiring realistic lighting.",
+    },
   };
 
   const module = moduleDetails[moduleId];
@@ -609,10 +612,7 @@ const renderModuleDetail = (moduleId: ModuleId) => {
 
       <Card className="p-6">
         <h2 className="text-xl font-semibold mb-3">Configuration Options</h2>
-        <CodeBlock
-          code={JSON.stringify(module.config, null, 2)}
-          language="json"
-        />
+        <CodeBlock code={JSON.stringify(module.config, null, 2)} language="json" />
       </Card>
 
       <Card className="p-6">
@@ -790,16 +790,12 @@ const TroubleshootingContent = () => (
   <div className="space-y-8">
     <div>
       <h1 className="text-4xl font-bold mb-4">Troubleshooting</h1>
-      <p className="text-lg text-muted-foreground">
-        Common issues and their solutions.
-      </p>
+      <p className="text-lg text-muted-foreground">Common issues and their solutions.</p>
     </div>
 
     <Card className="p-6">
       <h2 className="text-xl font-semibold mb-3">Job Stuck in Queue</h2>
-      <p className="text-muted-foreground mb-4">
-        If your job is stuck in the queue:
-      </p>
+      <p className="text-muted-foreground mb-4">If your job is stuck in the queue:</p>
       <ul className="space-y-2 text-muted-foreground">
         <li>• Check your API quota in Settings</li>
         <li>• Increase job priority if allowed</li>
@@ -809,9 +805,7 @@ const TroubleshootingContent = () => (
 
     <Card className="p-6">
       <h2 className="text-xl font-semibold mb-3">Out of Memory Errors</h2>
-      <p className="text-muted-foreground mb-4">
-        For memory issues:
-      </p>
+      <p className="text-muted-foreground mb-4">For memory issues:</p>
       <ul className="space-y-2 text-muted-foreground">
         <li>• Enable Neural Compression module</li>
         <li>• Enable Model Streaming for large models</li>
@@ -821,9 +815,7 @@ const TroubleshootingContent = () => (
 
     <Card className="p-6">
       <h2 className="text-xl font-semibold mb-3">Slow Performance</h2>
-      <p className="text-muted-foreground mb-4">
-        To improve performance:
-      </p>
+      <p className="text-muted-foreground mb-4">To improve performance:</p>
       <ul className="space-y-2 text-muted-foreground">
         <li>• Enable CUDA Accelerator module</li>
         <li>• Enable Response Cache for repeated queries</li>
@@ -840,35 +832,37 @@ const FAQContent = () => (
     </div>
 
     <Card className="p-6">
-      <h3 className="font-semibold mb-2">How does IntelliGPU achieve GPU-level performance without a GPU?</h3>
+      <h3 className="font-semibold mb-2">
+        How does IntelliGPU achieve GPU-level performance without a GPU?
+      </h3>
       <p className="text-muted-foreground">
-        IntelliGPU uses a combination of neural approximation, extreme quantization,
-        intelligent caching, and vectorized CPU instructions to achieve comparable
-        performance to dedicated GPU hardware.
+        IntelliGPU uses a combination of neural approximation, extreme quantization, intelligent
+        caching, and vectorized CPU instructions to achieve comparable performance to dedicated GPU
+        hardware.
       </p>
     </Card>
 
     <Card className="p-6">
       <h3 className="font-semibold mb-2">What models are supported?</h3>
       <p className="text-muted-foreground">
-        We support all major open-source LLMs including LLaMA, Mistral, Falcon,
-        and custom fine-tuned models. Check the Models page for the full list.
+        We support all major open-source LLMs including LLaMA, Mistral, Falcon, and custom
+        fine-tuned models. Check the Models page for the full list.
       </p>
     </Card>
 
     <Card className="p-6">
       <h3 className="font-semibold mb-2">Can I run IntelliGPU on-premises?</h3>
       <p className="text-muted-foreground">
-        Yes! Enterprise customers can deploy IntelliGPU on their own infrastructure.
-        See the Deployment section for Docker and Kubernetes guides.
+        Yes! Enterprise customers can deploy IntelliGPU on their own infrastructure. See the
+        Deployment section for Docker and Kubernetes guides.
       </p>
     </Card>
 
     <Card className="p-6">
       <h3 className="font-semibold mb-2">What's the accuracy compared to GPU inference?</h3>
       <p className="text-muted-foreground">
-        With 8-bit quantization, accuracy is typically within 0.5% of full precision.
-        4-bit quantization maintains 95-98% accuracy for most use cases.
+        With 8-bit quantization, accuracy is typically within 0.5% of full precision. 4-bit
+        quantization maintains 95-98% accuracy for most use cases.
       </p>
     </Card>
   </div>
@@ -904,9 +898,7 @@ VITE_SUPABASE_PUBLISHABLE_KEY=your_anon_key`}
 
     <Card className="p-6">
       <h2 className="text-xl font-semibold mb-4">Deploy with Docker</h2>
-      <p className="text-muted-foreground mb-4">
-        Run IntelliGPU in a containerized environment.
-      </p>
+      <p className="text-muted-foreground mb-4">Run IntelliGPU in a containerized environment.</p>
       <CodeBlock
         code={`# Build the image
 docker build -t intelligpu-app .

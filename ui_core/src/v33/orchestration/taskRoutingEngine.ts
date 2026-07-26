@@ -50,10 +50,10 @@ export class TaskRoutingEngine {
     let penalty = 0;
     if (loadFactorCpu > 0.9) penalty += 20;
     if (loadFactorIgpu > 0.9) penalty += 15;
-    
+
     // Balanced routing yields higher score
     const usageSum = loadFactorCpu + loadFactorIgpu + loadFactorNpu;
-    let baseScore = 95 - (penalty);
+    let baseScore = 95 - penalty;
     if (usageSum === 0) baseScore = 50;
 
     const hardwareUtilizationScore = parseFloat(Math.min(100, Math.max(0, baseScore)).toFixed(1));

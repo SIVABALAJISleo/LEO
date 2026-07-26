@@ -38,7 +38,7 @@ export class MemoryStabilityMaximizer {
         confidence: 0.99,
         minhash: "0a3c2b",
         quarantined: false,
-        stale: false
+        stale: false,
       },
       {
         id: "mem-v24-2",
@@ -48,7 +48,7 @@ export class MemoryStabilityMaximizer {
         confidence: 0.98,
         minhash: "5f8e9d",
         quarantined: false,
-        stale: false
+        stale: false,
       },
       {
         id: "mem-v24-3",
@@ -58,7 +58,7 @@ export class MemoryStabilityMaximizer {
         confidence: 0.65,
         minhash: "0a3c2c",
         quarantined: false,
-        stale: false
+        stale: false,
       },
       {
         id: "mem-v24-4",
@@ -68,18 +68,18 @@ export class MemoryStabilityMaximizer {
         confidence: 0.97,
         minhash: "5f8e9d",
         quarantined: false,
-        stale: false
+        stale: false,
       },
       {
         id: "mem-v24-5",
         fact: "Temporary file cache reference located in system tmp folder (stale node).", // Stale fact
         source: "Developer-Prompt",
         timestamp: Date.now() - 3600000 * 240, // 10 days ago
-        confidence: 0.50,
+        confidence: 0.5,
         minhash: "ef439b",
         quarantined: false,
-        stale: false
-      }
+        stale: false,
+      },
     ];
   }
 
@@ -110,7 +110,8 @@ export class MemoryStabilityMaximizer {
         const a = uniqueList[i];
         const b = uniqueList[j];
 
-        const hasSharedSubject = /Platform requires/i.test(a.fact) && /Platform requires/i.test(b.fact);
+        const hasSharedSubject =
+          /Platform requires/i.test(a.fact) && /Platform requires/i.test(b.fact);
         const contradictoryVal = /WebGPU/i.test(a.fact) !== /WebGPU/i.test(b.fact);
 
         if (hasSharedSubject && contradictoryVal) {
@@ -123,12 +124,12 @@ export class MemoryStabilityMaximizer {
       }
     }
 
-    quarantinedCount = uniqueList.filter(m => m.quarantined).length;
+    quarantinedCount = uniqueList.filter((m) => m.quarantined).length;
 
     // 3. Stale Memory Removal (older than 7 days with low confidence/usage)
-    const activeList = uniqueList.filter(m => {
-      const isOld = (Date.now() - m.timestamp) > 3600000 * 24 * 7;
-      if (isOld && m.confidence < 0.60) {
+    const activeList = uniqueList.filter((m) => {
+      const isOld = Date.now() - m.timestamp > 3600000 * 24 * 7;
+      if (isOld && m.confidence < 0.6) {
         evictedCount++;
         return false;
       }
@@ -136,8 +137,10 @@ export class MemoryStabilityMaximizer {
     });
 
     // Compute consistency score: ratio of clean vs quarantined/unverified
-    const quarantinedOrUnstable = activeList.filter(m => m.quarantined && m.confidence > 0.90).length;
-    const consistencyScore = 1.0 - (quarantinedOrUnstable / Math.max(1, activeList.length));
+    const quarantinedOrUnstable = activeList.filter(
+      (m) => m.quarantined && m.confidence > 0.9,
+    ).length;
+    const consistencyScore = 1.0 - quarantinedOrUnstable / Math.max(1, activeList.length);
 
     this.memories = activeList;
 
@@ -147,7 +150,7 @@ export class MemoryStabilityMaximizer {
       quarantinedCount,
       evictedCount,
       consistencyScore: parseFloat(Math.min(0.999, Math.max(0.98, consistencyScore)).toFixed(3)),
-      activeMemories: activeList
+      activeMemories: activeList,
     };
   }
 
@@ -165,7 +168,7 @@ export class MemoryStabilityMaximizer {
       confidence,
       minhash,
       quarantined: false,
-      stale: false
+      stale: false,
     });
   }
 }

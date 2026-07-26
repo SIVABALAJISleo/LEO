@@ -26,9 +26,9 @@ export class FrontierConvergenceLoop {
         baselineScore: 0.885,
         remedyApplied: "Implement TopologicalWorldModel rooms and corridor maps",
         postExecutionScore: 0.945,
-        gainScore: 0.060,
-        timestamp: Date.now() - 3600000 * 24
-      }
+        gainScore: 0.06,
+        timestamp: Date.now() - 3600000 * 24,
+      },
     ];
   }
 
@@ -41,7 +41,7 @@ export class FrontierConvergenceLoop {
       remedyApplied: "Enable OpenVINO dynamic routing inside openvinoIntelligencePipeline.ts",
       postExecutionScore: 0.958,
       gainScore: 0.033,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
 
     this.timeline.push(newStep);

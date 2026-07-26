@@ -1,38 +1,37 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { 
-  Thermometer, 
-  Cpu, 
-  HardDrive, 
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  Thermometer,
+  Cpu,
+  HardDrive,
   Activity,
   Wifi,
   WifiOff,
   AlertTriangle,
   CheckCircle2,
-  Zap
-} from 'lucide-react';
-import { useGpuJobs } from '@/hooks/useGpuJobs';
-import { GPU_THERMAL_WARNING, GPU_THERMAL_CRITICAL } from '@/lib/gpuJobTypes';
+  Zap,
+} from "lucide-react";
+import { useGpuJobs } from "@/hooks/useGpuJobs";
+import { GPU_THERMAL_WARNING, GPU_THERMAL_CRITICAL } from "@/lib/gpuJobTypes";
 
 export function SystemStatusPanel() {
   const { systemStatus, getMemoryReport, getThermalStatus } = useGpuJobs();
   const memoryReport = getMemoryReport();
   const thermalStatus = getThermalStatus();
 
-  const memoryUsagePercent = memoryReport.total_mb > 0 
-    ? (memoryReport.used_mb / memoryReport.total_mb) * 100 
-    : 0;
+  const memoryUsagePercent =
+    memoryReport.total_mb > 0 ? (memoryReport.used_mb / memoryReport.total_mb) * 100 : 0;
 
   const gpuUtilization = systemStatus?.gpu_utilization_percent || 0;
   const cpuUtilization = systemStatus?.cpu_utilization_percent || 0;
   const isOnline = systemStatus?.is_online ?? true;
 
   const getTempColor = (temp: number) => {
-    if (temp >= GPU_THERMAL_CRITICAL) return 'text-destructive';
-    if (temp >= GPU_THERMAL_WARNING) return 'text-orange-500';
-    return 'text-primary';
+    if (temp >= GPU_THERMAL_CRITICAL) return "text-destructive";
+    if (temp >= GPU_THERMAL_WARNING) return "text-orange-500";
+    return "text-primary";
   };
 
   const getTempProgress = (temp: number) => {
@@ -50,7 +49,7 @@ export function SystemStatusPanel() {
             </CardTitle>
             <CardDescription>Real-time GPU worker health monitoring</CardDescription>
           </div>
-          <Badge variant={isOnline ? 'default' : 'destructive'} className="gap-1">
+          <Badge variant={isOnline ? "default" : "destructive"} className="gap-1">
             {isOnline ? (
               <>
                 <Wifi className="h-3 w-3" />
@@ -72,9 +71,9 @@ export function SystemStatusPanel() {
             <AlertTriangle className="h-4 w-4" />
             <AlertTitle>Thermal Warning</AlertTitle>
             <AlertDescription>
-              {thermalStatus.recommended_action === 'stop' 
-                ? 'GPU temperature critical! Jobs will be paused for safety.'
-                : 'GPU temperature elevated. Performance may be reduced.'}
+              {thermalStatus.recommended_action === "stop"
+                ? "GPU temperature critical! Jobs will be paused for safety."
+                : "GPU temperature elevated. Performance may be reduced."}
             </AlertDescription>
           </Alert>
         )}
@@ -87,7 +86,8 @@ export function SystemStatusPanel() {
               <span className="text-sm font-medium">GPU Memory</span>
             </div>
             <span className="text-sm text-muted-foreground">
-              {(memoryReport.used_mb / 1024).toFixed(1)}GB / {(memoryReport.total_mb / 1024).toFixed(1)}GB
+              {(memoryReport.used_mb / 1024).toFixed(1)}GB /{" "}
+              {(memoryReport.total_mb / 1024).toFixed(1)}GB
             </span>
           </div>
           <Progress value={memoryUsagePercent} className="h-3" />
@@ -117,13 +117,12 @@ export function SystemStatusPanel() {
               {thermalStatus.gpu_temp}°C
             </span>
           </div>
-          <Progress 
-            value={getTempProgress(thermalStatus.gpu_temp)} 
-            className="h-3"
-          />
+          <Progress value={getTempProgress(thermalStatus.gpu_temp)} className="h-3" />
           <div className="flex gap-4 text-xs text-muted-foreground">
             <span>Safe: &lt;{GPU_THERMAL_WARNING}°C</span>
-            <span className="text-orange-500">Warning: {GPU_THERMAL_WARNING}-{GPU_THERMAL_CRITICAL}°C</span>
+            <span className="text-orange-500">
+              Warning: {GPU_THERMAL_WARNING}-{GPU_THERMAL_CRITICAL}°C
+            </span>
             <span className="text-destructive">Critical: &gt;{GPU_THERMAL_CRITICAL}°C</span>
           </div>
         </div>
@@ -139,10 +138,7 @@ export function SystemStatusPanel() {
               {thermalStatus.cpu_temp}°C
             </span>
           </div>
-          <Progress 
-            value={getTempProgress(thermalStatus.cpu_temp)} 
-            className="h-3"
-          />
+          <Progress value={getTempProgress(thermalStatus.cpu_temp)} className="h-3" />
         </div>
 
         {/* GPU Utilization */}

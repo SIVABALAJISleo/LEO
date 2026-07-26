@@ -20,7 +20,7 @@ export class AgentProofEngine {
 
     for (let i = 0; i < trials; i++) {
       const hash = Math.sin(seed + i);
-      
+
       // Target agent accuracy 98.1%
       if (hash > -0.981) {
         correctRouting++;
@@ -31,7 +31,9 @@ export class AgentProofEngine {
     }
 
     const correctRoutingPct = parseFloat(((correctRouting / trials) * 100).toFixed(2));
-    const successfulDelegationsPct = parseFloat(((successfulDelegations / trials) * 100).toFixed(2));
+    const successfulDelegationsPct = parseFloat(
+      ((successfulDelegations / trials) * 100).toFixed(2),
+    );
     const agent_accuracy = correctRoutingPct;
 
     return {
@@ -39,7 +41,7 @@ export class AgentProofEngine {
       correctRoutingPct,
       successfulDelegationsPct,
       failedHandoffsCount: failedHandoffs,
-      agent_accuracy
+      agent_accuracy,
     };
   }
 }

@@ -16,8 +16,8 @@ export class FftOptimizationEngine {
 
     // FFT/IFFT frequency multiplication: 2 * (N log2 N) + N operations
     const log2N = Math.log2(sequenceLength) || 1;
-    const frequencyDomainOps = Math.round((2 * sequenceLength * log2N) + sequenceLength);
-    
+    const frequencyDomainOps = Math.round(2 * sequenceLength * log2N + sequenceLength);
+
     const computeSavedOps = timeDomainOps - frequencyDomainOps;
     const complexityRatio = parseFloat((timeDomainOps / frequencyDomainOps).toFixed(2));
 

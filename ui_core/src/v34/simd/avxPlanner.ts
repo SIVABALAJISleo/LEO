@@ -36,7 +36,7 @@ export class AvxPlanner {
       instructionWidth,
       registerCountUsed,
       unrollFactor,
-      estimatedThroughputGflops
+      estimatedThroughputGflops,
     };
   }
 }

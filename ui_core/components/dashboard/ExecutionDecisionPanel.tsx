@@ -1,22 +1,22 @@
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { 
-  ArrowRight, 
-  Server, 
-  Cloud, 
-  Cpu, 
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  ArrowRight,
+  Server,
+  Cloud,
+  Cpu,
   AlertCircle,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   CheckCircle2,
   Clock,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  Zap
-} from 'lucide-react';
-import { workloadClassifier, WorkloadClassification } from '@/lib/safeCompute/WorkloadClassifier';
+  Zap,
+} from "lucide-react";
+import { workloadClassifier, WorkloadClassification } from "@/lib/safeCompute/WorkloadClassifier";
 
-export type ExecutionDecision = 'local' | 'defer' | 'delegate' | 'upgrade_required';
+export type ExecutionDecision = "local" | "defer" | "delegate" | "upgrade_required";
 
 export interface DecisionResult {
   decision: ExecutionDecision;
@@ -38,7 +38,7 @@ export const ExecutionDecisionPanel = ({
   workloadType,
   input,
   onDecision,
-  className
+  className,
 }: ExecutionDecisionPanelProps) => {
   const [decision, setDecision] = useState<DecisionResult | null>(null);
   const [loading, setLoading] = useState(true);
@@ -47,10 +47,10 @@ export const ExecutionDecisionPanel = ({
     // Classify workload and determine execution path
     const classify = async () => {
       setLoading(true);
-      
+
       const classification = workloadClassifier.classify(workloadId, workloadType, input, {
         allowDownscale: true,
-        userPriority: 'cost'
+        userPriority: "cost",
       });
 
       let result: DecisionResult;
@@ -58,31 +58,31 @@ export const ExecutionDecisionPanel = ({
       // Decision logic based on classification
       if (!classification.gpuRequired) {
         result = {
-          decision: 'local',
-          reason: 'Workload can be handled without GPU compute',
+          decision: "local",
+          reason: "Workload can be handled without GPU compute",
           classification,
-          recommendation: 'Execute locally for fastest response'
+          recommendation: "Execute locally for fastest response",
         };
-      } else if (classification.categories.includes('deferrable')) {
+      } else if (classification.categories.includes("deferrable")) {
         result = {
-          decision: 'defer',
-          reason: 'GPU required but workload can wait for optimal window',
+          decision: "defer",
+          reason: "GPU required but workload can wait for optimal window",
           classification,
-          recommendation: 'Schedule for off-peak execution to reduce costs'
+          recommendation: "Schedule for off-peak execution to reduce costs",
         };
       } else if (classification.delegatable) {
         result = {
-          decision: 'delegate',
-          reason: 'GPU required, delegating to available compute resource',
+          decision: "delegate",
+          reason: "GPU required, delegating to available compute resource",
           classification,
-          recommendation: 'Connect external GPU or use cloud compute'
+          recommendation: "Connect external GPU or use cloud compute",
         };
       } else {
         result = {
-          decision: 'upgrade_required',
-          reason: 'Workload requires dedicated GPU that is not available',
+          decision: "upgrade_required",
+          reason: "Workload requires dedicated GPU that is not available",
           classification,
-          recommendation: 'Register a GPU device or connect cloud compute'
+          recommendation: "Register a GPU device or connect cloud compute",
         };
       }
 
@@ -112,31 +112,31 @@ export const ExecutionDecisionPanel = ({
   const decisionConfig = {
     local: {
       icon: Cpu,
-      color: 'text-green-500',
-      bgColor: 'bg-green-500/10',
-      badge: 'Local',
-      badgeVariant: 'default' as const,
+      color: "text-green-500",
+      bgColor: "bg-green-500/10",
+      badge: "Local",
+      badgeVariant: "default" as const,
     },
     defer: {
       icon: Clock,
-      color: 'text-blue-500',
-      bgColor: 'bg-blue-500/10',
-      badge: 'Deferred',
-      badgeVariant: 'secondary' as const,
+      color: "text-blue-500",
+      bgColor: "bg-blue-500/10",
+      badge: "Deferred",
+      badgeVariant: "secondary" as const,
     },
     delegate: {
       icon: Cloud,
-      color: 'text-purple-500',
-      bgColor: 'bg-purple-500/10',
-      badge: 'Delegated',
-      badgeVariant: 'outline' as const,
+      color: "text-purple-500",
+      bgColor: "bg-purple-500/10",
+      badge: "Delegated",
+      badgeVariant: "outline" as const,
     },
     upgrade_required: {
       icon: AlertCircle,
-      color: 'text-yellow-500',
-      bgColor: 'bg-yellow-500/10',
-      badge: 'GPU Required',
-      badgeVariant: 'destructive' as const,
+      color: "text-yellow-500",
+      bgColor: "bg-yellow-500/10",
+      badge: "GPU Required",
+      badgeVariant: "destructive" as const,
     },
   };
 
@@ -164,15 +164,21 @@ export const ExecutionDecisionPanel = ({
           <div className="text-xs space-y-1">
             <div className="flex justify-between">
               <span className="text-muted-foreground">Primary Category</span>
-              <span className="font-medium">{decision.classification.primaryCategory.replace('_', ' ')}</span>
+              <span className="font-medium">
+                {decision.classification.primaryCategory.replace("_", " ")}
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">GPU Required</span>
-              <span className="font-medium">{decision.classification.gpuRequired ? 'Yes' : 'No'}</span>
+              <span className="font-medium">
+                {decision.classification.gpuRequired ? "Yes" : "No"}
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Quality Floor</span>
-              <span className="font-medium">{Math.round(decision.classification.qualityFloor * 100)}%</span>
+              <span className="font-medium">
+                {Math.round(decision.classification.qualityFloor * 100)}%
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Latency Budget</span>
@@ -181,7 +187,7 @@ export const ExecutionDecisionPanel = ({
           </div>
         )}
 
-        {decision.decision === 'upgrade_required' && (
+        {decision.decision === "upgrade_required" && (
           <div className="pt-2">
             <Button size="sm" className="w-full">
               <Server className="h-4 w-4 mr-2" />
@@ -205,10 +211,10 @@ interface ExecutionPathBadgeProps {
 
 export const ExecutionPathBadge = ({ decision, className }: ExecutionPathBadgeProps) => {
   const configs = {
-    local: { icon: Cpu, label: 'Local', variant: 'default' as const },
-    defer: { icon: Clock, label: 'Deferred', variant: 'secondary' as const },
-    delegate: { icon: Cloud, label: 'External', variant: 'outline' as const },
-    upgrade_required: { icon: AlertCircle, label: 'GPU Needed', variant: 'destructive' as const },
+    local: { icon: Cpu, label: "Local", variant: "default" as const },
+    defer: { icon: Clock, label: "Deferred", variant: "secondary" as const },
+    delegate: { icon: Cloud, label: "External", variant: "outline" as const },
+    upgrade_required: { icon: AlertCircle, label: "GPU Needed", variant: "destructive" as const },
   };
 
   const config = configs[decision];

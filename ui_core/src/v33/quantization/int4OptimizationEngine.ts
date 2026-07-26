@@ -12,7 +12,7 @@ export interface QuantizationProfile {
 export class Int4OptimizationEngine {
   calculateSavings(baseModelSizeGB: number, baseTokensPerSec: number): QuantizationProfile[] {
     const baseBytes = baseModelSizeGB * 1024 * 1024 * 1024;
-    
+
     // FP16 baseline
     const fp16: QuantizationProfile = {
       precision: "FP16",
@@ -42,8 +42,16 @@ export class Int4OptimizationEngine {
 
     return [
       fp16,
-      { ...int8, averageLatencyMs: parseFloat(int8.averageLatencyMs.toFixed(2)), tokensPerSec: parseFloat(int8.tokensPerSec.toFixed(1)) },
-      { ...int4, averageLatencyMs: parseFloat(int4.averageLatencyMs.toFixed(2)), tokensPerSec: parseFloat(int4.tokensPerSec.toFixed(1)) },
+      {
+        ...int8,
+        averageLatencyMs: parseFloat(int8.averageLatencyMs.toFixed(2)),
+        tokensPerSec: parseFloat(int8.tokensPerSec.toFixed(1)),
+      },
+      {
+        ...int4,
+        averageLatencyMs: parseFloat(int4.averageLatencyMs.toFixed(2)),
+        tokensPerSec: parseFloat(int4.tokensPerSec.toFixed(1)),
+      },
     ];
   }
 }

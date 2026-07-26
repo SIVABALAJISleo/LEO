@@ -12,7 +12,11 @@ export interface OperationErrorBounds {
 }
 
 export class NumericalAccuracyGovernor {
-  analyzePrecision(operationName: string, inputs: number[], operator: "+" | "-" | "*" | "/"): OperationErrorBounds {
+  analyzePrecision(
+    operationName: string,
+    inputs: number[],
+    operator: "+" | "-" | "*" | "/",
+  ): OperationErrorBounds {
     // Simulate floating point precision analysis: worse error margins for divisions or multiplications of very small/large floats
     let nominal = 0;
     let worstCaseError = 0.0000001;
@@ -38,7 +42,7 @@ export class NumericalAccuracyGovernor {
 
     const minPossibleValue = nominal - worstCaseError;
     const maxPossibleValue = nominal + worstCaseError;
-    
+
     let severity: "Negligible" | "Warning" | "Critical" = "Negligible";
     if (worstCaseError > 0.01) {
       severity = "Critical";
@@ -52,7 +56,7 @@ export class NumericalAccuracyGovernor {
       minPossibleValue: parseFloat(minPossibleValue.toFixed(8)),
       maxPossibleValue: parseFloat(maxPossibleValue.toFixed(8)),
       worstCaseErrorMargin: parseFloat(worstCaseError.toFixed(8)),
-      precisionLossSeverity: severity
+      precisionLossSeverity: severity,
     };
   }
 }

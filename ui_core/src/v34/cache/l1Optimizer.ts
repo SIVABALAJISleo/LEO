@@ -13,13 +13,13 @@ export class L1Optimizer {
 
   optimizeRoutingTable(tableId: string, sizeBytes: number): L1Allocation {
     const isL1Resident = sizeBytes <= this.l1CapacityBytes;
-    
+
     return {
       tableId,
       sizeBytes,
       isL1Resident,
       // L1 hit = 4 cycles, L2 hit = 12 cycles
-      cyclesLatency: isL1Resident ? 4 : 12
+      cyclesLatency: isL1Resident ? 4 : 12,
     };
   }
 }

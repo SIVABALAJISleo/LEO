@@ -24,33 +24,34 @@ export class UnknownKnowledgeManagement {
   /**
    * Evaluates if a statement has high uncertainty or lack of records, launching retrieval searches.
    */
-  public manageUncertainty(
-    topic: string,
-    currentCategory: OutputCategory
-  ): UncertaintyResolution {
+  public manageUncertainty(topic: string, currentCategory: OutputCategory): UncertaintyResolution {
     let isHallucinatingRisk = false;
     let prescribedMitigation = "Output matches verified reference documents.";
     let evidenceWorkflowLaunched = false;
 
     if (currentCategory === "Unknown" || currentCategory === "Uncertain") {
       isHallucinatingRisk = true;
-      prescribedMitigation = "Do not predict output. Halt token generation and launch verification crawlers.";
-      
+      prescribedMitigation =
+        "Do not predict output. Halt token generation and launch verification crawlers.";
+
       // Launch a new verification crawler task if not already registered
-      const exists = this.activeWorkflows.some(w => w.queryTopic.toLowerCase() === topic.toLowerCase());
-      
+      const exists = this.activeWorkflows.some(
+        (w) => w.queryTopic.toLowerCase() === topic.toLowerCase(),
+      );
+
       if (!exists) {
         const newTrigger: VerificationTrigger = {
           workflowId: `wf-${(1000 + Math.random() * 9000).toFixed(0)}`,
           queryTopic: topic,
           sourceTarget: "arxiv.org/semantic_scholar/google_search",
-          launchedTimestamp: Date.now()
+          launchedTimestamp: Date.now(),
         };
         this.activeWorkflows.push(newTrigger);
         evidenceWorkflowLaunched = true;
       }
     } else if (currentCategory === "Likely") {
-      prescribedMitigation = "Proceed with caution. Request confidence confirmation from user before finalizing.";
+      prescribedMitigation =
+        "Proceed with caution. Request confidence confirmation from user before finalizing.";
     }
 
     return {
@@ -58,7 +59,7 @@ export class UnknownKnowledgeManagement {
       isHallucinatingRisk,
       prescribedMitigation,
       evidenceWorkflowLaunched,
-      triggers: [...this.activeWorkflows]
+      triggers: [...this.activeWorkflows],
     };
   }
 

@@ -15,13 +15,13 @@ export interface RetrainingCostReport {
 
 export class TrainingEfficiencyEngine {
   calculateFinetuningMetrics(
-    strategy: FinetuningStrategy, 
+    strategy: FinetuningStrategy,
     baseParamsBillions: number = 7.0,
     gradientAccumulationSteps: number = 4,
-    checkpointingActive: boolean = true
+    checkpointingActive: boolean = true,
   ): RetrainingCostReport {
     const baseTrainableParams = baseParamsBillions * 1000; // in Millions
-    
+
     let trainableParamsMillions = 0;
     let vramRequiredGb = 0;
     let relativeCostFactor = 1.0;
@@ -32,7 +32,7 @@ export class TrainingEfficiencyEngine {
       vramRequiredGb = baseParamsBillions * 16; // 16GB per billion params for FP16 training
       relativeCostFactor = 1.0;
       trainingSpeedTokensSec = 850;
-      
+
       if (checkpointingActive) {
         vramRequiredGb *= 0.6; // saves activation memory
       }
@@ -41,7 +41,7 @@ export class TrainingEfficiencyEngine {
       vramRequiredGb = baseParamsBillions * 4.5;
       relativeCostFactor = 0.08;
       trainingSpeedTokensSec = 2200;
-      
+
       if (checkpointingActive) {
         vramRequiredGb *= 0.7;
       }
@@ -51,7 +51,7 @@ export class TrainingEfficiencyEngine {
       vramRequiredGb = baseParamsBillions * 1.8; // INT4 quantized base weights
       relativeCostFactor = 0.04; // ~25x cost reduction
       trainingSpeedTokensSec = 1400; // slightly slower than LoRA due to dequantization overhead
-      
+
       if (checkpointingActive) {
         vramRequiredGb *= 0.75;
       }
@@ -59,7 +59,9 @@ export class TrainingEfficiencyEngine {
 
     // Apply gradient accumulation scaling
     if (gradientAccumulationSteps > 1) {
-      trainingSpeedTokensSec = Math.round(trainingSpeedTokensSec * (1 - (0.05 * Math.log2(gradientAccumulationSteps))));
+      trainingSpeedTokensSec = Math.round(
+        trainingSpeedTokensSec * (1 - 0.05 * Math.log2(gradientAccumulationSteps)),
+      );
     }
 
     return {
@@ -69,7 +71,7 @@ export class TrainingEfficiencyEngine {
       gradientAccumulationSteps,
       checkpointingActive,
       relativeCostFactor: parseFloat(relativeCostFactor.toFixed(3)),
-      trainingSpeedTokensSec
+      trainingSpeedTokensSec,
     };
   }
 }

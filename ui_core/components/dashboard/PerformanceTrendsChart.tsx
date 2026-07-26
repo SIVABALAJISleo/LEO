@@ -1,7 +1,7 @@
-import { useState, useMemo } from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { PerformanceMetric } from '@/lib/types';
+import { useState, useMemo } from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { PerformanceMetric } from "@/lib/types";
 import {
   LineChart,
   Line,
@@ -11,57 +11,59 @@ import {
   Tooltip,
   ResponsiveContainer,
   Legend,
-} from 'recharts';
-import { format } from 'date-fns';
+} from "recharts";
+import { format } from "date-fns";
 
 interface PerformanceTrendsChartProps {
   metrics: PerformanceMetric[];
 }
 
-type MetricType = 'latency' | 'throughput' | 'cache';
+type MetricType = "latency" | "throughput" | "cache";
 
 export const PerformanceTrendsChart = ({ metrics }: PerformanceTrendsChartProps) => {
-  const [activeMetric, setActiveMetric] = useState<MetricType>('latency');
+  const [activeMetric, setActiveMetric] = useState<MetricType>("latency");
 
   const chartData = useMemo(() => {
     // Group metrics by hour
-    const grouped: Record<string, { latency: number[]; throughput: number[]; cache: number[] }> = {};
-    
+    const grouped: Record<string, { latency: number[]; throughput: number[]; cache: number[] }> =
+      {};
+
     metrics.forEach((m) => {
-      const hour = format(new Date(m.recorded_at), 'HH:00');
+      const hour = format(new Date(m.recorded_at), "HH:00");
       if (!grouped[hour]) {
         grouped[hour] = { latency: [], throughput: [], cache: [] };
       }
-      
-      if (m.latency_ms || m.metric_name === 'latency') {
+
+      if (m.latency_ms || m.metric_name === "latency") {
         grouped[hour].latency.push(m.latency_ms || m.metric_value || 0);
       }
-      if (m.throughput_rps || m.metric_name === 'throughput') {
+      if (m.throughput_rps || m.metric_name === "throughput") {
         grouped[hour].throughput.push(m.throughput_rps || m.metric_value || 0);
       }
-      if (m.cache_hit_ratio || m.metric_name === 'cache_hit_ratio') {
+      if (m.cache_hit_ratio || m.metric_name === "cache_hit_ratio") {
         grouped[hour].cache.push((m.cache_hit_ratio || m.metric_value || 0) * 100);
       }
     });
 
     return Object.entries(grouped).map(([time, data]) => ({
       time,
-      latency: data.latency.length > 0 
-        ? data.latency.reduce((a, b) => a + b, 0) / data.latency.length 
-        : null,
-      throughput: data.throughput.length > 0 
-        ? data.throughput.reduce((a, b) => a + b, 0) / data.throughput.length 
-        : null,
-      cache: data.cache.length > 0 
-        ? data.cache.reduce((a, b) => a + b, 0) / data.cache.length 
-        : null,
+      latency:
+        data.latency.length > 0
+          ? data.latency.reduce((a, b) => a + b, 0) / data.latency.length
+          : null,
+      throughput:
+        data.throughput.length > 0
+          ? data.throughput.reduce((a, b) => a + b, 0) / data.throughput.length
+          : null,
+      cache:
+        data.cache.length > 0 ? data.cache.reduce((a, b) => a + b, 0) / data.cache.length : null,
     }));
   }, [metrics]);
 
   const metricConfigs: Record<MetricType, { label: string; color: string; unit: string }> = {
-    latency: { label: 'Latency', color: 'hsl(var(--primary))', unit: 'ms' },
-    throughput: { label: 'Throughput', color: 'hsl(88, 72%, 60%)', unit: 'req/s' },
-    cache: { label: 'Cache Hit', color: 'hsl(200, 72%, 50%)', unit: '%' },
+    latency: { label: "Latency", color: "hsl(var(--primary))", unit: "ms" },
+    throughput: { label: "Throughput", color: "hsl(88, 72%, 60%)", unit: "req/s" },
+    cache: { label: "Cache Hit", color: "hsl(200, 72%, 50%)", unit: "%" },
   };
 
   const config = metricConfigs[activeMetric];
@@ -75,9 +77,9 @@ export const PerformanceTrendsChart = ({ metrics }: PerformanceTrendsChartProps)
             <Button
               key={key}
               size="sm"
-              variant={activeMetric === key ? 'default' : 'outline'}
+              variant={activeMetric === key ? "default" : "outline"}
               onClick={() => setActiveMetric(key)}
-              className={activeMetric === key ? 'bg-gradient-primary' : ''}
+              className={activeMetric === key ? "bg-gradient-primary" : ""}
             >
               {metricConfigs[key].label}
             </Button>
@@ -94,23 +96,19 @@ export const PerformanceTrendsChart = ({ metrics }: PerformanceTrendsChartProps)
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-              <XAxis
-                dataKey="time"
-                stroke="hsl(var(--muted-foreground))"
-                fontSize={12}
-              />
+              <XAxis dataKey="time" stroke="hsl(var(--muted-foreground))" fontSize={12} />
               <YAxis
                 stroke="hsl(var(--muted-foreground))"
                 fontSize={12}
-                tickFormatter={(value) => `${value}${config.unit === '%' ? '%' : ''}`}
+                tickFormatter={(value) => `${value}${config.unit === "%" ? "%" : ""}`}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: 'hsl(var(--card))',
-                  border: '1px solid hsl(var(--border))',
-                  borderRadius: '8px',
+                  backgroundColor: "hsl(var(--card))",
+                  border: "1px solid hsl(var(--border))",
+                  borderRadius: "8px",
                 }}
-                labelStyle={{ color: 'hsl(var(--foreground))' }}
+                labelStyle={{ color: "hsl(var(--foreground))" }}
                 formatter={(value: number) => [`${value.toFixed(2)} ${config.unit}`, config.label]}
               />
               <Legend />

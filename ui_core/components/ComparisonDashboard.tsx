@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import useAgentDemoJob from '../hooks/useAgentDemo';
-import { calculateEfficiency, EfficiencyResult } from '../benchmarking';
+import React, { useState } from "react";
+import useAgentDemoJob from "../hooks/useAgentDemo";
+import { calculateEfficiency, EfficiencyResult } from "../benchmarking";
 
 export function ComparisonDashboard() {
   const { running, lastResult, error, run } = useAgentDemoJob();
@@ -15,25 +15,25 @@ export function ComparisonDashboard() {
   };
 
   return (
-    <div style={{ padding: '1rem', border: '1px solid #444', borderRadius: 8 }}>
+    <div style={{ padding: "1rem", border: "1px solid #444", borderRadius: 8 }}>
       <h2>Local vs Simulated Cloud Comparison</h2>
-      <button onClick={handleRun} disabled={running} style={{ padding: '0.5rem 1rem' }}>
-        {running ? 'Running local job…' : 'Run Local Job'}
+      <button onClick={handleRun} disabled={running} style={{ padding: "0.5rem 1rem" }}>
+        {running ? "Running local job…" : "Run Local Job"}
       </button>
 
-      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+      {error && <p style={{ color: "red" }}>Error: {error}</p>}
 
       {lastResult && (
-        <div style={{ marginTop: '1rem' }}>
+        <div style={{ marginTop: "1rem" }}>
           <h3>Last Agent Job</h3>
-          <pre style={{ maxHeight: 200, overflow: 'auto', background: '#111', color: '#eee' }}>
+          <pre style={{ maxHeight: 200, overflow: "auto", background: "#111", color: "#eee" }}>
             {JSON.stringify(lastResult, null, 2)}
           </pre>
         </div>
       )}
 
       {eff && (
-        <div style={{ marginTop: '1rem' }}>
+        <div style={{ marginTop: "1rem" }}>
           <h3>Benchmark Metrics</h3>
           <p>
             <strong>Local Latency:</strong> {eff.localLatencyMs.toFixed(1)} ms
@@ -51,7 +51,8 @@ export function ComparisonDashboard() {
             <strong>Efficiency Ratio:</strong> {eff.efficiencyRating.toFixed(1)}%
           </p>
           <p>
-            <strong>Bypass Success:</strong> {eff.bypassSuccess ? 'Yes (local is faster or equal)' : 'No'}
+            <strong>Bypass Success:</strong>{" "}
+            {eff.bypassSuccess ? "Yes (local is faster or equal)" : "No"}
           </p>
         </div>
       )}
@@ -60,4 +61,3 @@ export function ComparisonDashboard() {
 }
 
 export default ComparisonDashboard;
-

@@ -26,13 +26,41 @@ export interface ImprovementLoopState {
 }
 
 const WEAKNESSES = [
-  { weakness: 'Contradiction handling in 90-day memory', rootCause: 'Absence of temporal ordering during merge', improvement: 'Added temporal index and chronological conflict resolution pass' },
-  { weakness: 'Tanglish fragment intent accuracy below 90%', rootCause: 'Incomplete Tamil-English vocabulary coverage', improvement: 'Extended Tanglish dictionary with 200+ colloquial patterns' },
-  { weakness: 'Agent deadlocks on ambiguous cross-domain routing', rootCause: 'No cyclic delegation detection mechanism', improvement: 'Added cycle-break sentinel with priority-queue fallback' },
-  { weakness: 'RAG vector drift over long knowledge horizons', rootCause: 'Embedding model not periodically recalibrated', improvement: 'Implemented rolling HNSW index refresh every 48h' },
-  { weakness: 'False confidence on unknown facts', rootCause: 'Missing unknown-unknown detection gate', improvement: 'Added epistemic uncertainty classifier to evidence ledger' },
-  { weakness: 'SLA violations during peak load > 5000 QPS', rootCause: 'Single-threaded memory merge locking', improvement: 'Migrated to lock-free concurrent merge with CAS primitives' },
-  { weakness: 'Hallucination spikes in multilingual edge cases', rootCause: 'Low-resource language fallback producing unverified outputs', improvement: 'Enforced evidence threshold gate for non-English responses' },
+  {
+    weakness: "Contradiction handling in 90-day memory",
+    rootCause: "Absence of temporal ordering during merge",
+    improvement: "Added temporal index and chronological conflict resolution pass",
+  },
+  {
+    weakness: "Tanglish fragment intent accuracy below 90%",
+    rootCause: "Incomplete Tamil-English vocabulary coverage",
+    improvement: "Extended Tanglish dictionary with 200+ colloquial patterns",
+  },
+  {
+    weakness: "Agent deadlocks on ambiguous cross-domain routing",
+    rootCause: "No cyclic delegation detection mechanism",
+    improvement: "Added cycle-break sentinel with priority-queue fallback",
+  },
+  {
+    weakness: "RAG vector drift over long knowledge horizons",
+    rootCause: "Embedding model not periodically recalibrated",
+    improvement: "Implemented rolling HNSW index refresh every 48h",
+  },
+  {
+    weakness: "False confidence on unknown facts",
+    rootCause: "Missing unknown-unknown detection gate",
+    improvement: "Added epistemic uncertainty classifier to evidence ledger",
+  },
+  {
+    weakness: "SLA violations during peak load > 5000 QPS",
+    rootCause: "Single-threaded memory merge locking",
+    improvement: "Migrated to lock-free concurrent merge with CAS primitives",
+  },
+  {
+    weakness: "Hallucination spikes in multilingual edge cases",
+    rootCause: "Low-resource language fallback producing unverified outputs",
+    improvement: "Enforced evidence threshold gate for non-English responses",
+  },
 ];
 
 export class AutonomousImprovementLoop {
@@ -60,7 +88,7 @@ export class AutonomousImprovementLoop {
     this.totalGain += gainPct;
 
     const cycle: ImprovementCycle = {
-      cycleId: `AIC-${String(this.cycleCount).padStart(4, '0')}`,
+      cycleId: `AIC-${String(this.cycleCount).padStart(4, "0")}`,
       cycleNumber: this.cycleCount,
       weaknessFound: weaknessEntry.weakness,
       rootCause: weaknessEntry.rootCause,
@@ -80,9 +108,8 @@ export class AutonomousImprovementLoop {
 
   getState(): ImprovementLoopState {
     const recentN = this.cycles.slice(-5);
-    const velocity = recentN.length > 1
-      ? recentN.reduce((s, c) => s + c.gainPct, 0) / recentN.length
-      : 0;
+    const velocity =
+      recentN.length > 1 ? recentN.reduce((s, c) => s + c.gainPct, 0) / recentN.length : 0;
     const isConverging = velocity < 0.15 && this.currentScore > 0.95;
 
     return {

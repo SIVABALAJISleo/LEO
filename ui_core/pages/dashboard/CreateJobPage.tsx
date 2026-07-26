@@ -1,76 +1,76 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Slider } from '@/components/ui/slider';
-import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useGpuJobs } from '@/hooks/useGpuJobs';
-import { JOB_TYPE_OPTIONS } from '@/lib/gpuJobTypes';
-import { 
-  ArrowLeft, 
-  Zap, 
-  Cpu, 
-  Monitor, 
-  Server,
-  Loader2,
-  Info,
-  AlertTriangle
-} from 'lucide-react';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useGpuJobs } from "@/hooks/useGpuJobs";
+import { JOB_TYPE_OPTIONS } from "@/lib/gpuJobTypes";
+import { ArrowLeft, Zap, Cpu, Monitor, Server, Loader2, Info, AlertTriangle } from "lucide-react";
 
-type JobTier = 'light' | 'medium' | 'heavy' | 'very_heavy';
+type JobTier = "light" | "medium" | "heavy" | "very_heavy";
 
-const TIER_INFO: Record<JobTier, { 
-  label: string; 
-  description: string; 
-  icon: React.ElementType; 
-  color: string;
-  examples: string[];
-  warning?: string;
-}> = {
+const TIER_INFO: Record<
+  JobTier,
+  {
+    label: string;
+    description: string;
+    icon: React.ElementType;
+    color: string;
+    examples: string[];
+    warning?: string;
+  }
+> = {
   light: {
-    label: 'Light',
-    description: 'Instant results',
+    label: "Light",
+    description: "Instant results",
     icon: Zap,
-    color: 'text-green-500',
-    examples: ['Text analysis', 'Validation', 'Quick tasks'],
+    color: "text-green-500",
+    examples: ["Text analysis", "Validation", "Quick tasks"],
   },
   medium: {
-    label: 'Medium',
-    description: 'Fast processing in your browser',
+    label: "Medium",
+    description: "Fast processing in your browser",
     icon: Monitor,
-    color: 'text-yellow-500',
-    examples: ['Image processing', 'Data transformation'],
+    color: "text-yellow-500",
+    examples: ["Image processing", "Data transformation"],
   },
   heavy: {
-    label: 'Heavy',
-    description: 'Full quality processing (may take a few minutes)',
+    label: "Heavy",
+    description: "Full quality processing (may take a few minutes)",
     icon: Server,
-    color: 'text-red-500',
-    examples: ['Training', 'Rendering', 'Complex tasks'],
+    color: "text-red-500",
+    examples: ["Training", "Rendering", "Complex tasks"],
   },
   very_heavy: {
-    label: 'Very Heavy',
-    description: 'Estimated projections and simulations',
+    label: "Very Heavy",
+    description: "Estimated projections and simulations",
     icon: Cpu,
-    color: 'text-purple-500',
-    examples: ['Large training', 'HD rendering', 'Massive simulation'],
-    warning: 'This tier provides estimates and projections.',
+    color: "text-purple-500",
+    examples: ["Large training", "HD rendering", "Massive simulation"],
+    warning: "This tier provides estimates and projections.",
   },
 };
 
 export default function CreateJobPage() {
   const navigate = useNavigate();
   const { createJob, getMemoryReport, systemStatus } = useGpuJobs();
-  
-  const [jobName, setJobName] = useState('');
-  const [jobType, setJobType] = useState('');
-  const [jobTier, setJobTier] = useState<JobTier>('heavy');
-  const [payload, setPayload] = useState('{}');
+
+  const [jobName, setJobName] = useState("");
+  const [jobType, setJobType] = useState("");
+  const [jobTier, setJobTier] = useState<JobTier>("heavy");
+  const [payload, setPayload] = useState("{}");
   const [priority, setPriority] = useState([5]);
   const [memoryMb, setMemoryMb] = useState(4096);
   const [estimatedDuration, setEstimatedDuration] = useState(300);
@@ -79,12 +79,12 @@ export default function CreateJobPage() {
 
   const memoryReport = getMemoryReport();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const selectedJobType = JOB_TYPE_OPTIONS.find(j => j.value === jobType);
+  const selectedJobType = JOB_TYPE_OPTIONS.find((j) => j.value === jobType);
   const tierInfo = TIER_INFO[jobTier];
 
   const handleJobTypeChange = (value: string) => {
     setJobType(value);
-    const option = JOB_TYPE_OPTIONS.find(j => j.value === value);
+    const option = JOB_TYPE_OPTIONS.find((j) => j.value === value);
     if (option) {
       setMemoryMb(option.memoryEstimate);
     }
@@ -100,7 +100,7 @@ export default function CreateJobPage() {
       try {
         parsedPayload = JSON.parse(payload);
       } catch {
-        throw new Error('Invalid JSON payload');
+        throw new Error("Invalid JSON payload");
       }
 
       const job = await createJob({
@@ -108,7 +108,7 @@ export default function CreateJobPage() {
         job_name: jobName || `${jobType} Job`,
         payload: parsedPayload,
         priority: priority[0],
-        memory_required_mb: jobTier === 'heavy' ? memoryMb : undefined,
+        memory_required_mb: jobTier === "heavy" ? memoryMb : undefined,
         estimated_duration_sec: estimatedDuration,
       });
 
@@ -116,7 +116,7 @@ export default function CreateJobPage() {
         navigate(`/dashboard/jobs`);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create job');
+      setError(err instanceof Error ? err.message : "Failed to create job");
     } finally {
       setIsSubmitting(false);
     }
@@ -165,7 +165,7 @@ export default function CreateJobPage() {
                     <SelectValue placeholder="Select job type" />
                   </SelectTrigger>
                   <SelectContent>
-                    {JOB_TYPE_OPTIONS.map(option => (
+                    {JOB_TYPE_OPTIONS.map((option) => (
                       <SelectItem key={option.value} value={option.value}>
                         <div className="flex items-center justify-between w-full">
                           <span>{option.label}</span>
@@ -204,9 +204,9 @@ export default function CreateJobPage() {
                   <Card
                     key={tier}
                     className={`cursor-pointer transition-all ${
-                      jobTier === tier 
-                        ? 'border-primary ring-2 ring-primary/20' 
-                        : 'hover:border-muted-foreground/50'
+                      jobTier === tier
+                        ? "border-primary ring-2 ring-primary/20"
+                        : "hover:border-muted-foreground/50"
                     }`}
                     onClick={() => setJobTier(tier)}
                   >
@@ -215,9 +215,7 @@ export default function CreateJobPage() {
                         <info.icon className={`h-5 w-5 ${info.color}`} />
                         <span className="font-semibold">{info.label}</span>
                       </div>
-                      <p className="text-xs text-muted-foreground mb-3">
-                        {info.description}
-                      </p>
+                      <p className="text-xs text-muted-foreground mb-3">{info.description}</p>
                       <div className="flex flex-wrap gap-1">
                         {info.examples.map((ex, i) => (
                           <Badge key={i} variant="outline" className="text-xs">
@@ -233,7 +231,7 @@ export default function CreateJobPage() {
           </Card>
 
           {/* Heavy Job Options */}
-          {jobTier === 'heavy' && (
+          {jobTier === "heavy" && (
             <Card>
               <CardHeader>
                 <CardTitle>Heavy Job Configuration</CardTitle>
@@ -243,17 +241,9 @@ export default function CreateJobPage() {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <Label>Priority</Label>
-                    <span className="text-sm text-muted-foreground">
-                      {priority[0]} / 10
-                    </span>
+                    <span className="text-sm text-muted-foreground">{priority[0]} / 10</span>
                   </div>
-                  <Slider
-                    value={priority}
-                    onValueChange={setPriority}
-                    min={1}
-                    max={10}
-                    step={1}
-                  />
+                  <Slider value={priority} onValueChange={setPriority} min={1} max={10} step={1} />
                   <p className="text-xs text-muted-foreground">
                     Higher priority jobs are processed first
                   </p>
@@ -262,7 +252,9 @@ export default function CreateJobPage() {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <Label>GPU Memory Required</Label>
-                    <span className={`text-sm ${memoryExceedsLimit ? 'text-destructive' : 'text-muted-foreground'}`}>
+                    <span
+                      className={`text-sm ${memoryExceedsLimit ? "text-destructive" : "text-muted-foreground"}`}
+                    >
                       {(memoryMb / 1024).toFixed(1)} GB
                     </span>
                   </div>
@@ -276,7 +268,8 @@ export default function CreateJobPage() {
                   {memoryExceedsLimit && (
                     <p className="text-xs text-destructive flex items-center gap-1">
                       <AlertTriangle className="h-3 w-3" />
-                      Exceeds available VRAM ({(memoryReport.max_job_size_mb / 1024).toFixed(1)}GB max)
+                      Exceeds available VRAM ({(memoryReport.max_job_size_mb / 1024).toFixed(1)}GB
+                      max)
                     </p>
                   )}
                 </div>
@@ -312,7 +305,7 @@ export default function CreateJobPage() {
               className="flex-1"
               size="lg"
               onClick={handleSubmit}
-              disabled={!isValid || isSubmitting || (jobTier === 'heavy' && memoryExceedsLimit)}
+              disabled={!isValid || isSubmitting || (jobTier === "heavy" && memoryExceedsLimit)}
             >
               {isSubmitting ? (
                 <>
@@ -332,7 +325,7 @@ export default function CreateJobPage() {
         {/* Sidebar */}
         <div className="space-y-6">
           {/* Selected Tier Info */}
-          <Card className={`border-${tierInfo.color.replace('text-', '')}/30`}>
+          <Card className={`border-${tierInfo.color.replace("text-", "")}/30`}>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <tierInfo.icon className={`h-5 w-5 ${tierInfo.color}`} />
@@ -341,8 +334,8 @@ export default function CreateJobPage() {
             </CardHeader>
             <CardContent className="space-y-3 text-sm">
               <p className="text-muted-foreground">{tierInfo.description}</p>
-              
-              {jobTier === 'light' && (
+
+              {jobTier === "light" && (
                 <Alert>
                   <Info className="h-4 w-4" />
                   <AlertDescription>
@@ -350,8 +343,8 @@ export default function CreateJobPage() {
                   </AlertDescription>
                 </Alert>
               )}
-              
-              {jobTier === 'medium' && (
+
+              {jobTier === "medium" && (
                 <Alert>
                   <Info className="h-4 w-4" />
                   <AlertDescription>
@@ -359,8 +352,8 @@ export default function CreateJobPage() {
                   </AlertDescription>
                 </Alert>
               )}
-              
-              {jobTier === 'heavy' && (
+
+              {jobTier === "heavy" && (
                 <Alert>
                   <Info className="h-4 w-4" />
                   <AlertDescription>
@@ -368,8 +361,8 @@ export default function CreateJobPage() {
                   </AlertDescription>
                 </Alert>
               )}
-              
-              {jobTier === 'very_heavy' && (
+
+              {jobTier === "very_heavy" && (
                 <Alert className="border-purple-500/30 bg-purple-500/5">
                   <AlertTriangle className="h-4 w-4 text-purple-500" />
                   <AlertDescription className="text-purple-300">
@@ -381,7 +374,7 @@ export default function CreateJobPage() {
           </Card>
 
           {/* System Status */}
-          {jobTier === 'heavy' && (
+          {jobTier === "heavy" && (
             <Card>
               <CardHeader>
                 <CardTitle className="text-sm">System Status</CardTitle>
@@ -389,8 +382,8 @@ export default function CreateJobPage() {
               <CardContent className="space-y-3 text-sm">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Worker Status</span>
-                  <Badge variant={systemStatus?.is_online ? 'default' : 'destructive'}>
-                    {systemStatus?.is_online ? 'Online' : 'Offline'}
+                  <Badge variant={systemStatus?.is_online ? "default" : "destructive"}>
+                    {systemStatus?.is_online ? "Online" : "Offline"}
                   </Badge>
                 </div>
                 <div className="flex justify-between">

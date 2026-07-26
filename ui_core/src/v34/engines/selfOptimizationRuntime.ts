@@ -28,7 +28,8 @@ export class SelfOptimizationRuntime {
 
     // Check for bottlenecks
     if (metrics.cacheMissRatePct > 15.0) {
-      suggestedAction = "Saturating L3 cache boundaries. Flush L1/L2 tables and lock current model parameters in memory.";
+      suggestedAction =
+        "Saturating L3 cache boundaries. Flush L1/L2 tables and lock current model parameters in memory.";
       expectedSpeedupMultiplier = 1.25;
       fusedKernelsCount = 3;
     } else if (metrics.latencyMs > 80) {
@@ -45,7 +46,7 @@ export class SelfOptimizationRuntime {
       fusedKernelsCount,
       adjustedOmpThreads,
       suggestedAction,
-      expectedSpeedupMultiplier
+      expectedSpeedupMultiplier,
     };
   }
 }

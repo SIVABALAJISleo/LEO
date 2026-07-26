@@ -20,28 +20,30 @@ export class IntelligentRetrievalEngine {
   private sourcesDatabase = [
     {
       id: "src-v37-01",
-      content: "GraphRAG retrieves entities and sub-relations. Knowledge compression aggregates these entities into raw rule definitions, stripping redundant boilerplate text.",
-      tags: ["graphrag", "compression"]
+      content:
+        "GraphRAG retrieves entities and sub-relations. Knowledge compression aggregates these entities into raw rule definitions, stripping redundant boilerplate text.",
+      tags: ["graphrag", "compression"],
     },
     {
       id: "src-v37-02",
-      content: "Quantized cache pipelines use GGUF scale-clamping arrays to retain context without exceeding maximum hardware buffers.",
-      tags: ["hardware", "compression"]
-    }
+      content:
+        "Quantized cache pipelines use GGUF scale-clamping arrays to retain context without exceeding maximum hardware buffers.",
+      tags: ["hardware", "compression"],
+    },
   ];
 
   /**
    * Performs a focused query, filtering database inputs and compressing outputs.
    */
   public executeCompactSearch(query: string, searchTag: string): CompactRetrievalReport {
-    const matched = this.sourcesDatabase.filter(s => s.tags.includes(searchTag));
+    const matched = this.sourcesDatabase.filter((s) => s.tags.includes(searchTag));
     const results: RetrievalResult[] = [];
     const sourceCitations: string[] = [];
 
     let originalTokensCount = 0;
     let compressedTokensCount = 0;
 
-    matched.forEach(item => {
+    matched.forEach((item) => {
       const origLength = item.content.split(/\s+/).length;
       originalTokensCount += origLength;
 
@@ -57,7 +59,7 @@ export class IntelligentRetrievalEngine {
         sourceId: item.id,
         relevance: 0.94,
         extractedSnippet: compressedText,
-        compressionRatio: parseFloat((compLength / origLength).toFixed(2))
+        compressionRatio: parseFloat((compLength / origLength).toFixed(2)),
       });
 
       sourceCitations.push(item.id);
@@ -70,7 +72,7 @@ export class IntelligentRetrievalEngine {
         originalTokensCount: 0,
         compressedTokensCount: 0,
         reductionPercentage: 0,
-        sourceCitations: []
+        sourceCitations: [],
       };
     }
 
@@ -81,7 +83,7 @@ export class IntelligentRetrievalEngine {
       originalTokensCount,
       compressedTokensCount,
       reductionPercentage,
-      sourceCitations
+      sourceCitations,
     };
   }
 }

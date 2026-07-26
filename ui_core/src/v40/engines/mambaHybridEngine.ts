@@ -20,7 +20,7 @@ export class MambaHybridEngine {
   public config: MambaConfig = {
     hybridRatio: 0.5,
     contextLength: 4096,
-    speculativeMode: "PEARL"
+    speculativeMode: "PEARL",
   };
 
   public setHybridRatio(ratio: number) {
@@ -40,11 +40,11 @@ export class MambaHybridEngine {
       const res = await fetch("http://localhost:8000/api/v1/v40/engines/mamba", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           contextLength: this.config.contextLength,
           hybridRatio: this.config.hybridRatio,
-          speculativeMode: this.config.speculativeMode
-        })
+          speculativeMode: this.config.speculativeMode,
+        }),
       });
       return await res.json();
     } catch (e) {
@@ -59,18 +59,19 @@ export class MambaHybridEngine {
    */
   private simulateLinearScalingDemo(): MambaTelemetry {
     const N = this.config.contextLength;
-    
+
     // O(n^2) Attention FLOPs approximation
-    const attentionFlops = (N * N) * 2; 
-    
+    const attentionFlops = N * N * 2;
+
     // O(n) Mamba FLOPs approximation (linear with hidden size constants)
-    const mambaFlops = N * 16 * 2; 
+    const mambaFlops = N * 16 * 2;
 
     // Combine based on hybrid ratio
-    const effectiveFlops = (attentionFlops * (1 - this.config.hybridRatio)) + (mambaFlops * this.config.hybridRatio);
-    
+    const effectiveFlops =
+      attentionFlops * (1 - this.config.hybridRatio) + mambaFlops * this.config.hybridRatio;
+
     let tokensPerSec = 12.0; // Base CPU speed
-    
+
     // Speculative decoding speedup multiplier
     if (this.config.speculativeMode === "PEARL") tokensPerSec *= 3.5;
     else if (this.config.speculativeMode === "EAGLE-3") tokensPerSec *= 2.8;
@@ -82,7 +83,7 @@ export class MambaHybridEngine {
       mambaFlops,
       speedupVsTransformer: attentionFlops / effectiveFlops,
       tokensPerSec,
-      effectiveFlops
+      effectiveFlops,
     };
   }
 }

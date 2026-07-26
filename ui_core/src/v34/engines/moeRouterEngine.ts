@@ -1,7 +1,8 @@
 // LEO AI V34 — MoE Router Engine
 // Coordinates active model experts dynamically to reduce computational footprint.
 
-export type ExpertType = "coding" | "reasoning" | "planning" | "enterprise" | "cybersecurity" | "research";
+export type ExpertType =
+  "coding" | "reasoning" | "planning" | "enterprise" | "cybersecurity" | "research";
 
 export interface ExpertPerformance {
   name: ExpertType;
@@ -19,12 +20,48 @@ export interface MoeRoutingReport {
 
 export class MoeRouterEngine {
   private expertsRegistry: ExpertPerformance[] = [
-    { name: "coding", rankScore: 0.96, utilizationCount: 120, isActive: true, retirementThresholdHours: 24 },
-    { name: "reasoning", rankScore: 0.98, utilizationCount: 340, isActive: true, retirementThresholdHours: 48 },
-    { name: "planning", rankScore: 0.91, utilizationCount: 88, isActive: true, retirementThresholdHours: 12 },
-    { name: "enterprise", rankScore: 0.89, utilizationCount: 45, isActive: true, retirementThresholdHours: 36 },
-    { name: "cybersecurity", rankScore: 0.94, utilizationCount: 12, isActive: false, retirementThresholdHours: 8 },
-    { name: "research", rankScore: 0.92, utilizationCount: 160, isActive: true, retirementThresholdHours: 24 }
+    {
+      name: "coding",
+      rankScore: 0.96,
+      utilizationCount: 120,
+      isActive: true,
+      retirementThresholdHours: 24,
+    },
+    {
+      name: "reasoning",
+      rankScore: 0.98,
+      utilizationCount: 340,
+      isActive: true,
+      retirementThresholdHours: 48,
+    },
+    {
+      name: "planning",
+      rankScore: 0.91,
+      utilizationCount: 88,
+      isActive: true,
+      retirementThresholdHours: 12,
+    },
+    {
+      name: "enterprise",
+      rankScore: 0.89,
+      utilizationCount: 45,
+      isActive: true,
+      retirementThresholdHours: 36,
+    },
+    {
+      name: "cybersecurity",
+      rankScore: 0.94,
+      utilizationCount: 12,
+      isActive: false,
+      retirementThresholdHours: 8,
+    },
+    {
+      name: "research",
+      rankScore: 0.92,
+      utilizationCount: 160,
+      isActive: true,
+      retirementThresholdHours: 24,
+    },
   ];
 
   /**
@@ -44,7 +81,11 @@ export class MoeRouterEngine {
     if (qLower.includes("plan") || qLower.includes("schedule") || qLower.includes("todo")) {
       selectedExperts.push("planning");
     }
-    if (qLower.includes("security") || qLower.includes("vulnerability") || qLower.includes("leak")) {
+    if (
+      qLower.includes("security") ||
+      qLower.includes("vulnerability") ||
+      qLower.includes("leak")
+    ) {
       selectedExperts.push("cybersecurity");
     }
     if (qLower.includes("research") || qLower.includes("paper") || qLower.includes("scientific")) {
@@ -60,12 +101,12 @@ export class MoeRouterEngine {
     }
 
     // Update utilization counts
-    this.expertsRegistry = this.expertsRegistry.map(exp => {
+    this.expertsRegistry = this.expertsRegistry.map((exp) => {
       if (selectedExperts.includes(exp.name)) {
         return {
           ...exp,
           utilizationCount: exp.utilizationCount + 1,
-          isActive: true
+          isActive: true,
         };
       }
       // Simulate expert retirement if unused
@@ -78,7 +119,9 @@ export class MoeRouterEngine {
     // Compute reduction percentages: 60% to 80%
     const numActive = selectedExperts.length;
     const totalPossibleExperts = this.expertsRegistry.length;
-    const computeAvoidancePct = parseFloat((((totalPossibleExperts - numActive) / totalPossibleExperts) * 100).toFixed(2));
+    const computeAvoidancePct = parseFloat(
+      (((totalPossibleExperts - numActive) / totalPossibleExperts) * 100).toFixed(2),
+    );
 
     // Clamp avoidance to 60-80% as requested by the goal
     const finalComputeAvoidancePct = Math.max(60, Math.min(80, computeAvoidancePct));
@@ -86,7 +129,7 @@ export class MoeRouterEngine {
     return {
       selectedExperts,
       computeAvoidancePct: finalComputeAvoidancePct,
-      activeExpertRankings: [...this.expertsRegistry].sort((a, b) => b.rankScore - a.rankScore)
+      activeExpertRankings: [...this.expertsRegistry].sort((a, b) => b.rankScore - a.rankScore),
     };
   }
 }

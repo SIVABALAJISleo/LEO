@@ -26,7 +26,11 @@ export class AdaptivePrecisionEngine {
     const lowerQuery = query.toLowerCase();
 
     if (lowerQuery.length > 150) complexityScore += 0.2;
-    if (lowerQuery.includes("prove") || lowerQuery.includes("validate") || lowerQuery.includes("synthesize")) {
+    if (
+      lowerQuery.includes("prove") ||
+      lowerQuery.includes("validate") ||
+      lowerQuery.includes("synthesize")
+    ) {
       complexityScore += 0.3;
     }
     if (lowerQuery.includes("math") || lowerQuery.includes("bug") || lowerQuery.includes("solve")) {
@@ -53,12 +57,12 @@ export class AdaptivePrecisionEngine {
     } else if (complexityScore < 0.75) {
       precisionRouted = "INT8";
       estimatedGpuMemoryMB = 4000;
-      computeCostScalar = 0.50;
+      computeCostScalar = 0.5;
       routingReason = "Standard workflow query; routed to INT8 model to preserve context logic.";
     } else {
       precisionRouted = "FP16";
       estimatedGpuMemoryMB = 8000;
-      computeCostScalar = 1.00;
+      computeCostScalar = 1.0;
       routingReason = "High cognitive complexity reasoning; routed to FP16 model.";
     }
 
@@ -81,7 +85,7 @@ export class AdaptivePrecisionEngine {
         totalQueriesRouted: 0,
         avgComplexity: 0,
         computeReductionScore: 0,
-        precisionBreakdown: { Ternary: 0, INT4: 0, INT8: 0, FP16: 0 }
+        precisionBreakdown: { Ternary: 0, INT4: 0, INT8: 0, FP16: 0 },
       };
     }
 
@@ -90,7 +94,7 @@ export class AdaptivePrecisionEngine {
     let sumCostScalar = 0;
     const counts = { Ternary: 0, INT4: 0, INT8: 0, FP16: 0 };
 
-    this.history.forEach(d => {
+    this.history.forEach((d) => {
       sumComplexity += d.complexityScore;
       sumCostScalar += d.computeCostScalar;
       counts[d.precisionRouted]++;
@@ -104,7 +108,7 @@ export class AdaptivePrecisionEngine {
       totalQueriesRouted: total,
       avgComplexity: parseFloat((sumComplexity / total).toFixed(2)),
       computeReductionScore,
-      precisionBreakdown: counts
+      precisionBreakdown: counts,
     };
   }
 

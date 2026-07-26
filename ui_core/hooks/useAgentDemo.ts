@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
-import { runDemoJobWithAgent, AgentJobResult } from '../agent';
+import { useState, useCallback } from "react";
+import { runDemoJobWithAgent, AgentJobResult } from "../agent";
 
 interface AgentDemoState {
   running: boolean;
@@ -19,7 +19,7 @@ export function useAgentDemoJob(): AgentDemoState & { run: (payload?: unknown) =
   });
 
   const run = useCallback(async (payload?: unknown) => {
-    setState(prev => ({ ...prev, running: true, error: null }));
+    setState((prev) => ({ ...prev, running: true, error: null }));
     try {
       const res = await runDemoJobWithAgent(payload ?? null);
       setState({ running: false, lastResult: res, error: null });
@@ -27,7 +27,7 @@ export function useAgentDemoJob(): AgentDemoState & { run: (payload?: unknown) =
       setState({
         running: false,
         lastResult: null,
-        error: err instanceof Error ? err.message : 'Unknown error',
+        error: err instanceof Error ? err.message : "Unknown error",
       });
     }
   }, []);
@@ -36,4 +36,3 @@ export function useAgentDemoJob(): AgentDemoState & { run: (payload?: unknown) =
 }
 
 export default useAgentDemoJob;
-

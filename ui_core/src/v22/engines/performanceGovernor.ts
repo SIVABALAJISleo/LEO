@@ -14,7 +14,7 @@ export interface ResourceSnapshot {
 
 export interface OptimizationAction {
   actionId: string;
-  targetResource: 'CPU' | 'Memory' | 'iGPU' | 'Retrieval' | 'Inference';
+  targetResource: "CPU" | "Memory" | "iGPU" | "Retrieval" | "Inference";
   description: string;
   estimatedGainPct: number;
   applied: boolean;
@@ -58,33 +58,68 @@ export class PerformanceGovernor {
 
     const bottlenecks: string[] = [];
     if (raw.cpuUsagePct > 70) bottlenecks.push(`High CPU usage: ${raw.cpuUsagePct.toFixed(1)}%`);
-    if (raw.memoryUsageMB > 1800) bottlenecks.push(`High memory: ${raw.memoryUsageMB.toFixed(0)} MB`);
-    if (raw.retrievalLatencyMs > 150) bottlenecks.push(`Slow retrieval: ${raw.retrievalLatencyMs.toFixed(0)}ms`);
-    if (raw.inferenceLatencyMs > 250) bottlenecks.push(`Slow inference: ${raw.inferenceLatencyMs.toFixed(0)}ms`);
+    if (raw.memoryUsageMB > 1800)
+      bottlenecks.push(`High memory: ${raw.memoryUsageMB.toFixed(0)} MB`);
+    if (raw.retrievalLatencyMs > 150)
+      bottlenecks.push(`Slow retrieval: ${raw.retrievalLatencyMs.toFixed(0)}ms`);
+    if (raw.inferenceLatencyMs > 250)
+      bottlenecks.push(`Slow inference: ${raw.inferenceLatencyMs.toFixed(0)}ms`);
     if (raw.igpuUsagePct > 75) bottlenecks.push(`iGPU saturation: ${raw.igpuUsagePct.toFixed(1)}%`);
 
     const optimizations: OptimizationAction[] = [];
     let actionId = 1;
 
     if (raw.cpuUsagePct > 60) {
-      optimizations.push({ actionId: `OPT-${actionId++}`, targetResource: 'CPU', description: 'Enable async task batching to reduce CPU spike frequency.', estimatedGainPct: 12, applied: true });
+      optimizations.push({
+        actionId: `OPT-${actionId++}`,
+        targetResource: "CPU",
+        description: "Enable async task batching to reduce CPU spike frequency.",
+        estimatedGainPct: 12,
+        applied: true,
+      });
     }
     if (raw.retrievalLatencyMs > 120) {
-      optimizations.push({ actionId: `OPT-${actionId++}`, targetResource: 'Retrieval', description: 'Switch dense retrieval to approximate nearest-neighbor with HNSW index.', estimatedGainPct: 22, applied: true });
+      optimizations.push({
+        actionId: `OPT-${actionId++}`,
+        targetResource: "Retrieval",
+        description: "Switch dense retrieval to approximate nearest-neighbor with HNSW index.",
+        estimatedGainPct: 22,
+        applied: true,
+      });
     }
     if (raw.inferenceLatencyMs > 200) {
-      optimizations.push({ actionId: `OPT-${actionId++}`, targetResource: 'iGPU', description: 'Offload matrix multiplications to iGPU shader pipeline.', estimatedGainPct: 18, applied: true });
+      optimizations.push({
+        actionId: `OPT-${actionId++}`,
+        targetResource: "iGPU",
+        description: "Offload matrix multiplications to iGPU shader pipeline.",
+        estimatedGainPct: 18,
+        applied: true,
+      });
     }
     if (raw.memoryUsageMB > 1600) {
-      optimizations.push({ actionId: `OPT-${actionId++}`, targetResource: 'Memory', description: 'Evict cold memory blocks and compress embedding cache.', estimatedGainPct: 15, applied: true });
+      optimizations.push({
+        actionId: `OPT-${actionId++}`,
+        targetResource: "Memory",
+        description: "Evict cold memory blocks and compress embedding cache.",
+        estimatedGainPct: 15,
+        applied: true,
+      });
     }
     if (optimizations.length === 0) {
-      optimizations.push({ actionId: `OPT-${actionId++}`, targetResource: 'Inference', description: 'System within optimal parameters. Maintain current scheduling.', estimatedGainPct: 0, applied: false });
+      optimizations.push({
+        actionId: `OPT-${actionId++}`,
+        targetResource: "Inference",
+        description: "System within optimal parameters. Maintain current scheduling.",
+        estimatedGainPct: 0,
+        applied: false,
+      });
     }
 
     // Apply optimizations to produce optimized snapshot
-    const totalGain = optimizations.filter(o => o.applied).reduce((s, o) => s + o.estimatedGainPct, 0);
-    const factor = 1 - Math.min(0.40, totalGain / 100);
+    const totalGain = optimizations
+      .filter((o) => o.applied)
+      .reduce((s, o) => s + o.estimatedGainPct, 0);
+    const factor = 1 - Math.min(0.4, totalGain / 100);
     const optimized = computeDerived({
       cpuUsagePct: raw.cpuUsagePct * factor,
       memoryUsageMB: raw.memoryUsageMB * (1 - Math.min(0.15, totalGain / 200)),
@@ -96,11 +131,15 @@ export class PerformanceGovernor {
       intelligencePerWatt: 0,
     });
 
-    const efficiencyGain = ((optimized.intelligencePerWatt - raw.intelligencePerWatt) / raw.intelligencePerWatt) * 100;
+    const efficiencyGain =
+      ((optimized.intelligencePerWatt - raw.intelligencePerWatt) / raw.intelligencePerWatt) * 100;
 
     return {
       snapshot: raw,
-      bottlenecks: bottlenecks.length > 0 ? bottlenecks : ['No bottlenecks detected — system operating optimally.'],
+      bottlenecks:
+        bottlenecks.length > 0
+          ? bottlenecks
+          : ["No bottlenecks detected — system operating optimally."],
       optimizations,
       optimizedSnapshot: optimized,
       efficiencyGainPct: Math.max(0, efficiencyGain),

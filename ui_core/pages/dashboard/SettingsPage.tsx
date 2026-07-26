@@ -1,53 +1,106 @@
-import { useState, useEffect } from 'react';
-import { useSettingsData } from '@/hooks/useSettingsData';
-import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Separator } from '@/components/ui/separator';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription } from '@/components/ui/dialog';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { useState, useEffect } from "react";
+import { useSettingsData } from "@/hooks/useSettingsData";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Separator } from "@/components/ui/separator";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { User, Key, Bell, Settings2, Webhook, Database, Trash2, Copy, Eye, EyeOff, Plus, Check, X, RefreshCw, Download, AlertTriangle, Shield } from 'lucide-react';
-import { format } from 'date-fns';
-import { ComputeSafetySettings } from '@/components/settings/ComputeSafetySettings';
+import {
+  User,
+  Key,
+  Bell,
+  Settings2,
+  Webhook,
+  Database,
+  Trash2,
+  Copy,
+  Eye,
+  EyeOff,
+  Plus,
+  Check,
+  X,
+  RefreshCw,
+  Download,
+  AlertTriangle,
+  Shield,
+} from "lucide-react";
+import { format } from "date-fns";
+import { ComputeSafetySettings } from "@/components/settings/ComputeSafetySettings";
 
 const SettingsPage = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { loading, profile, apiKeys, subscription, updateProfile, generateApiKey, revokeApiKey, deleteApiKey, refreshAll } = useSettingsData();
+  const {
+    loading,
+    profile,
+    apiKeys,
+    subscription,
+    updateProfile,
+    generateApiKey,
+    revokeApiKey,
+    deleteApiKey,
+    refreshAll,
+  } = useSettingsData();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { user, signOut } = useAuth();
   const { toast } = useToast();
 
-  const [fullName, setFullName] = useState(profile?.full_name || '');
-  const [company, setCompany] = useState(profile?.company || '');
+  const [fullName, setFullName] = useState(profile?.full_name || "");
+  const [company, setCompany] = useState(profile?.company || "");
   const [isSaving, setIsSaving] = useState(false);
-  const [newKeyName, setNewKeyName] = useState('');
+  const [newKeyName, setNewKeyName] = useState("");
   const [showNewKeyDialog, setShowNewKeyDialog] = useState(false);
   const [newlyGeneratedKey, setNewlyGeneratedKey] = useState<string | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [visibleKeys, setVisibleKeys] = useState<Record<string, boolean>>({});
-  const [webhookUrl, setWebhookUrl] = useState('');
+  const [webhookUrl, setWebhookUrl] = useState("");
   const [webhookTesting, setWebhookTesting] = useState(false);
   const [notifications, setNotifications] = useState({
     email: true,
     jobComplete: true,
     alerts: true,
-    weekly: false
+    weekly: false,
   });
 
   // Update state when profile loads
   useEffect(() => {
     if (profile) {
-      setFullName(profile.full_name || '');
-      setCompany(profile.company || '');
+      setFullName(profile.full_name || "");
+      setCompany(profile.company || "");
     }
   }, [profile]);
 
@@ -59,50 +112,50 @@ const SettingsPage = () => {
 
   const handleGenerateKey = async () => {
     if (!newKeyName.trim()) {
-      toast({ title: 'Error', description: 'Please enter a key name', variant: 'destructive' });
+      toast({ title: "Error", description: "Please enter a key name", variant: "destructive" });
       return;
     }
     const key = await generateApiKey(newKeyName);
     if (key) {
       setNewlyGeneratedKey(key);
-      setNewKeyName('');
+      setNewKeyName("");
     }
   };
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    toast({ title: 'Copied', description: 'API key copied to clipboard' });
+    toast({ title: "Copied", description: "API key copied to clipboard" });
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const toggleKeyVisibility = (keyId: string) => {
-    setVisibleKeys(prev => ({ ...prev, [keyId]: !prev[keyId] }));
+    setVisibleKeys((prev) => ({ ...prev, [keyId]: !prev[keyId] }));
   };
 
   const testWebhook = async () => {
     if (!webhookUrl) {
-      toast({ title: 'Error', description: 'Please enter a webhook URL', variant: 'destructive' });
+      toast({ title: "Error", description: "Please enter a webhook URL", variant: "destructive" });
       return;
     }
 
     setWebhookTesting(true);
     try {
       // PROD SaaS Engine: Local webhook simulation
-      await new Promise(r => setTimeout(r, 1000));
+      await new Promise((r) => setTimeout(r, 1000));
 
       const isSuccess = Math.random() > 0.2;
       if (isSuccess) {
-        toast({ title: 'Success', description: 'Webhook test successful (Simulated)!' });
+        toast({ title: "Success", description: "Webhook test successful (Simulated)!" });
       } else {
         toast({
-          title: 'Failed',
-          description: 'Webhook returned 500 (Simulated)',
-          variant: 'destructive'
+          title: "Failed",
+          description: "Webhook returned 500 (Simulated)",
+          variant: "destructive",
         });
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      toast({ title: 'Error', description: err.message, variant: 'destructive' });
+      toast({ title: "Error", description: err.message, variant: "destructive" });
     } finally {
       setWebhookTesting(false);
     }
@@ -118,18 +171,18 @@ const SettingsPage = () => {
       jobs: [],
       metrics: [],
       alerts: [],
-      exportedAt: new Date().toISOString()
+      exportedAt: new Date().toISOString(),
     };
 
-    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = `hyper-data-${new Date().toISOString().split('T')[0]}.json`;
+    a.download = `hyper-data-${new Date().toISOString().split("T")[0]}.json`;
     a.click();
     URL.revokeObjectURL(url);
 
-    toast({ title: 'Data Exported', description: 'Your data has been downloaded' });
+    toast({ title: "Data Exported", description: "Your data has been downloaded" });
   };
 
   if (loading) {
@@ -186,30 +239,41 @@ const SettingsPage = () => {
               <CardContent className="space-y-4">
                 <div className="space-y-4">
                   <div className="space-y-3">
-                    <Label htmlFor="email" className="text-sm font-semibold">Email</Label>
-                    <Input id="email" value={user?.email || ''} disabled className="bg-muted opacity-80" />
+                    <Label htmlFor="email" className="text-sm font-semibold">
+                      Email
+                    </Label>
+                    <Input
+                      id="email"
+                      value={user?.email || ""}
+                      disabled
+                      className="bg-muted opacity-80"
+                    />
                   </div>
                   <div className="space-y-3">
-                    <Label htmlFor="fullName" className="text-sm font-semibold">Full Name</Label>
+                    <Label htmlFor="fullName" className="text-sm font-semibold">
+                      Full Name
+                    </Label>
                     <Input
                       id="fullName"
                       value={fullName}
-                      onChange={e => setFullName(e.target.value)}
+                      onChange={(e) => setFullName(e.target.value)}
                       placeholder="Enter your full name"
                     />
                   </div>
                   <div className="space-y-3">
-                    <Label htmlFor="company" className="text-sm font-semibold">Company</Label>
+                    <Label htmlFor="company" className="text-sm font-semibold">
+                      Company
+                    </Label>
                     <Input
                       id="company"
                       value={company}
-                      onChange={e => setCompany(e.target.value)}
+                      onChange={(e) => setCompany(e.target.value)}
                       placeholder="Enter your company name"
                     />
                   </div>
                 </div>
                 <Button onClick={handleSaveProfile} disabled={isSaving}>
-                  {isSaving ? 'Saving...' : 'Save Changes'}
+                  {isSaving ? "Saving..." : "Save Changes"}
                 </Button>
               </CardContent>
             </Card>
@@ -231,7 +295,7 @@ const SettingsPage = () => {
                     <Separator />
                     <div className="flex items-center justify-between">
                       <span className="text-muted-foreground">Status</span>
-                      <Badge variant={subscription.status === 'active' ? 'default' : 'secondary'}>
+                      <Badge variant={subscription.status === "active" ? "default" : "secondary"}>
                         {subscription.status}
                       </Badge>
                     </div>
@@ -245,13 +309,17 @@ const SettingsPage = () => {
                     <div className="w-full bg-muted rounded-full h-2">
                       <div
                         className="bg-primary h-2 rounded-full transition-all"
-                        style={{ width: `${(subscription.api_calls_used / subscription.api_calls_limit) * 100}%` }}
+                        style={{
+                          width: `${(subscription.api_calls_used / subscription.api_calls_limit) * 100}%`,
+                        }}
                       />
                     </div>
                     <Separator />
                     <div className="flex items-center justify-between">
                       <span className="text-muted-foreground">Resets At</span>
-                      <span className="text-sm">{format(new Date(subscription.reset_at), 'PPP')}</span>
+                      <span className="text-sm">
+                        {format(new Date(subscription.reset_at), "PPP")}
+                      </span>
                     </div>
                   </>
                 ) : (
@@ -287,12 +355,18 @@ const SettingsPage = () => {
                   {newlyGeneratedKey ? (
                     <div className="space-y-4">
                       <div className="p-4 bg-primary/10 rounded-lg border border-primary/20">
-                        <p className="text-sm text-muted-foreground mb-2">Your new API key (copy it now, it won't be shown again):</p>
+                        <p className="text-sm text-muted-foreground mb-2">
+                          Your new API key (copy it now, it won't be shown again):
+                        </p>
                         <div className="flex items-center gap-2">
                           <code className="flex-1 font-mono text-sm bg-muted p-2 rounded break-all">
                             {newlyGeneratedKey}
                           </code>
-                          <Button size="sm" variant="outline" onClick={() => copyToClipboard(newlyGeneratedKey)}>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => copyToClipboard(newlyGeneratedKey)}
+                          >
                             <Copy className="h-4 w-4" />
                           </Button>
                         </div>
@@ -314,12 +388,14 @@ const SettingsPage = () => {
                         <Input
                           id="keyName"
                           value={newKeyName}
-                          onChange={e => setNewKeyName(e.target.value)}
+                          onChange={(e) => setNewKeyName(e.target.value)}
                           placeholder="e.g., Production, Development"
                         />
                       </div>
                       <DialogFooter>
-                        <Button variant="outline" onClick={() => setShowNewKeyDialog(false)}>Cancel</Button>
+                        <Button variant="outline" onClick={() => setShowNewKeyDialog(false)}>
+                          Cancel
+                        </Button>
                         <Button onClick={handleGenerateKey}>Generate</Button>
                       </DialogFooter>
                     </div>
@@ -347,32 +423,40 @@ const SettingsPage = () => {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    apiKeys.map(key => (
+                    apiKeys.map((key) => (
                       <TableRow key={key.id} className="border-border">
                         <TableCell className="font-medium">{key.key_name}</TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
                             <code className="font-mono text-sm text-muted-foreground">
-                              {key.key_prefix || '••••••••...••••'}
+                              {key.key_prefix || "••••••••...••••"}
                             </code>
-                            <span className="text-xs text-muted-foreground">(hidden for security)</span>
+                            <span className="text-xs text-muted-foreground">
+                              (hidden for security)
+                            </span>
                           </div>
                         </TableCell>
                         <TableCell>
-                          <Badge variant={key.is_active ? 'default' : 'secondary'}>
-                            {key.is_active ? 'Active' : 'Revoked'}
+                          <Badge variant={key.is_active ? "default" : "secondary"}>
+                            {key.is_active ? "Active" : "Revoked"}
                           </Badge>
                         </TableCell>
                         <TableCell className="text-muted-foreground text-sm">
-                          {format(new Date(key.created_at), 'MMM d, yyyy')}
+                          {format(new Date(key.created_at), "MMM d, yyyy")}
                         </TableCell>
                         <TableCell className="text-muted-foreground text-sm">
-                          {key.last_used_at ? format(new Date(key.last_used_at), 'MMM d, yyyy') : 'Never'}
+                          {key.last_used_at
+                            ? format(new Date(key.last_used_at), "MMM d, yyyy")
+                            : "Never"}
                         </TableCell>
                         <TableCell>
                           <div className="flex gap-1">
                             {key.is_active && (
-                              <Button size="sm" variant="ghost" onClick={() => revokeApiKey(key.id)}>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => revokeApiKey(key.id)}
+                              >
                                 <X className="h-4 w-4" />
                               </Button>
                             )}
@@ -386,12 +470,15 @@ const SettingsPage = () => {
                                 <AlertDialogHeader>
                                   <AlertDialogTitle>Delete API Key?</AlertDialogTitle>
                                   <AlertDialogDescription>
-                                    This action cannot be undone. Any applications using this key will lose access.
+                                    This action cannot be undone. Any applications using this key
+                                    will lose access.
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
                                   <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                  <AlertDialogAction onClick={() => deleteApiKey(key.id)}>Delete</AlertDialogAction>
+                                  <AlertDialogAction onClick={() => deleteApiKey(key.id)}>
+                                    Delete
+                                  </AlertDialogAction>
                                 </AlertDialogFooter>
                               </AlertDialogContent>
                             </AlertDialog>
@@ -421,40 +508,46 @@ const SettingsPage = () => {
                 </div>
                 <Switch
                   checked={notifications.email}
-                  onCheckedChange={v => setNotifications(prev => ({ ...prev, email: v }))}
+                  onCheckedChange={(v) => setNotifications((prev) => ({ ...prev, email: v }))}
                 />
               </div>
               <Separator />
               <div className="flex items-center justify-between">
                 <div>
                   <p className="font-medium">Job Completion Alerts</p>
-                  <p className="text-sm text-muted-foreground">Get notified when inference jobs complete</p>
+                  <p className="text-sm text-muted-foreground">
+                    Get notified when inference jobs complete
+                  </p>
                 </div>
                 <Switch
                   checked={notifications.jobComplete}
-                  onCheckedChange={v => setNotifications(prev => ({ ...prev, jobComplete: v }))}
+                  onCheckedChange={(v) => setNotifications((prev) => ({ ...prev, jobComplete: v }))}
                 />
               </div>
               <Separator />
               <div className="flex items-center justify-between">
                 <div>
                   <p className="font-medium">System Alerts</p>
-                  <p className="text-sm text-muted-foreground">Critical alerts about system status</p>
+                  <p className="text-sm text-muted-foreground">
+                    Critical alerts about system status
+                  </p>
                 </div>
                 <Switch
                   checked={notifications.alerts}
-                  onCheckedChange={v => setNotifications(prev => ({ ...prev, alerts: v }))}
+                  onCheckedChange={(v) => setNotifications((prev) => ({ ...prev, alerts: v }))}
                 />
               </div>
               <Separator />
               <div className="flex items-center justify-between">
                 <div>
                   <p className="font-medium">Weekly Summary</p>
-                  <p className="text-sm text-muted-foreground">Receive a weekly performance summary</p>
+                  <p className="text-sm text-muted-foreground">
+                    Receive a weekly performance summary
+                  </p>
                 </div>
                 <Switch
                   checked={notifications.weekly}
-                  onCheckedChange={v => setNotifications(prev => ({ ...prev, weekly: v }))}
+                  onCheckedChange={(v) => setNotifications((prev) => ({ ...prev, weekly: v }))}
                 />
               </div>
             </CardContent>
@@ -484,7 +577,7 @@ const SettingsPage = () => {
                     id="webhook"
                     type="url"
                     value={webhookUrl}
-                    onChange={e => setWebhookUrl(e.target.value)}
+                    onChange={(e) => setWebhookUrl(e.target.value)}
                     placeholder="https://your-server.com/webhook"
                   />
                 </div>
@@ -495,7 +588,7 @@ const SettingsPage = () => {
                       Testing...
                     </>
                   ) : (
-                    'Test Webhook'
+                    "Test Webhook"
                   )}
                 </Button>
               </CardContent>
@@ -529,7 +622,8 @@ const SettingsPage = () => {
                         Delete Account?
                       </AlertDialogTitle>
                       <AlertDialogDescription>
-                        This will permanently delete your account and all associated data. This action cannot be undone.
+                        This will permanently delete your account and all associated data. This
+                        action cannot be undone.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -545,7 +639,7 @@ const SettingsPage = () => {
           </div>
         </TabsContent>
       </Tabs>
-    </div >
+    </div>
   );
 };
 

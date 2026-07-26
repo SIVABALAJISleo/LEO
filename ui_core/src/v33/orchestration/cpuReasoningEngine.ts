@@ -17,12 +17,14 @@ export class CpuReasoningEngine {
     // CPU reasoning scales well with thread counts for tree branching
     const threadsUsed = Math.min(this.logicalThreads, Math.max(2, Math.round(taskSizeOps / 10000)));
     const avxActive = taskSizeOps > 50000;
-    
+
     // Cycle calculations (slower than GPU, but highly efficient for serial branching ops)
     const baseCycles = taskSizeOps / threadsUsed;
     const cacheHitRatio = 0.94; // high L1/L2 hits on CPU code execution
-    
-    const cycleTimeMs = parseFloat((baseCycles * (avxActive ? 0.0005 : 0.001) * (1.1 - cacheHitRatio)).toFixed(2));
+
+    const cycleTimeMs = parseFloat(
+      (baseCycles * (avxActive ? 0.0005 : 0.001) * (1.1 - cacheHitRatio)).toFixed(2),
+    );
 
     return {
       threadsUsed,

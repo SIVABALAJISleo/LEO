@@ -1,11 +1,11 @@
-import { Link } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Footer } from '@/components/Footer';
-import { Navbar } from '@/components/Navbar';
+import { Link } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Footer } from "@/components/Footer";
+import { Navbar } from "@/components/Navbar";
 
-const REFUND_VERSION = '1.0.0';
-const EFFECTIVE_DATE = '2026-01-09';
+const REFUND_VERSION = "1.0.0";
+const EFFECTIVE_DATE = "2026-01-09";
 
 const RefundPolicy = () => {
   return (
@@ -26,11 +26,9 @@ const RefundPolicy = () => {
           </p>
 
           <h2>1. Subscription Refunds</h2>
-          
+
           <h3>Monthly Subscriptions</h3>
-          <p>
-            You may cancel your monthly subscription at any time. Upon cancellation:
-          </p>
+          <p>You may cancel your monthly subscription at any time. Upon cancellation:</p>
           <ul>
             <li>Your subscription remains active until the end of the billing period</li>
             <li>No partial refunds are provided for unused time</li>
@@ -45,8 +43,8 @@ const RefundPolicy = () => {
 
           <h2>2. Usage-Based Charges</h2>
           <p>
-            Usage-based charges (compute time, API calls) are non-refundable once consumed.
-            However, we may issue credits for:
+            Usage-based charges (compute time, API calls) are non-refundable once consumed. However,
+            we may issue credits for:
           </p>
           <ul>
             <li>System errors that caused job failures</li>
@@ -66,10 +64,10 @@ const RefundPolicy = () => {
           <h2>4. How to Request a Refund</h2>
           <ol>
             <li>
-              Email{' '}
+              Email{" "}
               <a href="mailto:billing@hyper.app" className="text-primary hover:underline">
                 billing@hyper.app
-              </a>{' '}
+              </a>{" "}
               with your request
             </li>
             <li>Include your account email and transaction ID</li>
@@ -94,13 +92,13 @@ const RefundPolicy = () => {
 
           <h2>7. Chargebacks</h2>
           <p>
-            If you initiate a chargeback without first contacting us, we reserve the right
-            to suspend your account pending resolution.
+            If you initiate a chargeback without first contacting us, we reserve the right to
+            suspend your account pending resolution.
           </p>
 
           <h2>8. Contact</h2>
           <p>
-            For billing questions:{' '}
+            For billing questions:{" "}
             <a href="mailto:billing@hyper.app" className="text-primary hover:underline">
               billing@hyper.app
             </a>

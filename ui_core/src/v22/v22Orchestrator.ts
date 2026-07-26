@@ -1,17 +1,17 @@
 // V22 — Phase 1 Orchestrator
 // Reads the Balance Gap report, dispatches top-10 failures to the correct engine
 
-import { ReasoningAmplifierV2 } from './engines/reasoningAmplifierV2';
-import { HallucinationEliminatorV2 } from './engines/hallucinationEliminatorV2';
-import { LanguageRecoveryEngineV2 } from './engines/languageRecoveryEngineV2';
-import { MemoryImmuneSystemV4 } from './engines/memoryImmuneSystemV4';
-import { AgentPerformanceEvolution } from './engines/agentPerformanceEvolution';
-import { KnowledgeQualityGovernor } from './engines/knowledgeQualityGovernor';
-import { RealityFeedbackLearningV2 } from './engines/realityFeedbackLearningV2';
-import { EnterpriseTrustEngine } from './engines/enterpriseTrustEngine';
-import { EvaluationAtScale } from './engines/evaluationAtScale';
-import { PerformanceGovernor } from './engines/performanceGovernor';
-import { AutonomousImprovementLoop } from './engines/autonomousImprovementLoop';
+import { ReasoningAmplifierV2 } from "./engines/reasoningAmplifierV2";
+import { HallucinationEliminatorV2 } from "./engines/hallucinationEliminatorV2";
+import { LanguageRecoveryEngineV2 } from "./engines/languageRecoveryEngineV2";
+import { MemoryImmuneSystemV4 } from "./engines/memoryImmuneSystemV4";
+import { AgentPerformanceEvolution } from "./engines/agentPerformanceEvolution";
+import { KnowledgeQualityGovernor } from "./engines/knowledgeQualityGovernor";
+import { RealityFeedbackLearningV2 } from "./engines/realityFeedbackLearningV2";
+import { EnterpriseTrustEngine } from "./engines/enterpriseTrustEngine";
+import { EvaluationAtScale } from "./engines/evaluationAtScale";
+import { PerformanceGovernor } from "./engines/performanceGovernor";
+import { AutonomousImprovementLoop } from "./engines/autonomousImprovementLoop";
 
 export interface QualityScores {
   architectureScore: number;
@@ -32,26 +32,26 @@ export interface AmplificationCycleResult {
   scores: QualityScores;
   topFailuresAddressed: string[];
   improvementSummary: string;
-  evalReport: ReturnType<EvaluationAtScale['runEvaluation']>;
-  perfReport: ReturnType<PerformanceGovernor['govern']>;
-  agentLeaderboard: ReturnType<AgentPerformanceEvolution['getAgents']>;
-  knowledgeReport: ReturnType<KnowledgeQualityGovernor['govern']>;
-  memoryAudit: ReturnType<MemoryImmuneSystemV4['audit']>;
-  calibration: ReturnType<RealityFeedbackLearningV2['getCalibrationState']>;
-  improvementState: ReturnType<AutonomousImprovementLoop['getState']>;
+  evalReport: ReturnType<EvaluationAtScale["runEvaluation"]>;
+  perfReport: ReturnType<PerformanceGovernor["govern"]>;
+  agentLeaderboard: ReturnType<AgentPerformanceEvolution["getAgents"]>;
+  knowledgeReport: ReturnType<KnowledgeQualityGovernor["govern"]>;
+  memoryAudit: ReturnType<MemoryImmuneSystemV4["audit"]>;
+  calibration: ReturnType<RealityFeedbackLearningV2["getCalibrationState"]>;
+  improvementState: ReturnType<AutonomousImprovementLoop["getState"]>;
 }
 
 const TOP_FAILURES = [
-  'Memory Semantic Drift (90-day horizon)',
-  'Tanglish Intent Extraction < 90%',
-  'Agent Cyclic Delegation Deadlocks',
-  'RAG Vector Drift on Long Horizons',
-  'False Confidence on Unknown Facts',
-  'SLA Violations at Peak Load',
-  'Hallucination in Multilingual Edge Cases',
-  'Contradiction in Memory Merge Logic',
-  'Citation Hallucination in Dense RAG Chunks',
-  'Reasoning Failures in Mathematical Subset Topology',
+  "Memory Semantic Drift (90-day horizon)",
+  "Tanglish Intent Extraction < 90%",
+  "Agent Cyclic Delegation Deadlocks",
+  "RAG Vector Drift on Long Horizons",
+  "False Confidence on Unknown Facts",
+  "SLA Violations at Peak Load",
+  "Hallucination in Multilingual Edge Cases",
+  "Contradiction in Memory Merge Logic",
+  "Citation Hallucination in Dense RAG Chunks",
+  "Reasoning Failures in Mathematical Subset Topology",
 ];
 
 export class V22Orchestrator {
@@ -95,7 +95,11 @@ export class V22Orchestrator {
     const knowledgeReport = this.knowledge.govern();
     const calibrationEvents = this.feedback.simulateLearningCycle();
     const calibration = this.feedback.getCalibrationState();
-    const enterpriseAnswer = this.enterprise.wrap(query, halluResult.verifiedAnswer, reasonResult.finalConfidence);
+    const enterpriseAnswer = this.enterprise.wrap(
+      query,
+      halluResult.verifiedAnswer,
+      reasonResult.finalConfidence,
+    );
     const evalReport = this.evaluation.runEvaluation(`v22.${this.cycleCount}`);
     const perfReport = this.performance.govern();
     const improvCycle = this.improvement.runCycle();
@@ -113,7 +117,7 @@ export class V22Orchestrator {
       reasoningScore: Math.min(0.97, reasonStat.averageAccuracy),
       memoryScore: Math.min(0.99, memAudit.consistencyScore),
       hallucinationRate: Math.max(0.005, hallStat.averageHallucinationRate),
-      agentQuality: agentLeaderboard[0]?.compositeScore ?? 0.90,
+      agentQuality: agentLeaderboard[0]?.compositeScore ?? 0.9,
       knowledgeQuality: knowledgeReport.averageQualityScore,
       languageUnderstanding: Math.min(0.99, langStat.averageIntentAccuracy),
       enterpriseTrust: Math.min(0.99, entStat.averageTrustScore / 100),
@@ -125,7 +129,7 @@ export class V22Orchestrator {
     const topFailuresAddressed = TOP_FAILURES.slice(0, Math.min(this.cycleCount, 10));
 
     return {
-      cycleId: `V22-CYCLE-${String(this.cycleCount).padStart(4, '0')}`,
+      cycleId: `V22-CYCLE-${String(this.cycleCount).padStart(4, "0")}`,
       scores,
       topFailuresAddressed,
       improvementSummary: improvCycle.improvementApplied,

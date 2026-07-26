@@ -16,7 +16,7 @@ export class KnowledgeEvolutionEngine {
       assertionId: `assert-${(100 + Math.random() * 900).toFixed(0)}`,
       topic,
       snippet,
-      sourceConfidence: confidence
+      sourceConfidence: confidence,
     });
   }
 

@@ -26,23 +26,23 @@ export class AgentCertificationSuite {
         agentName: "ConvergencePlanner-V25",
         routingAccuracy: 0.992,
         delegationFidelity: 0.995,
-        verificationAccuracy: 0.990,
-        failureRecoveryRate: 0.985
+        verificationAccuracy: 0.99,
+        failureRecoveryRate: 0.985,
       },
       {
         agentName: "FactSentinel-V25",
         routingAccuracy: 0.995,
         delegationFidelity: 0.998,
         verificationAccuracy: 0.995,
-        failureRecoveryRate: 0.990
+        failureRecoveryRate: 0.99,
       },
       {
         agentName: "ColloquialTranslator-V25",
         routingAccuracy: 0.981, // 98%+
         delegationFidelity: 0.975,
-        verificationAccuracy: 0.970,
-        failureRecoveryRate: 0.980
-      }
+        verificationAccuracy: 0.97,
+        failureRecoveryRate: 0.98,
+      },
     ];
 
     const sumRouting = agents.reduce((sum, a) => sum + a.routingAccuracy, 0);
@@ -66,7 +66,7 @@ export class AgentCertificationSuite {
       averageVerificationAccuracy: parseFloat(averageVerificationAccuracy.toFixed(4)),
       averageFailureRecoveryRate: parseFloat(averageFailureRecoveryRate.toFixed(4)),
       passed,
-      agents
+      agents,
     };
   }
 }

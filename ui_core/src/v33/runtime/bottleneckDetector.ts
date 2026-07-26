@@ -13,7 +13,7 @@ export class BottleneckDetector {
   detectBottlenecks(
     cacheMissRatio: number,
     ramBandwidthGbSec: number,
-    isPcieThrottled: boolean
+    isPcieThrottled: boolean,
   ): SystemBottleneck[] {
     const list: SystemBottleneck[] = [];
 
@@ -23,7 +23,8 @@ export class BottleneckDetector {
         source: "CACHE_MISS_RATE",
         severity: "critical",
         metricValue: `Cache miss ratio at ${(cacheMissRatio * 100).toFixed(1)}%`,
-        remediationAction: "Instruct cacheResidentInferenceEngine to force-evict cold weights and page-lock the active specialist."
+        remediationAction:
+          "Instruct cacheResidentInferenceEngine to force-evict cold weights and page-lock the active specialist.",
       });
     }
 
@@ -33,7 +34,8 @@ export class BottleneckDetector {
         source: "RAM_SPEED",
         severity: "warning",
         metricValue: `RAM read throughput saturated at ${ramBandwidthGbSec.toFixed(1)} GB/s`,
-        remediationAction: "Switch model routing to INT4 adaptive precision to restrict memory bus load."
+        remediationAction:
+          "Switch model routing to INT4 adaptive precision to restrict memory bus load.",
       });
     }
 
@@ -43,7 +45,8 @@ export class BottleneckDetector {
         source: "PCIE_TRANSFER",
         severity: "low",
         metricValue: "PCIE link throttling during MoE weight transfers",
-        remediationAction: "Keep inactive experts in system RAM instead of writing/reading from disk storage."
+        remediationAction:
+          "Keep inactive experts in system RAM instead of writing/reading from disk storage.",
       });
     }
 

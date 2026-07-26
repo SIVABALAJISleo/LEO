@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import { AlertTriangle, XCircle, Info, X } from 'lucide-react';
-import { incidentStateMachine } from '@/lib/production/IncidentStateMachine';
+import { useEffect, useState } from "react";
+import { AlertTriangle, XCircle, Info, X } from "lucide-react";
+import { incidentStateMachine } from "@/lib/production/IncidentStateMachine";
 
 interface SystemBannerProps {
   dismissible?: boolean;
@@ -29,9 +29,9 @@ export const SystemBanner = ({ dismissible = true }: SystemBannerProps) => {
 
   const getIcon = () => {
     switch (banner.severity) {
-      case 'error':
+      case "error":
         return <XCircle className="h-4 w-4" />;
-      case 'warning':
+      case "warning":
         return <AlertTriangle className="h-4 w-4" />;
       default:
         return <Info className="h-4 w-4" />;
@@ -40,12 +40,12 @@ export const SystemBanner = ({ dismissible = true }: SystemBannerProps) => {
 
   const getBgClass = () => {
     switch (banner.severity) {
-      case 'error':
-        return 'bg-destructive text-destructive-foreground';
-      case 'warning':
-        return 'bg-yellow-500 text-yellow-950';
+      case "error":
+        return "bg-destructive text-destructive-foreground";
+      case "warning":
+        return "bg-yellow-500 text-yellow-950";
       default:
-        return 'bg-primary text-primary-foreground';
+        return "bg-primary text-primary-foreground";
     }
   };
 

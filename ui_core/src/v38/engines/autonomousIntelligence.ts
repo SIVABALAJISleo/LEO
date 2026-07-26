@@ -26,31 +26,31 @@ export class AutonomousIntelligence {
         label: "Scan semantic cache buffers",
         assignedAgent: "Planner",
         resourcesAllottedTokens: 150,
-        status: "completed"
+        status: "completed",
       },
       {
         id: "task-02",
         label: "Formulate causal hypothesis links",
         assignedAgent: "Scientist",
         resourcesAllottedTokens: 400,
-        status: "executing"
+        status: "executing",
       },
       {
         id: "task-03",
         label: "Check model quantization thresholds",
         assignedAgent: "Optimizer",
         resourcesAllottedTokens: 250,
-        status: "pending"
-      }
+        status: "pending",
+      },
     ];
 
-    const completed = decomposedTasks.filter(t => t.status === "completed").length;
+    const completed = decomposedTasks.filter((t) => t.status === "completed").length;
     const progress = completed / decomposedTasks.length;
 
     return {
       decomposedTasks,
       overallTaskProgress: parseFloat(progress.toFixed(2)),
-      selfMonitoringStatus: "Operational. Swarm resources balanced under strict limits."
+      selfMonitoringStatus: "Operational. Swarm resources balanced under strict limits.",
     };
   }
 }

@@ -38,7 +38,7 @@ export class LocalIntentEngine {
       { id: "c2", type: "CONDITION", name: "NOMINAL" },
     ];
 
-    rawNodes.forEach(n => this.nodes.set(n.id, n));
+    rawNodes.forEach((n) => this.nodes.set(n.id, n));
 
     // Valid Paths (Edges)
     this.addEdge("e1", "m1");
@@ -60,34 +60,37 @@ export class LocalIntentEngine {
 
   public getNodesByType(type: NodeType, previousId?: string): Node[] {
     if (!previousId) {
-      return Array.from(this.nodes.values()).filter(n => n.type === type);
+      return Array.from(this.nodes.values()).filter((n) => n.type === type);
     }
-    
+
     const possibleNextIds = this.edges.get(previousId) || [];
-    return possibleNextIds
-      .map(id => this.nodes.get(id)!)
-      .filter(n => n.type === type);
+    return possibleNextIds.map((id) => this.nodes.get(id)!).filter((n) => n.type === type);
   }
 
   /**
    * LAYER 4: EXECUTION
    * Pure Graph Traversal Validation
    */
-  public execute(intentIds: string[]): { status: string; result?: any; error?: string; details?: string } {
+  public execute(intentIds: string[]): {
+    status: string;
+    result?: any;
+    error?: string;
+    details?: string;
+  } {
     if (intentIds.length === 0) return { status: "ERROR", error: "EMPTY_INTENT" };
 
     // Validate chain
     for (let i = 0; i < intentIds.length - 1; i++) {
-        const current = intentIds[i];
-        const next = intentIds[i+1];
-        const validNexts = this.edges.get(current) || [];
-        if (!validNexts.includes(next)) {
-            return { 
-                status: "REJECTED", 
-                error: "INVALID_PATH", 
-                details: `Sequence ${this.nodes.get(current)?.name} -> ${this.nodes.get(next)?.name} is logically impossible.`
-            };
-        }
+      const current = intentIds[i];
+      const next = intentIds[i + 1];
+      const validNexts = this.edges.get(current) || [];
+      if (!validNexts.includes(next)) {
+        return {
+          status: "REJECTED",
+          error: "INVALID_PATH",
+          details: `Sequence ${this.nodes.get(current)?.name} -> ${this.nodes.get(next)?.name} is logically impossible.`,
+        };
+      }
     }
 
     // Deterministic Result Fetch
@@ -95,10 +98,10 @@ export class LocalIntentEngine {
     return {
       status: "SUCCESS",
       result: {
-        trace: intentIds.map(id => this.nodes.get(id)!.name),
+        trace: intentIds.map((id) => this.nodes.get(id)!.name),
         outcome: `DETERMINISTIC_VAL: Resolution for intent chain completed locally.`,
-        data: lastNode.type === "CONDITION" ? "ACK_CONFIG_ALIGNED" : "DATA_STREAM_ACTIVE"
-      }
+        data: lastNode.type === "CONDITION" ? "ACK_CONFIG_ALIGNED" : "DATA_STREAM_ACTIVE",
+      },
     };
   }
 }

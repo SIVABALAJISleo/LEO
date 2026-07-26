@@ -1,7 +1,8 @@
 // LEO AI V31 — Phase 3 Flash Attention Optimizer
 // Optimizes memory footprints and FLOP usage via sparse, chunked, and memory-efficient attention variants.
 
-export type AttentionStrategyType = "StandardSDPA" | "MemoryEfficient" | "SparseBlock" | "ChunkedRing";
+export type AttentionStrategyType =
+  "StandardSDPA" | "MemoryEfficient" | "SparseBlock" | "ChunkedRing";
 
 export interface AttentionMetrics {
   strategy: AttentionStrategyType;
@@ -18,13 +19,13 @@ export class AttentionOptimizationEngine {
     const isStandard = strategy === "StandardSDPA";
     const isMemEff = strategy === "MemoryEfficient";
     const isSparse = strategy === "SparseBlock";
-    
+
     let memoryFootprintMb = 0;
     let flopsGiga = 0;
     let sparsityPct = 0;
     let throughputTokensSec = 0;
 
-    const baseFlops = (sequenceLength * sequenceLength * 0.00001);
+    const baseFlops = sequenceLength * sequenceLength * 0.00001;
 
     if (isStandard) {
       memoryFootprintMb = parseFloat((sequenceLength * sequenceLength * 0.0002).toFixed(2));
@@ -57,7 +58,7 @@ export class AttentionOptimizationEngine {
       memoryFootprintMb: Math.max(1.2, memoryFootprintMb),
       flopsGiga: Math.max(0.01, flopsGiga),
       sparsityPct,
-      throughputTokensSec: Math.max(10, throughputTokensSec)
+      throughputTokensSec: Math.max(10, throughputTokensSec),
     };
   }
 

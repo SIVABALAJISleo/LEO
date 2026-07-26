@@ -1,6 +1,6 @@
-import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
-import { Loader2 } from 'lucide-react';
+import { Navigate, useLocation } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { Loader2 } from "lucide-react";
 
 interface AuthRedirectProps {
   children: React.ReactNode;
@@ -19,7 +19,7 @@ export const AuthRedirect = ({ children }: AuthRedirectProps) => {
   }
 
   // If user is authenticated and trying to access auth pages, redirect to dashboard
-  if (user && location.pathname.startsWith('/auth')) {
+  if (user && location.pathname.startsWith("/auth")) {
     return <Navigate to="/dashboard/home" replace />;
   }
 

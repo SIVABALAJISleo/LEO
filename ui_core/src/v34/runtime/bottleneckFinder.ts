@@ -13,7 +13,7 @@ export class BottleneckFinder {
   findBottlenecks(
     cacheMissRatio: number,
     ramBandwidthGbSec: number,
-    isThreadBlocked: boolean
+    isThreadBlocked: boolean,
   ): SystemBottleneck[] {
     const list: SystemBottleneck[] = [];
 
@@ -23,7 +23,8 @@ export class BottleneckFinder {
         source: "CACHE_FAULT",
         severity: "critical",
         metricValue: `Cache miss ratio at ${(cacheMissRatio * 100).toFixed(1)}%`,
-        remediationAction: "Instruct cacheResidencyAnalyzer to force-evict cold weights and page-lock the active specialist."
+        remediationAction:
+          "Instruct cacheResidencyAnalyzer to force-evict cold weights and page-lock the active specialist.",
       });
     }
 
@@ -33,7 +34,8 @@ export class BottleneckFinder {
         source: "RAM_SPEED",
         severity: "warning",
         metricValue: `RAM read throughput saturated at ${ramBandwidthGbSec.toFixed(1)} GB/s`,
-        remediationAction: "Switch model routing to INT4 adaptive precision to restrict memory bus load."
+        remediationAction:
+          "Switch model routing to INT4 adaptive precision to restrict memory bus load.",
       });
     }
 
@@ -43,7 +45,8 @@ export class BottleneckFinder {
         source: "THREAD_BLOCK",
         severity: "low",
         metricValue: "OpenMP threads scheduling bottleneck",
-        remediationAction: "Reconfigure OMP_NUM_THREADS affinity options to isolate execution cores."
+        remediationAction:
+          "Reconfigure OMP_NUM_THREADS affinity options to isolate execution cores.",
       });
     }
 

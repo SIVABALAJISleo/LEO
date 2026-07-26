@@ -26,7 +26,7 @@ interface SystemState {
 }
 
 class StateCompressor {
-  private readonly STORAGE_KEY = 'hyper_state_checkpoint';
+  private readonly STORAGE_KEY = "hyper_state_checkpoint";
   private readonly CHECKPOINT_INTERVAL = 5000; // 5 seconds
   private checkpoints: Map<string, CheckpointData> = new Map();
   private systemState: SystemState | null = null;
@@ -43,7 +43,7 @@ class StateCompressor {
   checkpoint(jobId: string, progress: number, state: unknown, inputs: unknown): string {
     const existing = this.checkpoints.get(jobId);
     const version = existing ? existing.version + 1 : 1;
-    
+
     const checkpoint: CheckpointData = {
       id: `cp-${jobId}-${version}`,
       jobId,
@@ -53,10 +53,10 @@ class StateCompressor {
       createdAt: new Date(),
       version,
     };
-    
+
     this.checkpoints.set(jobId, checkpoint);
     this.isDirty = true;
-    
+
     return checkpoint.id;
   }
 
@@ -75,7 +75,7 @@ class StateCompressor {
   getResumePoint(jobId: string): { progress: number; state: unknown } | null {
     const checkpoint = this.checkpoints.get(jobId);
     if (!checkpoint) return null;
-    
+
     return {
       progress: checkpoint.progress,
       state: checkpoint.state,
@@ -102,7 +102,7 @@ class StateCompressor {
   // Save to localStorage
   private saveToStorage(): void {
     if (!this.isDirty) return;
-    
+
     try {
       const data = {
         checkpoints: Array.from(this.checkpoints.entries()),
@@ -112,7 +112,7 @@ class StateCompressor {
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
       this.isDirty = false;
     } catch (e) {
-      console.warn('Failed to save state checkpoint:', e);
+      console.warn("Failed to save state checkpoint:", e);
     }
   }
 
@@ -121,17 +121,19 @@ class StateCompressor {
     try {
       const stored = localStorage.getItem(this.STORAGE_KEY);
       if (!stored) return;
-      
+
       const data = JSON.parse(stored);
-      
+
       // Restore checkpoints
       if (Array.isArray(data.checkpoints)) {
-        this.checkpoints = new Map(data.checkpoints.map(([k, v]: [string, CheckpointData]) => [
-          k,
-          { ...v, createdAt: new Date(v.createdAt) }
-        ]));
+        this.checkpoints = new Map(
+          data.checkpoints.map(([k, v]: [string, CheckpointData]) => [
+            k,
+            { ...v, createdAt: new Date(v.createdAt) },
+          ]),
+        );
       }
-      
+
       // Restore system state
       if (data.systemState) {
         this.systemState = {
@@ -142,13 +144,13 @@ class StateCompressor {
           },
         };
       }
-      
-      console.log('Restored state from checkpoint:', {
+
+      console.log("Restored state from checkpoint:", {
         checkpoints: this.checkpoints.size,
         hasSystemState: !!this.systemState,
       });
     } catch (e) {
-      console.warn('Failed to load state checkpoint:', e);
+      console.warn("Failed to load state checkpoint:", e);
     }
   }
 
@@ -161,14 +163,14 @@ class StateCompressor {
 
   // Setup beforeunload handler
   private setupBeforeUnload(): void {
-    if (typeof window !== 'undefined') {
-      window.addEventListener('beforeunload', () => {
+    if (typeof window !== "undefined") {
+      window.addEventListener("beforeunload", () => {
         this.saveToStorage();
       });
-      
+
       // Also save on visibility change (tab hidden)
-      document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'hidden') {
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "hidden") {
           this.saveToStorage();
         }
       });
@@ -202,16 +204,16 @@ class StateCompressor {
     totalStateSize: number;
   } {
     const checkpoints = Array.from(this.checkpoints.values());
-    const oldest = checkpoints.reduce((min, cp) => 
-      cp.createdAt < min ? cp.createdAt : min, 
-      new Date()
+    const oldest = checkpoints.reduce(
+      (min, cp) => (cp.createdAt < min ? cp.createdAt : min),
+      new Date(),
     );
-    
+
     const stateJson = JSON.stringify({
       checkpoints: Array.from(this.checkpoints.entries()),
       systemState: this.systemState,
     });
-    
+
     return {
       checkpointCount: this.checkpoints.size,
       oldestCheckpoint: checkpoints.length > 0 ? oldest : null,

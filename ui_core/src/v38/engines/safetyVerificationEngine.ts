@@ -18,21 +18,18 @@ export interface VerificationAudit {
 export class SafetyVerificationEngine {
   private sourcesDb: SourceCitationRating[] = [
     { sourceId: "OpenAlex/paper-201", reliabilityScore: 0.98, verifiedClaimsCount: 42 },
-    { sourceId: "GitHub/intel-ipex", reliabilityScore: 0.95, verifiedClaimsCount: 120 }
+    { sourceId: "GitHub/intel-ipex", reliabilityScore: 0.95, verifiedClaimsCount: 120 },
   ];
 
   /**
    * Reviews execution outcomes and scores verification integrity.
    */
-  public verifyStatement(
-    statement: string,
-    sourceId: string
-  ): VerificationAudit {
+  public verifyStatement(statement: string, sourceId: string): VerificationAudit {
     const sLower = statement.toLowerCase();
-    
+
     // Look up source
-    const source = this.sourcesDb.find(s => s.sourceId === sourceId);
-    const baseReliability = source ? source.reliabilityScore : 0.70;
+    const source = this.sourcesDb.find((s) => s.sourceId === sourceId);
+    const baseReliability = source ? source.reliabilityScore : 0.7;
 
     let hallucinationProbability = 0.02;
     let confidenceScore = baseReliability;
@@ -41,16 +38,16 @@ export class SafetyVerificationEngine {
     // Detect contradictions or unsafe assertions
     if (sLower.includes("overflow") || sLower.includes("bypass") || sLower.includes("maybe")) {
       hallucinationProbability = 0.45;
-      confidenceScore = baseReliability * 0.60;
+      confidenceScore = baseReliability * 0.6;
       verdict = "caution";
     }
 
     return {
       statementVerified: statement,
-      isConsistent: hallucinationProbability < 0.20,
+      isConsistent: hallucinationProbability < 0.2,
       hallucinationProbability,
       confidenceScore: parseFloat(confidenceScore.toFixed(3)),
-      verdict
+      verdict,
     };
   }
 

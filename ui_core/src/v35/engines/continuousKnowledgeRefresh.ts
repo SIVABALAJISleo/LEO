@@ -21,9 +21,30 @@ export interface RefreshReport {
 
 export class ContinuousKnowledgeRefresh {
   private knowledgeRegistry: KnowledgeNode[] = [
-    { id: "k-1", sourceUrl: "https://arxiv.org/abs/bitnet", conceptName: "1.58-bit Ternary LLM", ageDays: 12, confidenceScore: 0.99, state: "Fresh" },
-    { id: "k-2", sourceUrl: "https://github.com/oneapi/sycl", conceptName: "SYCL Compiler Targets", ageDays: 45, confidenceScore: 0.94, state: "Stable" },
-    { id: "k-3", sourceUrl: "https://intel.com/openvino-spec", conceptName: "OpenVINO CPU Kernels", ageDays: 180, confidenceScore: 0.72, state: "Aging" }
+    {
+      id: "k-1",
+      sourceUrl: "https://arxiv.org/abs/bitnet",
+      conceptName: "1.58-bit Ternary LLM",
+      ageDays: 12,
+      confidenceScore: 0.99,
+      state: "Fresh",
+    },
+    {
+      id: "k-2",
+      sourceUrl: "https://github.com/oneapi/sycl",
+      conceptName: "SYCL Compiler Targets",
+      ageDays: 45,
+      confidenceScore: 0.94,
+      state: "Stable",
+    },
+    {
+      id: "k-3",
+      sourceUrl: "https://intel.com/openvino-spec",
+      conceptName: "OpenVINO CPU Kernels",
+      ageDays: 180,
+      confidenceScore: 0.72,
+      state: "Aging",
+    },
   ];
 
   /**
@@ -33,7 +54,7 @@ export class ContinuousKnowledgeRefresh {
     let refreshedConceptsCount = 0;
     let contradictionsResolved = 0;
 
-    this.knowledgeRegistry = this.knowledgeRegistry.map(node => {
+    this.knowledgeRegistry = this.knowledgeRegistry.map((node) => {
       // Age the concept
       const ageDays = node.ageDays + 1;
       let state: IngestionState = "Stable";
@@ -58,7 +79,7 @@ export class ContinuousKnowledgeRefresh {
           ...node,
           ageDays: 0,
           confidenceScore: 0.99,
-          state: "Fresh"
+          state: "Fresh",
         };
       }
 
@@ -66,7 +87,7 @@ export class ContinuousKnowledgeRefresh {
         ...node,
         ageDays,
         confidenceScore,
-        state
+        state,
       };
     });
 
@@ -77,7 +98,7 @@ export class ContinuousKnowledgeRefresh {
       monitoredNodes: [...this.knowledgeRegistry],
       refreshedConceptsCount,
       contradictionsResolved,
-      averageAgeDays
+      averageAgeDays,
     };
   }
 }

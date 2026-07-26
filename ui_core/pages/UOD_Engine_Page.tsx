@@ -1,7 +1,7 @@
-import React from 'react';
-import { NodeGraph } from '../components/uod/NodeGraph';
-import { DynamicSchemaPanel } from '../components/uod/DynamicSchemaPanel';
-import { Network, Terminal, Settings, Share2, Layers } from 'lucide-react';
+import React from "react";
+import { NodeGraph } from "../components/uod/NodeGraph";
+import { DynamicSchemaPanel } from "../components/uod/DynamicSchemaPanel";
+import { Network, Terminal, Settings, Share2, Layers } from "lucide-react";
 
 const UOD_Engine_Page = () => {
   return (
@@ -25,7 +25,9 @@ const UOD_Engine_Page = () => {
         <div className="flex items-center gap-2">
           <div className="flex px-3 py-1 bg-slate-900 rounded-full border border-slate-800 items-center gap-2 mr-4">
             <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-            <span className="text-[10px] text-emerald-500 font-bold uppercase tracking-wider">DuckDB WASM ACTIVE</span>
+            <span className="text-[10px] text-emerald-500 font-bold uppercase tracking-wider">
+              DuckDB WASM ACTIVE
+            </span>
           </div>
           <button className="p-2 text-slate-400 hover:text-white transition-colors">
             <Share2 size={16} />

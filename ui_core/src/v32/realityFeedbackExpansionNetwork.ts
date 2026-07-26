@@ -17,7 +17,7 @@ export class RealityFeedbackExpansionNetwork {
 
   evaluateCycle(cycleId: string, predicted: number, observed: number): AlignmentCycle {
     const deviation = parseFloat((observed - predicted).toFixed(3));
-    
+
     // Learning adjustments: apply correction factor proportionally
     const learningRate = 0.05;
     const remedialAdjustmentValue = parseFloat((deviation * learningRate).toFixed(4));
@@ -31,7 +31,7 @@ export class RealityFeedbackExpansionNetwork {
       observedOutcomeValue: observed,
       deviation,
       remedialAdjustmentValue,
-      status
+      status,
     };
 
     this.cycleHistory.push(cycle);

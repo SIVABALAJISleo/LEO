@@ -21,7 +21,7 @@ export class SolutionCrystallizationEngine {
       conceptLabel: concept,
       factualAsserts: facts,
       embeddingVector,
-      crystallizedTimestamp: Date.now()
+      crystallizedTimestamp: Date.now(),
     };
 
     this.crystalDb.push(entity);

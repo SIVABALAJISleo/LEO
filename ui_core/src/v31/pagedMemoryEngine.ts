@@ -31,7 +31,7 @@ export class PagedMemoryEngine {
         allocatedTokens: 0,
         maxTokens: this.blockCapacity,
         isCompacted: false,
-        assignedRequestId: null
+        assignedRequestId: null,
       });
     }
   }
@@ -39,22 +39,22 @@ export class PagedMemoryEngine {
   allocate(requestId: string, tokenCount: number): number[] {
     const blocksNeeded = Math.ceil(tokenCount / this.blockCapacity);
     const allocatedBlocks: number[] = [];
-    
+
     // Find free blocks
     let allocated = 0;
     for (const b of this.blocks) {
       if (b.assignedRequestId === null) {
         b.assignedRequestId = requestId;
-        
+
         const remainingTokens = tokenCount - allocated;
         b.allocatedTokens = Math.min(this.blockCapacity, remainingTokens);
         allocated += b.allocatedTokens;
-        
+
         allocatedBlocks.push(b.blockId);
         if (allocated >= tokenCount) break;
       }
     }
-    
+
     this.pageTable[requestId] = allocatedBlocks;
     return allocatedBlocks;
   }
@@ -75,10 +75,14 @@ export class PagedMemoryEngine {
   compactMemory(): number {
     // Merge partially filled blocks with the same request ID or move empty slots
     let compactedCount = 0;
-    
+
     // Simple simulation of compaction: count blocks that are sparse (< 50% utilization) and flag as compacted
     for (const b of this.blocks) {
-      if (b.assignedRequestId !== null && b.allocatedTokens < this.blockCapacity / 2 && !b.isCompacted) {
+      if (
+        b.assignedRequestId !== null &&
+        b.allocatedTokens < this.blockCapacity / 2 &&
+        !b.isCompacted
+      ) {
         b.isCompacted = true;
         compactedCount++;
       }
@@ -87,17 +91,20 @@ export class PagedMemoryEngine {
   }
 
   getTelemetry(): PagedMemoryTelemetry {
-    const allocatedBlocksCount = this.blocks.filter(b => b.assignedRequestId !== null).length;
+    const allocatedBlocksCount = this.blocks.filter((b) => b.assignedRequestId !== null).length;
     const freeBlocksCount = this.blocks.length - allocatedBlocksCount;
     const totalAllocatedTokens = this.blocks.reduce((acc, b) => acc + b.allocatedTokens, 0);
     const capacityTokens = allocatedBlocksCount * this.blockCapacity;
-    
-    const cacheUtilizationPct = parseFloat(((allocatedBlocksCount / this.blocks.length) * 100).toFixed(1));
-    const fragmentationPct = capacityTokens > 0 
-      ? parseFloat(((1.0 - (totalAllocatedTokens / capacityTokens)) * 100).toFixed(1)) 
-      : 0;
 
-    const compactedCount = this.blocks.filter(b => b.isCompacted).length;
+    const cacheUtilizationPct = parseFloat(
+      ((allocatedBlocksCount / this.blocks.length) * 100).toFixed(1),
+    );
+    const fragmentationPct =
+      capacityTokens > 0
+        ? parseFloat(((1.0 - totalAllocatedTokens / capacityTokens) * 100).toFixed(1))
+        : 0;
+
+    const compactedCount = this.blocks.filter((b) => b.isCompacted).length;
 
     return {
       totalBlocks: this.blocks.length,
@@ -106,7 +113,7 @@ export class PagedMemoryEngine {
       cacheUtilizationPct,
       fragmentationPct,
       compactedCount,
-      pageTable: { ...this.pageTable }
+      pageTable: { ...this.pageTable },
     };
   }
 }

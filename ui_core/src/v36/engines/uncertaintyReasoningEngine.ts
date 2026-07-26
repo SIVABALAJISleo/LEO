@@ -14,20 +14,23 @@ export class UncertaintyReasoningEngine {
   /**
    * Estimates uncertainty rates based on string tokens and existing facts count.
    */
-  public evaluateStatement(
-    statement: string,
-    existingFactsCount: number
-  ): ConfidenceReport {
+  public evaluateStatement(statement: string, existingFactsCount: number): ConfidenceReport {
     const sLower = statement.toLowerCase();
-    
+
     let score = 0.96;
     let ambiguityDetected = false;
     let prescribedMitigation = "Proceed with execution.";
 
-    if (sLower.includes("maybe") || sLower.includes("unknown") || sLower.includes("price") || existingFactsCount === 0) {
+    if (
+      sLower.includes("maybe") ||
+      sLower.includes("unknown") ||
+      sLower.includes("price") ||
+      existingFactsCount === 0
+    ) {
       score = 0.35;
       ambiguityDetected = true;
-      prescribedMitigation = "High ambiguity detected. Stop generation and query external databases.";
+      prescribedMitigation =
+        "High ambiguity detected. Stop generation and query external databases.";
     } else if (existingFactsCount < 2) {
       score = 0.72;
       prescribedMitigation = "Fuzzy match. Ask for verification prior to execution.";
@@ -42,7 +45,7 @@ export class UncertaintyReasoningEngine {
       score,
       category,
       ambiguityDetected,
-      prescribedMitigation
+      prescribedMitigation,
     };
   }
 }

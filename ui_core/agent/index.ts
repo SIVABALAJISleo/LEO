@@ -1,13 +1,13 @@
-import { createExecutionPlan, JobSpec } from './executionAgent';
-import { runCpuJob } from '../engines/cpuEngine';
-import { runGpuJob } from '../engines/gpuEngine';
-import { runTextJob, TextJobPayload } from '../engines/textEngine';
-import { runImageJob, ImageJobPayload } from '../engines/imageEngine';
-import { runSimulationJob, SimulationJobPayload } from '../engines/simEngine';
+import { createExecutionPlan, JobSpec } from "./executionAgent";
+import { runCpuJob } from "../engines/cpuEngine";
+import { runGpuJob } from "../engines/gpuEngine";
+import { runTextJob, TextJobPayload } from "../engines/textEngine";
+import { runImageJob, ImageJobPayload } from "../engines/imageEngine";
+import { runSimulationJob, SimulationJobPayload } from "../engines/simEngine";
 
 export interface AgentJobResult {
   jobId: string;
-  engineUsed: 'cpu' | 'gpu' | 'hybrid';
+  engineUsed: "cpu" | "gpu" | "hybrid";
   details: unknown;
 }
 
@@ -18,26 +18,26 @@ export interface AgentJobResult {
 export async function runDemoJobWithAgent(payload: unknown): Promise<AgentJobResult> {
   const job: JobSpec = {
     id: `job-${Date.now()}`,
-    kind: 'demo-heavy-compute',
+    kind: "demo-heavy-compute",
     payload,
   };
 
   const plan = await createExecutionPlan(job);
 
-  if (plan.engine === 'cpu') {
+  if (plan.engine === "cpu") {
     const res = await runCpuJob(job.id, payload);
     return {
       jobId: job.id,
-      engineUsed: 'cpu',
+      engineUsed: "cpu",
       details: res,
     };
   }
 
-  if (plan.engine === 'gpu') {
+  if (plan.engine === "gpu") {
     const res = await runGpuJob(job.id, payload);
     return {
       jobId: job.id,
-      engineUsed: 'gpu',
+      engineUsed: "gpu",
       details: res,
     };
   }
@@ -50,7 +50,7 @@ export async function runDemoJobWithAgent(payload: unknown): Promise<AgentJobRes
 
   return {
     jobId: job.id,
-    engineUsed: 'hybrid',
+    engineUsed: "hybrid",
     details: { cpuRes, gpuRes },
   };
 }
@@ -58,7 +58,7 @@ export async function runDemoJobWithAgent(payload: unknown): Promise<AgentJobRes
 export async function runTextJobWithAgent(payload: TextJobPayload): Promise<AgentJobResult> {
   const job: JobSpec = {
     id: `text-${Date.now()}`,
-    kind: 'text',
+    kind: "text",
     payload,
   };
 
@@ -75,7 +75,7 @@ export async function runTextJobWithAgent(payload: TextJobPayload): Promise<Agen
 export async function runImageJobWithAgent(payload: ImageJobPayload): Promise<AgentJobResult> {
   const job: JobSpec = {
     id: `image-${Date.now()}`,
-    kind: 'image',
+    kind: "image",
     payload,
   };
 
@@ -90,11 +90,11 @@ export async function runImageJobWithAgent(payload: ImageJobPayload): Promise<Ag
 }
 
 export async function runSimulationJobWithAgent(
-  payload: SimulationJobPayload
+  payload: SimulationJobPayload,
 ): Promise<AgentJobResult> {
   const job: JobSpec = {
     id: `sim-${Date.now()}`,
-    kind: 'simulation',
+    kind: "simulation",
     payload,
   };
 
@@ -107,5 +107,3 @@ export async function runSimulationJobWithAgent(
     details: res,
   };
 }
-
-

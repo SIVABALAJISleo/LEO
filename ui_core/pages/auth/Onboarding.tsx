@@ -1,58 +1,79 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
-import { firebaseClient as supabase } from '@/integrations/firebase/client';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
-import { useToast } from '@/hooks/use-toast';
-import { Cpu, User, Settings, Palette, ChevronRight, ChevronLeft, Loader2 } from 'lucide-react';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { firebaseClient as supabase } from "@/integrations/firebase/client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useToast } from "@/hooks/use-toast";
+import { Cpu, User, Settings, Palette, ChevronRight, ChevronLeft, Loader2 } from "lucide-react";
 
-type Step = 'profile' | 'modules' | 'theme';
+type Step = "profile" | "modules" | "theme";
 
 const MODULES = [
-  { name: 'kernel_fusion', label: 'Kernel Fusion', description: 'Combine multiple GPU kernels for reduced overhead' },
-  { name: 'memory_optimization', label: 'Memory Optimization', description: 'Intelligent memory management and caching' },
-  { name: 'tensor_compression', label: 'Tensor Compression', description: 'Reduce model size while maintaining accuracy' },
-  { name: 'batch_scheduling', label: 'Batch Scheduling', description: 'Optimize batch processing for throughput' },
-  { name: 'precision_scaling', label: 'Precision Scaling', description: 'Dynamic precision for performance gains' },
+  {
+    name: "kernel_fusion",
+    label: "Kernel Fusion",
+    description: "Combine multiple GPU kernels for reduced overhead",
+  },
+  {
+    name: "memory_optimization",
+    label: "Memory Optimization",
+    description: "Intelligent memory management and caching",
+  },
+  {
+    name: "tensor_compression",
+    label: "Tensor Compression",
+    description: "Reduce model size while maintaining accuracy",
+  },
+  {
+    name: "batch_scheduling",
+    label: "Batch Scheduling",
+    description: "Optimize batch processing for throughput",
+  },
+  {
+    name: "precision_scaling",
+    label: "Precision Scaling",
+    description: "Dynamic precision for performance gains",
+  },
 ];
 
 const THEMES = [
-  { id: 'dark', label: 'Dark Mode', description: 'Default dark theme with neon green accents' },
-  { id: 'light', label: 'Light Mode', description: 'Clean light theme for bright environments' },
-  { id: 'system', label: 'System', description: 'Automatically match your system preference' },
+  { id: "dark", label: "Dark Mode", description: "Default dark theme with neon green accents" },
+  { id: "light", label: "Light Mode", description: "Clean light theme for bright environments" },
+  { id: "system", label: "System", description: "Automatically match your system preference" },
 ];
 
 const Onboarding = () => {
-  const [step, setStep] = useState<Step>('profile');
+  const [step, setStep] = useState<Step>("profile");
   const [loading, setLoading] = useState(false);
-  
+
   // Profile data
-  const [fullName, setFullName] = useState('');
-  const [company, setCompany] = useState('');
-  
+  const [fullName, setFullName] = useState("");
+  const [company, setCompany] = useState("");
+
   // Module preferences
-  const [enabledModules, setEnabledModules] = useState<string[]>(['kernel_fusion', 'memory_optimization']);
-  
+  const [enabledModules, setEnabledModules] = useState<string[]>([
+    "kernel_fusion",
+    "memory_optimization",
+  ]);
+
   // Theme preference
-  const [selectedTheme, setSelectedTheme] = useState('dark');
-  
+  const [selectedTheme, setSelectedTheme] = useState("dark");
+
   const navigate = useNavigate();
   const { user } = useAuth();
   const { toast } = useToast();
 
-  const steps: Step[] = ['profile', 'modules', 'theme'];
+  const steps: Step[] = ["profile", "modules", "theme"];
   const currentStepIndex = steps.indexOf(step);
   const progress = ((currentStepIndex + 1) / steps.length) * 100;
 
   const toggleModule = (moduleName: string) => {
-    setEnabledModules(prev => 
-      prev.includes(moduleName)
-        ? prev.filter(m => m !== moduleName)
-        : [...prev, moduleName]
+    setEnabledModules((prev) =>
+      prev.includes(moduleName) ? prev.filter((m) => m !== moduleName) : [...prev, moduleName],
     );
   };
 
@@ -73,11 +94,11 @@ const Onboarding = () => {
   const handleComplete = async () => {
     if (!user) {
       toast({
-        title: 'Error',
-        description: 'Please sign in to complete onboarding.',
-        variant: 'destructive',
+        title: "Error",
+        description: "Please sign in to complete onboarding.",
+        variant: "destructive",
       });
-      navigate('/auth/login');
+      navigate("/auth/login");
       return;
     }
 
@@ -86,49 +107,47 @@ const Onboarding = () => {
     try {
       // Update profile
       const { error: profileError } = await supabase
-        .from('profiles')
+        .from("profiles")
         .update({
           full_name: fullName,
           company: company,
         })
-        .eq('user_id', user.id);
+        .eq("user_id", user.id);
 
       if (profileError) throw profileError;
 
       // Create module configs
-      const moduleConfigs = MODULES.map(module => ({
+      const moduleConfigs = MODULES.map((module) => ({
         user_id: user.id,
         module_name: module.name,
-        module_type: 'optimization',
+        module_type: "optimization",
         enabled: enabledModules.includes(module.name),
         config: {},
         settings: {},
       }));
 
-      const { error: modulesError } = await supabase
-        .from('module_configs')
-        .upsert(moduleConfigs, { 
-          onConflict: 'user_id,module_name',
-          ignoreDuplicates: false 
-        });
+      const { error: modulesError } = await supabase.from("module_configs").upsert(moduleConfigs, {
+        onConflict: "user_id,module_name",
+        ignoreDuplicates: false,
+      });
 
       if (modulesError) throw modulesError;
 
       // Save theme preference (could be stored in localStorage or user metadata)
-      localStorage.setItem('theme-preference', selectedTheme);
+      localStorage.setItem("theme-preference", selectedTheme);
 
       toast({
-        title: 'Setup Complete!',
-        description: 'Your preferences have been saved. Welcome to HYPER!',
+        title: "Setup Complete!",
+        description: "Your preferences have been saved. Welcome to HYPER!",
       });
 
-      navigate('/dashboard/home');
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      navigate("/dashboard/home");
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error: unknown) {
       toast({
-        title: 'Error',
-        description: 'Failed to save preferences. Please try again.',
-        variant: 'destructive',
+        title: "Error",
+        description: "Failed to save preferences. Please try again.",
+        variant: "destructive",
       });
     } finally {
       setLoading(false);
@@ -137,7 +156,7 @@ const Onboarding = () => {
 
   const renderStepContent = () => {
     switch (step) {
-      case 'profile':
+      case "profile":
         return (
           <div className="space-y-6">
             <div className="flex items-center justify-center w-16 h-16 rounded-full bg-primary/20 mx-auto mb-4">
@@ -145,9 +164,7 @@ const Onboarding = () => {
             </div>
             <div className="text-center mb-6">
               <h3 className="text-xl font-semibold">Complete Your Profile</h3>
-              <p className="text-muted-foreground text-sm mt-1">
-                Tell us a bit about yourself
-              </p>
+              <p className="text-muted-foreground text-sm mt-1">Tell us a bit about yourself</p>
             </div>
             <div className="space-y-4">
               <div className="space-y-2">
@@ -172,7 +189,7 @@ const Onboarding = () => {
           </div>
         );
 
-      case 'modules':
+      case "modules":
         return (
           <div className="space-y-6">
             <div className="flex items-center justify-center w-16 h-16 rounded-full bg-primary/20 mx-auto mb-4">
@@ -190,8 +207,8 @@ const Onboarding = () => {
                   key={module.name}
                   className={`p-4 rounded-lg border cursor-pointer transition-all ${
                     enabledModules.includes(module.name)
-                      ? 'border-primary bg-primary/10'
-                      : 'border-border hover:border-primary/50'
+                      ? "border-primary bg-primary/10"
+                      : "border-border hover:border-primary/50"
                   }`}
                   onClick={() => toggleModule(module.name)}
                 >
@@ -212,7 +229,7 @@ const Onboarding = () => {
           </div>
         );
 
-      case 'theme':
+      case "theme":
         return (
           <div className="space-y-6">
             <div className="flex items-center justify-center w-16 h-16 rounded-full bg-primary/20 mx-auto mb-4">
@@ -220,9 +237,7 @@ const Onboarding = () => {
             </div>
             <div className="text-center mb-6">
               <h3 className="text-xl font-semibold">Choose Your Theme</h3>
-              <p className="text-muted-foreground text-sm mt-1">
-                Select your preferred appearance
-              </p>
+              <p className="text-muted-foreground text-sm mt-1">Select your preferred appearance</p>
             </div>
             <div className="space-y-3">
               {THEMES.map((theme) => (
@@ -230,17 +245,19 @@ const Onboarding = () => {
                   key={theme.id}
                   className={`p-4 rounded-lg border cursor-pointer transition-all ${
                     selectedTheme === theme.id
-                      ? 'border-primary bg-primary/10'
-                      : 'border-border hover:border-primary/50'
+                      ? "border-primary bg-primary/10"
+                      : "border-border hover:border-primary/50"
                   }`}
                   onClick={() => setSelectedTheme(theme.id)}
                 >
                   <div className="flex items-center gap-3">
-                    <div className={`w-4 h-4 rounded-full border-2 ${
-                      selectedTheme === theme.id
-                        ? 'border-primary bg-primary'
-                        : 'border-muted-foreground'
-                    }`} />
+                    <div
+                      className={`w-4 h-4 rounded-full border-2 ${
+                        selectedTheme === theme.id
+                          ? "border-primary bg-primary"
+                          : "border-muted-foreground"
+                      }`}
+                    />
                     <div>
                       <p className="font-medium">{theme.label}</p>
                       <p className="text-sm text-muted-foreground">{theme.description}</p>
@@ -264,15 +281,15 @@ const Onboarding = () => {
         {/* Logo */}
         <div className="flex items-center justify-center space-x-2 mb-6">
           <Cpu className="h-8 w-8 text-primary" />
-          <span className="text-2xl font-display font-bold">
-            HYPER
-          </span>
+          <span className="text-2xl font-display font-bold">HYPER</span>
         </div>
 
         {/* Progress Bar */}
         <div className="mb-8">
           <div className="flex justify-between text-sm text-muted-foreground mb-2">
-            <span>Step {currentStepIndex + 1} of {steps.length}</span>
+            <span>
+              Step {currentStepIndex + 1} of {steps.length}
+            </span>
             <span>{Math.round(progress)}% complete</span>
           </div>
           <div className="h-2 bg-muted rounded-full overflow-hidden">
@@ -297,12 +314,9 @@ const Onboarding = () => {
             <ChevronLeft className="h-4 w-4" />
             Back
           </Button>
-          
+
           {currentStepIndex < steps.length - 1 ? (
-            <Button
-              onClick={handleNext}
-              className="bg-gradient-primary shadow-glow gap-2"
-            >
+            <Button onClick={handleNext} className="bg-gradient-primary shadow-glow gap-2">
               Next
               <ChevronRight className="h-4 w-4" />
             </Button>

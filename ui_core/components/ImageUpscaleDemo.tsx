@@ -1,7 +1,7 @@
-import React, { useState, useRef } from 'react';
-import { runImageJobWithAgent } from '../agent';
-import type { AgentJobResult } from '../agent';
-import type { ImageJobResult } from '../engines/imageEngine';
+import React, { useState, useRef } from "react";
+import { runImageJobWithAgent } from "../agent";
+import type { AgentJobResult } from "../agent";
+import type { ImageJobResult } from "../engines/imageEngine";
 
 export default function ImageUpscaleDemo() {
   const [loading, setLoading] = useState(false);
@@ -19,7 +19,7 @@ export default function ImageUpscaleDemo() {
 
     const img = new Image();
     img.onload = async () => {
-      const ctx = canvasRef.current!.getContext('2d');
+      const ctx = canvasRef.current!.getContext("2d");
       if (!ctx) return;
 
       // Cap size for demo (e.g. 256x256)
@@ -48,20 +48,20 @@ export default function ImageUpscaleDemo() {
 
         const details = res.details as ImageJobResult;
         if (details?.upscaled && outputRef.current) {
-          const outCtx = outputRef.current.getContext('2d');
+          const outCtx = outputRef.current.getContext("2d");
           if (outCtx) {
             outputRef.current.width = details.upscaled.width;
             outputRef.current.height = details.upscaled.height;
             const outImg = new ImageData(
               details.upscaled.data,
               details.upscaled.width,
-              details.upscaled.height
+              details.upscaled.height,
             );
             outCtx.putImageData(outImg, 0, 0);
           }
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error');
+        setError(err instanceof Error ? err.message : "Unknown error");
       } finally {
         setLoading(false);
       }
@@ -70,39 +70,39 @@ export default function ImageUpscaleDemo() {
   };
 
   return (
-    <div style={{ padding: '1rem', border: '1px solid #444', borderRadius: 8 }}>
+    <div style={{ padding: "1rem", border: "1px solid #444", borderRadius: 8 }}>
       <input
         type="file"
         accept="image/*"
         onChange={handleFileChange}
         disabled={loading}
-        style={{ marginBottom: '1rem' }}
+        style={{ marginBottom: "1rem" }}
       />
 
       {loading && <p>Running WebGPU bilateral upscaler…</p>}
-      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+      {error && <p style={{ color: "red" }}>Error: {error}</p>}
 
-      <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'flex-start' }}>
+      <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", alignItems: "flex-start" }}>
         <div>
-          <p style={{ marginBottom: '0.25rem', fontSize: '0.9rem' }}>Input</p>
-          <canvas ref={canvasRef} style={{ border: '1px solid #333', maxWidth: 256 }} />
+          <p style={{ marginBottom: "0.25rem", fontSize: "0.9rem" }}>Input</p>
+          <canvas ref={canvasRef} style={{ border: "1px solid #333", maxWidth: 256 }} />
         </div>
         <div>
-          <p style={{ marginBottom: '0.25rem', fontSize: '0.9rem' }}>Upscaled (2×)</p>
-          <canvas ref={outputRef} style={{ border: '1px solid #333', maxWidth: 512 }} />
+          <p style={{ marginBottom: "0.25rem", fontSize: "0.9rem" }}>Upscaled (2×)</p>
+          <canvas ref={outputRef} style={{ border: "1px solid #333", maxWidth: 512 }} />
         </div>
       </div>
 
       {result && (
         <pre
           style={{
-            marginTop: '1rem',
+            marginTop: "1rem",
             maxHeight: 120,
-            overflow: 'auto',
-            background: '#111',
-            color: '#eee',
-            padding: '0.5rem',
-            fontSize: '0.8rem',
+            overflow: "auto",
+            background: "#111",
+            color: "#eee",
+            padding: "0.5rem",
+            fontSize: "0.8rem",
           }}
         >
           {JSON.stringify(result, null, 2)}

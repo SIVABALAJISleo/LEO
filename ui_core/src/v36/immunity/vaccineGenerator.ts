@@ -16,7 +16,7 @@ export class VaccineGenerator {
       id: `vac-${(100 + Math.random() * 900).toFixed(0)}`,
       anomalyTargetId: anomalyId,
       assertionMask: `Verify against: ${errorString.slice(0, 20)} bounds checks`,
-      strengthCoeff: 0.95
+      strengthCoeff: 0.95,
     };
     this.vaccines.push(vac);
     return vac;

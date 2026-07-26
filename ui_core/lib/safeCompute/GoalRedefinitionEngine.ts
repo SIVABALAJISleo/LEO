@@ -1,22 +1,22 @@
 /**
  * GOAL REDEFINITION ENGINE (CRITICAL)
- * 
+ *
  * ❌ Old thinking: "How do we do this heavy task without a GPU?"
  * ✅ New thinking: "What is the user REALLY trying to achieve?"
- * 
+ *
  * This engine extracts user intent and replaces heavy compute with equivalent outcomes.
  * This is the ACCELERATION that moves coverage from 93% to 98-99%.
  */
 
 export type UserDesiredOutcome =
-  | 'visual_result'      // User wants to SEE something
-  | 'data_result'        // User wants to GET data
-  | 'speed_perception'   // User wants to FEEL fast response
-  | 'quality_output'     // User needs HIGH precision
-  | 'learning_insight'   // User wants to UNDERSTAND
-  | 'creative_iteration' // User wants to EXPLORE options
-  | 'validation'         // User wants to VERIFY something
-  | 'production_asset';  // User needs FINAL deliverable
+  | "visual_result" // User wants to SEE something
+  | "data_result" // User wants to GET data
+  | "speed_perception" // User wants to FEEL fast response
+  | "quality_output" // User needs HIGH precision
+  | "learning_insight" // User wants to UNDERSTAND
+  | "creative_iteration" // User wants to EXPLORE options
+  | "validation" // User wants to VERIFY something
+  | "production_asset"; // User needs FINAL deliverable
 
 export type ToleranceProfile = {
   previewAcceptable: boolean;
@@ -27,11 +27,11 @@ export type ToleranceProfile = {
 };
 
 export type InteractionNeed =
-  | 'true_realtime'       // <100ms, interactive
-  | 'perceived_realtime'  // <2s, feels instant
-  | 'near_realtime'       // <10s, acceptable wait
-  | 'batch'               // Minutes OK
-  | 'async';              // Hours OK
+  | "true_realtime" // <100ms, interactive
+  | "perceived_realtime" // <2s, feels instant
+  | "near_realtime" // <10s, acceptable wait
+  | "batch" // Minutes OK
+  | "async"; // Hours OK
 
 export interface GoalAnalysis {
   workloadId: string;
@@ -57,91 +57,91 @@ export interface OutcomeReplacement {
 // Heavy Task → Light Outcome Mapping (LOCKED)
 const OUTCOME_REPLACEMENTS: Record<string, OutcomeReplacement> = {
   // AAA real-time rendering
-  'realtime_rendering': {
-    originalTask: 'AAA real-time rendering',
-    replacementTask: 'Cloud stream / pre-render / preview',
-    method: 'cloud_stream',
+  realtime_rendering: {
+    originalTask: "AAA real-time rendering",
+    replacementTask: "Cloud stream / pre-render / preview",
+    method: "cloud_stream",
     gpuRequired: false,
     estimatedLatencyMs: 50,
     qualityRetained: 0.92,
-    userBenefitExplanation: 'Instant preview with cloud-enhanced final render'
+    userBenefitExplanation: "Instant preview with cloud-enhanced final render",
   },
 
   // Large AI training
-  'large_model_training': {
-    originalTask: 'Large AI model training',
-    replacementTask: 'Pretrained + LoRA + inference only',
-    method: 'pretrained_finetune',
+  large_model_training: {
+    originalTask: "Large AI model training",
+    replacementTask: "Pretrained + LoRA + inference only",
+    method: "pretrained_finetune",
     gpuRequired: false,
     estimatedLatencyMs: 200,
     qualityRetained: 0.95,
-    userBenefitExplanation: 'Pretrained foundation + lightweight adaptation = same result'
+    userBenefitExplanation: "Pretrained foundation + lightweight adaptation = same result",
   },
 
   // 4K video render
-  'video_4k_render': {
-    originalTask: '4K video render',
-    replacementTask: 'Proxy render + async final',
-    method: 'proxy_async',
+  video_4k_render: {
+    originalTask: "4K video render",
+    replacementTask: "Proxy render + async final",
+    method: "proxy_async",
     gpuRequired: false,
     estimatedLatencyMs: 100,
     qualityRetained: 0.85,
-    userBenefitExplanation: 'Preview now, full quality delivered to inbox'
+    userBenefitExplanation: "Preview now, full quality delivered to inbox",
   },
 
   // Scientific simulation
-  'hpc_simulation': {
-    originalTask: 'Scientific HPC simulation',
-    replacementTask: 'Summary + sampled output + reference results',
-    method: 'sampled_summary',
+  hpc_simulation: {
+    originalTask: "Scientific HPC simulation",
+    replacementTask: "Summary + sampled output + reference results",
+    method: "sampled_summary",
     gpuRequired: false,
     estimatedLatencyMs: 500,
     qualityRetained: 0.88,
-    userBenefitExplanation: 'Statistical summary with key data points'
+    userBenefitExplanation: "Statistical summary with key data points",
   },
 
   // Ray tracing
-  'ray_tracing': {
-    originalTask: 'Ray tracing',
-    replacementTask: 'Raster preview + lighting approximation',
-    method: 'raster_approximation',
+  ray_tracing: {
+    originalTask: "Ray tracing",
+    replacementTask: "Raster preview + lighting approximation",
+    method: "raster_approximation",
     gpuRequired: false,
     estimatedLatencyMs: 30,
     qualityRetained: 0.82,
-    userBenefitExplanation: 'Fast raster with AI-enhanced lighting'
+    userBenefitExplanation: "Fast raster with AI-enhanced lighting",
   },
 
   // Large inference
-  'large_inference': {
-    originalTask: 'Large model inference',
-    replacementTask: 'Distilled model + confidence check',
-    method: 'distilled_inference',
+  large_inference: {
+    originalTask: "Large model inference",
+    replacementTask: "Distilled model + confidence check",
+    method: "distilled_inference",
     gpuRequired: false,
     estimatedLatencyMs: 50,
     qualityRetained: 0.94,
-    userBenefitExplanation: 'Lightweight model with same output quality'
+    userBenefitExplanation: "Lightweight model with same output quality",
   },
 
   // Image generation
-  'image_generation': {
-    originalTask: 'High-res image generation',
-    replacementTask: '512px draft + SR upscale on-demand',
-    method: 'progressive_upscale',
+  image_generation: {
+    originalTask: "High-res image generation",
+    replacementTask: "512px draft + SR upscale on-demand",
+    method: "progressive_upscale",
     gpuRequired: false,
     estimatedLatencyMs: 200,
-    qualityRetained: 0.90,
-    userBenefitExplanation: 'Quick draft, enhance only what you keep'
+    qualityRetained: 0.9,
+    userBenefitExplanation: "Quick draft, enhance only what you keep",
   },
 
   // 3D model processing
-  '3d_processing': {
-    originalTask: '3D model processing',
-    replacementTask: 'LOD preview + progressive refinement',
-    method: 'lod_progressive',
+  "3d_processing": {
+    originalTask: "3D model processing",
+    replacementTask: "LOD preview + progressive refinement",
+    method: "lod_progressive",
     gpuRequired: false,
     estimatedLatencyMs: 150,
     qualityRetained: 0.87,
-    userBenefitExplanation: 'Interactive preview, full detail on export'
+    userBenefitExplanation: "Interactive preview, full detail on export",
   },
 };
 
@@ -177,7 +177,7 @@ class GoalRedefinitionEngine {
     lastUpdated: new Date(),
   };
 
-  private constructor() { }
+  private constructor() {}
 
   static getInstance(): GoalRedefinitionEngine {
     if (!GoalRedefinitionEngine.instance) {
@@ -195,9 +195,9 @@ class GoalRedefinitionEngine {
     input: unknown,
     userHints?: {
       needsExact?: boolean;
-      urgency?: 'immediate' | 'soon' | 'whenever';
-      outputUsage?: 'preview' | 'iteration' | 'final';
-    }
+      urgency?: "immediate" | "soon" | "whenever";
+      outputUsage?: "preview" | "iteration" | "final";
+    },
   ): GoalAnalysis {
     const type = taskType.toLowerCase();
 
@@ -249,7 +249,7 @@ class GoalRedefinitionEngine {
     if (!analysis || !analysis.canReplaceTask || !analysis.replacementStrategy) {
       return {
         success: false,
-        uiLabel: 'Original compute required',
+        uiLabel: "Original compute required",
         qualityRetained: 0,
         gpuAvoided: false,
       };
@@ -269,24 +269,30 @@ class GoalRedefinitionEngine {
     };
   }
 
-  private extractDesiredOutcome(type: string, hints?: { outputUsage?: string }): UserDesiredOutcome {
-    if (hints?.outputUsage === 'final') return 'production_asset';
-    if (hints?.outputUsage === 'preview') return 'visual_result';
+  private extractDesiredOutcome(
+    type: string,
+    hints?: { outputUsage?: string },
+  ): UserDesiredOutcome {
+    if (hints?.outputUsage === "final") return "production_asset";
+    if (hints?.outputUsage === "preview") return "visual_result";
 
-    if (type.includes('preview') || type.includes('draft')) return 'visual_result';
-    if (type.includes('train') || type.includes('learn')) return 'learning_insight';
-    if (type.includes('creative') || type.includes('generate')) return 'creative_iteration';
-    if (type.includes('validate') || type.includes('verify')) return 'validation';
-    if (type.includes('analysis') || type.includes('data')) return 'data_result';
-    if (type.includes('render') || type.includes('video')) return 'visual_result';
-    if (type.includes('inference') || type.includes('predict')) return 'data_result';
+    if (type.includes("preview") || type.includes("draft")) return "visual_result";
+    if (type.includes("train") || type.includes("learn")) return "learning_insight";
+    if (type.includes("creative") || type.includes("generate")) return "creative_iteration";
+    if (type.includes("validate") || type.includes("verify")) return "validation";
+    if (type.includes("analysis") || type.includes("data")) return "data_result";
+    if (type.includes("render") || type.includes("video")) return "visual_result";
+    if (type.includes("inference") || type.includes("predict")) return "data_result";
 
-    return 'visual_result';
+    return "visual_result";
   }
 
-  private determineToleranceProfile(outcome: UserDesiredOutcome, hints?: { needsExact?: boolean; outputUsage?: string }): ToleranceProfile {
+  private determineToleranceProfile(
+    outcome: UserDesiredOutcome,
+    hints?: { needsExact?: boolean; outputUsage?: string },
+  ): ToleranceProfile {
     // Production assets have low tolerance
-    if (outcome === 'production_asset' || hints?.needsExact) {
+    if (outcome === "production_asset" || hints?.needsExact) {
       return {
         previewAcceptable: false,
         delayAcceptable: true,
@@ -297,7 +303,7 @@ class GoalRedefinitionEngine {
     }
 
     // Creative iteration has high tolerance
-    if (outcome === 'creative_iteration' || outcome === 'learning_insight') {
+    if (outcome === "creative_iteration" || outcome === "learning_insight") {
       return {
         previewAcceptable: true,
         delayAcceptable: true,
@@ -318,25 +324,29 @@ class GoalRedefinitionEngine {
   }
 
   private determineInteractionNeed(type: string, hints?: { urgency?: string }): InteractionNeed {
-    if (hints?.urgency === 'immediate') return 'true_realtime';
-    if (hints?.urgency === 'whenever') return 'async';
+    if (hints?.urgency === "immediate") return "true_realtime";
+    if (hints?.urgency === "whenever") return "async";
 
-    if (type.includes('realtime') || type.includes('interactive')) return 'true_realtime';
-    if (type.includes('batch') || type.includes('training')) return 'batch';
-    if (type.includes('preview') || type.includes('draft')) return 'perceived_realtime';
+    if (type.includes("realtime") || type.includes("interactive")) return "true_realtime";
+    if (type.includes("batch") || type.includes("training")) return "batch";
+    if (type.includes("preview") || type.includes("draft")) return "perceived_realtime";
 
-    return 'near_realtime';
+    return "near_realtime";
   }
 
   private findReplacementKey(type: string): string | undefined {
-    if (type.includes('realtime') && type.includes('render')) return 'realtime_rendering';
-    if (type.includes('train') && (type.includes('large') || type.includes('model'))) return 'large_model_training';
-    if (type.includes('4k') || (type.includes('video') && type.includes('render'))) return 'video_4k_render';
-    if (type.includes('hpc') || type.includes('simulation') || type.includes('scientific')) return 'hpc_simulation';
-    if (type.includes('ray') && type.includes('trace')) return 'ray_tracing';
-    if (type.includes('large') && type.includes('inference')) return 'large_inference';
-    if (type.includes('image') && type.includes('generat')) return 'image_generation';
-    if (type.includes('3d') || type.includes('mesh') || type.includes('model')) return '3d_processing';
+    if (type.includes("realtime") && type.includes("render")) return "realtime_rendering";
+    if (type.includes("train") && (type.includes("large") || type.includes("model")))
+      return "large_model_training";
+    if (type.includes("4k") || (type.includes("video") && type.includes("render")))
+      return "video_4k_render";
+    if (type.includes("hpc") || type.includes("simulation") || type.includes("scientific"))
+      return "hpc_simulation";
+    if (type.includes("ray") && type.includes("trace")) return "ray_tracing";
+    if (type.includes("large") && type.includes("inference")) return "large_inference";
+    if (type.includes("image") && type.includes("generat")) return "image_generation";
+    if (type.includes("3d") || type.includes("mesh") || type.includes("model"))
+      return "3d_processing";
 
     return undefined;
   }
@@ -344,7 +354,7 @@ class GoalRedefinitionEngine {
   private canReplaceTask(
     tolerance: ToleranceProfile,
     interactionNeed: InteractionNeed,
-    replacement?: OutcomeReplacement
+    replacement?: OutcomeReplacement,
   ): boolean {
     if (!replacement) return false;
 
@@ -354,7 +364,7 @@ class GoalRedefinitionEngine {
     }
 
     // Can't replace true realtime needs with slow replacements
-    if (interactionNeed === 'true_realtime' && replacement.estimatedLatencyMs > 100) {
+    if (interactionNeed === "true_realtime" && replacement.estimatedLatencyMs > 100) {
       return false;
     }
 
@@ -363,7 +373,7 @@ class GoalRedefinitionEngine {
 
   private generateReplacementResult(strategy: OutcomeReplacement): unknown {
     return {
-      type: 'goal_replacement',
+      type: "goal_replacement",
       originalTask: strategy.originalTask,
       replacedWith: strategy.replacementTask,
       method: strategy.method,
@@ -373,7 +383,7 @@ class GoalRedefinitionEngine {
       gpuRequired: strategy.gpuRequired,
       metadata: {
         executedAt: new Date().toISOString(),
-        version: '2.0',
+        version: "2.0",
       },
     };
   }
@@ -390,7 +400,7 @@ class GoalRedefinitionEngine {
       this.stats.byReplacement[method] = (this.stats.byReplacement[method] || 0) + 1;
 
       // Update average quality retained
-      const currentTotal = (this.stats.averageQualityRetained * (this.stats.tasksReplaced - 1));
+      const currentTotal = this.stats.averageQualityRetained * (this.stats.tasksReplaced - 1);
       this.stats.averageQualityRetained =
         (currentTotal + analysis.replacementStrategy.qualityRetained) / this.stats.tasksReplaced;
     }
@@ -416,9 +426,7 @@ class GoalRedefinitionEngine {
    * Get replacement rate (how many tasks were replaced vs total)
    */
   getReplacementRate(): number {
-    return this.stats.totalAnalyzed > 0
-      ? this.stats.tasksReplaced / this.stats.totalAnalyzed
-      : 0;
+    return this.stats.totalAnalyzed > 0 ? this.stats.tasksReplaced / this.stats.totalAnalyzed : 0;
   }
 
   /**

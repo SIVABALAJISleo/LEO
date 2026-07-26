@@ -19,7 +19,7 @@ export class ImprovementPlanner {
       remediationAction: remediation,
       priority,
       isScheduled: true,
-      status: "queued"
+      status: "queued",
     };
     this.queue.push(task);
     return task;

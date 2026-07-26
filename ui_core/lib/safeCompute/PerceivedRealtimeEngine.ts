@@ -1,12 +1,12 @@
 /**
  * PERCEIVED REAL-TIME ENGINE
- * 
+ *
  * If user expects speed:
  * - Instant preview
  * - Progressive output
  * - Async refinement
  * - Clear ETA
- * 
+ *
  * Humans need FEEDBACK, not FLOPS.
  */
 
@@ -42,7 +42,7 @@ export interface AsyncRefinementJob {
   estimatedCompletion: Date;
   stages: ProgressiveStage[];
   currentStage: number;
-  status: 'pending' | 'processing' | 'complete' | 'cancelled';
+  status: "pending" | "processing" | "complete" | "cancelled";
   onComplete?: (result: unknown) => void;
 }
 
@@ -71,7 +71,7 @@ class PerceivedRealtimeEngine {
       maxPreviewLatencyMs?: number;
       targetQuality?: number;
       progressiveStages?: number;
-    } = {}
+    } = {},
   ): PerceivedRealtimeResult {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const maxPreviewLatencyMs = options.maxPreviewLatencyMs || 100;
@@ -104,7 +104,7 @@ class PerceivedRealtimeEngine {
       asyncRefinementScheduled: true,
       estimatedFinalDelivery: refinementJob.estimatedCompletion,
       eta,
-      uiLabel: 'Result improving in background',
+      uiLabel: "Result improving in background",
     };
   }
 
@@ -115,60 +115,60 @@ class PerceivedRealtimeEngine {
   private generateInstantPreview(workloadType: string, input: unknown): unknown {
     const type = workloadType.toLowerCase();
 
-    if (type.includes('image') || type.includes('render')) {
+    if (type.includes("image") || type.includes("render")) {
       return {
-        type: 'image_preview',
-        resolution: '256x256',
-        quality: 'draft',
-        format: 'webp',
+        type: "image_preview",
+        resolution: "256x256",
+        quality: "draft",
+        format: "webp",
         placeholder: true,
-        message: 'Quick preview ready',
+        message: "Quick preview ready",
       };
     }
 
-    if (type.includes('video')) {
+    if (type.includes("video")) {
       return {
-        type: 'video_preview',
-        resolution: '480p',
+        type: "video_preview",
+        resolution: "480p",
         frames: 1,
         thumbnail: true,
-        message: 'First frame ready',
+        message: "First frame ready",
       };
     }
 
-    if (type.includes('3d') || type.includes('mesh')) {
+    if (type.includes("3d") || type.includes("mesh")) {
       return {
-        type: '3d_preview',
-        lod: 'low',
+        type: "3d_preview",
+        lod: "low",
         vertices: 1000,
         wireframe: true,
-        message: 'Wireframe preview ready',
+        message: "Wireframe preview ready",
       };
     }
 
-    if (type.includes('inference') || type.includes('ai')) {
+    if (type.includes("inference") || type.includes("ai")) {
       return {
-        type: 'inference_preview',
+        type: "inference_preview",
         tokens: 20,
         confidence: 0.7,
         streaming: true,
-        message: 'Initial response ready',
+        message: "Initial response ready",
       };
     }
 
-    if (type.includes('analysis') || type.includes('data')) {
+    if (type.includes("analysis") || type.includes("data")) {
       return {
-        type: 'analysis_preview',
-        summary: 'Processing...',
+        type: "analysis_preview",
+        summary: "Processing...",
         sampleSize: 100,
-        message: 'Sample analysis ready',
+        message: "Sample analysis ready",
       };
     }
 
     return {
-      type: 'generic_preview',
+      type: "generic_preview",
       placeholder: true,
-      message: 'Preview ready, refining...',
+      message: "Preview ready, refining...",
     };
   }
 
@@ -178,13 +178,13 @@ class PerceivedRealtimeEngine {
   private calculateProgressiveStages(
     workloadType: string,
     stageCount: number,
-    targetQuality: number
+    targetQuality: number,
   ): ProgressiveStage[] {
     const stages: ProgressiveStage[] = [];
     const qualityStep = (targetQuality - 0.5) / (stageCount - 1);
 
     for (let i = 0; i < stageCount; i++) {
-      const quality = 0.5 + (qualityStep * i);
+      const quality = 0.5 + qualityStep * i;
       stages.push({
         stage: i + 1,
         name: this.getStageName(i, stageCount),
@@ -196,12 +196,12 @@ class PerceivedRealtimeEngine {
   }
 
   private getStageName(index: number, total: number): string {
-    const names = ['Draft', 'Preview', 'Good', 'Final'];
+    const names = ["Draft", "Preview", "Good", "Final"];
     if (total <= 4) {
       return names[index] || `Stage ${index + 1}`;
     }
-    if (index === 0) return 'Draft';
-    if (index === total - 1) return 'Final';
+    if (index === 0) return "Draft";
+    if (index === total - 1) return "Final";
     const percent = Math.round((index / (total - 1)) * 100);
     return `${percent}% Quality`;
   }
@@ -211,12 +211,12 @@ class PerceivedRealtimeEngine {
    */
   private scheduleAsyncRefinement(
     workloadId: string,
-    stages: ProgressiveStage[]
+    stages: ProgressiveStage[],
   ): AsyncRefinementJob {
     const now = new Date();
     // Estimate 2 seconds per stage for refinement
     const totalSeconds = stages.length * 2;
-    const estimatedCompletion = new Date(now.getTime() + (totalSeconds * 1000));
+    const estimatedCompletion = new Date(now.getTime() + totalSeconds * 1000);
 
     const job: AsyncRefinementJob = {
       workloadId,
@@ -224,7 +224,7 @@ class PerceivedRealtimeEngine {
       estimatedCompletion,
       stages,
       currentStage: 1,
-      status: 'pending',
+      status: "pending",
     };
 
     // Simulate progressive refinement (in real implementation, this would be actual compute)
@@ -238,19 +238,19 @@ class PerceivedRealtimeEngine {
    */
   private simulateProgressiveRefinement(job: AsyncRefinementJob): void {
     const advanceStage = () => {
-      if (job.status === 'cancelled') return;
-      
+      if (job.status === "cancelled") return;
+
       if (job.currentStage < job.stages.length) {
         job.stages[job.currentStage - 1].deliveredAt = new Date();
         job.currentStage++;
-        job.status = 'processing';
-        
+        job.status = "processing";
+
         // Advance to next stage after delay
         setTimeout(advanceStage, 2000);
       } else {
         job.stages[job.stages.length - 1].deliveredAt = new Date();
-        job.status = 'complete';
-        
+        job.status = "complete";
+
         if (job.onComplete) {
           job.onComplete({
             workloadId: job.workloadId,
@@ -263,7 +263,7 @@ class PerceivedRealtimeEngine {
 
     // Start first stage
     setTimeout(() => {
-      job.status = 'processing';
+      job.status = "processing";
       advanceStage();
     }, 500);
   }
@@ -278,13 +278,13 @@ class PerceivedRealtimeEngine {
   } {
     // Estimate 2 seconds per remaining stage
     const seconds = stages.length * 2;
-    
+
     let formatted: string;
     if (seconds < 60) {
       formatted = `${seconds} seconds`;
     } else {
       const minutes = Math.ceil(seconds / 60);
-      formatted = `${minutes} minute${minutes > 1 ? 's' : ''}`;
+      formatted = `${minutes} minute${minutes > 1 ? "s" : ""}`;
     }
 
     return {
@@ -316,8 +316,8 @@ class PerceivedRealtimeEngine {
   cancelRefinement(workloadId: string): boolean {
     const job = this.refinementJobs.get(workloadId);
     if (!job) return false;
-    
-    job.status = 'cancelled';
+
+    job.status = "cancelled";
     return true;
   }
 
@@ -332,8 +332,9 @@ class PerceivedRealtimeEngine {
    * Get all active refinement jobs
    */
   getActiveJobs(): AsyncRefinementJob[] {
-    return Array.from(this.refinementJobs.values())
-      .filter(job => job.status === 'pending' || job.status === 'processing');
+    return Array.from(this.refinementJobs.values()).filter(
+      (job) => job.status === "pending" || job.status === "processing",
+    );
   }
 }
 

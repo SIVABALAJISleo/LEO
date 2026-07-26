@@ -25,11 +25,11 @@ export class IntelligenceQualityMaximizer {
       {
         id: "Path-1",
         sourceType: "Deductive",
-        content: isTamil 
+        content: isTamil
           ? "Localized startup plan: Establish Tamil-English intent maps and WebGPU caching."
           : "Deductive solution verifying query properties.",
         evidenceScore: 0.96,
-        consistencyScore: 0.97
+        consistencyScore: 0.97,
       },
       {
         id: "Path-2",
@@ -38,7 +38,7 @@ export class IntelligenceQualityMaximizer {
           ? "Formal proof: Local caching maps guarantees uptime metrics."
           : "Formal logic proof verifying SAT bounds.",
         evidenceScore: 0.98,
-        consistencyScore: 0.99
+        consistencyScore: 0.99,
       },
       {
         id: "Path-3",
@@ -47,8 +47,8 @@ export class IntelligenceQualityMaximizer {
           ? "Lateral pivot: Use local offline endpoints instead of cloud APIs."
           : "Lateral analogy parsing constraint shifts.",
         evidenceScore: 0.89,
-        consistencyScore: 0.91
-      }
+        consistencyScore: 0.91,
+      },
     ];
 
     // Select path with highest composite score
@@ -65,7 +65,7 @@ export class IntelligenceQualityMaximizer {
     const critiqueNotes = [
       "Critique: Analyzed all 3 paths for logical shortcuts.",
       "Critique: Checked references for potential vector drift.",
-      "Critique: Verified numeric constraints against calculators."
+      "Critique: Verified numeric constraints against calculators.",
     ];
 
     const finalAnswer = consensusChoice.content;
@@ -75,7 +75,7 @@ export class IntelligenceQualityMaximizer {
       consensusChoice,
       critiqueNotes,
       finalAnswer,
-      verifiable
+      verifiable,
     };
   }
 }

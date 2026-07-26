@@ -21,11 +21,13 @@ export class ScientificDiscoveryAssistant {
     this.hypotheses = [
       {
         id: "H-2901",
-        observation: "pLDDT structural structures are highly disordered in AlphaFold predictions for Q9BY12",
-        hypothesisText: "Target ligand binding stabilizes the domain boundaries under normal room temperatures.",
+        observation:
+          "pLDDT structural structures are highly disordered in AlphaFold predictions for Q9BY12",
+        hypothesisText:
+          "Target ligand binding stabilizes the domain boundaries under normal room temperatures.",
         evidenceCitationsCount: 14,
         verificationRate: 0.942,
-        rank: 1
+        rank: 1,
       },
       {
         id: "H-2902",
@@ -33,19 +35,24 @@ export class ScientificDiscoveryAssistant {
         hypothesisText: "Dynamic scheduling thread collisions dilute offload vector allocations.",
         evidenceCitationsCount: 8,
         verificationRate: 0.815,
-        rank: 2
-      }
+        rank: 2,
+      },
     ];
   }
 
-  proposeHypothesis(observation: string, text: string, citations: number, rate: number): HypothesisNode {
+  proposeHypothesis(
+    observation: string,
+    text: string,
+    citations: number,
+    rate: number,
+  ): HypothesisNode {
     const newNode: HypothesisNode = {
       id: `H-29${String(this.hypotheses.length + 1).padStart(2, "0")}`,
       observation,
       hypothesisText: text,
       evidenceCitationsCount: citations,
       verificationRate: rate,
-      rank: this.hypotheses.length + 1
+      rank: this.hypotheses.length + 1,
     };
 
     this.hypotheses.push(newNode);
@@ -62,7 +69,7 @@ export class ScientificDiscoveryAssistant {
       return b.evidenceCitationsCount - a.evidenceCitationsCount;
     });
 
-    this.hypotheses.forEach((h, idx) => h.rank = idx + 1);
+    this.hypotheses.forEach((h, idx) => (h.rank = idx + 1));
   }
 
   getHypotheses(): HypothesisNode[] {

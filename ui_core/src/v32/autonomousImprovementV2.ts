@@ -16,7 +16,7 @@ export class AutonomousImprovementV2 {
 
   triggerLoopCycle(currentQualityScore: number): AutoImprovementCycle {
     const idx = this.runs.length + 1;
-    
+
     let weakness = "No critical engineering ceilings identified.";
     let patch = "None required.";
     let delta = 0;
@@ -27,7 +27,8 @@ export class AutonomousImprovementV2 {
       delta = 8.5;
     } else if (currentQualityScore < 95) {
       weakness = "Sensor uncertainty anomalies under high noise/dust conditions.";
-      patch = "Increase LiDAR weight coefficient and ignore stereo camera inputs during anomaly matches.";
+      patch =
+        "Increase LiDAR weight coefficient and ignore stereo camera inputs during anomaly matches.";
       delta = 4.2;
     } else {
       weakness = "Marginal latency overhead scaling in long-context paged blocks.";
@@ -41,7 +42,7 @@ export class AutonomousImprovementV2 {
       identifiedWeakness: weakness,
       remedialPatchApplied: patch,
       benchmarkScoreDelta: delta,
-      deploymentStatus: "Deployed"
+      deploymentStatus: "Deployed",
     };
 
     this.runs.push(run);

@@ -1,13 +1,13 @@
 // ReleaseRollback - Versioned deployments with auto-rollback
 // System protects itself from bad deploys
 
-import { firebaseClient as supabase } from '@/integrations/firebase/client';
+import { firebaseClient as supabase } from "@/integrations/firebase/client";
 
 export interface Release {
   id: string;
   version: string;
   previousVersion: string | null;
-  status: 'pending' | 'deploying' | 'deployed' | 'rolled_back' | 'failed';
+  status: "pending" | "deploying" | "deployed" | "rolled_back" | "failed";
   rolloutPercentage: number;
   deployedAt: string | null;
   rolledBackAt: string | null;
@@ -30,7 +30,7 @@ export interface HealthMetrics {
 }
 
 export interface SchemaChange {
-  type: 'create_table' | 'alter_table' | 'drop_table' | 'create_index' | 'migration';
+  type: "create_table" | "alter_table" | "drop_table" | "create_index" | "migration";
   target: string;
   reversible: boolean;
   rollbackSql?: string;
@@ -73,10 +73,10 @@ class ReleaseRollbackService {
   // Get current deployed release
   async getCurrentRelease(): Promise<Release | null> {
     const { data, error } = await supabase
-      .from('releases')
-      .select('*')
-      .eq('status', 'deployed')
-      .order('deployed_at', { ascending: false })
+      .from("releases")
+      .select("*")
+      .eq("status", "deployed")
+      .order("deployed_at", { ascending: false })
       .limit(1)
       .single();
 
@@ -90,13 +90,13 @@ class ReleaseRollbackService {
   // Get release history
   async getReleaseHistory(limit = 20): Promise<Release[]> {
     const { data, error } = await supabase
-      .from('releases')
-      .select('*')
-      .order('created_at', { ascending: false })
+      .from("releases")
+      .select("*")
+      .order("created_at", { ascending: false })
       .limit(limit);
 
     if (error) {
-      console.error('[ReleaseRollback] Failed to fetch releases:', error);
+      console.error("[ReleaseRollback] Failed to fetch releases:", error);
       return [];
     }
 
@@ -112,19 +112,19 @@ class ReleaseRollbackService {
 
     if (metrics.errorRate > this.config.autoRollbackThresholds.maxErrorRatePercent) {
       failures.push(
-        `Error rate ${metrics.errorRate.toFixed(2)}% exceeds threshold ${this.config.autoRollbackThresholds.maxErrorRatePercent}%`
+        `Error rate ${metrics.errorRate.toFixed(2)}% exceeds threshold ${this.config.autoRollbackThresholds.maxErrorRatePercent}%`,
       );
     }
 
     if (metrics.latencyP99Ms > this.config.autoRollbackThresholds.maxLatencyP99Ms) {
       failures.push(
-        `P99 latency ${metrics.latencyP99Ms}ms exceeds threshold ${this.config.autoRollbackThresholds.maxLatencyP99Ms}ms`
+        `P99 latency ${metrics.latencyP99Ms}ms exceeds threshold ${this.config.autoRollbackThresholds.maxLatencyP99Ms}ms`,
       );
     }
 
     if (metrics.authFailures > this.config.autoRollbackThresholds.maxAuthFailuresPerMinute) {
       failures.push(
-        `Auth failures ${metrics.authFailures}/min exceeds threshold ${this.config.autoRollbackThresholds.maxAuthFailuresPerMinute}/min`
+        `Auth failures ${metrics.authFailures}/min exceeds threshold ${this.config.autoRollbackThresholds.maxAuthFailuresPerMinute}/min`,
       );
     }
 
@@ -141,11 +141,12 @@ class ReleaseRollbackService {
     nextStage: number | null;
   } {
     const currentPercentage = this.currentRelease?.rolloutPercentage || 0;
-    const currentStageIndex = this.config.stages.findIndex(s => s >= currentPercentage);
+    const currentStageIndex = this.config.stages.findIndex((s) => s >= currentPercentage);
     const currentStage = currentStageIndex >= 0 ? this.config.stages[currentStageIndex] : 0;
-    const nextStage = currentStageIndex < this.config.stages.length - 1
-      ? this.config.stages[currentStageIndex + 1]
-      : null;
+    const nextStage =
+      currentStageIndex < this.config.stages.length - 1
+        ? this.config.stages[currentStageIndex + 1]
+        : null;
 
     return {
       stages: this.config.stages,
@@ -186,9 +187,9 @@ class ReleaseRollbackService {
     avgRolloutTimeMs: number;
   }> {
     const { data: releases } = await supabase
-      .from('releases')
-      .select('status, deployed_at, created_at')
-      .order('created_at', { ascending: false })
+      .from("releases")
+      .select("status, deployed_at, created_at")
+      .order("created_at", { ascending: false })
       .limit(100);
 
     if (!releases) {
@@ -201,18 +202,19 @@ class ReleaseRollbackService {
       };
     }
 
-    const successfulDeployments = releases.filter(r => r.status === 'deployed').length;
-    const rolledBack = releases.filter(r => r.status === 'rolled_back').length;
-    const failed = releases.filter(r => r.status === 'failed').length;
+    const successfulDeployments = releases.filter((r) => r.status === "deployed").length;
+    const rolledBack = releases.filter((r) => r.status === "rolled_back").length;
+    const failed = releases.filter((r) => r.status === "failed").length;
 
     // Calculate average rollout time for successful deployments
     const rolloutTimes = releases
-      .filter(r => r.status === 'deployed' && r.deployed_at)
-      .map(r => new Date(r.deployed_at!).getTime() - new Date(r.created_at).getTime());
+      .filter((r) => r.status === "deployed" && r.deployed_at)
+      .map((r) => new Date(r.deployed_at!).getTime() - new Date(r.created_at).getTime());
 
-    const avgRolloutTimeMs = rolloutTimes.length > 0
-      ? rolloutTimes.reduce((sum, t) => sum + t, 0) / rolloutTimes.length
-      : 0;
+    const avgRolloutTimeMs =
+      rolloutTimes.length > 0
+        ? rolloutTimes.reduce((sum, t) => sum + t, 0) / rolloutTimes.length
+        : 0;
 
     return {
       totalDeployments: releases.length,
@@ -238,7 +240,7 @@ class ReleaseRollbackService {
       id: data.id as string,
       version: data.version as string,
       previousVersion: data.previous_version as string | null,
-      status: data.status as Release['status'],
+      status: data.status as Release["status"],
       rolloutPercentage: data.rollout_percentage as number,
       deployedAt: data.deployed_at as string | null,
       rolledBackAt: data.rolled_back_at as string | null,

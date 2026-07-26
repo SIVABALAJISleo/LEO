@@ -1,25 +1,25 @@
-import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
-import { 
-  CreditCard, 
-  Download, 
-  Calendar, 
-  CheckCircle, 
+import { useState } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import {
+  CreditCard,
+  Download,
+  Calendar,
+  CheckCircle,
   AlertCircle,
   Zap,
   Shield,
-  ExternalLink
-} from 'lucide-react';
-import { useBillingData, PLANS } from '@/hooks/useBillingData';
-import { useAuth } from '@/contexts/AuthContext';
-import { format } from 'date-fns';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
+  ExternalLink,
+} from "lucide-react";
+import { useBillingData, PLANS } from "@/hooks/useBillingData";
+import { useAuth } from "@/contexts/AuthContext";
+import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export default function BillingManagePage() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -28,14 +28,14 @@ export default function BillingManagePage() {
   const navigate = useNavigate();
   const [isYearly, setIsYearly] = useState(false);
 
-  const currentPlanDetails = PLANS.find(p => p.id === currentPlan) || PLANS[0];
+  const currentPlanDetails = PLANS.find((p) => p.id === currentPlan) || PLANS[0];
 
   const handleUpgrade = () => {
-    navigate('/billing/pricing');
+    navigate("/billing/pricing");
   };
 
   const handleCancelSubscription = () => {
-    toast.info('To cancel your subscription, please contact support.');
+    toast.info("To cancel your subscription, please contact support.");
   };
 
   const handleDownloadInvoice = (month: string) => {
@@ -43,9 +43,9 @@ export default function BillingManagePage() {
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
       minimumFractionDigits: 2,
     }).format(amount);
   };
@@ -58,7 +58,7 @@ export default function BillingManagePage() {
             <AlertCircle className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
             <h2 className="text-xl font-semibold mb-2">Sign in required</h2>
             <p className="text-muted-foreground mb-4">Please sign in to manage your billing.</p>
-            <Button onClick={() => navigate('/auth/login')}>Sign In</Button>
+            <Button onClick={() => navigate("/auth/login")}>Sign In</Button>
           </CardContent>
         </Card>
       </div>
@@ -85,14 +85,16 @@ export default function BillingManagePage() {
             <div>
               <h3 className="text-2xl font-bold">{currentPlanDetails.name}</h3>
               <p className="text-muted-foreground">
-                {currentPlanDetails.price !== null 
+                {currentPlanDetails.price !== null
                   ? `${currentPlanDetails.currency}${currentPlanDetails.price}/${currentPlanDetails.period}`
-                  : 'Custom pricing'
-                }
+                  : "Custom pricing"}
               </p>
             </div>
-            <Badge variant={currentPlan === 'free' ? 'secondary' : 'default'} className="text-lg px-4 py-2">
-              {subscription?.status === 'active' ? 'Active' : 'Inactive'}
+            <Badge
+              variant={currentPlan === "free" ? "secondary" : "default"}
+              className="text-lg px-4 py-2"
+            >
+              {subscription?.status === "active" ? "Active" : "Inactive"}
             </Badge>
           </div>
 
@@ -108,12 +110,8 @@ export default function BillingManagePage() {
           </div>
 
           <div className="flex gap-3 pt-4">
-            {currentPlan !== 'enterprise' && (
-              <Button onClick={handleUpgrade}>
-                Upgrade Plan
-              </Button>
-            )}
-            {currentPlan !== 'free' && (
+            {currentPlan !== "enterprise" && <Button onClick={handleUpgrade}>Upgrade Plan</Button>}
+            {currentPlan !== "free" && (
               <Button variant="outline" onClick={handleCancelSubscription}>
                 Cancel Subscription
               </Button>
@@ -181,24 +179,31 @@ export default function BillingManagePage() {
         <CardContent>
           {usageRecords.length > 0 ? (
             <div className="space-y-3">
-              {usageRecords.slice(0, 5).map((record: { id: string; month: string; computed_cost: number }) => (
-                <div key={record.id} className="flex items-center justify-between p-3 border border-border rounded-lg">
-                  <div>
-                    <p className="font-medium">{format(new Date(record.month + '-01'), 'MMMM yyyy')}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {formatCurrency(record.computed_cost || 0)}
-                    </p>
-                  </div>
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    onClick={() => handleDownloadInvoice(record.month)}
+              {usageRecords
+                .slice(0, 5)
+                .map((record: { id: string; month: string; computed_cost: number }) => (
+                  <div
+                    key={record.id}
+                    className="flex items-center justify-between p-3 border border-border rounded-lg"
                   >
-                    <Download className="h-4 w-4 mr-2" />
-                    Download
-                  </Button>
-                </div>
-              ))}
+                    <div>
+                      <p className="font-medium">
+                        {format(new Date(record.month + "-01"), "MMMM yyyy")}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {formatCurrency(record.computed_cost || 0)}
+                      </p>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleDownloadInvoice(record.month)}
+                    >
+                      <Download className="h-4 w-4 mr-2" />
+                      Download
+                    </Button>
+                  </div>
+                ))}
             </div>
           ) : (
             <p className="text-center text-muted-foreground py-8">No invoices yet</p>

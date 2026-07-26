@@ -3,7 +3,11 @@
 
 export interface OptimizationEvent {
   nodeName: string;
-  actionTaken: "fused_with_activation" | "reordered_for_data_locality" | "cached_intermediate" | "bypassed_identity";
+  actionTaken:
+    | "fused_with_activation"
+    | "reordered_for_data_locality"
+    | "cached_intermediate"
+    | "bypassed_identity";
   cyclesSaved: number;
 }
 
@@ -20,9 +24,13 @@ export class ExecutionOptimizer {
   optimizeExecutionGraph(totalNodesCount = 18): RuntimeOptimizationReport {
     const log: OptimizationEvent[] = [
       { nodeName: "conv_layer_1", actionTaken: "fused_with_activation", cyclesSaved: 12000 },
-      { nodeName: "attention_qkv_proj", actionTaken: "reordered_for_data_locality", cyclesSaved: 28000 },
+      {
+        nodeName: "attention_qkv_proj",
+        actionTaken: "reordered_for_data_locality",
+        cyclesSaved: 28000,
+      },
       { nodeName: "feed_forward_residual", actionTaken: "bypassed_identity", cyclesSaved: 8500 },
-      { nodeName: "layer_norm_output", actionTaken: "fused_with_activation", cyclesSaved: 6000 }
+      { nodeName: "layer_norm_output", actionTaken: "fused_with_activation", cyclesSaved: 6000 },
     ];
 
     const cyclesBefore = totalNodesCount * 50000;
@@ -31,7 +39,7 @@ export class ExecutionOptimizer {
 
     // Runtime Optimization Score represents the percentage of execution graph efficiency gains
     const runtimeOptimizationScore = parseFloat(
-      Math.min(100, (totalSaved / cyclesBefore) * 250 + 75).toFixed(1)
+      Math.min(100, (totalSaved / cyclesBefore) * 250 + 75).toFixed(1),
     );
 
     return {
@@ -40,7 +48,7 @@ export class ExecutionOptimizer {
       cyclesBefore,
       cyclesAfter,
       runtimeOptimizationScore,
-      optimizationLog: log
+      optimizationLog: log,
     };
   }
 }

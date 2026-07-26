@@ -31,37 +31,43 @@ export class DebateEngineV2 {
         agentName: "Architect",
         avatar: "📐",
         stance: "Structural Integrity",
-        arguments: "For V13, we should deploy a temporal decay memory layer at L1 and route queries through a formal proof checker before fallback.",
+        arguments:
+          "For V13, we should deploy a temporal decay memory layer at L1 and route queries through a formal proof checker before fallback.",
       },
       {
         agentName: "Researcher",
         avatar: "🔍",
         stance: "Prior Art & Literature",
-        arguments: "Benchmarks show that formal proofs using Lean/Coq reduce reasoning errors by up to 17% compared to traditional LLM chains.",
+        arguments:
+          "Benchmarks show that formal proofs using Lean/Coq reduce reasoning errors by up to 17% compared to traditional LLM chains.",
       },
       {
         agentName: "Verifier",
         avatar: "🛡️",
         stance: "Correctness Bound Enforcement",
-        arguments: "I will assert that the world model outcome probabilities sum to 1.0, and verify all code block syntax before execution.",
+        arguments:
+          "I will assert that the world model outcome probabilities sum to 1.0, and verify all code block syntax before execution.",
       },
       {
         agentName: "Critic",
         avatar: "🕵️",
         stance: "Risk & Vulnerability Isolation",
-        arguments: "Wait. Formal solvers can introduce massive latency spikes (~2-4s) if the proof goal isn't recursively bounded. We need timeouts.",
+        arguments:
+          "Wait. Formal solvers can introduce massive latency spikes (~2-4s) if the proof goal isn't recursively bounded. We need timeouts.",
       },
       {
         agentName: "Planner",
         avatar: "📅",
         stance: "Milestone Routing",
-        arguments: "I will decompose the execution: Phase 1 is intent extraction, Phase 2 is tool verifiers, Phase 3 is formal proof only on logical claims.",
+        arguments:
+          "I will decompose the execution: Phase 1 is intent extraction, Phase 2 is tool verifiers, Phase 3 is formal proof only on logical claims.",
       },
       {
         agentName: "Optimizer",
         avatar: "⚡",
         stance: "Resource Maximization",
-        arguments: "We can pre-compile frequent proofs into the knowledge crystallization store as FSM shortcuts, reducing runtime solver costs.",
+        arguments:
+          "We can pre-compile frequent proofs into the knowledge crystallization store as FSM shortcuts, reducing runtime solver costs.",
       },
     ];
 
@@ -73,13 +79,15 @@ export class DebateEngineV2 {
         agentName: "Critic",
         avatar: "🕵️",
         stance: "Approval",
-        arguments: "With pre-compilation and a Z3 solver timeout of 200ms, the latency risk is fully mitigated. I approve.",
+        arguments:
+          "With pre-compilation and a Z3 solver timeout of 200ms, the latency risk is fully mitigated. I approve.",
       },
       {
         agentName: "Architect",
         avatar: "📐",
         stance: "Final Consensus Layout",
-        arguments: "Excellent. Let's merge the critical path planner with local GGUF models running CPU fallbacks when Vulkan isn't active.",
+        arguments:
+          "Excellent. Let's merge the critical path planner with local GGUF models running CPU fallbacks when Vulkan isn't active.",
       },
     ];
 
@@ -88,11 +96,18 @@ export class DebateEngineV2 {
     // Build Consensus text
     let consensus = "";
     if (queryLower.includes("startup") || queryLower.includes("business")) {
-      consensus = "Consensus: Establish a multi-tenant subscription flow. Verify Stripe checkout signature via backend HMAC. Run task simulation comparing marketing vs dev risk bounds, and store the output crystal in the persistent Layer 0 store.";
-    } else if (queryLower.includes("ai") || queryLower.includes("train") || queryLower.includes("model")) {
-      consensus = "Consensus: Load local GGUF models on Llama.cpp with CPU fallback. Offload vector searches to client iGPU acceleration, and run active inference audits on memory block consistency.";
+      consensus =
+        "Consensus: Establish a multi-tenant subscription flow. Verify Stripe checkout signature via backend HMAC. Run task simulation comparing marketing vs dev risk bounds, and store the output crystal in the persistent Layer 0 store.";
+    } else if (
+      queryLower.includes("ai") ||
+      queryLower.includes("train") ||
+      queryLower.includes("model")
+    ) {
+      consensus =
+        "Consensus: Load local GGUF models on Llama.cpp with CPU fallback. Offload vector searches to client iGPU acceleration, and run active inference audits on memory block consistency.";
     } else {
-      consensus = "Consensus: Execute formal verification. Route input to IntentCanonicalizerV2. Validate claims using the Z3 solver, and critique the final output through SelfCritic before rendering.";
+      consensus =
+        "Consensus: Execute formal verification. Route input to IntentCanonicalizerV2. Validate claims using the Z3 solver, and critique the final output through SelfCritic before rendering.";
     }
 
     return {

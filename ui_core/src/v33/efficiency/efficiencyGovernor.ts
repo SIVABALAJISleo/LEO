@@ -13,7 +13,7 @@ export class EfficiencyGovernor {
     tokensGeneratedCount: number,
     powerConsumedWatts: number,
     reasoningTasksCount: number,
-    retrievalsCount: number
+    retrievalsCount: number,
   ): EfficiencyMetrics {
     const power = Math.max(0.5, powerConsumedWatts);
 

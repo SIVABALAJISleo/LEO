@@ -1,15 +1,22 @@
-import { useState, useEffect } from 'react';
-import { firebaseClient as supabase } from '@/integrations/firebase/client';
-import { useAuth } from '@/contexts/AuthContext';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Progress } from '@/components/ui/progress';
+import { useState, useEffect } from "react";
+import { firebaseClient as supabase } from "@/integrations/firebase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Progress } from "@/components/ui/progress";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Activity,
   AlertTriangle,
@@ -28,10 +35,10 @@ import {
   Wifi,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   WifiOff,
-  Zap
-} from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
-import { useAdminRole } from '@/hooks/useAdminRole';
+  Zap,
+} from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
+import { useAdminRole } from "@/hooks/useAdminRole";
 
 interface AdminSummary {
   stats: {
@@ -93,9 +100,9 @@ export default function SecretAdminPage() {
     try {
       // Fetch all jobs for admin view
       const { data: jobsData } = await supabase
-        .from('gpu_jobs')
-        .select('*')
-        .order('created_at', { ascending: false })
+        .from("gpu_jobs")
+        .select("*")
+        .order("created_at", { ascending: false })
         .limit(200);
 
       setJobs((jobsData || []) as JobData[]);
@@ -105,29 +112,29 @@ export default function SecretAdminPage() {
       const localSummary: AdminSummary = {
         stats: {
           total_jobs: allJobs.length,
-          pending: allJobs.filter((j: JobData) => j.status === 'pending').length,
-          queued: allJobs.filter((j: JobData) => j.status === 'queued').length,
-          running: allJobs.filter((j: JobData) => j.status === 'running').length,
-          completed: allJobs.filter((j: JobData) => j.status === 'completed').length,
-          failed: allJobs.filter((j: JobData) => j.status === 'failed').length,
-          cancelled: allJobs.filter((j: JobData) => j.status === 'cancelled').length,
+          pending: allJobs.filter((j: JobData) => j.status === "pending").length,
+          queued: allJobs.filter((j: JobData) => j.status === "queued").length,
+          running: allJobs.filter((j: JobData) => j.status === "running").length,
+          completed: allJobs.filter((j: JobData) => j.status === "completed").length,
+          failed: allJobs.filter((j: JobData) => j.status === "failed").length,
+          cancelled: allJobs.filter((j: JobData) => j.status === "cancelled").length,
           by_tier: {
-            light: allJobs.filter((j: JobData) => j.job_tier === 'light').length,
-            medium: allJobs.filter((j: JobData) => j.job_tier === 'medium').length,
-            heavy: allJobs.filter((j: JobData) => j.job_tier === 'heavy').length,
+            light: allJobs.filter((j: JobData) => j.job_tier === "light").length,
+            medium: allJobs.filter((j: JobData) => j.job_tier === "medium").length,
+            heavy: allJobs.filter((j: JobData) => j.job_tier === "heavy").length,
           },
         },
-        queue_depth: allJobs.filter((j: JobData) => j.status === 'queued').length,
+        queue_depth: allJobs.filter((j: JobData) => j.status === "queued").length,
         avg_runtime_ms: 0,
-        avg_runtime_formatted: '0s',
+        avg_runtime_formatted: "0s",
         active_workers: [],
         registered_agents: [],
         timestamp: new Date().toISOString(),
       };
 
       // Calculate average runtime
-      const completedJobs = allJobs.filter((j: JobData) =>
-        j.status === 'completed' && j.started_at && j.completed_at
+      const completedJobs = allJobs.filter(
+        (j: JobData) => j.status === "completed" && j.started_at && j.completed_at,
       );
       if (completedJobs.length > 0) {
         const totalMs = completedJobs.reduce((acc: number, j: JobData) => {
@@ -139,9 +146,9 @@ export default function SecretAdminPage() {
 
       // Get system status for worker info
       const { data: systemStatus } = await supabase
-        .from('gpu_system_status')
-        .select('*')
-        .order('last_heartbeat_at', { ascending: false })
+        .from("gpu_system_status")
+        .select("*")
+        .order("last_heartbeat_at", { ascending: false })
         .limit(5);
 
       if (systemStatus && systemStatus.length > 0) {
@@ -156,7 +163,7 @@ export default function SecretAdminPage() {
 
       setSummary(localSummary);
     } catch (err) {
-      console.error('Error fetching admin data:', err);
+      console.error("Error fetching admin data:", err);
     } finally {
       setLoading(false);
     }
@@ -194,12 +201,10 @@ export default function SecretAdminPage() {
           <CardHeader className="text-center">
             <Shield className="w-16 h-16 mx-auto text-destructive mb-4" />
             <CardTitle>Access Denied</CardTitle>
-            <CardDescription>
-              This page requires admin privileges.
-            </CardDescription>
+            <CardDescription>This page requires admin privileges.</CardDescription>
           </CardHeader>
           <CardContent className="text-center">
-            <Button onClick={() => window.location.href = '/dashboard'}>
+            <Button onClick={() => (window.location.href = "/dashboard")}>
               Return to Dashboard
             </Button>
           </CardContent>
@@ -241,13 +246,8 @@ export default function SecretAdminPage() {
               <Database className="h-3 w-3" />
               {stats?.total_jobs || 0} Total Jobs
             </Badge>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleRefresh}
-              disabled={refreshing}
-            >
-              <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
+            <Button variant="outline" size="sm" onClick={handleRefresh} disabled={refreshing}>
+              <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? "animate-spin" : ""}`} />
               Refresh
             </Button>
           </div>
@@ -311,7 +311,7 @@ export default function SecretAdminPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{summary?.avg_runtime_formatted || '-'}</div>
+              <div className="text-2xl font-bold">{summary?.avg_runtime_formatted || "-"}</div>
             </CardContent>
           </Card>
 
@@ -348,7 +348,9 @@ export default function SecretAdminPage() {
               <CardDescription>Client-side WebGPU/WASM</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-yellow-500">{stats?.by_tier?.medium || 0}</div>
+              <div className="text-3xl font-bold text-yellow-500">
+                {stats?.by_tier?.medium || 0}
+              </div>
             </CardContent>
           </Card>
 
@@ -379,8 +381,8 @@ export default function SecretAdminPage() {
                     <CardContent className="pt-4">
                       <div className="flex items-center justify-between mb-2">
                         <span className="font-mono text-sm">{worker.worker_id}</span>
-                        <Badge variant={worker.is_processing ? 'default' : 'secondary'}>
-                          {worker.is_processing ? 'Processing' : 'Idle'}
+                        <Badge variant={worker.is_processing ? "default" : "secondary"}>
+                          {worker.is_processing ? "Processing" : "Idle"}
                         </Badge>
                       </div>
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -399,9 +401,15 @@ export default function SecretAdminPage() {
         <Tabs defaultValue="all" className="space-y-4">
           <TabsList>
             <TabsTrigger value="all">All ({jobs.length})</TabsTrigger>
-            <TabsTrigger value="running">Running ({jobs.filter(j => j.status === 'running').length})</TabsTrigger>
-            <TabsTrigger value="queued">Queued ({jobs.filter(j => j.status === 'queued').length})</TabsTrigger>
-            <TabsTrigger value="failed">Failed ({jobs.filter(j => j.status === 'failed').length})</TabsTrigger>
+            <TabsTrigger value="running">
+              Running ({jobs.filter((j) => j.status === "running").length})
+            </TabsTrigger>
+            <TabsTrigger value="queued">
+              Queued ({jobs.filter((j) => j.status === "queued").length})
+            </TabsTrigger>
+            <TabsTrigger value="failed">
+              Failed ({jobs.filter((j) => j.status === "failed").length})
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="all">
@@ -409,15 +417,15 @@ export default function SecretAdminPage() {
           </TabsContent>
 
           <TabsContent value="running">
-            <JobsTable jobs={jobs.filter(j => j.status === 'running')} />
+            <JobsTable jobs={jobs.filter((j) => j.status === "running")} />
           </TabsContent>
 
           <TabsContent value="queued">
-            <JobsTable jobs={jobs.filter(j => j.status === 'queued')} />
+            <JobsTable jobs={jobs.filter((j) => j.status === "queued")} />
           </TabsContent>
 
           <TabsContent value="failed">
-            <JobsTable jobs={jobs.filter(j => j.status === 'failed')} />
+            <JobsTable jobs={jobs.filter((j) => j.status === "failed")} />
           </TabsContent>
         </Tabs>
       </div>
@@ -429,9 +437,7 @@ function JobsTable({ jobs }: { jobs: JobData[] }) {
   if (jobs.length === 0) {
     return (
       <Card>
-        <CardContent className="py-12 text-center text-muted-foreground">
-          No jobs found
-        </CardContent>
+        <CardContent className="py-12 text-center text-muted-foreground">No jobs found</CardContent>
       </Card>
     );
   }
@@ -453,46 +459,58 @@ function JobsTable({ jobs }: { jobs: JobData[] }) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {jobs.map(job => (
+              {jobs.map((job) => (
                 <TableRow key={job.id}>
-                  <TableCell className="font-mono text-xs">
-                    {job.id.slice(0, 8)}...
-                  </TableCell>
+                  <TableCell className="font-mono text-xs">{job.id.slice(0, 8)}...</TableCell>
                   <TableCell>{job.job_type}</TableCell>
                   <TableCell>
-                    <Badge variant={
-                      job.job_tier === 'light' ? 'outline' :
-                        job.job_tier === 'medium' ? 'secondary' : 'default'
-                    }>
+                    <Badge
+                      variant={
+                        job.job_tier === "light"
+                          ? "outline"
+                          : job.job_tier === "medium"
+                            ? "secondary"
+                            : "default"
+                      }
+                    >
                       {job.job_tier}
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <Badge variant={
-                      job.status === 'completed' ? 'default' :
-                        job.status === 'failed' ? 'destructive' :
-                          job.status === 'running' ? 'default' : 'secondary'
-                    } className={
-                      job.status === 'running' ? 'bg-blue-500' :
-                        job.status === 'completed' ? 'bg-green-500' : ''
-                    }>
+                    <Badge
+                      variant={
+                        job.status === "completed"
+                          ? "default"
+                          : job.status === "failed"
+                            ? "destructive"
+                            : job.status === "running"
+                              ? "default"
+                              : "secondary"
+                      }
+                      className={
+                        job.status === "running"
+                          ? "bg-blue-500"
+                          : job.status === "completed"
+                            ? "bg-green-500"
+                            : ""
+                      }
+                    >
                       {job.status}
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    {job.status === 'running' ? (
+                    {job.status === "running" ? (
                       <Progress value={job.progress} className="h-2 w-20" />
-                    ) : job.status === 'completed' ? (
-                      '100%'
+                    ) : job.status === "completed" ? (
+                      "100%"
                     ) : (
-                      '-'
+                      "-"
                     )}
                   </TableCell>
                   <TableCell>
                     {job.memory_required_mb
                       ? `${(job.memory_required_mb / 1024).toFixed(1)}GB`
-                      : '-'
-                    }
+                      : "-"}
                   </TableCell>
                   <TableCell className="text-xs text-muted-foreground">
                     {formatDistanceToNow(new Date(job.created_at), { addSuffix: true })}

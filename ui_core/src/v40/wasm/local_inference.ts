@@ -1,7 +1,7 @@
 /**
  * LEO AI V42 - The Irrelevance Engine
  * Phase 5: Local WebAssembly Port (Browser Fallback)
- * 
+ *
  * Orchestrates pure JS/Wasm fallback inference when the device is completely offline.
  * Leverages WebGPU for ternary matrix math and WebAssembly for Mamba state space scanning.
  */
@@ -40,30 +40,46 @@ export class LocalInferenceRunner {
     // Simulate loading the WebAssembly modules compiled via emscripten
     console.log("Loading BitNet Decompression Wasm Module...");
     console.log("Loading Mamba Parallel Scan Wasm Module...");
-    
+
     // Simulating delay to fetch and compile .wasm binaries
-    await new Promise(r => setTimeout(r, 500));
-    
+    await new Promise((r) => setTimeout(r, 500));
+
     this.isInitialized = true;
   }
 
-  public async generateStreaming(prompt: string, onToken: (token: string) => void): Promise<string> {
+  public async generateStreaming(
+    prompt: string,
+    onToken: (token: string) => void,
+  ): Promise<string> {
     if (!this.isInitialized) await this.initialize();
-    
+
     console.log(`Starting Local WebGPU Generation for: "${prompt}"`);
     let fullResponse = "";
-    
+
     // Mock token generation stream
-    const mockTokens = ["This", " response", " is", " generated", " 100%", " offline", " using", " local", " WebGPU", " and", " WebAssembly", " compute!"];
-    
+    const mockTokens = [
+      "This",
+      " response",
+      " is",
+      " generated",
+      " 100%",
+      " offline",
+      " using",
+      " local",
+      " WebGPU",
+      " and",
+      " WebAssembly",
+      " compute!",
+    ];
+
     for (const token of mockTokens) {
       // Simulate hardware compute latency per token (~15 tok/sec)
-      await new Promise(r => setTimeout(r, 66)); 
-      
+      await new Promise((r) => setTimeout(r, 66));
+
       onToken(token);
       fullResponse += token;
     }
-    
+
     return fullResponse;
   }
 }

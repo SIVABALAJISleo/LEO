@@ -9,7 +9,7 @@ export class RegressionUniverse {
     const success = vac.strengthCoeff > 0.85;
     return {
       success,
-      safetyIndex: success ? 0.98 : 0.45
+      safetyIndex: success ? 0.98 : 0.45,
     };
   }
 }

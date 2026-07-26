@@ -5,8 +5,8 @@ import { IntelliGPUAuth } from "../components/IntelliGPUAuth";
 export default function Auth() {
   const navigate = useNavigate();
   return (
-    <IntelliGPUAuth 
-      onNavigate={(view: any) => navigate(view === "home" ? "/" : `/${view}`)} 
+    <IntelliGPUAuth
+      onNavigate={(view: any) => navigate(view === "home" ? "/" : `/${view}`)}
       onSuccess={() => navigate("/swarms")}
     />
   );

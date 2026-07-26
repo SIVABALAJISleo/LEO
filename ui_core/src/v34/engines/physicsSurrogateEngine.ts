@@ -11,9 +11,9 @@ export interface SurrogateEstimation {
 
 export class PhysicsSurrogateEngine {
   private cacheRegistry: Record<string, number> = {
-    "thermal_gradient_i5": 0.42,
-    "aerodynamic_drag_coeff": 0.28,
-    "structural_stress_limit": 145.2
+    thermal_gradient_i5: 0.42,
+    aerodynamic_drag_coeff: 0.28,
+    structural_stress_limit: 145.2,
   };
 
   /**
@@ -21,7 +21,7 @@ export class PhysicsSurrogateEngine {
    */
   public estimatePhysics(
     systemKey: string,
-    inputs: { temp: number; pressure: number; load: number }
+    inputs: { temp: number; pressure: number; load: number },
   ): SurrogateEstimation {
     const cacheKey = systemKey.toLowerCase();
     let systemParamEstimate = 0.0;
@@ -33,17 +33,15 @@ export class PhysicsSurrogateEngine {
     } else {
       // Neural Operator approximation simulation
       systemParamEstimate = parseFloat(
-        (inputs.temp * 0.004 + inputs.pressure * 0.012 + inputs.load * 0.008).toFixed(4)
+        (inputs.temp * 0.004 + inputs.pressure * 0.012 + inputs.load * 0.008).toFixed(4),
       );
     }
 
     // Heuristics for physical validation
     const feasibilityScore = systemParamEstimate > 1.0 ? 0.85 : 0.96;
-    
+
     // Check if the approximation respects mass/energy conservation bounds
-    const physicalConsistencyScore = parseFloat(
-      (0.92 + Math.random() * 0.07).toFixed(3)
-    );
+    const physicalConsistencyScore = parseFloat((0.92 + Math.random() * 0.07).toFixed(3));
 
     // FLOP savings by avoiding integration solvers (Runge-Kutta, etc.)
     const simulationAvoidedFlopsGiga = 1250.0;
@@ -53,7 +51,7 @@ export class PhysicsSurrogateEngine {
       feasibilityScore,
       physicalConsistencyScore,
       cachedLookupUsed,
-      simulationAvoidedFlopsGiga
+      simulationAvoidedFlopsGiga,
     };
   }
 }

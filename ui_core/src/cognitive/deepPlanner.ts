@@ -25,7 +25,11 @@ export class DeepPlanner {
     const queryLower = query.toLowerCase();
 
     // 1. Task Decomposition based on query characteristics
-    if (queryLower.includes("startup") || queryLower.includes("business") || queryLower.includes("saas")) {
+    if (
+      queryLower.includes("startup") ||
+      queryLower.includes("business") ||
+      queryLower.includes("saas")
+    ) {
       milestones.push(
         {
           id: "M1",
@@ -44,7 +48,8 @@ export class DeepPlanner {
         {
           id: "M3",
           title: "Stripe Signature Integration & Webhooks",
-          description: "Secure payment verification routes and create automated user tier provisions.",
+          description:
+            "Secure payment verification routes and create automated user tier provisions.",
           dependencies: ["M2"],
           status: "pending",
         },
@@ -54,9 +59,13 @@ export class DeepPlanner {
           description: "Generate cold outreach pipelines and configure customer feedback tunnels.",
           dependencies: ["M1", "M3"],
           status: "pending",
-        }
+        },
       );
-    } else if (queryLower.includes("ai") || queryLower.includes("train") || queryLower.includes("model")) {
+    } else if (
+      queryLower.includes("ai") ||
+      queryLower.includes("train") ||
+      queryLower.includes("model")
+    ) {
       milestones.push(
         {
           id: "M1",
@@ -68,7 +77,8 @@ export class DeepPlanner {
         {
           id: "M2",
           title: "Model Architecture Definition (Mamba/RWKV)",
-          description: "Define the local CPU-first state space configuration or GGUF quantization parameters.",
+          description:
+            "Define the local CPU-first state space configuration or GGUF quantization parameters.",
           dependencies: ["M1"],
           status: "pending",
         },
@@ -85,7 +95,7 @@ export class DeepPlanner {
           description: "Benchmark reasoning results and save outputs to local Semantic Cache.",
           dependencies: ["M3"],
           status: "pending",
-        }
+        },
       );
     } else {
       // Default general multi-step plan
@@ -107,10 +117,11 @@ export class DeepPlanner {
         {
           id: "M3",
           title: "Execution & Self-Critic Cycle",
-          description: "Synthesize result and perform rigorous contradiction and logic validations.",
+          description:
+            "Synthesize result and perform rigorous contradiction and logic validations.",
           dependencies: ["M2"],
           status: "pending",
-        }
+        },
       );
     }
 

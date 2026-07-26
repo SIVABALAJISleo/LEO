@@ -7,9 +7,9 @@ export interface AgentResponse {
   agentId: "Agent_A" | "Agent_B" | "Agent_C" | "Agent_D" | "Agent_E";
   proposedAnswer: string;
   correctnessConfidence: number; // 0 to 1.0
-  evidenceQuality: number;       // 0 to 10
+  evidenceQuality: number; // 0 to 10
   latencySec: number;
-  trustFactor: number;           // 0 to 10
+  trustFactor: number; // 0 to 10
 }
 
 export interface ConsensusVerdictV2 {
@@ -21,16 +21,15 @@ export interface ConsensusVerdictV2 {
 
 export class AgentConsensusSystemV2 {
   coordinateConsensus(
-    responses: AgentResponse[], 
-    method: "WeightedVoting" | "TrustWeightVoting" | "EvidenceWeightVoting"
+    responses: AgentResponse[],
+    method: "WeightedVoting" | "TrustWeightVoting" | "EvidenceWeightVoting",
   ): ConsensusVerdictV2 {
-    
     let bestResponse = responses[0];
     let maxScore = -1;
 
-    responses.forEach(r => {
+    responses.forEach((r) => {
       let score = 0;
-      
+
       if (method === "WeightedVoting") {
         // Average weight of confidence and latency
         const latencyPenalty = Math.max(0.1, r.latencySec);
@@ -53,7 +52,7 @@ export class AgentConsensusSystemV2 {
       responses,
       methodUsed: method,
       finalConsensusAnswer: `[Consensus Chosen Response: ${bestResponse.agentId}] ${bestResponse.proposedAnswer}`,
-      consensusScore: parseFloat(Math.min(10.0, maxScore).toFixed(2))
+      consensusScore: parseFloat(Math.min(10.0, maxScore).toFixed(2)),
     };
   }
 }

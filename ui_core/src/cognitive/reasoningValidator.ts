@@ -25,22 +25,33 @@ export class ReasoningValidator {
     const answerLower = rawAnswer.toLowerCase();
 
     // 1. Assumption Check
-    if (queryLower.includes("always") || queryLower.includes("never") || queryLower.includes("only")) {
+    if (
+      queryLower.includes("always") ||
+      queryLower.includes("never") ||
+      queryLower.includes("only")
+    ) {
       assumptionChecks.push({
-        assumption: "Verify if absolute qualifiers (always/never/only) are mathematically sound in this context.",
-        verified: answerLower.includes("not necessarily") || answerLower.includes("depends on") || answerLower.includes("premise is fallacious")
+        assumption:
+          "Verify if absolute qualifiers (always/never/only) are mathematically sound in this context.",
+        verified:
+          answerLower.includes("not necessarily") ||
+          answerLower.includes("depends on") ||
+          answerLower.includes("premise is fallacious"),
       });
     }
 
     if (queryLower.includes("startup") || queryLower.includes("business")) {
       assumptionChecks.push({
         assumption: "Verify if growth model assumes infinite market resources.",
-        verified: true
+        verified: true,
       });
     }
 
     // 2. Logic Check
-    if (reasoningChain.length < 3 && (queryLower.includes("calculate") || queryLower.includes("why"))) {
+    if (
+      reasoningChain.length < 3 &&
+      (queryLower.includes("calculate") || queryLower.includes("why"))
+    ) {
       logicErrors.push("Reasoning chain is too brief for a complex calculation or explanation.");
       missingSteps.push("Intermediate transition steps mapping preconditions to postconditions.");
     }
@@ -50,25 +61,39 @@ export class ReasoningValidator {
     const hasNo = answerLower.includes("no");
     if (hasYes && hasNo) {
       // Direct self-contradiction
-      contradictions.push("Direct lexical conflict: Solution contains both positive (yes) and negative (no) conclusions.");
-      correctedAnswer = correctedAnswer.replace(/\byes\b.*\bno\b/gi, "No, because the absolute premise is fallacious.");
+      contradictions.push(
+        "Direct lexical conflict: Solution contains both positive (yes) and negative (no) conclusions.",
+      );
+      correctedAnswer = correctedAnswer.replace(
+        /\byes\b.*\bno\b/gi,
+        "No, because the absolute premise is fallacious.",
+      );
     }
 
     // 4. Missing Step Detection
     if (queryLower.includes("calculate") && !/\d+/.test(rawAnswer)) {
-      logicErrors.push("Numerical problem resolved without explicitly outputting arithmetic digits.");
+      logicErrors.push(
+        "Numerical problem resolved without explicitly outputting arithmetic digits.",
+      );
       missingSteps.push("Explicit calculation of numerical values.");
     }
 
     // Determine overall validity
-    const isValid = logicErrors.length === 0 && contradictions.length === 0 && missingSteps.length === 0;
+    const isValid =
+      logicErrors.length === 0 && contradictions.length === 0 && missingSteps.length === 0;
 
     // Apply corrections if invalid
     if (!isValid) {
       if (contradictions.length > 0) {
-        correctedAnswer = "Logical Validation Failed: Self-contradiction detected in reasoning steps. Resolved Output: " + correctedAnswer;
+        correctedAnswer =
+          "Logical Validation Failed: Self-contradiction detected in reasoning steps. Resolved Output: " +
+          correctedAnswer;
       } else if (missingSteps.length > 0) {
-        correctedAnswer = correctedAnswer + "\n\n[Validator Step Injection]: " + missingSteps.join("; ") + " was verified and integrated successfully.";
+        correctedAnswer =
+          correctedAnswer +
+          "\n\n[Validator Step Injection]: " +
+          missingSteps.join("; ") +
+          " was verified and integrated successfully.";
       }
     }
 

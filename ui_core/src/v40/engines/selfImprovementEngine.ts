@@ -1,5 +1,17 @@
-export interface ExceptionLog { id: string; sourceModule: string; exceptionMessage: string; critiqueText: string; timestamp: number; }
-export interface OptimizationPatch { patchId: string; actionScript: string; scoreBefore: number; scoreAfter: number; deployed: boolean; }
+export interface ExceptionLog {
+  id: string;
+  sourceModule: string;
+  exceptionMessage: string;
+  critiqueText: string;
+  timestamp: number;
+}
+export interface OptimizationPatch {
+  patchId: string;
+  actionScript: string;
+  scoreBefore: number;
+  scoreAfter: number;
+  deployed: boolean;
+}
 
 // --- V42 Swarm Distillation Additions ---
 export interface SwarmTelemetry {
@@ -12,9 +24,9 @@ export interface SwarmTelemetry {
   syntheticGeneratedToday: number;
 }
 
-export interface SelfImprovementReport { 
-  loggedExceptions: ExceptionLog[]; 
-  activePatches: OptimizationPatch[]; 
+export interface SelfImprovementReport {
+  loggedExceptions: ExceptionLog[];
+  activePatches: OptimizationPatch[];
   improvementGainRatio: number;
   swarmTelemetry: SwarmTelemetry;
 }
@@ -27,13 +39,14 @@ export class SelfImprovementEngine {
     globalImprovementPercent: 0.0,
     vaccinesGenerated: 0,
     dailySyntheticQuota: 10000000,
-    syntheticGeneratedToday: 0
+    syntheticGeneratedToday: 0,
   };
 
   public async logException(module: string, message: string): Promise<SelfImprovementReport> {
     const res = await fetch("http://localhost:8000/api/v1/v40/engines/improvement/log", {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ module, message })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ module, message }),
     });
     return res.json();
   }

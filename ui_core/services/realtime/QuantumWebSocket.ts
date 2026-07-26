@@ -8,7 +8,7 @@ export class QuantumWebSocket {
   private reconnectAttempts = 0;
   private maxReconnectAttempts = 5;
 
-  constructor(url: string = 'ws://localhost:8005/ws/telemetry') {
+  constructor(url: string = "ws://localhost:8005/ws/telemetry") {
     this.url = url;
   }
 
@@ -17,7 +17,7 @@ export class QuantumWebSocket {
       this.ws = new WebSocket(this.url);
 
       this.ws.onopen = () => {
-        console.log('[LEO Quantum WS] Real-time connection established.');
+        console.log("[LEO Quantum WS] Real-time connection established.");
         this.reconnectAttempts = 0;
       };
 
@@ -26,7 +26,7 @@ export class QuantumWebSocket {
           const data = JSON.parse(event.data);
           this.handleMessage(data);
         } catch (e) {
-          console.warn('[LEO Quantum WS] Unparseable payload received:', event.data);
+          console.warn("[LEO Quantum WS] Unparseable payload received:", event.data);
         }
       };
 
@@ -35,7 +35,7 @@ export class QuantumWebSocket {
       };
 
       this.ws.onerror = (err) => {
-        console.warn('[LEO Quantum WS] Error:', err);
+        console.warn("[LEO Quantum WS] Error:", err);
       };
     } catch (e) {
       this.attemptReconnect();
@@ -54,17 +54,17 @@ export class QuantumWebSocket {
 
   private handleMessage(data: any) {
     switch (data.type) {
-      case 'benchmark_update':
-        window.dispatchEvent(new CustomEvent('leo:benchmark', { detail: data }));
+      case "benchmark_update":
+        window.dispatchEvent(new CustomEvent("leo:benchmark", { detail: data }));
         break;
-      case 'swarm_update':
-        window.dispatchEvent(new CustomEvent('leo:swarm', { detail: data }));
+      case "swarm_update":
+        window.dispatchEvent(new CustomEvent("leo:swarm", { detail: data }));
         break;
-      case 'memory_update':
-        window.dispatchEvent(new CustomEvent('leo:memory', { detail: data }));
+      case "memory_update":
+        window.dispatchEvent(new CustomEvent("leo:memory", { detail: data }));
         break;
       default:
-        window.dispatchEvent(new CustomEvent('leo:telemetry', { detail: data }));
+        window.dispatchEvent(new CustomEvent("leo:telemetry", { detail: data }));
     }
   }
 

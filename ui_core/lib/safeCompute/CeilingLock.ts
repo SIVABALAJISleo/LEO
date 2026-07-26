@@ -1,19 +1,19 @@
 /**
  * CeilingLock - Final service coverage ceiling enforcer
- * 
+ *
  * Maximum achievable coverage: ~96.5%
  * Remaining ~3.5% is permanently unreachable due to:
  * - Legally mandated certified execution
  * - Strict deterministic reproducibility requirements
  * - Fresh + instant + exact physical conflicts
- * 
+ *
  * EXCLUDED from coverage math (not system responsibility):
  * - User hardware absence
  * - User refusal / opt-out
  */
 
 export interface CeilingBoundary {
-  reason: 'regulatory' | 'audit_required' | 'physics_conflict';
+  reason: "regulatory" | "audit_required" | "physics_conflict";
   description: string;
   isTerminal: boolean;
 }
@@ -30,24 +30,33 @@ class CeilingLockEngine {
   private readonly MAX_COVERAGE = 0.965;
   // UPDATED: 3.5% permanently unreachable (non-software constraints only)
   private readonly UNREACHABLE_PERCENT = 0.035;
-  
+
   // PRUNED: Removed 'no_hardware' and 'user_refusal' - not system responsibility
   private boundaryReasons: Map<string, CeilingBoundary> = new Map([
-    ['regulatory', {
-      reason: 'regulatory',
-      description: 'Legally mandated certified execution required',
-      isTerminal: true
-    }],
-    ['audit_required', {
-      reason: 'audit_required',
-      description: 'Deterministic reproducibility audit mandated',
-      isTerminal: true
-    }],
-    ['physics_conflict', {
-      reason: 'physics_conflict',
-      description: 'Fresh + instant + exact physical conflict',
-      isTerminal: true
-    }]
+    [
+      "regulatory",
+      {
+        reason: "regulatory",
+        description: "Legally mandated certified execution required",
+        isTerminal: true,
+      },
+    ],
+    [
+      "audit_required",
+      {
+        reason: "audit_required",
+        description: "Deterministic reproducibility audit mandated",
+        isTerminal: true,
+      },
+    ],
+    [
+      "physics_conflict",
+      {
+        reason: "physics_conflict",
+        description: "Fresh + instant + exact physical conflict",
+        isTerminal: true,
+      },
+    ],
   ]);
 
   /**
@@ -63,18 +72,18 @@ class CeilingLockEngine {
 
     // Check only hard constraints (non-software)
     if (request.requiresCertified) {
-      boundaryReached = this.boundaryReasons.get('regulatory')!;
+      boundaryReached = this.boundaryReasons.get("regulatory")!;
     } else if (request.requiresDeterministic) {
-      boundaryReached = this.boundaryReasons.get('audit_required')!;
+      boundaryReached = this.boundaryReasons.get("audit_required")!;
     } else if (request.requiresInstantExact) {
-      boundaryReached = this.boundaryReasons.get('physics_conflict')!;
+      boundaryReached = this.boundaryReasons.get("physics_conflict")!;
     }
 
     return {
       maxCoverage: this.MAX_COVERAGE,
       currentCoverage: boundaryReached ? 0 : this.MAX_COVERAGE,
       isAtCeiling: boundaryReached !== null,
-      boundaryReached
+      boundaryReached,
     };
   }
 
@@ -83,16 +92,16 @@ class CeilingLockEngine {
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getTerminalResolution(boundary: CeilingBoundary): {
-    action: 'info_only' | 'preview_only' | 'planning_only';
+    action: "info_only" | "preview_only" | "planning_only";
     message: string;
     allocateCompute: false;
     promiseFulfillment: false;
   } {
     return {
-      action: 'info_only',
-      message: 'Request resolved to informational output',
+      action: "info_only",
+      message: "Request resolved to informational output",
       allocateCompute: false,
-      promiseFulfillment: false
+      promiseFulfillment: false,
     };
   }
 
@@ -115,10 +124,10 @@ class CeilingLockEngine {
       unreachablePercent: this.UNREACHABLE_PERCENT,
       isLocked: true,
       gapBreakdown: {
-        regulationBound: 0.012,      // ~1.2%
-        deterministicAudit: 0.011,   // ~1.1%
-        physicsConflicts: 0.012      // ~1.2%
-      }
+        regulationBound: 0.012, // ~1.2%
+        deterministicAudit: 0.011, // ~1.1%
+        physicsConflicts: 0.012, // ~1.2%
+      },
     };
   }
 
@@ -136,9 +145,9 @@ class CeilingLockEngine {
     return {
       currentCoverage: this.MAX_COVERAGE,
       remainingGap: this.UNREACHABLE_PERCENT,
-      cause: 'Non-software constraints only',
+      cause: "Non-software constraints only",
       isMaximized: true,
-      constraintsPruned: ['user_hardware_absence', 'user_refusal_optout']
+      constraintsPruned: ["user_hardware_absence", "user_refusal_optout"],
     };
   }
 }

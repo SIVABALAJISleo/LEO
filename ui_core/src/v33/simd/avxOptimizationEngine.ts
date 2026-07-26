@@ -15,7 +15,7 @@ export class AvxOptimizationEngine {
         instructionSet: "Scalar",
         registerBitWidth: 32,
         parallelElementsCount: 1,
-        speedupFactorMultiplier: 1.0
+        speedupFactorMultiplier: 1.0,
       };
     }
 
@@ -24,7 +24,7 @@ export class AvxOptimizationEngine {
         instructionSet: "AVX2",
         registerBitWidth: 256,
         parallelElementsCount: 8, // 256 bits / 32 bits float = 8
-        speedupFactorMultiplier: 6.4 // typical speedup factoring in memory overhead
+        speedupFactorMultiplier: 6.4, // typical speedup factoring in memory overhead
       };
     }
 
@@ -33,7 +33,7 @@ export class AvxOptimizationEngine {
       instructionSet: "AVX512",
       registerBitWidth: 512,
       parallelElementsCount: 16, // 512 bits / 32 bits float = 16
-      speedupFactorMultiplier: 12.8
+      speedupFactorMultiplier: 12.8,
     };
   }
 

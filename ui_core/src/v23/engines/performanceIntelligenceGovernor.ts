@@ -28,7 +28,7 @@ export class PerformanceIntelligenceGovernor {
       igpuLoadPct: this.throttled ? 32.0 : 68.5,
       ramUsageGb: this.throttled ? 3.4 : 5.8,
       retrievalLatencyMs: this.throttled ? 180 : 92,
-      intelligencePerWatt: this.throttled ? 85.6 : 94.2 // score of output utility divided by input power draw
+      intelligencePerWatt: this.throttled ? 85.6 : 94.2, // score of output utility divided by input power draw
     };
 
     const recommendations: string[] = [];
@@ -36,21 +36,25 @@ export class PerformanceIntelligenceGovernor {
       recommendations.push("High CPU footprint detected. Recommend queue batching.");
     }
     if (snapshot.igpuLoadPct > 60) {
-      recommendations.push("WebGPU tensor workloads peaked. Scheduling non-critical RAG audits in off-peak intervals.");
+      recommendations.push(
+        "WebGPU tensor workloads peaked. Scheduling non-critical RAG audits in off-peak intervals.",
+      );
     }
     if (snapshot.ramUsageGb > 5.0) {
       recommendations.push("Consolidating system cache via memoryPerfectionEngine.ts");
     }
 
     if (recommendations.length === 0) {
-      recommendations.push("All resource channels calibrated. Compute scaling operating at max efficiency.");
+      recommendations.push(
+        "All resource channels calibrated. Compute scaling operating at max efficiency.",
+      );
     }
 
     return {
       timestamp: Date.now(),
       snapshot,
       throttlingActive: this.throttled,
-      recommendations
+      recommendations,
     };
   }
 

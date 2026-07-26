@@ -20,14 +20,14 @@ export class RealityAlignmentNetwork {
       simulatedPrediction: prediction,
       actualOutcome: `Score: ${actualOutcomeScore.toFixed(3)}`,
       predictionAccuracyScore: 1 - errorDelta,
-      correctionFactor: errorDelta * 0.1
+      correctionFactor: errorDelta * 0.1,
     };
 
     this.history.push(event);
-    
+
     // Auto-adjust current calibration rate
     this.currentCalibrationRate = parseFloat(
-      Math.max(0.95, Math.min(0.995, this.currentCalibrationRate - (errorDelta * 0.05))).toFixed(4)
+      Math.max(0.95, Math.min(0.995, this.currentCalibrationRate - errorDelta * 0.05)).toFixed(4),
     );
   }
 

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,7 +8,7 @@ import ReliabilityOrchestrator from "@/lib/core/ReliabilityOrchestrator";
 // Initialize to ensure it exists, though we mock the logs below
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const orchestrator = ReliabilityOrchestrator.getInstance();
-// In a real app we'd have a hook to read the orchestrator's state. 
+// In a real app we'd have a hook to read the orchestrator's state.
 // For now, we'll simulate reading the "Audit Stream".
 
 const StatusPage = () => {
@@ -18,7 +17,7 @@ const StatusPage = () => {
   const [metrics, setMetrics] = useState({
     avgLatency: 0,
     optimisticOps: 0,
-    complianceChecks: 0
+    complianceChecks: 0,
   });
 
   useEffect(() => {
@@ -32,16 +31,16 @@ const StatusPage = () => {
           "Decomposed task 'Analyze Market' into 4 sub-agents",
           "Ranked 150 physics hypotheses (Uncertainty: Low)",
           "Audit Log: Legal Disclaimer Attached to output",
-          "Optimistic UI Update: 0ms latency user feedback"
+          "Optimistic UI Update: 0ms latency user feedback",
         ][Math.floor(Math.random() * 4)],
-        status: "success"
+        status: "success",
       };
 
-      setLogs(prev => [newLog, ...prev].slice(0, 50));
-      setMetrics(prev => ({
+      setLogs((prev) => [newLog, ...prev].slice(0, 50));
+      setMetrics((prev) => ({
         avgLatency: Math.floor(Math.random() * 5), // < 5ms perceived
         optimisticOps: prev.optimisticOps + 1,
-        complianceChecks: prev.complianceChecks + (Math.random() > 0.7 ? 1 : 0)
+        complianceChecks: prev.complianceChecks + (Math.random() > 0.7 ? 1 : 0),
       }));
     }, 2500);
 
@@ -93,18 +92,29 @@ const StatusPage = () => {
       <Card className="border-zinc-800 bg-zinc-950/50 backdrop-blur">
         <CardHeader>
           <CardTitle>Reliability Layer Audit Stream</CardTitle>
-          <CardDescription>Live feed of Orchestrator decisions (Decomposition, Ranking, Auditing)</CardDescription>
+          <CardDescription>
+            Live feed of Orchestrator decisions (Decomposition, Ranking, Auditing)
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <ScrollArea className="h-[400px] w-full rounded-md border p-4">
             <div className="space-y-4">
               {logs.map((log) => (
-                <div key={log.id} className="flex items-start gap-4 text-sm border-b border-zinc-900 pb-3 last:border-0 animation-fade-in">
-                  <span className="text-zinc-500 font-mono text-xs w-20 shrink-0">{log.timestamp}</span>
+                <div
+                  key={log.id}
+                  className="flex items-start gap-4 text-sm border-b border-zinc-900 pb-3 last:border-0 animation-fade-in"
+                >
+                  <span className="text-zinc-500 font-mono text-xs w-20 shrink-0">
+                    {log.timestamp}
+                  </span>
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <Badge variant="secondary" className="text-xs">{log.layer}</Badge>
-                      {log.status === 'success' && <span className="text-green-500 text-xs">● Verified</span>}
+                      <Badge variant="secondary" className="text-xs">
+                        {log.layer}
+                      </Badge>
+                      {log.status === "success" && (
+                        <span className="text-green-500 text-xs">● Verified</span>
+                      )}
                     </div>
                     <p className="text-zinc-300">{log.message}</p>
                   </div>

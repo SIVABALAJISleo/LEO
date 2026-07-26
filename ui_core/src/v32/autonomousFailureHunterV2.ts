@@ -16,7 +16,7 @@ export class AutonomousFailureHunterV2 {
 
   huntForFailures(testSuiteName: string): HunterFailureRecord {
     const testId = `hunter-test-${Math.floor(Math.random() * 1000)}`;
-    
+
     // Simulate detecting a specific category of error depending on testSuiteName
     let category = "LogicBoundError";
     let observedError = "Output verification step failed conformal boundaries checks.";
@@ -34,7 +34,7 @@ export class AutonomousFailureHunterV2 {
       observedError,
       generatedFixPatch,
       retestSuccess: true, // Auto-patching succeeded
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
 
     this.failureKB.push(record);
@@ -49,7 +49,7 @@ export class AutonomousFailureHunterV2 {
     const total = this.failureKB.length;
     if (total === 0) return 100.0;
     // Successful retests contribute to failure reduction rate
-    const succeededCount = this.failureKB.filter(r => r.retestSuccess).length;
+    const succeededCount = this.failureKB.filter((r) => r.retestSuccess).length;
     return parseFloat(((succeededCount / total) * 100).toFixed(1));
   }
 }

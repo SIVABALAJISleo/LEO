@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from "react";
 
 export interface VirtualListProps<T> {
   items: T[];
@@ -13,7 +13,7 @@ export function VirtualList<T>({
   itemHeight,
   containerHeight = 600,
   renderItem,
-  className = '',
+  className = "",
 }: VirtualListProps<T>) {
   const [scrollTop, setScrollTop] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -27,12 +27,12 @@ export function VirtualList<T>({
 
     const container = containerRef.current;
     if (container) {
-      container.addEventListener('scroll', handleScroll);
+      container.addEventListener("scroll", handleScroll);
     }
 
     return () => {
       if (container) {
-        container.removeEventListener('scroll', handleScroll);
+        container.removeEventListener("scroll", handleScroll);
       }
     };
   }, []);
@@ -40,7 +40,7 @@ export function VirtualList<T>({
   const startIndex = Math.max(0, Math.floor(scrollTop / itemHeight) - 2);
   const endIndex = Math.min(
     items.length,
-    Math.ceil((scrollTop + containerHeight) / itemHeight) + 2
+    Math.ceil((scrollTop + containerHeight) / itemHeight) + 2,
   );
 
   const visibleItems = items.slice(startIndex, endIndex);
@@ -50,14 +50,14 @@ export function VirtualList<T>({
   return (
     <div
       ref={containerRef}
-      style={{ height: `${containerHeight}px`, overflowY: 'auto' }}
+      style={{ height: `${containerHeight}px`, overflowY: "auto" }}
       className={`relative border border-white/10 rounded-lg bg-black/40 ${className}`}
     >
-      <div style={{ height: `${totalHeight}px`, position: 'relative' }}>
+      <div style={{ height: `${totalHeight}px`, position: "relative" }}>
         <div
           style={{
             transform: `translateY(${offsetY}px)`,
-            position: 'absolute',
+            position: "absolute",
             top: 0,
             left: 0,
             right: 0,

@@ -14,7 +14,7 @@ export class EdgeCaseLibrary {
     this.library.push({
       id: `ec-${(100 + Math.random() * 900).toFixed(0)}`,
       errorHash: hash,
-      reproducibleSteps: steps
+      reproducibleSteps: steps,
     });
   }
 

@@ -25,9 +25,9 @@ export class BenchmarkEvidenceEngine {
     runId: string,
     datasetName: string,
     datasetVersion: string,
-    records: EvidenceRecord[]
+    records: EvidenceRecord[],
   ): EvidencePackage {
-    const matchesCount = records.filter(r => r.matches).length;
+    const matchesCount = records.filter((r) => r.matches).length;
     const overallMatchRate = parseFloat(((matchesCount / records.length) * 100).toFixed(2));
 
     const pack: EvidencePackage = {
@@ -35,7 +35,7 @@ export class BenchmarkEvidenceEngine {
       datasetName,
       datasetVersion,
       records,
-      overallMatchRate
+      overallMatchRate,
     };
 
     this.runs.set(runId, pack);

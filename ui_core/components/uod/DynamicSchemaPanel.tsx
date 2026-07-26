@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Search, Tag, Info, AlertCircle, ShieldCheck } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { Search, Tag, Info, AlertCircle, ShieldCheck } from "lucide-react";
 
 interface Property {
   property_name: string;
@@ -11,23 +11,24 @@ interface Property {
 
 export const DynamicSchemaPanel = () => {
   const [properties, setProperties] = useState<any[]>([]);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
 
   // Mock fetching from global_registry (In a real app, this would be an API call)
   useEffect(() => {
     setProperties([
-      { property_name: 'revenue', data_type: 'float', unit: 'USD', domain_tag: 'finance' },
-      { property_name: 'expense', data_type: 'float', unit: 'USD', domain_tag: 'finance' },
-      { property_name: 'conversion_rate', data_type: 'float', unit: '%', domain_tag: 'marketing' },
-      { property_name: 'temperature', data_type: 'float', unit: '°C', domain_tag: 'iot' },
-      { property_name: 'user_id', data_type: 'string', domain_tag: 'identity' },
-      { property_name: 'timestamp', data_type: 'datetime', domain_tag: 'core' },
+      { property_name: "revenue", data_type: "float", unit: "USD", domain_tag: "finance" },
+      { property_name: "expense", data_type: "float", unit: "USD", domain_tag: "finance" },
+      { property_name: "conversion_rate", data_type: "float", unit: "%", domain_tag: "marketing" },
+      { property_name: "temperature", data_type: "float", unit: "°C", domain_tag: "iot" },
+      { property_name: "user_id", data_type: "string", domain_tag: "identity" },
+      { property_name: "timestamp", data_type: "datetime", domain_tag: "core" },
     ]);
   }, []);
 
-  const filtered = properties.filter(p => 
-    p.property_name.toLowerCase().includes(search.toLowerCase()) ||
-    p.domain_tag.toLowerCase().includes(search.toLowerCase())
+  const filtered = properties.filter(
+    (p) =>
+      p.property_name.toLowerCase().includes(search.toLowerCase()) ||
+      p.domain_tag.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
@@ -35,13 +36,15 @@ export const DynamicSchemaPanel = () => {
       <div className="p-4 border-b border-slate-700 bg-slate-950/50">
         <div className="flex items-center gap-2 mb-4">
           <ShieldCheck className="text-emerald-400" size={20} />
-          <h2 className="font-bold text-sm uppercase tracking-tighter text-emerald-400">Global Ontology</h2>
+          <h2 className="font-bold text-sm uppercase tracking-tighter text-emerald-400">
+            Global Ontology
+          </h2>
         </div>
         <div className="relative">
           <Search className="absolute left-2 top-2.5 text-slate-500" size={14} />
-          <input 
-            type="text" 
-            placeholder="Search properties..." 
+          <input
+            type="text"
+            placeholder="Search properties..."
             className="w-full bg-slate-800 border border-slate-700 rounded-md py-1.5 pl-8 pr-2 text-xs focus:ring-1 focus:ring-blue-500 outline-none transition-all"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -51,15 +54,19 @@ export const DynamicSchemaPanel = () => {
 
       <div className="flex-1 overflow-y-auto p-2 space-y-1 custom-scrollbar">
         {filtered.map((prop) => (
-          <div 
+          <div
             key={prop.property_name}
             draggable
-            onDragStart={(e) => e.dataTransfer.setData('uod_property', JSON.stringify(prop))}
+            onDragStart={(e) => e.dataTransfer.setData("uod_property", JSON.stringify(prop))}
             className="group p-2 rounded-md hover:bg-slate-800 border border-transparent hover:border-slate-700 cursor-grab active:cursor-grabbing transition-all"
           >
             <div className="flex items-center justify-between mb-1">
-              <span className="font-mono text-[11px] font-bold text-blue-400">{prop.property_name}</span>
-              <span className="text-[9px] bg-slate-700 px-1.5 py-0.5 rounded text-slate-300 uppercase">{prop.data_type}</span>
+              <span className="font-mono text-[11px] font-bold text-blue-400">
+                {prop.property_name}
+              </span>
+              <span className="text-[9px] bg-slate-700 px-1.5 py-0.5 rounded text-slate-300 uppercase">
+                {prop.data_type}
+              </span>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-[9px] text-slate-500 flex items-center gap-1">

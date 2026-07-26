@@ -4,7 +4,9 @@ import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 
 interface IntelliGPUAuthProps {
-  onNavigate: (view: "home" | "docs" | "playground" | "pricing" | "swarms" | "auth" | "onboarding") => void;
+  onNavigate: (
+    view: "home" | "docs" | "playground" | "pricing" | "swarms" | "auth" | "onboarding",
+  ) => void;
   onSuccess: () => void;
 }
 
@@ -27,7 +29,9 @@ export const IntelliGPUAuth: React.FC<IntelliGPUAuthProps> = ({ onNavigate, onSu
           {/* Logo */}
           <div className="flex items-center gap-2 mb-6">
             <Cpu className="h-6 w-6 text-[#76B900]" />
-            <span className="text-lg font-black tracking-tight text-white font-display">IntelliGPU</span>
+            <span className="text-lg font-black tracking-tight text-white font-display">
+              IntelliGPU
+            </span>
           </div>
 
           <h2 className="text-2xl font-black text-white mb-1 tracking-tight text-center">
@@ -39,7 +43,10 @@ export const IntelliGPUAuth: React.FC<IntelliGPUAuthProps> = ({ onNavigate, onSu
 
           <form onSubmit={handleSubmit} className="w-full space-y-5">
             <div>
-              <label htmlFor="email" className="block text-slate-300 font-bold text-xs uppercase mb-2">
+              <label
+                htmlFor="email"
+                className="block text-slate-300 font-bold text-xs uppercase mb-2"
+              >
                 Email
               </label>
               <input
@@ -54,7 +61,10 @@ export const IntelliGPUAuth: React.FC<IntelliGPUAuthProps> = ({ onNavigate, onSu
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-slate-300 font-bold text-xs uppercase mb-2">
+              <label
+                htmlFor="password"
+                className="block text-slate-300 font-bold text-xs uppercase mb-2"
+              >
                 Password
               </label>
               <input

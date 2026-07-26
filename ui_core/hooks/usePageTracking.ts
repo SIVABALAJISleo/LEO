@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import { trackPageView } from '@/lib/analytics';
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { trackPageView } from "@/lib/analytics";
 
 /**
  * Hook to track page views automatically

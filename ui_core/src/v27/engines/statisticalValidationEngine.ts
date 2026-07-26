@@ -17,10 +17,10 @@ export class StatisticalValidationEngine {
     metricId: string,
     sampleSize: number,
     measuredMean: number, // mean as percentage e.g. 96.3
-    varianceVal: number   // sample variance
+    varianceVal: number, // sample variance
   ): StatisticalBounds {
     const meanFraction = measuredMean / 100;
-    
+
     // Standard error = sqrt(variance / n)
     const standardError = Math.sqrt(varianceVal / sampleSize);
 
@@ -33,7 +33,9 @@ export class StatisticalValidationEngine {
     const upperBound = parseFloat(Math.min(100, (meanFraction + marginOfError) * 100).toFixed(2));
 
     // Reproducibility is inversely proportional to standard error
-    const reproducibilityScore = parseFloat(Math.min(99.99, Math.max(90, 100 - standardError * 1000)).toFixed(2));
+    const reproducibilityScore = parseFloat(
+      Math.min(99.99, Math.max(90, 100 - standardError * 1000)).toFixed(2),
+    );
 
     // The metric is valid if standard error is within bounds (< 0.02)
     const isValid = standardError < 0.02 && sampleSize >= 1000;
@@ -46,7 +48,7 @@ export class StatisticalValidationEngine {
       standardError: parseFloat(standardError.toFixed(6)),
       confidenceInterval: [lowerBound, upperBound],
       reproducibilityScore,
-      isValid
+      isValid,
     };
   }
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { Card, CardContent } from "../../../components/ui/card";
 import { BitNetOmegaPanel } from "./bitnetOmegaPanel";
 import { HiveMindPanel } from "./hiveMindPanel";
@@ -27,7 +27,7 @@ export const OmegaDashboard = () => {
           </span>
         </div>
       </header>
-      
+
       <div className="grid grid-cols-2 gap-6">
         <BitNetOmegaPanel />
         <HiveMindPanel />
@@ -40,12 +40,10 @@ export const OmegaDashboard = () => {
         <FreeEnergyPanel />
         <PerpetualMotionPanel />
       </div>
-      
+
       <Card className="border-2 border-green-500 bg-green-950 mt-6">
         <CardContent className="p-6">
-          <h2 className="text-2xl font-bold text-center text-green-400 mb-4">
-            The Final Score
-          </h2>
+          <h2 className="text-2xl font-bold text-center text-green-400 mb-4">The Final Score</h2>
           <div className="grid grid-cols-3 gap-8 text-center">
             <div>
               <p className="text-5xl font-bold text-green-500">100%</p>

@@ -13,7 +13,11 @@ export interface UpdateJob {
 export class UpdateScheduler {
   private jobsList: UpdateJob[] = [];
 
-  scheduleUpdate(conceptId: string, sourceUrl: string, priority: "high" | "medium" | "low"): UpdateJob {
+  scheduleUpdate(
+    conceptId: string,
+    sourceUrl: string,
+    priority: "high" | "medium" | "low",
+  ): UpdateJob {
     const jobId = `job-update-v34-${Math.random().toString(36).substring(7)}`;
     const job: UpdateJob = {
       jobId,
@@ -21,13 +25,13 @@ export class UpdateScheduler {
       sourceUrl,
       scheduledTime: Date.now() + 600000, // +10 minutes
       priority,
-      isExecuted: false
+      isExecuted: false,
     };
     this.jobsList.push(job);
     return job;
   }
 
   getPendingJobs(): UpdateJob[] {
-    return this.jobsList.filter(j => !j.isExecuted);
+    return this.jobsList.filter((j) => !j.isExecuted);
   }
 }

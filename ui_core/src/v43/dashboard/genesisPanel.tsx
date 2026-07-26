@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
 import { Button } from "../../../components/ui/button";
 import { Textarea } from "../../../components/ui/textarea";
@@ -15,7 +15,7 @@ export const GenesisPanel = () => {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          <Textarea 
+          <Textarea
             placeholder="Describe what you want to build..."
             className="min-h-[100px] bg-slate-900 border-slate-700 text-white"
           />

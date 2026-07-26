@@ -12,21 +12,24 @@ export interface AutomationOpportunity {
 }
 
 export class WorkflowAutomationDiscoveryEngine {
-  rankOpportunities(tasks: { name: string; frequency: number; impact: number; complexity: number; }[]): AutomationOpportunity[] {
-    
-    return tasks.map(t => {
-      // ROI is proportional to frequency and impact, inversely proportional to complexity
-      const calculatedRoi = parseFloat(
-        ((t.frequency * t.impact) / (t.complexity || 1.0)).toFixed(2)
-      );
+  rankOpportunities(
+    tasks: { name: string; frequency: number; impact: number; complexity: number }[],
+  ): AutomationOpportunity[] {
+    return tasks
+      .map((t) => {
+        // ROI is proportional to frequency and impact, inversely proportional to complexity
+        const calculatedRoi = parseFloat(
+          ((t.frequency * t.impact) / (t.complexity || 1.0)).toFixed(2),
+        );
 
-      return {
-        taskName: t.name,
-        frequencyPerHour: t.frequency,
-        impactScore: t.impact,
-        complexityScore: t.complexity,
-        estimatedRoi: calculatedRoi
-      };
-    }).sort((a, b) => b.estimatedRoi - a.estimatedRoi);
+        return {
+          taskName: t.name,
+          frequencyPerHour: t.frequency,
+          impactScore: t.impact,
+          complexityScore: t.complexity,
+          estimatedRoi: calculatedRoi,
+        };
+      })
+      .sort((a, b) => b.estimatedRoi - a.estimatedRoi);
   }
 }

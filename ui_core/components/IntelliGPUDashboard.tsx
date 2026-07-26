@@ -1,10 +1,41 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { 
-  Cpu, LayoutDashboard, Zap, FileText, Activity, Settings, LogOut, Bell, User, 
-  Layers, CheckCircle2, FolderOpen, RefreshCw, Search, SlidersHorizontal, 
-  Trash2, Download, Globe, Database, Mail, HardDrive, Terminal,
-  Sparkles, MessageSquare, CheckCircle, HelpCircle, ArrowRight, GitBranch, FlaskConical, Gauge, LineChart, Award, Scale, ShieldCheck, Sliders
+import {
+  Cpu,
+  LayoutDashboard,
+  Zap,
+  FileText,
+  Activity,
+  Settings,
+  LogOut,
+  Bell,
+  User,
+  Layers,
+  CheckCircle2,
+  FolderOpen,
+  RefreshCw,
+  Search,
+  SlidersHorizontal,
+  Trash2,
+  Download,
+  Globe,
+  Database,
+  Mail,
+  HardDrive,
+  Terminal,
+  Sparkles,
+  MessageSquare,
+  CheckCircle,
+  HelpCircle,
+  ArrowRight,
+  GitBranch,
+  FlaskConical,
+  Gauge,
+  LineChart,
+  Award,
+  Scale,
+  ShieldCheck,
+  Sliders,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
@@ -17,14 +48,16 @@ interface IntelliGPUDashboardProps {
   children?: React.ReactNode;
 }
 
-export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({ 
-  onSignOut, 
+export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
+  onSignOut,
   onNavigateToLegacy,
   activeSection: propActiveSection,
   setActiveSection: propSetActiveSection,
-  children
+  children,
 }) => {
-  const [localActiveSection, setLocalActiveSection] = useState<"dashboard" | "inference" | "results" | "modules" | "monitoring" | "settings">("dashboard");
+  const [localActiveSection, setLocalActiveSection] = useState<
+    "dashboard" | "inference" | "results" | "modules" | "monitoring" | "settings"
+  >("dashboard");
   const activeSection = propActiveSection || localActiveSection;
   const setActiveSection = (section: any) => {
     if (propSetActiveSection) {
@@ -39,7 +72,9 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
   const activeTab = tabId || "v45singularity";
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
 
-  const [activeSettingsTab, setActiveSettingsTab] = useState<"profile" | "api" | "notifications" | "advanced">("profile");
+  const [activeSettingsTab, setActiveSettingsTab] = useState<
+    "profile" | "api" | "notifications" | "advanced"
+  >("profile");
   const [fullName, setFullName] = useState("");
   const [company, setCompany] = useState("");
   const [activeTrend, setActiveTrend] = useState<"latency" | "throughput" | "cache">("latency");
@@ -52,7 +87,9 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
   const [weeklySummary, setWeeklySummary] = useState(false);
 
   // API Keys state
-  const [apiKeys, setApiKeys] = useState<Array<{ name: string; key: string; status: string; created: string; lastUsed: string }>>([]);
+  const [apiKeys, setApiKeys] = useState<
+    Array<{ name: string; key: string; status: string; created: string; lastUsed: string }>
+  >([]);
 
   const generateApiKey = () => {
     const key = `igpu_live_${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}`;
@@ -102,13 +139,17 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
           {/* Logo */}
           <div className="h-16 flex items-center gap-2 px-6 border-b border-slate-800/80">
             <Cpu className="h-5 w-5 text-[#76B900]" />
-            <span className="font-black text-white tracking-tight font-display text-sm uppercase">IntelliGPU</span>
+            <span className="font-black text-white tracking-tight font-display text-sm uppercase">
+              IntelliGPU
+            </span>
           </div>
 
           {/* Nav Groupings */}
           <div className="px-4 py-6 space-y-6">
             <div>
-              <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider px-3 mb-2">Main</div>
+              <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider px-3 mb-2">
+                Main
+              </div>
               <nav className="space-y-1">
                 {[
                   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -124,8 +165,8 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
                       key={item.id}
                       onClick={() => setActiveSection(item.id as any)}
                       className={`w-full flex items-center gap-3 px-3 py-2 rounded text-xs font-bold transition-all ${
-                        active 
-                          ? "bg-[#76B900]/10 text-[#76B900] border-l-2 border-[#76B900]" 
+                        active
+                          ? "bg-[#76B900]/10 text-[#76B900] border-l-2 border-[#76B900]"
                           : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/20"
                       }`}
                     >
@@ -138,13 +179,15 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
             </div>
 
             <div>
-              <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider px-3 mb-2">Settings</div>
+              <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider px-3 mb-2">
+                Settings
+              </div>
               <nav className="space-y-1">
                 <button
                   onClick={() => setActiveSection("settings")}
                   className={`w-full flex items-center gap-3 px-3 py-2 rounded text-xs font-bold transition-all ${
                     activeSection === "settings"
-                      ? "bg-[#76B900]/10 text-[#76B900] border-l-2 border-[#76B900]" 
+                      ? "bg-[#76B900]/10 text-[#76B900] border-l-2 border-[#76B900]"
                       : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/20"
                   }`}
                 >
@@ -156,13 +199,15 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
 
             {onNavigateToLegacy && (
               <div>
-                <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider px-3 mb-2">Legacy</div>
+                <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider px-3 mb-2">
+                  Legacy
+                </div>
                 <nav className="space-y-1">
                   <button
                     onClick={onNavigateToLegacy}
                     className={`w-full flex items-center gap-3 px-3 py-2 rounded text-xs font-bold transition-all ${
                       activeSection === "legacy" || activeSection === "legacy_swarms"
-                        ? "bg-[#76B900]/10 text-[#76B900] border-l-2 border-[#76B900]" 
+                        ? "bg-[#76B900]/10 text-[#76B900] border-l-2 border-[#76B900]"
                         : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/20 animate-pulse"
                     }`}
                   >
@@ -193,11 +238,16 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
         <header className="h-16 border-b border-slate-800/80 flex items-center justify-between px-8 bg-[#030914]/90 backdrop-blur-sm z-10 flex-shrink-0">
           <div>
             <h2 className="text-xs font-bold text-slate-100">Welcome back, sivabalajipulavanur</h2>
-            <p className="text-[9px] text-slate-500 font-semibold mt-0.5">Tuesday, December 9, 2025</p>
+            <p className="text-[9px] text-slate-500 font-semibold mt-0.5">
+              Tuesday, December 9, 2025
+            </p>
           </div>
 
           <div className="flex items-center gap-4">
-            <Button variant="outline" className="border-slate-800 text-slate-300 text-xs px-4 py-2 bg-[#0b1329]/40">
+            <Button
+              variant="outline"
+              className="border-slate-800 text-slate-300 text-xs px-4 py-2 bg-[#0b1329]/40"
+            >
               View Jobs
             </Button>
             <Button className="bg-[#76B900] hover:bg-[#659e00] text-black font-extrabold text-xs px-4 py-2 rounded">
@@ -227,8 +277,8 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
                 { id: "v14super", label: "V14 Breakthrough", icon: Sparkles },
                 { id: "v15substrate", label: "V15 Substrate", icon: Brain },
                 { id: "v16substrate", label: "V16 Substrate", icon: Sparkles },
-                { id: "v17dominance", label: "V17 Dominance", icon: Zap }
-              ]
+                { id: "v17dominance", label: "V17 Dominance", icon: Zap },
+              ],
             },
             {
               title: "Validation & Stability",
@@ -237,8 +287,8 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
                 { id: "failureHunting", label: "Failure Hunting", icon: Crosshair },
                 { id: "v22quality", label: "V22 Quality", icon: FlaskConical },
                 { id: "v23frontier", label: "V23 Frontier", icon: Gauge },
-                { id: "v24convergence", label: "V24 Convergence", icon: LineChart }
-              ]
+                { id: "v24convergence", label: "V24 Convergence", icon: LineChart },
+              ],
             },
             {
               title: "Product Verification",
@@ -248,8 +298,8 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
                 { id: "v27certification", label: "V27 Scientific Proof", icon: Scale },
                 { id: "v28validation", label: "V28 Validation Lab", icon: ShieldCheck },
                 { id: "v29frontier", label: "V29 Frontier Core", icon: Cpu },
-                { id: "v30frontier", label: "V30 Acceleration", icon: Cpu }
-              ]
+                { id: "v30frontier", label: "V30 Acceleration", icon: Cpu },
+              ],
             },
             {
               title: "Compute Efficiency",
@@ -258,8 +308,8 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
                 { id: "v32ceiling", label: "V32 Eng Ceiling", icon: Cpu },
                 { id: "v32reality", label: "V32 Reality Learning", icon: Gauge },
                 { id: "v33compute", label: "V33 Irrelevance", icon: Gauge },
-                { id: "v34compute", label: "V34 Irrelevance", icon: Cpu }
-              ]
+                { id: "v34compute", label: "V34 Irrelevance", icon: Cpu },
+              ],
             },
             {
               title: "Convergence & Cockpits",
@@ -271,8 +321,8 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
                 { id: "v40ultimate", label: "V40 Cockpit", icon: Sparkles },
                 { id: "vinfinity", label: "v∞ Cockpit", icon: Zap },
                 { id: "v42irrelevance", label: "V42 Cockpit", icon: Sparkles },
-                { id: "v43omega", label: "V43 OMEGA", icon: Zap }
-              ]
+                { id: "v43omega", label: "V43 OMEGA", icon: Zap },
+              ],
             },
             {
               title: "Quantum Frontier & Utils",
@@ -281,14 +331,14 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
                 { id: "debate", label: "Multi-Agent Debate", icon: MessageSquare },
                 { id: "quality", label: "Verification & Quality", icon: Shield },
                 { id: "benchmarks", label: "Benchmarks", icon: BarChart2 },
-                { id: "devops", label: "DevOps Stage", icon: Settings }
-              ]
-            }
+                { id: "devops", label: "DevOps Stage", icon: Settings },
+              ],
+            },
           ];
 
           const activeTabItem = versionCategories
-            .flatMap(cat => cat.items)
-            .find(item => item.id === activeTab);
+            .flatMap((cat) => cat.items)
+            .find((item) => item.id === activeTab);
           const activeTabLabel = activeTabItem ? activeTabItem.label : "V45 SINGULARITY";
 
           return (
@@ -307,7 +357,11 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
                   className="flex items-center gap-2 border border-slate-800 bg-[#0b1329]/60 hover:bg-[#0b1329]/95 text-slate-200 text-xs px-4 py-2 rounded transition-all font-bold uppercase tracking-wider shadow-[0_0_10px_rgba(0,0,0,0.5)]"
                 >
                   <span>Explore Substrates</span>
-                  <span className={`text-[10px] transition-transform duration-200 ${isSelectorOpen ? 'rotate-180' : ''}`}>▼</span>
+                  <span
+                    className={`text-[10px] transition-transform duration-200 ${isSelectorOpen ? "rotate-180" : ""}`}
+                  >
+                    ▼
+                  </span>
                 </button>
 
                 {isSelectorOpen && (
@@ -336,7 +390,9 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
                                       : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/20"
                                   }`}
                                 >
-                                  <Icon className={`h-3.5 w-3.5 ${active ? 'text-[#76B900]' : 'text-slate-500'}`} />
+                                  <Icon
+                                    className={`h-3.5 w-3.5 ${active ? "text-[#76B900]" : "text-slate-500"}`}
+                                  />
                                   <span>{item.label}</span>
                                 </button>
                               );
@@ -355,7 +411,7 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
         {/* Workspace Body */}
         <main className="flex-1 overflow-y-auto p-8">
           {children}
-          
+
           {!children && activeSection === "dashboard" && (
             <div className="space-y-6 max-w-6xl mx-auto animate-in fade-in duration-300">
               <div className="flex items-center justify-between">
@@ -382,15 +438,24 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
                         { label: "Temperature", val: "0 °C" },
                         { label: "Active Jobs", val: "0" },
                       ].map((metric, idx) => (
-                        <div key={idx} className="p-2 bg-[#020813]/60 border border-slate-800/40 rounded">
-                          <div className="text-[10px] text-slate-500 uppercase font-semibold">{metric.label}</div>
-                          <div className="text-sm font-extrabold text-[#76B900] mt-1">{metric.val}</div>
+                        <div
+                          key={idx}
+                          className="p-2 bg-[#020813]/60 border border-slate-800/40 rounded"
+                        >
+                          <div className="text-[10px] text-slate-500 uppercase font-semibold">
+                            {metric.label}
+                          </div>
+                          <div className="text-sm font-extrabold text-[#76B900] mt-1">
+                            {metric.val}
+                          </div>
                         </div>
                       ))}
                     </div>
                     <div className="mt-6 flex flex-col items-center justify-center p-6 border border-slate-800/60 border-dashed rounded bg-[#020813]/30">
                       <Activity className="h-6 w-6 text-slate-700 mb-2" />
-                      <span className="text-[10px] text-slate-500 font-medium">No system metrics available</span>
+                      <span className="text-[10px] text-slate-500 font-medium">
+                        No system metrics available
+                      </span>
                     </div>
                   </CardContent>
                 </Card>
@@ -408,8 +473,13 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
                         { label: "Cache Hit", val: "0.0%" },
                         { label: "Avg Speedup", val: "0.0%" },
                       ].map((p, idx) => (
-                        <div key={idx} className="p-2 bg-[#020813]/60 border border-slate-800/40 rounded">
-                          <div className="text-[10px] text-slate-500 uppercase font-semibold">{p.label}</div>
+                        <div
+                          key={idx}
+                          className="p-2 bg-[#020813]/60 border border-slate-800/40 rounded"
+                        >
+                          <div className="text-[10px] text-slate-500 uppercase font-semibold">
+                            {p.label}
+                          </div>
                           <div className="text-sm font-extrabold text-[#76B900] mt-1">{p.val}</div>
                         </div>
                       ))}
@@ -460,7 +530,7 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
                       {[
                         { id: "latency", label: "Latency" },
                         { id: "throughput", label: "Throughput" },
-                        { id: "cache", label: "Cache Hit" }
+                        { id: "cache", label: "Cache Hit" },
                       ].map((t) => (
                         <button
                           key={t.id}
@@ -478,7 +548,9 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
                   </div>
                   <div className="flex flex-col items-center justify-center p-16 border border-slate-800/60 border-dashed rounded bg-[#020813]/20">
                     <Activity className="h-8 w-8 text-slate-700 mb-3" />
-                    <p className="text-[11px] text-slate-500 font-bold">No performance data available</p>
+                    <p className="text-[11px] text-slate-500 font-bold">
+                      No performance data available
+                    </p>
                   </div>
                 </CardContent>
               </Card>
@@ -508,7 +580,10 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
                       "Graph Optimization",
                       "Sparsity & Pruning",
                     ].map((name, idx) => (
-                      <div key={idx} className="p-4 bg-[#020813]/80 border border-slate-800/60 rounded-lg flex flex-col justify-between min-h-[110px]">
+                      <div
+                        key={idx}
+                        className="p-4 bg-[#020813]/80 border border-slate-800/60 rounded-lg flex flex-col justify-between min-h-[110px]"
+                      >
                         <div className="flex items-center justify-between">
                           <span className="text-xs font-bold text-slate-200">{name}</span>
                           <span className="flex items-center gap-1 text-[9px] font-bold text-slate-500 uppercase px-2 py-0.5 bg-slate-900/60 border border-slate-800 rounded">
@@ -528,8 +603,12 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
                         </div>
 
                         <div className="flex justify-between text-[9px] text-slate-500 font-bold uppercase mt-3">
-                          <span>Speedup: <strong className="text-slate-400">N/A</strong></span>
-                          <span>Comp: <strong className="text-slate-400">N/A</strong></span>
+                          <span>
+                            Speedup: <strong className="text-slate-400">N/A</strong>
+                          </span>
+                          <span>
+                            Comp: <strong className="text-slate-400">N/A</strong>
+                          </span>
                         </div>
                       </div>
                     ))}
@@ -549,12 +628,17 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
                   </div>
                   <div>
                     <h1 className="text-xl font-black text-white tracking-tight">Inference Jobs</h1>
-                    <p className="text-xs text-slate-500 font-semibold mt-0.5">Manage and monitor your GPU inference jobs</p>
+                    <p className="text-xs text-slate-500 font-semibold mt-0.5">
+                      Manage and monitor your GPU inference jobs
+                    </p>
                   </div>
                 </div>
 
                 <div className="flex gap-2">
-                  <Button variant="outline" className="border-slate-800 text-slate-300 text-xs px-4 py-2 bg-[#0b1329]/40 flex items-center gap-1.5">
+                  <Button
+                    variant="outline"
+                    className="border-slate-800 text-slate-300 text-xs px-4 py-2 bg-[#0b1329]/40 flex items-center gap-1.5"
+                  >
                     <RefreshCw className="h-3.5 w-3.5" />
                     Refresh
                   </Button>
@@ -611,8 +695,12 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
               <Card className="bg-[#0b1329]/20 border-slate-800/80 py-24 shadow-inner">
                 <CardContent className="flex flex-col items-center justify-center text-center">
                   <FolderOpen className="h-10 w-10 text-slate-700 mb-3" />
-                  <h3 className="text-sm font-extrabold text-slate-300 uppercase tracking-wider">No jobs found matching your criteria</h3>
-                  <p className="text-[11px] text-slate-500 font-semibold mt-1">Create a new job to get started.</p>
+                  <h3 className="text-sm font-extrabold text-slate-300 uppercase tracking-wider">
+                    No jobs found matching your criteria
+                  </h3>
+                  <p className="text-[11px] text-slate-500 font-semibold mt-1">
+                    Create a new job to get started.
+                  </p>
                 </CardContent>
               </Card>
             </div>
@@ -628,11 +716,16 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
                   </div>
                   <div>
                     <h1 className="text-xl font-black text-white tracking-tight">GPU Modules</h1>
-                    <p className="text-xs text-slate-500 font-semibold mt-0.5">Manage and configure optimization modules</p>
+                    <p className="text-xs text-slate-500 font-semibold mt-0.5">
+                      Manage and configure optimization modules
+                    </p>
                   </div>
                 </div>
 
-                <Button variant="outline" className="border-slate-800 text-slate-300 text-xs px-4 py-2 bg-[#0b1329]/40 flex items-center gap-1.5">
+                <Button
+                  variant="outline"
+                  className="border-slate-800 text-slate-300 text-xs px-4 py-2 bg-[#0b1329]/40 flex items-center gap-1.5"
+                >
                   <RefreshCw className="h-3.5 w-3.5" />
                   Refresh
                 </Button>
@@ -665,34 +758,98 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
               {/* GPU Modules List */}
               <div className="space-y-4">
                 {[
-                  { id: "quantization", label: "Quantization", desc: "Reduce model precision to INT8/FP16 for faster inference with minimal accuracy loss." },
-                  { id: "kernel", label: "Kernel Optimization", desc: "Optimize CUDA kernels for maximum GPU utilization and throughput." },
-                  { id: "approx", label: "Neural Approximation", desc: "Replace expensive operations with learned approximations." },
-                  { id: "compression", label: "Memory Compression", desc: "Compress intermediate tensors to reduce memory footprint." },
-                  { id: "cache", label: "Cache Optimization", desc: "Intelligent caching of repeated computations and activations." },
-                  { id: "parallel", label: "Parallel Execution", desc: "Execute independent operations concurrently on GPU streams." },
-                  { id: "distributed", label: "Distributed Computing", desc: "Scale inference across multiple GPUs and nodes." },
-                  { id: "serving", label: "Model Serving", desc: "Optimized model loading and request batching for production." },
-                  { id: "streaming", label: "Streaming Inference", desc: "Stream model weights and outputs for low-latency pipelines." },
-                  { id: "jit", label: "JIT Compilation", desc: "Just-in-time compilation of model graphs for target hardware." },
-                  { id: "memory", label: "Memory Management", desc: "Advanced memory allocation and defragmentation strategies." },
-                  { id: "speculative", label: "Speculative Execution", desc: "Predict and pre-compute likely execution paths." },
-                  { id: "precision", label: "Adaptive Precision", desc: "Dynamically adjust precision based on input characteristics." },
-                  { id: "graph", label: "Graph Optimization", desc: "Fuse operations and eliminate redundancies in computation graphs." },
-                  { id: "sparsity", label: "Sparsity & Pruning", desc: "Remove unnecessary weights and leverage sparse computation." }
+                  {
+                    id: "quantization",
+                    label: "Quantization",
+                    desc: "Reduce model precision to INT8/FP16 for faster inference with minimal accuracy loss.",
+                  },
+                  {
+                    id: "kernel",
+                    label: "Kernel Optimization",
+                    desc: "Optimize CUDA kernels for maximum GPU utilization and throughput.",
+                  },
+                  {
+                    id: "approx",
+                    label: "Neural Approximation",
+                    desc: "Replace expensive operations with learned approximations.",
+                  },
+                  {
+                    id: "compression",
+                    label: "Memory Compression",
+                    desc: "Compress intermediate tensors to reduce memory footprint.",
+                  },
+                  {
+                    id: "cache",
+                    label: "Cache Optimization",
+                    desc: "Intelligent caching of repeated computations and activations.",
+                  },
+                  {
+                    id: "parallel",
+                    label: "Parallel Execution",
+                    desc: "Execute independent operations concurrently on GPU streams.",
+                  },
+                  {
+                    id: "distributed",
+                    label: "Distributed Computing",
+                    desc: "Scale inference across multiple GPUs and nodes.",
+                  },
+                  {
+                    id: "serving",
+                    label: "Model Serving",
+                    desc: "Optimized model loading and request batching for production.",
+                  },
+                  {
+                    id: "streaming",
+                    label: "Streaming Inference",
+                    desc: "Stream model weights and outputs for low-latency pipelines.",
+                  },
+                  {
+                    id: "jit",
+                    label: "JIT Compilation",
+                    desc: "Just-in-time compilation of model graphs for target hardware.",
+                  },
+                  {
+                    id: "memory",
+                    label: "Memory Management",
+                    desc: "Advanced memory allocation and defragmentation strategies.",
+                  },
+                  {
+                    id: "speculative",
+                    label: "Speculative Execution",
+                    desc: "Predict and pre-compute likely execution paths.",
+                  },
+                  {
+                    id: "precision",
+                    label: "Adaptive Precision",
+                    desc: "Dynamically adjust precision based on input characteristics.",
+                  },
+                  {
+                    id: "graph",
+                    label: "Graph Optimization",
+                    desc: "Fuse operations and eliminate redundancies in computation graphs.",
+                  },
+                  {
+                    id: "sparsity",
+                    label: "Sparsity & Pruning",
+                    desc: "Remove unnecessary weights and leverage sparse computation.",
+                  },
                 ].map((mod) => (
                   <Card key={mod.id} className="bg-[#0b1329]/40 border-slate-800/80 shadow-md">
                     <CardContent className="p-6">
                       <div className="flex items-start justify-between">
                         <div>
                           <div className="flex items-center gap-2">
-                            <span className="text-sm font-extrabold text-slate-200">{mod.label}</span>
+                            <span className="text-sm font-extrabold text-slate-200">
+                              {mod.label}
+                            </span>
                             <span className="flex items-center gap-1 text-[9px] font-bold text-slate-500 uppercase px-2 py-0.5 bg-slate-900/60 border border-slate-800 rounded">
                               <span className="h-1 w-1 rounded-full bg-slate-500" />
                               Idle
                             </span>
                           </div>
-                          <p className="text-[11px] text-slate-400 mt-1 font-semibold">{mod.desc}</p>
+                          <p className="text-[11px] text-slate-400 mt-1 font-semibold">
+                            {mod.desc}
+                          </p>
                         </div>
                         <div className="flex items-center gap-1.5">
                           <div className="h-3 w-3 rounded-full border border-slate-700 bg-transparent flex items-center justify-center">
@@ -717,14 +874,18 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
                         <div className="p-2 bg-[#020813]/60 border border-slate-800/40 rounded flex items-center gap-2">
                           <Zap className="h-4 w-4 text-emerald-500" />
                           <div>
-                            <div className="text-[9px] text-slate-500 font-bold uppercase">Speedup</div>
+                            <div className="text-[9px] text-slate-500 font-bold uppercase">
+                              Speedup
+                            </div>
                             <div className="text-xs font-bold text-slate-300">-</div>
                           </div>
                         </div>
                         <div className="p-2 bg-[#020813]/60 border border-slate-800/40 rounded flex items-center gap-2">
                           <FileText className="h-4 w-4 text-blue-500" />
                           <div>
-                            <div className="text-[9px] text-slate-500 font-bold uppercase">Compression</div>
+                            <div className="text-[9px] text-slate-500 font-bold uppercase">
+                              Compression
+                            </div>
                             <div className="text-xs font-bold text-slate-300">-</div>
                           </div>
                         </div>
@@ -745,21 +906,28 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
                               }`}
                             />
                           </button>
-                          <span className="text-[10px] text-slate-400 font-bold uppercase">Enabled</span>
+                          <span className="text-[10px] text-slate-400 font-bold uppercase">
+                            Enabled
+                          </span>
                         </div>
 
                         <div className="flex gap-2">
-                          <Button variant="outline" className="border-slate-800 text-xs px-3.5 py-1.5 bg-[#0b1329]/40 flex items-center gap-1">
+                          <Button
+                            variant="outline"
+                            className="border-slate-800 text-xs px-3.5 py-1.5 bg-[#0b1329]/40 flex items-center gap-1"
+                          >
                             <Settings className="h-3.5 w-3.5 text-slate-500" />
                             Configure
                           </Button>
-                          <Button variant="outline" className="border-slate-800 text-xs px-3.5 py-1.5 bg-[#0b1329]/40 flex items-center gap-1">
+                          <Button
+                            variant="outline"
+                            className="border-slate-800 text-xs px-3.5 py-1.5 bg-[#0b1329]/40 flex items-center gap-1"
+                          >
                             <Activity className="h-3.5 w-3.5 text-slate-500" />
                             Stats
                           </Button>
                         </div>
                       </div>
-
                     </CardContent>
                   </Card>
                 ))}
@@ -775,7 +943,8 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
                 {activeSection} Area
               </h2>
               <p className="text-slate-500 text-xs max-w-sm leading-relaxed">
-                This console section is currently offline. Complete server setup to activate active telemetry channels.
+                This console section is currently offline. Complete server setup to activate active
+                telemetry channels.
               </p>
             </div>
           )}
@@ -785,7 +954,9 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
             <div className="space-y-6 max-w-3xl mx-auto animate-in fade-in duration-300">
               <div>
                 <h1 className="text-xl font-black text-white tracking-tight">Settings</h1>
-                <p className="text-xs text-slate-500 mt-1 font-semibold">Manage your account and preferences</p>
+                <p className="text-xs text-slate-500 mt-1 font-semibold">
+                  Manage your account and preferences
+                </p>
               </div>
 
               {/* Settings Subnav Tabs */}
@@ -794,7 +965,7 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
                   { id: "profile", label: "Profile" },
                   { id: "api", label: "API Keys" },
                   { id: "notifications", label: "Notifications" },
-                  { id: "advanced", label: "Advanced" }
+                  { id: "advanced", label: "Advanced" },
                 ].map((tab) => (
                   <button
                     key={tab.id}
@@ -819,11 +990,15 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
                       <h3 className="text-sm font-bold text-slate-200 uppercase tracking-wider mb-2 border-b border-slate-800/60 pb-2">
                         Profile Information
                       </h3>
-                      <p className="text-[10px] text-slate-400 font-semibold mb-4">Update your account details</p>
+                      <p className="text-[10px] text-slate-400 font-semibold mb-4">
+                        Update your account details
+                      </p>
 
                       <div className="space-y-4">
                         <div>
-                          <label className="block text-[10px] text-slate-400 font-bold uppercase mb-1.5">Email</label>
+                          <label className="block text-[10px] text-slate-400 font-bold uppercase mb-1.5">
+                            Email
+                          </label>
                           <input
                             type="email"
                             disabled
@@ -833,7 +1008,9 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
                         </div>
 
                         <div>
-                          <label className="block text-[10px] text-slate-400 font-bold uppercase mb-1.5">Full Name</label>
+                          <label className="block text-[10px] text-slate-400 font-bold uppercase mb-1.5">
+                            Full Name
+                          </label>
                           <input
                             type="text"
                             placeholder="Enter your full name"
@@ -844,7 +1021,9 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
                         </div>
 
                         <div>
-                          <label className="block text-[10px] text-slate-400 font-bold uppercase mb-1.5">Company</label>
+                          <label className="block text-[10px] text-slate-400 font-bold uppercase mb-1.5">
+                            Company
+                          </label>
                           <input
                             type="text"
                             placeholder="Enter your company name"
@@ -867,7 +1046,9 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
                       <h3 className="text-sm font-bold text-slate-200 uppercase tracking-wider mb-2 border-b border-slate-800/60 pb-2">
                         Subscription
                       </h3>
-                      <p className="text-[10px] text-slate-400 font-semibold mb-4">Your current plan details</p>
+                      <p className="text-[10px] text-slate-400 font-semibold mb-4">
+                        Your current plan details
+                      </p>
                       <div className="p-4 bg-[#020813]/60 border border-slate-800/40 rounded text-xs text-slate-400">
                         No subscription found
                       </div>
@@ -886,7 +1067,9 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
                           <h3 className="text-sm font-bold text-slate-200 uppercase tracking-wider">
                             API Keys
                           </h3>
-                          <p className="text-[10px] text-slate-400 font-semibold mt-0.5">Manage your API keys for programmatic access</p>
+                          <p className="text-[10px] text-slate-400 font-semibold mt-0.5">
+                            Manage your API keys for programmatic access
+                          </p>
                         </div>
                         <Button
                           onClick={generateApiKey}
@@ -916,8 +1099,12 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
                               {apiKeys.map((item, idx) => (
                                 <tr key={idx} className="hover:bg-slate-800/10">
                                   <td className="py-3 px-3 text-white font-bold">{item.name}</td>
-                                  <td className="py-3 px-3 font-mono text-[10px] text-[#76B900]">{item.key}</td>
-                                  <td className="py-3 px-3 text-emerald-400 font-bold">{item.status}</td>
+                                  <td className="py-3 px-3 font-mono text-[10px] text-[#76B900]">
+                                    {item.key}
+                                  </td>
+                                  <td className="py-3 px-3 text-emerald-400 font-bold">
+                                    {item.status}
+                                  </td>
                                   <td className="py-3 px-3">{item.created}</td>
                                   <td className="py-3 px-3">{item.lastUsed}</td>
                                 </tr>
@@ -939,7 +1126,9 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
                       <h3 className="text-sm font-bold text-slate-200 uppercase tracking-wider mb-2 border-b border-slate-800/60 pb-2">
                         Notification Preferences
                       </h3>
-                      <p className="text-[10px] text-slate-400 font-semibold mb-6">Configure how you receive updates</p>
+                      <p className="text-[10px] text-slate-400 font-semibold mb-6">
+                        Configure how you receive updates
+                      </p>
 
                       <div className="space-y-4">
                         {[
@@ -972,10 +1161,15 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
                             toggle: setWeeklySummary,
                           },
                         ].map((pref) => (
-                          <div key={pref.id} className="flex items-center justify-between border-b border-slate-800/40 pb-4 last:border-b-0">
+                          <div
+                            key={pref.id}
+                            className="flex items-center justify-between border-b border-slate-800/40 pb-4 last:border-b-0"
+                          >
                             <div>
                               <div className="text-xs font-bold text-slate-200">{pref.title}</div>
-                              <div className="text-[10px] text-slate-400 mt-0.5 font-semibold">{pref.desc}</div>
+                              <div className="text-[10px] text-slate-400 mt-0.5 font-semibold">
+                                {pref.desc}
+                              </div>
                             </div>
 
                             <button
@@ -1010,11 +1204,15 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
                           Webhook Configuration
                         </h3>
                       </div>
-                      <p className="text-[10px] text-slate-400 font-semibold mb-4">Test webhook endpoints</p>
+                      <p className="text-[10px] text-slate-400 font-semibold mb-4">
+                        Test webhook endpoints
+                      </p>
 
                       <div className="space-y-4">
                         <div>
-                          <label className="block text-[10px] text-slate-400 font-bold uppercase mb-1.5">Webhook URL</label>
+                          <label className="block text-[10px] text-slate-400 font-bold uppercase mb-1.5">
+                            Webhook URL
+                          </label>
                           <input
                             type="text"
                             value={webhookUrl}
@@ -1040,10 +1238,15 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
                           Data Management
                         </h3>
                       </div>
-                      <p className="text-[10px] text-slate-400 font-semibold mb-6">Export or delete your data</p>
+                      <p className="text-[10px] text-slate-400 font-semibold mb-6">
+                        Export or delete your data
+                      </p>
 
                       <div className="space-y-3">
-                        <Button variant="outline" className="w-full py-6 border-slate-800 text-xs font-bold text-slate-200 bg-[#0b1329]/40 flex items-center justify-center gap-2">
+                        <Button
+                          variant="outline"
+                          className="w-full py-6 border-slate-800 text-xs font-bold text-slate-200 bg-[#0b1329]/40 flex items-center justify-center gap-2"
+                        >
                           <Download className="h-4 w-4" />
                           Export All Data
                         </Button>
@@ -1058,7 +1261,6 @@ export const IntelliGPUDashboard: React.FC<IntelliGPUDashboardProps> = ({
               )}
             </div>
           )}
-
         </main>
       </div>
     </div>

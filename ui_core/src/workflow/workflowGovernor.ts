@@ -30,34 +30,77 @@ export class WorkflowGovernor {
 
     let intentResolved = "General CRM Operation";
 
-    if (requestLower.includes("refund") || requestLower.includes("billing") || requestLower.includes("invoice")) {
+    if (
+      requestLower.includes("refund") ||
+      requestLower.includes("billing") ||
+      requestLower.includes("invoice")
+    ) {
       intentResolved = "Finance Payment Reimbursement";
       workflowSteps.push(
-        { name: "Query billing record database", department: "Finance", status: "verified", resultMessage: "Invoice match validated." },
-        { name: "Initiate Stripe webhook refund payout", department: "Finance", status: "verified", resultMessage: "Stripe transaction status processed." },
-        { name: "Notify customer support logs queue", department: "Support", status: "verified", resultMessage: "Support ticket logs marked resolved." }
+        {
+          name: "Query billing record database",
+          department: "Finance",
+          status: "verified",
+          resultMessage: "Invoice match validated.",
+        },
+        {
+          name: "Initiate Stripe webhook refund payout",
+          department: "Finance",
+          status: "verified",
+          resultMessage: "Stripe transaction status processed.",
+        },
+        {
+          name: "Notify customer support logs queue",
+          department: "Support",
+          status: "verified",
+          resultMessage: "Support ticket logs marked resolved.",
+        },
       );
-    } else if (requestLower.includes("hiring") || requestLower.includes("employee") || requestLower.includes("leave")) {
+    } else if (
+      requestLower.includes("hiring") ||
+      requestLower.includes("employee") ||
+      requestLower.includes("leave")
+    ) {
       intentResolved = "HR Resource Management Allocation";
       workflowSteps.push(
-        { name: "Verify department head approval status", department: "HR", status: "verified", resultMessage: "Digital signature matching matches head." },
-        { name: "Log allocation updates in employee matrix database", department: "HR", status: "verified", resultMessage: "Record entry complete." }
+        {
+          name: "Verify department head approval status",
+          department: "HR",
+          status: "verified",
+          resultMessage: "Digital signature matching matches head.",
+        },
+        {
+          name: "Log allocation updates in employee matrix database",
+          department: "HR",
+          status: "verified",
+          resultMessage: "Record entry complete.",
+        },
       );
     } else {
       workflowSteps.push(
-        { name: "Analyze CRM record parameters", department: "CRM", status: "verified", resultMessage: "Parameters map matched." },
-        { name: "Run general workflow dispatcher", department: "Operations", status: "verified", resultMessage: "Dispatched." }
+        {
+          name: "Analyze CRM record parameters",
+          department: "CRM",
+          status: "verified",
+          resultMessage: "Parameters map matched.",
+        },
+        {
+          name: "Run general workflow dispatcher",
+          department: "Operations",
+          status: "verified",
+          resultMessage: "Dispatched.",
+        },
       );
     }
 
-    const allStepsVerified = workflowSteps.every(s => s.status === "verified");
+    const allStepsVerified = workflowSteps.every((s) => s.status === "verified");
 
     return {
       requestId,
       intentResolved,
       workflowSteps,
       allStepsVerified,
-      successRate: allStepsVerified ? 0.995 : 0.40
+      successRate: allStepsVerified ? 0.995 : 0.4,
     };
   }
 }

@@ -25,14 +25,14 @@ export class PrefixReuseEngine {
       prefixHash: "system-prompt-v31-audit",
       prefixLengthTokens: 1024,
       lastUsedTimestamp: Date.now(),
-      hitCount: 15
+      hitCount: 15,
     },
     "regional-context-emea": {
       prefixHash: "regional-context-emea",
       prefixLengthTokens: 512,
       lastUsedTimestamp: Date.now(),
-      hitCount: 8
-    }
+      hitCount: 8,
+    },
   };
 
   evaluateQueryPrefix(query: string): PrefixEvaluation {
@@ -73,7 +73,7 @@ export class PrefixReuseEngine {
       prefixLengthTokens,
       tokensBypassed,
       latencySavedMs,
-      kvCacheSavedMb
+      kvCacheSavedMb,
     };
   }
 

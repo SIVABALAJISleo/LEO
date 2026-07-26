@@ -1,5 +1,5 @@
-import { runCpuJob } from './cpuEngine';
-import { runGpuJob, runWebGpuUpscale, WebGpuUpscalePayload } from './gpuEngine';
+import { runCpuJob } from "./cpuEngine";
+import { runGpuJob, runWebGpuUpscale, WebGpuUpscalePayload } from "./gpuEngine";
 
 export interface ImageJobPayload {
   // When provided, we will try to run real WebGPU upscaling on this image.
@@ -23,7 +23,10 @@ export interface ImageJobResult {
 
 // Image engine: runs the demo CPU job and, if possible, executes a real WebGPU
 // nearest-neighbor upscaler on provided image data.
-export async function runImageJob(jobId: string, payload: ImageJobPayload): Promise<ImageJobResult> {
+export async function runImageJob(
+  jobId: string,
+  payload: ImageJobPayload,
+): Promise<ImageJobResult> {
   const [cpuRes, gpuRes] = await Promise.all([
     runCpuJob(jobId, payload),
     runGpuJob(jobId, payload),
@@ -65,8 +68,7 @@ export async function runImageJob(jobId: string, payload: ImageJobPayload): Prom
     gpuNote: gpuRes.note,
     upscaled,
     note: upscaled
-      ? 'Image engine executed CPU demo work and WebGPU upscaling.'
-      : 'Image engine executed CPU demo work; WebGPU upscaler skipped or unavailable.',
+      ? "Image engine executed CPU demo work and WebGPU upscaling."
+      : "Image engine executed CPU demo work; WebGPU upscaler skipped or unavailable.",
   };
 }
-

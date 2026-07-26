@@ -3,7 +3,7 @@
 // All backend operations with strongly typed functions
 // ============================================
 
-import { firebaseClient as supabase } from '@/integrations/firebase/client';
+import { firebaseClient as supabase } from "@/integrations/firebase/client";
 import type {
   User,
   Profile,
@@ -20,8 +20,8 @@ import type {
   Alert,
   AlertsFilter,
   ApiError,
-} from './types';
-import type { Json } from '@/integrations/supabase/types';
+} from "./types";
+import type { Json } from "@/integrations/supabase/types";
 
 // ============================================
 // Helper Functions
@@ -32,11 +32,7 @@ function createApiError(code: string, message: string, details?: string): ApiErr
 }
 
 function handleSupabaseError(error: { message: string; code?: string }): never {
-  throw createApiError(
-    error.code || 'SUPABASE_ERROR',
-    error.message,
-    'Database operation failed'
-  );
+  throw createApiError(error.code || "SUPABASE_ERROR", error.message, "Database operation failed");
 }
 
 // Convert Record<string, unknown> to Json type
@@ -59,12 +55,12 @@ export async function login(email: string, password: string): Promise<AuthResult
   });
 
   if (error) {
-    throw createApiError('AUTH_ERROR', error.message, 'Failed to sign in');
+    throw createApiError("AUTH_ERROR", error.message, "Failed to sign in");
   }
 
   return {
     user: data.user as User,
-    session: data.session as AuthResult['session'],
+    session: data.session as AuthResult["session"],
   };
 }
 
@@ -76,7 +72,7 @@ export async function login(email: string, password: string): Promise<AuthResult
 export async function signup(
   email: string,
   password: string,
-  fullName?: string
+  fullName?: string,
 ): Promise<AuthResult> {
   const redirectUrl = `${window.location.origin}/`;
 
@@ -92,12 +88,12 @@ export async function signup(
   });
 
   if (error) {
-    throw createApiError('AUTH_ERROR', error.message, 'Failed to sign up');
+    throw createApiError("AUTH_ERROR", error.message, "Failed to sign up");
   }
 
   return {
     user: data.user as User,
-    session: data.session as AuthResult['session'],
+    session: data.session as AuthResult["session"],
   };
 }
 
@@ -109,7 +105,7 @@ export async function logout(): Promise<void> {
   const { error } = await supabase.auth.signOut();
 
   if (error) {
-    throw createApiError('AUTH_ERROR', error.message, 'Failed to sign out');
+    throw createApiError("AUTH_ERROR", error.message, "Failed to sign out");
   }
 }
 
@@ -118,20 +114,23 @@ export async function logout(): Promise<void> {
  * Returns null if not authenticated
  */
 export async function getCurrentUser(): Promise<{ user: User; profile: Profile } | null> {
-  const { data: { user }, error: userError } = await supabase.auth.getUser();
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
 
   if (userError || !user) {
     return null;
   }
 
   const { data: profile, error: profileError } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('user_id', user.id)
+    .from("profiles")
+    .select("*")
+    .eq("user_id", user.id)
     .maybeSingle();
 
   if (profileError) {
-    console.error('Failed to fetch profile:', profileError);
+    console.error("Failed to fetch profile:", profileError);
   }
 
   return {
@@ -150,9 +149,9 @@ export async function getCurrentUser(): Promise<{ user: User; profile: Profile }
  */
 export async function listModels(): Promise<Model[]> {
   const { data, error } = await supabase
-    .from('models')
-    .select('*')
-    .order('created_at', { ascending: false });
+    .from("models")
+    .select("*")
+    .order("created_at", { ascending: false });
 
   if (error) handleSupabaseError(error);
   return (data || []) as unknown as Model[];
@@ -163,11 +162,13 @@ export async function listModels(): Promise<Model[]> {
  * @throws ApiError on failure
  */
 export async function createModel(input: CreateModelInput): Promise<Model> {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) throw createApiError('AUTH_ERROR', 'Not authenticated');
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw createApiError("AUTH_ERROR", "Not authenticated");
 
   const { data, error } = await supabase
-    .from('models')
+    .from("models")
     .insert({
       user_id: user.id,
       name: input.name,
@@ -189,14 +190,10 @@ export async function createModel(input: CreateModelInput): Promise<Model> {
  * @throws ApiError on failure or not found
  */
 export async function getModelById(id: string): Promise<Model> {
-  const { data, error } = await supabase
-    .from('models')
-    .select('*')
-    .eq('id', id)
-    .single();
+  const { data, error } = await supabase.from("models").select("*").eq("id", id).single();
 
   if (error) handleSupabaseError(error);
-  if (!data) throw createApiError('NOT_FOUND', 'Model not found');
+  if (!data) throw createApiError("NOT_FOUND", "Model not found");
   return data as unknown as Model;
 }
 
@@ -206,7 +203,7 @@ export async function getModelById(id: string): Promise<Model> {
  */
 export async function updateModel(id: string, updates: Partial<CreateModelInput>): Promise<Model> {
   const updateData: Record<string, unknown> = {};
-  
+
   if (updates.name !== undefined) updateData.name = updates.name;
   if (updates.description !== undefined) updateData.description = updates.description;
   if (updates.model_type !== undefined) updateData.model_type = updates.model_type;
@@ -215,9 +212,9 @@ export async function updateModel(id: string, updates: Partial<CreateModelInput>
   if (updates.parameters !== undefined) updateData.parameters = toJson(updates.parameters);
 
   const { data, error } = await supabase
-    .from('models')
+    .from("models")
     .update(updateData)
-    .eq('id', id)
+    .eq("id", id)
     .select()
     .single();
 
@@ -230,10 +227,7 @@ export async function updateModel(id: string, updates: Partial<CreateModelInput>
  * @throws ApiError on failure
  */
 export async function deleteModel(id: string): Promise<void> {
-  const { error } = await supabase
-    .from('models')
-    .delete()
-    .eq('id', id);
+  const { error } = await supabase.from("models").delete().eq("id", id);
 
   if (error) handleSupabaseError(error);
 }
@@ -247,11 +241,13 @@ export async function deleteModel(id: string): Promise<void> {
  * @throws ApiError on failure
  */
 export async function createInferenceJob(input: CreateInferenceJobInput): Promise<InferenceJob> {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) throw createApiError('AUTH_ERROR', 'Not authenticated');
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw createApiError("AUTH_ERROR", "Not authenticated");
 
   const { data, error } = await supabase
-    .from('inference_jobs')
+    .from("inference_jobs")
     .insert({
       user_id: user.id,
       model_id: input.modelId,
@@ -272,10 +268,10 @@ export async function createInferenceJob(input: CreateInferenceJobInput): Promis
  */
 export async function getActiveJobs(): Promise<InferenceJob[]> {
   const { data, error } = await supabase
-    .from('inference_jobs')
-    .select('*')
-    .in('status', ['running', 'queued'])
-    .order('created_at', { ascending: false });
+    .from("inference_jobs")
+    .select("*")
+    .in("status", ["running", "queued"])
+    .order("created_at", { ascending: false });
 
   if (error) handleSupabaseError(error);
   return (data || []) as unknown as InferenceJob[];
@@ -286,13 +282,10 @@ export async function getActiveJobs(): Promise<InferenceJob[]> {
  * @throws ApiError on failure
  */
 export async function getJobs(status?: string): Promise<InferenceJob[]> {
-  let query = supabase
-    .from('inference_jobs')
-    .select('*')
-    .order('created_at', { ascending: false });
+  let query = supabase.from("inference_jobs").select("*").order("created_at", { ascending: false });
 
   if (status) {
-    query = query.eq('status', status);
+    query = query.eq("status", status);
   }
 
   const { data, error } = await query;
@@ -309,19 +302,19 @@ export async function getJobById(id: string): Promise<{
   metrics: PerformanceMetric[];
 }> {
   const { data: job, error: jobError } = await supabase
-    .from('inference_jobs')
-    .select('*')
-    .eq('id', id)
+    .from("inference_jobs")
+    .select("*")
+    .eq("id", id)
     .single();
 
   if (jobError) handleSupabaseError(jobError);
-  if (!job) throw createApiError('NOT_FOUND', 'Job not found');
+  if (!job) throw createApiError("NOT_FOUND", "Job not found");
 
   const { data: metrics, error: metricsError } = await supabase
-    .from('performance_metrics')
-    .select('*')
-    .eq('job_id', id)
-    .order('recorded_at', { ascending: true });
+    .from("performance_metrics")
+    .select("*")
+    .eq("job_id", id)
+    .order("recorded_at", { ascending: true });
 
   if (metricsError) handleSupabaseError(metricsError);
 
@@ -337,9 +330,9 @@ export async function getJobById(id: string): Promise<{
  */
 export async function cancelJob(id: string): Promise<InferenceJob> {
   const { data, error } = await supabase
-    .from('inference_jobs')
-    .update({ status: 'cancelled' })
-    .eq('id', id)
+    .from("inference_jobs")
+    .update({ status: "cancelled" })
+    .eq("id", id)
     .select()
     .single();
 
@@ -353,9 +346,9 @@ export async function cancelJob(id: string): Promise<InferenceJob> {
  */
 export async function updateJobProgress(id: string, progress: number): Promise<InferenceJob> {
   const { data, error } = await supabase
-    .from('inference_jobs')
+    .from("inference_jobs")
     .update({ progress })
-    .eq('id', id)
+    .eq("id", id)
     .select()
     .single();
 
@@ -373,9 +366,9 @@ export async function updateJobProgress(id: string, progress: number): Promise<I
  */
 export async function getModuleConfigs(): Promise<ModuleConfig[]> {
   const { data, error } = await supabase
-    .from('module_configs')
-    .select('*')
-    .order('module_name', { ascending: true });
+    .from("module_configs")
+    .select("*")
+    .order("module_name", { ascending: true });
 
   if (error) handleSupabaseError(error);
   return (data || []) as unknown as ModuleConfig[];
@@ -387,16 +380,16 @@ export async function getModuleConfigs(): Promise<ModuleConfig[]> {
  */
 export async function updateModuleConfig(
   id: string,
-  patch: UpdateModuleConfigInput
+  patch: UpdateModuleConfigInput,
 ): Promise<ModuleConfig> {
   const updateData: Record<string, unknown> = {};
   if (patch.enabled !== undefined) updateData.enabled = patch.enabled;
   if (patch.config !== undefined) updateData.config = toJson(patch.config);
 
   const { data, error } = await supabase
-    .from('module_configs')
+    .from("module_configs")
     .update(updateData)
-    .eq('id', id)
+    .eq("id", id)
     .select()
     .single();
 
@@ -412,22 +405,27 @@ export async function upsertModuleConfig(
   moduleName: string,
   moduleType: string,
   config: Record<string, unknown>,
-  enabled: boolean = true
+  enabled: boolean = true,
 ): Promise<ModuleConfig> {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) throw createApiError('AUTH_ERROR', 'Not authenticated');
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw createApiError("AUTH_ERROR", "Not authenticated");
 
   const { data, error } = await supabase
-    .from('module_configs')
-    .upsert({
-      user_id: user.id,
-      module_name: moduleName,
-      module_type: moduleType,
-      config: toJson(config),
-      enabled,
-    }, {
-      onConflict: 'user_id,module_name',
-    })
+    .from("module_configs")
+    .upsert(
+      {
+        user_id: user.id,
+        module_name: moduleName,
+        module_type: moduleType,
+        config: toJson(config),
+        enabled,
+      },
+      {
+        onConflict: "user_id,module_name",
+      },
+    )
     .select()
     .single();
 
@@ -444,30 +442,30 @@ export async function upsertModuleConfig(
  * @throws ApiError on failure
  */
 export async function getPerformanceMetrics(
-  filters: PerformanceMetricsFilter = {}
+  filters: PerformanceMetricsFilter = {},
 ): Promise<PerformanceMetric[]> {
   let query = supabase
-    .from('performance_metrics')
-    .select('*')
-    .order('recorded_at', { ascending: false });
+    .from("performance_metrics")
+    .select("*")
+    .order("recorded_at", { ascending: false });
 
   if (filters.startDate) {
-    query = query.gte('recorded_at', filters.startDate);
+    query = query.gte("recorded_at", filters.startDate);
   }
   if (filters.endDate) {
-    query = query.lte('recorded_at', filters.endDate);
+    query = query.lte("recorded_at", filters.endDate);
   }
   if (filters.moduleName) {
-    query = query.eq('module_name', filters.moduleName);
+    query = query.eq("module_name", filters.moduleName);
   }
   if (filters.modelId) {
-    query = query.eq('model_id', filters.modelId);
+    query = query.eq("model_id", filters.modelId);
   }
   if (filters.jobId) {
-    query = query.eq('job_id', filters.jobId);
+    query = query.eq("job_id", filters.jobId);
   }
   if (filters.metricName) {
-    query = query.eq('metric_name', filters.metricName);
+    query = query.eq("metric_name", filters.metricName);
   }
   if (filters.limit) {
     query = query.limit(filters.limit);
@@ -488,9 +486,9 @@ export async function getPerformanceMetrics(
  */
 export async function getSystemMetricsRecent(limit: number = 50): Promise<SystemMetrics[]> {
   const { data, error } = await supabase
-    .from('system_metrics')
-    .select('*')
-    .order('recorded_at', { ascending: false })
+    .from("system_metrics")
+    .select("*")
+    .order("recorded_at", { ascending: false })
     .limit(limit);
 
   if (error) handleSupabaseError(error);
@@ -502,13 +500,15 @@ export async function getSystemMetricsRecent(limit: number = 50): Promise<System
  * @throws ApiError on failure
  */
 export async function insertSystemMetrics(
-  metrics: Omit<SystemMetrics, 'id' | 'user_id' | 'recorded_at'>
+  metrics: Omit<SystemMetrics, "id" | "user_id" | "recorded_at">,
 ): Promise<SystemMetrics> {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) throw createApiError('AUTH_ERROR', 'Not authenticated');
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw createApiError("AUTH_ERROR", "Not authenticated");
 
   const { data, error } = await supabase
-    .from('system_metrics')
+    .from("system_metrics")
     .insert({
       user_id: user.id,
       gpu_utilization: metrics.gpu_utilization,
@@ -534,19 +534,16 @@ export async function insertSystemMetrics(
  * @throws ApiError on failure
  */
 export async function getAlerts(filters: AlertsFilter = {}): Promise<Alert[]> {
-  let query = supabase
-    .from('alerts')
-    .select('*')
-    .order('created_at', { ascending: false });
+  let query = supabase.from("alerts").select("*").order("created_at", { ascending: false });
 
   if (filters.severity) {
-    query = query.eq('severity', filters.severity);
+    query = query.eq("severity", filters.severity);
   }
   if (filters.resolved !== undefined) {
-    query = query.eq('resolved', filters.resolved);
+    query = query.eq("resolved", filters.resolved);
   }
   if (filters.alertType) {
-    query = query.eq('alert_type', filters.alertType);
+    query = query.eq("alert_type", filters.alertType);
   }
   if (filters.limit) {
     query = query.limit(filters.limit);
@@ -563,12 +560,12 @@ export async function getAlerts(filters: AlertsFilter = {}): Promise<Alert[]> {
  */
 export async function resolveAlert(id: string): Promise<Alert> {
   const { data, error } = await supabase
-    .from('alerts')
+    .from("alerts")
     .update({
       resolved: true,
       resolved_at: new Date().toISOString(),
     })
-    .eq('id', id)
+    .eq("id", id)
     .select()
     .single();
 
@@ -584,14 +581,16 @@ export async function createAlert(
   alertType: string,
   title: string,
   message: string,
-  severity: Alert['severity'] = 'info',
-  metadata: Record<string, unknown> = {}
+  severity: Alert["severity"] = "info",
+  metadata: Record<string, unknown> = {},
 ): Promise<Alert> {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) throw createApiError('AUTH_ERROR', 'Not authenticated');
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw createApiError("AUTH_ERROR", "Not authenticated");
 
   const { data, error } = await supabase
-    .from('alerts')
+    .from("alerts")
     .insert({
       user_id: user.id,
       alert_type: alertType,
@@ -615,14 +614,14 @@ export async function createAlert(
  * Get module status for all modules
  * @throws ApiError on failure
  */
-export async function getModuleStatuses(): Promise<import('./types').ModuleStatus[]> {
+export async function getModuleStatuses(): Promise<import("./types").ModuleStatus[]> {
   const { data, error } = await supabase
-    .from('module_status')
-    .select('*')
-    .order('module_name', { ascending: true });
+    .from("module_status")
+    .select("*")
+    .order("module_name", { ascending: true });
 
   if (error) handleSupabaseError(error);
-  return (data || []) as unknown as import('./types').ModuleStatus[];
+  return (data || []) as unknown as import("./types").ModuleStatus[];
 }
 
 /**
@@ -631,25 +630,30 @@ export async function getModuleStatuses(): Promise<import('./types').ModuleStatu
  */
 export async function updateModuleStatus(
   moduleName: string,
-  status: import('./types').ModuleStatusType,
-  currentJobId?: string | null
-): Promise<import('./types').ModuleStatus> {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) throw createApiError('AUTH_ERROR', 'Not authenticated');
+  status: import("./types").ModuleStatusType,
+  currentJobId?: string | null,
+): Promise<import("./types").ModuleStatus> {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw createApiError("AUTH_ERROR", "Not authenticated");
 
   const { data, error } = await supabase
-    .from('module_status')
-    .upsert({
-      user_id: user.id,
-      module_name: moduleName,
-      status,
-      current_job_id: currentJobId ?? null,
-    }, {
-      onConflict: 'user_id,module_name',
-    })
+    .from("module_status")
+    .upsert(
+      {
+        user_id: user.id,
+        module_name: moduleName,
+        status,
+        current_job_id: currentJobId ?? null,
+      },
+      {
+        onConflict: "user_id,module_name",
+      },
+    )
     .select()
     .single();
 
   if (error) handleSupabaseError(error);
-  return data as unknown as import('./types').ModuleStatus;
+  return data as unknown as import("./types").ModuleStatus;
 }

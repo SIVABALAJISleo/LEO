@@ -29,7 +29,7 @@ export class TopWeaknessEliminator {
         impactScore: 9.2,
         complexity: "Medium" as const,
         improvementStrategy: "Inject minhash hash comparisons and temporal decay weighting",
-        estimatedGainPct: 8.5
+        estimatedGainPct: 8.5,
       },
       {
         id: "W-02",
@@ -38,7 +38,7 @@ export class TopWeaknessEliminator {
         impactScore: 8.8,
         complexity: "Low" as const,
         improvementStrategy: "Implement Tanglish phoneme dictionary and sub-query expanders",
-        estimatedGainPct: 7.2
+        estimatedGainPct: 7.2,
       },
       {
         id: "W-03",
@@ -47,7 +47,7 @@ export class TopWeaknessEliminator {
         impactScore: 9.5,
         complexity: "High" as const,
         improvementStrategy: "Enforce acyclic routing table restrictions and parent-fallback rules",
-        estimatedGainPct: 9.1
+        estimatedGainPct: 9.1,
       },
       {
         id: "W-04",
@@ -56,7 +56,7 @@ export class TopWeaknessEliminator {
         impactScore: 8.5,
         complexity: "Medium" as const,
         improvementStrategy: "Introduce partition clustering and dynamic attention vector masks",
-        estimatedGainPct: 6.4
+        estimatedGainPct: 6.4,
       },
       {
         id: "W-05",
@@ -65,21 +65,23 @@ export class TopWeaknessEliminator {
         impactScore: 9.6,
         complexity: "Low" as const,
         improvementStrategy: "Enforce verification thresholds and confidence boundary throttling",
-        estimatedGainPct: 11.3
-      }
+        estimatedGainPct: 11.3,
+      },
     ];
 
     const complexityWeights = { Low: 1, Medium: 2, High: 3 };
 
-    this.weaknesses = rawData.map((w, idx) => {
-      const weight = complexityWeights[w.complexity];
-      const roiScore = parseFloat(((w.impactScore * w.estimatedGainPct) / weight).toFixed(2));
-      return {
-        rank: idx + 1,
-        ...w,
-        roiScore
-      };
-    }).sort((a, b) => b.roiScore - a.roiScore);
+    this.weaknesses = rawData
+      .map((w, idx) => {
+        const weight = complexityWeights[w.complexity];
+        const roiScore = parseFloat(((w.impactScore * w.estimatedGainPct) / weight).toFixed(2));
+        return {
+          rank: idx + 1,
+          ...w,
+          roiScore,
+        };
+      })
+      .sort((a, b) => b.roiScore - a.roiScore);
 
     // Re-assign ranks based on ROI
     this.weaknesses.forEach((w, idx) => {

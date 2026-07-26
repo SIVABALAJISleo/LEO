@@ -12,7 +12,7 @@ export interface AnomalyReport {
 export class RareBugFinder {
   testConcurrencyStability(testIterationsCount: number): AnomalyReport[] {
     const list: AnomalyReport[] = [];
-    
+
     // Simulate test runs
     for (let i = 0; i < 3; i++) {
       const isBugDetected = Math.random() > 0.82;
@@ -23,7 +23,7 @@ export class RareBugFinder {
       if (isBugDetected) {
         bugType = i === 1 ? "MEMORY_LEAK" : "RACE_CONDITION";
         leakSizeKB = bugType === "MEMORY_LEAK" ? Math.round(Math.random() * 850 + 200) : undefined;
-        unstableThreadId = `thread-worker-${i+1}`;
+        unstableThreadId = `thread-worker-${i + 1}`;
       }
 
       list.push({
@@ -31,7 +31,7 @@ export class RareBugFinder {
         isBugDetected,
         bugType,
         leakSizeKB,
-        unstableThreadId
+        unstableThreadId,
       });
     }
 

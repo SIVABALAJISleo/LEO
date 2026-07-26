@@ -1,50 +1,49 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Skeleton } from '@/components/ui/skeleton';
-import { 
-  Clock, 
-  Download, 
-  XCircle, 
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Clock,
+  Download,
+  XCircle,
   AlertTriangle,
   CheckCircle2,
   Loader2,
   Pause,
-  ListOrdered
-} from 'lucide-react';
-import { useGpuJobs } from '@/hooks/useGpuJobs';
-import { 
-  GpuJob, 
-  getStatusBadgeVariant, 
-  getStatusMessage,
-  getStatusColor
-} from '@/lib/gpuJobTypes';
-import { formatDistanceToNow } from 'date-fns';
+  ListOrdered,
+} from "lucide-react";
+import { useGpuJobs } from "@/hooks/useGpuJobs";
+import { GpuJob, getStatusBadgeVariant, getStatusMessage, getStatusColor } from "@/lib/gpuJobTypes";
+import { formatDistanceToNow } from "date-fns";
 
-function JobCard({ job, position, onCancel }: { 
-  job: GpuJob; 
+function JobCard({
+  job,
+  position,
+  onCancel,
+}: {
+  job: GpuJob;
   position: number | null;
   onCancel: (id: string) => void;
 }) {
   const statusMessage = getStatusMessage(job.status, position || undefined);
   const statusColor = getStatusColor(job.status);
-  const canCancel = job.status === 'pending' || job.status === 'queued';
+  const canCancel = job.status === "pending" || job.status === "queued";
 
   const getStatusIcon = () => {
     switch (job.status) {
-      case 'pending':
-      case 'queued':
+      case "pending":
+      case "queued":
         return <Clock className="h-4 w-4" />;
-      case 'running':
+      case "running":
         return <Loader2 className="h-4 w-4 animate-spin" />;
-      case 'paused':
+      case "paused":
         return <Pause className="h-4 w-4" />;
-      case 'completed':
+      case "completed":
         return <CheckCircle2 className="h-4 w-4" />;
-      case 'failed':
-      case 'too_large':
+      case "failed":
+      case "too_large":
         return <AlertTriangle className="h-4 w-4" />;
       default:
         return <XCircle className="h-4 w-4" />;
@@ -64,16 +63,18 @@ function JobCard({ job, position, onCancel }: {
               </span>
             </Badge>
           </div>
-          
+
           <p className="text-sm text-muted-foreground mb-2">{statusMessage}</p>
-          
+
           <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
             <span>Type: {job.job_type}</span>
             <span>Memory: {((job.memory_required_mb || 0) / 1024).toFixed(1)}GB</span>
-            <span>Created: {formatDistanceToNow(new Date(job.created_at), { addSuffix: true })}</span>
+            <span>
+              Created: {formatDistanceToNow(new Date(job.created_at), { addSuffix: true })}
+            </span>
           </div>
 
-          {job.status === 'running' && (
+          {job.status === "running" && (
             <div className="mt-3">
               <div className="flex justify-between text-xs mb-1">
                 <span>Progress</span>
@@ -108,8 +109,8 @@ function JobCard({ job, position, onCancel }: {
               Cancel
             </Button>
           )}
-          
-          {job.status === 'completed' && job.result_url && (
+
+          {job.status === "completed" && job.result_url && (
             <Button size="sm" asChild>
               <a href={job.result_url} target="_blank" rel="noopener noreferrer">
                 <Download className="h-4 w-4 mr-1" />
@@ -137,7 +138,7 @@ export function JobQueueList() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {[1, 2, 3].map(i => (
+          {[1, 2, 3].map((i) => (
             <Skeleton key={i} className="h-24 w-full" />
           ))}
         </CardContent>
@@ -160,9 +161,7 @@ export function JobQueueList() {
           </div>
           <div className="flex gap-2">
             <Badge variant="secondary">{stats.completed} completed</Badge>
-            {stats.failed > 0 && (
-              <Badge variant="destructive">{stats.failed} failed</Badge>
-            )}
+            {stats.failed > 0 && <Badge variant="destructive">{stats.failed} failed</Badge>}
           </div>
         </div>
       </CardHeader>
@@ -175,7 +174,7 @@ export function JobQueueList() {
         ) : (
           <ScrollArea className="h-[500px] pr-4">
             <div className="space-y-3">
-              {jobs.map(job => (
+              {jobs.map((job) => (
                 <JobCard
                   key={job.id}
                   job={job}

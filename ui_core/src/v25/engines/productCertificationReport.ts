@@ -39,18 +39,18 @@ export class ProductCertificationReport {
     // Overall product score computed strictly on metrics
     const overallProductScore = parseFloat(
       (
-        (reasoningScore * 0.20) +
-        (memoryScore * 0.15) +
-        (searchScore * 0.10) +
-        (ragScore * 0.15) +
-        (agentScore * 0.10) +
-        (verificationScoreMetric(reasoningScore, memoryScore) * 0.10) +
-        (enterpriseScore * 0.10) +
-        (performanceScore * 0.10)
-      ).toFixed(4)
+        reasoningScore * 0.2 +
+        memoryScore * 0.15 +
+        searchScore * 0.1 +
+        ragScore * 0.15 +
+        agentScore * 0.1 +
+        verificationScoreMetric(reasoningScore, memoryScore) * 0.1 +
+        enterpriseScore * 0.1 +
+        performanceScore * 0.1
+      ).toFixed(4),
     );
 
-    const isCertified = 
+    const isCertified =
       reasoningScore >= 0.95 &&
       memoryScore >= 0.98 &&
       metrics.hallucination <= 0.01 &&
@@ -70,11 +70,11 @@ export class ProductCertificationReport {
       performanceScore,
       hallucinationScore,
       overallProductScore: Math.min(0.99, Math.max(0.95, overallProductScore)),
-      status
+      status,
     };
   }
 }
 
 function verificationScoreMetric(reas: number, mem: number): number {
-  return parseFloat(((reas * 0.6) + (mem * 0.4)).toFixed(3));
+  return parseFloat((reas * 0.6 + mem * 0.4).toFixed(3));
 }

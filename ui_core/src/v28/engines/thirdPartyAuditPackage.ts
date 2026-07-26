@@ -17,10 +17,10 @@ export class ThirdPartyAuditPackage {
   compileBundle(
     config: ReproducibilityConfig,
     datasets: RegisteredDataset[],
-    verificationReport: Record<string, any>
+    verificationReport: Record<string, any>,
   ): AuditBundle {
     const bundleId = `ANTIGRAVITY-V28-BUNDLE-${Date.now().toString().slice(-4)}`;
-    
+
     // Hash details to compile verification signature
     const signaturePayload = JSON.stringify({ config, datasetsCount: datasets.length });
     const sha256VerificationSignature = `sha256-bundle-${bundleId.toLowerCase()}-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`;
@@ -31,7 +31,7 @@ export class ThirdPartyAuditPackage {
       config,
       datasets,
       verificationReport,
-      sha256VerificationSignature
+      sha256VerificationSignature,
     };
   }
 }

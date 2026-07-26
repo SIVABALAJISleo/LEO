@@ -34,7 +34,7 @@ class MetricSeparatorEngine {
   }
 
   private getToday(): string {
-    return new Date().toISOString().split('T')[0];
+    return new Date().toISOString().split("T")[0];
   }
 
   private ensureDailyMetrics(): DailyMetrics {
@@ -91,7 +91,7 @@ class MetricSeparatorEngine {
   getReport(date?: string): MetricReport {
     const targetDate = date || this.getToday();
     const metrics = this.dailyMetrics.get(targetDate);
-    
+
     if (!metrics) {
       return {
         date: targetDate,
@@ -105,15 +105,16 @@ class MetricSeparatorEngine {
     }
 
     const totalServed = metrics.instantServed + metrics.approximateServed + metrics.gpuJobsExecuted;
-    
+
     return {
       date: targetDate,
       users: metrics.uniqueUsers.size,
       requests: metrics.totalRequests,
       gpuJobs: metrics.gpuJobsExecuted,
-      collapseRatio: metrics.totalRequests > 0 
-        ? (metrics.totalRequests - metrics.gpuJobsExecuted) / metrics.totalRequests 
-        : 0,
+      collapseRatio:
+        metrics.totalRequests > 0
+          ? (metrics.totalRequests - metrics.gpuJobsExecuted) / metrics.totalRequests
+          : 0,
       instantRate: totalServed > 0 ? metrics.instantServed / totalServed : 0,
       approximateRate: totalServed > 0 ? metrics.approximateServed / totalServed : 0,
     };
@@ -122,9 +123,11 @@ class MetricSeparatorEngine {
   // Plain English summary for owner
   getOwnerSummary(): string {
     const report = this.getReport();
-    return `Today: ${report.users} users made ${report.requests} requests. ` +
-           `Only ${report.gpuJobs} required GPU compute. ` +
-           `${Math.round(report.collapseRatio * 100)}% workload collapsed.`;
+    return (
+      `Today: ${report.users} users made ${report.requests} requests. ` +
+      `Only ${report.gpuJobs} required GPU compute. ` +
+      `${Math.round(report.collapseRatio * 100)}% workload collapsed.`
+    );
   }
 
   // Owner-only coverage status (DO NOT expose to users)
@@ -136,11 +139,11 @@ class MetricSeparatorEngine {
     isMaximized: true;
   } {
     return {
-      currentCoverage: 0.965,  // ~96.5%
-      remainingGap: 0.035,     // ~3.5%
-      gapCause: 'Non-software constraints only',
-      constraintsPruned: ['user_hardware_absence', 'user_refusal_optout'],
-      isMaximized: true
+      currentCoverage: 0.965, // ~96.5%
+      remainingGap: 0.035, // ~3.5%
+      gapCause: "Non-software constraints only",
+      constraintsPruned: ["user_hardware_absence", "user_refusal_optout"],
+      isMaximized: true,
     };
   }
 }

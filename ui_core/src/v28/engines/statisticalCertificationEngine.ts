@@ -18,7 +18,7 @@ export class StatisticalCertificationEngine {
     variance: number,
     sampleSize: number,
     targetThreshold: number,
-    operator: ">=" | "<=" = ">="
+    operator: ">=" | "<=" = ">=",
   ): StatMetrics {
     const stdDev = Math.sqrt(variance);
     const standardError = Math.sqrt(variance / sampleSize);
@@ -30,8 +30,10 @@ export class StatisticalCertificationEngine {
     const lowerBound = parseFloat(Math.max(0, mean - marginOfError * 100).toFixed(2));
     const upperBound = parseFloat(Math.min(100, mean + marginOfError * 100).toFixed(2));
 
-    const reproducibilityIndex = parseFloat(Math.min(99.99, Math.max(90, 100 - standardError * 500)).toFixed(2));
-    
+    const reproducibilityIndex = parseFloat(
+      Math.min(99.99, Math.max(90, 100 - standardError * 500)).toFixed(2),
+    );
+
     let met = false;
     if (operator === ">=") {
       met = mean >= targetThreshold;
@@ -40,7 +42,7 @@ export class StatisticalCertificationEngine {
     }
 
     // Must have standard error under 0.05% margin error limits to pass scientific verification
-    const passed = met && (marginOfError * 100 < 1.0);
+    const passed = met && marginOfError * 100 < 1.0;
 
     return {
       sampleSize,
@@ -50,7 +52,7 @@ export class StatisticalCertificationEngine {
       standardError: parseFloat(standardError.toFixed(6)),
       confidenceInterval: [lowerBound, upperBound],
       reproducibilityIndex,
-      passed
+      passed,
     };
   }
 }

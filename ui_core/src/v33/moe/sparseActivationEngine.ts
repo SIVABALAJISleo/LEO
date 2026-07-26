@@ -19,11 +19,56 @@ export interface ActivationStats {
 
 export class SparseActivationEngine {
   private expertMap = new Map<string, ExpertState>([
-    ["exp-0", { expertId: "exp-0", name: "Reasoning Expert", isActive: false, loadState: "SYSTEM_RAM", memoryRequiredBytes: 500 * 1024 * 1024 }],
-    ["exp-1", { expertId: "exp-1", name: "Math Expert", isActive: false, loadState: "SYSTEM_RAM", memoryRequiredBytes: 500 * 1024 * 1024 }],
-    ["exp-2", { expertId: "exp-2", name: "Code Expert", isActive: false, loadState: "SYSTEM_RAM", memoryRequiredBytes: 500 * 1024 * 1024 }],
-    ["exp-3", { expertId: "exp-3", name: "Language Expert", isActive: false, loadState: "SYSTEM_RAM", memoryRequiredBytes: 500 * 1024 * 1024 }],
-    ["exp-4", { expertId: "exp-4", name: "Retrieval Expert", isActive: false, loadState: "SYSTEM_RAM", memoryRequiredBytes: 500 * 1024 * 1024 }]
+    [
+      "exp-0",
+      {
+        expertId: "exp-0",
+        name: "Reasoning Expert",
+        isActive: false,
+        loadState: "SYSTEM_RAM",
+        memoryRequiredBytes: 500 * 1024 * 1024,
+      },
+    ],
+    [
+      "exp-1",
+      {
+        expertId: "exp-1",
+        name: "Math Expert",
+        isActive: false,
+        loadState: "SYSTEM_RAM",
+        memoryRequiredBytes: 500 * 1024 * 1024,
+      },
+    ],
+    [
+      "exp-2",
+      {
+        expertId: "exp-2",
+        name: "Code Expert",
+        isActive: false,
+        loadState: "SYSTEM_RAM",
+        memoryRequiredBytes: 500 * 1024 * 1024,
+      },
+    ],
+    [
+      "exp-3",
+      {
+        expertId: "exp-3",
+        name: "Language Expert",
+        isActive: false,
+        loadState: "SYSTEM_RAM",
+        memoryRequiredBytes: 500 * 1024 * 1024,
+      },
+    ],
+    [
+      "exp-4",
+      {
+        expertId: "exp-4",
+        name: "Retrieval Expert",
+        isActive: false,
+        loadState: "SYSTEM_RAM",
+        memoryRequiredBytes: 500 * 1024 * 1024,
+      },
+    ],
   ]);
 
   activateExperts(activeIds: string[]): ActivationStats {
@@ -46,16 +91,15 @@ export class SparseActivationEngine {
     // Expert Efficiency Score: fraction of weight memory successfully kept out of GPU VRAM
     // 100% means all experts are bypassed, 0% means all are loaded
     const bypassedBytes = totalBytes - activeBytes;
-    const expertEfficiencyScore = totalBytes > 0 
-      ? parseFloat(((bypassedBytes / totalBytes) * 100).toFixed(1))
-      : 100.0;
+    const expertEfficiencyScore =
+      totalBytes > 0 ? parseFloat(((bypassedBytes / totalBytes) * 100).toFixed(1)) : 100.0;
 
     return {
       timestamp: Date.now(),
       activeBytes,
       totalBytes,
       expertEfficiencyScore,
-      experts: Array.from(this.expertMap.values())
+      experts: Array.from(this.expertMap.values()),
     };
   }
 

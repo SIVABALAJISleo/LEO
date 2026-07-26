@@ -23,24 +23,27 @@ export class AnalogicalReasoningEngineV2 {
         sourcePattern: "Dynamic load balancing via coolant pump scheduling",
         targetDomain: "OpenVINO Model Execution",
         adaptedStrategy: "Dynamic offloading to iGPU when CPU temperature exceeds safe limits",
-        similarityScore: 0.82
+        similarityScore: 0.82,
       },
       {
         sourceDomain: "Topological Navigation",
         sourcePattern: "Sub-path compression via landmark routing nodes",
         targetDomain: "RAG Text Retrieval",
         adaptedStrategy: "Hierarchical GraphRAG citation clustering using key reference entities",
-        similarityScore: 0.91
-      }
+        similarityScore: 0.91,
+      },
     ];
   }
 
   findAnalogy(unknownProblem: string): AnalogyAdaptation {
     // Determine closest matching adaptation
-    if (unknownProblem.toLowerCase().includes("memory") || unknownProblem.toLowerCase().includes("cache")) {
+    if (
+      unknownProblem.toLowerCase().includes("memory") ||
+      unknownProblem.toLowerCase().includes("cache")
+    ) {
       return this.analogyRegistry[0];
     }
-    
+
     // Default adaptation fallback
     return this.analogyRegistry[1];
   }

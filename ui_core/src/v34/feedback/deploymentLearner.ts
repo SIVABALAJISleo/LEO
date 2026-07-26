@@ -15,7 +15,7 @@ export class DeploymentLearner {
   processFeedbackStats(
     completionsCount: number,
     correctionsCount: number,
-    userSatisfactionRate: number // 0 to 100
+    userSatisfactionRate: number, // 0 to 100
   ): LearningReport {
     const total = completionsCount + correctionsCount;
     if (total === 0) {
@@ -24,20 +24,20 @@ export class DeploymentLearner {
         totalInteractionsLogged: 0,
         accuracyRefinedDelta: 0.0,
         learningRateAdjusted: this.learningRate,
-        realWorldLearningScore: 50.0
+        realWorldLearningScore: 50.0,
       };
     }
 
     // Accuracy gains: more user completions = faster convergence
     const completionRatio = completionsCount / total;
     const accuracyRefinedDelta = parseFloat((completionRatio * 5.8).toFixed(2));
-    
+
     // Adjust learning rate dynamically: decelerate on high satisfaction, accelerate on errors
     const adjustedLr = correctionsCount > completionsCount ? 0.085 : 0.045;
 
     // Real World Learning Score: scales with satisfaction and user interaction quantity
     const realWorldLearningScore = parseFloat(
-      Math.min(99.6, userSatisfactionRate * 0.85 + (total > 100 ? 14.6 : total * 0.1)).toFixed(1)
+      Math.min(99.6, userSatisfactionRate * 0.85 + (total > 100 ? 14.6 : total * 0.1)).toFixed(1),
     );
 
     return {
@@ -45,7 +45,7 @@ export class DeploymentLearner {
       totalInteractionsLogged: total,
       accuracyRefinedDelta,
       learningRateAdjusted: adjustedLr,
-      realWorldLearningScore
+      realWorldLearningScore,
     };
   }
 }

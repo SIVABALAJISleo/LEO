@@ -28,12 +28,18 @@ export const runNvidiaComparison = async (): Promise<NvidiaComparisonResult> => 
     "NVIDIA N1X",
     "RTX 4060",
     "RTX 5070",
-    "RTX 5090"
+    "RTX 5090",
   ];
 
-  const comparisons: HardwareComparison[] = hardwareList.map(hw => {
+  const comparisons: HardwareComparison[] = hardwareList.map((hw) => {
     // Generate scores demonstrating high parity/competitiveness against target NVIDIA platforms
-    const base = hw.includes("RTX 5090") ? 90 : hw.includes("N1X") ? 98 : hw.includes("Orin") ? 95 : 92;
+    const base = hw.includes("RTX 5090")
+      ? 90
+      : hw.includes("N1X")
+        ? 98
+        : hw.includes("Orin")
+          ? 95
+          : 92;
 
     return {
       hardwareName: hw,
@@ -46,11 +52,11 @@ export const runNvidiaComparison = async (): Promise<NvidiaComparisonResult> => 
       industrialInspectionParity: parseFloat((base + Math.random() * 3.5).toFixed(2)),
       multiCameraAnalyticsParity: parseFloat((base + Math.random() * 4).toFixed(2)),
       warehouseRoboticsParity: parseFloat((base + Math.random() * 2).toFixed(2)),
-      outdoorAutonomyParity: parseFloat((base + Math.random() * 3).toFixed(2))
+      outdoorAutonomyParity: parseFloat((base + Math.random() * 3).toFixed(2)),
     };
   });
 
-  const n1xComp = comparisons.find(c => c.hardwareName === "NVIDIA N1X")?.edgeAiParity || 98.5;
+  const n1xComp = comparisons.find((c) => c.hardwareName === "NVIDIA N1X")?.edgeAiParity || 98.5;
   const overallRed = 96.0 + Math.random() * 3.0;
   const globalRed = 92.0 + Math.random() * 4.0;
 
@@ -58,6 +64,6 @@ export const runNvidiaComparison = async (): Promise<NvidiaComparisonResult> => 
     overallRelevanceReductionScore: parseFloat(overallRed.toFixed(2)),
     n1xFunctionalCompetitivenessScore: parseFloat(n1xComp.toFixed(2)),
     globalAcceleratorReductionScore: parseFloat(globalRed.toFixed(2)),
-    hardwareComparisons: comparisons
+    hardwareComparisons: comparisons,
   };
 };

@@ -18,16 +18,16 @@ export interface ConvergenceSweepResult {
   cycleId: string;
   normalizedQuery: string;
   dialectDetected: string;
-  intelligenceOutput: ReturnType<IntelligenceQualityMaximizer['process']>;
-  hallucinationOutput: ReturnType<HallucinationMinimizer['minimize']>;
-  memoryOutput: ReturnType<MemoryStabilityMaximizer['stabilize']>;
-  agentOutput: ReturnType<AgentEffectivenessOptimizer['optimize']>;
-  knowledgeOutput: ReturnType<KnowledgeGovernanceEngine['govern']>;
-  benchmarkOutput: ReturnType<ContinuousBenchmarkSystem['runSuite']>;
-  efficiencyOutput: ReturnType<PerformanceEfficiencyEngine['profile']>;
-  reliabilityOutput: ReturnType<EnterpriseReliabilityEngine['audit']>;
-  improvementStep: ReturnType<AutonomousConvergenceLoop['runCycle']>;
-  topWeaknesses: ReturnType<TopWeaknessEliminator['getTopWeaknesses']>;
+  intelligenceOutput: ReturnType<IntelligenceQualityMaximizer["process"]>;
+  hallucinationOutput: ReturnType<HallucinationMinimizer["minimize"]>;
+  memoryOutput: ReturnType<MemoryStabilityMaximizer["stabilize"]>;
+  agentOutput: ReturnType<AgentEffectivenessOptimizer["optimize"]>;
+  knowledgeOutput: ReturnType<KnowledgeGovernanceEngine["govern"]>;
+  benchmarkOutput: ReturnType<ContinuousBenchmarkSystem["runSuite"]>;
+  efficiencyOutput: ReturnType<PerformanceEfficiencyEngine["profile"]>;
+  reliabilityOutput: ReturnType<EnterpriseReliabilityEngine["audit"]>;
+  improvementStep: ReturnType<AutonomousConvergenceLoop["runCycle"]>;
+  topWeaknesses: ReturnType<TopWeaknessEliminator["getTopWeaknesses"]>;
   scores: ConvergenceScores;
 }
 
@@ -75,12 +75,16 @@ export class ConvergenceOrchestrator {
     const halluOut = this.hallucination.minimize(intelOut.finalAnswer);
 
     // 4. Stabilize memory (Phase 5)
-    this.memory.addFact(halluOut.calibratedResponse, "User-Convergence-Session", halluOut.calibratedConfidence);
+    this.memory.addFact(
+      halluOut.calibratedResponse,
+      "User-Convergence-Session",
+      halluOut.calibratedConfidence,
+    );
     const memOut = this.memory.stabilize();
 
     // 5. Optimize agents (Phase 6)
     const agentOut = this.agents.optimize();
-    this.agents.getAgents().forEach(agent => {
+    this.agents.getAgents().forEach((agent) => {
       this.agents.registerMetric(agent.name, intelOut.verifiable, 90 + Math.random() * 40);
     });
 
@@ -112,7 +116,7 @@ export class ConvergenceOrchestrator {
       agentOut.agents[0]?.reliability ?? 0.98,
       intelOut.consensusChoice.consistencyScore, // verification score
       relOut.slaCompliancePct, // enterprise score
-      effOut.snapshot.intelligencePerWatt / 100 // performance score
+      effOut.snapshot.intelligencePerWatt / 100, // performance score
     );
 
     return {
@@ -129,7 +133,7 @@ export class ConvergenceOrchestrator {
       reliabilityOutput: relOut,
       improvementStep,
       topWeaknesses,
-      scores
+      scores,
     };
   }
 }

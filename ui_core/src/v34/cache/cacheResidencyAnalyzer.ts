@@ -15,7 +15,7 @@ export class CacheResidencyAnalyzer {
     l1Hits: number,
     l2Hits: number,
     l3Hits: number,
-    ramHits: number
+    ramHits: number,
   ): CacheResidencyTelemetry {
     const total = l1Hits + l2Hits + l3Hits + ramHits;
     if (total === 0) {
@@ -25,7 +25,7 @@ export class CacheResidencyAnalyzer {
         l2HitRatePct: 0,
         l3HitRatePct: 0,
         ramHitRatePct: 100,
-        cacheEfficiencyIndex: 0
+        cacheEfficiencyIndex: 0,
       };
     }
 
@@ -35,7 +35,7 @@ export class CacheResidencyAnalyzer {
     const ramHitRatePct = parseFloat(((ramHits / total) * 100).toFixed(1));
 
     // L1 hits count as 1.0 weight, L2 as 0.75, L3 as 0.50, RAM as 0.0
-    const scoreRaw = (l1HitRatePct * 1.0 + l2HitRatePct * 0.75 + l3HitRatePct * 0.50);
+    const scoreRaw = l1HitRatePct * 1.0 + l2HitRatePct * 0.75 + l3HitRatePct * 0.5;
     const cacheEfficiencyIndex = parseFloat(Math.min(100.0, Math.max(0.0, scoreRaw)).toFixed(1));
 
     return {
@@ -44,7 +44,7 @@ export class CacheResidencyAnalyzer {
       l2HitRatePct,
       l3HitRatePct,
       ramHitRatePct,
-      cacheEfficiencyIndex
+      cacheEfficiencyIndex,
     };
   }
 }

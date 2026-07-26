@@ -48,7 +48,7 @@ function LegacyTabWrapper() {
     case "benchmarks":
     case "devops":
       return <LegacyCognitiveDashboards activeTab={tabId} />;
-      
+
     case "v18validation":
       return <ValidationDashboard />;
     case "failureHunting":
@@ -99,7 +99,7 @@ function LegacyTabWrapper() {
       return <OmegaDashboard />;
     case "v45singularity":
       return <SingularityDashboard />;
-      
+
     default:
       return <Navigate to="/admin" replace />;
   }
@@ -108,11 +108,14 @@ function LegacyTabWrapper() {
 export default function AdminRoutes() {
   return (
     <Routes>
-      <Route path="legacy/:tabId" element={
-        <AdminDashboard activeSection="legacy">
-          <LegacyTabWrapper />
-        </AdminDashboard>
-      } />
+      <Route
+        path="legacy/:tabId"
+        element={
+          <AdminDashboard activeSection="legacy">
+            <LegacyTabWrapper />
+          </AdminDashboard>
+        }
+      />
       <Route path="*" element={<Navigate to="/admin" replace />} />
     </Routes>
   );

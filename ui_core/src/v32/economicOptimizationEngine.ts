@@ -14,23 +14,26 @@ export interface EconomicProfile {
 
 export class EconomicOptimizationEngine {
   optimize(
-    profile: EconomicProfile, 
-    priority: "latency" | "accuracy" | "cost" | "balanced" = "balanced"
-  ): { optimizationDecisions: string[]; efficiencyScore: number; } {
-    
+    profile: EconomicProfile,
+    priority: "latency" | "accuracy" | "cost" | "balanced" = "balanced",
+  ): { optimizationDecisions: string[]; efficiencyScore: number } {
     const decisions: string[] = [];
-    
+
     // Evaluate trade-offs
     if (profile.latencySec > 2.0) {
       decisions.push("Latency threshold exceeded. Shift tasks to local INT8 iGPU offload blocks.");
     }
-    
+
     if (profile.memoryMb > 16384) {
-      decisions.push("VRAM usage high. Trigger paged block compaction and key pruning in KV Cache.");
+      decisions.push(
+        "VRAM usage high. Trigger paged block compaction and key pruning in KV Cache.",
+      );
     }
 
     if (profile.costDollar > 0.05) {
-      decisions.push("Centralized Cloud cost detected. Shift processing locally using peer mesh coordinates.");
+      decisions.push(
+        "Centralized Cloud cost detected. Shift processing locally using peer mesh coordinates.",
+      );
     }
 
     // Formulation of Efficiency Score (0 to 100): higher accuracy, lower latency, lower energy and cost
@@ -42,12 +45,15 @@ export class EconomicOptimizationEngine {
     let priorityWeight = 1.0;
     if (priority === "latency") priorityWeight = 1.4;
 
-    const rawScore = (accuracyFactor * 50) + (10 / latencyPenalty) * 20 - (energyPenalty * 0.1) - costPenalty;
-    const efficiencyScore = parseFloat(Math.min(100, Math.max(10, rawScore * priorityWeight)).toFixed(1));
+    const rawScore =
+      accuracyFactor * 50 + (10 / latencyPenalty) * 20 - energyPenalty * 0.1 - costPenalty;
+    const efficiencyScore = parseFloat(
+      Math.min(100, Math.max(10, rawScore * priorityWeight)).toFixed(1),
+    );
 
     return {
       optimizationDecisions: decisions,
-      efficiencyScore
+      efficiencyScore,
     };
   }
 }

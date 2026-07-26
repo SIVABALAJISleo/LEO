@@ -4,10 +4,18 @@ export { EvaluationUniverse } from "../evaluation/evaluationUniverse";
 export type { DomainBenchmark, UniverseEvaluationReport } from "../evaluation/evaluationUniverse";
 
 export { SelfCritiqueEngineV2 } from "../engines/selfCritiqueEngineV2";
-export type { CritiqueFlaws, CritiqueCycleStep, SelfCritiqueV2Report } from "../engines/selfCritiqueEngineV2";
+export type {
+  CritiqueFlaws,
+  CritiqueCycleStep,
+  SelfCritiqueV2Report,
+} from "../engines/selfCritiqueEngineV2";
 
 export { UniversalReasoningEngine } from "../engines/universalReasoningEngine";
-export type { ReasoningParadigm, ReasoningPremise, ParadigmResult } from "../engines/universalReasoningEngine";
+export type {
+  ReasoningParadigm,
+  ReasoningPremise,
+  ParadigmResult,
+} from "../engines/universalReasoningEngine";
 
 export { DebateFramework } from "../agents/debateFramework";
 export type { AgentStatement, DebatePhase, DebateSessionReport } from "../agents/debateFramework";

@@ -1,19 +1,11 @@
-import { CreateJobForm } from '@/components/gpu-jobs/CreateJobForm';
-import { JobQueueList } from '@/components/gpu-jobs/JobQueueList';
-import { SystemStatusPanel } from '@/components/gpu-jobs/SystemStatusPanel';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { useGpuJobs } from '@/hooks/useGpuJobs';
-import { 
-  Cpu, 
-  ListOrdered, 
-  Activity, 
-  Shield,
-  Wifi,
-  Thermometer,
-  HardDrive
-} from 'lucide-react';
+import { CreateJobForm } from "@/components/gpu-jobs/CreateJobForm";
+import { JobQueueList } from "@/components/gpu-jobs/JobQueueList";
+import { SystemStatusPanel } from "@/components/gpu-jobs/SystemStatusPanel";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { useGpuJobs } from "@/hooks/useGpuJobs";
+import { Cpu, ListOrdered, Activity, Shield, Wifi, Thermometer, HardDrive } from "lucide-react";
 
 export default function GpuJobsPage() {
   const { getJobStats, getThermalStatus, getMemoryReport } = useGpuJobs();
@@ -26,7 +18,9 @@ export default function GpuJobsPage() {
       <div className="flex-1 space-y-6 p-6">
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-primary">Smart GPU Job Queue</h1>
-          <p className="text-muted-foreground">Submit, monitor, and manage your GPU compute jobs with full safety protection</p>
+          <p className="text-muted-foreground">
+            Submit, monitor, and manage your GPU compute jobs with full safety protection
+          </p>
         </div>
 
         {/* Quick Stats */}
@@ -38,9 +32,7 @@ export default function GpuJobsPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.running}</div>
-              <p className="text-xs text-muted-foreground">
-                {stats.pending} queued
-              </p>
+              <p className="text-xs text-muted-foreground">{stats.pending} queued</p>
             </CardContent>
           </Card>
 
@@ -62,12 +54,14 @@ export default function GpuJobsPage() {
           <Card className="bg-card border-border">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">GPU Temp</CardTitle>
-              <Thermometer className={`h-4 w-4 ${thermal.is_safe ? 'text-primary' : 'text-orange-500'}`} />
+              <Thermometer
+                className={`h-4 w-4 ${thermal.is_safe ? "text-primary" : "text-orange-500"}`}
+              />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{thermal.gpu_temp}°C</div>
               <p className="text-xs text-muted-foreground">
-                {thermal.is_safe ? 'Normal' : 'Elevated'}
+                {thermal.is_safe ? "Normal" : "Elevated"}
               </p>
             </CardContent>
           </Card>
@@ -79,11 +73,11 @@ export default function GpuJobsPage() {
             </CardHeader>
             <CardContent>
               <div className="flex items-center gap-2">
-                <Badge variant="default" className="bg-primary">Active</Badge>
+                <Badge variant="default" className="bg-primary">
+                  Active
+                </Badge>
               </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                All 6 safeguards enabled
-              </p>
+              <p className="text-xs text-muted-foreground mt-1">All 6 safeguards enabled</p>
             </CardContent>
           </Card>
         </div>

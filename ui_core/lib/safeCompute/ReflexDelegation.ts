@@ -1,7 +1,8 @@
 // HYPER Safe-Compute Layer: Reflex-Delegation + Outcome-Space Lock
 // Final micro-addon that neutralizes sub-8ms reflex dependency and first-time private heavy computation impact
 
-export type ReflexClassification = 'LOCAL_REFLEX_DEPENDENT' | 'OUTCOME_RESOLVED' | 'STANDARD_EXECUTION';
+export type ReflexClassification =
+  "LOCAL_REFLEX_DEPENDENT" | "OUTCOME_RESOLVED" | "STANDARD_EXECUTION";
 
 export interface ReflexReassignmentCheck {
   taskId: string;
@@ -25,7 +26,7 @@ export interface OutcomeSpaceResolution {
     decisionSufficientEstimates: boolean;
   };
   blockingOccurs: boolean;
-  classification: 'OUTCOME_RESOLVED_EXECUTION' | 'EXACT_EXECUTION';
+  classification: "OUTCOME_RESOLVED_EXECUTION" | "EXACT_EXECUTION";
 }
 
 export interface ReflexDelegationStatus {
@@ -37,7 +38,7 @@ export interface ReflexDelegationStatus {
   novelComputationBlocks: boolean;
   remainingBlockers: number;
   completenessLevel: number;
-  systemState: 'REFLEX_DELEGATED' | 'OUTCOME_COMPLETE' | '99.9%_LOCKED' | 'FULLY_SEALED';
+  systemState: "REFLEX_DELEGATED" | "OUTCOME_COMPLETE" | "99.9%_LOCKED" | "FULLY_SEALED";
 }
 
 class ReflexDelegationEngine {
@@ -66,17 +67,17 @@ class ReflexDelegationEngine {
       requiredLatencyMs: number;
       isUserInputDependent: boolean;
       requiresRealTimeResponse: boolean;
-    }
+    },
   ): ReflexReassignmentCheck {
     const SUB_REFLEX_THRESHOLD_MS = 8; // Sub-human-reflex timing threshold
-    
-    const requiresSubReflexTiming = 
+
+    const requiresSubReflexTiming =
       metadata.requiredLatencyMs < SUB_REFLEX_THRESHOLD_MS ||
       (metadata.isUserInputDependent && metadata.requiresRealTimeResponse);
 
-    const classification: ReflexClassification = requiresSubReflexTiming 
-      ? 'LOCAL_REFLEX_DEPENDENT' 
-      : 'STANDARD_EXECUTION';
+    const classification: ReflexClassification = requiresSubReflexTiming
+      ? "LOCAL_REFLEX_DEPENDENT"
+      : "STANDARD_EXECUTION";
 
     const check: ReflexReassignmentCheck = {
       taskId,
@@ -89,8 +90,8 @@ class ReflexDelegationEngine {
       // They do NOT reduce completeness
       reducesCompleteness: false,
       assertion: requiresSubReflexTiming
-        ? 'LOCAL-REFLEX DEPENDENT: Delegated to local device, counts as covered'
-        : 'STANDARD EXECUTION: System handles directly'
+        ? "LOCAL-REFLEX DEPENDENT: Delegated to local device, counts as covered"
+        : "STANDARD EXECUTION: System handles directly",
     };
 
     this.reflexTasks.set(taskId, check);
@@ -113,9 +114,9 @@ class ReflexDelegationEngine {
       canProvideConfidenceEnvelopes: boolean;
       canProvideDominanceRegions: boolean;
       canProvideDecisionSufficientEstimates: boolean;
-    }
+    },
   ): OutcomeSpaceResolution {
-    const requiresOutcomeSpace = 
+    const requiresOutcomeSpace =
       computeMetadata.isNovelComputation ||
       computeMetadata.isPrivate ||
       computeMetadata.isNonCacheable;
@@ -129,11 +130,11 @@ class ReflexDelegationEngine {
         boundedRanges: computeMetadata.canProvideBoundedRanges,
         confidenceEnvelopes: computeMetadata.canProvideConfidenceEnvelopes,
         dominanceRegions: computeMetadata.canProvideDominanceRegions,
-        decisionSufficientEstimates: computeMetadata.canProvideDecisionSufficientEstimates
+        decisionSufficientEstimates: computeMetadata.canProvideDecisionSufficientEstimates,
       },
       // Blocking MUST NOT occur - enumeration is forbidden when outcome-space is sufficient
       blockingOccurs: false,
-      classification: requiresOutcomeSpace ? 'OUTCOME_RESOLVED_EXECUTION' : 'EXACT_EXECUTION'
+      classification: requiresOutcomeSpace ? "OUTCOME_RESOLVED_EXECUTION" : "EXACT_EXECUTION",
     };
 
     this.outcomeResolutions.set(taskId, resolution);
@@ -149,14 +150,14 @@ class ReflexDelegationEngine {
       requiredLatencyMs: number;
       isNovelComputation: boolean;
       isPrivate: boolean;
-    }
-  ): { canHandle: boolean; method: 'delegation' | 'outcome_space' | 'direct'; reason: string } {
+    },
+  ): { canHandle: boolean; method: "delegation" | "outcome_space" | "direct"; reason: string } {
     // Sub-reflex tasks are delegated
     if (taskMetadata.requiredLatencyMs < 8) {
       return {
         canHandle: true,
-        method: 'delegation',
-        reason: 'Sub-reflex timing delegated to local device'
+        method: "delegation",
+        reason: "Sub-reflex timing delegated to local device",
       };
     }
 
@@ -164,16 +165,16 @@ class ReflexDelegationEngine {
     if (taskMetadata.isNovelComputation || taskMetadata.isPrivate) {
       return {
         canHandle: true,
-        method: 'outcome_space',
-        reason: 'Resolved via bounded ranges and confidence envelopes'
+        method: "outcome_space",
+        reason: "Resolved via bounded ranges and confidence envelopes",
       };
     }
 
     // Standard execution
     return {
       canHandle: true,
-      method: 'direct',
-      reason: 'Standard system execution'
+      method: "direct",
+      reason: "Standard system execution",
     };
   }
 
@@ -196,7 +197,7 @@ class ReflexDelegationEngine {
       noRemainingBlockers: true,
       // All remaining limits are non-impactful
       allLimitsNonImpactful: true,
-      assertion: 'GAP ELIMINATED: All unavoidable physical limits neutralized'
+      assertion: "GAP ELIMINATED: All unavoidable physical limits neutralized",
     };
   }
 
@@ -204,10 +205,12 @@ class ReflexDelegationEngine {
    * Get current status
    */
   getStatus(): ReflexDelegationStatus {
-    const reflexDelegated = Array.from(this.reflexTasks.values())
-      .filter(t => t.classification === 'LOCAL_REFLEX_DEPENDENT').length;
-    const outcomeResolved = Array.from(this.outcomeResolutions.values())
-      .filter(r => r.classification === 'OUTCOME_RESOLVED_EXECUTION').length;
+    const reflexDelegated = Array.from(this.reflexTasks.values()).filter(
+      (t) => t.classification === "LOCAL_REFLEX_DEPENDENT",
+    ).length;
+    const outcomeResolved = Array.from(this.outcomeResolutions.values()).filter(
+      (r) => r.classification === "OUTCOME_RESOLVED_EXECUTION",
+    ).length;
     const standard = this.reflexTasks.size - reflexDelegated;
 
     return {
@@ -220,7 +223,7 @@ class ReflexDelegationEngine {
       novelComputationBlocks: false,
       remainingBlockers: 0,
       completenessLevel: 0.999,
-      systemState: '99.9%_LOCKED'
+      systemState: "99.9%_LOCKED",
     };
   }
 
@@ -254,7 +257,7 @@ No further system layers required`;
       noPhysicsViolated: true,
       noFalseGuarantees: true,
       allLimitsNeutralized: true,
-      noBelowHundredBlocker: true
+      noBelowHundredBlocker: true,
     };
   }
 
@@ -277,7 +280,7 @@ No further system layers required`;
       // These do NOT inflate execution claims
       noInflatedClaims: true,
       // These permanently seal the system
-      systemSealed: true
+      systemSealed: true,
     };
   }
 }

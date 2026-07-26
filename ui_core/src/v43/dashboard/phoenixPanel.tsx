@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
 import { MetricCard } from "./OmegaShared";
 
@@ -13,20 +13,20 @@ export const PhoenixPanel = () => {
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-3 gap-4">
-          <MetricCard 
-            label="Uptime" 
+          <MetricCard
+            label="Uptime"
             value="100.00%"
             comparison="NVIDIA: 99.999%"
             status="SUPERIOR"
           />
-          <MetricCard 
-            label="Vaccines Applied" 
+          <MetricCard
+            label="Vaccines Applied"
             value={phoenix.vaccineCount}
             comparison="Each failure makes system stronger"
             status="GROWING"
           />
-          <MetricCard 
-            label="System Strength" 
+          <MetricCard
+            label="System Strength"
             value={`${phoenix.strengthScore}%`}
             comparison="Increases with every chaos event"
             status="ANTI-FRAGILE"

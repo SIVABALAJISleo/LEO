@@ -16,7 +16,7 @@ export class ExperimentPlanner {
       id: `exp-${(100 + Math.random() * 900).toFixed(0)}`,
       targetClaimId: claimId,
       procedureSummary: procedure,
-      stepsCount: 5
+      stepsCount: 5,
     };
     this.experiments.push(exp);
     return exp;

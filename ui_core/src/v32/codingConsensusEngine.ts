@@ -9,9 +9,9 @@ export interface CodeCandidate {
   description: string;
   sourceCode: string;
   correctnessScore: number; // 0 to 10
-  complexityScore: number;  // 0 to 10 (lower is better complexity / simpler)
+  complexityScore: number; // 0 to 10 (lower is better complexity / simpler)
   maintainabilityScore: number; // 0 to 10
-  securityScore: number;     // 0 to 10
+  securityScore: number; // 0 to 10
   totalScore: number;
 }
 
@@ -32,7 +32,7 @@ export class CodingConsensusEngine {
         complexityScore: 9.5, // High complexity (O(2^n))
         maintainabilityScore: 9.0,
         securityScore: 8.5,
-        totalScore: 0
+        totalScore: 0,
       },
       {
         path: "Path_B",
@@ -42,7 +42,7 @@ export class CodingConsensusEngine {
         complexityScore: 3.5, // Simpler complexity (O(n))
         maintainabilityScore: 8.0,
         securityScore: 9.0,
-        totalScore: 0
+        totalScore: 0,
       },
       {
         path: "Path_C",
@@ -52,7 +52,7 @@ export class CodingConsensusEngine {
         complexityScore: 3.0, // O(n) space/time
         maintainabilityScore: 9.5,
         securityScore: 9.5,
-        totalScore: 0
+        totalScore: 0,
       },
       {
         path: "Path_D",
@@ -62,7 +62,7 @@ export class CodingConsensusEngine {
         complexityScore: 1.5, // O(n) time, O(1) space
         maintainabilityScore: 9.5,
         securityScore: 9.8,
-        totalScore: 0
+        totalScore: 0,
       },
       {
         path: "Path_E",
@@ -72,16 +72,21 @@ export class CodingConsensusEngine {
         complexityScore: 1.0, // O(1) complexity
         maintainabilityScore: 6.5,
         securityScore: 9.0,
-        totalScore: 0
-      }
+        totalScore: 0,
+      },
     ];
 
     // Compute composite score: higher correctness, lower complexity, higher maintainability/security
-    candidates.forEach(c => {
+    candidates.forEach((c) => {
       // Score formulation: correctness * 0.4 + (10 - complexity) * 0.2 + maintainability * 0.2 + security * 0.2
       const complexityFactor = 10 - c.complexityScore;
       c.totalScore = parseFloat(
-        (c.correctnessScore * 0.4 + complexityFactor * 0.2 + c.maintainabilityScore * 0.2 + c.securityScore * 0.2).toFixed(2)
+        (
+          c.correctnessScore * 0.4 +
+          complexityFactor * 0.2 +
+          c.maintainabilityScore * 0.2 +
+          c.securityScore * 0.2
+        ).toFixed(2),
       );
     });
 
@@ -92,7 +97,7 @@ export class CodingConsensusEngine {
     return {
       candidates,
       selectedPath,
-      selectionReason: `Selected ${sorted[0].path} (${sorted[0].description}) as it achieves the maximum composite safety/complexity rank of ${sorted[0].totalScore}/10.0.`
+      selectionReason: `Selected ${sorted[0].path} (${sorted[0].description}) as it achieves the maximum composite safety/complexity rank of ${sorted[0].totalScore}/10.0.`,
     };
   }
 }

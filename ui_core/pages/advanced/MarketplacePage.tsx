@@ -1,41 +1,54 @@
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Input } from '@/components/ui/input';
-import { Store, Puzzle, Link2, Download, Star, Search, Plus } from 'lucide-react';
-import { useMarketplaceData } from '@/hooks/useMarketplaceData';
-import { LoadingState } from '@/components/ui/loading-state';
-import { EmptyState } from '@/components/ui/empty-state';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { toast } from 'sonner';
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Store, Puzzle, Link2, Download, Star, Search, Plus } from "lucide-react";
+import { useMarketplaceData } from "@/hooks/useMarketplaceData";
+import { LoadingState } from "@/components/ui/loading-state";
+import { EmptyState } from "@/components/ui/empty-state";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { toast } from "sonner";
 
 const MarketplacePage = () => {
   const { plugins, integrations, transactions, isLoading, installPlugin } = useMarketplaceData();
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [isCreateIntegrationOpen, setIsCreateIntegrationOpen] = useState(false);
-  const [newIntegration, setNewIntegration] = useState({ name: '', integration_type: 'webhook' });
+  const [newIntegration, setNewIntegration] = useState({ name: "", integration_type: "webhook" });
 
-  const filteredPlugins = plugins.filter(p => 
-    p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    p.category?.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredPlugins = plugins.filter(
+    (p) =>
+      p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.category?.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   const handleInstall = async (pluginId: string) => {
     await installPlugin(pluginId);
-    toast.success('Plugin installed successfully');
+    toast.success("Plugin installed successfully");
   };
 
   const handleCreateIntegration = async () => {
     if (!newIntegration.name) {
-      toast.error('Integration name is required');
+      toast.error("Integration name is required");
       return;
     }
-    toast.info('Integration creation coming soon');
-    setNewIntegration({ name: '', integration_type: 'webhook' });
+    toast.info("Integration creation coming soon");
+    setNewIntegration({ name: "", integration_type: "webhook" });
     setIsCreateIntegrationOpen(false);
   };
 
@@ -52,20 +65,38 @@ const MarketplacePage = () => {
 
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
-          <CardHeader className="pb-2"><CardTitle className="text-sm">Available Plugins</CardTitle></CardHeader>
-          <CardContent><p className="text-2xl font-bold">{plugins.filter(p => p.is_published).length}</p></CardContent>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm">Available Plugins</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold">{plugins.filter((p) => p.is_published).length}</p>
+          </CardContent>
         </Card>
         <Card>
-          <CardHeader className="pb-2"><CardTitle className="text-sm">Active Integrations</CardTitle></CardHeader>
-          <CardContent><p className="text-2xl font-bold">{integrations.filter(i => i.is_active).length}</p></CardContent>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm">Active Integrations</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold">{integrations.filter((i) => i.is_active).length}</p>
+          </CardContent>
         </Card>
         <Card>
-          <CardHeader className="pb-2"><CardTitle className="text-sm">Installed</CardTitle></CardHeader>
-          <CardContent><p className="text-2xl font-bold">{integrations.length}</p></CardContent>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm">Installed</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold">{integrations.length}</p>
+          </CardContent>
         </Card>
         <Card>
-          <CardHeader className="pb-2"><CardTitle className="text-sm">Total Downloads</CardTitle></CardHeader>
-          <CardContent><p className="text-2xl font-bold">{plugins.reduce((sum, p) => sum + (p.download_count || 0), 0)}</p></CardContent>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm">Total Downloads</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold">
+              {plugins.reduce((sum, p) => sum + (p.download_count || 0), 0)}
+            </p>
+          </CardContent>
         </Card>
       </div>
 
@@ -80,11 +111,20 @@ const MarketplacePage = () => {
           <div className="flex gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input placeholder="Search plugins..." className="pl-10" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+              <Input
+                placeholder="Search plugins..."
+                className="pl-10"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </div>
           </div>
           {filteredPlugins.length === 0 ? (
-            <EmptyState title="No plugins found" description="Try adjusting your search" icon={Puzzle} />
+            <EmptyState
+              title="No plugins found"
+              description="Try adjusting your search"
+              icon={Puzzle}
+            />
           ) : (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {filteredPlugins.map((p) => (
@@ -117,7 +157,7 @@ const MarketplacePage = () => {
                         <Badge variant="outline">v{p.version}</Badge>
                       </div>
                       <Button size="sm" onClick={() => handleInstall(p.id)}>
-                        {p.price && p.price > 0 ? `$${p.price}` : 'Install'}
+                        {p.price && p.price > 0 ? `$${p.price}` : "Install"}
                       </Button>
                     </div>
                   </CardContent>
@@ -131,7 +171,9 @@ const MarketplacePage = () => {
           <div className="flex justify-end">
             <Dialog open={isCreateIntegrationOpen} onOpenChange={setIsCreateIntegrationOpen}>
               <DialogTrigger asChild>
-                <Button><Plus className="mr-2 h-4 w-4" /> New Integration</Button>
+                <Button>
+                  <Plus className="mr-2 h-4 w-4" /> New Integration
+                </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
@@ -140,12 +182,25 @@ const MarketplacePage = () => {
                 <div className="space-y-4">
                   <div>
                     <Label>Name</Label>
-                    <Input value={newIntegration.name} onChange={(e) => setNewIntegration({ ...newIntegration, name: e.target.value })} placeholder="Integration name" />
+                    <Input
+                      value={newIntegration.name}
+                      onChange={(e) =>
+                        setNewIntegration({ ...newIntegration, name: e.target.value })
+                      }
+                      placeholder="Integration name"
+                    />
                   </div>
                   <div>
                     <Label>Type</Label>
-                    <Select value={newIntegration.integration_type} onValueChange={(v) => setNewIntegration({ ...newIntegration, integration_type: v })}>
-                      <SelectTrigger><SelectValue /></SelectTrigger>
+                    <Select
+                      value={newIntegration.integration_type}
+                      onValueChange={(v) =>
+                        setNewIntegration({ ...newIntegration, integration_type: v })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="webhook">Webhook</SelectItem>
                         <SelectItem value="oauth">OAuth</SelectItem>
@@ -154,13 +209,19 @@ const MarketplacePage = () => {
                       </SelectContent>
                     </Select>
                   </div>
-                  <Button onClick={handleCreateIntegration} className="w-full">Create</Button>
+                  <Button onClick={handleCreateIntegration} className="w-full">
+                    Create
+                  </Button>
                 </div>
               </DialogContent>
             </Dialog>
           </div>
           {integrations.length === 0 ? (
-            <EmptyState title="No integrations" description="Connect external services to your platform" icon={Link2} />
+            <EmptyState
+              title="No integrations"
+              description="Connect external services to your platform"
+              icon={Link2}
+            />
           ) : (
             <div className="space-y-2">
               {integrations.map((i) => (
@@ -174,9 +235,13 @@ const MarketplacePage = () => {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Badge variant={i.is_active ? 'default' : 'secondary'}>{i.is_active ? 'Active' : 'Inactive'}</Badge>
+                      <Badge variant={i.is_active ? "default" : "secondary"}>
+                        {i.is_active ? "Active" : "Inactive"}
+                      </Badge>
                       {i.last_sync_at && (
-                        <span className="text-sm text-muted-foreground">Synced: {new Date(i.last_sync_at).toLocaleDateString()}</span>
+                        <span className="text-sm text-muted-foreground">
+                          Synced: {new Date(i.last_sync_at).toLocaleDateString()}
+                        </span>
                       )}
                     </div>
                   </CardContent>
@@ -188,7 +253,11 @@ const MarketplacePage = () => {
 
         <TabsContent value="transactions" className="space-y-4">
           {transactions.length === 0 ? (
-            <EmptyState title="No transactions" description="Your marketplace transactions will appear here" icon={Store} />
+            <EmptyState
+              title="No transactions"
+              description="Your marketplace transactions will appear here"
+              icon={Store}
+            />
           ) : (
             <div className="space-y-2">
               {transactions.map((t) => (
@@ -198,12 +267,26 @@ const MarketplacePage = () => {
                       <Store className="h-6 w-6 text-muted-foreground" />
                       <div>
                         <p className="font-medium">{t.transaction_type}</p>
-                        <p className="text-sm text-muted-foreground">{new Date(t.created_at).toLocaleString()}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {new Date(t.created_at).toLocaleString()}
+                        </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="font-bold">${t.amount.toFixed(2)} {t.currency}</span>
-                      <Badge variant={t.status === 'completed' ? 'default' : t.status === 'pending' ? 'secondary' : 'destructive'}>{t.status}</Badge>
+                      <span className="font-bold">
+                        ${t.amount.toFixed(2)} {t.currency}
+                      </span>
+                      <Badge
+                        variant={
+                          t.status === "completed"
+                            ? "default"
+                            : t.status === "pending"
+                              ? "secondary"
+                              : "destructive"
+                        }
+                      >
+                        {t.status}
+                      </Badge>
                     </div>
                   </CardContent>
                 </Card>

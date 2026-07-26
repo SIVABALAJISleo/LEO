@@ -15,16 +15,16 @@ export class LongTailReasoningEngine {
 
     return {
       id: `ANOM-${Date.now().toString().slice(-4)}`,
-      detectedAnomaly: isRare 
+      detectedAnomaly: isRare
         ? "Highly complex, long-tail logical subset bounds detected."
         : "Standard operational query distribution.",
       rarityWeight: isRare ? 0.94 : 0.08,
-      primaryInferenceResult: isRare 
+      primaryInferenceResult: isRare
         ? "Standard route outputs might skip logical SAT constraints."
         : "Standard deductive result compiled.",
       alternativeInferenceResult: isRare
         ? "Alternative solver: SAT verification constraints met under formal topology parameters."
-        : "No alternative path required."
+        : "No alternative path required.",
     };
   }
 }

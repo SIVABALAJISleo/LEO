@@ -4,11 +4,11 @@
 export class OpenVinoEngine {
   public compileModelToIR(
     modelPath: string,
-    targetBitrate: number
+    targetBitrate: number,
   ): { irPath: string; compiled: boolean } {
     return {
       irPath: `${modelPath}_ir_q${targetBitrate}.xml`,
-      compiled: true
+      compiled: true,
     };
   }
 }

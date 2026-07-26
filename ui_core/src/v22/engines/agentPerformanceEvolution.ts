@@ -2,27 +2,27 @@
 // Dynamic priority queue: best agents gain priority, weak agents lose priority
 
 export type AgentDomain =
-  | 'Reasoning'
-  | 'RAG'
-  | 'Language'
-  | 'Code'
-  | 'Search'
-  | 'Security'
-  | 'Memory'
-  | 'Planning'
-  | 'Enterprise'
-  | 'Verification';
+  | "Reasoning"
+  | "RAG"
+  | "Language"
+  | "Code"
+  | "Search"
+  | "Security"
+  | "Memory"
+  | "Planning"
+  | "Enterprise"
+  | "Verification";
 
 export interface AgentRecord {
   agentId: string;
   name: string;
   domain: AgentDomain;
-  accuracyScore: number;   // 0–1
-  latencyScore: number;    // 0–1 (1 = fastest)
+  accuracyScore: number; // 0–1
+  latencyScore: number; // 0–1 (1 = fastest)
   reliabilityScore: number; // 0–1
   verificationScore: number; // 0–1
-  compositeScore: number;  // weighted average
-  priority: number;        // 1 = highest priority
+  compositeScore: number; // weighted average
+  priority: number; // 1 = highest priority
   tasksCompleted: number;
   tasksSucceeded: number;
   isActive: boolean;
@@ -36,23 +36,23 @@ export interface AgentLeaderboard {
 }
 
 const AGENT_DEFS: { name: string; domain: AgentDomain }[] = [
-  { name: 'ReasonCore', domain: 'Reasoning' },
-  { name: 'RAGMaster', domain: 'RAG' },
-  { name: 'LinguaAgent', domain: 'Language' },
-  { name: 'CodeSentinel', domain: 'Code' },
-  { name: 'SearchVector', domain: 'Search' },
-  { name: 'SecureGuard', domain: 'Security' },
-  { name: 'MemoryKeeper', domain: 'Memory' },
-  { name: 'PlannerPrime', domain: 'Planning' },
-  { name: 'EnterpriseCog', domain: 'Enterprise' },
-  { name: 'VerifyBot', domain: 'Verification' },
+  { name: "ReasonCore", domain: "Reasoning" },
+  { name: "RAGMaster", domain: "RAG" },
+  { name: "LinguaAgent", domain: "Language" },
+  { name: "CodeSentinel", domain: "Code" },
+  { name: "SearchVector", domain: "Search" },
+  { name: "SecureGuard", domain: "Security" },
+  { name: "MemoryKeeper", domain: "Memory" },
+  { name: "PlannerPrime", domain: "Planning" },
+  { name: "EnterpriseCog", domain: "Enterprise" },
+  { name: "VerifyBot", domain: "Verification" },
 ];
 
 const compositeScore = (a: AgentRecord): number =>
   a.accuracyScore * 0.35 +
-  a.latencyScore * 0.20 +
+  a.latencyScore * 0.2 +
   a.reliabilityScore * 0.25 +
-  a.verificationScore * 0.20;
+  a.verificationScore * 0.2;
 
 export class AgentPerformanceEvolution {
   private agents: Map<string, AgentRecord>;
@@ -61,9 +61,9 @@ export class AgentPerformanceEvolution {
   constructor() {
     this.agents = new Map();
     AGENT_DEFS.forEach((def, idx) => {
-      const id = `AGT-${String(idx + 1).padStart(3, '0')}`;
+      const id = `AGT-${String(idx + 1).padStart(3, "0")}`;
       const acc = 0.88 + Math.random() * 0.11;
-      const lat = 0.80 + Math.random() * 0.18;
+      const lat = 0.8 + Math.random() * 0.18;
       const rel = 0.85 + Math.random() * 0.13;
       const ver = 0.87 + Math.random() * 0.11;
       const rec: AgentRecord = {
@@ -94,10 +94,19 @@ export class AgentPerformanceEvolution {
     // Simulate task outcomes and update scores
     for (const agent of this.agents.values()) {
       const delta = (Math.random() - 0.48) * 0.03; // slight positive bias
-      agent.accuracyScore = Math.min(0.99, Math.max(0.60, agent.accuracyScore + delta));
-      agent.latencyScore = Math.min(0.99, Math.max(0.55, agent.latencyScore + (Math.random() - 0.5) * 0.02));
-      agent.reliabilityScore = Math.min(0.99, Math.max(0.65, agent.reliabilityScore + (Math.random() - 0.45) * 0.02));
-      agent.verificationScore = Math.min(0.99, Math.max(0.65, agent.verificationScore + (Math.random() - 0.48) * 0.02));
+      agent.accuracyScore = Math.min(0.99, Math.max(0.6, agent.accuracyScore + delta));
+      agent.latencyScore = Math.min(
+        0.99,
+        Math.max(0.55, agent.latencyScore + (Math.random() - 0.5) * 0.02),
+      );
+      agent.reliabilityScore = Math.min(
+        0.99,
+        Math.max(0.65, agent.reliabilityScore + (Math.random() - 0.45) * 0.02),
+      );
+      agent.verificationScore = Math.min(
+        0.99,
+        Math.max(0.65, agent.verificationScore + (Math.random() - 0.48) * 0.02),
+      );
 
       const oldComposite = agent.compositeScore;
       agent.compositeScore = compositeScore(agent);
@@ -109,7 +118,9 @@ export class AgentPerformanceEvolution {
     }
 
     // Re-rank by composite score
-    const sorted = Array.from(this.agents.values()).sort((a, b) => b.compositeScore - a.compositeScore);
+    const sorted = Array.from(this.agents.values()).sort(
+      (a, b) => b.compositeScore - a.compositeScore,
+    );
     sorted.forEach((agent, idx) => {
       agent.priority = idx + 1;
     });
@@ -128,7 +139,7 @@ export class AgentPerformanceEvolution {
 
   routeTask(domain: AgentDomain): AgentRecord | undefined {
     return Array.from(this.agents.values())
-      .filter(a => a.domain === domain && a.isActive)
+      .filter((a) => a.domain === domain && a.isActive)
       .sort((a, b) => b.compositeScore - a.compositeScore)[0];
   }
 }

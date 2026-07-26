@@ -24,13 +24,14 @@ export interface WebGpuUpscaleResult {
 }
 
 export async function runGpuJob(jobId: string, payload: unknown): Promise<GpuJobResult> {
-  const hasWebGPU = typeof navigator !== 'undefined' && typeof (navigator as any).gpu !== 'undefined';
+  const hasWebGPU =
+    typeof navigator !== "undefined" && typeof (navigator as any).gpu !== "undefined";
 
   if (!hasWebGPU) {
     return {
       jobId,
       usedWebGPU: false,
-      note: 'WebGPU not available; GPU engine fell back to no-op.',
+      note: "WebGPU not available; GPU engine fell back to no-op.",
     };
   }
 
@@ -40,7 +41,7 @@ export async function runGpuJob(jobId: string, payload: unknown): Promise<GpuJob
       return {
         jobId,
         usedWebGPU: false,
-        note: 'WebGPU adapter not available.',
+        note: "WebGPU adapter not available.",
       };
     }
 
@@ -50,13 +51,13 @@ export async function runGpuJob(jobId: string, payload: unknown): Promise<GpuJob
     return {
       jobId,
       usedWebGPU: true,
-      note: 'WebGPU device acquired; basic GPU path available.',
+      note: "WebGPU device acquired; basic GPU path available.",
     };
   } catch {
     return {
       jobId,
       usedWebGPU: false,
-      note: 'WebGPU initialization failed.',
+      note: "WebGPU initialization failed.",
     };
   }
 }
@@ -65,9 +66,10 @@ export async function runGpuJob(jobId: string, payload: unknown): Promise<GpuJob
 // This is a concrete “secret sauce” step: real compute work on the user’s GPU/iGPU.
 export async function runWebGpuUpscale(
   jobId: string,
-  payload: WebGpuUpscalePayload
+  payload: WebGpuUpscalePayload,
 ): Promise<WebGpuUpscaleResult> {
-  const hasWebGPU = typeof navigator !== 'undefined' && typeof (navigator as any).gpu !== 'undefined';
+  const hasWebGPU =
+    typeof navigator !== "undefined" && typeof (navigator as any).gpu !== "undefined";
   if (!hasWebGPU) {
     return {
       jobId,
@@ -75,7 +77,7 @@ export async function runWebGpuUpscale(
       width: payload.width,
       height: payload.height,
       data: null,
-      note: 'WebGPU not available on this device.',
+      note: "WebGPU not available on this device.",
     };
   }
 
@@ -87,7 +89,7 @@ export async function runWebGpuUpscale(
       width: payload.width,
       height: payload.height,
       data: null,
-      note: 'WebGPU adapter not available.',
+      note: "WebGPU adapter not available.",
     };
   }
 
@@ -245,10 +247,10 @@ export async function runWebGpuUpscale(
   });
 
   const pipeline = await device.createComputePipelineAsync({
-    layout: 'auto',
+    layout: "auto",
     compute: {
       module: shaderModule,
-      entryPoint: 'main',
+      entryPoint: "main",
     },
   });
 
@@ -307,8 +309,6 @@ export async function runWebGpuUpscale(
     width: dstWidth,
     height: dstHeight,
     data: outPixels,
-    note: 'WebGPU edge-aware (bilateral) upscaler executed successfully.',
+    note: "WebGPU edge-aware (bilateral) upscaler executed successfully.",
   };
 }
-
-

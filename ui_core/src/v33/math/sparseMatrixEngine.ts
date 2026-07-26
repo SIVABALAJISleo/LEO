@@ -15,7 +15,7 @@ export class SparseMatrixEngine {
   evaluateSparsity(rows: number, cols: number, sparsityPct = 75.0): SparsityReport {
     const totalElementsCount = rows * cols;
     const activeElementsCount = Math.round(totalElementsCount * ((100.0 - sparsityPct) / 100.0));
-    
+
     // In sparse multiply, we skip zero elements entirely
     // Direct computation takes rows * cols * cols operations
     // Sparse computation takes activeElementsCount * cols operations
@@ -23,7 +23,9 @@ export class SparseMatrixEngine {
     const totalOpsSparse = activeElementsCount * cols;
     const opsSaved = totalOpsDirect - totalOpsSparse;
 
-    const efficiencyMultiplier = parseFloat((totalOpsDirect / Math.max(1, totalOpsSparse)).toFixed(2));
+    const efficiencyMultiplier = parseFloat(
+      (totalOpsDirect / Math.max(1, totalOpsSparse)).toFixed(2),
+    );
 
     return {
       matrixRows: rows,
@@ -32,7 +34,7 @@ export class SparseMatrixEngine {
       totalElementsCount,
       activeElementsCount,
       opsSaved,
-      efficiencyMultiplier
+      efficiencyMultiplier,
     };
   }
 }

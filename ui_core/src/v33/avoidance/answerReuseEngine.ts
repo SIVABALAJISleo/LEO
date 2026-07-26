@@ -19,20 +19,28 @@ export interface ReuseReport {
 
 export class AnswerReuseEngine {
   private cache = new Map<string, CachedAnswer>([
-    ["explain-mamba", {
-      queryHash: "h-explain-mamba-01",
-      originalQuery: "Explain state space models and Mamba vs Transformer",
-      cachedAnswerText: "State Space Models (SSMs) scale linearly O(N) by maintaining a recurrent hidden state, unlike Transformers which scale quadratically O(N^2) over sequence length due to full attention matrix computations.",
-      confidenceScore: 0.98,
-      lastUsedTimestamp: Date.now() - 360000
-    }],
-    ["quantize-bits", {
-      queryHash: "h-quantize-bits-02",
-      originalQuery: "What is ternary weight quantization?",
-      cachedAnswerText: "Ternary weight quantization represents neural network weights using only three values: -1, 0, and +1, compressing memory demands down to 1.58 bits per parameter.",
-      confidenceScore: 0.95,
-      lastUsedTimestamp: Date.now() - 120000
-    }]
+    [
+      "explain-mamba",
+      {
+        queryHash: "h-explain-mamba-01",
+        originalQuery: "Explain state space models and Mamba vs Transformer",
+        cachedAnswerText:
+          "State Space Models (SSMs) scale linearly O(N) by maintaining a recurrent hidden state, unlike Transformers which scale quadratically O(N^2) over sequence length due to full attention matrix computations.",
+        confidenceScore: 0.98,
+        lastUsedTimestamp: Date.now() - 360000,
+      },
+    ],
+    [
+      "quantize-bits",
+      {
+        queryHash: "h-quantize-bits-02",
+        originalQuery: "What is ternary weight quantization?",
+        cachedAnswerText:
+          "Ternary weight quantization represents neural network weights using only three values: -1, 0, and +1, compressing memory demands down to 1.58 bits per parameter.",
+        confidenceScore: 0.95,
+        lastUsedTimestamp: Date.now() - 120000,
+      },
+    ],
   ]);
 
   checkSemanticReuse(query: string): ReuseReport {
@@ -43,16 +51,16 @@ export class AnswerReuseEngine {
     let computeAvoidedFlops = 0;
 
     // Check semantic proximity matching
-    this.cache.forEach(item => {
+    this.cache.forEach((item) => {
       let matches = 0;
       const keywords = item.originalQuery.toLowerCase().split(" ");
-      keywords.forEach(word => {
+      keywords.forEach((word) => {
         if (word.length > 3 && lower.includes(word)) {
           matches++;
         }
       });
 
-      const matchRatio = matches / keywords.filter(w => w.length > 3).length;
+      const matchRatio = matches / keywords.filter((w) => w.length > 3).length;
       if (matchRatio > 0.65 && matchRatio > semanticMatchPercent) {
         semanticMatchPercent = parseFloat((matchRatio * 100).toFixed(1));
         if (matchRatio >= 0.8) {
@@ -66,7 +74,9 @@ export class AnswerReuseEngine {
     });
 
     // Compute Avoidance Score: scales with semantic match quality
-    const computeAvoidanceScore = cacheHit ? 99.5 : parseFloat((semanticMatchPercent * 0.95).toFixed(1));
+    const computeAvoidanceScore = cacheHit
+      ? 99.5
+      : parseFloat((semanticMatchPercent * 0.95).toFixed(1));
 
     return {
       cacheHit,

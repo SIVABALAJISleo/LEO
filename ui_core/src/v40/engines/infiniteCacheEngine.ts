@@ -39,7 +39,7 @@ export class InfiniteCacheEngine {
       contradictoryContext: 0,
       unsupportedFormat: 0,
     },
-    offlineFallbackActive: false
+    offlineFallbackActive: false,
   };
 
   /**
@@ -52,12 +52,12 @@ export class InfiniteCacheEngine {
       const res = await fetch("http://localhost:8000/api/v1/cache/query", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query })
+        body: JSON.stringify({ query }),
       });
       if (res.ok) {
         const data = await res.json();
         if (data.hit) {
-           return data.answer;
+          return data.answer;
         }
       }
       throw new Error("Cache Miss or Backend Offline");
@@ -71,7 +71,7 @@ export class InfiniteCacheEngine {
 
   private async _executeLocalWebGPURunner(query: string): Promise<string> {
     // Scaffold: In production this invokes `local_inference.ts` which loads `compute_shader.wgsl`
-    await new Promise(r => setTimeout(r, 1500)); // Simulate WASM computation delay
+    await new Promise((r) => setTimeout(r, 1500)); // Simulate WASM computation delay
     return `[Local WebGPU Fallback] Synthesized response for: "${query}". Generated locally at 15 tok/sec without server connection.`;
   }
 
@@ -82,11 +82,11 @@ export class InfiniteCacheEngine {
     try {
       const res = await fetch("http://localhost:8000/api/v1/cache/analytics");
       const data = await res.json();
-      
+
       this.metrics.totalRequests = data.total_requests;
       this.metrics.overallHitRate = data.overall_hit_rate;
       this.metrics.estimatedTFlopsSaved = data.estimated_tflops_saved;
-      
+
       // Update tiers based on backend mapping
       this.metrics.tiers[0].hitCount = data.hits_by_tier["tier1_exact"] || 0;
       this.metrics.tiers[1].hitCount = data.hits_by_tier["tier2_semantic"] || 0;
@@ -114,7 +114,7 @@ export class InfiniteCacheEngine {
       const res = await fetch("http://localhost:8000/api/v1/cache/warm", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ node: nodeName })
+        body: JSON.stringify({ node: nodeName }),
       });
       return res.ok;
     } catch (e) {

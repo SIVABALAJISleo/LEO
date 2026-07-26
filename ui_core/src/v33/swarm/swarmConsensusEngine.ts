@@ -26,7 +26,7 @@ export class SwarmConsensusEngine {
         agreedSolutionSummary: "No votes present.",
         consensusConfidence: 0.0,
         swarmIntelligenceScore: 0,
-        votes: []
+        votes: [],
       };
     }
 
@@ -34,7 +34,7 @@ export class SwarmConsensusEngine {
     let weightedConfidenceSum = 0;
     let weightSum = 0;
 
-    votes.forEach(v => {
+    votes.forEach((v) => {
       weightedConfidenceSum += v.confidenceScore * v.weight;
       weightSum += v.weight;
     });
@@ -43,10 +43,10 @@ export class SwarmConsensusEngine {
 
     // Calculate consensus level: mock variations in outputs to compute diversity
     const sampleOutput = votes[0]?.outputSummary || "N/A";
-    
+
     // Swarm Intelligence Score scales with consensus level and active agent size
     const swarmIntelligenceScore = parseFloat(
-      Math.min(100, (averageConfidence * 75) + (votes.length * 5)).toFixed(1)
+      Math.min(100, averageConfidence * 75 + votes.length * 5).toFixed(1),
     );
 
     return {

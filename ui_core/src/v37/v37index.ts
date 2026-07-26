@@ -47,4 +47,8 @@ export type { EnergyDirectives } from "./engines/energyEfficiencyEngine";
 
 // 12. Failure Immunity System
 export { FailureImmunitySystem } from "./engines/failureImmunitySystem";
-export type { FailureIncident, VaccineAssertion, ImmunityReport } from "./engines/failureImmunitySystem";
+export type {
+  FailureIncident,
+  VaccineAssertion,
+  ImmunityReport,
+} from "./engines/failureImmunitySystem";

@@ -12,10 +12,11 @@ export interface FlopEfficiencyReport {
 export class IntelligencePerFlopEngine {
   calculateEfficiency(flopsGiga: number, reasoningQualityScore: number): FlopEfficiencyReport {
     // If FLOPS is zero (because we hit a local cache), efficiency coefficient is maximum
-    const effectiveFlops = flopsGiga || 0.001; 
+    const effectiveFlops = flopsGiga || 0.001;
     const coeff = parseFloat((reasoningQualityScore / effectiveFlops).toFixed(3));
 
-    let classification: "SubOptimal" | "Standard" | "HighlyEfficient" | "OptimalAvoidance" = "Standard";
+    let classification: "SubOptimal" | "Standard" | "HighlyEfficient" | "OptimalAvoidance" =
+      "Standard";
     if (flopsGiga === 0) {
       classification = "OptimalAvoidance";
     } else if (coeff > 5.0) {
@@ -28,7 +29,7 @@ export class IntelligencePerFlopEngine {
       flopsGiga,
       reasoningQualityScore,
       efficiencyCoefficient: coeff,
-      classification
+      classification,
     };
   }
 }

@@ -20,15 +20,19 @@ export interface EfficiencyIndexReport {
 export class ArchitectureComparisonEngine {
   private researchEngine = new StateSpaceResearchEngine();
 
-  calculateEfficiencyIndex(contextLength: number, maxMemoryAllowedMB: number): EfficiencyIndexReport {
+  calculateEfficiencyIndex(
+    contextLength: number,
+    maxMemoryAllowedMB: number,
+  ): EfficiencyIndexReport {
     const architectures = this.researchEngine.evaluateArchitectures(contextLength);
 
-    const detailedScores = architectures.map(arch => {
+    const detailedScores = architectures.map((arch) => {
       // Memory efficiency: how much margin we have under constraints
       const memoryRatio = arch.memoryUsageMB / maxMemoryAllowedMB;
-      const memoryEfficiency = memoryRatio > 1.0 
-        ? Math.max(0.1, 1 / (memoryRatio * memoryRatio)) // heavily penalize exceeding memory
-        : 1.0 - (memoryRatio * 0.3); // higher margin = better
+      const memoryEfficiency =
+        memoryRatio > 1.0
+          ? Math.max(0.1, 1 / (memoryRatio * memoryRatio)) // heavily penalize exceeding memory
+          : 1.0 - memoryRatio * 0.3; // higher margin = better
 
       // Latency score: lower latency is better
       const latencyScore = Math.max(0.1, 100 / (arch.latencyMsPerToken + 1.0));
@@ -46,7 +50,7 @@ export class ArchitectureComparisonEngine {
         efficiencyIndex,
         memoryEfficiency: parseFloat(memoryEfficiency.toFixed(2)),
         latencyScore: parseFloat(latencyScore.toFixed(2)),
-        reasoningScore: parseFloat(reasoningScore.toFixed(2))
+        reasoningScore: parseFloat(reasoningScore.toFixed(2)),
       };
     });
 
@@ -59,7 +63,7 @@ export class ArchitectureComparisonEngine {
       contextLength,
       preferredArchitecture: top ? top.name : "Unknown",
       architectureEfficiencyIndex: top ? top.efficiencyIndex : 0,
-      detailedScores: sorted
+      detailedScores: sorted,
     };
   }
 }

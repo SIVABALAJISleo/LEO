@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { firebaseClient as supabase } from '@/integrations/firebase/client';
+import { firebaseClient as supabase } from "@/integrations/firebase/client";
 
 /* ---------------- TYPES ---------------- */
 
@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // Check active session on mount
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
-        fetchUserProfile(session.user.id, session.user.email || '');
+        fetchUserProfile(session.user.id, session.user.email || "");
       } else {
         setUser(null);
         setLoading(false);
@@ -52,13 +52,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event: string, session: any) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (_event: string, session: any) => {
       if (!session?.user) {
         setUser(null);
         setLoading(false);
         return;
       }
-      fetchUserProfile(session.user.id, session.user.email || '');
+      fetchUserProfile(session.user.id, session.user.email || "");
     });
 
     return () => {
@@ -68,20 +70,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchUserProfile = async (uid: string, email: string) => {
     try {
-      // In a real Supabase setup, you'd have a 'profiles' table. 
+      // In a real Supabase setup, you'd have a 'profiles' table.
       // We will try to fetch the profile, or fallback to the auth metadata.
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', uid)
-        .single();
+      const { data, error } = await supabase.from("profiles").select("*").eq("id", uid).single();
 
       if (data) {
         setUser({ id: uid, email, username: data.username, created_at: data.created_at } as User);
       } else {
         // Fallback for new users before their profile trigger fires
-        setUser({ id: uid, email, username: email.split('@')[0], created_at: new Date().toISOString() } as User);
+        setUser({
+          id: uid,
+          email,
+          username: email.split("@")[0],
+          created_at: new Date().toISOString(),
+        } as User);
       }
     } catch (err) {
       console.error("Failed to load user profile:", err);
@@ -90,7 +93,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false);
     }
   };
-
 
   /* -------- SIGN IN -------- */
 
@@ -123,8 +125,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         options: {
           data: {
             username: username.toLowerCase(),
-          }
-        }
+          },
+        },
       });
 
       if (error) throw error;
@@ -168,7 +170,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const verifyOtp = async (email: string, token: string) => {
     try {
-      const { error } = await supabase.auth.verifyOtp({ email, token, type: 'email' });
+      const { error } = await supabase.auth.verifyOtp({ email, token, type: "email" });
       if (error) throw error;
       return { error: null };
     } catch (error: any) {

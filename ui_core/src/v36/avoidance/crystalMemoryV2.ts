@@ -10,13 +10,20 @@ export interface CrystallizedConcept {
 
 export class CrystalMemoryV2 {
   private memoryCache: CrystallizedConcept[] = [
-    { id: "c-10", conceptKey: "vnni offset cycles", responseBody: "AVX-VNNI reduces integer steps to 1 instruction cycle.", frequency: 12 }
+    {
+      id: "c-10",
+      conceptKey: "vnni offset cycles",
+      responseBody: "AVX-VNNI reduces integer steps to 1 instruction cycle.",
+      frequency: 12,
+    },
   ];
 
   public lookupMemory(key: string): CrystallizedConcept | null {
     const kNorm = key.toLowerCase();
-    const match = this.memoryCache.find(c => kNorm.includes(c.conceptKey) || c.conceptKey.includes(kNorm));
-    
+    const match = this.memoryCache.find(
+      (c) => kNorm.includes(c.conceptKey) || c.conceptKey.includes(kNorm),
+    );
+
     if (match) {
       match.frequency++;
       return match;

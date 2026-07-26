@@ -16,11 +16,11 @@ export class DeltaWorldUpdateEngine {
 
   applyUpdates(
     model: TopologicalWorldModel,
-    observations: { nodeId: string; properties: Record<string, any> }[]
+    observations: { nodeId: string; properties: Record<string, any> }[],
   ): WorldDelta[] {
     const freshDeltas: WorldDelta[] = [];
 
-    observations.forEach(obs => {
+    observations.forEach((obs) => {
       const node = model.getNode(obs.nodeId);
       if (node) {
         Object.entries(obs.properties).forEach(([key, val]) => {
@@ -32,7 +32,7 @@ export class DeltaWorldUpdateEngine {
               fieldChanged: key,
               oldValue: oldVal,
               newValue: val,
-              timestamp: Date.now()
+              timestamp: Date.now(),
             };
             node.properties[key] = val;
             this.deltaLog.push(delta);

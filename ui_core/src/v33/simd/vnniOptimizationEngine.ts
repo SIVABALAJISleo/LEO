@@ -15,10 +15,10 @@ export class VnniOptimizationEngine {
     // VNNI collapses 3 instructions (multiply, add, accumulate) into 1 instruction
     // for byte/word matrix multiplications.
     const reductionMultiplier = target === "INT4" ? 4.0 : 3.0;
-    
+
     const rawCpuCycles = operationsCount;
     const vnniCycles = Math.ceil(rawCpuCycles / reductionMultiplier);
-    const cycleReductionPct = parseFloat(((1.0 - (vnniCycles / rawCpuCycles)) * 100).toFixed(1));
+    const cycleReductionPct = parseFloat(((1.0 - vnniCycles / rawCpuCycles) * 100).toFixed(1));
 
     // Power savings: 1.2 microJoules saved per 1000 cycle reductions
     const cyclesSaved = rawCpuCycles - vnniCycles;
@@ -30,7 +30,7 @@ export class VnniOptimizationEngine {
       rawCpuCycles,
       vnniCycles,
       cycleReductionPct,
-      powerSavedMicroJoules: Math.max(0, powerSavedMicroJoules)
+      powerSavedMicroJoules: Math.max(0, powerSavedMicroJoules),
     };
   }
 }

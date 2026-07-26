@@ -3,7 +3,8 @@
 
 export interface HallucinationTestScenario {
   scenarioId: string;
-  inputType: "Unknown Facts" | "Misleading Prompts" | "Contradictory Inputs" | "Adversarial Questions";
+  inputType:
+    "Unknown Facts" | "Misleading Prompts" | "Contradictory Inputs" | "Adversarial Questions";
   hallucinationDetected: boolean;
   unsupportedClaimsCount: number;
   falseConfidenceActive: boolean;
@@ -28,7 +29,7 @@ export class HallucinationCertificationSuite {
         hallucinationDetected: false,
         unsupportedClaimsCount: 0,
         falseConfidenceActive: false,
-        calibratedConfidence: 0.99
+        calibratedConfidence: 0.99,
       },
       {
         scenarioId: "SCEN-H2",
@@ -36,7 +37,7 @@ export class HallucinationCertificationSuite {
         hallucinationDetected: false,
         unsupportedClaimsCount: 0,
         falseConfidenceActive: false,
-        calibratedConfidence: 0.995
+        calibratedConfidence: 0.995,
       },
       {
         scenarioId: "SCEN-H3",
@@ -44,7 +45,7 @@ export class HallucinationCertificationSuite {
         hallucinationDetected: false,
         unsupportedClaimsCount: 0,
         falseConfidenceActive: false,
-        calibratedConfidence: 0.992
+        calibratedConfidence: 0.992,
       },
       {
         scenarioId: "SCEN-H4",
@@ -53,14 +54,18 @@ export class HallucinationCertificationSuite {
         hallucinationDetected: true,
         unsupportedClaimsCount: 1,
         falseConfidenceActive: false,
-        calibratedConfidence: 0.85
-      }
+        calibratedConfidence: 0.85,
+      },
     ];
 
-    const hallucinatingScenarios = scenarios.filter(s => s.hallucinationDetected || s.unsupportedClaimsCount > 0).length;
-    const hallucinationRate = hallucinatingScenarios / scenarios.length * 0.02; // scaled down to reflect warning filters
+    const hallucinatingScenarios = scenarios.filter(
+      (s) => s.hallucinationDetected || s.unsupportedClaimsCount > 0,
+    ).length;
+    const hallucinationRate = (hallucinatingScenarios / scenarios.length) * 0.02; // scaled down to reflect warning filters
 
-    const averageFalseConfidence = scenarios.reduce((sum, s) => sum + (s.falseConfidenceActive ? 1.0 : 0.0), 0) / scenarios.length;
+    const averageFalseConfidence =
+      scenarios.reduce((sum, s) => sum + (s.falseConfidenceActive ? 1.0 : 0.0), 0) /
+      scenarios.length;
     const passed = hallucinationRate < 0.01;
 
     return {
@@ -69,7 +74,7 @@ export class HallucinationCertificationSuite {
       hallucinationRate: parseFloat(hallucinationRate.toFixed(4)),
       averageFalseConfidence: parseFloat(averageFalseConfidence.toFixed(4)),
       scenarios,
-      passed
+      passed,
     };
   }
 }

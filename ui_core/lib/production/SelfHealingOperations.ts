@@ -2,8 +2,8 @@
 // Goal: System heals itself before humans notice
 
 interface HealthCheck {
-  component: 'api' | 'database' | 'websocket' | 'cpu' | 'memory' | 'queue';
-  status: 'healthy' | 'degraded' | 'unhealthy' | 'unknown';
+  component: "api" | "database" | "websocket" | "cpu" | "memory" | "queue";
+  status: "healthy" | "degraded" | "unhealthy" | "unknown";
   latencyMs: number;
   message: string;
   checkedAt: Date;
@@ -29,7 +29,7 @@ interface FeatureFlagState {
 
 interface IncidentLogEntry {
   id: string;
-  type: 'failure' | 'recovery' | 'degradation' | 'auto-disable' | 'auto-enable';
+  type: "failure" | "recovery" | "degradation" | "auto-disable" | "auto-enable";
   component: string;
   message: string;
   metadata: Record<string, unknown>;
@@ -45,7 +45,7 @@ interface SelfHealingStats {
   autoDisables: number;
   autoRecoveries: number;
   incidentsLogged: number;
-  currentHealth: 'healthy' | 'degraded' | 'unhealthy';
+  currentHealth: "healthy" | "degraded" | "unhealthy";
 }
 
 const DEFAULT_RETRY_CONFIG: AutoRetryConfig = {
@@ -53,7 +53,7 @@ const DEFAULT_RETRY_CONFIG: AutoRetryConfig = {
   baseDelayMs: 1000,
   maxDelayMs: 30000,
   backoffMultiplier: 2,
-  retryableErrors: ['ECONNRESET', 'ETIMEDOUT', 'ENOTFOUND', 'NetworkError', 'FetchError', '5'],
+  retryableErrors: ["ECONNRESET", "ETIMEDOUT", "ENOTFOUND", "NetworkError", "FetchError", "5"],
 };
 
 class SelfHealingOperations {
@@ -64,7 +64,7 @@ class SelfHealingOperations {
   private isRunning: boolean = false;
   private checkInterval: ReturnType<typeof setInterval> | null = null;
   private webhookUrl?: string;
-  
+
   private stats: SelfHealingStats = {
     healthChecksRun: 0,
     autoRetries: 0,
@@ -72,7 +72,7 @@ class SelfHealingOperations {
     autoDisables: 0,
     autoRecoveries: 0,
     incidentsLogged: 0,
-    currentHealth: 'healthy',
+    currentHealth: "healthy",
   };
 
   private readonly FAILURE_THRESHOLD = 3;
@@ -100,17 +100,17 @@ class SelfHealingOperations {
     ]);
 
     this.stats.healthChecksRun += checks.length;
-    
+
     // Determine overall health
-    const unhealthyCount = checks.filter(c => c.status === 'unhealthy').length;
-    const degradedCount = checks.filter(c => c.status === 'degraded').length;
-    
+    const unhealthyCount = checks.filter((c) => c.status === "unhealthy").length;
+    const degradedCount = checks.filter((c) => c.status === "degraded").length;
+
     if (unhealthyCount > 0) {
-      this.stats.currentHealth = 'unhealthy';
+      this.stats.currentHealth = "unhealthy";
     } else if (degradedCount > 0) {
-      this.stats.currentHealth = 'degraded';
+      this.stats.currentHealth = "degraded";
     } else {
-      this.stats.currentHealth = 'healthy';
+      this.stats.currentHealth = "healthy";
     }
 
     return checks;
@@ -119,26 +119,29 @@ class SelfHealingOperations {
   private async checkApi(): Promise<HealthCheck> {
     const start = Date.now();
     try {
-      const response = await fetch('/api/health', { method: 'HEAD', signal: AbortSignal.timeout(5000) });
+      const response = await fetch("/api/health", {
+        method: "HEAD",
+        signal: AbortSignal.timeout(5000),
+      });
       const check: HealthCheck = {
-        component: 'api',
-        status: response.ok ? 'healthy' : 'degraded',
+        component: "api",
+        status: response.ok ? "healthy" : "degraded",
         latencyMs: Date.now() - start,
-        message: response.ok ? 'API responding normally' : `API returned ${response.status}`,
+        message: response.ok ? "API responding normally" : `API returned ${response.status}`,
         checkedAt: new Date(),
       };
-      this.healthChecks.set('api', check);
+      this.healthChecks.set("api", check);
       return check;
     } catch (e) {
       const check: HealthCheck = {
-        component: 'api',
-        status: 'unhealthy',
+        component: "api",
+        status: "unhealthy",
         latencyMs: Date.now() - start,
-        message: (e as Error).message || 'API unreachable',
+        message: (e as Error).message || "API unreachable",
         checkedAt: new Date(),
       };
-      this.healthChecks.set('api', check);
-      this.logIncident('failure', 'api', check.message, {});
+      this.healthChecks.set("api", check);
+      this.logIncident("failure", "api", check.message, {});
       return check;
     }
   }
@@ -148,57 +151,61 @@ class SelfHealingOperations {
     try {
       // Use the Supabase health endpoint
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      if (!supabaseUrl) throw new Error('Supabase URL not configured');
-      
-      const response = await fetch(`${supabaseUrl}/rest/v1/`, { 
-        method: 'HEAD',
+      if (!supabaseUrl) throw new Error("Supabase URL not configured");
+
+      const response = await fetch(`${supabaseUrl}/rest/v1/`, {
+        method: "HEAD",
         signal: AbortSignal.timeout(5000),
         headers: {
-          'apikey': import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || '',
-        }
+          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || "",
+        },
       });
-      
+
       const check: HealthCheck = {
-        component: 'database',
-        status: response.ok ? 'healthy' : 'degraded',
+        component: "database",
+        status: response.ok ? "healthy" : "degraded",
         latencyMs: Date.now() - start,
-        message: response.ok ? 'Database responding normally' : `Database returned ${response.status}`,
+        message: response.ok
+          ? "Database responding normally"
+          : `Database returned ${response.status}`,
         checkedAt: new Date(),
       };
-      this.healthChecks.set('database', check);
+      this.healthChecks.set("database", check);
       return check;
     } catch (e) {
       const check: HealthCheck = {
-        component: 'database',
-        status: 'unhealthy',
+        component: "database",
+        status: "unhealthy",
         latencyMs: Date.now() - start,
-        message: (e as Error).message || 'Database unreachable',
+        message: (e as Error).message || "Database unreachable",
         checkedAt: new Date(),
       };
-      this.healthChecks.set('database', check);
-      this.logIncident('failure', 'database', check.message, {});
+      this.healthChecks.set("database", check);
+      this.logIncident("failure", "database", check.message, {});
       return check;
     }
   }
 
   private async checkMemory(): Promise<HealthCheck> {
     const check: HealthCheck = {
-      component: 'memory',
-      status: 'healthy',
+      component: "memory",
+      status: "healthy",
       latencyMs: 0,
-      message: 'Memory check (client-side)',
+      message: "Memory check (client-side)",
       checkedAt: new Date(),
     };
 
-    if (typeof performance !== 'undefined' && 'memory' in performance) {
-      const memory = (performance as { memory?: { usedJSHeapSize: number; jsHeapSizeLimit: number } }).memory;
+    if (typeof performance !== "undefined" && "memory" in performance) {
+      const memory = (
+        performance as { memory?: { usedJSHeapSize: number; jsHeapSizeLimit: number } }
+      ).memory;
       if (memory) {
         const usagePercent = (memory.usedJSHeapSize / memory.jsHeapSizeLimit) * 100;
         if (usagePercent > 90) {
-          check.status = 'unhealthy';
+          check.status = "unhealthy";
           check.message = `Memory usage critical: ${usagePercent.toFixed(1)}%`;
         } else if (usagePercent > 75) {
-          check.status = 'degraded';
+          check.status = "degraded";
           check.message = `Memory usage elevated: ${usagePercent.toFixed(1)}%`;
         } else {
           check.message = `Memory usage normal: ${usagePercent.toFixed(1)}%`;
@@ -206,21 +213,21 @@ class SelfHealingOperations {
       }
     }
 
-    this.healthChecks.set('memory', check);
+    this.healthChecks.set("memory", check);
     return check;
   }
 
   private async checkCpu(): Promise<HealthCheck> {
     // CPU monitoring via performance observer for long tasks
     const check: HealthCheck = {
-      component: 'cpu',
-      status: 'healthy',
+      component: "cpu",
+      status: "healthy",
       latencyMs: 0,
-      message: 'CPU check (client-side approximation)',
+      message: "CPU check (client-side approximation)",
       checkedAt: new Date(),
     };
-    
-    this.healthChecks.set('cpu', check);
+
+    this.healthChecks.set("cpu", check);
     return check;
   }
 
@@ -228,7 +235,7 @@ class SelfHealingOperations {
 
   async withAutoRetry<T>(
     operation: () => Promise<T>,
-    config: Partial<AutoRetryConfig> = {}
+    config: Partial<AutoRetryConfig> = {},
   ): Promise<T> {
     const cfg = { ...DEFAULT_RETRY_CONFIG, ...config };
     let lastError: Error | null = null;
@@ -239,23 +246,30 @@ class SelfHealingOperations {
         const result = await operation();
         if (attempt > 0) {
           this.stats.successfulRetries++;
-          this.logIncident('recovery', 'auto-retry', `Operation succeeded after ${attempt} retries`, {});
+          this.logIncident(
+            "recovery",
+            "auto-retry",
+            `Operation succeeded after ${attempt} retries`,
+            {},
+          );
         }
         return result;
       } catch (error) {
         lastError = error as Error;
         const errorStr = lastError.message || String(error);
-        
+
         // Check if error is retryable
-        const isRetryable = cfg.retryableErrors.some(e => errorStr.includes(e));
-        
+        const isRetryable = cfg.retryableErrors.some((e) => errorStr.includes(e));
+
         if (!isRetryable || attempt === cfg.maxRetries) {
           throw lastError;
         }
 
         this.stats.autoRetries++;
-        console.log(`[SelfHealing] Retry ${attempt + 1}/${cfg.maxRetries} in ${delay}ms: ${errorStr}`);
-        
+        console.log(
+          `[SelfHealing] Retry ${attempt + 1}/${cfg.maxRetries} in ${delay}ms: ${errorStr}`,
+        );
+
         await this.sleep(delay);
         delay = Math.min(delay * cfg.backoffMultiplier, cfg.maxDelayMs);
       }
@@ -265,7 +279,7 @@ class SelfHealingOperations {
   }
 
   private sleep(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   // ===== FEATURE FLAG AUTO-DISABLE =====
@@ -309,14 +323,14 @@ class SelfHealingOperations {
     flag.enabled = false;
     flag.autoDisabledAt = new Date();
     flag.autoDisableReason = reason;
-    
+
     this.stats.autoDisables++;
-    this.logIncident('auto-disable', flagKey, `Feature auto-disabled: ${reason}`, { 
-      failureCount: flag.failureCount 
+    this.logIncident("auto-disable", flagKey, `Feature auto-disabled: ${reason}`, {
+      failureCount: flag.failureCount,
     });
 
     // Alert webhook if configured
-    this.sendAlert(`Feature ${flagKey} auto-disabled`, reason, 'warning');
+    this.sendAlert(`Feature ${flagKey} auto-disabled`, reason, "warning");
 
     // Schedule recovery check
     setTimeout(() => this.checkFeatureRecovery(flagKey), this.RECOVERY_CHECK_INTERVAL);
@@ -332,10 +346,10 @@ class SelfHealingOperations {
     flag.failureCount = 0;
     flag.enabled = true;
     flag.recoveredAt = new Date();
-    
+
     this.stats.autoRecoveries++;
-    this.logIncident('auto-enable', flagKey, 'Feature auto-recovered', {});
-    
+    this.logIncident("auto-enable", flagKey, "Feature auto-recovered", {});
+
     console.log(`[SelfHealing] Feature ${flagKey} auto-recovered`);
     this.saveToStorage();
   }
@@ -351,10 +365,10 @@ class SelfHealingOperations {
   // ===== INCIDENT LOGGING =====
 
   private logIncident(
-    type: IncidentLogEntry['type'],
+    type: IncidentLogEntry["type"],
     component: string,
     message: string,
-    metadata: Record<string, unknown>
+    metadata: Record<string, unknown>,
   ): void {
     const incident: IncidentLogEntry = {
       id: `inc_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -363,8 +377,8 @@ class SelfHealingOperations {
       message,
       metadata,
       timestamp: new Date(),
-      resolved: type === 'recovery' || type === 'auto-enable',
-      resolvedAt: type === 'recovery' || type === 'auto-enable' ? new Date() : undefined,
+      resolved: type === "recovery" || type === "auto-enable",
+      resolvedAt: type === "recovery" || type === "auto-enable" ? new Date() : undefined,
     };
 
     this.incidentLog.unshift(incident);
@@ -374,7 +388,7 @@ class SelfHealingOperations {
 
     this.stats.incidentsLogged++;
     console.log(`[SelfHealing] Incident: ${type} - ${component} - ${message}`);
-    
+
     this.saveToStorage();
   }
 
@@ -383,7 +397,7 @@ class SelfHealingOperations {
   }
 
   resolveIncident(incidentId: string): void {
-    const incident = this.incidentLog.find(i => i.id === incidentId);
+    const incident = this.incidentLog.find((i) => i.id === incidentId);
     if (incident && !incident.resolved) {
       incident.resolved = true;
       incident.resolvedAt = new Date();
@@ -397,7 +411,11 @@ class SelfHealingOperations {
     this.webhookUrl = url;
   }
 
-  private async sendAlert(title: string, message: string, severity: 'info' | 'warning' | 'critical'): Promise<void> {
+  private async sendAlert(
+    title: string,
+    message: string,
+    severity: "info" | "warning" | "critical",
+  ): Promise<void> {
     if (!this.webhookUrl) {
       console.log(`[SelfHealing] Alert (no webhook): ${severity} - ${title}: ${message}`);
       return;
@@ -405,18 +423,18 @@ class SelfHealingOperations {
 
     try {
       await fetch(this.webhookUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title,
           message,
           severity,
           timestamp: new Date().toISOString(),
-          source: 'hyper-self-healing',
+          source: "hyper-self-healing",
         }),
       });
     } catch (e) {
-      console.error('[SelfHealing] Failed to send alert:', e);
+      console.error("[SelfHealing] Failed to send alert:", e);
     }
   }
 
@@ -426,7 +444,7 @@ class SelfHealingOperations {
     if (this.isRunning) return;
     this.isRunning = true;
 
-    console.log('[SelfHealing] Starting health monitoring');
+    console.log("[SelfHealing] Starting health monitoring");
     this.runAllHealthChecks();
 
     this.checkInterval = setInterval(() => {
@@ -440,26 +458,29 @@ class SelfHealingOperations {
       this.checkInterval = null;
     }
     this.isRunning = false;
-    console.log('[SelfHealing] Stopped health monitoring');
+    console.log("[SelfHealing] Stopped health monitoring");
   }
 
   // ===== PERSISTENCE =====
 
   private saveToStorage(): void {
     try {
-      localStorage.setItem('hyper_self_healing', JSON.stringify({
-        featureFlags: Array.from(this.featureFlags.entries()),
-        incidentLog: this.incidentLog.slice(0, 100),
-        stats: this.stats,
-      }));
+      localStorage.setItem(
+        "hyper_self_healing",
+        JSON.stringify({
+          featureFlags: Array.from(this.featureFlags.entries()),
+          incidentLog: this.incidentLog.slice(0, 100),
+          stats: this.stats,
+        }),
+      );
     } catch (e) {
-      console.warn('[SelfHealing] Failed to save state:', e);
+      console.warn("[SelfHealing] Failed to save state:", e);
     }
   }
 
   private loadFromStorage(): void {
     try {
-      const data = localStorage.getItem('hyper_self_healing');
+      const data = localStorage.getItem("hyper_self_healing");
       if (data) {
         const parsed = JSON.parse(data);
         if (parsed.featureFlags) {
@@ -477,7 +498,7 @@ class SelfHealingOperations {
         }
       }
     } catch (e) {
-      console.warn('[SelfHealing] Failed to load state:', e);
+      console.warn("[SelfHealing] Failed to load state:", e);
     }
   }
 

@@ -1,8 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Search, Command, Layers, Clock, Activity, AlertTriangle, CheckCircle2, ChevronRight, X } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import clsx from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import React, { useState, useEffect, useRef } from "react";
+import {
+  Search,
+  Command,
+  Layers,
+  Clock,
+  Activity,
+  AlertTriangle,
+  CheckCircle2,
+  ChevronRight,
+  X,
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import clsx from "clsx";
+import { twMerge } from "tailwind-merge";
 
 function cn(...inputs) {
   return twMerge(clsx(inputs));
@@ -19,20 +29,19 @@ export default function App() {
   const inputRef = useRef(null);
 
   useEffect(() => {
-    fetch('http://localhost:3001/api/nodes')
-      .then(res => res.json())
-      .then(data => setNodes(data))
-      .catch(err => console.error("Backend not running?"));
+    fetch("http://localhost:3001/api/nodes")
+      .then((res) => res.json())
+      .then((data) => setNodes(data))
+      .catch((err) => console.error("Backend not running?"));
   }, []);
 
   useEffect(() => {
     if (query.length > 0) {
       const typeSequence = ["ENTITY", "METRIC", "TIME", "CONDITION"];
       const nextType = typeSequence[selectedBlocks.length];
-      
-      const filtered = nodes.filter(n => 
-        n.type === nextType && 
-        n.name.toLowerCase().includes(query.toLowerCase())
+
+      const filtered = nodes.filter(
+        (n) => n.type === nextType && n.name.toLowerCase().includes(query.toLowerCase()),
       );
       setSuggestions(filtered);
     } else {
@@ -45,29 +54,29 @@ export default function App() {
     setSelectedBlocks(newBlocks);
     setQuery("");
     setIsOpen(false);
-    
+
     if (newBlocks.length === 4) {
       resolveQuery(newBlocks);
     }
   };
 
   const resolveQuery = (blocks) => {
-    const uuids = blocks.map(b => b.id);
-    fetch('http://localhost:3001/api/resolve', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ uuids })
+    const uuids = blocks.map((b) => b.id);
+    fetch("http://localhost:3001/api/resolve", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ uuids }),
     })
-    .then(res => res.json())
-    .then(data => {
-      if (data.status === "SUCCESS") {
-        setResult(data.result);
-        setError(null);
-      } else {
-        setError(data.message);
-        setResult(null);
-      }
-    });
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status === "SUCCESS") {
+          setResult(data.result);
+          setError(null);
+        } else {
+          setError(data.message);
+          setResult(null);
+        }
+      });
   };
 
   const removeBlock = (index) => {
@@ -78,18 +87,22 @@ export default function App() {
 
   const getIcon = (type) => {
     switch (type) {
-      case "ENTITY": return <Layers size={14} />;
-      case "METRIC": return <Activity size={14} />;
-      case "TIME": return <Clock size={14} />;
-      case "CONDITION": return <AlertTriangle size={14} />;
-      default: return <Command size={14} />;
+      case "ENTITY":
+        return <Layers size={14} />;
+      case "METRIC":
+        return <Activity size={14} />;
+      case "TIME":
+        return <Clock size={14} />;
+      case "CONDITION":
+        return <AlertTriangle size={14} />;
+      default:
+        return <Command size={14} />;
     }
   };
 
   return (
     <div className="min-h-screen bg-[#0a0a0c] text-white font-sans selection:bg-cyan-500/30">
       <div className="max-w-4xl mx-auto pt-20 px-6">
-        
         {/* Header */}
         <div className="flex flex-col space-y-2 mb-12">
           <h1 className="text-4xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
@@ -114,18 +127,22 @@ export default function App() {
                   block.type === "ENTITY" && "bg-cyan-500/10 border-cyan-500/50 text-cyan-400",
                   block.type === "METRIC" && "bg-blue-500/10 border-blue-500/50 text-blue-400",
                   block.type === "TIME" && "bg-purple-500/10 border-purple-500/50 text-purple-400",
-                  block.type === "CONDITION" && "bg-amber-500/10 border-amber-500/50 text-amber-400"
+                  block.type === "CONDITION" &&
+                    "bg-amber-500/10 border-amber-500/50 text-amber-400",
                 )}
               >
                 {getIcon(block.type)}
                 {block.name}
-                <button onClick={() => removeBlock(i)} className="hover:text-white transition-colors">
+                <button
+                  onClick={() => removeBlock(i)}
+                  className="hover:text-white transition-colors"
+                >
                   <X size={14} />
                 </button>
               </motion.div>
             ))}
           </AnimatePresence>
-          
+
           {selectedBlocks.length < 4 && (
             <div className="relative flex-grow min-w-[200px]">
               <div className="flex items-center gap-3 text-zinc-500 group">
@@ -139,10 +156,13 @@ export default function App() {
                   }}
                   onFocus={() => setIsOpen(true)}
                   placeholder={
-                    selectedBlocks.length === 0 ? "Select Entity (e.g. ALPHA_NODE)..." :
-                    selectedBlocks.length === 1 ? "Select Metric..." :
-                    selectedBlocks.length === 2 ? "Select Time Window..." :
-                    "Select Condition Severity..."
+                    selectedBlocks.length === 0
+                      ? "Select Entity (e.g. ALPHA_NODE)..."
+                      : selectedBlocks.length === 1
+                        ? "Select Metric..."
+                        : selectedBlocks.length === 2
+                          ? "Select Time Window..."
+                          : "Select Condition Severity..."
                   }
                   className="bg-transparent border-none outline-none text-sm w-full placeholder:text-zinc-700"
                 />
@@ -169,10 +189,15 @@ export default function App() {
                           </div>
                           <div className="flex flex-col items-start">
                             <span className="font-bold text-sm tracking-tight">{node.name}</span>
-                            <span className="text-[10px] text-zinc-500 uppercase tracking-widest">{node.type}</span>
+                            <span className="text-[10px] text-zinc-500 uppercase tracking-widest">
+                              {node.type}
+                            </span>
                           </div>
                         </div>
-                        <ChevronRight size={14} className="text-zinc-700 group-hover:text-cyan-400" />
+                        <ChevronRight
+                          size={14}
+                          className="text-zinc-700 group-hover:text-cyan-400"
+                        />
                       </button>
                     ))}
                   </motion.div>
@@ -198,7 +223,9 @@ export default function App() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <h3 className="text-zinc-500 text-[10px] uppercase tracking-[0.2em] mb-4">Execution Trace</h3>
+                  <h3 className="text-zinc-500 text-[10px] uppercase tracking-[0.2em] mb-4">
+                    Execution Trace
+                  </h3>
                   <div className="flex flex-col gap-2">
                     {result.trace.map((step, i) => (
                       <div key={i} className="flex items-center gap-3 text-sm">
@@ -209,9 +236,12 @@ export default function App() {
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-zinc-500 text-[10px] uppercase tracking-[0.2em] mb-4">Resolved Data</h3>
+                  <h3 className="text-zinc-500 text-[10px] uppercase tracking-[0.2em] mb-4">
+                    Resolved Data
+                  </h3>
                   <div className="text-4xl font-bold tracking-tighter mb-1">
-                    {result.data.value} <span className="text-lg text-zinc-500 font-normal">{result.data.unit}</span>
+                    {result.data.value}{" "}
+                    <span className="text-lg text-zinc-500 font-normal">{result.data.unit}</span>
                   </div>
                   <p className="text-xs text-zinc-500 border-t border-zinc-800 pt-4 mt-4">
                     {result.outcome}
@@ -236,7 +266,6 @@ export default function App() {
             </motion.div>
           )}
         </AnimatePresence>
-
       </div>
     </div>
   );

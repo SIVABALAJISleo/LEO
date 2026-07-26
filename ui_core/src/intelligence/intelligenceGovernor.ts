@@ -31,7 +31,7 @@ export class IntelligenceGovernor {
     critiqueChains.push({
       stage: "initial_draft",
       answerContent: originalAnswer,
-      hallucinationScore: 0.15
+      hallucinationScore: 0.15,
     });
 
     // Round 2: Skeptic Attack (checks policy guidelines, Stripe parameters, local VRAM)
@@ -39,22 +39,24 @@ export class IntelligenceGovernor {
     let hallucinationScore = 0.08;
 
     if (queryLower.includes("stripe") && !originalAnswer.includes("whsec")) {
-      attackContent = "Skeptic Attack: Warning! The billing response lacks whsec portal secrets validation checks. This could bypass cryptographic gates.";
+      attackContent =
+        "Skeptic Attack: Warning! The billing response lacks whsec portal secrets validation checks. This could bypass cryptographic gates.";
       hallucinationScore = 0.35;
     } else if (queryLower.includes("gpu") && !originalAnswer.includes("vram")) {
-      attackContent = "Skeptic Attack: Local compiler models must specify VRAM capacity limits to prevent thrashing thread locks.";
+      attackContent =
+        "Skeptic Attack: Local compiler models must specify VRAM capacity limits to prevent thrashing thread locks.";
       hallucinationScore = 0.25;
     }
 
     critiqueChains.push({
       stage: "skeptic_attack",
       answerContent: attackContent,
-      hallucinationScore
+      hallucinationScore,
     });
 
     // Round 3: Architect Refinement
     let refinedAnswer = originalAnswer;
-    if (hallucinationScore > 0.10) {
+    if (hallucinationScore > 0.1) {
       if (queryLower.includes("stripe")) {
         refinedAnswer = `${originalAnswer} [Security Fix: Enforce signature checks with whsec_prod_verification_token_key_2026.]`;
       } else if (queryLower.includes("gpu")) {
@@ -65,14 +67,14 @@ export class IntelligenceGovernor {
     critiqueChains.push({
       stage: "architect_refinement",
       answerContent: refinedAnswer,
-      hallucinationScore: 0.02
+      hallucinationScore: 0.02,
     });
 
     // Round 4: Verification Sign-off
     critiqueChains.push({
       stage: "verification_signoff",
       answerContent: `Verified Aligned Answer: ${refinedAnswer}`,
-      hallucinationScore: 0.001
+      hallucinationScore: 0.001,
     });
 
     return {
@@ -80,8 +82,8 @@ export class IntelligenceGovernor {
       originalAnswer,
       critiqueChains,
       finalAuditedAnswer: refinedAnswer,
-      isFullyVerified: hallucinationScore < 0.10 || refinedAnswer !== originalAnswer,
-      confidenceScore: parseFloat((1.0 - hallucinationScore * 0.1).toFixed(4))
+      isFullyVerified: hallucinationScore < 0.1 || refinedAnswer !== originalAnswer,
+      confidenceScore: parseFloat((1.0 - hallucinationScore * 0.1).toFixed(4)),
     };
   }
 }

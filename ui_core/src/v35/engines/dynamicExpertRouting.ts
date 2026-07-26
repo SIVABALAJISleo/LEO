@@ -1,7 +1,15 @@
 // LEO AI V35 — Dynamic Expert Routing
 // Mixture of Experts (MoE) router to direct queries to specialized execution blocks.
 
-export type V35Expert = "Coding" | "Business" | "Enterprise" | "Scientific" | "Mathematical" | "Research" | "Security" | "Planning";
+export type V35Expert =
+  | "Coding"
+  | "Business"
+  | "Enterprise"
+  | "Scientific"
+  | "Mathematical"
+  | "Research"
+  | "Security"
+  | "Planning";
 
 export interface ExpertProfile {
   name: V35Expert;
@@ -26,7 +34,7 @@ export class DynamicExpertRouting {
     Mathematical: 35,
     Research: 28,
     Security: 24,
-    Planning: 15
+    Planning: 15,
   };
 
   /**
@@ -40,19 +48,38 @@ export class DynamicExpertRouting {
     let detectedIntent = "GeneralReasoning";
 
     // Intent classifier logic
-    if (qLower.includes("code") || qLower.includes("typescript") || qLower.includes("compile") || qLower.includes("build")) {
+    if (
+      qLower.includes("code") ||
+      qLower.includes("typescript") ||
+      qLower.includes("compile") ||
+      qLower.includes("build")
+    ) {
       selectedExperts.push("Coding");
       detectedIntent = "SoftwareEngineering";
     }
-    if (qLower.includes("math") || qLower.includes("equation") || qLower.includes("solve") || qLower.includes("calculate")) {
+    if (
+      qLower.includes("math") ||
+      qLower.includes("equation") ||
+      qLower.includes("solve") ||
+      qLower.includes("calculate")
+    ) {
       selectedExperts.push("Mathematical");
       detectedIntent = "MathematicalLogic";
     }
-    if (qLower.includes("science") || qLower.includes("hypothesis") || qLower.includes("physics") || qLower.includes("regression")) {
+    if (
+      qLower.includes("science") ||
+      qLower.includes("hypothesis") ||
+      qLower.includes("physics") ||
+      qLower.includes("regression")
+    ) {
       selectedExperts.push("Scientific");
       detectedIntent = "ScientificMethod";
     }
-    if (qLower.includes("security") || qLower.includes("vulnerability") || qLower.includes("exploit")) {
+    if (
+      qLower.includes("security") ||
+      qLower.includes("vulnerability") ||
+      qLower.includes("exploit")
+    ) {
       selectedExperts.push("Security");
       detectedIntent = "CybersecurityAudit";
     }
@@ -64,7 +91,11 @@ export class DynamicExpertRouting {
       selectedExperts.push("Business");
       detectedIntent = "MarketAnalysis";
     }
-    if (qLower.includes("enterprise") || qLower.includes("compliance") || qLower.includes("audit")) {
+    if (
+      qLower.includes("enterprise") ||
+      qLower.includes("compliance") ||
+      qLower.includes("audit")
+    ) {
       selectedExperts.push("Enterprise");
       detectedIntent = "EnterpriseCompliance";
     }
@@ -101,7 +132,7 @@ export class DynamicExpertRouting {
       selectedExperts,
       consensusReport,
       computeReductionPct: finalComputeReductionPct,
-      routingLatencyMs
+      routingLatencyMs,
     };
   }
 }

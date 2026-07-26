@@ -15,7 +15,11 @@ export type { EvolutionConcept, IngestionReport } from "./engines/knowledgeEvolu
 
 // === 4. Long Tail Failure Engine ===
 export { FailureVaccinationEngine } from "./engines/failureVaccinationEngine";
-export type { FailureCategory, LoggedFailure, VaccineReport } from "./engines/failureVaccinationEngine";
+export type {
+  FailureCategory,
+  LoggedFailure,
+  VaccineReport,
+} from "./engines/failureVaccinationEngine";
 
 // === 5. Swarms Agent Governance ===
 export { AgentGovernanceEngine } from "./engines/agentGovernanceEngine";

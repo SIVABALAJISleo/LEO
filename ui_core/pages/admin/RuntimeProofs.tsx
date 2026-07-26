@@ -3,20 +3,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { 
-  Shield, 
-  Database, 
-  AlertTriangle, 
-  Lock, 
-  Activity, 
+import {
+  Shield,
+  Database,
+  AlertTriangle,
+  Lock,
+  Activity,
   FileText,
   Play,
   CheckCircle,
   XCircle,
   Loader2,
-  RefreshCw
+  RefreshCw,
 } from "lucide-react";
-import { firebaseClient as supabase } from '@/integrations/firebase/client';
+import { firebaseClient as supabase } from "@/integrations/firebase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Navbar } from "@/components/Navbar";
 
@@ -97,31 +97,33 @@ export default function RuntimeProofs() {
       .eq("event_type", "runtime_proof")
       .order("created_at", { ascending: false })
       .limit(20);
-    
+
     if (data) {
-      setHistory(data.map(d => ({
-        id: d.id,
-        created_at: d.created_at,
-        event_data: d.event_data as unknown as ProofResult,
-      })));
+      setHistory(
+        data.map((d) => ({
+          id: d.id,
+          created_at: d.created_at,
+          event_data: d.event_data as unknown as ProofResult,
+        })),
+      );
     }
   };
 
   const runProof = async (proofId: string) => {
-    setLoading(prev => ({ ...prev, [proofId]: true }));
-    
+    setLoading((prev) => ({ ...prev, [proofId]: true }));
+
     try {
       const { data, error } = await supabase.functions.invoke("runtime-proof", {
         body: { action: proofId, user_id: user?.id },
       });
 
       if (error) throw error;
-      
-      setResults(prev => ({ ...prev, [proofId]: data }));
+
+      setResults((prev) => ({ ...prev, [proofId]: data }));
       fetchHistory();
     } catch (error) {
       console.error(`Error running ${proofId}:`, error);
-      setResults(prev => ({
+      setResults((prev) => ({
         ...prev,
         [proofId]: {
           proof_type: proofId,
@@ -132,28 +134,28 @@ export default function RuntimeProofs() {
         },
       }));
     } finally {
-      setLoading(prev => ({ ...prev, [proofId]: false }));
+      setLoading((prev) => ({ ...prev, [proofId]: false }));
     }
   };
 
   const runAllProofs = async () => {
     setRunningAll(true);
-    
+
     for (const proof of PROOF_CONFIGS) {
       await runProof(proof.id);
-      await new Promise(r => setTimeout(r, 500));
+      await new Promise((r) => setTimeout(r, 500));
     }
-    
+
     setRunningAll(false);
   };
 
-  const allPassed = PROOF_CONFIGS.every(p => results[p.id]?.success);
-  const executedCount = Object.values(results).filter(r => r !== null).length;
+  const allPassed = PROOF_CONFIGS.every((p) => results[p.id]?.success);
+  const executedCount = Object.values(results).filter((r) => r !== null).length;
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      
+
       <div className="container mx-auto px-4 py-8 pt-24">
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -162,17 +164,17 @@ export default function RuntimeProofs() {
               Generate irreversible evidence that the system handles real failures
             </p>
           </div>
-          
+
           <div className="flex items-center gap-4">
-            <Badge variant={executedCount === PROOF_CONFIGS.length && allPassed ? "default" : "secondary"}>
+            <Badge
+              variant={
+                executedCount === PROOF_CONFIGS.length && allPassed ? "default" : "secondary"
+              }
+            >
               {executedCount}/{PROOF_CONFIGS.length} Executed
             </Badge>
-            
-            <Button 
-              onClick={runAllProofs} 
-              disabled={runningAll}
-              size="lg"
-            >
+
+            <Button onClick={runAllProofs} disabled={runningAll} size="lg">
               {runningAll ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -190,7 +192,9 @@ export default function RuntimeProofs() {
 
         {/* Final Verdict */}
         {executedCount === PROOF_CONFIGS.length && (
-          <Card className={`mb-8 ${allPassed ? "border-green-500 bg-green-500/10" : "border-red-500 bg-red-500/10"}`}>
+          <Card
+            className={`mb-8 ${allPassed ? "border-green-500 bg-green-500/10" : "border-red-500 bg-red-500/10"}`}
+          >
             <CardContent className="py-6">
               <div className="flex items-center gap-4">
                 {allPassed ? (
@@ -203,7 +207,7 @@ export default function RuntimeProofs() {
                     {allPassed ? "PRODUCTION-READY" : "NOT READY"}
                   </h2>
                   <p className="text-muted-foreground">
-                    {allPassed 
+                    {allPassed
                       ? "All runtime proofs verified. System has exercised real failure recovery."
                       : "Some proofs failed. Review logs and re-run failed proofs."}
                   </p>
@@ -228,24 +232,23 @@ export default function RuntimeProofs() {
                       <Icon className={`h-6 w-6 ${proof.color}`} />
                       <CardTitle className="text-lg">{proof.name}</CardTitle>
                     </div>
-                    {result && (
-                      result.success ? (
+                    {result &&
+                      (result.success ? (
                         <CheckCircle className="h-5 w-5 text-green-500" />
                       ) : (
                         <XCircle className="h-5 w-5 text-red-500" />
-                      )
-                    )}
+                      ))}
                   </div>
                   <p className="text-sm text-muted-foreground">{proof.description}</p>
                 </CardHeader>
-                
+
                 <CardContent>
                   {result && (
                     <div className="mb-4 space-y-2">
                       <div className="text-xs text-muted-foreground">
                         Executed: {new Date(result.executed_at).toLocaleString()}
                       </div>
-                      
+
                       <ScrollArea className="h-32 rounded border bg-muted/50 p-2">
                         <div className="space-y-1 font-mono text-xs">
                           {result.logs.map((log, i) => (
@@ -265,7 +268,7 @@ export default function RuntimeProofs() {
                     </div>
                   )}
 
-                  <Button 
+                  <Button
                     onClick={() => runProof(proof.id)}
                     disabled={isLoading || runningAll}
                     className="w-full"
@@ -310,7 +313,7 @@ export default function RuntimeProofs() {
             ) : (
               <div className="space-y-3">
                 {history.map((item) => (
-                  <div 
+                  <div
                     key={item.id}
                     className="flex items-center justify-between p-3 rounded-lg bg-muted/50"
                   >

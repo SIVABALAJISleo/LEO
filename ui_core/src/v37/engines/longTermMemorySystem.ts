@@ -15,19 +15,21 @@ export class LongTermMemorySystem {
     {
       id: "mem-101",
       type: "failure",
-      content: "Avoid multi-agent loop locks when both verification agent and optimizer agent have equal vote weight; resolve via constitution clause 3.",
+      content:
+        "Avoid multi-agent loop locks when both verification agent and optimizer agent have equal vote weight; resolve via constitution clause 3.",
       tags: ["arbitration", "swarm", "deadlocks"],
       importance: 0.95,
-      timestamp: Date.now() - 3600000
+      timestamp: Date.now() - 3600000,
     },
     {
       id: "mem-102",
       type: "semantic",
-      content: "Intel Core i5 12th Gen physical threads should use CPU affinity bindings to avoid context switching latency.",
+      content:
+        "Intel Core i5 12th Gen physical threads should use CPU affinity bindings to avoid context switching latency.",
       tags: ["hardware", "intel", "ipex"],
       importance: 0.88,
-      timestamp: Date.now() - 7200000
-    }
+      timestamp: Date.now() - 7200000,
+    },
   ];
 
   /**
@@ -35,7 +37,7 @@ export class LongTermMemorySystem {
    */
   public recallRelevantMemories(queryTags: string[]): MemoryBlock[] {
     return this.memoryStores
-      .filter(mem => mem.tags.some(t => queryTags.includes(t)))
+      .filter((mem) => mem.tags.some((t) => queryTags.includes(t)))
       .sort((a, b) => b.importance - a.importance);
   }
 
@@ -46,7 +48,7 @@ export class LongTermMemorySystem {
     type: MemoryBlock["type"],
     content: string,
     tags: string[],
-    importance: number
+    importance: number,
   ): MemoryBlock {
     const newBlock: MemoryBlock = {
       id: `mem-${(Math.random() * 10000).toFixed(0)}`,
@@ -54,7 +56,7 @@ export class LongTermMemorySystem {
       content,
       tags,
       importance,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
     this.memoryStores.push(newBlock);
     return newBlock;

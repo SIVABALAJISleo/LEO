@@ -1,5 +1,16 @@
 import React from "react";
-import { Zap, Code, Shield, Gauge, Activity, Layers, Brain, Cloud, Cpu, CheckCircle2 } from "lucide-react";
+import {
+  Zap,
+  Code,
+  Shield,
+  Gauge,
+  Activity,
+  Layers,
+  Brain,
+  Cloud,
+  Cpu,
+  CheckCircle2,
+} from "lucide-react";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 
@@ -15,14 +26,16 @@ export const IntelliGPUHome: React.FC<IntelliGPUHomeProps> = ({ onNavigate }) =>
         {/* Background Visual representation of a GPU chip substrate */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(118,185,0,0.15),transparent_70%)]" />
         <div className="absolute inset-0 opacity-20 bg-[linear-gradient(rgba(118,185,0,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(118,185,0,0.05)_1px,transparent_1px)] bg-[size:32px_32px]" />
-        
+
         {/* Glowing Chip Graphic background */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#76B900]/10 rounded-full blur-[120px] pointer-events-none animate-pulse-glow" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-24 pb-16">
           <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-[#76B900]/10 border border-[#76B900]/30 mb-8 backdrop-blur-md">
             <Zap className="h-4 w-4 text-[#76B900] mr-2" />
-            <span className="text-xs font-bold text-[#76B900] tracking-wide uppercase">52-Module Architecture • Zero Hardware</span>
+            <span className="text-xs font-bold text-[#76B900] tracking-wide uppercase">
+              52-Module Architecture • Zero Hardware
+            </span>
           </div>
 
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black mb-6 leading-tight tracking-tight text-white font-display">
@@ -34,7 +47,9 @@ export const IntelliGPUHome: React.FC<IntelliGPUHomeProps> = ({ onNavigate }) =>
           </h1>
 
           <p className="text-base sm:text-lg text-slate-400 max-w-3xl mx-auto mb-10 leading-relaxed">
-            Achieve 100% RTX 5090 performance parity using intelligent software algorithms. AI inference, 4K/240 FPS gaming, VR rendering, and big model training—all on a basic laptop.
+            Achieve 100% RTX 5090 performance parity using intelligent software algorithms. AI
+            inference, 4K/240 FPS gaming, VR rendering, and big model training—all on a basic
+            laptop.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
@@ -158,18 +173,52 @@ export const IntelliGPUHome: React.FC<IntelliGPUHomeProps> = ({ onNavigate }) =>
                     <tr className="border-b border-slate-800 bg-[#041023] text-slate-300">
                       <th className="py-4 px-6 font-bold uppercase tracking-wider">Task</th>
                       <th className="py-4 px-6 font-bold uppercase tracking-wider">RTX 5090</th>
-                      <th className="py-4 px-6 font-bold uppercase tracking-wider text-[#76B900]">IntelliGPU</th>
-                      <th className="py-4 px-6 font-bold uppercase tracking-wider text-[#76B900]">Efficiency</th>
+                      <th className="py-4 px-6 font-bold uppercase tracking-wider text-[#76B900]">
+                        IntelliGPU
+                      </th>
+                      <th className="py-4 px-6 font-bold uppercase tracking-wider text-[#76B900]">
+                        Efficiency
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-800/60">
                     {[
-                      { task: "AI Inference (4-bit)", rtx: "1000 tokens/s", intelli: "980 tokens/s", eff: "98%" },
-                      { task: "4K Gaming @120Hz", rtx: "120 FPS", intelli: "118 FPS", eff: "98.3%" },
-                      { task: "VR Rendering", rtx: "1.8ms latency", intelli: "1.9ms perceived", eff: "94.7%" },
-                      { task: "Ray Tracing", rtx: "100% quality", intelli: "98% visual", eff: "98%" },
-                      { task: "Matrix Multiply", rtx: "100 TFLOPS", intelli: "95 equiv TFLOPS", eff: "95%" },
-                      { task: "Model Training", rtx: "100% speed", intelli: "95% efficiency", eff: "95%" },
+                      {
+                        task: "AI Inference (4-bit)",
+                        rtx: "1000 tokens/s",
+                        intelli: "980 tokens/s",
+                        eff: "98%",
+                      },
+                      {
+                        task: "4K Gaming @120Hz",
+                        rtx: "120 FPS",
+                        intelli: "118 FPS",
+                        eff: "98.3%",
+                      },
+                      {
+                        task: "VR Rendering",
+                        rtx: "1.8ms latency",
+                        intelli: "1.9ms perceived",
+                        eff: "94.7%",
+                      },
+                      {
+                        task: "Ray Tracing",
+                        rtx: "100% quality",
+                        intelli: "98% visual",
+                        eff: "98%",
+                      },
+                      {
+                        task: "Matrix Multiply",
+                        rtx: "100 TFLOPS",
+                        intelli: "95 equiv TFLOPS",
+                        eff: "95%",
+                      },
+                      {
+                        task: "Model Training",
+                        rtx: "100% speed",
+                        intelli: "95% efficiency",
+                        eff: "95%",
+                      },
                     ].map((row, idx) => (
                       <tr key={idx} className="hover:bg-slate-800/20 transition-colors">
                         <td className="py-4 px-6 font-semibold text-slate-200">{row.task}</td>
@@ -275,12 +324,14 @@ export const IntelliGPUHome: React.FC<IntelliGPUHomeProps> = ({ onNavigate }) =>
                 <div>
                   <h3 className="text-xl font-bold text-slate-100 mb-2">{tier.name}</h3>
                   <div className="mb-2 flex items-baseline">
-                    <span className="text-4xl font-extrabold text-[#76B900] font-display">{tier.price}</span>
-                    {tier.price !== "Custom" && <span className="text-slate-500 text-xs ml-1">/month</span>}
+                    <span className="text-4xl font-extrabold text-[#76B900] font-display">
+                      {tier.price}
+                    </span>
+                    {tier.price !== "Custom" && (
+                      <span className="text-slate-500 text-xs ml-1">/month</span>
+                    )}
                   </div>
-                  <div className="text-xs font-bold text-[#76B900] mb-6">
-                    {tier.calls}
-                  </div>
+                  <div className="text-xs font-bold text-[#76B900] mb-6">{tier.calls}</div>
                   <ul className="space-y-3 mb-8">
                     {tier.features.map((f, idx) => (
                       <li key={idx} className="flex items-start text-xs text-slate-300">
@@ -321,7 +372,9 @@ export const IntelliGPUHome: React.FC<IntelliGPUHomeProps> = ({ onNavigate }) =>
                   <tr className="border-b border-slate-800/80 pb-4 text-slate-400">
                     <th className="py-3 px-4 font-bold uppercase tracking-wider">Operation</th>
                     <th className="py-3 px-4 font-bold uppercase tracking-wider">Unit</th>
-                    <th className="py-3 px-4 font-bold uppercase tracking-wider text-[#76B900]">Price</th>
+                    <th className="py-3 px-4 font-bold uppercase tracking-wider text-[#76B900]">
+                      Price
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-800/40">
@@ -370,7 +423,10 @@ export const IntelliGPUHome: React.FC<IntelliGPUHomeProps> = ({ onNavigate }) =>
                   a: "Yes! Save 20% when you pay annually. Contact sales for enterprise volume discounts.",
                 },
               ].map((faq, idx) => (
-                <div key={idx} className="pb-6 border-b border-slate-800/60 last:border-0 last:pb-0">
+                <div
+                  key={idx}
+                  className="pb-6 border-b border-slate-800/60 last:border-0 last:pb-0"
+                >
                   <h4 className="text-sm font-bold text-slate-200 mb-2">{faq.q}</h4>
                   <p className="text-xs text-slate-400 leading-relaxed">{faq.a}</p>
                 </div>
@@ -388,7 +444,8 @@ export const IntelliGPUHome: React.FC<IntelliGPUHomeProps> = ({ onNavigate }) =>
             Ready to Get Started?
           </h2>
           <p className="text-slate-400 text-xs sm:text-sm mb-8 max-w-xl mx-auto leading-relaxed">
-            Start with 100 free API calls per day. No credit card required. Upgrade anytime as your needs grow.
+            Start with 100 free API calls per day. No credit card required. Upgrade anytime as your
+            needs grow.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button
@@ -410,4 +467,3 @@ export const IntelliGPUHome: React.FC<IntelliGPUHomeProps> = ({ onNavigate }) =>
     </div>
   );
 };
-

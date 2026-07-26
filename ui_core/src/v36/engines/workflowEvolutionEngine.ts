@@ -30,19 +30,19 @@ export class WorkflowEvolutionEngine {
     const suggestions: OptimizationSuggestion[] = [];
     let workflowEfficiencyScore = 94.6;
 
-    const slowTransitions = this.transitions.filter(t => t.durationMs > 1000);
+    const slowTransitions = this.transitions.filter((t) => t.durationMs > 1000);
     if (slowTransitions.length > 0) {
       suggestions.push({
         macroKey: "auto_sycl_matrix_compilation",
         stepsAvoidedCount: 3,
-        expectedSpeedupPct: 35.0
+        expectedSpeedupPct: 35.0,
       });
       workflowEfficiencyScore = 84.2;
     }
 
     return {
       suggestions,
-      workflowEfficiencyScore
+      workflowEfficiencyScore,
     };
   }
 }

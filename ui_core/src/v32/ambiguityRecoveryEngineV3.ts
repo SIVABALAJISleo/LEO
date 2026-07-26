@@ -26,16 +26,29 @@ export class AmbiguityRecoveryEngineV3 {
     if (qLower.includes("fast") && qLower.includes("cheap") && qLower.includes("high parameter")) {
       contradictionsFound.push({
         type: "Contradiction",
-        description: "Requesting cheap resource costs while locking execution parameters to a 70B high parameter model.",
-        remedialOptions: ["Cascade dynamically from 1B model", "Reduce context block token footprint"]
+        description:
+          "Requesting cheap resource costs while locking execution parameters to a 70B high parameter model.",
+        remedialOptions: [
+          "Cascade dynamically from 1B model",
+          "Reduce context block token footprint",
+        ],
       });
     }
 
-    if (qLower.includes("database") && !qLower.includes("postgres") && !qLower.includes("supabase") && !qLower.includes("mysql")) {
+    if (
+      qLower.includes("database") &&
+      !qLower.includes("postgres") &&
+      !qLower.includes("supabase") &&
+      !qLower.includes("mysql")
+    ) {
       contradictionsFound.push({
         type: "Incomplete",
-        description: "Database transaction was requested, but no backend schema (Postgres, Firebase, or Supabase) was declared.",
-        remedialOptions: ["Initialize using Supabase adapter", "Route metadata schema to local sqlite"]
+        description:
+          "Database transaction was requested, but no backend schema (Postgres, Firebase, or Supabase) was declared.",
+        remedialOptions: [
+          "Initialize using Supabase adapter",
+          "Route metadata schema to local sqlite",
+        ],
       });
     }
 
@@ -43,7 +56,10 @@ export class AmbiguityRecoveryEngineV3 {
       contradictionsFound.push({
         type: "VagueParameter",
         description: "Extremely short instruction lacks logical boundary criteria.",
-        remedialOptions: ["Add specific constraint boundaries", "Provide standard test framework schema"]
+        remedialOptions: [
+          "Add specific constraint boundaries",
+          "Provide standard test framework schema",
+        ],
       });
     }
 
@@ -59,7 +75,7 @@ export class AmbiguityRecoveryEngineV3 {
       inferredIntent,
       extractedRequirements,
       contradictionsFound,
-      isRecovered: contradictionsFound.length === 0
+      isRecovered: contradictionsFound.length === 0,
     };
   }
 }

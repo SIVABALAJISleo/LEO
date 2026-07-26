@@ -16,6 +16,6 @@ export const runNoisyLanguageBenchmark = async (): Promise<LanguageScoreResult> 
     totalTests: 100000,
     intentDetectionAccuracy: parseFloat(intent.toFixed(2)),
     semanticUnderstanding: parseFloat(semantic.toFixed(2)),
-    overallAccuracy: parseFloat(accuracy.toFixed(2))
+    overallAccuracy: parseFloat(accuracy.toFixed(2)),
   };
 };

@@ -24,10 +24,11 @@ export class MatrixPlanner {
     rows: number,
     cols: number,
     isSparse: boolean,
-    sparsityPct = 65
+    sparsityPct = 65,
   ): MathSelectionReport {
     const startTime = performance.now();
-    let selectedAlgorithm: "Direct Multiply" | "Winograd" | "FFT" | "Sparse Matrix" | "Block Sparse" = "Direct Multiply";
+    let selectedAlgorithm:
+      "Direct Multiply" | "Winograd" | "FFT" | "Sparse Matrix" | "Block Sparse" = "Direct Multiply";
     let opsRequired = rows * cols * cols;
     let opsSaved = 0;
     let mathEfficiencyScore = 50; // base direct multiply efficiency
@@ -52,7 +53,7 @@ export class MatrixPlanner {
       opsRequired = report.frequencyDomainOps;
       opsSaved = report.computeSavedOps;
       // High score due to N^2 vs N log N savings
-      mathEfficiencyScore = parseFloat((90.0 + (report.complexityRatio * 0.1)).toFixed(1));
+      mathEfficiencyScore = parseFloat((90.0 + report.complexityRatio * 0.1).toFixed(1));
     }
 
     const finalScore = parseFloat(Math.min(100, Math.max(0, mathEfficiencyScore)).toFixed(1));
@@ -64,7 +65,7 @@ export class MatrixPlanner {
       opsRequired,
       opsSaved,
       mathEfficiencyScore: finalScore,
-      planningOverheadMs: parseFloat((performance.now() - startTime).toFixed(3))
+      planningOverheadMs: parseFloat((performance.now() - startTime).toFixed(3)),
     };
   }
 }

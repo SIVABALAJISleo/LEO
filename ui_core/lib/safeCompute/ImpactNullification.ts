@@ -1,29 +1,25 @@
 /**
  * IMPACT-NULLIFICATION ENGINE
- * 
+ *
  * Eliminates the blocking effect of remaining hard constraints.
  * Converts unsolvable constraints into non-blocking system states.
  * Finalizes the system as impact-complete, not physics-complete.
- * 
+ *
  * CRITICAL: This does NOT add compute.
  * CRITICAL: This does NOT alter execution paths.
  * CRITICAL: This does NOT raise execution ceilings.
  */
 
 export type NullificationCategory =
-  | 'temporal'
-  | 'entropy'
-  | 'asymmetry'
-  | 'reality'
-  | 'expectation';
+  "temporal" | "entropy" | "asymmetry" | "reality" | "expectation";
 
 export interface ImpactNullificationCheck {
   taskId: string;
   constraintType: NullificationCategory;
   isNullified: boolean;
-  classification: 'IMPACT_NULLIFIED' | 'STANDARD';
+  classification: "IMPACT_NULLIFIED" | "STANDARD";
   method: string;
-  blockingEffect: 'eliminated' | 'reduced' | 'unchanged';
+  blockingEffect: "eliminated" | "reduced" | "unchanged";
 }
 
 export interface TemporalInversionState {
@@ -93,23 +89,20 @@ class ImpactNullificationEngine {
 
   /**
    * IMPACT-NULLIFICATION RULE
-   * 
+   *
    * If a constraint cannot be removed physically, its ability to block
    * usefulness, adoption, trust, or outcomes MUST be eliminated at the system level.
    */
-  nullifyImpact(
-    taskId: string,
-    constraintType: NullificationCategory
-  ): ImpactNullificationCheck {
+  nullifyImpact(taskId: string, constraintType: NullificationCategory): ImpactNullificationCheck {
     const method = this.getNullificationMethod(constraintType);
-    
+
     const result: ImpactNullificationCheck = {
       taskId,
       constraintType,
       isNullified: true,
-      classification: 'IMPACT_NULLIFIED',
+      classification: "IMPACT_NULLIFIED",
       method,
-      blockingEffect: 'eliminated',
+      blockingEffect: "eliminated",
     };
 
     this.nullifiedTasks.set(taskId, result);
@@ -121,27 +114,27 @@ class ImpactNullificationEngine {
    */
   private getNullificationMethod(category: NullificationCategory): string {
     switch (category) {
-      case 'temporal':
-        return 'Temporal inversion: commit outcomes before completion';
-      case 'entropy':
-        return 'Entropy bounding: replace exact with bounded solution spaces';
-      case 'asymmetry':
-        return 'Asymmetry collapse: decompose + delegate + ensemble';
-      case 'reality':
-        return 'Reality decoupling: resumable, replayable, state-portable';
-      case 'expectation':
-        return 'Expectation governance: anchor early, signal continuously';
+      case "temporal":
+        return "Temporal inversion: commit outcomes before completion";
+      case "entropy":
+        return "Entropy bounding: replace exact with bounded solution spaces";
+      case "asymmetry":
+        return "Asymmetry collapse: decompose + delegate + ensemble";
+      case "reality":
+        return "Reality decoupling: resumable, replayable, state-portable";
+      case "expectation":
+        return "Expectation governance: anchor early, signal continuously";
     }
   }
 
   /**
    * TEMPORAL INVERSION RULE
-   * 
+   *
    * When execution time cannot be reduced further:
    * - Commit outcomes before completion
    * - Deliver reversible or bounded results immediately
    * - Apply silent correction only if required
-   * 
+   *
    * Time MAY exist. Waiting MUST NOT.
    */
   applyTemporalInversion(
@@ -150,7 +143,7 @@ class ImpactNullificationEngine {
       canCommitEarly: boolean;
       resultCanBeBounded: boolean;
       resultCanBeReversible: boolean;
-    }
+    },
   ): TemporalInversionState {
     return {
       outcomeCommittedBeforeCompletion: metadata.canCommitEarly,
@@ -163,12 +156,12 @@ class ImpactNullificationEngine {
 
   /**
    * ENTROPY BOUNDING RULE
-   * 
+   *
    * When exact computation is novel or non-cacheable:
    * - Replace exact answers with bounded solution spaces
    * - Return impossibility regions, dominance ranges, or confidence envelopes
    * - Narrow continuously without blocking
-   * 
+   *
    * Enumeration is forbidden when bounding is sufficient.
    */
   applyEntropyBounding(
@@ -178,7 +171,7 @@ class ImpactNullificationEngine {
       dominanceRanges: [number, number][];
       confidenceMin: number;
       confidenceMax: number;
-    }
+    },
   ): EntropyBoundingState {
     return {
       boundedSolutionSpace: true,
@@ -192,12 +185,12 @@ class ImpactNullificationEngine {
 
   /**
    * ASYMMETRY COLLAPSE RULE
-   * 
+   *
    * When massive synchronization is required in theory:
    * - Replace single synchronized execution with expert decomposition
    * - Use delegated intelligence
    * - Apply ensemble collapse at inference
-   * 
+   *
    * Capability equivalence is sufficient. Training symmetry is not required.
    */
   applyAsymmetryCollapse(
@@ -206,30 +199,28 @@ class ImpactNullificationEngine {
       expertDecomposition: boolean;
       delegatedIntelligence: boolean;
       ensembleCollapse: boolean;
-    }
+    },
   ): AsymmetryCollapseState {
     return {
       expertDecompositionApplied: metadata.expertDecomposition,
       delegatedIntelligenceUsed: metadata.delegatedIntelligence,
       ensembleCollapseAtInference: metadata.ensembleCollapse,
-      capabilityEquivalenceAchieved: 
-        metadata.expertDecomposition || 
-        metadata.delegatedIntelligence || 
-        metadata.ensembleCollapse,
+      capabilityEquivalenceAchieved:
+        metadata.expertDecomposition || metadata.delegatedIntelligence || metadata.ensembleCollapse,
       trainingSymmetryRequired: false,
     };
   }
 
   /**
    * REALITY DECOUPLING RULE
-   * 
+   *
    * No task may depend on a single physical device.
    * All heavy or critical tasks MUST be:
    * - resumable
    * - replayable
    * - state-portable
    * - failure-tolerant
-   * 
+   *
    * Hardware failure may pause execution. It must never destroy progress.
    */
   applyRealityDecoupling(
@@ -239,7 +230,7 @@ class ImpactNullificationEngine {
       hasReplayLog: boolean;
       stateIsSerializable: boolean;
       hasRedundancy: boolean;
-    }
+    },
   ): RealityDecouplingState {
     return {
       isResumable: metadata.hasCheckpoints,
@@ -253,13 +244,13 @@ class ImpactNullificationEngine {
 
   /**
    * EXPECTATION GOVERNANCE RULE
-   * 
+   *
    * Human expectation is treated as a first-class constraint.
    * System MUST:
    * - anchor outcomes early
    * - maintain continuous certainty signals
    * - avoid silence, surprise, or ambiguity
-   * 
+   *
    * Psychological limits are governed, not debated.
    */
   applyExpectationGovernance(
@@ -270,7 +261,7 @@ class ImpactNullificationEngine {
       noSilence: boolean;
       noSurprise: boolean;
       noAmbiguity: boolean;
-    }
+    },
   ): ExpectationGovernanceState {
     return {
       outcomesAnchoredEarly: metadata.earlyAnchor,
@@ -287,14 +278,14 @@ class ImpactNullificationEngine {
    */
   getStatus(): ImpactNullificationStatus {
     const tasks = Array.from(this.nullifiedTasks.values());
-    
+
     return {
       enabled: true,
-      nullifiedConstraints: tasks.filter(t => t.isNullified).length,
+      nullifiedConstraints: tasks.filter((t) => t.isNullified).length,
       blockingDrawbacks: 0, // 0%
       practicalUsefulness: 0.999, // ~99.9%
-      remainingGap: 'Purely theoretical',
-      status: 'IMPACT-COMPLETE · BOUNDARY-NEUTRALIZED · MAX-UTILITY-LOCKED',
+      remainingGap: "Purely theoretical",
+      status: "IMPACT-COMPLETE · BOUNDARY-NEUTRALIZED · MAX-UTILITY-LOCKED",
     };
   }
 
@@ -313,7 +304,7 @@ class ImpactNullificationEngine {
       noFalseGuarantees: true,
       executionCeilingUnchanged: true,
       noDuplication: true,
-      assertion: 'IMPACT-COMPLETE · BOUNDARY-NEUTRALIZED · MAX-UTILITY-LOCKED',
+      assertion: "IMPACT-COMPLETE · BOUNDARY-NEUTRALIZED · MAX-UTILITY-LOCKED",
     };
   }
 
@@ -321,7 +312,7 @@ class ImpactNullificationEngine {
    * Get final assertion
    */
   getFinalAssertion(): string {
-    return 'Constraints may exist in reality, but they no longer exist in impact.';
+    return "Constraints may exist in reality, but they no longer exist in impact.";
   }
 
   /**
@@ -340,8 +331,8 @@ class ImpactNullificationEngine {
       allLimitsNonBlocking: true,
       noPhysicsViolated: true,
       noFalseGuarantees: true,
-      blockingDrawbacks: '0%',
-      status: 'IMPACT-COMPLETE · BOUNDARY-NEUTRALIZED · MAX-UTILITY-LOCKED',
+      blockingDrawbacks: "0%",
+      status: "IMPACT-COMPLETE · BOUNDARY-NEUTRALIZED · MAX-UTILITY-LOCKED",
     };
   }
 

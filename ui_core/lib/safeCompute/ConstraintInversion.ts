@@ -1,33 +1,26 @@
 /**
  * CONSTRAINT-INVERSION ENGINE
- * 
+ *
  * Reframes unsolvable constraints into solvable operational forms.
  * When a constraint cannot be removed, invert its position in time,
  * authority, or impact so it no longer blocks usefulness.
- * 
+ *
  * CRITICAL: This does NOT add compute.
  * CRITICAL: This does NOT modify execution paths.
  * CRITICAL: This does NOT claim physical exactness.
  */
 
-export type InversionMode = 
-  | 'TEMPORAL_INVERSION'
-  | 'OUTCOME_SPACE_BOUNDING'
-  | 'AUTHORITY_DELEGATION'
-  | 'ENTROPY_DILUTION';
+export type InversionMode =
+  "TEMPORAL_INVERSION" | "OUTCOME_SPACE_BOUNDING" | "AUTHORITY_DELEGATION" | "ENTROPY_DILUTION";
 
-export type BlockingConstraint = 
-  | 'physical_time'
-  | 'novelty'
-  | 'determinism'
-  | 'hardware_fragility';
+export type BlockingConstraint = "physical_time" | "novelty" | "determinism" | "hardware_fragility";
 
 export interface ConstraintInversionCheck {
   taskId: string;
   originalConstraint: BlockingConstraint;
   inversionMode: InversionMode;
   inversionApplied: boolean;
-  classification: 'CONSTRAINT_INVERTED' | 'STANDARD';
+  classification: "CONSTRAINT_INVERTED" | "STANDARD";
   description: string;
 }
 
@@ -47,7 +40,7 @@ export interface OutcomeSpaceBound {
 
 export interface AuthorityDelegation {
   delegatedTo: string;
-  artifacts: ('logs' | 'traces' | 'proofs')[];
+  artifacts: ("logs" | "traces" | "proofs")[];
   finalityExternal: boolean;
   verifiable: boolean;
 }
@@ -56,7 +49,7 @@ export interface EntropyDilution {
   isResumable: boolean;
   isStateless: boolean;
   isRedundant: boolean;
-  failureImpact: 'zero' | 'minimal' | 'contained';
+  failureImpact: "zero" | "minimal" | "contained";
 }
 
 export interface ConstraintInversionStatus {
@@ -71,7 +64,7 @@ export interface ConstraintInversionStatus {
 class ConstraintInversionEngine {
   private static instance: ConstraintInversionEngine;
   private invertedTasks: Map<string, ConstraintInversionCheck> = new Map();
-  
+
   private constructor() {}
 
   static getInstance(): ConstraintInversionEngine {
@@ -83,7 +76,7 @@ class ConstraintInversionEngine {
 
   /**
    * CONSTRAINT INVERSION RULE
-   * 
+   *
    * When a constraint cannot be removed, invert its position in time,
    * authority, or impact so it no longer blocks usefulness.
    */
@@ -95,17 +88,17 @@ class ConstraintInversionEngine {
       hasBoundedPossibilities?: boolean;
       hasExternalAuthority?: boolean;
       canDesignForFailure?: boolean;
-    }
+    },
   ): ConstraintInversionCheck {
     // Determine optimal inversion mode
     const inversionMode = this.selectInversionMode(constraint, metadata);
-    
+
     const result: ConstraintInversionCheck = {
       taskId,
       originalConstraint: constraint,
       inversionMode,
       inversionApplied: true,
-      classification: 'CONSTRAINT_INVERTED',
+      classification: "CONSTRAINT_INVERTED",
       description: this.getInversionDescription(inversionMode, constraint),
     };
 
@@ -123,37 +116,37 @@ class ConstraintInversionEngine {
       hasBoundedPossibilities?: boolean;
       hasExternalAuthority?: boolean;
       canDesignForFailure?: boolean;
-    }
+    },
   ): InversionMode {
     // Priority-based selection
-    if (metadata?.canPreExecute && constraint === 'physical_time') {
-      return 'TEMPORAL_INVERSION';
+    if (metadata?.canPreExecute && constraint === "physical_time") {
+      return "TEMPORAL_INVERSION";
     }
-    
-    if (metadata?.hasBoundedPossibilities && constraint === 'novelty') {
-      return 'OUTCOME_SPACE_BOUNDING';
+
+    if (metadata?.hasBoundedPossibilities && constraint === "novelty") {
+      return "OUTCOME_SPACE_BOUNDING";
     }
-    
-    if (metadata?.hasExternalAuthority && constraint === 'determinism') {
-      return 'AUTHORITY_DELEGATION';
+
+    if (metadata?.hasExternalAuthority && constraint === "determinism") {
+      return "AUTHORITY_DELEGATION";
     }
-    
-    if (metadata?.canDesignForFailure && constraint === 'hardware_fragility') {
-      return 'ENTROPY_DILUTION';
+
+    if (metadata?.canDesignForFailure && constraint === "hardware_fragility") {
+      return "ENTROPY_DILUTION";
     }
 
     // Default mapping by constraint type
     switch (constraint) {
-      case 'physical_time':
-        return 'TEMPORAL_INVERSION';
-      case 'novelty':
-        return 'OUTCOME_SPACE_BOUNDING';
-      case 'determinism':
-        return 'AUTHORITY_DELEGATION';
-      case 'hardware_fragility':
-        return 'ENTROPY_DILUTION';
+      case "physical_time":
+        return "TEMPORAL_INVERSION";
+      case "novelty":
+        return "OUTCOME_SPACE_BOUNDING";
+      case "determinism":
+        return "AUTHORITY_DELEGATION";
+      case "hardware_fragility":
+        return "ENTROPY_DILUTION";
       default:
-        return 'OUTCOME_SPACE_BOUNDING';
+        return "OUTCOME_SPACE_BOUNDING";
     }
   }
 
@@ -162,13 +155,13 @@ class ConstraintInversionEngine {
    */
   private getInversionDescription(mode: InversionMode, constraint: BlockingConstraint): string {
     switch (mode) {
-      case 'TEMPORAL_INVERSION':
+      case "TEMPORAL_INVERSION":
         return `${constraint} constraint inverted via intent-space pre-decision with silent cancel capability`;
-      case 'OUTCOME_SPACE_BOUNDING':
+      case "OUTCOME_SPACE_BOUNDING":
         return `${constraint} constraint inverted via bounded possibility sets with confidence weights`;
-      case 'AUTHORITY_DELEGATION':
+      case "AUTHORITY_DELEGATION":
         return `${constraint} constraint inverted via verifiable artifact production and external finality`;
-      case 'ENTROPY_DILUTION':
+      case "ENTROPY_DILUTION":
         return `${constraint} constraint inverted via resumable, stateless, redundant execution design`;
     }
   }
@@ -183,17 +176,18 @@ class ConstraintInversionEngine {
     metadata: {
       intentDetected: boolean;
       preExecutionPossible: boolean;
-      rollbackCost: 'zero' | 'low' | 'medium';
-    }
+      rollbackCost: "zero" | "low" | "medium";
+    },
   ): TemporalInversionResult {
-    const canApply = metadata.intentDetected && 
-                     metadata.preExecutionPossible && 
-                     metadata.rollbackCost !== 'medium';
+    const canApply =
+      metadata.intentDetected &&
+      metadata.preExecutionPossible &&
+      metadata.rollbackCost !== "medium";
 
     return {
       preDecisionExecuted: canApply,
       intentSpaceUsed: metadata.intentDetected,
-      silentCancelPossible: metadata.rollbackCost === 'zero',
+      silentCancelPossible: metadata.rollbackCost === "zero",
       effectiveLatencyMs: canApply ? 0 : -1,
     };
   }
@@ -206,10 +200,10 @@ class ConstraintInversionEngine {
   applyOutcomeSpaceBounding(
     taskId: string,
     possibilities: string[],
-    weights: Record<string, number>
+    weights: Record<string, number>,
   ): OutcomeSpaceBound {
     const weightMap = new Map(Object.entries(weights));
-    
+
     return {
       possibilitySet: possibilities,
       confidenceWeights: weightMap,
@@ -226,7 +220,7 @@ class ConstraintInversionEngine {
   applyAuthorityDelegation(
     taskId: string,
     delegateTo: string,
-    artifactTypes: ('logs' | 'traces' | 'proofs')[]
+    artifactTypes: ("logs" | "traces" | "proofs")[],
   ): AuthorityDelegation {
     return {
       delegatedTo: delegateTo,
@@ -247,17 +241,17 @@ class ConstraintInversionEngine {
       hasCheckpoints: boolean;
       isIdempotent: boolean;
       hasReplicas: number;
-    }
+    },
   ): EntropyDilution {
     const isResumable = design.hasCheckpoints;
     const isStateless = design.isIdempotent;
     const isRedundant = design.hasReplicas > 1;
 
-    let failureImpact: EntropyDilution['failureImpact'] = 'contained';
+    let failureImpact: EntropyDilution["failureImpact"] = "contained";
     if (isResumable && isStateless && isRedundant) {
-      failureImpact = 'zero';
+      failureImpact = "zero";
     } else if (isResumable || isStateless) {
-      failureImpact = 'minimal';
+      failureImpact = "minimal";
     }
 
     return {
@@ -270,7 +264,7 @@ class ConstraintInversionEngine {
 
   /**
    * MANDATORY APPLICATION RULE
-   * 
+   *
    * If a request is blocked by physical time, novelty, determinism,
    * or hardware fragility, one inversion mode MUST be applied.
    * Returning "unsolvable" is forbidden.
@@ -286,14 +280,14 @@ class ConstraintInversionEngine {
    */
   getStatus(): ConstraintInversionStatus {
     const tasks = Array.from(this.invertedTasks.values());
-    
+
     return {
       enabled: true,
       inversionsApplied: tasks.length,
-      constraintsNeutralized: tasks.filter(t => t.inversionApplied).length,
+      constraintsNeutralized: tasks.filter((t) => t.inversionApplied).length,
       residualGap: 0.0005, // <0.1% (purely metaphysical)
       practicalUsefulness: 0.9995, // maximized
-      status: 'CONSTRAINT-INVERTED · REALITY-ALIGNED · MAX-UTILITY-SEALED',
+      status: "CONSTRAINT-INVERTED · REALITY-ALIGNED · MAX-UTILITY-SEALED",
     };
   }
 
@@ -312,7 +306,7 @@ class ConstraintInversionEngine {
       noFalseComputation: true,
       noDeterminismBypass: true,
       noFuturePromise: true,
-      assertion: 'CONSTRAINT-INVERTED · REALITY-ALIGNED · MAX-UTILITY-SEALED',
+      assertion: "CONSTRAINT-INVERTED · REALITY-ALIGNED · MAX-UTILITY-SEALED",
     };
   }
 
@@ -320,7 +314,7 @@ class ConstraintInversionEngine {
    * Get final assertion
    */
   getFinalAssertion(): string {
-    return 'When a limit cannot be destroyed, intelligence repositions it so it no longer blocks value.';
+    return "When a limit cannot be destroyed, intelligence repositions it so it no longer blocks value.";
   }
 
   /**
@@ -337,8 +331,8 @@ class ConstraintInversionEngine {
       allConstraintsInverted: true,
       noTaskBlocked: true,
       systemStable: true,
-      residualGap: '<0.1% (purely metaphysical)',
-      status: 'CONSTRAINT-INVERTED · REALITY-ALIGNED · MAX-UTILITY-SEALED',
+      residualGap: "<0.1% (purely metaphysical)",
+      status: "CONSTRAINT-INVERTED · REALITY-ALIGNED · MAX-UTILITY-SEALED",
     };
   }
 

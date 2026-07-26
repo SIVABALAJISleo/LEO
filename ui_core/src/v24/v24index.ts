@@ -21,10 +21,18 @@ export { KnowledgeGovernanceEngine } from "./engines/knowledgeGovernanceEngine";
 export type { KnowledgeItemV24 } from "./engines/knowledgeGovernanceEngine";
 
 export { ContinuousBenchmarkSystem } from "./engines/continuousBenchmarkSystem";
-export type { BenchmarkDomainV24, HistoricalReleaseV24, BenchmarkReportV24 } from "./engines/continuousBenchmarkSystem";
+export type {
+  BenchmarkDomainV24,
+  HistoricalReleaseV24,
+  BenchmarkReportV24,
+} from "./engines/continuousBenchmarkSystem";
 
 export { PerformanceEfficiencyEngine } from "./engines/performanceEfficiencyEngine";
-export type { HardwareSnapshotV24, SchedulingRule, EfficiencyReport } from "./engines/performanceEfficiencyEngine";
+export type {
+  HardwareSnapshotV24,
+  SchedulingRule,
+  EfficiencyReport,
+} from "./engines/performanceEfficiencyEngine";
 
 export { EnterpriseReliabilityEngine } from "./engines/enterpriseReliabilityEngine";
 export type { SLAIncident, ReliabilityAuditReport } from "./engines/enterpriseReliabilityEngine";

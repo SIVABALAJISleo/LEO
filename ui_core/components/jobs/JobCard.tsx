@@ -1,13 +1,13 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Clock, Zap, HardDrive, XCircle, RotateCcw, Eye, Gauge, Shield } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { InferenceJob } from '@/hooks/useJobsData';
-import { cn } from '@/lib/utils';
-import { formatDistanceToNow } from 'date-fns';
+import { Clock, Zap, HardDrive, XCircle, RotateCcw, Eye, Gauge, Shield } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { InferenceJob } from "@/hooks/useJobsData";
+import { cn } from "@/lib/utils";
+import { formatDistanceToNow } from "date-fns";
 
 interface JobCardProps {
   job: InferenceJob;
@@ -19,49 +19,49 @@ interface JobCardProps {
 export function JobCard({ job, onViewDetails, onCancel, onRetry }: JobCardProps) {
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
-      case 'completed':
-        return 'bg-green-500/20 text-green-400 border-green-500/30';
-      case 'running':
-        return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
-      case 'queued':
-        return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
-      case 'failed':
-        return 'bg-red-500/20 text-red-400 border-red-500/30';
-      case 'cancelled':
-        return 'bg-muted text-muted-foreground border-border';
+      case "completed":
+        return "bg-green-500/20 text-green-400 border-green-500/30";
+      case "running":
+        return "bg-blue-500/20 text-blue-400 border-blue-500/30";
+      case "queued":
+        return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
+      case "failed":
+        return "bg-red-500/20 text-red-400 border-red-500/30";
+      case "cancelled":
+        return "bg-muted text-muted-foreground border-border";
       default:
-        return 'bg-muted text-muted-foreground border-border';
+        return "bg-muted text-muted-foreground border-border";
     }
   };
 
   const getPriorityLabel = (priority: number) => {
-    if (priority <= 3) return { label: 'High', color: 'text-red-400' };
-    if (priority <= 6) return { label: 'Normal', color: 'text-yellow-400' };
-    return { label: 'Low', color: 'text-muted-foreground' };
+    if (priority <= 3) return { label: "High", color: "text-red-400" };
+    if (priority <= 6) return { label: "Normal", color: "text-yellow-400" };
+    return { label: "Low", color: "text-muted-foreground" };
   };
 
   const priorityInfo = getPriorityLabel(job.priority);
   const enabledModules = Array.isArray(job.enabled_modules) ? job.enabled_modules : [];
-  const modelName = job.model?.name || 'Unknown Model';
+  const modelName = job.model?.name || "Unknown Model";
   const progress = job.progress || 0;
 
   // Confidence scoring - PRODUCTION HONEST
   // Based on actual job metrics, not random numbers
   const getConfidenceScore = (): number => {
     // Use actual latency/speedup if available, otherwise show honest "unknown"
-    if (job.status === 'completed' && job.latency_ms) {
+    if (job.status === "completed" && job.latency_ms) {
       // Real confidence based on actual execution quality
       return job.latency_ms < 100 ? 95 : job.latency_ms < 500 ? 88 : 82;
     }
-    if (job.status === 'running') return 0; // Still executing, no confidence yet
-    if (job.status === 'queued') return 0; // Not started
+    if (job.status === "running") return 0; // Still executing, no confidence yet
+    if (job.status === "queued") return 0; // Not started
     return 0; // Unknown until executed
   };
 
   const getProcessingMethod = (): string => {
-    if (job.latency_ms && job.latency_ms < 100) return 'Cached';
-    if (job.compression_ratio && job.compression_ratio > 2) return 'Blended';
-    return 'Fresh';
+    if (job.latency_ms && job.latency_ms < 100) return "Cached";
+    if (job.compression_ratio && job.compression_ratio > 2) return "Blended";
+    return "Fresh";
   };
 
   const confidenceScore = getConfidenceScore();
@@ -73,7 +73,7 @@ export function JobCard({ job, onViewDetails, onCancel, onRetry }: JobCardProps)
       const endTime = job.completed_at ? new Date(job.completed_at) : new Date();
       return formatDistanceToNow(new Date(job.started_at), { addSuffix: false });
     }
-    return '—';
+    return "—";
   };
 
   return (
@@ -104,7 +104,7 @@ export function JobCard({ job, onViewDetails, onCancel, onRetry }: JobCardProps)
             </div>
 
             {/* Progress bar for running jobs */}
-            {job.status === 'running' && (
+            {job.status === "running" && (
               <div className="space-y-1">
                 <div className="flex justify-between text-xs">
                   <span className="text-muted-foreground">Progress</span>
@@ -146,11 +146,16 @@ export function JobCard({ job, onViewDetails, onCancel, onRetry }: JobCardProps)
                     <div className="space-y-0.5 cursor-help">
                       <Gauge className="h-3.5 w-3.5 mx-auto text-primary" />
                       <p className="text-xs text-muted-foreground">Confidence</p>
-                      <p className={cn(
-                        "text-sm font-bold",
-                        confidenceScore >= 90 ? "text-green-400" : 
-                        confidenceScore >= 80 ? "text-yellow-400" : "text-orange-400"
-                      )}>
+                      <p
+                        className={cn(
+                          "text-sm font-bold",
+                          confidenceScore >= 90
+                            ? "text-green-400"
+                            : confidenceScore >= 80
+                              ? "text-yellow-400"
+                              : "text-orange-400",
+                        )}
+                      >
                         {confidenceScore}%
                       </p>
                     </div>
@@ -191,10 +196,10 @@ export function JobCard({ job, onViewDetails, onCancel, onRetry }: JobCardProps)
                 <Eye className="h-4 w-4 mr-1" />
                 Details
               </Button>
-              {(job.status === 'queued' || job.status === 'running') && (
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
+              {(job.status === "queued" || job.status === "running") && (
+                <Button
+                  variant="ghost"
+                  size="sm"
                   onClick={onCancel}
                   className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
                 >
@@ -202,7 +207,7 @@ export function JobCard({ job, onViewDetails, onCancel, onRetry }: JobCardProps)
                   Cancel
                 </Button>
               )}
-              {(job.status === 'failed' || job.status === 'cancelled') && (
+              {(job.status === "failed" || job.status === "cancelled") && (
                 <Button variant="ghost" size="sm" onClick={onRetry}>
                   <RotateCcw className="h-4 w-4 mr-1" />
                   Retry

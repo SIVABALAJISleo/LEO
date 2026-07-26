@@ -1,20 +1,20 @@
-import { useAuth } from '@/contexts/AuthContext';
-import { Button } from '@/components/ui/button';
-import { SidebarTrigger } from '@/components/ui/sidebar';
+import { useAuth } from "@/contexts/AuthContext";
+import { Button } from "@/components/ui/button";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Plus, List, Settings, Bell } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { format } from 'date-fns';
-import { ComputeSafetyBadge } from './ComputeSafetyBadge';
-import { NotificationPopover } from './NotificationPopover';
+import { Plus, List, Settings, Bell } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { format } from "date-fns";
+import { ComputeSafetyBadge } from "./ComputeSafetyBadge";
+import { NotificationPopover } from "./NotificationPopover";
 
 export const DashboardHeader = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const currentDate = format(new Date(), 'EEEE, MMMM d, yyyy');
+  const currentDate = format(new Date(), "EEEE, MMMM d, yyyy");
 
   // Display username from profile, fallback to email username part
-  const displayName = user?.username || user?.email?.split('@')[0] || 'User';
+  const displayName = user?.username || user?.email?.split("@")[0] || "User";
 
   return (
     <header className="h-16 border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
@@ -35,7 +35,7 @@ export const DashboardHeader = () => {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => navigate('/dashboard/jobs')}
+              onClick={() => navigate("/dashboard/jobs")}
               className="hidden sm:flex"
             >
               <List className="h-4 w-4 mr-2" />
@@ -44,7 +44,7 @@ export const DashboardHeader = () => {
             <Button
               size="sm"
               className="bg-gradient-primary shadow-glow"
-              onClick={() => navigate('/dashboard/jobs?new=true')}
+              onClick={() => navigate("/dashboard/jobs?new=true")}
             >
               <Plus className="h-4 w-4 mr-2" />
               New Job
@@ -52,11 +52,7 @@ export const DashboardHeader = () => {
 
             <NotificationPopover />
 
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigate('/dashboard/settings')}
-            >
+            <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard/settings")}>
               <Settings className="h-5 w-5" />
             </Button>
           </div>

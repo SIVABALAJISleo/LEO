@@ -6,7 +6,7 @@
 
 export interface P2PTask {
   id: string;
-  type: 'parallelizable' | 'sequential';
+  type: "parallelizable" | "sequential";
   payload: ArrayBuffer;
   encryptedPayload?: ArrayBuffer;
   priority: number;
@@ -38,7 +38,13 @@ export interface P2PSecurityConditions {
   hasNoPrivateData: boolean;
 }
 
-type SafetyEventType = 'peer_connected' | 'peer_disconnected' | 'task_started' | 'task_completed' | 'security_violation' | 'fallback_triggered';
+type SafetyEventType =
+  | "peer_connected"
+  | "peer_disconnected"
+  | "task_started"
+  | "task_completed"
+  | "security_violation"
+  | "fallback_triggered";
 
 class P2POffloadManager {
   private static instance: P2POffloadManager;
@@ -70,7 +76,7 @@ class P2POffloadManager {
    */
   canUseP2P(task: P2PTask): P2PSecurityConditions {
     return {
-      isParallelizable: task.type === 'parallelizable',
+      isParallelizable: task.type === "parallelizable",
       hasUserConsent: this.config.userOptedIn,
       passesSecurityCheck: this.performSecurityCheck(task),
       hasNoPrivateData: this.checkNoPrivateData(task),
@@ -85,11 +91,10 @@ class P2POffloadManager {
 
     try {
       // Generate ephemeral encryption key
-      const key = await crypto.subtle.generateKey(
-        { name: 'AES-GCM', length: 256 },
-        true,
-        ['encrypt', 'decrypt']
-      );
+      const key = await crypto.subtle.generateKey({ name: "AES-GCM", length: 256 }, true, [
+        "encrypt",
+        "decrypt",
+      ]);
 
       this.config.encryptionKey = key;
       this.config.enabled = true;
@@ -120,7 +125,7 @@ class P2POffloadManager {
 
     // All conditions must pass
     if (!Object.values(conditions).every(Boolean)) {
-      this.emit('fallback_triggered', { taskId: task.id, reason: 'security_conditions_not_met' });
+      this.emit("fallback_triggered", { taskId: task.id, reason: "security_conditions_not_met" });
       return this.fallbackToLocal(task);
     }
 
@@ -130,7 +135,7 @@ class P2POffloadManager {
       const encryptedTask = { ...task, encryptedPayload };
 
       this.activeTasks.set(task.id, encryptedTask);
-      this.emit('task_started', { taskId: task.id });
+      this.emit("task_started", { taskId: task.id });
 
       // Distribute to peers with redundancy
       const results = await this.distributeToRedundantPeers(encryptedTask);
@@ -139,15 +144,15 @@ class P2POffloadManager {
       const verifiedResult = this.verifyRedundantResults(results);
 
       if (verifiedResult) {
-        this.emit('task_completed', { taskId: task.id, verified: true });
+        this.emit("task_completed", { taskId: task.id, verified: true });
         return verifiedResult;
       } else {
         // Results don't match - fallback to local
-        this.emit('security_violation', { taskId: task.id, reason: 'result_mismatch' });
+        this.emit("security_violation", { taskId: task.id, reason: "result_mismatch" });
         return this.fallbackToLocal(task);
       }
     } catch (error) {
-      this.emit('fallback_triggered', { taskId: task.id, reason: 'error', error });
+      this.emit("fallback_triggered", { taskId: task.id, reason: "error", error });
       return this.fallbackToLocal(task);
     } finally {
       this.activeTasks.delete(task.id);
@@ -191,19 +196,19 @@ class P2POffloadManager {
   private checkNoPrivateData(task: P2PTask): boolean {
     // In production, would analyze payload for PII patterns
     // For now, assume all parallelizable tasks are safe
-    return task.type === 'parallelizable';
+    return task.type === "parallelizable";
   }
 
   private async encryptPayload(payload: ArrayBuffer): Promise<ArrayBuffer> {
     if (!this.config.encryptionKey) {
-      throw new Error('Encryption key not available');
+      throw new Error("Encryption key not available");
     }
 
     const iv = crypto.getRandomValues(new Uint8Array(12));
     const encrypted = await crypto.subtle.encrypt(
-      { name: 'AES-GCM', iv },
+      { name: "AES-GCM", iv },
       this.config.encryptionKey,
-      payload
+      payload,
     );
 
     // Prepend IV to encrypted data
@@ -216,18 +221,14 @@ class P2POffloadManager {
 
   private async decryptPayload(encrypted: ArrayBuffer): Promise<ArrayBuffer> {
     if (!this.config.encryptionKey) {
-      throw new Error('Encryption key not available');
+      throw new Error("Encryption key not available");
     }
 
     const data = new Uint8Array(encrypted);
     const iv = data.slice(0, 12);
     const ciphertext = data.slice(12);
 
-    return crypto.subtle.decrypt(
-      { name: 'AES-GCM', iv },
-      this.config.encryptionKey,
-      ciphertext
-    );
+    return crypto.subtle.decrypt({ name: "AES-GCM", iv }, this.config.encryptionKey, ciphertext);
   }
 
   private async distributeToRedundantPeers(task: P2PTask): Promise<P2PResult[]> {
@@ -241,7 +242,7 @@ class P2POffloadManager {
       const startTime = performance.now();
 
       // Fixed delay - no random variance in demo mode
-      await new Promise(resolve => setTimeout(resolve, 150));
+      await new Promise((resolve) => setTimeout(resolve, 150));
 
       const result: P2PResult = {
         taskId: task.id,
@@ -262,12 +263,12 @@ class P2POffloadManager {
 
     // Compare results from different peers
     const firstResult = new Uint8Array(results[0].result);
-    
+
     for (let i = 1; i < results.length; i++) {
       const otherResult = new Uint8Array(results[i].result);
-      
+
       if (firstResult.length !== otherResult.length) return null;
-      
+
       for (let j = 0; j < firstResult.length; j++) {
         if (firstResult[j] !== otherResult[j]) return null;
       }
@@ -282,23 +283,23 @@ class P2POffloadManager {
     const startTime = performance.now();
 
     // Perform local computation
-    await new Promise(resolve => setTimeout(resolve, 50));
+    await new Promise((resolve) => setTimeout(resolve, 50));
 
     return {
       taskId: task.id,
       result: task.payload,
       verified: true,
       computeTime: performance.now() - startTime,
-      peerId: 'local',
+      peerId: "local",
     };
   }
 
   private emit(event: SafetyEventType, data: unknown): void {
-    this.listeners.forEach(listener => {
+    this.listeners.forEach((listener) => {
       try {
         listener(event, data);
       } catch (e) {
-        console.error('P2P event listener error:', e);
+        console.error("P2P event listener error:", e);
       }
     });
   }

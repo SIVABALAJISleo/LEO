@@ -13,13 +13,13 @@ import {
   AutonomyGovernor,
   RealityFeedbackNetwork,
   IntelligenceGovernor,
-  KnowledgeImmuneSystem
+  KnowledgeImmuneSystem,
 } from "../cognitive/v17index";
 
 describe("Antigravity AI V17 Domain Dominance Engine Tests", () => {
   it("Phase 1: Enterprise Command Center indexes graph nodes and policies", () => {
     const center = new EnterpriseCommandCenter();
-    
+
     const report1 = center.searchCompanyKnowledge("Stripe Payment Portal");
     expect(report1.nodesFound.length).toBeGreaterThan(0);
     expect(report1.policyPassed).toBe(true);
@@ -31,7 +31,7 @@ describe("Antigravity AI V17 Domain Dominance Engine Tests", () => {
 
     center.ingestDocument("New V17 Security Manual", "Enforce local WebGPU shader audits.");
     const report3 = center.searchCompanyKnowledge("Security Manual");
-    expect(report3.nodesFound.find(n => n.type === "document")).toBeDefined();
+    expect(report3.nodesFound.find((n) => n.type === "document")).toBeDefined();
   });
 
   it("Phase 2: RAG 99.9 Engine retrieves chunks and verifies citations", () => {
@@ -41,17 +41,17 @@ describe("Antigravity AI V17 Domain Dominance Engine Tests", () => {
     expect(report1.chunksRetrieved.length).toBeGreaterThan(0);
     expect(report1.citationsVerified).toContain("doc-billing");
     expect(report1.hallucinationRisk).toBeLessThan(0.05);
-    expect(report1.ragScore).toBeGreaterThan(0.80);
+    expect(report1.ragScore).toBeGreaterThan(0.8);
 
     const report2 = rag.queryRAG("Unknown unreferenced statement");
     expect(report2.citationsVerified.length).toBe(0);
-    expect(report2.hallucinationRisk).toBeGreaterThan(0.50);
+    expect(report2.hallucinationRisk).toBeGreaterThan(0.5);
   });
 
   it("Phase 3: Universal Search Engine executes multi-factor search ranking", () => {
     const search = new SearchGovernorV3();
     const report = search.executeUniversalSearch("Stripe signature");
-    
+
     expect(report.results.length).toBeGreaterThan(0);
     expect(report.results[0].title).toContain("Stripe");
     expect(report.results[0].finalScore).toBeGreaterThan(report.results[3].finalScore);
@@ -173,7 +173,7 @@ describe("Antigravity AI V17 Domain Dominance Engine Tests", () => {
 
     const report = governor.auditAnswerQuality(
       "Process stripe payment transactions",
-      "Draft: The server processes transactions directly."
+      "Draft: The server processes transactions directly.",
     );
 
     expect(governor.auditAnswerQuality).toBeDefined();
@@ -185,8 +185,8 @@ describe("Antigravity AI V17 Domain Dominance Engine Tests", () => {
   it("Phase 13: Knowledge Immune System decaying rules check", () => {
     const immune = new KnowledgeImmuneSystem();
     const crystals = immune.auditCrystals();
-    
-    const quarantined = crystals.find(c => c.id === "V16-C04");
+
+    const quarantined = crystals.find((c) => c.id === "V16-C04");
     expect(quarantined?.status).toBe("quarantined");
   });
 
@@ -195,7 +195,7 @@ describe("Antigravity AI V17 Domain Dominance Engine Tests", () => {
     const report = universe.runDomainEvaluation();
 
     expect(report.totalTasksRun).toBe(103000); // 103,000 simulated
-    expect(report.overallAccuracy).toBeGreaterThan(0.90);
+    expect(report.overallAccuracy).toBeGreaterThan(0.9);
     expect(report.averageLatencyMs).toBeLessThan(200);
     expect(report.benchmarks.length).toBe(10);
   });

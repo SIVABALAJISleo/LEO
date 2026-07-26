@@ -19,7 +19,7 @@ export class ReproducibilityEngine {
     osArchitecture: "Windows-x64",
     nodeVersion: "v20.11.0",
     compilerTarget: "ES2022-Vite",
-    datasetHash: "sha256-d7a9f8f8b88d3e2322329381c1c1c1f1f2e2"
+    datasetHash: "sha256-d7a9f8f8b88d3e2322329381c1c1c1f1f2e2",
   };
 
   getBaselineConfig(): ReproducibilityConfig {

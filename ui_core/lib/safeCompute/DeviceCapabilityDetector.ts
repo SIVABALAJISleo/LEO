@@ -2,7 +2,7 @@
 // Detect device capability (GPU, RAM, CPU)
 // Route medium jobs accordingly
 
-type DeviceCapabilityLevel = 'high' | 'medium' | 'low' | 'minimal';
+type DeviceCapabilityLevel = "high" | "medium" | "low" | "minimal";
 
 interface DeviceCapabilities {
   level: DeviceCapabilityLevel;
@@ -23,7 +23,7 @@ interface ComputeRouting {
   canRunFull: boolean;
   canRunQuantized: boolean;
   canRunProgressive: boolean;
-  recommendedMode: 'full' | 'quantized' | 'progressive' | 'server';
+  recommendedMode: "full" | "quantized" | "progressive" | "server";
   maxModelSizeMb: number;
   estimatedSpeedFactor: number;
 }
@@ -78,9 +78,10 @@ class DeviceCapabilityDetector {
   }
 
   private async checkWebGPU(): Promise<boolean> {
-    if (!('gpu' in navigator)) return false;
+    if (!("gpu" in navigator)) return false;
     try {
-      const gpu = (navigator as Navigator & { gpu?: { requestAdapter: () => Promise<unknown> } }).gpu;
+      const gpu = (navigator as Navigator & { gpu?: { requestAdapter: () => Promise<unknown> } })
+        .gpu;
       if (!gpu) return false;
       const adapter = await gpu.requestAdapter();
       return !!adapter;
@@ -91,8 +92,8 @@ class DeviceCapabilityDetector {
 
   private checkWebGL2(): boolean {
     try {
-      const canvas = document.createElement('canvas');
-      return !!canvas.getContext('webgl2');
+      const canvas = document.createElement("canvas");
+      return !!canvas.getContext("webgl2");
     } catch {
       return false;
     }
@@ -100,13 +101,13 @@ class DeviceCapabilityDetector {
 
   private getGPUInfo(): { vendor: string | null; renderer: string | null } {
     try {
-      const canvas = document.createElement('canvas');
-      const gl = canvas.getContext('webgl') || canvas.getContext('webgl2');
+      const canvas = document.createElement("canvas");
+      const gl = canvas.getContext("webgl") || canvas.getContext("webgl2");
       if (!gl) return { vendor: null, renderer: null };
-      
-      const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+
+      const debugInfo = gl.getExtension("WEBGL_debug_renderer_info");
       if (!debugInfo) return { vendor: null, renderer: null };
-      
+
       return {
         vendor: gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL),
         renderer: gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL),
@@ -118,7 +119,7 @@ class DeviceCapabilityDetector {
 
   private estimateRAM(): number {
     // Use deviceMemory API if available
-    if ('deviceMemory' in navigator) {
+    if ("deviceMemory" in navigator) {
       return (navigator as Navigator & { deviceMemory?: number }).deviceMemory || 4;
     }
     // Fallback estimation based on platform
@@ -127,18 +128,20 @@ class DeviceCapabilityDetector {
   }
 
   private checkMobile(): boolean {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent,
+    );
   }
 
   private getNetworkType(): string {
-    const connection = (navigator as Navigator & { connection?: { effectiveType?: string } }).connection;
-    return connection?.effectiveType || 'unknown';
+    const connection = (navigator as Navigator & { connection?: { effectiveType?: string } })
+      .connection;
+    return connection?.effectiveType || "unknown";
   }
 
   private checkWasmSupport(): boolean {
     try {
-      return typeof WebAssembly === 'object' && 
-             typeof WebAssembly.instantiate === 'function';
+      return typeof WebAssembly === "object" && typeof WebAssembly.instantiate === "function";
     } catch {
       return false;
     }
@@ -146,7 +149,7 @@ class DeviceCapabilityDetector {
 
   private checkSharedArrayBuffer(): boolean {
     try {
-      return typeof SharedArrayBuffer !== 'undefined';
+      return typeof SharedArrayBuffer !== "undefined";
     } catch {
       return false;
     }
@@ -161,36 +164,36 @@ class DeviceCapabilityDetector {
     supportsWasm: boolean;
   }): number {
     let score = 0;
-    
+
     // WebGPU is best
     if (params.hasWebGPU) score += 40;
     else if (params.hasWebGL2) score += 25;
-    
+
     // RAM
     score += Math.min(20, params.estimatedRamGb * 2);
-    
+
     // CPU cores
     score += Math.min(20, params.cpuCores * 2.5);
-    
+
     // Mobile penalty
     if (params.isMobile) score *= 0.7;
-    
+
     // WASM bonus
     if (params.supportsWasm) score += 10;
-    
+
     return Math.min(100, Math.max(0, score));
   }
 
   private determineLevel(score: number): DeviceCapabilityLevel {
-    if (score >= 70) return 'high';
-    if (score >= 45) return 'medium';
-    if (score >= 25) return 'low';
-    return 'minimal';
+    if (score >= 70) return "high";
+    if (score >= 45) return "medium";
+    if (score >= 25) return "low";
+    return "minimal";
   }
 
   getComputeRouting(): ComputeRouting {
     const caps = this.cachedCapabilities || {
-      level: 'low' as DeviceCapabilityLevel,
+      level: "low" as DeviceCapabilityLevel,
       hasWebGPU: false,
       hasWebGL2: false,
       estimatedRamGb: 4,
@@ -198,32 +201,32 @@ class DeviceCapabilityDetector {
     };
 
     const routing: ComputeRouting = {
-      canRunFull: caps.level === 'high' && caps.hasWebGPU,
-      canRunQuantized: caps.level === 'high' || caps.level === 'medium',
-      canRunProgressive: caps.level !== 'minimal',
-      recommendedMode: 'server',
+      canRunFull: caps.level === "high" && caps.hasWebGPU,
+      canRunQuantized: caps.level === "high" || caps.level === "medium",
+      canRunProgressive: caps.level !== "minimal",
+      recommendedMode: "server",
       maxModelSizeMb: 0,
       estimatedSpeedFactor: 1,
     };
 
     switch (caps.level) {
-      case 'high':
-        routing.recommendedMode = caps.hasWebGPU ? 'full' : 'quantized';
+      case "high":
+        routing.recommendedMode = caps.hasWebGPU ? "full" : "quantized";
         routing.maxModelSizeMb = caps.estimatedRamGb * 256; // Use ~25% of RAM
         routing.estimatedSpeedFactor = caps.hasWebGPU ? 0.9 : 0.5;
         break;
-      case 'medium':
-        routing.recommendedMode = 'quantized';
+      case "medium":
+        routing.recommendedMode = "quantized";
         routing.maxModelSizeMb = caps.estimatedRamGb * 128;
         routing.estimatedSpeedFactor = 0.3;
         break;
-      case 'low':
-        routing.recommendedMode = 'progressive';
+      case "low":
+        routing.recommendedMode = "progressive";
         routing.maxModelSizeMb = caps.estimatedRamGb * 64;
         routing.estimatedSpeedFactor = 0.15;
         break;
       default:
-        routing.recommendedMode = 'server';
+        routing.recommendedMode = "server";
         routing.maxModelSizeMb = 0;
         routing.estimatedSpeedFactor = 0;
     }
@@ -233,29 +236,29 @@ class DeviceCapabilityDetector {
 
   getLevelLabel(): string {
     const caps = this.cachedCapabilities;
-    if (!caps) return 'Unknown';
-    
+    if (!caps) return "Unknown";
+
     const labels: Record<DeviceCapabilityLevel, string> = {
-      high: 'High Performance',
-      medium: 'Standard',
-      low: 'Basic',
-      minimal: 'Limited',
+      high: "High Performance",
+      medium: "Standard",
+      low: "Basic",
+      minimal: "Limited",
     };
-    
+
     return labels[caps.level];
   }
 
   getLevelColor(): string {
     const caps = this.cachedCapabilities;
-    if (!caps) return 'muted';
-    
+    if (!caps) return "muted";
+
     const colors: Record<DeviceCapabilityLevel, string> = {
-      high: 'text-green-500',
-      medium: 'text-blue-500',
-      low: 'text-yellow-500',
-      minimal: 'text-orange-500',
+      high: "text-green-500",
+      medium: "text-blue-500",
+      low: "text-yellow-500",
+      minimal: "text-orange-500",
     };
-    
+
     return colors[caps.level];
   }
 
@@ -266,7 +269,7 @@ class DeviceCapabilityDetector {
 
   private notifyListeners(): void {
     if (this.cachedCapabilities) {
-      this.listeners.forEach(l => l(this.cachedCapabilities!));
+      this.listeners.forEach((l) => l(this.cachedCapabilities!));
     }
   }
 

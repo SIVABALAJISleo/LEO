@@ -40,16 +40,16 @@ export class RealityGradeProductScore {
     // Reality-grade Overall Product Score
     const overallProductScore = parseFloat(
       (
-        (reasoningScore * 0.15) +
-        (memoryScore * 0.15) +
-        (searchScore * 0.10) +
-        (ragScore * 0.15) +
-        (agentScore * 0.10) +
-        (verificationScore * 0.10) +
-        (freshnessScore * 0.05) +
-        (resilienceScore * 0.10) +
-        (realityAlignmentScore * 0.10)
-      ).toFixed(4)
+        reasoningScore * 0.15 +
+        memoryScore * 0.15 +
+        searchScore * 0.1 +
+        ragScore * 0.15 +
+        agentScore * 0.1 +
+        verificationScore * 0.1 +
+        freshnessScore * 0.05 +
+        resilienceScore * 0.1 +
+        realityAlignmentScore * 0.1
+      ).toFixed(4),
     );
 
     return {
@@ -62,7 +62,7 @@ export class RealityGradeProductScore {
       freshnessScore,
       resilienceScore,
       realityAlignmentScore,
-      overallProductScore: Math.min(0.99, Math.max(0.95, overallProductScore))
+      overallProductScore: Math.min(0.99, Math.max(0.95, overallProductScore)),
     };
   }
 }

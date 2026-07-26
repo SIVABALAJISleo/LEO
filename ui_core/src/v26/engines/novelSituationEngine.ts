@@ -14,7 +14,7 @@ export class NovelSituationEngine {
 
     return {
       noveltyScore: isNovel ? 0.95 : 0.12,
-      matchedAnalogies: isNovel 
+      matchedAnalogies: isNovel
         ? ["Analogy: Transferred distributed token validation logic from V17 edge server guides."]
         : ["Analogy: Standard lookup correlation found."],
       transferredPatterns: isNovel
@@ -22,7 +22,7 @@ export class NovelSituationEngine {
         : [],
       generatedHypotheses: isNovel
         ? ["Hypothesis: Future state validation requires acyclic dependency graph sweeps."]
-        : []
+        : [],
     };
   }
 }

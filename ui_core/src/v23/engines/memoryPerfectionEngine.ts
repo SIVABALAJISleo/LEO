@@ -35,42 +35,44 @@ export class MemoryPerfectionEngine {
         timestamp: Date.now() - 3600000 * 24, // 1 day ago
         confidence: 0.99,
         minhash: "0f4a8e",
-        quarantined: false
+        quarantined: false,
       },
       {
         uuid: "mem-v23-2",
-        statement: "Stripe webhook verification signature uses whsec_prod_verification_token_key_2026.",
+        statement:
+          "Stripe webhook verification signature uses whsec_prod_verification_token_key_2026.",
         source: "System-Log",
         timestamp: Date.now() - 3600000 * 12, // 12 hrs ago
         confidence: 0.98,
         minhash: "9a2f1c",
-        quarantined: false
+        quarantined: false,
       },
       {
         uuid: "mem-v23-3",
         statement: "SaaS platform localized routing must prioritize CPU instead of WebGPU.", // Contradiction
         source: "Adversarial-Feed",
         timestamp: Date.now() - 3600000 * 2, // 2 hrs ago
-        confidence: 0.70,
+        confidence: 0.7,
         minhash: "0f4a8f", // similar minhash to mem-v23-1
-        quarantined: false
+        quarantined: false,
       },
       {
         uuid: "mem-v23-4",
-        statement: "Stripe webhook verification signature uses whsec_prod_verification_token_key_2026.", // Duplicate
+        statement:
+          "Stripe webhook verification signature uses whsec_prod_verification_token_key_2026.", // Duplicate
         source: "System-Log",
         timestamp: Date.now() - 3600000 * 1, // 1 hr ago
         confidence: 0.97,
         minhash: "9a2f1c",
-        quarantined: false
-      }
+        quarantined: false,
+      },
     ];
   }
 
   perfectMemory(): MemoryAuditV23 {
     let duplicateCount = 0;
     let quarantinedCount = 0;
-    
+
     // 1. Duplicate Elimination (minhash map)
     const seenHashes = new Set<string>();
     const uniqueMemories: MemoryBlockV23[] = [];
@@ -94,9 +96,10 @@ export class MemoryPerfectionEngine {
       for (let j = i + 1; j < uniqueMemories.length; j++) {
         const a = uniqueMemories[i];
         const b = uniqueMemories[j];
-        
+
         // Simulating checking if text matches similar subjects but contradicts
-        const hasMutualSubject = /localized routing/i.test(a.statement) && /localized routing/i.test(b.statement);
+        const hasMutualSubject =
+          /localized routing/i.test(a.statement) && /localized routing/i.test(b.statement);
         const hasOppositeCondition = /WebGPU/i.test(a.statement) !== /WebGPU/i.test(b.statement);
 
         if (hasMutualSubject && hasOppositeCondition) {
@@ -110,11 +113,13 @@ export class MemoryPerfectionEngine {
       }
     }
 
-    quarantinedCount = uniqueMemories.filter(m => m.quarantined).length;
+    quarantinedCount = uniqueMemories.filter((m) => m.quarantined).length;
 
     // Consistency score starts at 1.0, minus deductions for unhandled issues
-    const unhandledIssues = uniqueMemories.filter(m => m.quarantined && m.confidence > 0.95).length;
-    const consistencyScore = 1.0 - (unhandledIssues / Math.max(1, uniqueMemories.length));
+    const unhandledIssues = uniqueMemories.filter(
+      (m) => m.quarantined && m.confidence > 0.95,
+    ).length;
+    const consistencyScore = 1.0 - unhandledIssues / Math.max(1, uniqueMemories.length);
 
     // Update internal memory cache with perfected list
     this.memories = uniqueMemories;
@@ -124,7 +129,7 @@ export class MemoryPerfectionEngine {
       duplicateCount,
       quarantinedCount,
       consistencyScore: parseFloat(Math.min(0.999, Math.max(0.98, consistencyScore)).toFixed(3)),
-      memoryBlocks: uniqueMemories
+      memoryBlocks: uniqueMemories,
     };
   }
 
@@ -141,7 +146,7 @@ export class MemoryPerfectionEngine {
       timestamp: Date.now(),
       confidence,
       minhash,
-      quarantined: false
+      quarantined: false,
     });
   }
 }

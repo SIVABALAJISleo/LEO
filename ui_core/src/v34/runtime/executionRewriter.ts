@@ -3,7 +3,11 @@
 
 export interface RewriteEvent {
   nodeName: string;
-  actionTaken: "fused_with_activation" | "reordered_for_data_locality" | "cached_intermediate" | "bypassed_identity";
+  actionTaken:
+    | "fused_with_activation"
+    | "reordered_for_data_locality"
+    | "cached_intermediate"
+    | "bypassed_identity";
   cyclesSaved: number;
 }
 
@@ -20,9 +24,13 @@ export class ExecutionRewriter {
   rewriteExecutionGraph(totalNodesCount = 18): RuntimeOptimizationReport {
     const log: RewriteEvent[] = [
       { nodeName: "conv_layer_1", actionTaken: "fused_with_activation", cyclesSaved: 12000 },
-      { nodeName: "attention_qkv_proj", actionTaken: "reordered_for_data_locality", cyclesSaved: 28000 },
+      {
+        nodeName: "attention_qkv_proj",
+        actionTaken: "reordered_for_data_locality",
+        cyclesSaved: 28000,
+      },
       { nodeName: "feed_forward_residual", actionTaken: "bypassed_identity", cyclesSaved: 8500 },
-      { nodeName: "layer_norm_output", actionTaken: "fused_with_activation", cyclesSaved: 6000 }
+      { nodeName: "layer_norm_output", actionTaken: "fused_with_activation", cyclesSaved: 6000 },
     ];
 
     const cyclesBefore = totalNodesCount * 50000;
@@ -31,7 +39,7 @@ export class ExecutionRewriter {
 
     // Runtime Intelligence Score represents the percentage of execution graph efficiency gains
     const runtimeIntelligenceScore = parseFloat(
-      Math.min(100, (totalSaved / cyclesBefore) * 200 + 80).toFixed(1)
+      Math.min(100, (totalSaved / cyclesBefore) * 200 + 80).toFixed(1),
     );
 
     return {
@@ -40,7 +48,7 @@ export class ExecutionRewriter {
       cyclesBefore,
       cyclesAfter,
       runtimeIntelligenceScore,
-      optimizationLog: log
+      optimizationLog: log,
     };
   }
 }

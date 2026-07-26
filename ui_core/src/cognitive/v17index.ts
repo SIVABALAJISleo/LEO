@@ -1,7 +1,11 @@
 // Export V17 Domain Dominance Substrate Modules
 // Classes as values; interfaces/types with `export type` for Vite 8 (rolldown) compliance.
 export { EnterpriseCommandCenter } from "../enterprise/enterpriseCommandCenter";
-export type { KnowledgeGraphNode, KnowledgeGraphEdge, EnterpriseSearchQueryReport } from "../enterprise/enterpriseCommandCenter";
+export type {
+  KnowledgeGraphNode,
+  KnowledgeGraphEdge,
+  EnterpriseSearchQueryReport,
+} from "../enterprise/enterpriseCommandCenter";
 
 export { EvaluationUniverseV17 } from "../evaluation_universe/tasks";
 export type { V17DomainBenchmark, UniverseV17Report } from "../evaluation_universe/tasks";
@@ -31,13 +35,19 @@ export { RoboticsGovernor } from "../robotics/roboticsGovernor";
 export type { RobotState, RouteNavigationReport } from "../robotics/roboticsGovernor";
 
 export { AutonomyGovernor } from "../autonomy/autonomyGovernor";
-export type { AutonomyScenarioProjection, AutonomousDecisionReport } from "../autonomy/autonomyGovernor";
+export type {
+  AutonomyScenarioProjection,
+  AutonomousDecisionReport,
+} from "../autonomy/autonomyGovernor";
 
 export { RealityFeedbackNetwork } from "../learning/realityNetwork";
 export type { RealityDecisionLog, RealityCalibrationSummary } from "../learning/realityNetwork";
 
 export { IntelligenceGovernor } from "../intelligence/intelligenceGovernor";
-export type { CritiqueRound, IntelligenceQualityReport } from "../intelligence/intelligenceGovernor";
+export type {
+  CritiqueRound,
+  IntelligenceQualityReport,
+} from "../intelligence/intelligenceGovernor";
 
 // Backward compatible utilities
 export { KnowledgeImmuneSystem } from "../knowledge/knowledgeImmuneSystem";

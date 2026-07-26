@@ -54,7 +54,7 @@ export class ReasoningProofEngine {
       reasoning_accuracy,
       consistency,
       calibration,
-      sampleVariance
+      sampleVariance,
     };
   }
 }

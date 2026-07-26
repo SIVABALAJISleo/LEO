@@ -26,14 +26,26 @@ export class DocumentationReasoningEngine {
     const textLower = rawText.toLowerCase();
 
     if (textLower.includes("payment") || textLower.includes("stripe")) {
-      endpointsFound.push("POST /v1/payment_intents", "POST /v1/payment_intents/:id/confirm", "GET /v1/payment_intents/:id");
+      endpointsFound.push(
+        "POST /v1/payment_intents",
+        "POST /v1/payment_intents/:id/confirm",
+        "GET /v1/payment_intents/:id",
+      );
       relationships.push(
-        { fromEndpoint: "POST /v1/payment_intents", toEndpoint: "POST /v1/payment_intents/:id/confirm", relationType: "Prerequisite" },
-        { fromEndpoint: "POST /v1/payment_intents/:id/confirm", toEndpoint: "GET /v1/payment_intents/:id", relationType: "Dependency" }
+        {
+          fromEndpoint: "POST /v1/payment_intents",
+          toEndpoint: "POST /v1/payment_intents/:id/confirm",
+          relationType: "Prerequisite",
+        },
+        {
+          fromEndpoint: "POST /v1/payment_intents/:id/confirm",
+          toEndpoint: "GET /v1/payment_intents/:id",
+          relationType: "Dependency",
+        },
       );
       extractedCodeSnippets.push(
         `const paymentIntent = await stripe.paymentIntents.create({\n  amount: 2000,\n  currency: 'usd',\n});`,
-        `const confirmedIntent = await stripe.paymentIntents.confirm(intentId);\n`
+        `const confirmedIntent = await stripe.paymentIntents.confirm(intentId);\n`,
       );
     } else {
       // Generic fallback
@@ -41,11 +53,11 @@ export class DocumentationReasoningEngine {
       relationships.push({
         fromEndpoint: "POST /v1/authenticate",
         toEndpoint: "GET /v1/user/profile",
-        relationType: "Prerequisite"
+        relationType: "Prerequisite",
       });
       extractedCodeSnippets.push(
         `const auth = await client.authenticate({ apiKey: process.env.API_KEY });`,
-        `const userProfile = await client.getUserProfile();`
+        `const userProfile = await client.getUserProfile();`,
       );
     }
 
@@ -56,7 +68,7 @@ export class DocumentationReasoningEngine {
       endpointsFound,
       relationships,
       extractedCodeSnippets,
-      parsingConfidence
+      parsingConfidence,
     };
   }
 }

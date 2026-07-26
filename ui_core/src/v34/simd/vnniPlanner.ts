@@ -15,7 +15,7 @@ export class VnniPlanner {
         vnniActive: false,
         cyclesPerDotProduct: 4,
         opsThroughputMultiplier: 1.0,
-        expectedMemoryBandwidthSavedPct: 0.0
+        expectedMemoryBandwidthSavedPct: 0.0,
       };
     }
 
@@ -28,7 +28,7 @@ export class VnniPlanner {
       vnniActive,
       cyclesPerDotProduct,
       opsThroughputMultiplier,
-      expectedMemoryBandwidthSavedPct
+      expectedMemoryBandwidthSavedPct,
     };
   }
 }

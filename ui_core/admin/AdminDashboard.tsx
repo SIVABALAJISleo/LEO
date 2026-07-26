@@ -8,7 +8,11 @@ interface AdminDashboardProps {
   children?: React.ReactNode;
 }
 
-export default function AdminDashboard({ activeSection, setActiveSection, children }: AdminDashboardProps) {
+export default function AdminDashboard({
+  activeSection,
+  setActiveSection,
+  children,
+}: AdminDashboardProps) {
   const navigate = useNavigate();
   return (
     <IntelliGPUDashboard

@@ -1,13 +1,13 @@
 // BackupDrillAutomation - Automated restore testing and verification
 // Rule: A backup that was never restored is a lie
 
-import { firebaseClient as supabase } from '@/integrations/firebase/client';
+import { firebaseClient as supabase } from "@/integrations/firebase/client";
 
 export interface BackupDrill {
   id: string;
   backupId: string;
-  drillType: 'full_restore' | 'partial_restore' | 'integrity_check' | 'schema_validation';
-  status: 'pending' | 'running' | 'passed' | 'failed';
+  drillType: "full_restore" | "partial_restore" | "integrity_check" | "schema_validation";
+  status: "pending" | "running" | "passed" | "failed";
   startedAt: string | null;
   completedAt: string | null;
   durationMs: number | null;
@@ -22,8 +22,8 @@ export interface BackupDrill {
 }
 
 export interface DrillSchedule {
-  drillType: BackupDrill['drillType'];
-  frequency: 'daily' | 'weekly' | 'monthly';
+  drillType: BackupDrill["drillType"];
+  frequency: "daily" | "weekly" | "monthly";
   lastRun: string | null;
   nextRun: string;
   enabled: boolean;
@@ -49,31 +49,31 @@ class BackupDrillAutomation {
     // Default schedules
     this.schedules = [
       {
-        drillType: 'integrity_check',
-        frequency: 'daily',
+        drillType: "integrity_check",
+        frequency: "daily",
         lastRun: null,
-        nextRun: this.calculateNextRun('daily'),
+        nextRun: this.calculateNextRun("daily"),
         enabled: true,
       },
       {
-        drillType: 'schema_validation',
-        frequency: 'weekly',
+        drillType: "schema_validation",
+        frequency: "weekly",
         lastRun: null,
-        nextRun: this.calculateNextRun('weekly'),
+        nextRun: this.calculateNextRun("weekly"),
         enabled: true,
       },
       {
-        drillType: 'partial_restore',
-        frequency: 'weekly',
+        drillType: "partial_restore",
+        frequency: "weekly",
         lastRun: null,
-        nextRun: this.calculateNextRun('weekly'),
+        nextRun: this.calculateNextRun("weekly"),
         enabled: true,
       },
       {
-        drillType: 'full_restore',
-        frequency: 'monthly',
+        drillType: "full_restore",
+        frequency: "monthly",
         lastRun: null,
-        nextRun: this.calculateNextRun('monthly'),
+        nextRun: this.calculateNextRun("monthly"),
         enabled: true,
       },
     ];
@@ -91,8 +91,8 @@ class BackupDrillAutomation {
     const drill: BackupDrill = {
       id: `drill_${Date.now()}`,
       backupId,
-      drillType: 'integrity_check',
-      status: 'running',
+      drillType: "integrity_check",
+      status: "running",
       startedAt: new Date().toISOString(),
       completedAt: null,
       durationMs: null,
@@ -105,38 +105,38 @@ class BackupDrillAutomation {
     try {
       // Verify backup exists
       const { data: backup, error } = await supabase
-        .from('backup_metadata')
-        .select('*')
-        .eq('id', backupId)
+        .from("backup_metadata")
+        .select("*")
+        .eq("id", backupId)
         .single();
 
       if (error || !backup) {
-        drill.status = 'failed';
-        drill.result.errors = ['Backup not found'];
+        drill.status = "failed";
+        drill.result.errors = ["Backup not found"];
       } else {
         // Simulate checksum verification
-        const checksumValid = backup.status === 'completed';
-        
-        drill.status = checksumValid ? 'passed' : 'failed';
+        const checksumValid = backup.status === "completed";
+
+        drill.status = checksumValid ? "passed" : "failed";
         drill.result = {
           checksumMatch: checksumValid,
           tablesValidated: checksumValid ? 1 : 0,
         };
       }
     } catch (error) {
-      drill.status = 'failed';
-      drill.result.errors = [error instanceof Error ? error.message : 'Unknown error'];
+      drill.status = "failed";
+      drill.result.errors = [error instanceof Error ? error.message : "Unknown error"];
     }
 
     drill.completedAt = new Date().toISOString();
     drill.durationMs = Date.now() - start;
-    
+
     this.recentDrills.unshift(drill);
-    this.updateScheduleLastRun('integrity_check');
-    
+    this.updateScheduleLastRun("integrity_check");
+
     // Log drill result
     await this.logDrillResult(drill);
-    
+
     return drill;
   }
 
@@ -144,9 +144,9 @@ class BackupDrillAutomation {
   async runSchemaValidation(): Promise<BackupDrill> {
     const drill: BackupDrill = {
       id: `drill_${Date.now()}`,
-      backupId: 'current_schema',
-      drillType: 'schema_validation',
-      status: 'running',
+      backupId: "current_schema",
+      drillType: "schema_validation",
+      status: "running",
       startedAt: new Date().toISOString(),
       completedAt: null,
       durationMs: null,
@@ -160,24 +160,25 @@ class BackupDrillAutomation {
       // Validate key tables exist and are accessible
       // Use specific table checks with tables that exist in the schema
       const tableChecks = await Promise.allSettled([
-        supabase.from('profiles').select('id').limit(1),
-        supabase.from('gpu_jobs').select('id').limit(1),
-        supabase.from('inference_jobs').select('id').limit(1),
-        supabase.from('alerts').select('id').limit(1),
-        supabase.from('backup_metadata').select('id').limit(1),
+        supabase.from("profiles").select("id").limit(1),
+        supabase.from("gpu_jobs").select("id").limit(1),
+        supabase.from("inference_jobs").select("id").limit(1),
+        supabase.from("alerts").select("id").limit(1),
+        supabase.from("backup_metadata").select("id").limit(1),
       ]);
-      
-      const tableNames = ['profiles', 'gpu_jobs', 'inference_jobs', 'alerts', 'backup_metadata'];
+
+      const tableNames = ["profiles", "gpu_jobs", "inference_jobs", "alerts", "backup_metadata"];
       let validatedTables = 0;
       const errors: string[] = [];
-      
+
       tableChecks.forEach((result, index) => {
-        if (result.status === 'fulfilled' && !result.value.error) {
+        if (result.status === "fulfilled" && !result.value.error) {
           validatedTables++;
         } else {
-          const errorMsg = result.status === 'rejected' 
-            ? 'access error' 
-            : result.value.error?.message || 'unknown error';
+          const errorMsg =
+            result.status === "rejected"
+              ? "access error"
+              : result.value.error?.message || "unknown error";
           errors.push(`Table ${tableNames[index]}: ${errorMsg}`);
         }
       });
@@ -187,21 +188,21 @@ class BackupDrillAutomation {
         schemaIntact: validatedTables === tableNames.length,
         errors: errors.length > 0 ? errors : undefined,
       };
-      
-      drill.status = drill.result.schemaIntact ? 'passed' : 'failed';
+
+      drill.status = drill.result.schemaIntact ? "passed" : "failed";
     } catch (error) {
-      drill.status = 'failed';
-      drill.result.errors = [error instanceof Error ? error.message : 'Unknown error'];
+      drill.status = "failed";
+      drill.result.errors = [error instanceof Error ? error.message : "Unknown error"];
     }
 
     drill.completedAt = new Date().toISOString();
     drill.durationMs = Date.now() - start;
-    
+
     this.recentDrills.unshift(drill);
-    this.updateScheduleLastRun('schema_validation');
-    
+    this.updateScheduleLastRun("schema_validation");
+
     await this.logDrillResult(drill);
-    
+
     return drill;
   }
 
@@ -210,8 +211,8 @@ class BackupDrillAutomation {
     const drill: BackupDrill = {
       id: `drill_${Date.now()}`,
       backupId,
-      drillType: 'partial_restore',
-      status: 'running',
+      drillType: "partial_restore",
+      status: "running",
       startedAt: new Date().toISOString(),
       completedAt: null,
       durationMs: null,
@@ -224,20 +225,20 @@ class BackupDrillAutomation {
     try {
       // Verify backup is restorable (simulated - in production this would test actual restore)
       const { data: backup, error } = await supabase
-        .from('backup_metadata')
-        .select('*')
-        .eq('id', backupId)
+        .from("backup_metadata")
+        .select("*")
+        .eq("id", backupId)
         .single();
 
       if (error || !backup) {
-        drill.status = 'failed';
-        drill.result.errors = ['Backup not found or corrupted'];
-      } else if (backup.status !== 'completed') {
-        drill.status = 'failed';
-        drill.result.errors = ['Backup status is not completed'];
+        drill.status = "failed";
+        drill.result.errors = ["Backup not found or corrupted"];
+      } else if (backup.status !== "completed") {
+        drill.status = "failed";
+        drill.result.errors = ["Backup status is not completed"];
       } else {
         // Simulate successful partial restore
-        drill.status = 'passed';
+        drill.status = "passed";
         drill.result = {
           rowsRestored: Math.floor(Math.random() * 1000) + 100, // Simulated
           checksumMatch: true,
@@ -245,39 +246,42 @@ class BackupDrillAutomation {
         };
       }
     } catch (error) {
-      drill.status = 'failed';
-      drill.result.errors = [error instanceof Error ? error.message : 'Unknown error'];
+      drill.status = "failed";
+      drill.result.errors = [error instanceof Error ? error.message : "Unknown error"];
     }
 
     drill.completedAt = new Date().toISOString();
     drill.durationMs = Date.now() - start;
-    
+
     this.recentDrills.unshift(drill);
-    this.updateScheduleLastRun('partial_restore');
-    
+    this.updateScheduleLastRun("partial_restore");
+
     await this.logDrillResult(drill);
-    
+
     return drill;
   }
 
   // Get drill report
   getDrillReport(): DrillReport {
-    const passed = this.recentDrills.filter(d => d.status === 'passed');
-    const failed = this.recentDrills.filter(d => d.status === 'failed');
-    
-    const avgDuration = this.recentDrills.length > 0
-      ? this.recentDrills.reduce((sum, d) => sum + (d.durationMs || 0), 0) / this.recentDrills.length
-      : 0;
+    const passed = this.recentDrills.filter((d) => d.status === "passed");
+    const failed = this.recentDrills.filter((d) => d.status === "failed");
+
+    const avgDuration =
+      this.recentDrills.length > 0
+        ? this.recentDrills.reduce((sum, d) => sum + (d.durationMs || 0), 0) /
+          this.recentDrills.length
+        : 0;
 
     return {
       totalDrills: this.recentDrills.length,
       passedDrills: passed.length,
       failedDrills: failed.length,
-      successRate: this.recentDrills.length > 0 ? (passed.length / this.recentDrills.length) * 100 : 100,
+      successRate:
+        this.recentDrills.length > 0 ? (passed.length / this.recentDrills.length) * 100 : 100,
       averageDurationMs: Math.round(avgDuration),
       lastSuccessfulDrill: passed[0]?.completedAt || null,
       lastFailedDrill: failed[0]?.completedAt || null,
-      upcomingDrills: this.schedules.filter(s => s.enabled),
+      upcomingDrills: this.schedules.filter((s) => s.enabled),
     };
   }
 
@@ -287,8 +291,8 @@ class BackupDrillAutomation {
   }
 
   // Update schedule
-  updateSchedule(drillType: BackupDrill['drillType'], updates: Partial<DrillSchedule>): void {
-    const schedule = this.schedules.find(s => s.drillType === drillType);
+  updateSchedule(drillType: BackupDrill["drillType"], updates: Partial<DrillSchedule>): void {
+    const schedule = this.schedules.find((s) => s.drillType === drillType);
     if (schedule) {
       Object.assign(schedule, updates);
     }
@@ -297,31 +301,31 @@ class BackupDrillAutomation {
   // Check if any drills are due
   getDueDrills(): DrillSchedule[] {
     const now = new Date();
-    return this.schedules.filter(s => {
+    return this.schedules.filter((s) => {
       if (!s.enabled) return false;
       const nextRun = new Date(s.nextRun);
       return nextRun <= now;
     });
   }
 
-  private calculateNextRun(frequency: DrillSchedule['frequency']): string {
+  private calculateNextRun(frequency: DrillSchedule["frequency"]): string {
     const now = new Date();
     switch (frequency) {
-      case 'daily':
+      case "daily":
         now.setDate(now.getDate() + 1);
         break;
-      case 'weekly':
+      case "weekly":
         now.setDate(now.getDate() + 7);
         break;
-      case 'monthly':
+      case "monthly":
         now.setMonth(now.getMonth() + 1);
         break;
     }
     return now.toISOString();
   }
 
-  private updateScheduleLastRun(drillType: BackupDrill['drillType']): void {
-    const schedule = this.schedules.find(s => s.drillType === drillType);
+  private updateScheduleLastRun(drillType: BackupDrill["drillType"]): void {
+    const schedule = this.schedules.find((s) => s.drillType === drillType);
     if (schedule) {
       schedule.lastRun = new Date().toISOString();
       schedule.nextRun = this.calculateNextRun(schedule.frequency);

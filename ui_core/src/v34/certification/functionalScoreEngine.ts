@@ -18,19 +18,21 @@ export class FunctionalScoreEngine {
     workflowRate: number,
     codePassed: number,
     retrievalScore: number,
-    satisfaction: number
+    satisfaction: number,
   ): V34ScoreBreakdown {
     const memoryPrecision = 97.4; // Fixed empirical memory precision factor
 
     // Weighted composite score (0-100)
-    const compositeIndex = parseFloat((
-      accuracy * 0.25 +
-      workflowRate * 0.15 +
-      codePassed * 0.20 +
-      retrievalScore * 0.15 +
-      memoryPrecision * 0.10 +
-      satisfaction * 0.15
-    ).toFixed(1));
+    const compositeIndex = parseFloat(
+      (
+        accuracy * 0.25 +
+        workflowRate * 0.15 +
+        codePassed * 0.2 +
+        retrievalScore * 0.15 +
+        memoryPrecision * 0.1 +
+        satisfaction * 0.15
+      ).toFixed(1),
+    );
 
     return {
       logicAccuracy: parseFloat(accuracy.toFixed(1)),
@@ -39,7 +41,7 @@ export class FunctionalScoreEngine {
       retrievalAccuracy: parseFloat(retrievalScore.toFixed(1)),
       memoryPrecision,
       satisfactionRate: parseFloat(satisfaction.toFixed(1)),
-      compositeIndex: Math.min(100.0, Math.max(0.0, compositeIndex))
+      compositeIndex: Math.min(100.0, Math.max(0.0, compositeIndex)),
     };
   }
 }

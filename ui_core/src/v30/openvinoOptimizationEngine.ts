@@ -40,7 +40,7 @@ export class OpenvinoOptimizationEngine {
       quantizationRatePct: this.quantizationRate,
       powerDrawWatts: parseFloat(powerDrawWatts.toFixed(1)),
       tokensPerSecond: parseFloat(tokensPerSecond.toFixed(1)),
-      intelligencePerWatt: parseFloat(intelligencePerWatt.toFixed(2))
+      intelligencePerWatt: parseFloat(intelligencePerWatt.toFixed(2)),
     };
   }
 }

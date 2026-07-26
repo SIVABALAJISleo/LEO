@@ -1,77 +1,173 @@
 import React, { useState, useEffect } from "react";
-import { fetchLeoStatus, fetchDevOpsStatus, configureDevOps, sendStripeWebhook, DevOpsSettings } from "../../lib/api";
+import {
+  fetchLeoStatus,
+  fetchDevOpsStatus,
+  configureDevOps,
+  sendStripeWebhook,
+  DevOpsSettings,
+} from "../../lib/api";
 import { QuerySimulationConsole } from "../../components/dashboard/QuerySimulationConsole";
 import { BenchmarkLeaderboard } from "../../components/dashboard/BenchmarkLeaderboard";
 import { useLeoStatus } from "../../contexts/LeoStatusContext";
 
-import { 
-  Activity, Cpu, HardDrive, Layers, Zap, AlertTriangle, Play, Shield, 
-  RefreshCw, AlertCircle, Sparkles, MessageSquare, CheckCircle, 
-  Terminal, HelpCircle, ArrowRight, Settings, BarChart2, Brain, GitBranch, Crosshair, FlaskConical, Gauge, LineChart, Award, Scale, ShieldCheck
+import {
+  Activity,
+  Cpu,
+  HardDrive,
+  Layers,
+  Zap,
+  AlertTriangle,
+  Play,
+  Shield,
+  RefreshCw,
+  AlertCircle,
+  Sparkles,
+  MessageSquare,
+  CheckCircle,
+  Terminal,
+  HelpCircle,
+  ArrowRight,
+  Settings,
+  BarChart2,
+  Brain,
+  GitBranch,
+  Crosshair,
+  FlaskConical,
+  Gauge,
+  LineChart,
+  Award,
+  Scale,
+  ShieldCheck,
 } from "lucide-react";
 
-import { 
-  IntentCanonicalizer, LanguageRecoveryEngine, ReasoningValidator, 
-  DeepPlanner, SelfCritic, DebateCoordinator, EvaluationCenter, 
-  MemoryQualityMonitor, CrystalAuditor, NoveltyResearchEngine,
-  FormalReasoningEngine, VerificationOrchestrator, WorldModelEngineV2,
-  RealityFeedbackLoop, MetaLearningGovernor, KnowledgeGovernor,
-  MemoryGovernorV2, IntentCanonicalizerV2, LanguageRecoveryEngineV2,
-  DebateEngineV2, PlannerV2, NoveltyDiscoveryEngineV2,
-  ResearchEngineV2, EvaluationCenterV2
+import {
+  IntentCanonicalizer,
+  LanguageRecoveryEngine,
+  ReasoningValidator,
+  DeepPlanner,
+  SelfCritic,
+  DebateCoordinator,
+  EvaluationCenter,
+  MemoryQualityMonitor,
+  CrystalAuditor,
+  NoveltyResearchEngine,
+  FormalReasoningEngine,
+  VerificationOrchestrator,
+  WorldModelEngineV2,
+  RealityFeedbackLoop,
+  MetaLearningGovernor,
+  KnowledgeGovernor,
+  MemoryGovernorV2,
+  IntentCanonicalizerV2,
+  LanguageRecoveryEngineV2,
+  DebateEngineV2,
+  PlannerV2,
+  NoveltyDiscoveryEngineV2,
+  ResearchEngineV2,
+  EvaluationCenterV2,
 } from "../../src/cognitive";
 
 import { V42Dashboard } from "../../components/v42/V42Dashboard";
 
 // Import V14 Engines
-import { IntentReconstructionEngine, ReconstructedIntent } from "../../src/engines/intentReconstructionEngine";
-import { DeepReasoningEngine, ReasoningType, ReasoningResult } from "../../src/engines/deepReasoningEngine";
-import { ToolVerificationEngine, VerificationOutput } from "../../src/engines/toolVerificationEngine";
+import {
+  IntentReconstructionEngine,
+  ReconstructedIntent,
+} from "../../src/engines/intentReconstructionEngine";
+import {
+  DeepReasoningEngine,
+  ReasoningType,
+  ReasoningResult,
+} from "../../src/engines/deepReasoningEngine";
+import {
+  ToolVerificationEngine,
+  VerificationOutput,
+} from "../../src/engines/toolVerificationEngine";
 import { SelfCritiqueEngine, CritiqueReport } from "../../src/engines/selfCritiqueEngine";
-import { EvaluationCenter as EvaluationCenterV14, EvaluationReport } from "../../src/evaluation/evaluationCenter";
+import {
+  EvaluationCenter as EvaluationCenterV14,
+  EvaluationReport,
+} from "../../src/evaluation/evaluationCenter";
 import { RealityFeedbackEngine, FeedbackEntry } from "../../src/engines/realityFeedbackEngine";
-import { KnowledgeGovernor as KnowledgeGovernorV14, KnowledgeItem } from "../../src/engines/knowledgeGovernor";
-import { MemoryGovernor as MemoryGovernorV14, V14MemoryBlock } from "../../src/engines/memoryGovernor";
+import {
+  KnowledgeGovernor as KnowledgeGovernorV14,
+  KnowledgeItem,
+} from "../../src/engines/knowledgeGovernor";
+import {
+  MemoryGovernor as MemoryGovernorV14,
+  V14MemoryBlock,
+} from "../../src/engines/memoryGovernor";
 import { DebateEngine as DebateEngineV14, DebateSessionV14 } from "../../src/engines/debateEngine";
 
 // Import V15 Engines
 import {
-  EvaluationUniverse, UniverseEvaluationReport,
-  SelfCritiqueEngineV2, SelfCritiqueV2Report,
-  UniversalReasoningEngine, ParadigmResult, ReasoningParadigm,
-  DebateFramework, DebateSessionReport,
-  ToolVerifier, ToolVerifierReport,
-  RealityFeedbackSystem, FeedbackLog, CalibrationReport,
-  KnowledgeImmuneSystem, KnowledgeCrystal,
-  MemoryImmuneSystem, MemoryBlock, ImmuneAuditReport,
-  MetaLearningGovernor as MetaLearningGovernorV15, StrategyMetric,
-  WorldModelV3, SimulationResultV3,
-  DiscoveryEngineV3, DiscoveryReport,
-  IntentReconstructionEngine as IntentReconstructionEngineV15, IntentReconstructionReport,
-  ConfidenceEngine as ConfidenceEngineV15, CalibrationResponse,
-  DistributedMesh, MeshNode, ConflictResolutionReport,
-  HardeningTelemetry, TelemetryEvent,
-  iGPUAccelerationEngine as iGPUAccelerationEngineV15, iGPUMetrics as iGPUMetricsV15,
-  SelfImprovementLoop, SelfImprovementReport
+  EvaluationUniverse,
+  UniverseEvaluationReport,
+  SelfCritiqueEngineV2,
+  SelfCritiqueV2Report,
+  UniversalReasoningEngine,
+  ParadigmResult,
+  ReasoningParadigm,
+  DebateFramework,
+  DebateSessionReport,
+  ToolVerifier,
+  ToolVerifierReport,
+  RealityFeedbackSystem,
+  FeedbackLog,
+  CalibrationReport,
+  KnowledgeImmuneSystem,
+  KnowledgeCrystal,
+  MemoryImmuneSystem,
+  MemoryBlock,
+  ImmuneAuditReport,
+  MetaLearningGovernor as MetaLearningGovernorV15,
+  StrategyMetric,
+  WorldModelV3,
+  SimulationResultV3,
+  DiscoveryEngineV3,
+  DiscoveryReport,
+  IntentReconstructionEngine as IntentReconstructionEngineV15,
+  IntentReconstructionReport,
+  ConfidenceEngine as ConfidenceEngineV15,
+  CalibrationResponse,
+  DistributedMesh,
+  MeshNode,
+  ConflictResolutionReport,
+  HardeningTelemetry,
+  TelemetryEvent,
+  iGPUAccelerationEngine as iGPUAccelerationEngineV15,
+  iGPUMetrics as iGPUMetricsV15,
+  SelfImprovementLoop,
+  SelfImprovementReport,
 } from "../../src/cognitive/v15index";
 
 // Import V16 Engines
 import {
-  EvaluationUniverseV16, UniverseV16Report,
+  EvaluationUniverseV16,
+  UniverseV16Report,
   UniversalReasoningCore,
-  FormalProofEngine, TheoremSolver, ProofTelemetry, ProofEngineReport,
-  VerificationMesh, VerificationCheckV16, VerificationMeshReport,
+  FormalProofEngine,
+  TheoremSolver,
+  ProofTelemetry,
+  ProofEngineReport,
+  VerificationMesh,
+  VerificationCheckV16,
+  VerificationMeshReport,
   RealityFeedbackEngineV3,
   KnowledgeImmuneSystem as KnowledgeImmuneSystemV16,
   MemoryImmuneSystem as MemoryImmuneSystemV16,
   MetaLearningGovernor as MetaLearningGovernorV16,
   DiscoveryEngineV4,
   WorldModelV4,
-  DebateFrameworkV16, DebateV16Report,
-  IntentReconstructionEngine as IntentReconstructionEngineV16, IntentReconstructionReport as IntentReconstructionReportV16,
+  DebateFrameworkV16,
+  DebateV16Report,
+  IntentReconstructionEngine as IntentReconstructionEngineV16,
+  IntentReconstructionReport as IntentReconstructionReportV16,
   ConfidenceEngineV16,
-  HardeningTelemetryV16, IncidentAlertV16,
-  iGPUAccelerationEngineV16, iGPUMetricsV16
+  HardeningTelemetryV16,
+  IncidentAlertV16,
+  iGPUAccelerationEngineV16,
+  iGPUMetricsV16,
 } from "../../src/cognitive/v16index";
 
 // Import V17 Engines
@@ -89,7 +185,7 @@ import {
   AutonomyGovernor,
   RealityFeedbackNetwork,
   IntelligenceGovernor,
-  KnowledgeImmuneSystem as KnowledgeImmuneSystemV17
+  KnowledgeImmuneSystem as KnowledgeImmuneSystemV17,
 } from "../../src/cognitive/v17index";
 
 interface LegacyCognitiveDashboardsProps {
@@ -102,9 +198,11 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
   // --- V17 Domain Dominance States ---
   const [v17QueryInput, setV17QueryInput] = useState("Issue transaction refund invoice");
   const [v17SelectedDomain, setV17SelectedDomain] = useState<string>("Finance/HR Workflow");
-  const [v17SelectedBackend, setV17SelectedBackend] = useState<"WebGPU" | "ONNX Runtime" | "GGUF" | "llama.cpp">("WebGPU");
+  const [v17SelectedBackend, setV17SelectedBackend] = useState<
+    "WebGPU" | "ONNX Runtime" | "GGUF" | "llama.cpp"
+  >("WebGPU");
   const [v17EvalReport, setV17EvalReport] = useState<any>(null);
-  
+
   const [v17EnterpriseReport, setV17EnterpriseReport] = useState<any>(null);
   const [v17RagReport, setV17RagReport] = useState<any>(null);
   const [v17SearchReport, setV17SearchReport] = useState<any>(null);
@@ -137,7 +235,8 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
 
   // --- V16 Substrate States ---
   const [v16QueryInput, setV16QueryInput] = useState("bro startup fail wat do");
-  const [v16SelectedParadigm, setV16SelectedParadigm] = useState<ReasoningParadigm>("Systems Thinking");
+  const [v16SelectedParadigm, setV16SelectedParadigm] =
+    useState<ReasoningParadigm>("Systems Thinking");
   const [v16SelectedSolver, setV16SelectedSolver] = useState<TheoremSolver>("Lean");
   const [v16EvalReport, setV16EvalReport] = useState<UniverseV16Report | null>(null);
   const [v16ReasoningResult, setV16ReasoningResult] = useState<any>(null);
@@ -148,7 +247,8 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
   const [v16Crystals, setV16Crystals] = useState<KnowledgeCrystal[]>([]);
   const [v16Memories, setV16Memories] = useState<MemoryBlock[]>([]);
   const [v16DiscoveryReport, setV16DiscoveryReport] = useState<any>(null);
-  const [v16ReconstructReport, setV16ReconstructReport] = useState<IntentReconstructionReportV16 | null>(null);
+  const [v16ReconstructReport, setV16ReconstructReport] =
+    useState<IntentReconstructionReportV16 | null>(null);
   const [v16ConfidenceReport, setV16ConfidenceReport] = useState<CalibrationResponse | null>(null);
   const [v16DebateReport, setV16DebateReport] = useState<DebateV16Report | null>(null);
   const [v16HardwareMetrics, setV16HardwareMetrics] = useState<iGPUMetricsV16 | null>(null);
@@ -176,7 +276,8 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
 
   // --- V15 Substrate States ---
   const [v15QueryInput, setV15QueryInput] = useState("bro startup fail wat do");
-  const [v15SelectedParadigm, setV15SelectedParadigm] = useState<ReasoningParadigm>("Systems Thinking");
+  const [v15SelectedParadigm, setV15SelectedParadigm] =
+    useState<ReasoningParadigm>("Systems Thinking");
   const [v15EvalReport, setV15EvalReport] = useState<UniverseEvaluationReport | null>(null);
   const [v15CritiqueReport, setV15CritiqueReport] = useState<SelfCritiqueV2Report | null>(null);
   const [v15ReasoningResult, setV15ReasoningResult] = useState<ParadigmResult | null>(null);
@@ -186,9 +287,12 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
   const [v15Calibration, setV15Calibration] = useState<CalibrationReport | null>(null);
   const [v15Crystals, setV15Crystals] = useState<KnowledgeCrystal[]>([]);
   const [v15Memories, setV15Memories] = useState<MemoryBlock[]>([]);
-  const [v15ImprovementReport, setV15ImprovementReport] = useState<SelfImprovementReport | null>(null);
+  const [v15ImprovementReport, setV15ImprovementReport] = useState<SelfImprovementReport | null>(
+    null,
+  );
   const [v15DiscoveryReport, setV15DiscoveryReport] = useState<DiscoveryReport | null>(null);
-  const [v15ReconstructReport, setV15ReconstructReport] = useState<IntentReconstructionReport | null>(null);
+  const [v15ReconstructReport, setV15ReconstructReport] =
+    useState<IntentReconstructionReport | null>(null);
   const [v15ConfidenceReport, setV15ConfidenceReport] = useState<CalibrationResponse | null>(null);
   const [v15MeshNodes, setV15MeshNodes] = useState<MeshNode[]>([]);
   const [v15HardwareMetrics, setV15HardwareMetrics] = useState<iGPUMetricsV15 | null>(null);
@@ -269,11 +373,18 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
 
     const critiqueResult = intelligenceV17.auditAnswerQuality(
       v17QueryInput,
-      enterprise.verifiedAnswer || rag.chunksRetrieved.map(c => c.content).join("\n") || "No source text."
+      enterprise.verifiedAnswer ||
+        rag.chunksRetrieved.map((c) => c.content).join("\n") ||
+        "No source text.",
     );
     setV17IntelligenceReport(critiqueResult);
 
-    realityV17.logRealityCheck("decision-" + Date.now().toString().slice(-4), v17SelectedDomain, 100, 106);
+    realityV17.logRealityCheck(
+      "decision-" + Date.now().toString().slice(-4),
+      v17SelectedDomain,
+      100,
+      106,
+    );
     setV17RealitySummary(realityV17.getSummary());
   };
 
@@ -298,19 +409,25 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
     const verify = verifierV15.verifyAnswer(recon.reconstructedQuery, reason.conclusion);
     setV15VerifierReport(verify);
 
-    const critique = selfCritiqueV15.executeSelfCritique(recon.reconstructedQuery, verify.repairedAnswer);
+    const critique = selfCritiqueV15.executeSelfCritique(
+      recon.reconstructedQuery,
+      verify.repairedAnswer,
+    );
     setV15CritiqueReport(critique);
 
     const confidence = confidenceV15.calibrateOutput(
       critique.finalAnswer,
       reason.confidenceScore,
       1.0 - critique.hallucinationRatePct,
-      verify.checks.filter(c => c.status === "verified").length,
-      verify.checks.length
+      verify.checks.filter((c) => c.status === "verified").length,
+      verify.checks.length,
     );
     setV15ConfidenceReport(confidence);
 
-    hardeningV15.logTelemetry("V15 Query Processed", { query: v15QueryInput, confidence: confidence.calibratedConfidence });
+    hardeningV15.logTelemetry("V15 Query Processed", {
+      query: v15QueryInput,
+      confidence: confidence.calibratedConfidence,
+    });
     setV15HardeningLogs([...hardeningV15.getEventsLog()]);
   };
 
@@ -353,7 +470,12 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
   };
 
   const handleV15RealityLog = () => {
-    feedbackV15.logRealityFeedback("p-v15-" + Date.now().toString().slice(-4), "intentAccuracyWeight", 100, 108);
+    feedbackV15.logRealityFeedback(
+      "p-v15-" + Date.now().toString().slice(-4),
+      "intentAccuracyWeight",
+      100,
+      108,
+    );
     setV15FeedbackHistory([...feedbackV15.getHistory()]);
     setV15Calibration(feedbackV15.getCalibration());
   };
@@ -379,15 +501,19 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
       verify.repairedAnswer,
       reason.confidenceScore,
       verify.overallScore,
-      verify.checksLog.filter(c => c.status === "verified").length,
-      verify.checksLog.length
+      verify.checksLog.filter((c) => c.status === "verified").length,
+      verify.checksLog.length,
     );
     setV16ConfidenceReport(confidence);
 
     const scenario = worldV16.simulateWorldState(recon.reconstructedQuery);
     setV16ScenarioReport(scenario);
 
-    hardeningV16.logV16Event("V16 Query Processed", { query: v16QueryInput, confidence: confidence.calibratedConfidence }, "info");
+    hardeningV16.logV16Event(
+      "V16 Query Processed",
+      { query: v16QueryInput, confidence: confidence.calibratedConfidence },
+      "info",
+    );
     setV16HardeningLogs([...hardeningV16.getEventsLog()]);
     setV16Alerts([...hardeningV16.getV16Alerts()]);
   };
@@ -398,7 +524,11 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
   };
 
   const handleV16RunProof = () => {
-    const report = proofV16.verifyClaim(v16QueryInput, "local logic correctness", v16SelectedSolver);
+    const report = proofV16.verifyClaim(
+      v16QueryInput,
+      "local logic correctness",
+      v16SelectedSolver,
+    );
     setV16ProofReport(report);
   };
 
@@ -427,7 +557,12 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
   };
 
   const handleV16RealityLog = () => {
-    feedbackV16.logRealityEvent("p-v16-" + Date.now().toString().slice(-4), "predictionAccuracy", 100, 110);
+    feedbackV16.logRealityEvent(
+      "p-v16-" + Date.now().toString().slice(-4),
+      "predictionAccuracy",
+      100,
+      110,
+    );
     setV16FeedbackHistory([...feedbackV16.getHistory()]);
     setV16Calibration(feedbackV16.getCalibration());
   };
@@ -442,30 +577,30 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
   // --- V14 Cognitive Breakthrough States ---
   const [v14Query, setV14Query] = useState("bro startup fail wat do");
   const [v14ReconResult, setV14ReconResult] = useState<ReconstructedIntent | null>(null);
-  
+
   const [v14ReasoningType, setV14ReasoningType] = useState<ReasoningType>("Deductive");
   const [v14ReasoningResult, setV14ReasoningResult] = useState<ReasoningResult | null>(null);
-  
+
   const [v14VerifyOutput, setV14VerifyOutput] = useState<VerificationOutput | null>(null);
   const [v14CritiqueResult, setV14CritiqueResult] = useState<CritiqueReport | null>(null);
-  
+
   const [v14EvalReport, setV14EvalReport] = useState<EvaluationReport | null>(null);
   const [v14DebateSession, setV14DebateSession] = useState<DebateSessionV14 | null>(null);
-  
+
   // Feedback
   const [v14PredictedVal, setV14PredictedVal] = useState("200");
   const [v14ObservedVal, setV14ObservedVal] = useState("350");
   const [v14FeedbackHistory, setV14FeedbackHistory] = useState<FeedbackEntry[]>([]);
   const [v14FeedbackWeights, setV14FeedbackWeights] = useState<Record<string, number>>({
     intentAccuracyWeight: 0.95,
-    reasoningConfidence: 0.90,
+    reasoningConfidence: 0.9,
     verificationRigour: 0.96,
   });
 
   // Memory & Knowledge Governors
   const [v14Memories, setV14Memories] = useState<V14MemoryBlock[]>([]);
   const [v14Crystals, setV14Crystals] = useState<KnowledgeItem[]>([]);
-  
+
   // New entry states for insertion
   const [v14NewMemFact, setV14NewMemFact] = useState("Stripe webhook verification passed on v14.");
   const [v14NewMemSource, setV14NewMemSource] = useState("Manual-Entry");
@@ -508,22 +643,26 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
   const [webhookLog, setWebhookLog] = useState<string>("");
 
   // V13 Superintelligence States
-  const [theoremClaim, setTheoremClaim] = useState("Sum of two positive integers is always positive");
+  const [theoremClaim, setTheoremClaim] = useState(
+    "Sum of two positive integers is always positive",
+  );
   const [theoremResult, setTheoremResult] = useState<any>(null);
   const [verificationQuery, setVerificationQuery] = useState("Solve: 452 * 231");
   const [verificationOutput, setVerificationOutput] = useState<any>(null);
-  const [v13ScenarioQuery, setV13ScenarioQuery] = useState("Startup SaaS launch dynamic compute pricing");
+  const [v13ScenarioQuery, setV13ScenarioQuery] = useState(
+    "Startup SaaS launch dynamic compute pricing",
+  );
   const [v13ScenarioReport, setV13ScenarioReport] = useState<any>(null);
   const [predictedValue, setPredictedValue] = useState("250");
   const [observedValue, setObservedValue] = useState("410");
   const [feedbackRecords, setFeedbackRecords] = useState<any[]>([]);
   const [feedbackWeights, setFeedbackWeights] = useState<any>({
     crystallizationWeight: 0.95,
-    localInferenceConfidence: 0.90,
+    localInferenceConfidence: 0.9,
     activeResearchRate: 0.85,
     gpuAccelerationPriority: 0.88,
   });
-  
+
   // V13 class instances (persistent)
   const [proverInstance] = useState(() => new FormalReasoningEngine());
   const [orchestratorInstance] = useState(() => new VerificationOrchestrator());
@@ -558,13 +697,18 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
   };
 
   const handleV14Verify = () => {
-    const rawAnswer = v14ReasoningResult?.conclusion || "Setting up local model training needs correct GPU configuration.";
+    const rawAnswer =
+      v14ReasoningResult?.conclusion ||
+      "Setting up local model training needs correct GPU configuration.";
     const res = toolVerifyV14.verifyOutput(v14Query, rawAnswer);
     setV14VerifyOutput(res);
   };
 
   const handleV14Critique = () => {
-    const rawAnswer = v14VerifyOutput?.repairedContent || v14ReasoningResult?.conclusion || "Setting up local model training needs correct GPU configuration.";
+    const rawAnswer =
+      v14VerifyOutput?.repairedContent ||
+      v14ReasoningResult?.conclusion ||
+      "Setting up local model training needs correct GPU configuration.";
     const res = selfCritiqueV14.critique(v14Query, rawAnswer);
     setV14CritiqueResult(res);
   };
@@ -582,7 +726,12 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
   const handleV14LogFeedback = () => {
     const p = parseFloat(v14PredictedVal) || 0;
     const o = parseFloat(v14ObservedVal) || 0;
-    realityFeedbackV14.logFeedback("v14-pred-" + Date.now().toString().slice(-4), "intentAccuracyWeight", p, o);
+    realityFeedbackV14.logFeedback(
+      "v14-pred-" + Date.now().toString().slice(-4),
+      "intentAccuracyWeight",
+      p,
+      o,
+    );
     setV14FeedbackHistory([...realityFeedbackV14.getHistory()]);
     setV14FeedbackWeights({ ...realityFeedbackV14.getWeights() });
   };
@@ -604,7 +753,7 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
   };
 
   const handleV14AddCrystal = () => {
-    knowledgeGovV14.addCrystal(v14NewCrystalTopic, 0.95, 0.90);
+    knowledgeGovV14.addCrystal(v14NewCrystalTopic, 0.95, 0.9);
     setV14Crystals([...knowledgeGovV14.getItems()]);
     setV14NewCrystalTopic("");
   };
@@ -628,7 +777,12 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
   const handleLogFeedback = () => {
     const p = parseFloat(predictedValue) || 0;
     const o = parseFloat(observedValue) || 0;
-    feedbackLoopInstance.logReality("pred-" + Date.now().toString().slice(-4), "localInferenceConfidence", p, o);
+    feedbackLoopInstance.logReality(
+      "pred-" + Date.now().toString().slice(-4),
+      "localInferenceConfidence",
+      p,
+      o,
+    );
     setFeedbackRecords([...feedbackLoopInstance.getHistory()]);
     setFeedbackWeights({ ...feedbackLoopInstance.getModelWeights() });
   };
@@ -667,11 +821,12 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
     const plan = planner.generatePlan(canonical.intent);
     setPlanResult(plan);
 
-    const rawAnswer = "Setting up model training requires dataloaders, model layers, and optimizer configurations.";
+    const rawAnswer =
+      "Setting up model training requires dataloaders, model layers, and optimizer configurations.";
     const critique = critic.critique(canonical.intent, rawAnswer);
     setCriticResult(critique);
 
-    const steps = plan.milestones.map(m => m.title);
+    const steps = plan.milestones.map((m) => m.title);
     const validation = validator.validate(canonical.intent, critique.improvedAnswer, steps);
     setValidationResult(validation);
 
@@ -714,14 +869,14 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
             id: "cs_live_98765",
             amount_total: 2900,
             currency: "usd",
-            customer_details: { email: "user@hyper.app" }
-          }
-        }
+            customer_details: { email: "user@hyper.app" },
+          },
+        },
       };
-      
+
       const timestamp = Math.floor(Date.now() / 1000).toString();
       const rawBody = JSON.stringify(payload);
-      
+
       let signature = "";
       if (isValidSig) {
         const CryptoJS = await import("crypto-js");
@@ -762,21 +917,30 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
             <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm">
               <div className="flex items-center gap-2 text-slate-400 mb-3">
                 <Activity className="h-4 w-4" />
-                <h3 className="text-xs font-semibold uppercase tracking-wider">Novelty Reduction</h3>
+                <h3 className="text-xs font-semibold uppercase tracking-wider">
+                  Novelty Reduction
+                </h3>
               </div>
               <div className="text-3xl font-extrabold text-blue-500">
                 {status?.telemetry?.avoidance_rate_pct?.toFixed(1) || "99.3"}%
               </div>
-              <p className="text-[10px] text-slate-400 mt-1">Novelty eliminated via Swarm Pipeline</p>
+              <p className="text-[10px] text-slate-400 mt-1">
+                Novelty eliminated via Swarm Pipeline
+              </p>
             </div>
 
             <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm">
               <div className="flex items-center gap-2 text-emerald-400 mb-3">
                 <Zap className="h-4 w-4 text-emerald-400" />
-                <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">GPU Energy Saved</h3>
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                  GPU Energy Saved
+                </h3>
               </div>
               <div className="text-3xl font-extrabold text-emerald-400">
-                {status?.telemetry?.gpu_watts_saved ? (status.telemetry.gpu_watts_saved / 1000).toFixed(1) : "490.0"} kW
+                {status?.telemetry?.gpu_watts_saved
+                  ? (status.telemetry.gpu_watts_saved / 1000).toFixed(1)
+                  : "490.0"}{" "}
+                kW
               </div>
               <p className="text-[10px] text-slate-400 mt-1">NVIDIA GPU irrelevance threshold</p>
             </div>
@@ -784,7 +948,9 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
             <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm">
               <div className="flex items-center gap-2 text-slate-400 mb-3">
                 <HardDrive className="h-4 w-4" />
-                <h3 className="text-xs font-semibold uppercase tracking-wider">Predictive Pre-resolutions</h3>
+                <h3 className="text-xs font-semibold uppercase tracking-wider">
+                  Predictive Pre-resolutions
+                </h3>
               </div>
               <div className="text-3xl font-extrabold">
                 {status?.semantic_store_size?.toLocaleString() || "11,500,000"}
@@ -795,7 +961,9 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
             <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5 shadow-sm">
               <div className="flex items-center gap-2 text-slate-400 mb-3">
                 <Layers className="h-4 w-4" />
-                <h3 className="text-xs font-semibold uppercase tracking-wider">Discovery Crystals</h3>
+                <h3 className="text-xs font-semibold uppercase tracking-wider">
+                  Discovery Crystals
+                </h3>
               </div>
               <div className="text-3xl font-extrabold">
                 {status?.fingerprint_store_size?.toLocaleString() || "310,000"}
@@ -819,7 +987,9 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
               V11 Cognitive Engine Playground
             </h3>
             <p className="text-xs text-slate-400 mb-6">
-              Assault the recovery engines with spelling typos, slang, and mixed Tamil-English dialects to see how the inputs are reconstructed into pristine intents, planned, and validated.
+              Assault the recovery engines with spelling typos, slang, and mixed Tamil-English
+              dialects to see how the inputs are reconstructed into pristine intents, planned, and
+              validated.
             </p>
 
             <div className="flex gap-4 mb-6">
@@ -848,9 +1018,22 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
                       Noisy Language Recovery Engine
                     </h4>
                     <div className="text-xs space-y-2">
-                      <p className="text-slate-400">Raw Input: <span className="font-mono text-rose-400">"{recoveryResult.raw}"</span></p>
-                      <p className="text-slate-400">Recovered Output: <span className="font-mono text-emerald-400">"{recoveryResult.recoveredText}"</span></p>
-                      <p className="text-slate-400">Recovery Confidence: <span className="font-semibold text-slate-200">{(recoveryResult.confidence * 100).toFixed(1)}%</span></p>
+                      <p className="text-slate-400">
+                        Raw Input:{" "}
+                        <span className="font-mono text-rose-400">"{recoveryResult.raw}"</span>
+                      </p>
+                      <p className="text-slate-400">
+                        Recovered Output:{" "}
+                        <span className="font-mono text-emerald-400">
+                          "{recoveryResult.recoveredText}"
+                        </span>
+                      </p>
+                      <p className="text-slate-400">
+                        Recovery Confidence:{" "}
+                        <span className="font-semibold text-slate-200">
+                          {(recoveryResult.confidence * 100).toFixed(1)}%
+                        </span>
+                      </p>
                       <div>
                         <p className="font-semibold mb-1 text-slate-300">Diagnostics Log:</p>
                         <ul className="list-disc list-inside space-y-1 pl-1 text-[11px] text-slate-400">
@@ -868,15 +1051,26 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
                       Intent Canonicalization Engine
                     </h4>
                     <div className="text-xs space-y-2">
-                      <p className="text-slate-400">Input Text: <span className="font-mono">"{canonicalResult.original}"</span></p>
-                      <p className="text-slate-400">Canonical Intent: <span className="font-semibold text-blue-300">"{canonicalResult.intent}"</span></p>
+                      <p className="text-slate-400">
+                        Input Text: <span className="font-mono">"{canonicalResult.original}"</span>
+                      </p>
+                      <p className="text-slate-400">
+                        Canonical Intent:{" "}
+                        <span className="font-semibold text-blue-300">
+                          "{canonicalResult.intent}"
+                        </span>
+                      </p>
                       <div>
-                        <p className="font-semibold mb-1 text-slate-300">Normalization Operations:</p>
+                        <p className="font-semibold mb-1 text-slate-300">
+                          Normalization Operations:
+                        </p>
                         <ul className="list-disc list-inside space-y-1 pl-1 text-[11px] text-slate-400">
                           {canonicalResult.changes.map((ch: string, i: number) => (
                             <li key={i}>{ch}</li>
                           ))}
-                          {canonicalResult.changes.length === 0 && <li>No slang, dialects, or typo replacements required.</li>}
+                          {canonicalResult.changes.length === 0 && (
+                            <li>No slang, dialects, or typo replacements required.</li>
+                          )}
                         </ul>
                       </div>
                     </div>
@@ -904,7 +1098,10 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
                           ))}
                         </ul>
                       </div>
-                      <p className="text-slate-400">Simulation Run: <span className="text-emerald-400">{noveltyResult.simulationResult}</span></p>
+                      <p className="text-slate-400">
+                        Simulation Run:{" "}
+                        <span className="text-emerald-400">{noveltyResult.simulationResult}</span>
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -916,7 +1113,9 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
                       Multi-Step Planner
                     </h4>
                     <div className="text-xs space-y-3">
-                      <p className="text-slate-400">Plan depth level: <span className="font-semibold">{planResult.depth}</span></p>
+                      <p className="text-slate-400">
+                        Plan depth level: <span className="font-semibold">{planResult.depth}</span>
+                      </p>
                       <div className="space-y-3 border-l border-blue-500/20 pl-3">
                         {planResult.milestones.map((m: any) => (
                           <div key={m.id} className="relative">
@@ -924,7 +1123,9 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
                             <h5 className="font-semibold text-slate-200">{m.title}</h5>
                             <p className="text-slate-400 text-[10px]">{m.description}</p>
                             {m.dependencies.length > 0 && (
-                              <p className="text-[9px] text-slate-500">Dependencies: {m.dependencies.join(", ")}</p>
+                              <p className="text-[9px] text-slate-500">
+                                Dependencies: {m.dependencies.join(", ")}
+                              </p>
                             )}
                           </div>
                         ))}
@@ -968,11 +1169,15 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
                         {validationResult.isValid ? (
                           <span className="text-emerald-400 font-bold">VALIDATED (PASS)</span>
                         ) : (
-                          <span className="text-amber-400 font-bold">RECONSTRUCTED (AUTO-FIXED)</span>
+                          <span className="text-amber-400 font-bold">
+                            RECONSTRUCTED (AUTO-FIXED)
+                          </span>
                         )}
                       </p>
                       <div>
-                        <p className="font-semibold text-slate-300">Corrected/Refined Output Answer:</p>
+                        <p className="font-semibold text-slate-300">
+                          Corrected/Refined Output Answer:
+                        </p>
                         <div className="bg-slate-900 border border-slate-800 p-3 rounded text-[11px] font-mono text-slate-300 whitespace-pre-wrap">
                           {validationResult.correctedAnswer}
                         </div>
@@ -995,10 +1200,13 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
                   <Sparkles className="h-6 w-6 text-blue-400 animate-pulse" />
-                  <h2 className="text-xl font-bold tracking-tight text-white">V14 Cognitive Breakthrough Engine</h2>
+                  <h2 className="text-xl font-bold tracking-tight text-white">
+                    V14 Cognitive Breakthrough Engine
+                  </h2>
                 </div>
                 <p className="text-xs text-slate-400 max-w-xl">
-                  Unified edge cognitive substrate executing intent reconstruction, deductive reasoning, tool-verified pipelines, and consensus agent debates.
+                  Unified edge cognitive substrate executing intent reconstruction, deductive
+                  reasoning, tool-verified pipelines, and consensus agent debates.
                 </p>
               </div>
             </div>
@@ -1017,8 +1225,18 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
                 onChange={(e) => setV14Query(e.target.value)}
               />
               <div className="flex gap-2">
-                <button onClick={handleV14Reconstruct} className="bg-blue-600 text-white text-xs font-bold px-4 py-2 rounded-md">Reconstruct</button>
-                <button onClick={handleV14Debate} className="bg-indigo-600 text-white text-xs font-bold px-4 py-2 rounded-md">Debate</button>
+                <button
+                  onClick={handleV14Reconstruct}
+                  className="bg-blue-600 text-white text-xs font-bold px-4 py-2 rounded-md"
+                >
+                  Reconstruct
+                </button>
+                <button
+                  onClick={handleV14Debate}
+                  className="bg-indigo-600 text-white text-xs font-bold px-4 py-2 rounded-md"
+                >
+                  Debate
+                </button>
               </div>
             </div>
 
@@ -1026,13 +1244,17 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
               {v14ReconResult && (
                 <div className="bg-[#020713] border border-slate-800 p-4 rounded-lg text-xs space-y-2">
                   <p className="text-slate-400">Raw: "{v14ReconResult.original}"</p>
-                  <p className="text-slate-450 text-emerald-400 font-mono">Reconstructed: "{v14ReconResult.reconstructed}"</p>
+                  <p className="text-slate-450 text-emerald-400 font-mono">
+                    Reconstructed: "{v14ReconResult.reconstructed}"
+                  </p>
                 </div>
               )}
 
               {v14DebateSession && (
                 <div className="bg-[#020713] border border-slate-800 p-4 rounded-lg text-xs space-y-2">
-                  <p className="text-emerald-450 font-bold">Consensus: {v14DebateSession.consensus}</p>
+                  <p className="text-emerald-450 font-bold">
+                    Consensus: {v14DebateSession.consensus}
+                  </p>
                 </div>
               )}
             </div>
@@ -1040,21 +1262,50 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-6">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-200 mb-2">Phase 2: Multi-Pathway Reasoning</h3>
-              <select value={v14ReasoningType} onChange={(e) => setV14ReasoningType(e.target.value as ReasoningType)} className="bg-slate-900 border border-slate-700 rounded p-1 text-xs text-white">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-200 mb-2">
+                Phase 2: Multi-Pathway Reasoning
+              </h3>
+              <select
+                value={v14ReasoningType}
+                onChange={(e) => setV14ReasoningType(e.target.value as ReasoningType)}
+                className="bg-slate-900 border border-slate-700 rounded p-1 text-xs text-white"
+              >
                 <option value="Deductive">Deductive</option>
                 <option value="Inductive">Inductive</option>
                 <option value="Abductive">Abductive</option>
               </select>
-              <button onClick={handleV14Reason} className="bg-purple-600 text-white text-xs font-bold px-4 py-1.5 rounded ml-2">Reason</button>
-              {v14ReasoningResult && <p className="text-xs text-slate-300 mt-4">{v14ReasoningResult.conclusion}</p>}
+              <button
+                onClick={handleV14Reason}
+                className="bg-purple-600 text-white text-xs font-bold px-4 py-1.5 rounded ml-2"
+              >
+                Reason
+              </button>
+              {v14ReasoningResult && (
+                <p className="text-xs text-slate-300 mt-4">{v14ReasoningResult.conclusion}</p>
+              )}
             </div>
 
             <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-6">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-200 mb-2">Phase 3 &amp; 4: Verification &amp; Critique</h3>
-              <button onClick={handleV14Verify} className="bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded">Verify</button>
-              <button onClick={handleV14Critique} className="bg-rose-600 text-white text-xs font-bold px-4 py-2 rounded ml-2">Critique</button>
-              {v14VerifyOutput && <p className="text-xs text-slate-350 mt-4">Verified Repaired: {v14VerifyOutput.repairedContent}</p>}
+              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-200 mb-2">
+                Phase 3 &amp; 4: Verification &amp; Critique
+              </h3>
+              <button
+                onClick={handleV14Verify}
+                className="bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded"
+              >
+                Verify
+              </button>
+              <button
+                onClick={handleV14Critique}
+                className="bg-rose-600 text-white text-xs font-bold px-4 py-2 rounded ml-2"
+              >
+                Critique
+              </button>
+              {v14VerifyOutput && (
+                <p className="text-xs text-slate-350 mt-4">
+                  Verified Repaired: {v14VerifyOutput.repairedContent}
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -1069,10 +1320,24 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
 
           <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5">
             <div className="flex gap-2">
-              <input type="text" value={v15QueryInput} onChange={(e) => setV15QueryInput(e.target.value)} className="flex-1 bg-slate-900 border border-slate-700 px-3 py-2 text-xs text-white" />
-              <button onClick={handleV15RunPipeline} className="bg-indigo-600 text-white text-xs font-bold px-4 py-2 rounded">Trigger Cascade</button>
+              <input
+                type="text"
+                value={v15QueryInput}
+                onChange={(e) => setV15QueryInput(e.target.value)}
+                className="flex-1 bg-slate-900 border border-slate-700 px-3 py-2 text-xs text-white"
+              />
+              <button
+                onClick={handleV15RunPipeline}
+                className="bg-indigo-600 text-white text-xs font-bold px-4 py-2 rounded"
+              >
+                Trigger Cascade
+              </button>
             </div>
-            {v15ReconstructReport && <p className="text-xs text-emerald-400 mt-4">{v15ReconstructReport.reconstructedQuery}</p>}
+            {v15ReconstructReport && (
+              <p className="text-xs text-emerald-400 mt-4">
+                {v15ReconstructReport.reconstructedQuery}
+              </p>
+            )}
           </div>
         </div>
       );
@@ -1081,15 +1346,31 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
       return (
         <div className="space-y-6 animate-in fade-in duration-300">
           <div className="relative overflow-hidden bg-gradient-to-r from-slate-950 via-slate-900 to-blue-955 border border-blue-500/30 rounded-2xl p-6">
-            <h2 className="text-xl font-extrabold tracking-tight text-white">V16 Intelligence Density Substrate</h2>
+            <h2 className="text-xl font-extrabold tracking-tight text-white">
+              V16 Intelligence Density Substrate
+            </h2>
           </div>
 
           <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-5">
             <div className="flex gap-2">
-              <input type="text" value={v16QueryInput} onChange={(e) => setV16QueryInput(e.target.value)} className="flex-1 bg-slate-900 border border-slate-700 px-3 py-2 text-xs text-white" />
-              <button onClick={handleV16RunPipeline} className="bg-blue-600 text-white text-xs font-bold px-4 py-2 rounded">Run Substrate V16</button>
+              <input
+                type="text"
+                value={v16QueryInput}
+                onChange={(e) => setV16QueryInput(e.target.value)}
+                className="flex-1 bg-slate-900 border border-slate-700 px-3 py-2 text-xs text-white"
+              />
+              <button
+                onClick={handleV16RunPipeline}
+                className="bg-blue-600 text-white text-xs font-bold px-4 py-2 rounded"
+              >
+                Run Substrate V16
+              </button>
             </div>
-            {v16ReconstructReport && <p className="text-xs text-emerald-400 mt-4">{v16ReconstructReport.reconstructedQuery}</p>}
+            {v16ReconstructReport && (
+              <p className="text-xs text-emerald-400 mt-4">
+                {v16ReconstructReport.reconstructedQuery}
+              </p>
+            )}
           </div>
         </div>
       );
@@ -1098,12 +1379,28 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
       return (
         <div className="space-y-6 animate-in fade-in duration-300">
           <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-6">
-            <h2 className="text-lg font-bold text-white mb-2">V17 Multi-Domain Automation Engine</h2>
+            <h2 className="text-lg font-bold text-white mb-2">
+              V17 Multi-Domain Automation Engine
+            </h2>
             <div className="flex gap-2">
-              <input type="text" value={v17QueryInput} onChange={(e) => setV17QueryInput(e.target.value)} className="flex-1 bg-slate-900 border border-slate-700 px-3 py-2 text-xs text-white" />
-              <button onClick={handleV17RunQuery} className="bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded">Process Domains</button>
+              <input
+                type="text"
+                value={v17QueryInput}
+                onChange={(e) => setV17QueryInput(e.target.value)}
+                className="flex-1 bg-slate-900 border border-slate-700 px-3 py-2 text-xs text-white"
+              />
+              <button
+                onClick={handleV17RunQuery}
+                className="bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded"
+              >
+                Process Domains
+              </button>
             </div>
-            {v17EdgeReport && <p className="text-xs text-emerald-400 mt-4">Local Execution: {v17EdgeReport.conclusion}</p>}
+            {v17EdgeReport && (
+              <p className="text-xs text-emerald-400 mt-4">
+                Local Execution: {v17EdgeReport.conclusion}
+              </p>
+            )}
           </div>
         </div>
       );
@@ -1114,10 +1411,24 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
           <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-6">
             <h3 className="text-lg font-bold text-white mb-4">Constitutional Debate Arena</h3>
             <div className="flex gap-2">
-              <input type="text" value={debateQuery} onChange={(e) => setDebateQuery(e.target.value)} className="flex-1 bg-slate-900 border border-slate-700 px-3 py-2 text-xs text-white" />
-              <button onClick={handleRunSwarmDebate} className="bg-blue-600 text-white text-xs font-bold px-4 py-2 rounded">Debate</button>
+              <input
+                type="text"
+                value={debateQuery}
+                onChange={(e) => setDebateQuery(e.target.value)}
+                className="flex-1 bg-slate-900 border border-slate-700 px-3 py-2 text-xs text-white"
+              />
+              <button
+                onClick={handleRunSwarmDebate}
+                className="bg-blue-600 text-white text-xs font-bold px-4 py-2 rounded"
+              >
+                Debate
+              </button>
             </div>
-            {debateSession && <p className="text-xs text-emerald-400 mt-4">Debated Outcome: {debateSession.consensus}</p>}
+            {debateSession && (
+              <p className="text-xs text-emerald-400 mt-4">
+                Debated Outcome: {debateSession.consensus}
+              </p>
+            )}
           </div>
         </div>
       );
@@ -1126,10 +1437,26 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
       return (
         <div className="space-y-6 animate-in fade-in duration-300">
           <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-6">
-            <h3 className="text-lg font-bold text-white mb-4">Crystallization &amp; Memory Auditors</h3>
-            <button onClick={handleMemoryAudit} className="bg-slate-800 text-white text-xs px-4 py-2 rounded mr-2">Audit Memory</button>
-            <button onClick={handleCrystalAudit} className="bg-slate-800 text-white text-xs px-4 py-2 rounded">Audit Crystals</button>
-            {memoryAudit && <p className="text-xs text-emerald-400 mt-4">Memory Quality: {memoryAudit.memoryScore * 100}%</p>}
+            <h3 className="text-lg font-bold text-white mb-4">
+              Crystallization &amp; Memory Auditors
+            </h3>
+            <button
+              onClick={handleMemoryAudit}
+              className="bg-slate-800 text-white text-xs px-4 py-2 rounded mr-2"
+            >
+              Audit Memory
+            </button>
+            <button
+              onClick={handleCrystalAudit}
+              className="bg-slate-800 text-white text-xs px-4 py-2 rounded"
+            >
+              Audit Crystals
+            </button>
+            {memoryAudit && (
+              <p className="text-xs text-emerald-400 mt-4">
+                Memory Quality: {memoryAudit.memoryScore * 100}%
+              </p>
+            )}
           </div>
         </div>
       );
@@ -1141,9 +1468,21 @@ export default function LegacyCognitiveDashboards({ activeTab }: LegacyCognitive
       return (
         <div className="space-y-6 animate-in fade-in duration-300">
           <div className="bg-[#030d1e] border border-slate-800 rounded-xl p-6">
-            <h3 className="text-lg font-bold text-white mb-4">OTel Telemetry &amp; Gateway Sandboxes</h3>
-            <button onClick={() => handleSendMockWebhook(true)} className="bg-emerald-600 text-white text-xs px-4 py-2 rounded mr-2">Verified webhook</button>
-            <button onClick={() => handleSendMockWebhook(false)} className="bg-rose-600 text-white text-xs px-4 py-2 rounded">Malformed webhook</button>
+            <h3 className="text-lg font-bold text-white mb-4">
+              OTel Telemetry &amp; Gateway Sandboxes
+            </h3>
+            <button
+              onClick={() => handleSendMockWebhook(true)}
+              className="bg-emerald-600 text-white text-xs px-4 py-2 rounded mr-2"
+            >
+              Verified webhook
+            </button>
+            <button
+              onClick={() => handleSendMockWebhook(false)}
+              className="bg-rose-600 text-white text-xs px-4 py-2 rounded"
+            >
+              Malformed webhook
+            </button>
             {webhookStatus && <p className="text-xs text-slate-300 mt-4">{webhookStatus}</p>}
           </div>
         </div>

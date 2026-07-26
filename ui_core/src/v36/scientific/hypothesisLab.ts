@@ -16,7 +16,7 @@ export class HypothesisLab {
       id: `claim-${(100 + Math.random() * 900).toFixed(0)}`,
       claimText,
       priorProbability: prior,
-      falsified: false
+      falsified: false,
     };
     this.claims.push(claim);
     return claim;

@@ -12,12 +12,9 @@ export class IntelligenceCompressionEngine {
   /**
    * Compresses granular code/facts into abstracted logical structures.
    */
-  public compressToPrinciple(
-    rawText: string,
-    topicName: string
-  ): DistilledPrinciple {
+  public compressToPrinciple(rawText: string, topicName: string): DistilledPrinciple {
     const bytesOriginal = new Blob([rawText]).size;
-    
+
     // Abstract the rules
     let ruleName = `Rule-${topicName.toUpperCase()}`;
     let distilledCondition = "IF memory_exhaustion THEN route_to_NPU_Q4";
@@ -36,7 +33,7 @@ export class IntelligenceCompressionEngine {
       ruleName,
       distilledCondition,
       bytesOriginal,
-      bytesDistilled
+      bytesDistilled,
     };
   }
 }

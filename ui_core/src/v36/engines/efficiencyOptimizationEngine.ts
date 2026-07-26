@@ -14,7 +14,7 @@ export class EfficiencyOptimizationEngine {
    */
   public prescribeOptimizations(
     ramLimitGb: number,
-    operationType: "vector" | "matrix" | "logic"
+    operationType: "vector" | "matrix" | "logic",
   ): RuntimeOptimizationDirectives {
     let activeDevice: "CPU" | "iGPU" | "NPU" = "CPU";
     let quantizationBits = 16;
@@ -41,14 +41,14 @@ export class EfficiencyOptimizationEngine {
     } else {
       activeDevice = "NPU";
       fusedKernelsCount = 2;
-      speedupEstimation = 2.10;
+      speedupEstimation = 2.1;
     }
 
     return {
       fusedKernelsCount,
       quantizationBits,
       activeDevice,
-      speedupEstimation
+      speedupEstimation,
     };
   }
 }

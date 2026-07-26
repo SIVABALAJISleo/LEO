@@ -16,8 +16,11 @@ export class ScientificReasoningEngine {
    */
   public evaluateClaim(claimText: string): ScientificBreakdown {
     const cLower = claimText.toLowerCase();
-    
-    const facts: string[] = ["RAM constraints exist on local consumer workstations.", "NVIDIA CUDA kernels are not present in Intel setups."];
+
+    const facts: string[] = [
+      "RAM constraints exist on local consumer workstations.",
+      "NVIDIA CUDA kernels are not present in Intel setups.",
+    ];
     const hypotheses: string[] = [];
     const assumptions: string[] = [];
     const conclusions: string[] = [];
@@ -25,9 +28,15 @@ export class ScientificReasoningEngine {
 
     // Parse claim elements
     if (cLower.includes("quantization") || cLower.includes("bitrate")) {
-      hypotheses.push("Quantizing models down to 4-bits decreases peak VRAM allocation to under 8GB.");
-      assumptions.push("Assumed that ternary or 2-bit quantization maintains semantic coherence above 80%.");
-      conclusions.push("Quantization allows models to execute local reasoning on integrated graphics.");
+      hypotheses.push(
+        "Quantizing models down to 4-bits decreases peak VRAM allocation to under 8GB.",
+      );
+      assumptions.push(
+        "Assumed that ternary or 2-bit quantization maintains semantic coherence above 80%.",
+      );
+      conclusions.push(
+        "Quantization allows models to execute local reasoning on integrated graphics.",
+      );
     } else {
       hypotheses.push("Caching query nodes will bypass model inference loops.");
       assumptions.push("Assumed that user queries exhibit high semantic reuse rates.");
@@ -36,7 +45,9 @@ export class ScientificReasoningEngine {
 
     // Contradiction detection
     if (cLower.includes("unlimited") && cLower.includes("local")) {
-      contradictionsFound.push("Claim requests infinite context length but execution is restricted to local system RAM boundaries.");
+      contradictionsFound.push(
+        "Claim requests infinite context length but execution is restricted to local system RAM boundaries.",
+      );
     }
 
     const validityRatio = contradictionsFound.length === 0 ? 0.99 : 0.45;
@@ -47,7 +58,7 @@ export class ScientificReasoningEngine {
       assumptions,
       conclusions,
       contradictionsFound,
-      validityRatio
+      validityRatio,
     };
   }
 }

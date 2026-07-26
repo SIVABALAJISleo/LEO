@@ -12,9 +12,9 @@ export interface CacheLayerReport {
 
 export class L3OptimizationEngine {
   private cacheCapacity = {
-    L1: 32 * 1024 * 8,   // 256KB
+    L1: 32 * 1024 * 8, // 256KB
     L2: 1024 * 1024 * 2, // 2MB
-    L3: 1024 * 1024 * 32 // 32MB
+    L3: 1024 * 1024 * 32, // 32MB
   };
 
   profileCache(usedL1: number, usedL2: number, usedL3: number): CacheLayerReport[] {
@@ -46,7 +46,7 @@ export class L3OptimizationEngine {
         occupancyPct: Math.min(100, l3Pct),
         throughputGbSec: 320,
         prefetchEfficiencyPct: 88.4,
-      }
+      },
     ];
   }
 }

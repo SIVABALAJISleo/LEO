@@ -25,10 +25,10 @@ export class FormalReasoningEngine {
           "intro n",
           "assume h1 : is_safe(n)",
           "assume h2 : corridor_clear(n)",
-          "exact safety_lemma n h1 h2"
+          "exact safety_lemma n h1 h2",
         ],
         isValidated: true,
-        compilationLog: "Lean4 compiler certified: 0 goals remaining"
+        compilationLog: "Lean4 compiler certified: 0 goals remaining",
       },
       {
         theoremName: "ModelEscalationBound",
@@ -37,11 +37,11 @@ export class FormalReasoningEngine {
           "intro c",
           "assume h_complexity : c > 0.85",
           "apply cascade_routing_threshold",
-          "assumption"
+          "assumption",
         ],
         isValidated: true,
-        compilationLog: "Lean4 compiler certified: 0 goals remaining"
-      }
+        compilationLog: "Lean4 compiler certified: 0 goals remaining",
+      },
     ];
   }
 
@@ -50,15 +50,11 @@ export class FormalReasoningEngine {
     return {
       theoremName: `AdHocTheorem_${Math.floor(1000 + Math.random() * 9000)}`,
       declaration: proposition,
-      proofSteps: [
-        "intro x",
-        "apply logic_inversion",
-        "exact x"
-      ],
+      proofSteps: ["intro x", "apply logic_inversion", "exact x"],
       isValidated: isMockValid,
-      compilationLog: isMockValid 
-        ? "Lean4 proof verification succeeded: 0 goals remaining" 
-        : "Lean4 proof verification error: unresolved goals in case 'default_case'"
+      compilationLog: isMockValid
+        ? "Lean4 proof verification succeeded: 0 goals remaining"
+        : "Lean4 proof verification error: unresolved goals in case 'default_case'",
     };
   }
 

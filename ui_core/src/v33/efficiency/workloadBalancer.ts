@@ -31,7 +31,7 @@ export class WorkloadBalancer {
       powerConstraintMode,
       cpuCoreLimit,
       gpuBatchThrottlingMs,
-      npuPriorityLevel
+      npuPriorityLevel,
     };
   }
 }

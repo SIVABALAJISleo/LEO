@@ -29,43 +29,46 @@ export class ScientificReasoningEngine {
       {
         role: "Planner",
         contribution: `Proposed design for verifying: "${concept}" using local kernels.`,
-        confidenceScore: 0.92
+        confidenceScore: 0.92,
       },
       {
         role: "Scientist",
-        contribution: "Hypothesis: Quantization to Ternary scales keeps logic validity above 95% while eliminating VRAM bounds.",
-        confidenceScore: 0.96
+        contribution:
+          "Hypothesis: Quantization to Ternary scales keeps logic validity above 95% while eliminating VRAM bounds.",
+        confidenceScore: 0.96,
       },
       {
         role: "Critic",
-        contribution: "We must run regression tests to ensure accuracy doesn't fall below critical thresholds.",
-        confidenceScore: 0.88
+        contribution:
+          "We must run regression tests to ensure accuracy doesn't fall below critical thresholds.",
+        confidenceScore: 0.88,
       },
       {
         role: "Verifier",
-        contribution: "Calculated GGUF accuracy loss: error delta is less than 1.4% on standard benchmarks.",
-        confidenceScore: 0.97
-      }
+        contribution:
+          "Calculated GGUF accuracy loss: error delta is less than 1.4% on standard benchmarks.",
+        confidenceScore: 0.97,
+      },
     ];
 
     const verificationSteps: VerificationStep[] = [
       {
         assertion: "Model size is reduced under quantization.",
         checkedSource: "QuantizationGovernor",
-        status: "verified"
+        status: "verified",
       },
       {
         assertion: "Loss of accuracy is negligible.",
         checkedSource: "L3 Accuracy Log",
-        status: "verified"
-      }
+        status: "verified",
+      },
     ];
 
     return {
       debateLog,
       verificationSteps,
       consensusReached: true,
-      synthesizedClaim: `Verified: Ternary scaling satisfies local compute bounds on "${concept}" with <2% quality loss.`
+      synthesizedClaim: `Verified: Ternary scaling satisfies local compute bounds on "${concept}" with <2% quality loss.`,
     };
   }
 }

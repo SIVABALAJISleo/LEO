@@ -28,11 +28,19 @@ export class FormalReasoningEngine {
     let solverOutput = "sat";
 
     // 1. Determine formal language and generate verification proof code
-    if (claimLower.includes("prime") || claimLower.includes("theorem") || claimLower.includes("induction")) {
+    if (
+      claimLower.includes("prime") ||
+      claimLower.includes("theorem") ||
+      claimLower.includes("induction")
+    ) {
       formalLanguage = "Lean";
       proofCode = `theorem claim_verification (n : ℕ) : ${claim} := by\n  sorry`;
       solverOutput = "Lean: 0 goals remaining (completely verified)";
-    } else if (claimLower.includes("sorted") || claimLower.includes("list") || claimLower.includes("recursive")) {
+    } else if (
+      claimLower.includes("sorted") ||
+      claimLower.includes("list") ||
+      claimLower.includes("recursive")
+    ) {
       formalLanguage = "Coq";
       proofCode = `Theorem claim_verification : forall l : list nat, ${claim}.\nProof.\n  induction l; simpl; auto.\nQed.`;
       solverOutput = "Coq: Verification Successful (proven by structural induction)";
@@ -44,9 +52,16 @@ export class FormalReasoningEngine {
     }
 
     // Direct fallacy checker
-    if (claimLower.includes("contradiction") || claimLower.includes("false") || claimLower.includes("invalid")) {
+    if (
+      claimLower.includes("contradiction") ||
+      claimLower.includes("false") ||
+      claimLower.includes("invalid")
+    ) {
       isVerified = false;
-      solverOutput = formalLanguage === "Z3-SMT" ? "unsat" : "Verification Failed: Direct logical contradiction identified.";
+      solverOutput =
+        formalLanguage === "Z3-SMT"
+          ? "unsat"
+          : "Verification Failed: Direct logical contradiction identified.";
     }
 
     return {

@@ -1,46 +1,42 @@
 // ExecutionAuditLogger - Deterministic execution pipeline audit
 // Every decision logged with reason, no silent fallbacks
 
-export type ExecutionPath = 
-  | 'SHORTCUT'
-  | 'LOOKUP'
-  | 'SURROGATE'
-  | 'DISTRIBUTED'
-  | 'RAW_COMPUTE'
-  | 'AUTHORITY_GOVERNED'
-  | 'EXPLAIN';
+export type ExecutionPath =
+  | "SHORTCUT"
+  | "LOOKUP"
+  | "SURROGATE"
+  | "DISTRIBUTED"
+  | "RAW_COMPUTE"
+  | "AUTHORITY_GOVERNED"
+  | "EXPLAIN";
 
-export type ExecutionOutcome = 
-  | 'completed'
-  | 'delegated'
-  | 'avoided'
-  | 'failed'
-  | 'authority_pending';
+export type ExecutionOutcome =
+  "completed" | "delegated" | "avoided" | "failed" | "authority_pending";
 
 export interface ExecutionAuditEntry {
   id: string;
   timestamp: string;
   workloadId: string;
   workloadType: string;
-  
+
   // Decision path
   selectedPath: ExecutionPath;
   pathReason: string;
   confidence: number;
-  
+
   // Outcome
   outcome: ExecutionOutcome;
   outcomeReason: string;
-  
+
   // Metrics
   latencyMs: number;
   gpuAvoided: boolean;
   surrogateUsed: boolean;
-  
+
   // Authority
   authorityRequired: boolean;
-  authorityStatus?: 'pending' | 'approved' | 'denied';
-  
+  authorityStatus?: "pending" | "approved" | "denied";
+
   // Reproducibility
   inputHash: string;
   outputHash?: string;
@@ -65,9 +61,12 @@ class ExecutionAuditLogger {
     const str = JSON.stringify(data);
     const encoder = new TextEncoder();
     const dataBuffer = encoder.encode(str);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuffer);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", dataBuffer);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.slice(0, 8).map(b => b.toString(16).padStart(2, '0')).join('');
+    return hashArray
+      .slice(0, 8)
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
   }
 
   // Log execution decision
@@ -83,7 +82,7 @@ class ExecutionAuditLogger {
     gpuAvoided: boolean;
     surrogateUsed: boolean;
     authorityRequired: boolean;
-    authorityStatus?: 'pending' | 'approved' | 'denied';
+    authorityStatus?: "pending" | "approved" | "denied";
     input: unknown;
     output?: unknown;
   }): Promise<ExecutionAuditEntry> {
@@ -180,20 +179,23 @@ class ExecutionAuditLogger {
 
   // Find entries by workload ID
   findByWorkloadId(workloadId: string): ExecutionAuditEntry[] {
-    return this.auditLog.filter(e => e.workloadId === workloadId);
+    return this.auditLog.filter((e) => e.workloadId === workloadId);
   }
 
   // Verify reproducibility - same input should produce same path
-  async verifyReproducibility(input: unknown, expectedPath: ExecutionPath): Promise<{
+  async verifyReproducibility(
+    input: unknown,
+    expectedPath: ExecutionPath,
+  ): Promise<{
     reproducible: boolean;
     inputHash: string;
     previousEntries: ExecutionAuditEntry[];
   }> {
     const inputHash = await this.generateHash(input);
-    const previousEntries = this.auditLog.filter(e => e.inputHash === inputHash);
-    
-    const reproducible = previousEntries.length === 0 || 
-      previousEntries.every(e => e.selectedPath === expectedPath);
+    const previousEntries = this.auditLog.filter((e) => e.inputHash === inputHash);
+
+    const reproducible =
+      previousEntries.length === 0 || previousEntries.every((e) => e.selectedPath === expectedPath);
 
     return {
       reproducible,

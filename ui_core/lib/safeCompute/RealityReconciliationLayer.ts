@@ -2,11 +2,11 @@
 // Handles prediction ≠ truth scenarios with transparent corrections
 // All corrections are logged with explicit reasons
 
-export type CorrectionStrategy = 
-  | 'ELASTIC_CORRECTION'   // Fast snap for minor deltas (<10%)
-  | 'TEMPORAL_SMOOTHING'   // Gradual transition for medium deltas (10-30%)
-  | 'SAFE_ROLLBACK'        // Full rollback for large deltas (>30%)
-  | 'EXECUTION_HALT';      // Immediate stop for safety-critical failures
+export type CorrectionStrategy =
+  | "ELASTIC_CORRECTION" // Fast snap for minor deltas (<10%)
+  | "TEMPORAL_SMOOTHING" // Gradual transition for medium deltas (10-30%)
+  | "SAFE_ROLLBACK" // Full rollback for large deltas (>30%)
+  | "EXECUTION_HALT"; // Immediate stop for safety-critical failures
 
 export interface PredictionResult {
   taskId: string;
@@ -19,7 +19,7 @@ export interface PredictionResult {
 export interface TruthResult {
   taskId: string;
   actualValue: unknown;
-  source: 'computation' | 'authority' | 'measurement';
+  source: "computation" | "authority" | "measurement";
   timestamp: Date;
 }
 
@@ -80,10 +80,10 @@ class RealityReconciliationLayerCore {
       isSafetyCritical?: boolean;
       tolerancePercent?: number;
       forceStrategy?: CorrectionStrategy;
-    } = {}
+    } = {},
   ): ReconciliationRecord | null {
     const prediction = this.pendingPredictions.get(taskId);
-    
+
     if (!prediction) {
       console.warn(`No pending prediction for task ${taskId}`);
       return null;
@@ -98,7 +98,7 @@ class RealityReconciliationLayerCore {
       delta,
       options.isSafetyCritical ?? false,
       options.tolerancePercent ?? 10,
-      options.forceStrategy
+      options.forceStrategy,
     );
 
     const record: ReconciliationRecord = {
@@ -126,31 +126,31 @@ class RealityReconciliationLayerCore {
    */
   private calculateDelta(predicted: unknown, actual: unknown): number {
     // Numeric comparison
-    if (typeof predicted === 'number' && typeof actual === 'number') {
+    if (typeof predicted === "number" && typeof actual === "number") {
       if (actual === 0) return predicted === 0 ? 0 : 1;
       return Math.abs(predicted - actual) / Math.abs(actual);
     }
 
     // String comparison (Levenshtein-like)
-    if (typeof predicted === 'string' && typeof actual === 'string') {
+    if (typeof predicted === "string" && typeof actual === "string") {
       const maxLen = Math.max(predicted.length, actual.length);
       if (maxLen === 0) return 0;
-      
+
       let matches = 0;
       const minLen = Math.min(predicted.length, actual.length);
       for (let i = 0; i < minLen; i++) {
         if (predicted[i] === actual[i]) matches++;
       }
-      return 1 - (matches / maxLen);
+      return 1 - matches / maxLen;
     }
 
     // Boolean comparison
-    if (typeof predicted === 'boolean' && typeof actual === 'boolean') {
+    if (typeof predicted === "boolean" && typeof actual === "boolean") {
       return predicted === actual ? 0 : 1;
     }
 
     // Object comparison (shallow)
-    if (typeof predicted === 'object' && typeof actual === 'object') {
+    if (typeof predicted === "object" && typeof actual === "object") {
       try {
         const predStr = JSON.stringify(predicted);
         const actStr = JSON.stringify(actual);
@@ -171,15 +171,14 @@ class RealityReconciliationLayerCore {
     delta: number,
     isSafetyCritical: boolean,
     tolerancePercent: number,
-    forceStrategy?: CorrectionStrategy
+    forceStrategy?: CorrectionStrategy,
   ): { strategy: CorrectionStrategy; reason: string; correctionApplied: boolean } {
-    
     // Honor forced strategy if provided
     if (forceStrategy) {
       return {
         strategy: forceStrategy,
         reason: `Strategy forced: ${forceStrategy}`,
-        correctionApplied: forceStrategy !== 'EXECUTION_HALT',
+        correctionApplied: forceStrategy !== "EXECUTION_HALT",
       };
     }
 
@@ -189,7 +188,7 @@ class RealityReconciliationLayerCore {
     // Safety-critical with any significant delta: halt
     if (isSafetyCritical && delta > tolerance) {
       return {
-        strategy: 'EXECUTION_HALT',
+        strategy: "EXECUTION_HALT",
         reason: `Safety-critical task with ${deltaPercent.toFixed(1)}% delta exceeds ${tolerancePercent}% tolerance. Execution halted for human review.`,
         correctionApplied: false,
       };
@@ -198,7 +197,7 @@ class RealityReconciliationLayerCore {
     // Large delta (>30%): safe rollback
     if (delta > 0.3) {
       return {
-        strategy: 'SAFE_ROLLBACK',
+        strategy: "SAFE_ROLLBACK",
         reason: `Large prediction error (${deltaPercent.toFixed(1)}%). Rolling back to last known good state.`,
         correctionApplied: true,
       };
@@ -207,7 +206,7 @@ class RealityReconciliationLayerCore {
     // Medium delta (10-30%): temporal smoothing
     if (delta > 0.1) {
       return {
-        strategy: 'TEMPORAL_SMOOTHING',
+        strategy: "TEMPORAL_SMOOTHING",
         reason: `Medium prediction error (${deltaPercent.toFixed(1)}%). Applying gradual correction over time.`,
         correctionApplied: true,
       };
@@ -215,7 +214,7 @@ class RealityReconciliationLayerCore {
 
     // Small delta (<10%): elastic correction
     return {
-      strategy: 'ELASTIC_CORRECTION',
+      strategy: "ELASTIC_CORRECTION",
       reason: `Minor prediction error (${deltaPercent.toFixed(1)}%). Applying instant elastic snap.`,
       correctionApplied: true,
     };
@@ -226,7 +225,7 @@ class RealityReconciliationLayerCore {
    */
   getRecords(taskId?: string): ReconciliationRecord[] {
     if (taskId) {
-      return this.records.filter(r => r.taskId === taskId);
+      return this.records.filter((r) => r.taskId === taskId);
     }
     return [...this.records];
   }
@@ -262,25 +261,25 @@ class RealityReconciliationLayerCore {
     let totalDelta = 0;
     let successCount = 0;
 
-    this.records.forEach(record => {
+    this.records.forEach((record) => {
       switch (record.strategy) {
-        case 'ELASTIC_CORRECTION':
+        case "ELASTIC_CORRECTION":
           stats.elasticCorrections++;
           break;
-        case 'TEMPORAL_SMOOTHING':
+        case "TEMPORAL_SMOOTHING":
           stats.temporalSmoothings++;
           break;
-        case 'SAFE_ROLLBACK':
+        case "SAFE_ROLLBACK":
           stats.safeRollbacks++;
           break;
-        case 'EXECUTION_HALT':
+        case "EXECUTION_HALT":
           stats.executionHalts++;
           break;
       }
 
       totalDelta += record.delta;
       stats.maxDelta = Math.max(stats.maxDelta, record.delta);
-      
+
       if (record.correctionApplied) {
         successCount++;
       }
@@ -296,9 +295,7 @@ class RealityReconciliationLayerCore {
    * Get recent corrections for UI display
    */
   getRecentCorrections(limit: number = 10): ReconciliationRecord[] {
-    return this.records
-      .slice(-limit)
-      .reverse();
+    return this.records.slice(-limit).reverse();
   }
 
   /**
@@ -307,10 +304,8 @@ class RealityReconciliationLayerCore {
   pruneOldRecords(maxAgeMs: number = 3600000): number {
     const cutoff = Date.now() - maxAgeMs;
     const initialLength = this.records.length;
-    
-    this.records = this.records.filter(
-      r => r.timestamp.getTime() > cutoff
-    );
+
+    this.records = this.records.filter((r) => r.timestamp.getTime() > cutoff);
 
     return initialLength - this.records.length;
   }

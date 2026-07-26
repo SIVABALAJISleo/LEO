@@ -26,10 +26,10 @@ export class BitNetResearchEngine {
       computationalReducibility = 0.75;
     } else if (lower.includes("math") || lower.includes("proof") || lower.includes("science")) {
       recommendedBits = 8; // INT8
-      computationalReducibility = 0.50;
+      computationalReducibility = 0.5;
     }
 
-    const modelClosenessIndex = parseFloat((0.82 + (computationalReducibility * 0.15)).toFixed(3));
+    const modelClosenessIndex = parseFloat((0.82 + computationalReducibility * 0.15).toFixed(3));
     const isReadinessApproved = modelClosenessIndex > 0.85;
 
     return {
@@ -37,7 +37,7 @@ export class BitNetResearchEngine {
       recommendedBits,
       modelClosenessIndex,
       computationalReducibility,
-      isReadinessApproved
+      isReadinessApproved,
     };
   }
 }

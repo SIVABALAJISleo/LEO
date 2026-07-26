@@ -1,30 +1,30 @@
 // Authority Handoff Engine
 // Reduces authority decisions to trivial confirmations via prediction, proof, and constraints
 
-import { preDecisionCompressor, PreDecisionResult } from './PreDecisionCompressor';
-import { cryptographicProofPipeline, ExecutionProof } from './CryptographicProofPipeline';
-import { digitalTwinVerifier, DigitalTwinResult } from './DigitalTwinVerifier';
+import { preDecisionCompressor, PreDecisionResult } from "./PreDecisionCompressor";
+import { cryptographicProofPipeline, ExecutionProof } from "./CryptographicProofPipeline";
+import { digitalTwinVerifier, DigitalTwinResult } from "./DigitalTwinVerifier";
 
-export type AuthorityType = 
-  | 'HUMAN_SAFETY'
-  | 'LEGAL_COMPLIANCE'
-  | 'FINANCIAL_APPROVAL'
-  | 'MEDICAL_DECISION'
-  | 'HARDWARE_CONFIRMATION'
-  | 'REGULATORY_SIGN_OFF';
+export type AuthorityType =
+  | "HUMAN_SAFETY"
+  | "LEGAL_COMPLIANCE"
+  | "FINANCIAL_APPROVAL"
+  | "MEDICAL_DECISION"
+  | "HARDWARE_CONFIRMATION"
+  | "REGULATORY_SIGN_OFF";
 
 export type HandoffPackage = {
   taskId: string;
   authorityType: AuthorityType;
-  
+
   // Pre-computed decision support
   recommendedAction: string;
   alternativeActions: string[];
-  
+
   // Risk and confidence
   riskScore: number;
   confidencePercent: number;
-  
+
   // Proof bundle
   proofBundle: {
     executionHash: string;
@@ -32,17 +32,17 @@ export type HandoffPackage = {
     timestamp: string;
     replayable: boolean;
   };
-  
+
   // Replay log
   replayLog: string[];
-  
+
   // Evidence
   evidence: string[];
   explanation: string;
-  
+
   // Final flag
   confirmOnly: boolean;
-  
+
   // Timing
   preparationTimeMs: number;
   timestamp: string;
@@ -54,9 +54,9 @@ export type HandoffResult = {
   preDecision: PreDecisionResult;
   twinVerification: DigitalTwinResult | null;
   cryptoProof: ExecutionProof | null;
-  
+
   // Metrics
-  authorityThinkingRequired: 'none' | 'minimal' | 'moderate' | 'full';
+  authorityThinkingRequired: "none" | "minimal" | "moderate" | "full";
   estimatedReviewTimeMs: number;
 };
 
@@ -79,15 +79,15 @@ class AuthorityHandoffEngine {
       none: 0,
       minimal: 0,
       moderate: 0,
-      full: 0
-    }
+      full: 0,
+    },
   };
 
   async prepareHandoff(
     taskId: string,
     authorityType: AuthorityType,
     possibleActions: string[],
-    context: Record<string, unknown>
+    context: Record<string, unknown>,
   ): Promise<HandoffResult> {
     const startTime = performance.now();
 
@@ -96,7 +96,7 @@ class AuthorityHandoffEngine {
       taskId,
       authorityType,
       possibleActions,
-      context
+      context,
     );
 
     // Step 2: Digital twin verification (if applicable)
@@ -105,7 +105,7 @@ class AuthorityHandoffEngine {
       twinVerification = await digitalTwinVerifier.simulateAction({
         actionId: taskId,
         actionType: preDecision.envelope.recommendedAction,
-        context
+        context,
       });
     }
 
@@ -113,13 +113,13 @@ class AuthorityHandoffEngine {
     let cryptoProof: ExecutionProof | null = null;
     if (this.requiresCryptoProof(authorityType)) {
       cryptoProof = await cryptographicProofPipeline.generateProof({
-        type: 'decision',
+        type: "decision",
         input: {
           action: preDecision.envelope.recommendedAction,
-          context
+          context,
         },
         output: preDecision.envelope,
-        executionContext: { taskId, authorityType }
+        executionContext: { taskId, authorityType },
       });
     }
 
@@ -133,7 +133,7 @@ class AuthorityHandoffEngine {
     const authorityThinking = this.estimateAuthorityThinking(
       preDecision,
       twinVerification,
-      confirmOnly
+      confirmOnly,
     );
 
     const preparationTimeMs = performance.now() - startTime;
@@ -143,22 +143,22 @@ class AuthorityHandoffEngine {
       authorityType,
       recommendedAction: preDecision.envelope.recommendedAction,
       alternativeActions: preDecision.envelope.safeActions.filter(
-        a => a !== preDecision.envelope.recommendedAction
+        (a) => a !== preDecision.envelope.recommendedAction,
       ),
       riskScore: preDecision.envelope.riskScore,
       confidencePercent: preDecision.envelope.confidence * 100,
       proofBundle: {
         executionHash: cryptoProof?.executionHash || this.generateHash(taskId),
-        merkleRoot: cryptoProof?.inputHash || 'N/A',
+        merkleRoot: cryptoProof?.inputHash || "N/A",
         timestamp: new Date().toISOString(),
-        replayable: true
+        replayable: true,
       },
       replayLog,
       evidence: preDecision.evidence,
       explanation: preDecision.explanation,
       confirmOnly,
       preparationTimeMs,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
     const result: HandoffResult = {
@@ -168,7 +168,7 @@ class AuthorityHandoffEngine {
       twinVerification,
       cryptoProof,
       authorityThinkingRequired: authorityThinking,
-      estimatedReviewTimeMs: this.estimateReviewTime(authorityThinking)
+      estimatedReviewTimeMs: this.estimateReviewTime(authorityThinking),
     };
 
     this.recordHandoff(result);
@@ -176,26 +176,20 @@ class AuthorityHandoffEngine {
   }
 
   private requiresTwinVerification(authorityType: AuthorityType): boolean {
-    return [
-      'HUMAN_SAFETY',
-      'MEDICAL_DECISION',
-      'HARDWARE_CONFIRMATION'
-    ].includes(authorityType);
+    return ["HUMAN_SAFETY", "MEDICAL_DECISION", "HARDWARE_CONFIRMATION"].includes(authorityType);
   }
 
   private requiresCryptoProof(authorityType: AuthorityType): boolean {
-    return [
-      'LEGAL_COMPLIANCE',
-      'FINANCIAL_APPROVAL',
-      'REGULATORY_SIGN_OFF'
-    ].includes(authorityType);
+    return ["LEGAL_COMPLIANCE", "FINANCIAL_APPROVAL", "REGULATORY_SIGN_OFF"].includes(
+      authorityType,
+    );
   }
 
   private buildReplayLog(
     taskId: string,
     preDecision: PreDecisionResult,
     twinVerification: DigitalTwinResult | null,
-    cryptoProof: ExecutionProof | null
+    cryptoProof: ExecutionProof | null,
   ): string[] {
     const log: string[] = [
       `[${new Date().toISOString()}] HANDOFF_START: ${taskId}`,
@@ -203,13 +197,13 @@ class AuthorityHandoffEngine {
       `[PRE_DECISION] Safe actions: ${preDecision.envelope.safeActions.length}`,
       `[PRE_DECISION] Recommended: ${preDecision.envelope.recommendedAction}`,
       `[PRE_DECISION] Risk score: ${preDecision.envelope.riskScore.toFixed(4)}`,
-      `[PRE_DECISION] Confidence: ${(preDecision.envelope.confidence * 100).toFixed(1)}%`
+      `[PRE_DECISION] Confidence: ${(preDecision.envelope.confidence * 100).toFixed(1)}%`,
     ];
 
     if (twinVerification) {
       log.push(
-        `[TWIN_VERIFY] Result: ${twinVerification.autoApprovalRecommended ? 'PASS' : 'NEEDS_REVIEW'}`,
-        `[TWIN_VERIFY] Confidence: ${twinVerification.overallConfidence}`
+        `[TWIN_VERIFY] Result: ${twinVerification.autoApprovalRecommended ? "PASS" : "NEEDS_REVIEW"}`,
+        `[TWIN_VERIFY] Confidence: ${twinVerification.overallConfidence}`,
       );
     }
 
@@ -217,7 +211,7 @@ class AuthorityHandoffEngine {
       log.push(
         `[CRYPTO_PROOF] Hash: ${cryptoProof.executionHash.substring(0, 16)}...`,
         `[CRYPTO_PROOF] Input hash: ${cryptoProof.inputHash.substring(0, 16)}...`,
-        `[CRYPTO_PROOF] Verifiable: ${cryptoProof.reproducible}`
+        `[CRYPTO_PROOF] Verifiable: ${cryptoProof.reproducible}`,
       );
     }
 
@@ -227,47 +221,46 @@ class AuthorityHandoffEngine {
 
   private isConfirmOnly(
     preDecision: PreDecisionResult,
-    twinVerification: DigitalTwinResult | null
+    twinVerification: DigitalTwinResult | null,
   ): boolean {
     // Confirm-only if:
     // 1. Single safe action identified
     // 2. High confidence (>95%)
     // 3. Twin verification passed (if applicable)
-    
+
     const singleAction = preDecision.singleSafeAction;
     const highConfidence = preDecision.envelope.confidence >= 0.95;
     const twinPassed = !twinVerification || twinVerification.autoApprovalRecommended;
-    
+
     return singleAction && highConfidence && twinPassed;
   }
 
   private estimateAuthorityThinking(
     preDecision: PreDecisionResult,
     twinVerification: DigitalTwinResult | null,
-    confirmOnly: boolean
-  ): 'none' | 'minimal' | 'moderate' | 'full' {
+    confirmOnly: boolean,
+  ): "none" | "minimal" | "moderate" | "full" {
     if (confirmOnly && preDecision.envelope.confidence >= 0.99) {
-      return 'none';
+      return "none";
     }
-    
+
     if (confirmOnly) {
-      return 'minimal';
+      return "minimal";
     }
-    
-    if (preDecision.envelope.safeActions.length <= 3 && 
-        preDecision.envelope.confidence >= 0.85) {
-      return 'moderate';
+
+    if (preDecision.envelope.safeActions.length <= 3 && preDecision.envelope.confidence >= 0.85) {
+      return "moderate";
     }
-    
-    return 'full';
+
+    return "full";
   }
 
-  private estimateReviewTime(thinking: 'none' | 'minimal' | 'moderate' | 'full'): number {
+  private estimateReviewTime(thinking: "none" | "minimal" | "moderate" | "full"): number {
     const times: Record<string, number> = {
-      none: 100,      // 100ms - just click confirm
-      minimal: 2000,  // 2 seconds - quick review
+      none: 100, // 100ms - just click confirm
+      minimal: 2000, // 2 seconds - quick review
       moderate: 10000, // 10 seconds - some consideration
-      full: 60000     // 1 minute - full analysis
+      full: 60000, // 1 minute - full analysis
     };
     return times[thinking];
   }
@@ -277,10 +270,10 @@ class AuthorityHandoffEngine {
     let hash = 0;
     for (let i = 0; i < input.length; i++) {
       const char = input.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash;
     }
-    return Math.abs(hash).toString(16).padStart(16, '0');
+    return Math.abs(hash).toString(16).padStart(16, "0");
   }
 
   private recordHandoff(result: HandoffResult): void {
@@ -291,12 +284,12 @@ class AuthorityHandoffEngine {
 
     // Update stats
     const total = this.handoffs.length;
-    const confirmOnlyCount = this.handoffs.filter(h => h.package.confirmOnly).length;
+    const confirmOnlyCount = this.handoffs.filter((h) => h.package.confirmOnly).length;
     const avgPrep = this.handoffs.reduce((sum, h) => sum + h.package.preparationTimeMs, 0) / total;
     const avgReview = this.handoffs.reduce((sum, h) => sum + h.estimatedReviewTimeMs, 0) / total;
 
     const thinkingDist: Record<string, number> = { none: 0, minimal: 0, moderate: 0, full: 0 };
-    this.handoffs.forEach(h => {
+    this.handoffs.forEach((h) => {
       thinkingDist[h.authorityThinkingRequired]++;
     });
 
@@ -305,7 +298,7 @@ class AuthorityHandoffEngine {
       confirmOnlyRate: confirmOnlyCount / total,
       averagePreparationMs: avgPrep,
       averageEstimatedReviewMs: avgReview,
-      authorityThinkingDistribution: thinkingDist
+      authorityThinkingDistribution: thinkingDist,
     };
   }
 
@@ -329,19 +322,19 @@ class AuthorityHandoffEngine {
         softwareExecutionRate: 0.998, // Target
         authorityConfirmOnlyRate: 0,
         humanThinkingRequired: 0,
-        proofCoverage: 0
+        proofCoverage: 0,
       };
     }
 
-    const confirmOnly = this.handoffs.filter(h => h.package.confirmOnly).length;
-    const noThinking = this.handoffs.filter(h => h.authorityThinkingRequired === 'none').length;
-    const withProof = this.handoffs.filter(h => h.cryptoProof !== null).length;
+    const confirmOnly = this.handoffs.filter((h) => h.package.confirmOnly).length;
+    const noThinking = this.handoffs.filter((h) => h.authorityThinkingRequired === "none").length;
+    const withProof = this.handoffs.filter((h) => h.cryptoProof !== null).length;
 
     return {
       softwareExecutionRate: 0.997 + (confirmOnly / this.handoffs.length) * 0.001,
       authorityConfirmOnlyRate: confirmOnly / this.handoffs.length,
       humanThinkingRequired: (this.handoffs.length - noThinking) / this.handoffs.length,
-      proofCoverage: withProof / this.handoffs.length
+      proofCoverage: withProof / this.handoffs.length,
     };
   }
 }

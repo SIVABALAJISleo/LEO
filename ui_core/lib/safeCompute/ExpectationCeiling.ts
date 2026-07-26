@@ -4,7 +4,7 @@
  * Calm, final messaging - no escalation
  */
 
-export type DemandType = 'instant' | 'exact' | 'heavy' | 'free';
+export type DemandType = "instant" | "exact" | "heavy" | "free";
 
 export interface ExpectationLock {
   userId: string;
@@ -23,10 +23,10 @@ export interface DemandEvent {
 
 // Final, calm messages - no room for negotiation
 const CEILING_MESSAGES: Record<DemandType, string> = {
-  instant: 'This task is running at maximum speed.',
-  exact: 'Full precision is being applied.',
-  heavy: 'All available resources are engaged.',
-  free: 'This task uses the allocated resources.',
+  instant: "This task is running at maximum speed.",
+  exact: "Full precision is being applied.",
+  heavy: "All available resources are engaged.",
+  free: "This task uses the allocated resources.",
 };
 
 const THRESHOLD_COUNTS: Record<DemandType, number> = {
@@ -67,7 +67,7 @@ class ExpectationCeilingEnforcer {
 
     // Keep only recent events (last hour)
     const hourAgo = Date.now() - 60 * 60 * 1000;
-    const recentHistory = history.filter(e => e.timestamp.getTime() > hourAgo);
+    const recentHistory = history.filter((e) => e.timestamp.getTime() > hourAgo);
     this.demandHistory.set(key, recentHistory);
 
     // Check if threshold exceeded
@@ -109,7 +109,7 @@ class ExpectationCeilingEnforcer {
    */
   getUserLocks(userId: string): ExpectationLock[] {
     const locks: ExpectationLock[] = [];
-    
+
     for (const [key, lock] of this.activeLocks) {
       if (key.startsWith(userId) && lock.isLocked) {
         // Check if lock has expired
@@ -141,9 +141,9 @@ class ExpectationCeilingEnforcer {
   getDemandCount(userId: string, demandType: DemandType): number {
     const key = `${userId}:${demandType}`;
     const history = this.demandHistory.get(key) || [];
-    
+
     const hourAgo = Date.now() - 60 * 60 * 1000;
-    return history.filter(e => e.timestamp.getTime() > hourAgo).length;
+    return history.filter((e) => e.timestamp.getTime() > hourAgo).length;
   }
 
   /**

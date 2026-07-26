@@ -1,9 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { useEffect, useRef } from 'react';
-import { toast } from 'sonner';
-import { useAuth } from '@/contexts/AuthContext';
-import { firebaseClient as supabase } from '@/integrations/firebase/client';
-import { useNotifications } from '@/contexts/NotificationContext';
+import { useEffect, useRef } from "react";
+import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
+import { firebaseClient as supabase } from "@/integrations/firebase/client";
+import { useNotifications } from "@/contexts/NotificationContext";
 
 interface NotificationOptions {
   enableJobNotifications?: boolean;
@@ -30,13 +30,13 @@ export function useRealtimeNotifications(options: NotificationOptions = {}) {
     // Job status change notifications
     if (enableJobNotifications) {
       const jobChannel = supabase
-        .channel('job-notifications')
+        .channel("job-notifications")
         .on(
-          'postgres_changes',
+          "postgres_changes",
           {
-            event: 'UPDATE',
-            schema: 'public',
-            table: 'inference_jobs',
+            event: "UPDATE",
+            schema: "public",
+            table: "inference_jobs",
             filter: `user_id=eq.${user.id}`,
           },
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -45,41 +45,41 @@ export function useRealtimeNotifications(options: NotificationOptions = {}) {
             const oldJob = payload.old as Record<string, unknown>;
 
             if (newJob.status !== oldJob?.status) {
-              const jobId = String(newJob.id || 'Unknown').substring(0, 8);
-              let message = '';
-              let severity: 'info' | 'warning' | 'error' | 'critical' = 'info';
+              const jobId = String(newJob.id || "Unknown").substring(0, 8);
+              let message = "";
+              let severity: "info" | "warning" | "error" | "critical" = "info";
 
               switch (newJob.status) {
-                case 'running':
+                case "running":
                   message = `Job ${jobId} started processing`;
                   toast.info(message);
                   break;
-                case 'completed':
+                case "completed":
                   message = `Job ${jobId} completed successfully`;
                   toast.success(message);
                   break;
-                case 'failed':
+                case "failed":
                   message = `Job ${jobId} failed`;
-                  severity = 'error';
-                  toast.error(`${message}: ${newJob.error_message || 'Unknown error'}`);
+                  severity = "error";
+                  toast.error(`${message}: ${newJob.error_message || "Unknown error"}`);
                   break;
-                case 'cancelled':
+                case "cancelled":
                   message = `Job ${jobId} was cancelled`;
-                  severity = 'warning';
+                  severity = "warning";
                   toast.warning(message);
                   break;
               }
 
               if (message) {
                 addNotification({
-                  title: 'Job Update',
+                  title: "Job Update",
                   message,
                   severity,
-                  alert_type: 'job'
+                  alert_type: "job",
                 });
               }
             }
-          }
+          },
         )
         .subscribe();
 
@@ -89,36 +89,37 @@ export function useRealtimeNotifications(options: NotificationOptions = {}) {
     // Alert notifications
     if (enableAlertNotifications) {
       const alertChannel = supabase
-        .channel('alert-notifications')
+        .channel("alert-notifications")
         .on(
-          'postgres_changes',
+          "postgres_changes",
           {
-            event: 'INSERT',
-            schema: 'public',
-            table: 'alerts',
+            event: "INSERT",
+            schema: "public",
+            table: "alerts",
             filter: `user_id=eq.${user.id}`,
           },
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (payload: any) => {
             const alert = payload.new as Record<string, unknown>;
 
-            const severity = String(alert.severity || 'info') as 'info' | 'warning' | 'error' | 'critical';
-            const title = String(alert.title || 'Alert');
-            const message = String(alert.message || '');
+            const severity = String(alert.severity || "info") as
+              "info" | "warning" | "error" | "critical";
+            const title = String(alert.title || "Alert");
+            const message = String(alert.message || "");
 
             addNotification({
               title,
               message,
               severity,
-              alert_type: 'system'
+              alert_type: "system",
             });
 
-            if (severity === 'critical' || severity === 'error') {
+            if (severity === "critical" || severity === "error") {
               toast.error(title, {
                 description: message,
                 duration: 10000,
               });
-            } else if (severity === 'warning') {
+            } else if (severity === "warning") {
               toast.warning(title, {
                 description: message,
                 duration: 6000,
@@ -129,7 +130,7 @@ export function useRealtimeNotifications(options: NotificationOptions = {}) {
                 duration: 6000,
               });
             }
-          }
+          },
         )
         .subscribe();
 
@@ -139,13 +140,13 @@ export function useRealtimeNotifications(options: NotificationOptions = {}) {
     // System-wide notifications
     if (enableSystemNotifications) {
       const systemChannel = supabase
-        .channel('system-notifications')
+        .channel("system-notifications")
         .on(
-          'postgres_changes',
+          "postgres_changes",
           {
-            event: 'INSERT',
-            schema: 'public',
-            table: 'system_metrics',
+            event: "INSERT",
+            schema: "public",
+            table: "system_metrics",
             filter: `user_id=eq.${user.id}`,
           },
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -153,15 +154,16 @@ export function useRealtimeNotifications(options: NotificationOptions = {}) {
             const metrics = payload.new as Record<string, unknown>;
 
             // Only notify on critical status changes
-            if (metrics.status === 'critical') {
-              const title = 'System Critical Alert';
-              const message = 'System health has dropped to critical levels. Check monitoring dashboard.';
+            if (metrics.status === "critical") {
+              const title = "System Critical Alert";
+              const message =
+                "System health has dropped to critical levels. Check monitoring dashboard.";
 
               addNotification({
                 title,
                 message,
-                severity: 'critical',
-                alert_type: 'system'
+                severity: "critical",
+                alert_type: "system",
               });
 
               toast.error(title, {
@@ -169,7 +171,7 @@ export function useRealtimeNotifications(options: NotificationOptions = {}) {
                 duration: 10000,
               });
             }
-          }
+          },
         )
         .subscribe();
 
@@ -179,14 +181,20 @@ export function useRealtimeNotifications(options: NotificationOptions = {}) {
     return () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       channels.forEach((channel: any) => {
-        if (channel && typeof channel.unsubscribe === 'function') {
+        if (channel && typeof channel.unsubscribe === "function") {
           channel.unsubscribe();
         } else {
           supabase.removeChannel(channel);
         }
       });
     };
-  }, [user, enableJobNotifications, enableAlertNotifications, enableSystemNotifications, addNotification]);
+  }, [
+    user,
+    enableJobNotifications,
+    enableAlertNotifications,
+    enableSystemNotifications,
+    addNotification,
+  ]);
 }
 
 export default useRealtimeNotifications;

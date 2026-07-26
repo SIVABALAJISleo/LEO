@@ -16,7 +16,11 @@ export { KvCompressionEngine } from "./kvCompressionEngine";
 export type { CompressionReport } from "./kvCompressionEngine";
 
 export { HierarchicalCrystalMemory } from "./hierarchicalCrystalMemory";
-export type { CrystalMemoryLevel, RetrievalStep, RetrievalAudit } from "./hierarchicalCrystalMemory";
+export type {
+  CrystalMemoryLevel,
+  RetrievalStep,
+  RetrievalAudit,
+} from "./hierarchicalCrystalMemory";
 
 export { ComputeAvoidanceGovernor } from "./computeAvoidanceGovernor";
 export type { AvoidanceDecisionType, GovernorResolution } from "./computeAvoidanceGovernor";
@@ -43,7 +47,11 @@ export { OpenvinoMaximumUtilization } from "./openvinoMaximumUtilization";
 export type { OpenVINODevice, DeviceTelemetry } from "./openvinoMaximumUtilization";
 
 export { DistributedIntelligenceMesh } from "./distributedIntelligenceMesh";
-export type { ExecutionNode, MeshNodeStatus, WorkloadDistribution } from "./distributedIntelligenceMesh";
+export type {
+  ExecutionNode,
+  MeshNodeStatus,
+  WorkloadDistribution,
+} from "./distributedIntelligenceMesh";
 
 export { ComputeIrrelevanceScore } from "./computeIrrelevanceScore";
 export type { ScoreBreakdown } from "./computeIrrelevanceScore";

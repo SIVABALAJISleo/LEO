@@ -22,9 +22,11 @@ export class LocalAIEngine {
   /**
    * Resolves runtime settings and simulates local inference with fallback paths.
    */
-  public async getActiveConfiguration(modelType: "GGUF" | "Mamba" | "RWKV" | "ONNX"): Promise<LocalModelConfig> {
+  public async getActiveConfiguration(
+    modelType: "GGUF" | "Mamba" | "RWKV" | "ONNX",
+  ): Promise<LocalModelConfig> {
     const rawBackend = this.hal.resolveOptimalBackend();
-    
+
     // Auto-resolve backend compatibility
     let activeBackend: "WebGPU" | "Vulkan" | "CPU-Fallback" = "CPU-Fallback";
     if (rawBackend.toLowerCase().includes("webgpu")) {
@@ -47,12 +49,17 @@ export class LocalAIEngine {
   /**
    * Executes local inference using quantized models (e.g. 4-bit, 2-bit GGUF).
    */
-  public async infer(prompt: string, modelType: "GGUF" | "Mamba" | "RWKV" | "BitNet"): Promise<string> {
+  public async infer(
+    prompt: string,
+    modelType: "GGUF" | "Mamba" | "RWKV" | "BitNet",
+  ): Promise<string> {
     console.log(`[LOCAL AI L15] Loading quantized ${modelType} weights into local memory.`);
     const config = await this.getActiveConfiguration(modelType === "BitNet" ? "GGUF" : modelType);
-    
-    console.log(`[LOCAL AI L15] Running llama.cpp inference path via ${config.activeBackend} [Quant: ${config.quantization}]...`);
-    
+
+    console.log(
+      `[LOCAL AI L15] Running llama.cpp inference path via ${config.activeBackend} [Quant: ${config.quantization}]...`,
+    );
+
     return `[LOCAL INFERENCE SUCCESS] Run: ${modelType} | Backend: ${config.activeBackend} | Quantization: ${config.quantization} | VRAM: ${config.vramUsageMb}MB`;
   }
 }

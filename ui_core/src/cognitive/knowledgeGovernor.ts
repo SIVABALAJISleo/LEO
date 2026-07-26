@@ -34,7 +34,7 @@ export class KnowledgeGovernor {
       topic: "Local GGUF Mamba/RWKV GPU Quantization",
       accuracyScore: 0.92,
       freshnessScore: 0.88,
-      trustScore: 0.90,
+      trustScore: 0.9,
       verificationScore: 0.95,
       reuseScore: 0.72,
       status: "active",
@@ -44,10 +44,10 @@ export class KnowledgeGovernor {
       id: "K-003",
       topic: "Contradictory Policy Clause (Global vs Region-B)",
       accuracyScore: 0.45,
-      freshnessScore: 0.30,
-      trustScore: 0.50,
-      verificationScore: 0.20,
-      reuseScore: 0.10,
+      freshnessScore: 0.3,
+      trustScore: 0.5,
+      verificationScore: 0.2,
+      reuseScore: 0.1,
       status: "active",
       lastValidated: Date.now() - 86400000,
     },
@@ -57,21 +57,21 @@ export class KnowledgeGovernor {
    * Evaluates all assets, reinforcing good knowledge and expiring bad knowledge.
    */
   public performAudit(): KnowledgeAsset[] {
-    const threshold = 0.60;
+    const threshold = 0.6;
 
     this.assets = this.assets.map((asset) => {
       // Calculate overall quality index
       const qualityIndex =
-        (asset.accuracyScore * 0.3) +
-        (asset.freshnessScore * 0.2) +
-        (asset.trustScore * 0.2) +
-        (asset.verificationScore * 0.2) +
-        (asset.reuseScore * 0.1);
+        asset.accuracyScore * 0.3 +
+        asset.freshnessScore * 0.2 +
+        asset.trustScore * 0.2 +
+        asset.verificationScore * 0.2 +
+        asset.reuseScore * 0.1;
 
       let status = asset.status;
       if (qualityIndex < threshold) {
         status = "expired";
-      } else if (qualityIndex > 0.90) {
+      } else if (qualityIndex > 0.9) {
         status = "reinforced";
       }
 

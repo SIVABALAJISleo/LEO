@@ -27,7 +27,7 @@ export class AgentEvolutionV2 {
         latencyMs: 140,
         verificationRate: 0.99,
         successRate: 0.98,
-        tier: "Elite"
+        tier: "Elite",
       },
       {
         name: "FactSentinel-V23",
@@ -36,7 +36,7 @@ export class AgentEvolutionV2 {
         latencyMs: 90,
         verificationRate: 0.995,
         successRate: 0.99,
-        tier: "Elite"
+        tier: "Elite",
       },
       {
         name: "TamilLinguist-V23",
@@ -45,7 +45,7 @@ export class AgentEvolutionV2 {
         latencyMs: 180,
         verificationRate: 0.95,
         successRate: 0.96,
-        tier: "Standard"
+        tier: "Standard",
       },
       {
         name: "LegacyResolver-V11",
@@ -54,7 +54,7 @@ export class AgentEvolutionV2 {
         latencyMs: 340,
         verificationRate: 0.72,
         successRate: 0.74,
-        tier: "Standard" // Candidate for retirement
+        tier: "Standard", // Candidate for retirement
       },
       {
         name: "MathProver-V18",
@@ -63,8 +63,8 @@ export class AgentEvolutionV2 {
         latencyMs: 290,
         verificationRate: 0.92,
         successRate: 0.93,
-        tier: "Standard"
-      }
+        tier: "Standard",
+      },
     ];
   }
 
@@ -73,8 +73,8 @@ export class AgentEvolutionV2 {
     const promoted: string[] = [];
     const retired: string[] = [];
 
-    this.agents = this.agents.map(agent => {
-      const score = (agent.accuracy * 0.4) + (agent.successRate * 0.3) + (agent.verificationRate * 0.3);
+    this.agents = this.agents.map((agent) => {
+      const score = agent.accuracy * 0.4 + agent.successRate * 0.3 + agent.verificationRate * 0.3;
 
       if (score > 0.97 && agent.tier !== "Elite") {
         agent.tier = "Elite";
@@ -95,12 +95,13 @@ export class AgentEvolutionV2 {
     }
 
     if (!auditSummary) {
-      auditSummary = "All agents performing within expected calibration envelopes. No routing swaps required.";
+      auditSummary =
+        "All agents performing within expected calibration envelopes. No routing swaps required.";
     }
 
     return {
       agents: this.agents,
-      auditSummary
+      auditSummary,
     };
   }
 
@@ -113,13 +114,15 @@ export class AgentEvolutionV2 {
   }
 
   registerAgentResult(name: string, success: boolean, latencyMs: number) {
-    const agent = this.agents.find(a => a.name === name);
+    const agent = this.agents.find((a) => a.name === name);
     if (agent) {
       // Smooth average updates
       agent.latencyMs = Math.round(agent.latencyMs * 0.9 + latencyMs * 0.1);
       const outcome = success ? 1.0 : 0.0;
       agent.successRate = parseFloat((agent.successRate * 0.95 + outcome * 0.05).toFixed(3));
-      agent.accuracy = parseFloat((agent.accuracy * 0.98 + (success ? 1.0 : 0.8) * 0.02).toFixed(3));
+      agent.accuracy = parseFloat(
+        (agent.accuracy * 0.98 + (success ? 1.0 : 0.8) * 0.02).toFixed(3),
+      );
     }
   }
 }

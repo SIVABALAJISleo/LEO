@@ -48,12 +48,7 @@ export const LayerWaterfallChart: React.FC<LayerWaterfallChartProps> = ({ data }
         >
           <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
           <XAxis type="number" unit=" ms" />
-          <YAxis
-            type="category"
-            dataKey="layer_name"
-            width={180}
-            tick={{ fontSize: 12 }}
-          />
+          <YAxis type="category" dataKey="layer_name" width={180} tick={{ fontSize: 12 }} />
           <Tooltip
             cursor={{ fill: "rgba(255, 255, 255, 0.1)" }}
             content={({ active, payload }) => {
@@ -66,7 +61,8 @@ export const LayerWaterfallChart: React.FC<LayerWaterfallChartProps> = ({ data }
                       Latency: <span className="text-foreground">{d.duration.toFixed(2)} ms</span>
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      Confidence: <span className="text-foreground">{(d.confidence * 100).toFixed(1)}%</span>
+                      Confidence:{" "}
+                      <span className="text-foreground">{(d.confidence * 100).toFixed(1)}%</span>
                     </p>
                     <p className="text-xs mt-1 font-medium">
                       Status:{" "}
@@ -87,10 +83,7 @@ export const LayerWaterfallChart: React.FC<LayerWaterfallChartProps> = ({ data }
           {/* Visible duration bar */}
           <Bar dataKey="duration" stackId="a" radius={[0, 4, 4, 0]}>
             {chartData.map((entry, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={entry.resolved ? "#10b981" : "#3b82f6"}
-              />
+              <Cell key={`cell-${index}`} fill={entry.resolved ? "#10b981" : "#3b82f6"} />
             ))}
           </Bar>
         </BarChart>

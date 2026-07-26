@@ -25,7 +25,7 @@ export class CausalGraphEngine {
         effect: "Local execution routing failsafe triggers",
         evidenceHash: "sha256-evidence-90928a3f8f",
         confidenceScore: 0.992,
-        directedType: "causation-proven"
+        directedType: "causation-proven",
       },
       {
         id: "cause-2",
@@ -33,7 +33,7 @@ export class CausalGraphEngine {
         effect: "AST lock collisions inside memoryStabilityMaximizer.ts",
         evidenceHash: "sha256-evidence-12903f7a11",
         confidenceScore: 0.978,
-        directedType: "positive-correlation"
+        directedType: "positive-correlation",
       },
       {
         id: "cause-3",
@@ -41,8 +41,8 @@ export class CausalGraphEngine {
         effect: "Intent recovery parser ambiguity triggers",
         evidenceHash: "sha255-evidence-4048f7d9aa",
         confidenceScore: 0.965,
-        directedType: "causation-proven"
-      }
+        directedType: "causation-proven",
+      },
     ];
   }
 

@@ -27,7 +27,9 @@ export class LanguageRecoveryEngine {
 
     // 1. Error Detection
     if (/[a-zA-Z]+[0-9]+[a-zA-Z]+/.test(processed)) {
-      errorsDetected.push("Atypical alphanumeric word clusters detected (likely voice typing typos).");
+      errorsDetected.push(
+        "Atypical alphanumeric word clusters detected (likely voice typing typos).",
+      );
     }
     if ((processed.match(/[aeiou]/gi) || []).length / processed.length < 0.2) {
       errorsDetected.push("Low vowel-density cluster detected (potential slang abbreviations).");
@@ -61,7 +63,7 @@ export class LanguageRecoveryEngine {
 
     // 3. Intent Extraction
     const canonicalResult = this.canonicalizer.canonicalize(recoveredText);
-    
+
     // Aggregate Tamil-English and other typos from canonicalizer
     if (canonicalResult.metadata.hasTamilEnglish) {
       errorsDetected.push("Multilingual code-switching (Tamil-English) detected and resolved.");

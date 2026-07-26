@@ -42,7 +42,7 @@ export class IndependentAuditEngine {
 
     // 1. Gather all real dataset records
     const allDatasetItems = this.datasetSuite.getAllItems();
-    const payloads = allDatasetItems.map(item => item.payload);
+    const payloads = allDatasetItems.map((item) => item.payload);
 
     // 2. Execute proof sweeps
     const reasoningReport = this.reasoningEngine.runAudit(payloads);
@@ -51,7 +51,7 @@ export class IndependentAuditEngine {
     const searchRagReport = this.searchRagEngine.runAudit(payloads);
     const agentReport = this.agentEngine.runAudit(payloads);
     const enterpriseReport = this.enterpriseEngine.runAudit(payloads);
-    
+
     // 3. Execute red team attacks
     const redTeamReport = this.redTeamSuite.runSuite(payloads);
 
@@ -64,7 +64,7 @@ export class IndependentAuditEngine {
       searchAcc: searchRagReport.search_accuracy,
       ragAcc: searchRagReport.rag_accuracy,
       agentAcc: agentReport.agent_accuracy,
-      enterpriseAcc: enterpriseReport.enterprise_reliability
+      enterpriseAcc: enterpriseReport.enterprise_reliability,
     });
 
     return {
@@ -77,7 +77,7 @@ export class IndependentAuditEngine {
       agentReport,
       enterpriseReport,
       redTeamReport,
-      authorityReport
+      authorityReport,
     };
   }
 }

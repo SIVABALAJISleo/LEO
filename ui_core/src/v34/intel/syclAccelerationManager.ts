@@ -21,7 +21,7 @@ export class SyclAccelerationManager {
       activeKernelsCount: 1,
       unifiedSharedMemoryAllocatedMB: this.totalUsmAllocated,
       kernelCompilationTimeMs: isCompiled ? 420 : 15, // compile overhead in milliseconds
-      queueStatus: "running"
+      queueStatus: "running",
     };
   }
 
@@ -31,7 +31,7 @@ export class SyclAccelerationManager {
       activeKernelsCount: 0,
       unifiedSharedMemoryAllocatedMB: this.totalUsmAllocated,
       kernelCompilationTimeMs: 0,
-      queueStatus: "idle"
+      queueStatus: "idle",
     };
   }
 }

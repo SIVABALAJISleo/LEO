@@ -12,7 +12,7 @@ export interface CalibrationBin {
 export class TrustCalibrationEngine {
   calibrate(estimatedConfidence: number, observedCorrectness: number): CalibrationBin {
     const error = parseFloat((estimatedConfidence - observedCorrectness).toFixed(4));
-    let status: CalibrationBin['status'] = "CALIBRATED";
+    let status: CalibrationBin["status"] = "CALIBRATED";
 
     if (error > 0.05) {
       status = "OVERCONFIDENT";
@@ -25,15 +25,33 @@ export class TrustCalibrationEngine {
       expectedConfidence: estimatedConfidence,
       measuredAccuracy: observedCorrectness,
       calibrationError: error,
-      status
+      status,
     };
   }
 
   getCalibrationBins(): CalibrationBin[] {
     return [
-      { binId: "BIN-90", expectedConfidence: 0.90, measuredAccuracy: 0.895, calibrationError: 0.005, status: "CALIBRATED" },
-      { binId: "BIN-95", expectedConfidence: 0.95, measuredAccuracy: 0.948, calibrationError: 0.002, status: "CALIBRATED" },
-      { binId: "BIN-99", expectedConfidence: 0.99, measuredAccuracy: 0.992, calibrationError: -0.002, status: "CALIBRATED" }
+      {
+        binId: "BIN-90",
+        expectedConfidence: 0.9,
+        measuredAccuracy: 0.895,
+        calibrationError: 0.005,
+        status: "CALIBRATED",
+      },
+      {
+        binId: "BIN-95",
+        expectedConfidence: 0.95,
+        measuredAccuracy: 0.948,
+        calibrationError: 0.002,
+        status: "CALIBRATED",
+      },
+      {
+        binId: "BIN-99",
+        expectedConfidence: 0.99,
+        measuredAccuracy: 0.992,
+        calibrationError: -0.002,
+        status: "CALIBRATED",
+      },
     ];
   }
 }

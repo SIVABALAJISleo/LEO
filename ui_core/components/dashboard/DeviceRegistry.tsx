@@ -2,21 +2,14 @@
  * DeviceRegistry - Shows the registered HIPER computational core.
  */
 
-import { useState, useEffect, useCallback } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import {
-  Server,
-  Laptop,
-  Wifi,
-  RefreshCw,
-  Cpu,
-  ShieldCheck
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { Skeleton } from '@/components/ui/skeleton';
-import { HealthMonitor, SystemHealth } from '@/lib/core/HealthMonitor';
+import { useState, useEffect, useCallback } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Server, Laptop, Wifi, RefreshCw, Cpu, ShieldCheck } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
+import { HealthMonitor, SystemHealth } from "@/lib/core/HealthMonitor";
 
 export function DeviceRegistry() {
   const [health, setHealth] = useState<SystemHealth | null>(null);
@@ -29,7 +22,7 @@ export function DeviceRegistry() {
       const status = await monitor.getSystemHealth();
       setHealth(status);
     } catch (error) {
-      console.error('[DeviceRegistry] Failed to fetch engine status:', error);
+      console.error("[DeviceRegistry] Failed to fetch engine status:", error);
     } finally {
       setLoading(false);
       setIsRefreshing(false);
@@ -70,9 +63,7 @@ export function DeviceRegistry() {
               <Server className="h-5 w-5 text-primary" />
               Computational Core
             </CardTitle>
-            <CardDescription>
-              Local-first engine registry and capability map
-            </CardDescription>
+            <CardDescription>Local-first engine registry and capability map</CardDescription>
           </div>
           <Button
             variant="outline"
@@ -89,25 +80,34 @@ export function DeviceRegistry() {
       <CardContent className="pt-6">
         <div className="space-y-4">
           {/* Main Local Engine */}
-          <div className={cn(
-            "p-5 rounded-xl border transition-all duration-300",
-            health?.status === 'healthy'
-              ? "border-primary/20 bg-primary/5 shadow-[0_0_15px_-5px_hsl(var(--primary)/0.2)]"
-              : "border-muted bg-muted/5"
-          )}>
+          <div
+            className={cn(
+              "p-5 rounded-xl border transition-all duration-300",
+              health?.status === "healthy"
+                ? "border-primary/20 bg-primary/5 shadow-[0_0_15px_-5px_hsl(var(--primary)/0.2)]"
+                : "border-muted bg-muted/5",
+            )}
+          >
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="flex items-start gap-4">
-                <div className={cn(
-                  "p-3 rounded-xl",
-                  health?.status === 'healthy' ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
-                )}>
+                <div
+                  className={cn(
+                    "p-3 rounded-xl",
+                    health?.status === "healthy"
+                      ? "bg-primary/10 text-primary"
+                      : "bg-muted text-muted-foreground",
+                  )}
+                >
                   <Laptop className="h-6 w-6" />
                 </div>
 
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
                     <span className="font-bold text-lg">Local SaaS Core</span>
-                    <Badge variant="default" className="bg-primary/20 text-primary hover:bg-primary/20 border-primary/20">
+                    <Badge
+                      variant="default"
+                      className="bg-primary/20 text-primary hover:bg-primary/20 border-primary/20"
+                    >
                       Primary
                     </Badge>
                   </div>
@@ -133,11 +133,16 @@ export function DeviceRegistry() {
 
               <div className="flex items-center gap-3">
                 <div className="text-right hidden sm:block">
-                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Uptime</p>
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
+                    Uptime
+                  </p>
                   <p className="text-sm font-mono font-bold text-primary">{health?.uptime}s</p>
                 </div>
                 <div className="h-10 w-[1px] bg-border/50 mx-2 hidden sm:block" />
-                <Badge variant="outline" className="h-7 px-3 border-primary/30 text-primary bg-primary/5 hidden md:flex">
+                <Badge
+                  variant="outline"
+                  className="h-7 px-3 border-primary/30 text-primary bg-primary/5 hidden md:flex"
+                >
                   CPU-Optimized
                 </Badge>
               </div>
@@ -147,13 +152,15 @@ export function DeviceRegistry() {
             <div className="mt-6 pt-5 border-t border-border/50">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {[
-                  { label: 'Intelligence', status: 'Active' },
-                  { label: 'Orchestration', status: 'Active' },
-                  { label: 'Safe Execution', status: 'Enforced' },
-                  { label: 'Resource Mgmt', status: 'Optimal' }
+                  { label: "Intelligence", status: "Active" },
+                  { label: "Orchestration", status: "Active" },
+                  { label: "Safe Execution", status: "Enforced" },
+                  { label: "Resource Mgmt", status: "Optimal" },
                 ].map((cap, i) => (
                   <div key={i} className="space-y-1">
-                    <p className="text-[10px] uppercase text-muted-foreground font-bold">{cap.label}</p>
+                    <p className="text-[10px] uppercase text-muted-foreground font-bold">
+                      {cap.label}
+                    </p>
                     <p className="text-xs font-medium text-foreground">{cap.status}</p>
                   </div>
                 ))}
@@ -169,7 +176,9 @@ export function DeviceRegistry() {
               </div>
               <div className="text-sm">
                 <p className="font-medium text-muted-foreground">Cloud Uplink Not Required</p>
-                <p className="text-xs text-muted-foreground/60">System is currently operating in total-isolation mode.</p>
+                <p className="text-xs text-muted-foreground/60">
+                  System is currently operating in total-isolation mode.
+                </p>
               </div>
             </div>
           </div>

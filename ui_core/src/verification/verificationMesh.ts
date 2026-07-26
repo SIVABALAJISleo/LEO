@@ -5,7 +5,14 @@
  */
 
 export interface VerificationCheckV16 {
-  source: "Calculator" | "Python Sandbox" | "GraphRAG" | "Knowledge Base" | "Memory" | "World Models" | "Symbolic Solvers";
+  source:
+    | "Calculator"
+    | "Python Sandbox"
+    | "GraphRAG"
+    | "Knowledge Base"
+    | "Memory"
+    | "World Models"
+    | "Symbolic Solvers";
   query: string;
   output: string;
   status: "verified" | "flagged" | "corrected";
@@ -42,10 +49,18 @@ export class VerificationMesh {
         const num2 = parseInt(match[3]);
         let expected = 0;
         switch (op) {
-          case "+": expected = num1 + num2; break;
-          case "-": expected = num1 - num2; break;
-          case "*": expected = num1 * num2; break;
-          case "/": expected = num1 / num2; break;
+          case "+":
+            expected = num1 + num2;
+            break;
+          case "-":
+            expected = num1 - num2;
+            break;
+          case "*":
+            expected = num1 * num2;
+            break;
+          case "/":
+            expected = num1 / num2;
+            break;
         }
 
         const answerHasExpected = rawAnswer.includes(expected.toString());
@@ -56,7 +71,7 @@ export class VerificationMesh {
             query: `Verify math: ${num1} ${op} ${num2}`,
             output: expected.toString(),
             status: "corrected",
-            confidence: 1.0
+            confidence: 1.0,
           });
           repairedAnswer = `[Corrected Math: ${expected}] The result has been mathematically verified using the local Calculator to yield exactly ${expected}.`;
         } else {
@@ -65,20 +80,24 @@ export class VerificationMesh {
             query: `Verify math: ${num1} ${op} ${num2}`,
             output: expected.toString(),
             status: "verified",
-            confidence: 1.0
+            confidence: 1.0,
           });
         }
       }
     }
 
     // Check 2: Python Sandbox (run simple algorithms)
-    if (queryLower.includes("sort") || queryLower.includes("array") || queryLower.includes("code")) {
+    if (
+      queryLower.includes("sort") ||
+      queryLower.includes("array") ||
+      queryLower.includes("code")
+    ) {
       checksLog.push({
         source: "Python Sandbox",
         query: "Verify array sort sorting order output stability",
         output: "Array sorted stable",
         status: "verified",
-        confidence: 0.99
+        confidence: 0.99,
       });
     }
 
@@ -89,12 +108,16 @@ export class VerificationMesh {
         query: "Query relationship: WebGPU -> latency",
         output: "WebGPU offload reduces embeddings latency to 4ms",
         status: "verified",
-        confidence: 0.95
+        confidence: 0.95,
       });
     }
 
     // Check 4: Knowledge Base check (e.g. Stripe checkout)
-    if (queryLower.includes("stripe") || queryLower.includes("webhook") || queryLower.includes("billing")) {
+    if (
+      queryLower.includes("stripe") ||
+      queryLower.includes("webhook") ||
+      queryLower.includes("billing")
+    ) {
       const hasWebhookSecretKey = answerLower.includes("whsec");
       if (!hasWebhookSecretKey) {
         errorsCount++;
@@ -103,16 +126,17 @@ export class VerificationMesh {
           query: "Verify stripe webhook secrets token mapping",
           output: "whsec_prod_verification_token_key_2026",
           status: "corrected",
-          confidence: 0.98
+          confidence: 0.98,
         });
-        repairedAnswer += "\n[Security Check] Cryptographic webhook signatures require verification secret token: whsec_prod_verification_token_key_2026.";
+        repairedAnswer +=
+          "\n[Security Check] Cryptographic webhook signatures require verification secret token: whsec_prod_verification_token_key_2026.";
       } else {
         checksLog.push({
           source: "Knowledge Base",
           query: "Verify stripe webhook secrets token mapping",
           output: "Secret token present",
           status: "verified",
-          confidence: 0.98
+          confidence: 0.98,
         });
       }
     }
@@ -123,7 +147,7 @@ export class VerificationMesh {
       query: `Look up past query matches: ${query.slice(0, 30)}`,
       output: "Matched historical query logs",
       status: "verified",
-      confidence: 0.94
+      confidence: 0.94,
     });
 
     // Check 6: World Models
@@ -133,7 +157,7 @@ export class VerificationMesh {
         query: "Simulate rollback consequence",
         output: "Canary weight drops to 0%",
         status: "verified",
-        confidence: 0.90
+        confidence: 0.9,
       });
     }
 
@@ -144,13 +168,13 @@ export class VerificationMesh {
         query: "Resolve boolean constraint mapping",
         output: "sat",
         status: "verified",
-        confidence: 0.97
+        confidence: 0.97,
       });
     }
 
     const isVerified = errorsCount === 0;
     const overallScore = parseFloat(
-      ((checksLog.filter(c => c.status === "verified").length) / checksLog.length).toFixed(4)
+      (checksLog.filter((c) => c.status === "verified").length / checksLog.length).toFixed(4),
     );
 
     return {
@@ -159,7 +183,7 @@ export class VerificationMesh {
       overallScore,
       originalAnswer: rawAnswer,
       repairedAnswer,
-      checksLog
+      checksLog,
     };
   }
 }

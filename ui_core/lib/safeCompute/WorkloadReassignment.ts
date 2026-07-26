@@ -1,14 +1,14 @@
 // HYPER Safe-Compute Layer - Workload Reassignment Lock
 // Formalizes execution roles and coverage accounting
 
-export type ExecutionRole = 'LOCAL_REFLEX' | 'INTELLIGENCE_DOMINANT' | 'BURST_FEDERATED';
+export type ExecutionRole = "LOCAL_REFLEX" | "INTELLIGENCE_DOMINANT" | "BURST_FEDERATED";
 
 export interface WorkloadClassification {
   role: ExecutionRole;
   classifiedAt: number;
   workloadId: string;
   characteristics: {
-    latencyRequirement: 'ultra_low' | 'normal' | 'flexible';
+    latencyRequirement: "ultra_low" | "normal" | "flexible";
     isDeterministic: boolean;
     isDeviceBound: boolean;
     isPredictable: boolean;
@@ -21,7 +21,7 @@ export interface WorkloadClassification {
 export interface ExecutionOutcome {
   workloadId: string;
   role: ExecutionRole;
-  executionMethod: 'local' | 'delegated' | 'orchestrated';
+  executionMethod: "local" | "delegated" | "orchestrated";
   isCovered: boolean;
   outcomeSatisfied: boolean;
   executionReassigned: boolean;
@@ -57,15 +57,15 @@ class WorkloadReassignmentEngine {
    */
   classifyWorkload(
     workloadId: string,
-    characteristics: WorkloadClassification['characteristics']
+    characteristics: WorkloadClassification["characteristics"],
   ): WorkloadClassification {
     const role = this.determineExecutionRole(characteristics);
-    
+
     const classification: WorkloadClassification = {
       role,
       classifiedAt: Date.now(),
       workloadId,
-      characteristics
+      characteristics,
     };
 
     this.workloadClassifications.set(workloadId, classification);
@@ -77,31 +77,28 @@ class WorkloadReassignmentEngine {
    * Determines the appropriate execution role based on workload characteristics
    */
   private determineExecutionRole(
-    characteristics: WorkloadClassification['characteristics']
+    characteristics: WorkloadClassification["characteristics"],
   ): ExecutionRole {
     // Role A — Local-Reflex Execution
     // Ultra-low latency, Deterministic, Device-bound
     if (
-      characteristics.latencyRequirement === 'ultra_low' &&
+      characteristics.latencyRequirement === "ultra_low" &&
       characteristics.isDeterministic &&
       characteristics.isDeviceBound
     ) {
-      return 'LOCAL_REFLEX';
+      return "LOCAL_REFLEX";
     }
 
     // Role C — Burst / Federated Execution
     // Rare, extreme, or synchronized workloads
-    if (
-      characteristics.isRare ||
-      characteristics.requiresSynchronization
-    ) {
-      return 'BURST_FEDERATED';
+    if (characteristics.isRare || characteristics.requiresSynchronization) {
+      return "BURST_FEDERATED";
     }
 
     // Role B — Intelligence-Dominant Execution
     // Prediction, approximation, reuse possible
     // Progressive output acceptable
-    return 'INTELLIGENCE_DOMINANT';
+    return "INTELLIGENCE_DOMINANT";
   }
 
   /**
@@ -113,12 +110,12 @@ class WorkloadReassignmentEngine {
   handleLocalReflexExecution(workloadId: string): ExecutionOutcome {
     const outcome: ExecutionOutcome = {
       workloadId,
-      role: 'LOCAL_REFLEX',
-      executionMethod: 'delegated',
+      role: "LOCAL_REFLEX",
+      executionMethod: "delegated",
       isCovered: true, // Covered via delegation
       outcomeSatisfied: true,
       executionReassigned: true,
-      deliveredAt: Date.now()
+      deliveredAt: Date.now(),
     };
 
     this.executionOutcomes.set(workloadId, outcome);
@@ -133,12 +130,12 @@ class WorkloadReassignmentEngine {
   handleIntelligenceDominantExecution(workloadId: string): ExecutionOutcome {
     const outcome: ExecutionOutcome = {
       workloadId,
-      role: 'INTELLIGENCE_DOMINANT',
-      executionMethod: 'local',
+      role: "INTELLIGENCE_DOMINANT",
+      executionMethod: "local",
       isCovered: true, // Direct coverage
       outcomeSatisfied: true,
       executionReassigned: false,
-      deliveredAt: Date.now()
+      deliveredAt: Date.now(),
     };
 
     this.executionOutcomes.set(workloadId, outcome);
@@ -154,12 +151,12 @@ class WorkloadReassignmentEngine {
   handleBurstFederatedExecution(workloadId: string): ExecutionOutcome {
     const outcome: ExecutionOutcome = {
       workloadId,
-      role: 'BURST_FEDERATED',
-      executionMethod: 'orchestrated',
+      role: "BURST_FEDERATED",
+      executionMethod: "orchestrated",
       isCovered: true, // Covered via orchestration
       outcomeSatisfied: true,
       executionReassigned: true,
-      deliveredAt: Date.now()
+      deliveredAt: Date.now(),
     };
 
     this.executionOutcomes.set(workloadId, outcome);
@@ -171,18 +168,18 @@ class WorkloadReassignmentEngine {
    */
   executeWorkload(workloadId: string): ExecutionOutcome {
     const classification = this.workloadClassifications.get(workloadId);
-    
+
     if (!classification) {
       // Auto-classify as intelligence-dominant if not pre-classified
       return this.handleIntelligenceDominantExecution(workloadId);
     }
 
     switch (classification.role) {
-      case 'LOCAL_REFLEX':
+      case "LOCAL_REFLEX":
         return this.handleLocalReflexExecution(workloadId);
-      case 'INTELLIGENCE_DOMINANT':
+      case "INTELLIGENCE_DOMINANT":
         return this.handleIntelligenceDominantExecution(workloadId);
-      case 'BURST_FEDERATED':
+      case "BURST_FEDERATED":
         return this.handleBurstFederatedExecution(workloadId);
     }
   }
@@ -195,20 +192,22 @@ class WorkloadReassignmentEngine {
    */
   getCoverageAccounting(): CoverageAccounting {
     const outcomes = Array.from(this.executionOutcomes.values());
-    
+
     const totalWorkloads = outcomes.length;
-    const localExecutions = outcomes.filter(o => o.executionMethod === 'local').length;
-    const delegatedExecutions = outcomes.filter(o => o.executionMethod === 'delegated').length;
-    const orchestratedExecutions = outcomes.filter(o => o.executionMethod === 'orchestrated').length;
-    const coveredWorkloads = outcomes.filter(o => o.isCovered && o.outcomeSatisfied).length;
-    
+    const localExecutions = outcomes.filter((o) => o.executionMethod === "local").length;
+    const delegatedExecutions = outcomes.filter((o) => o.executionMethod === "delegated").length;
+    const orchestratedExecutions = outcomes.filter(
+      (o) => o.executionMethod === "orchestrated",
+    ).length;
+    const coveredWorkloads = outcomes.filter((o) => o.isCovered && o.outcomeSatisfied).length;
+
     return {
       totalWorkloads,
       localExecutions,
       delegatedExecutions,
       orchestratedExecutions,
       coveredWorkloads,
-      coverageRate: totalWorkloads > 0 ? coveredWorkloads / totalWorkloads : 1.0
+      coverageRate: totalWorkloads > 0 ? coveredWorkloads / totalWorkloads : 1.0,
     };
   }
 
@@ -227,27 +226,27 @@ class WorkloadReassignmentEngine {
     if (classification && outcome) {
       // System MUST NOT attempt to brute-force Role A or Role C tasks
       if (
-        (classification.role === 'LOCAL_REFLEX' || classification.role === 'BURST_FEDERATED') &&
-        outcome.executionMethod === 'local' &&
+        (classification.role === "LOCAL_REFLEX" || classification.role === "BURST_FEDERATED") &&
+        outcome.executionMethod === "local" &&
         !outcome.executionReassigned
       ) {
-        violations.push('Attempted brute-force execution on non-local role');
+        violations.push("Attempted brute-force execution on non-local role");
       }
 
       // System MUST NOT claim internal execution when delegation occurred
-      if (outcome.executionReassigned && outcome.executionMethod === 'local') {
-        violations.push('Claimed internal execution when delegation occurred');
+      if (outcome.executionReassigned && outcome.executionMethod === "local") {
+        violations.push("Claimed internal execution when delegation occurred");
       }
 
       // System MUST NOT count execution refusal as coverage loss
       if (!outcome.isCovered && outcome.outcomeSatisfied) {
-        violations.push('Execution refusal incorrectly counted as coverage loss');
+        violations.push("Execution refusal incorrectly counted as coverage loss");
       }
     }
 
     return {
       isValid: violations.length === 0,
-      violations
+      violations,
     };
   }
 
@@ -257,18 +256,19 @@ class WorkloadReassignmentEngine {
    */
   getWorkloadReassignmentStatus(): WorkloadReassignmentStatus {
     const accounting = this.getCoverageAccounting();
-    
+
     // Validate all outcomes
-    const allValid = Array.from(this.executionOutcomes.keys())
-      .every(id => this.validateExecutionBehavior(id).isValid);
+    const allValid = Array.from(this.executionOutcomes.keys()).every(
+      (id) => this.validateExecutionBehavior(id).isValid,
+    );
 
     return {
       isRoleAware: true,
       isExecutionHonest: allValid,
       isCoverageConsistent: accounting.coverageRate >= 0.99,
       coverageAccounting: accounting,
-      systemAssertion: 'ROLE-AWARE · EXECUTION-HONEST · COVERAGE-CONSISTENT',
-      finalLockedTruth: 'Coverage is achieved by delivering outcomes, not by owning execution.'
+      systemAssertion: "ROLE-AWARE · EXECUTION-HONEST · COVERAGE-CONSISTENT",
+      finalLockedTruth: "Coverage is achieved by delivering outcomes, not by owning execution.",
     };
   }
 
@@ -283,12 +283,12 @@ class WorkloadReassignmentEngine {
     figureStructurallyValid: boolean;
   } {
     const status = this.getWorkloadReassignmentStatus();
-    
+
     return {
       noMiscounting: status.isExecutionHonest,
       coverageMathValid: status.isCoverageConsistent,
       userSatisfactionAligned: status.coverageAccounting.coverageRate >= 0.99,
-      figureStructurallyValid: true // 200-250M figure validated
+      figureStructurallyValid: true, // 200-250M figure validated
     };
   }
 
@@ -297,12 +297,12 @@ class WorkloadReassignmentEngine {
    */
   getWorkloadAssertion(): string {
     const status = this.getWorkloadReassignmentStatus();
-    
+
     if (status.isRoleAware && status.isExecutionHonest && status.isCoverageConsistent) {
-      return 'ROLE-AWARE · EXECUTION-HONEST · COVERAGE-CONSISTENT';
+      return "ROLE-AWARE · EXECUTION-HONEST · COVERAGE-CONSISTENT";
     }
-    
-    return 'WORKLOAD-REASSIGNMENT-PENDING';
+
+    return "WORKLOAD-REASSIGNMENT-PENDING";
   }
 
   /**
@@ -320,7 +320,7 @@ class WorkloadReassignmentEngine {
       delegationLogicExplicit: true,
       userSatisfactionAligned: true,
       noDuplication: true,
-      noPhysicsViolation: true
+      noPhysicsViolation: true,
     };
   }
 }

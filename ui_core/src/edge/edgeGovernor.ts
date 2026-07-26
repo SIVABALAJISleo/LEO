@@ -24,24 +24,30 @@ export class EdgeGovernor {
   private localMemoryPool: string[] = [
     "Local Stripe credentials: whsec_prod_verification_token_key_2026",
     "Active iGPU Acceleration: WebGPU is active",
-    "Gossip routing rules limit infinite loop index lists"
+    "Gossip routing rules limit infinite loop index lists",
   ];
 
   /**
    * Executes offline inference checking local index models, GGUF runtimes, and local embeddings.
    */
-  public executeLocalTask(prompt: string, backend: EdgeCompilationMetrics["backendType"]): EdgeInferenceReport {
+  public executeLocalTask(
+    prompt: string,
+    backend: EdgeCompilationMetrics["backendType"],
+  ): EdgeInferenceReport {
     const promptLower = prompt.toLowerCase();
-    
+
     // Local Memory lookup
-    const localSearchResultCount = this.localMemoryPool.filter(fact => fact.toLowerCase().includes(promptLower)).length;
+    const localSearchResultCount = this.localMemoryPool.filter((fact) =>
+      fact.toLowerCase().includes(promptLower),
+    ).length;
     const localMemoryMatched = localSearchResultCount > 0;
 
     let resultText = "[Edge Offline Inference] Query processed offline on local model parameters.";
     if (localMemoryMatched) {
-      resultText = `[Edge Local Memory Match] Verified Offline Source: "${this.localMemoryPool.find(fact => fact.toLowerCase().includes(promptLower))}"`;
+      resultText = `[Edge Local Memory Match] Verified Offline Source: "${this.localMemoryPool.find((fact) => fact.toLowerCase().includes(promptLower))}"`;
     } else if (promptLower.includes("stripe") || promptLower.includes("billing")) {
-      resultText = "[Edge Offline Inference] Webhook signature processing requires cryptographic HMAC verification via whsec production tokens.";
+      resultText =
+        "[Edge Offline Inference] Webhook signature processing requires cryptographic HMAC verification via whsec production tokens.";
     }
 
     return {
@@ -53,9 +59,9 @@ export class EdgeGovernor {
         backendType: backend,
         compilationTimeMs: 145,
         memoryFootprintMB: 512,
-        gpuAccelerationActive: backend === "WebGPU" || backend === "llama.cpp"
+        gpuAccelerationActive: backend === "WebGPU" || backend === "llama.cpp",
       },
-      accuracyRate: 0.985
+      accuracyRate: 0.985,
     };
   }
 }

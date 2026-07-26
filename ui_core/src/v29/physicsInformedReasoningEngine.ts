@@ -16,22 +16,23 @@ export interface VerificationOutcome {
 }
 
 export class PhysicsInformedReasoningEngine {
-  verifyConstraints(
-    actionName: string,
-    spec: PhysicalConstraints
-  ): VerificationOutcome {
+  verifyConstraints(actionName: string, spec: PhysicalConstraints): VerificationOutcome {
     const start = performance.now();
     const violations: string[] = [];
 
     // 1. Evaluate physical boundary limits
     const momentum = spec.massKg * spec.velocityMS;
     if (momentum > 12000) {
-      violations.push(`Momentum (${momentum.toFixed(1)} N·s) exceeded corridor structural load limits.`);
+      violations.push(
+        `Momentum (${momentum.toFixed(1)} N·s) exceeded corridor structural load limits.`,
+      );
     }
 
     // 2. Evaluate engineering tolerances
     if (spec.maxAccelerationG > 4.5) {
-      violations.push(`Acceleration G-force (${spec.maxAccelerationG} G) exceeded payload stress constraints.`);
+      violations.push(
+        `Acceleration G-force (${spec.maxAccelerationG} G) exceeded payload stress constraints.`,
+      );
     }
 
     // 3. Optimization bounds check
@@ -41,12 +42,12 @@ export class PhysicsInformedReasoningEngine {
 
     const end = performance.now();
     const surrogateComputationTimeMs = parseFloat((end - start).toFixed(4));
-    
+
     return {
       compliant: violations.length === 0,
       violations,
       surrogateComputationTimeMs: Math.max(0.01, surrogateComputationTimeMs),
-      estimatedEnergyJoules: spec.massKg * 9.81 * spec.velocityMS * 0.08
+      estimatedEnergyJoules: spec.massKg * 9.81 * spec.velocityMS * 0.08,
     };
   }
 }

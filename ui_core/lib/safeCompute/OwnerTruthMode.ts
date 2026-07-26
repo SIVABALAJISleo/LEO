@@ -15,7 +15,7 @@ export interface TruthDiagnostics {
   };
   totalRequests: number;
   compressionRatio: number;
-  systemHealth: 'excellent' | 'good' | 'fair' | 'attention_needed';
+  systemHealth: "excellent" | "good" | "fair" | "attention_needed";
   insights: string[];
 }
 
@@ -42,23 +42,21 @@ class OwnerTruthModeEngine {
   /**
    * Record a request outcome for truth tracking
    */
-  recordOutcome(
-    outcome: 'instant' | 'approximate' | 'exact' | 'deferred'
-  ): void {
-    const dateKey = new Date().toISOString().split('T')[0];
+  recordOutcome(outcome: "instant" | "approximate" | "exact" | "deferred"): void {
+    const dateKey = new Date().toISOString().split("T")[0];
     const stats = this.getOrCreateStats(dateKey);
 
     switch (outcome) {
-      case 'instant':
+      case "instant":
         stats.instantServed++;
         break;
-      case 'approximate':
+      case "approximate":
         stats.approximateAccepted++;
         break;
-      case 'exact':
+      case "exact":
         stats.exactComputed++;
         break;
-      case 'deferred':
+      case "deferred":
         stats.deferredByPhysics++;
         break;
     }
@@ -74,7 +72,7 @@ class OwnerTruthModeEngine {
    * using proper authentication (e.g., admin role checks via useAdminRole hook)
    */
   getDiagnostics(): TruthDiagnostics | null {
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date().toISOString().split("T")[0];
     const stats = this.dailyStats.get(today) || this.createEmptyStats(today);
     const total = stats.totalRequests || 1; // Prevent division by zero
 
@@ -87,9 +85,10 @@ class OwnerTruthModeEngine {
     // Theoretical: if all requests needed fresh compute vs actual fresh compute
     const theoreticalFreshNeeded = total;
     const actualFreshComputed = stats.exactComputed;
-    const compressionRatio = actualFreshComputed > 0 
-      ? theoreticalFreshNeeded / actualFreshComputed 
-      : theoreticalFreshNeeded;
+    const compressionRatio =
+      actualFreshComputed > 0
+        ? theoreticalFreshNeeded / actualFreshComputed
+        : theoreticalFreshNeeded;
 
     // Determine system health
     const health = this.determineHealth(instantPercent, approxPercent, exactPercent);
@@ -140,8 +139,8 @@ class OwnerTruthModeEngine {
     for (let i = 0; i < days; i++) {
       const date = new Date(today);
       date.setDate(date.getDate() - i);
-      const dateKey = date.toISOString().split('T')[0];
-      
+      const dateKey = date.toISOString().split("T")[0];
+
       const stats = this.dailyStats.get(dateKey);
       if (stats) {
         result.push(stats);
@@ -156,9 +155,9 @@ class OwnerTruthModeEngine {
    */
   generateWeeklyReport(): string {
     const stats = this.getHistoricalStats(7);
-    
+
     if (stats.length === 0) {
-      return 'No data available for the past week.';
+      return "No data available for the past week.";
     }
 
     const totals = stats.reduce(
@@ -169,7 +168,7 @@ class OwnerTruthModeEngine {
         deferred: acc.deferred + day.deferredByPhysics,
         total: acc.total + day.totalRequests,
       }),
-      { instant: 0, approximate: 0, exact: 0, deferred: 0, total: 0 }
+      { instant: 0, approximate: 0, exact: 0, deferred: 0, total: 0 },
     );
 
     const avgCompressionRatio = totals.exact > 0 ? totals.total / totals.exact : totals.total;
@@ -197,10 +196,10 @@ Effective Compression Ratio: ${Math.round(avgCompressionRatio)}x
 (${totals.total} requests served with ${totals.exact} fresh computations)
 
 System Status: ${this.determineHealth(
-  (totals.instant / totals.total) * 100,
-  (totals.approximate / totals.total) * 100,
-  (totals.exact / totals.total) * 100
-).toUpperCase()}
+      (totals.instant / totals.total) * 100,
+      (totals.approximate / totals.total) * 100,
+      (totals.exact / totals.total) * 100,
+    ).toUpperCase()}
 
 REALITY LOCK: COVERAGE-MAXIMIZED · CONSTRAINT-PRUNED
     `.trim();
@@ -226,65 +225,70 @@ REALITY LOCK: COVERAGE-MAXIMIZED · CONSTRAINT-PRUNED
   private determineHealth(
     instantPercent: number,
     approxPercent: number,
-    exactPercent: number
-  ): TruthDiagnostics['systemHealth'] {
+    exactPercent: number,
+  ): TruthDiagnostics["systemHealth"] {
     // Excellent: >70% instant, <10% exact
     if (instantPercent >= 70 && exactPercent < 10) {
-      return 'excellent';
+      return "excellent";
     }
 
     // Good: >50% instant, <20% exact
     if (instantPercent >= 50 && exactPercent < 20) {
-      return 'good';
+      return "good";
     }
 
     // Fair: >30% instant, <40% exact
     if (instantPercent >= 30 && exactPercent < 40) {
-      return 'fair';
+      return "fair";
     }
 
     // Attention needed: high exact computation load
-    return 'attention_needed';
+    return "attention_needed";
   }
 
   private generateSummary(stats: DailyStats, compressionRatio: number): string {
     if (stats.totalRequests === 0) {
-      return 'No requests processed today yet.';
+      return "No requests processed today yet.";
     }
 
     const instantPercent = Math.round((stats.instantServed / stats.totalRequests) * 100);
-    
+
     return `Today: ${stats.totalRequests} requests processed. ${instantPercent}% served instantly. Compression ratio: ${Math.round(compressionRatio)}x.`;
   }
 
   private generateInsights(
     stats: DailyStats,
-    percentages: { instantPercent: number; approxPercent: number; exactPercent: number; deferredPercent: number }
+    percentages: {
+      instantPercent: number;
+      approxPercent: number;
+      exactPercent: number;
+      deferredPercent: number;
+    },
   ): string[] {
     const insights: string[] = [];
 
     if (percentages.instantPercent >= 80) {
-      insights.push('Cache and optimization are performing excellently.');
+      insights.push("Cache and optimization are performing excellently.");
     }
 
     if (percentages.exactPercent > 30) {
-      insights.push('Higher than normal fresh computation load - consider cache warming.');
+      insights.push("Higher than normal fresh computation load - consider cache warming.");
     }
 
     if (percentages.deferredPercent > 10) {
-      insights.push('Some requests hitting physical limits - expected for heavy workloads.');
+      insights.push("Some requests hitting physical limits - expected for heavy workloads.");
     }
 
     if (percentages.approxPercent > 40) {
-      insights.push('Users are accepting quick results frequently - good for responsiveness.');
+      insights.push("Users are accepting quick results frequently - good for responsiveness.");
     }
 
     if (stats.totalRequests < 10) {
-      insights.push('Low request volume today.');
+      insights.push("Low request volume today.");
     }
 
     if (insights.length === 0) {
-      insights.push('System operating within normal parameters.');
+      insights.push("System operating within normal parameters.");
     }
 
     return insights;

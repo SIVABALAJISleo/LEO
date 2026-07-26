@@ -43,7 +43,9 @@ const Index = () => {
           <div className="animate-fade-in-up">
             <div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 border border-primary/30 mb-8 backdrop-blur-md animate-pulse-glow">
               <Zap className="h-4 w-4 text-primary mr-2" />
-              <span className="text-sm font-bold text-primary tracking-wide uppercase">Certified Production Grade • MNC Standard Architecture</span>
+              <span className="text-sm font-bold text-primary tracking-wide uppercase">
+                Certified Production Grade • MNC Standard Architecture
+              </span>
             </div>
 
             <h1 className="text-5xl sm:text-6xl lg:text-8xl font-black mb-6 leading-tight tracking-tighter">
@@ -53,13 +55,16 @@ const Index = () => {
             </h1>
 
             <p className="text-xl text-foreground/70 max-w-3xl mx-auto mb-8">
-              Achieve high-end GPU performance using intelligent software algorithms.
-              AI inference, 4K rendering, VR processing, and large model training—all optimized for any hardware.
+              Achieve high-end GPU performance using intelligent software algorithms. AI inference,
+              4K rendering, VR processing, and large model training—all optimized for any hardware.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
               <Link to="/auth/signup">
-                <Button size="lg" className="bg-gradient-primary shadow-glow hover:scale-105 transition-transform">
+                <Button
+                  size="lg"
+                  className="bg-gradient-primary shadow-glow hover:scale-105 transition-transform"
+                >
                   Get Started Free
                   <Zap className="ml-2 h-5 w-5" />
                 </Button>
@@ -80,7 +85,11 @@ const Index = () => {
                 { value: "$0", label: "Hardware Cost" },
                 { value: "1000s+", label: "Concurrent Users" },
               ].map((stat, idx) => (
-                <div key={idx} className="text-center animate-fade-in" style={{ animationDelay: `${idx * 100}ms` }}>
+                <div
+                  key={idx}
+                  className="text-center animate-fade-in"
+                  style={{ animationDelay: `${idx * 100}ms` }}
+                >
                   <div className="text-3xl font-bold text-primary mb-1">{stat.value}</div>
                   <div className="text-sm text-foreground/60">{stat.label}</div>
                 </div>
@@ -184,24 +193,60 @@ const Index = () => {
                 </thead>
                 <tbody>
                   {[
-                    { task: "AI Inference", trad: "Requires GPU", hyper: "Distilled models + caching", need: "Neutralized" },
-                    { task: "4K Video Preview", trad: "Full GPU render", hyper: "Proxy + async refinement", need: "Neutralized" },
-                    { task: "Ray Tracing", trad: "Hardware RT cores", hyper: "Raster preview + cloud stream", need: "Optional" },
-                    { task: "Model Training", trad: "Multi-GPU cluster", hyper: "LoRA + pretrained delegation", need: "Delegated" },
-                    { task: "VR Rendering", trad: "<2ms GPU latency", hyper: "Predictive timewarp + streaming", need: "Optional" },
-                    { task: "3D Processing", trad: "Full GPU compute", hyper: "LOD preview + progressive load", need: "Neutralized" },
+                    {
+                      task: "AI Inference",
+                      trad: "Requires GPU",
+                      hyper: "Distilled models + caching",
+                      need: "Neutralized",
+                    },
+                    {
+                      task: "4K Video Preview",
+                      trad: "Full GPU render",
+                      hyper: "Proxy + async refinement",
+                      need: "Neutralized",
+                    },
+                    {
+                      task: "Ray Tracing",
+                      trad: "Hardware RT cores",
+                      hyper: "Raster preview + cloud stream",
+                      need: "Optional",
+                    },
+                    {
+                      task: "Model Training",
+                      trad: "Multi-GPU cluster",
+                      hyper: "LoRA + pretrained delegation",
+                      need: "Delegated",
+                    },
+                    {
+                      task: "VR Rendering",
+                      trad: "<2ms GPU latency",
+                      hyper: "Predictive timewarp + streaming",
+                      need: "Optional",
+                    },
+                    {
+                      task: "3D Processing",
+                      trad: "Full GPU compute",
+                      hyper: "LOD preview + progressive load",
+                      need: "Neutralized",
+                    },
                   ].map((row, idx) => (
-                    <tr key={idx} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
+                    <tr
+                      key={idx}
+                      className="border-b border-border/50 hover:bg-muted/30 transition-colors"
+                    >
                       <td className="py-4 px-4 font-medium">{row.task}</td>
                       <td className="py-4 px-4 text-foreground/70">{row.trad}</td>
                       <td className="py-4 px-4 text-primary font-medium">{row.hyper}</td>
                       <td className="py-4 px-4">
-                        <span className={`px-3 py-1 rounded-full text-sm font-medium ${row.need === 'Neutralized'
-                            ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-                            : row.need === 'Optional'
-                              ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
-                              : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
-                          }`}>
+                        <span
+                          className={`px-3 py-1 rounded-full text-sm font-medium ${
+                            row.need === "Neutralized"
+                              ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+                              : row.need === "Optional"
+                                ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
+                                : "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400"
+                          }`}
+                        >
                           {row.need}
                         </span>
                       </td>
@@ -211,7 +256,8 @@ const Index = () => {
               </table>
             </div>
             <p className="text-sm text-muted-foreground mt-4 text-center">
-              GPU replacement: ❌ NOT CLAIMED • GPU dependency neutralized: ✅ YES • Practical coverage: 98-99%
+              GPU replacement: ❌ NOT CLAIMED • GPU dependency neutralized: ✅ YES • Practical
+              coverage: 98-99%
             </p>
           </Card>
         </div>
@@ -234,14 +280,25 @@ const Index = () => {
                 price: "$0",
                 period: "/month",
                 description: "For individuals getting started",
-                features: ["Basic dashboard access", "Up to 5 concurrent jobs", "Community support", "10 GB storage"],
+                features: [
+                  "Basic dashboard access",
+                  "Up to 5 concurrent jobs",
+                  "Community support",
+                  "10 GB storage",
+                ],
               },
               {
                 name: "HYPER Pro",
                 price: "$49",
                 period: "/month",
                 description: "For professionals and teams",
-                features: ["Priority job processing", "Up to 50 concurrent jobs", "Email support (24h)", "100 GB storage", "Advanced modules"],
+                features: [
+                  "Priority job processing",
+                  "Up to 50 concurrent jobs",
+                  "Email support (24h)",
+                  "100 GB storage",
+                  "Advanced modules",
+                ],
                 popular: true,
               },
               {
@@ -249,15 +306,22 @@ const Index = () => {
                 price: "Custom",
                 period: "",
                 description: "For large organizations",
-                features: ["Dedicated compute cluster", "Unlimited concurrent jobs", "24/7 priority support", "Custom SLAs", "On-premise option"],
+                features: [
+                  "Dedicated compute cluster",
+                  "Unlimited concurrent jobs",
+                  "24/7 priority support",
+                  "Custom SLAs",
+                  "On-premise option",
+                ],
               },
             ].map((tier, idx) => (
               <Card
                 key={idx}
-                className={`p-6 ${tier.popular
+                className={`p-6 ${
+                  tier.popular
                     ? "border-primary shadow-glow scale-105"
                     : "border-border hover:border-primary/50"
-                  } transition-all`}
+                } transition-all`}
               >
                 {tier.popular && (
                   <div className="bg-gradient-primary text-primary-foreground text-xs font-bold py-1 px-3 rounded-full mb-4 inline-block">
@@ -278,14 +342,15 @@ const Index = () => {
                     </li>
                   ))}
                 </ul>
-                <Link to={tier.name === 'Enterprise' ? '/billing/enterprise' : '/auth/signup'}>
+                <Link to={tier.name === "Enterprise" ? "/billing/enterprise" : "/auth/signup"}>
                   <Button
-                    className={`w-full ${tier.popular
+                    className={`w-full ${
+                      tier.popular
                         ? "bg-gradient-primary shadow-glow"
                         : "bg-secondary hover:bg-secondary/80"
-                      }`}
+                    }`}
                   >
-                    {tier.name === 'Enterprise' ? 'Contact Sales' : 'Get Started'}
+                    {tier.name === "Enterprise" ? "Contact Sales" : "Get Started"}
                   </Button>
                 </Link>
               </Card>
@@ -314,7 +379,10 @@ const Index = () => {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link to="/auth/signup">
-              <Button size="lg" className="bg-gradient-primary shadow-glow hover:scale-105 transition-transform">
+              <Button
+                size="lg"
+                className="bg-gradient-primary shadow-glow hover:scale-105 transition-transform"
+              >
                 Start Free Today
                 <Shield className="ml-2 h-5 w-5" />
               </Button>

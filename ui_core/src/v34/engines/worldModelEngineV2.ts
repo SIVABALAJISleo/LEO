@@ -24,11 +24,16 @@ export interface WorldState {
 }
 
 export class WorldModelEngineV2 {
-  private zones: string[] = ["NPU_Core", "iGPU_Vector_Register", "L3_Cache_Lockbox", "Storage_Docs"];
+  private zones: string[] = [
+    "NPU_Core",
+    "iGPU_Vector_Register",
+    "L3_Cache_Lockbox",
+    "Storage_Docs",
+  ];
   private entities: EntityState[] = [
     { id: "ent-1", name: "TernaryKernel", zone: "NPU_Core", status: "idle" },
     { id: "ent-2", name: "EmbeddingsMatrix", zone: "iGPU_Vector_Register", status: "idle" },
-    { id: "ent-3", name: "KnowledgeGraph", zone: "Storage_Docs", status: "idle" }
+    { id: "ent-3", name: "KnowledgeGraph", zone: "Storage_Docs", status: "idle" },
   ];
 
   private causalRules: CausalLink[] = [
@@ -36,31 +41,33 @@ export class WorldModelEngineV2 {
       action: "QuantizeWeights",
       triggerNode: "TernaryKernel",
       consequence: "Reduces memory size and avoids matrix multiplications.",
-      probability: 0.98
+      probability: 0.98,
     },
     {
       action: "LoadDenseModel",
       triggerNode: "Storage_Docs",
       consequence: "Saturates memory bus, causing L3 cache misses.",
-      probability: 0.88
-    }
+      probability: 0.88,
+    },
   ];
 
   /**
    * Predicts results of actions using the topological maps and causal links.
    */
   public simulateAction(actionName: string): WorldState {
-    const rulesMatched = this.causalRules.filter(r => r.action.toLowerCase() === actionName.toLowerCase());
-    
+    const rulesMatched = this.causalRules.filter(
+      (r) => r.action.toLowerCase() === actionName.toLowerCase(),
+    );
+
     let predictedNextState = "Standard operation continue.";
     let consistencyScore = 0.95;
 
     if (rulesMatched.length > 0) {
       predictedNextState = rulesMatched[0].consequence;
       consistencyScore = rulesMatched[0].probability;
-      
+
       // Update entity states based on action
-      this.entities = this.entities.map(e => {
+      this.entities = this.entities.map((e) => {
         if (e.zone === rulesMatched[0].triggerNode) {
           return { ...e, status: "busy" };
         }
@@ -73,7 +80,7 @@ export class WorldModelEngineV2 {
       zones: this.zones,
       entities: this.entities,
       predictedNextState,
-      causalConsistencyScore: consistencyScore
+      causalConsistencyScore: consistencyScore,
     };
   }
 }

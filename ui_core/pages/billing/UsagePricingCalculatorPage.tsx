@@ -1,10 +1,10 @@
-import { useState, useMemo } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
-import { Calculator, Cpu, HardDrive, Zap, Film } from 'lucide-react';
-import { calculateCost, PRICING_CONFIG } from '@/hooks/useBillingData';
+import { useState, useMemo } from "react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { Calculator, Cpu, HardDrive, Zap, Film } from "lucide-react";
+import { calculateCost, PRICING_CONFIG } from "@/hooks/useBillingData";
 
 const UsagePricingCalculatorPage = () => {
   const [usage, setUsage] = useState({
@@ -19,13 +19,13 @@ const UsagePricingCalculatorPage = () => {
 
   const handleChange = (field: keyof typeof usage, value: string) => {
     const numValue = parseFloat(value) || 0;
-    setUsage(prev => ({ ...prev, [field]: numValue }));
+    setUsage((prev) => ({ ...prev, [field]: numValue }));
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
       minimumFractionDigits: 2,
     }).format(amount);
   };
@@ -37,9 +37,7 @@ const UsagePricingCalculatorPage = () => {
           <Calculator className="h-8 w-8 text-primary" />
           Usage Pricing Calculator
         </h1>
-        <p className="text-muted-foreground">
-          Estimate your monthly costs based on expected usage
-        </p>
+        <p className="text-muted-foreground">Estimate your monthly costs based on expected usage</p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
@@ -58,11 +56,12 @@ const UsagePricingCalculatorPage = () => {
               <Input
                 type="number"
                 value={usage.inferenceTokens}
-                onChange={(e) => handleChange('inferenceTokens', e.target.value)}
+                onChange={(e) => handleChange("inferenceTokens", e.target.value)}
                 placeholder="e.g., 100000"
               />
               <p className="text-xs text-muted-foreground">
-                Rate: ${PRICING_CONFIG.inference.rate} per {PRICING_CONFIG.inference.per.toLocaleString()} tokens
+                Rate: ${PRICING_CONFIG.inference.rate} per{" "}
+                {PRICING_CONFIG.inference.per.toLocaleString()} tokens
               </p>
             </div>
 
@@ -74,7 +73,7 @@ const UsagePricingCalculatorPage = () => {
               <Input
                 type="number"
                 value={usage.trainingHours}
-                onChange={(e) => handleChange('trainingHours', e.target.value)}
+                onChange={(e) => handleChange("trainingHours", e.target.value)}
                 placeholder="e.g., 10"
               />
               <p className="text-xs text-muted-foreground">
@@ -90,7 +89,7 @@ const UsagePricingCalculatorPage = () => {
               <Input
                 type="number"
                 value={usage.renderingHours}
-                onChange={(e) => handleChange('renderingHours', e.target.value)}
+                onChange={(e) => handleChange("renderingHours", e.target.value)}
                 placeholder="e.g., 5"
               />
               <p className="text-xs text-muted-foreground">
@@ -106,11 +105,12 @@ const UsagePricingCalculatorPage = () => {
               <Input
                 type="number"
                 value={usage.storageGB}
-                onChange={(e) => handleChange('storageGB', e.target.value)}
+                onChange={(e) => handleChange("storageGB", e.target.value)}
                 placeholder="e.g., 25"
               />
               <p className="text-xs text-muted-foreground">
-                First {PRICING_CONFIG.storage.freeGB} GB free, then ${PRICING_CONFIG.storage.rate}/GB/month
+                First {PRICING_CONFIG.storage.freeGB} GB free, then ${PRICING_CONFIG.storage.rate}
+                /GB/month
               </p>
             </div>
           </CardContent>
@@ -167,7 +167,8 @@ const UsagePricingCalculatorPage = () => {
 
             <div className="bg-primary/10 rounded-lg p-4">
               <p className="text-sm text-center">
-                <span className="font-medium">Tip:</span> Upgrade to HYPER Pro for priority processing and better rates on high-volume usage.
+                <span className="font-medium">Tip:</span> Upgrade to HYPER Pro for priority
+                processing and better rates on high-volume usage.
               </p>
             </div>
           </CardContent>

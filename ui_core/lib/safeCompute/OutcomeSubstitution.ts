@@ -1,10 +1,10 @@
 /**
  * OUTCOME-SUBSTITUTION ENGINE
- * 
+ *
  * Replaces unsatisfiable execution goals with satisfiable outcome goals.
  * Closes the final brute-force dependency gap by converting "cannot compute"
  * into "goal achieved differently".
- * 
+ *
  * CRITICAL: This does NOT increase exact execution coverage.
  * This does NOT claim physical equivalence.
  * This operates above all existing intelligence, perception, and certainty layers.
@@ -14,7 +14,7 @@ export interface OutcomeSubstitutionCheck {
   taskId: string;
   isApplicable: boolean;
   reason: string;
-  classification: 'OUTCOME_SATISFIED' | 'REQUIRES_ORIGINAL_MECHANISM' | 'UNDETERMINED';
+  classification: "OUTCOME_SATISFIED" | "REQUIRES_ORIGINAL_MECHANISM" | "UNDETERMINED";
   substitutedMechanism?: string;
   preservedOutcome?: string;
 }
@@ -28,17 +28,17 @@ export interface OutcomeSubstitutionStatus {
 }
 
 // Mechanism substitution categories (INTERNAL ONLY - never expose)
-type SubstitutionPattern = 
-  | 'reflex_to_intent_buffer'
-  | 'full_training_to_expert_routing'
-  | 'live_edit_to_proxy_control'
-  | 'exhaustive_to_bounds_guarantee'
-  | 'custom';
+type SubstitutionPattern =
+  | "reflex_to_intent_buffer"
+  | "full_training_to_expert_routing"
+  | "live_edit_to_proxy_control"
+  | "exhaustive_to_bounds_guarantee"
+  | "custom";
 
 class OutcomeSubstitutionEngine {
   private static instance: OutcomeSubstitutionEngine;
   private classifiedTasks: Map<string, OutcomeSubstitutionCheck> = new Map();
-  
+
   private constructor() {}
 
   static getInstance(): OutcomeSubstitutionEngine {
@@ -50,7 +50,7 @@ class OutcomeSubstitutionEngine {
 
   /**
    * Check if a task qualifies for outcome substitution
-   * 
+   *
    * Applicability conditions (ALL must be true):
    * 1. User's success metric is goal-based, not mechanism-based
    * 2. Substituted path satisfies the same decision, experience, or utility
@@ -60,20 +60,20 @@ class OutcomeSubstitutionEngine {
   checkApplicability(
     taskId: string,
     taskMetadata: {
-      successMetric: 'goal_based' | 'mechanism_based';
+      successMetric: "goal_based" | "mechanism_based";
       outcomePreserved: boolean;
       requiresOriginalMechanism: boolean;
       requestsCertifiedEquivalence: boolean;
       proposedSubstitution?: SubstitutionPattern;
-    }
+    },
   ): OutcomeSubstitutionCheck {
     // Check if mechanism is explicitly required
-    if (taskMetadata.successMetric === 'mechanism_based') {
+    if (taskMetadata.successMetric === "mechanism_based") {
       const result: OutcomeSubstitutionCheck = {
         taskId,
         isApplicable: false,
-        reason: 'Success metric is mechanism-based - original execution required',
-        classification: 'REQUIRES_ORIGINAL_MECHANISM',
+        reason: "Success metric is mechanism-based - original execution required",
+        classification: "REQUIRES_ORIGINAL_MECHANISM",
       };
       this.classifiedTasks.set(taskId, result);
       return result;
@@ -84,8 +84,8 @@ class OutcomeSubstitutionEngine {
       const result: OutcomeSubstitutionCheck = {
         taskId,
         isApplicable: false,
-        reason: 'Legal or safety constraint requires original mechanism',
-        classification: 'REQUIRES_ORIGINAL_MECHANISM',
+        reason: "Legal or safety constraint requires original mechanism",
+        classification: "REQUIRES_ORIGINAL_MECHANISM",
       };
       this.classifiedTasks.set(taskId, result);
       return result;
@@ -96,8 +96,8 @@ class OutcomeSubstitutionEngine {
       const result: OutcomeSubstitutionCheck = {
         taskId,
         isApplicable: false,
-        reason: 'User explicitly requested certified physical equivalence',
-        classification: 'REQUIRES_ORIGINAL_MECHANISM',
+        reason: "User explicitly requested certified physical equivalence",
+        classification: "REQUIRES_ORIGINAL_MECHANISM",
       };
       this.classifiedTasks.set(taskId, result);
       return result;
@@ -108,8 +108,8 @@ class OutcomeSubstitutionEngine {
       const result: OutcomeSubstitutionCheck = {
         taskId,
         isApplicable: false,
-        reason: 'Substituted path does not preserve required outcome',
-        classification: 'UNDETERMINED',
+        reason: "Substituted path does not preserve required outcome",
+        classification: "UNDETERMINED",
       };
       this.classifiedTasks.set(taskId, result);
       return result;
@@ -119,10 +119,10 @@ class OutcomeSubstitutionEngine {
     const result: OutcomeSubstitutionCheck = {
       taskId,
       isApplicable: true,
-      reason: 'Goal-based success metric satisfied through mechanism substitution',
-      classification: 'OUTCOME_SATISFIED',
+      reason: "Goal-based success metric satisfied through mechanism substitution",
+      classification: "OUTCOME_SATISFIED",
       substitutedMechanism: this.getSubstitutionDescription(taskMetadata.proposedSubstitution),
-      preservedOutcome: 'User goal achieved through alternative execution path',
+      preservedOutcome: "User goal achieved through alternative execution path",
     };
     this.classifiedTasks.set(taskId, result);
     return result;
@@ -133,16 +133,16 @@ class OutcomeSubstitutionEngine {
    */
   private getSubstitutionDescription(pattern?: SubstitutionPattern): string {
     switch (pattern) {
-      case 'reflex_to_intent_buffer':
-        return 'Intent buffering with outcome lock';
-      case 'full_training_to_expert_routing':
-        return 'Expert routing with inference assembly';
-      case 'live_edit_to_proxy_control':
-        return 'Proxy control with deferred truth';
-      case 'exhaustive_to_bounds_guarantee':
-        return 'Bounds and guarantees with decision';
+      case "reflex_to_intent_buffer":
+        return "Intent buffering with outcome lock";
+      case "full_training_to_expert_routing":
+        return "Expert routing with inference assembly";
+      case "live_edit_to_proxy_control":
+        return "Proxy control with deferred truth";
+      case "exhaustive_to_bounds_guarantee":
+        return "Bounds and guarantees with decision";
       default:
-        return 'Alternative mechanism preserving outcome';
+        return "Alternative mechanism preserving outcome";
     }
   }
 
@@ -155,11 +155,11 @@ class OutcomeSubstitutionEngine {
       requiresExhaustiveComputation: boolean;
       hasDecisionBounds: boolean;
       hasGuaranteeShortcut: boolean;
-    }
+    },
   ): boolean {
     // If not exhaustive, no brute-force needed
     if (!computeMetadata.requiresExhaustiveComputation) return true;
-    
+
     // Check if shortcuts exist
     return computeMetadata.hasDecisionBounds || computeMetadata.hasGuaranteeShortcut;
   }
@@ -169,11 +169,13 @@ class OutcomeSubstitutionEngine {
    */
   getStatus(): OutcomeSubstitutionStatus {
     const tasks = Array.from(this.classifiedTasks.values());
-    
+
     return {
       enabled: true,
-      substitutedTasks: tasks.filter(t => t.classification === 'OUTCOME_SATISFIED').length,
-      originalMechanismTasks: tasks.filter(t => t.classification === 'REQUIRES_ORIGINAL_MECHANISM').length,
+      substitutedTasks: tasks.filter((t) => t.classification === "OUTCOME_SATISFIED").length,
+      originalMechanismTasks: tasks.filter(
+        (t) => t.classification === "REQUIRES_ORIGINAL_MECHANISM",
+      ).length,
       bruteForceDependencyEliminated: true,
       usefulnessLevel: 0.985, // ~98-99% achieved
     };
@@ -181,7 +183,7 @@ class OutcomeSubstitutionEngine {
 
   /**
    * Confirm ceiling safety - LOCKED
-   * 
+   *
    * Explicitly confirms:
    * - No physics laws violated
    * - No time, bandwidth, or parallelism limits bypassed
@@ -197,7 +199,7 @@ class OutcomeSubstitutionEngine {
       physicsRespected: true,
       limitsRespected: true,
       noFalseEquivalence: true,
-      assertion: 'OUTCOME-COMPLETE · BRUTE-FORCE-FREE · REALITY-ALIGNED',
+      assertion: "OUTCOME-COMPLETE · BRUTE-FORCE-FREE · REALITY-ALIGNED",
     };
   }
 
@@ -205,7 +207,7 @@ class OutcomeSubstitutionEngine {
    * Get final assertion for system state
    */
   getFinalAssertion(): string {
-    return 'Users don\'t care how reality is computed — they care that their goal is achieved.';
+    return "Users don't care how reality is computed — they care that their goal is achieved.";
   }
 
   /**
@@ -222,8 +224,8 @@ class OutcomeSubstitutionEngine {
       allBruteForcePathsReframed: true,
       noUserGoalBlocked: true,
       usefulnessGapClosed: true,
-      remainingGap: 'Purely non-substitutable physics (~1-2%)',
-      status: 'OUTCOME-COMPLETE · BRUTE-FORCE-FREE · REALITY-ALIGNED',
+      remainingGap: "Purely non-substitutable physics (~1-2%)",
+      status: "OUTCOME-COMPLETE · BRUTE-FORCE-FREE · REALITY-ALIGNED",
     };
   }
 

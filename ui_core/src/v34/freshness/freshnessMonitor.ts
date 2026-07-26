@@ -13,7 +13,7 @@ export class FreshnessMonitor {
   calculateFreshness(
     factsAgeArray: number[], // array of timestamp ages in milliseconds
     staleCount: number,
-    deprecatedCount: number
+    deprecatedCount: number,
   ): FreshnessMetrics {
     const totalFacts = factsAgeArray.length;
     let averageAgeDays = 0;
@@ -26,7 +26,7 @@ export class FreshnessMonitor {
 
     // Knowledge Freshness Score decays as average age increases and stale concepts gather
     // Target: average age under 15 days, 0 stale elements = 100 score
-    const ageFactor = Math.max(0, 100 - (averageAgeDays * 2.5)); // loss of 2.5 points per day
+    const ageFactor = Math.max(0, 100 - averageAgeDays * 2.5); // loss of 2.5 points per day
     const stalePenalty = staleCount * 4.5;
     const deprecatedPenalty = deprecatedCount * 8.0;
 
@@ -38,7 +38,7 @@ export class FreshnessMonitor {
       averageAgeDays: parseFloat(averageAgeDays.toFixed(2)),
       deprecatedFactsCount: deprecatedCount,
       activeStaleConceptsCount: staleCount,
-      knowledgeFreshnessScore
+      knowledgeFreshnessScore,
     };
   }
 }

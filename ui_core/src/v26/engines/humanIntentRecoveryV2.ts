@@ -24,14 +24,14 @@ export class HumanIntentRecoveryV2 {
 
     if (isTamil) {
       inferredIntent = "Colloquial codeswitched query resolution.";
-      recoveredQuery = trimmed
-        .replace(/eppadi/i, "how to")
-        .replace(/panradhu/i, "do");
+      recoveredQuery = trimmed.replace(/eppadi/i, "how to").replace(/panradhu/i, "do");
     }
 
     if (isContradictory) {
       ambiguityScore = 0.82;
-      identifiedAmbiguities.push("Mutually exclusive write/delete instructions found in the same block.");
+      identifiedAmbiguities.push(
+        "Mutually exclusive write/delete instructions found in the same block.",
+      );
       inferredIntent = "Logical conflict resolution.";
     }
 
@@ -46,7 +46,7 @@ export class HumanIntentRecoveryV2 {
       inferredIntent,
       ambiguityScore,
       identifiedAmbiguities,
-      resolved: ambiguityScore < 0.50
+      resolved: ambiguityScore < 0.5,
     };
   }
 }

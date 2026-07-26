@@ -20,14 +20,42 @@ export interface SplitInferenceJob {
 
 export class FederatedInferenceEngine {
   private nodes: EdgeNode[] = [
-    { nodeId: "node-desktop-intel", deviceType: "desktop", availableMemoryMB: 16384, computePowerIndex: 9.2, latencyMs: 15, isActive: true },
-    { nodeId: "node-laptop-ryzen", deviceType: "laptop", availableMemoryMB: 8192, computePowerIndex: 6.5, latencyMs: 35, isActive: true },
-    { nodeId: "node-mobile-snapdragon", deviceType: "mobile", availableMemoryMB: 3072, computePowerIndex: 3.1, latencyMs: 85, isActive: true },
-    { nodeId: "node-edge-raspberry", deviceType: "edge", availableMemoryMB: 1024, computePowerIndex: 1.2, latencyMs: 120, isActive: false }
+    {
+      nodeId: "node-desktop-intel",
+      deviceType: "desktop",
+      availableMemoryMB: 16384,
+      computePowerIndex: 9.2,
+      latencyMs: 15,
+      isActive: true,
+    },
+    {
+      nodeId: "node-laptop-ryzen",
+      deviceType: "laptop",
+      availableMemoryMB: 8192,
+      computePowerIndex: 6.5,
+      latencyMs: 35,
+      isActive: true,
+    },
+    {
+      nodeId: "node-mobile-snapdragon",
+      deviceType: "mobile",
+      availableMemoryMB: 3072,
+      computePowerIndex: 3.1,
+      latencyMs: 85,
+      isActive: true,
+    },
+    {
+      nodeId: "node-edge-raspberry",
+      deviceType: "edge",
+      availableMemoryMB: 1024,
+      computePowerIndex: 1.2,
+      latencyMs: 120,
+      isActive: false,
+    },
   ];
 
   assignLayers(modelLayersCount = 32): SplitInferenceJob[] {
-    const activeNodes = this.nodes.filter(n => n.isActive);
+    const activeNodes = this.nodes.filter((n) => n.isActive);
     if (activeNodes.length === 0) return [];
 
     const totalComputeIndex = activeNodes.reduce((a, b) => a + b.computePowerIndex, 0);
@@ -37,9 +65,10 @@ export class FederatedInferenceEngine {
     activeNodes.forEach((node, idx) => {
       // Allocate portion of layers based on compute power share
       const share = node.computePowerIndex / totalComputeIndex;
-      const layersAllocated = idx === activeNodes.length - 1 
-        ? modelLayersCount - layerCursor // cover any rounding remainder
-        : Math.round(modelLayersCount * share);
+      const layersAllocated =
+        idx === activeNodes.length - 1
+          ? modelLayersCount - layerCursor // cover any rounding remainder
+          : Math.round(modelLayersCount * share);
 
       if (layersAllocated > 0) {
         jobs.push({

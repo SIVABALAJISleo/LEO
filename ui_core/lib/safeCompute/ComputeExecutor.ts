@@ -1,14 +1,14 @@
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 // ComputeExecutor - Abstract compute execution layer
 // Multi-machine ready: prepares system for additional compute nodes
 
-export type ExecutorType = 'local' | 'remote' | 'distributed';
+export type ExecutorType = "local" | "remote" | "distributed";
 
 export interface ComputeNode {
   id: string;
   type: ExecutorType;
-  status: 'online' | 'offline' | 'busy';
+  status: "online" | "offline" | "busy";
   capabilities: NodeCapabilities;
   lastHeartbeat: Date;
 }
@@ -47,7 +47,7 @@ class ComputeExecutor {
 
   constructor() {
     // Initialize local node
-    this.localNodeId = 'local-' + uuidv4().slice(0, 8);
+    this.localNodeId = "local-" + uuidv4().slice(0, 8);
     this.registerLocalNode();
   }
 
@@ -55,8 +55,8 @@ class ComputeExecutor {
   private registerLocalNode(): void {
     const localNode: ComputeNode = {
       id: this.localNodeId,
-      type: 'local',
-      status: 'online',
+      type: "local",
+      status: "online",
       capabilities: {
         gpuAvailable: true, // Will be detected
         gpuMemoryMb: 8192, // Default, will be updated
@@ -78,15 +78,15 @@ class ComputeExecutor {
     if (!node) {
       return {
         jobId: request.jobId,
-        nodeId: 'none',
+        nodeId: "none",
         success: false,
-        error: 'No available compute nodes',
+        error: "No available compute nodes",
         executionTimeMs: 0,
       };
     }
 
     // Mark node as busy
-    node.status = 'busy';
+    node.status = "busy";
     this.pendingJobs.set(request.jobId, request);
 
     try {
@@ -101,20 +101,20 @@ class ComputeExecutor {
         executionTimeMs: Date.now() - startTime,
       };
 
-      node.status = 'online';
+      node.status = "online";
       this.pendingJobs.delete(request.jobId);
       this.notifyListeners(result);
 
       return result;
     } catch (error) {
-      node.status = 'online';
+      node.status = "online";
       this.pendingJobs.delete(request.jobId);
 
       const result: ExecutionResult = {
         jobId: request.jobId,
         nodeId: node.id,
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: error instanceof Error ? error.message : "Unknown error",
         executionTimeMs: Date.now() - startTime,
       };
 
@@ -139,7 +139,7 @@ class ComputeExecutor {
   }
 
   // Register remote node (future use)
-  registerNode(node: Omit<ComputeNode, 'lastHeartbeat'>): void {
+  registerNode(node: Omit<ComputeNode, "lastHeartbeat">): void {
     this.nodes.set(node.id, {
       ...node,
       lastHeartbeat: new Date(),
@@ -187,22 +187,18 @@ class ComputeExecutor {
   private selectNode(request: ExecutionRequest): ComputeNode | null {
     // For now, always use local node
     // Future: implement load balancing across multiple nodes
-    const availableNodes = Array.from(this.nodes.values())
-      .filter(n => n.status === 'online');
+    const availableNodes = Array.from(this.nodes.values()).filter((n) => n.status === "online");
 
     if (availableNodes.length === 0) return null;
 
     // Priority: local first, then by capability
-    return availableNodes.find(n => n.type === 'local') || availableNodes[0];
+    return availableNodes.find((n) => n.type === "local") || availableNodes[0];
   }
 
-  private async executeOnNode(
-    node: ComputeNode,
-    request: ExecutionRequest
-  ): Promise<unknown> {
+  private async executeOnNode(node: ComputeNode, request: ExecutionRequest): Promise<unknown> {
     // Simulate execution based on job type
     const executionTime = this.estimateExecutionTime(request);
-    await new Promise(resolve => setTimeout(resolve, Math.min(executionTime, 5000)));
+    await new Promise((resolve) => setTimeout(resolve, Math.min(executionTime, 5000)));
 
     return {
       processed: true,
@@ -215,17 +211,17 @@ class ComputeExecutor {
   private estimateExecutionTime(request: ExecutionRequest): number {
     // Estimate based on job type
     const baseTime: Record<string, number> = {
-      'inference': 2000,
-      'image_generation': 5000,
-      'video_processing': 10000,
-      'training': 30000,
-      'analysis': 1500,
+      inference: 2000,
+      image_generation: 5000,
+      video_processing: 10000,
+      training: 30000,
+      analysis: 1500,
     };
     return baseTime[request.jobType] || 3000;
   }
 
   private notifyListeners(result: ExecutionResult): void {
-    this.listeners.forEach(l => l(result));
+    this.listeners.forEach((l) => l(result));
   }
 }
 

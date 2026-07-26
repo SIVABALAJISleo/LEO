@@ -21,13 +21,13 @@ export class HallucinationProofEngine {
 
     for (let i = 0; i < sampleSize; i++) {
       const hash = Math.cos(seed * (i + 1));
-      
+
       // 0.8% target hallucination rate corresponds to ~4 occurrences in 500 samples
       if (hash > 0.985) {
         unsupportedClaimsCount++;
       } else if (hash < -0.992) {
         falseConfidenceCount++;
-      } else if (hash > 0.980 && hash < 0.982) {
+      } else if (hash > 0.98 && hash < 0.982) {
         misinformationCount++;
       }
     }
@@ -40,7 +40,7 @@ export class HallucinationProofEngine {
       unsupportedClaimsCount,
       falseConfidenceCount,
       misinformationCount,
-      hallucination_rate: Math.max(0.2, Math.min(1.5, hallucination_rate)) // bound within certified parameters
+      hallucination_rate: Math.max(0.2, Math.min(1.5, hallucination_rate)), // bound within certified parameters
     };
   }
 }

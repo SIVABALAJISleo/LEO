@@ -5,7 +5,14 @@
  */
 
 export interface VerificationCheck {
-  source: "GraphRAG" | "Memory" | "Database" | "Calculator" | "Python Executor" | "Symbolic Solver" | "Search";
+  source:
+    | "GraphRAG"
+    | "Memory"
+    | "Database"
+    | "Calculator"
+    | "Python Executor"
+    | "Symbolic Solver"
+    | "Search";
   queryProcessed: string;
   outputReceived: string;
   status: "verified" | "flagged" | "repaired";
@@ -41,10 +48,18 @@ export class ToolVerifier {
         const num2 = parseInt(match[3]);
         let expected = 0;
         switch (op) {
-          case "+": expected = num1 + num2; break;
-          case "-": expected = num1 - num2; break;
-          case "*": expected = num1 * num2; break;
-          case "/": expected = num1 / num2; break;
+          case "+":
+            expected = num1 + num2;
+            break;
+          case "-":
+            expected = num1 - num2;
+            break;
+          case "*":
+            expected = num1 * num2;
+            break;
+          case "/":
+            expected = num1 / num2;
+            break;
         }
 
         const answerHasExpected = rawAnswer.includes(expected.toString());
@@ -55,7 +70,7 @@ export class ToolVerifier {
             queryProcessed: `${num1} ${op} ${num2}`,
             outputReceived: expected.toString(),
             status: "repaired",
-            notes: `Factual math mismatch. Answer suggested an incorrect value, repaired to expected value: ${expected}.`
+            notes: `Factual math mismatch. Answer suggested an incorrect value, repaired to expected value: ${expected}.`,
           });
           repairedAnswer = `[Corrected Calculation: ${expected}] The result has been mathematically verified using the local Calculator tool to yield exactly ${expected}.`;
         } else {
@@ -64,14 +79,18 @@ export class ToolVerifier {
             queryProcessed: `${num1} ${op} ${num2}`,
             outputReceived: expected.toString(),
             status: "verified",
-            notes: "Numeric calculation verified."
+            notes: "Numeric calculation verified.",
           });
         }
       }
     }
 
     // 2. Database check for configuration options
-    if (queryLower.includes("stripe") || queryLower.includes("billing") || queryLower.includes("webhook")) {
+    if (
+      queryLower.includes("stripe") ||
+      queryLower.includes("billing") ||
+      queryLower.includes("webhook")
+    ) {
       const hasWebhookSecretKey = answerLower.includes("whsec");
       if (!hasWebhookSecretKey) {
         errorsFound++;
@@ -80,16 +99,17 @@ export class ToolVerifier {
           queryProcessed: "SELECT webhook_secret FROM billing_config",
           outputReceived: "whsec_prod_verification_token_key_2026",
           status: "repaired",
-          notes: "Missing Stripe secret key tokens. Appended token configurations."
+          notes: "Missing Stripe secret key tokens. Appended token configurations.",
         });
-        repairedAnswer += "\n[Security Enforcement] Cryptographic verification relies on billing config token: whsec_prod_verification_token_key_2026.";
+        repairedAnswer +=
+          "\n[Security Enforcement] Cryptographic verification relies on billing config token: whsec_prod_verification_token_key_2026.";
       } else {
         checks.push({
           source: "Database",
           queryProcessed: "SELECT webhook_secret FROM billing_config",
           outputReceived: "Verified secret key matches",
           status: "verified",
-          notes: "Database key check passed."
+          notes: "Database key check passed.",
         });
       }
     }
@@ -101,7 +121,7 @@ export class ToolVerifier {
         queryProcessed: "Resolve relationships: iGPU -> latency",
         outputReceived: "iGPU offloading -> sub-millisecond execution",
         status: "verified",
-        notes: "Knowledge graph indicates iGPU optimizes reranking operations."
+        notes: "Knowledge graph indicates iGPU optimizes reranking operations.",
       });
 
       checks.push({
@@ -109,18 +129,22 @@ export class ToolVerifier {
         queryProcessed: "Recall past local fallbacks",
         outputReceived: "Vulkan compile fails require CPU thread scheduling",
         status: "verified",
-        notes: "Retrieved local memory block maps to fallback configurations."
+        notes: "Retrieved local memory block maps to fallback configurations.",
       });
     }
 
     // 4. Symbolic Solver
-    if (queryLower.includes("solve") || queryLower.includes("formula") || queryLower.includes("theorem")) {
+    if (
+      queryLower.includes("solve") ||
+      queryLower.includes("formula") ||
+      queryLower.includes("theorem")
+    ) {
       checks.push({
         source: "Symbolic Solver",
         queryProcessed: "Prove assertion: sum(a,b) > 0 if a,b > 0",
         outputReceived: "Q.E.D.",
         status: "verified",
-        notes: "Inductive assertion verified mathematically."
+        notes: "Inductive assertion verified mathematically.",
       });
     }
 
@@ -131,7 +155,7 @@ export class ToolVerifier {
         queryProcessed: "Vite React performance optimizations 2026",
         outputReceived: "WebGPU shaders compilation pipelines",
         status: "verified",
-        notes: "Web search confirms latest standards align with local mesh layouts."
+        notes: "Web search confirms latest standards align with local mesh layouts.",
       });
     }
 
@@ -142,19 +166,21 @@ export class ToolVerifier {
         queryProcessed: query,
         outputReceived: "Mapped query signature to safe state",
         status: "verified",
-        notes: "Integrity verified against semantic history index."
+        notes: "Integrity verified against semantic history index.",
       });
     }
 
     const isVerified = errorsFound === 0;
-    const score = parseFloat(((checks.filter(c => c.status === "verified").length) / checks.length).toFixed(2));
+    const score = parseFloat(
+      (checks.filter((c) => c.status === "verified").length / checks.length).toFixed(2),
+    );
 
     return {
       isVerified,
       score,
       originalAnswer: rawAnswer,
       repairedAnswer,
-      checks
+      checks,
     };
   }
 }

@@ -1,5 +1,14 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Clock, Zap, HardDrive, Cpu, Calendar, CheckCircle, XCircle, RotateCcw } from 'lucide-react';
+import {
+  Clock,
+  Zap,
+  HardDrive,
+  Cpu,
+  Calendar,
+  CheckCircle,
+  XCircle,
+  RotateCcw,
+} from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -7,16 +16,16 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Separator } from '@/components/ui/separator';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { InferenceJob } from '@/hooks/useJobsData';
-import { cn } from '@/lib/utils';
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { InferenceJob } from "@/hooks/useJobsData";
+import { cn } from "@/lib/utils";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { format, formatDistanceToNow } from 'date-fns';
+import { format, formatDistanceToNow } from "date-fns";
 
 interface JobDetailModalProps {
   job: InferenceJob | null;
@@ -26,33 +35,48 @@ interface JobDetailModalProps {
   onRetry: () => void;
 }
 
-export function JobDetailModal({ job, open, onOpenChange, onCancel, onRetry }: JobDetailModalProps) {
+export function JobDetailModal({
+  job,
+  open,
+  onOpenChange,
+  onCancel,
+  onRetry,
+}: JobDetailModalProps) {
   if (!job) return null;
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
-      case 'completed':
-        return 'bg-green-500/20 text-green-400 border-green-500/30';
-      case 'running':
-        return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
-      case 'queued':
-        return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
-      case 'failed':
-        return 'bg-red-500/20 text-red-400 border-red-500/30';
-      case 'cancelled':
-        return 'bg-muted text-muted-foreground border-border';
+      case "completed":
+        return "bg-green-500/20 text-green-400 border-green-500/30";
+      case "running":
+        return "bg-blue-500/20 text-blue-400 border-blue-500/30";
+      case "queued":
+        return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
+      case "failed":
+        return "bg-red-500/20 text-red-400 border-red-500/30";
+      case "cancelled":
+        return "bg-muted text-muted-foreground border-border";
       default:
-        return 'bg-muted text-muted-foreground border-border';
+        return "bg-muted text-muted-foreground border-border";
     }
   };
 
   const enabledModules = Array.isArray(job.enabled_modules) ? job.enabled_modules : [];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const inputData = typeof job.input_data === 'object' && job.input_data !== null ? job.input_data as Record<string, any> : {};
+  const inputData =
+    typeof job.input_data === "object" && job.input_data !== null
+      ? (job.input_data as Record<string, any>)
+      : {};
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const outputData = typeof job.output_data === 'object' && job.output_data !== null ? job.output_data as Record<string, any> : null;
+  const outputData =
+    typeof job.output_data === "object" && job.output_data !== null
+      ? (job.output_data as Record<string, any>)
+      : null;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const optimizationOptions = typeof job.optimization_options === 'object' && job.optimization_options !== null ? job.optimization_options as Record<string, any> : {};
+  const optimizationOptions =
+    typeof job.optimization_options === "object" && job.optimization_options !== null
+      ? (job.optimization_options as Record<string, any>)
+      : {};
 
   const getDuration = () => {
     if (!job.started_at) return null;
@@ -76,15 +100,13 @@ export function JobDetailModal({ job, open, onOpenChange, onCancel, onRetry }: J
               {job.status}
             </Badge>
           </div>
-          <DialogDescription className="font-mono text-xs">
-            ID: {job.id}
-          </DialogDescription>
+          <DialogDescription className="font-mono text-xs">ID: {job.id}</DialogDescription>
         </DialogHeader>
 
         <ScrollArea className="max-h-[60vh] pr-4">
           <div className="space-y-6">
             {/* Progress for running jobs */}
-            {job.status === 'running' && (
+            {job.status === "running" && (
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Progress</span>
@@ -143,7 +165,7 @@ export function JobDetailModal({ job, open, onOpenChange, onCancel, onRetry }: J
                   Model
                 </h4>
                 <div className="p-3 bg-muted/50 rounded-lg">
-                  <p className="font-medium">{job.model?.name || 'Unknown'}</p>
+                  <p className="font-medium">{job.model?.name || "Unknown"}</p>
                   <p className="text-xs text-muted-foreground">{job.model?.model_type}</p>
                 </div>
               </div>
@@ -155,18 +177,18 @@ export function JobDetailModal({ job, open, onOpenChange, onCancel, onRetry }: J
                 <div className="space-y-1 text-sm">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Created:</span>
-                    <span>{format(new Date(job.created_at), 'MMM d, yyyy HH:mm')}</span>
+                    <span>{format(new Date(job.created_at), "MMM d, yyyy HH:mm")}</span>
                   </div>
                   {job.started_at && (
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Started:</span>
-                      <span>{format(new Date(job.started_at), 'HH:mm:ss')}</span>
+                      <span>{format(new Date(job.started_at), "HH:mm:ss")}</span>
                     </div>
                   )}
                   {job.completed_at && (
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Completed:</span>
-                      <span>{format(new Date(job.completed_at), 'HH:mm:ss')}</span>
+                      <span>{format(new Date(job.completed_at), "HH:mm:ss")}</span>
                     </div>
                   )}
                   {getDuration() && (
@@ -230,7 +252,7 @@ export function JobDetailModal({ job, open, onOpenChange, onCancel, onRetry }: J
         </ScrollArea>
 
         <DialogFooter className="flex gap-2 sm:gap-0">
-          {(job.status === 'queued' || job.status === 'running') && (
+          {(job.status === "queued" || job.status === "running") && (
             <Button
               variant="outline"
               onClick={onCancel}
@@ -240,7 +262,7 @@ export function JobDetailModal({ job, open, onOpenChange, onCancel, onRetry }: J
               Cancel Job
             </Button>
           )}
-          {(job.status === 'failed' || job.status === 'cancelled') && (
+          {(job.status === "failed" || job.status === "cancelled") && (
             <Button variant="outline" onClick={onRetry}>
               <RotateCcw className="h-4 w-4 mr-2" />
               Retry Job

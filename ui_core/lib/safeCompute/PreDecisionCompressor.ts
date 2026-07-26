@@ -13,7 +13,7 @@ export type OutcomeSimulation = {
   scenarioId: string;
   description: string;
   probability: number;
-  riskLevel: 'low' | 'medium' | 'high' | 'critical';
+  riskLevel: "low" | "medium" | "high" | "critical";
   mitigationAvailable: boolean;
 };
 
@@ -42,23 +42,23 @@ class PreDecisionCompressor {
     totalCompressions: 0,
     singleActionRate: 0,
     averageRiskReduction: 0,
-    averageProcessingMs: 0
+    averageProcessingMs: 0,
   };
 
   async compress(
     taskId: string,
     taskType: string,
     possibleActions: string[],
-    context: Record<string, unknown>
+    context: Record<string, unknown>,
   ): Promise<PreDecisionResult> {
     const startTime = performance.now();
 
     // Simulate all possible outcomes
     const simulations = await this.simulateOutcomes(possibleActions, context);
-    
+
     // Compute risk envelope
     const envelope = this.computeSafetyEnvelope(possibleActions, simulations);
-    
+
     // Generate explanation and evidence
     const explanation = this.generateExplanation(envelope, simulations);
     const evidence = this.gatherEvidence(taskId, simulations, envelope);
@@ -74,7 +74,7 @@ class PreDecisionCompressor {
       explanation,
       evidence,
       processingTimeMs,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
     this.recordCompression(result);
@@ -83,7 +83,7 @@ class PreDecisionCompressor {
 
   private async simulateOutcomes(
     actions: string[],
-    context: Record<string, unknown>
+    context: Record<string, unknown>,
   ): Promise<OutcomeSimulation[]> {
     const simulations: OutcomeSimulation[] = [];
 
@@ -91,13 +91,13 @@ class PreDecisionCompressor {
       // Deterministic risk assessment based on action type
       const riskLevel = this.assessActionRisk(action, context);
       const probability = this.calculateProbability(action, context);
-      
+
       simulations.push({
         scenarioId: `sim_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         description: `Outcome for action: ${action}`,
         probability,
         riskLevel,
-        mitigationAvailable: riskLevel !== 'critical'
+        mitigationAvailable: riskLevel !== "critical",
       });
     }
 
@@ -107,38 +107,41 @@ class PreDecisionCompressor {
   private assessActionRisk(
     action: string,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    context: Record<string, unknown>
-  ): 'low' | 'medium' | 'high' | 'critical' {
+    context: Record<string, unknown>,
+  ): "low" | "medium" | "high" | "critical" {
     const actionLower = action.toLowerCase();
-    
+
     // Critical actions that require authority
-    if (actionLower.includes('delete_all') || 
-        actionLower.includes('terminate') ||
-        actionLower.includes('irreversible')) {
-      return 'critical';
+    if (
+      actionLower.includes("delete_all") ||
+      actionLower.includes("terminate") ||
+      actionLower.includes("irreversible")
+    ) {
+      return "critical";
     }
-    
+
     // High risk actions
-    if (actionLower.includes('modify_production') ||
-        actionLower.includes('financial_transfer') ||
-        actionLower.includes('access_sensitive')) {
-      return 'high';
+    if (
+      actionLower.includes("modify_production") ||
+      actionLower.includes("financial_transfer") ||
+      actionLower.includes("access_sensitive")
+    ) {
+      return "high";
     }
-    
+
     // Medium risk
-    if (actionLower.includes('update') ||
-        actionLower.includes('create') ||
-        actionLower.includes('modify')) {
-      return 'medium';
+    if (
+      actionLower.includes("update") ||
+      actionLower.includes("create") ||
+      actionLower.includes("modify")
+    ) {
+      return "medium";
     }
-    
-    return 'low';
+
+    return "low";
   }
 
-  private calculateProbability(
-    action: string,
-    context: Record<string, unknown>
-  ): number {
+  private calculateProbability(action: string, context: Record<string, unknown>): number {
     // Base probability on historical patterns and context
     const hasHistory = context.historicalSuccess !== undefined;
     if (hasHistory) {
@@ -149,13 +152,13 @@ class PreDecisionCompressor {
 
   private computeSafetyEnvelope(
     actions: string[],
-    simulations: OutcomeSimulation[]
+    simulations: OutcomeSimulation[],
   ): SafetyEnvelope {
     const safeActions: string[] = [];
     const unsafeActions: string[] = [];
-    
+
     simulations.forEach((sim, index) => {
-      if (sim.riskLevel === 'low' || (sim.riskLevel === 'medium' && sim.mitigationAvailable)) {
+      if (sim.riskLevel === "low" || (sim.riskLevel === "medium" && sim.mitigationAvailable)) {
         safeActions.push(actions[index]);
       } else {
         unsafeActions.push(actions[index]);
@@ -163,45 +166,44 @@ class PreDecisionCompressor {
     });
 
     // Find best action among safe ones
-    const recommendedAction = safeActions.length > 0 
-      ? safeActions[0] 
-      : 'REQUIRES_AUTHORITY_REVIEW';
+    const recommendedAction = safeActions.length > 0 ? safeActions[0] : "REQUIRES_AUTHORITY_REVIEW";
 
     // Calculate overall risk score
     const riskScore = unsafeActions.length / actions.length;
-    
+
     // Calculate confidence based on simulations
-    const avgProbability = simulations.reduce((sum, s) => sum + s.probability, 0) / simulations.length;
+    const avgProbability =
+      simulations.reduce((sum, s) => sum + s.probability, 0) / simulations.length;
 
     return {
       safeActions,
       unsafeActions,
       recommendedAction,
       riskScore,
-      confidence: avgProbability
+      confidence: avgProbability,
     };
   }
 
   private generateExplanation(
     envelope: SafetyEnvelope,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    simulations: OutcomeSimulation[]
+    simulations: OutcomeSimulation[],
   ): string {
     if (envelope.safeActions.length === 1) {
       return `Single safe action identified: "${envelope.recommendedAction}". All other options locked due to risk assessment. Confidence: ${(envelope.confidence * 100).toFixed(1)}%.`;
     }
-    
+
     if (envelope.safeActions.length > 1) {
       return `${envelope.safeActions.length} safe actions available. Recommended: "${envelope.recommendedAction}". ${envelope.unsafeActions.length} options locked. Confidence: ${(envelope.confidence * 100).toFixed(1)}%.`;
     }
-    
+
     return `All actions require authority review. Risk score: ${(envelope.riskScore * 100).toFixed(1)}%. Authority confirmation required before proceeding.`;
   }
 
   private gatherEvidence(
     taskId: string,
     simulations: OutcomeSimulation[],
-    envelope: SafetyEnvelope
+    envelope: SafetyEnvelope,
   ): string[] {
     const evidence: string[] = [
       `Task ID: ${taskId}`,
@@ -211,12 +213,14 @@ class PreDecisionCompressor {
       `Unsafe actions locked: ${envelope.unsafeActions.length}`,
       `Recommended action: ${envelope.recommendedAction}`,
       `Risk score: ${envelope.riskScore.toFixed(4)}`,
-      `Confidence: ${envelope.confidence.toFixed(4)}`
+      `Confidence: ${envelope.confidence.toFixed(4)}`,
     ];
 
     // Add simulation details
     simulations.forEach((sim, i) => {
-      evidence.push(`Scenario ${i + 1}: ${sim.riskLevel} risk, ${(sim.probability * 100).toFixed(1)}% probability`);
+      evidence.push(
+        `Scenario ${i + 1}: ${sim.riskLevel} risk, ${(sim.probability * 100).toFixed(1)}% probability`,
+      );
     });
 
     return evidence;
@@ -230,15 +234,16 @@ class PreDecisionCompressor {
 
     // Update stats
     const total = this.compressions.length;
-    const singleActionCount = this.compressions.filter(c => c.singleSafeAction).length;
-    const avgRiskReduction = this.compressions.reduce((sum, c) => sum + (1 - c.envelope.riskScore), 0) / total;
+    const singleActionCount = this.compressions.filter((c) => c.singleSafeAction).length;
+    const avgRiskReduction =
+      this.compressions.reduce((sum, c) => sum + (1 - c.envelope.riskScore), 0) / total;
     const avgProcessing = this.compressions.reduce((sum, c) => sum + c.processingTimeMs, 0) / total;
 
     this.stats = {
       totalCompressions: total,
       singleActionRate: singleActionCount / total,
       averageRiskReduction: avgRiskReduction,
-      averageProcessingMs: avgProcessing
+      averageProcessingMs: avgProcessing,
     };
   }
 

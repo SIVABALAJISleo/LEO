@@ -1,11 +1,11 @@
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Alert } from '@/lib/types';
-import { AlertCircle, AlertTriangle, Info, XCircle, Check, Bell } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
-import { cn } from '@/lib/utils';
-import { useToast } from '@/hooks/use-toast';
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Alert } from "@/lib/types";
+import { AlertCircle, AlertTriangle, Info, XCircle, Check, Bell } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
+import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 interface RecentAlertsProps {
   alerts: Alert[];
@@ -17,29 +17,29 @@ export const RecentAlerts = ({ alerts, onResolve }: RecentAlertsProps) => {
 
   const getSeverityConfig = (severity: string) => {
     switch (severity) {
-      case 'critical':
+      case "critical":
         return {
           icon: XCircle,
-          className: 'text-destructive bg-destructive/20 border-destructive/30',
-          badge: 'bg-destructive text-destructive-foreground',
+          className: "text-destructive bg-destructive/20 border-destructive/30",
+          badge: "bg-destructive text-destructive-foreground",
         };
-      case 'error':
+      case "error":
         return {
           icon: AlertCircle,
-          className: 'text-red-500 bg-red-500/20 border-red-500/30',
-          badge: 'bg-red-500 text-white',
+          className: "text-red-500 bg-red-500/20 border-red-500/30",
+          badge: "bg-red-500 text-white",
         };
-      case 'warning':
+      case "warning":
         return {
           icon: AlertTriangle,
-          className: 'text-yellow-500 bg-yellow-500/20 border-yellow-500/30',
-          badge: 'bg-yellow-500 text-yellow-900',
+          className: "text-yellow-500 bg-yellow-500/20 border-yellow-500/30",
+          badge: "bg-yellow-500 text-yellow-900",
         };
       default:
         return {
           icon: Info,
-          className: 'text-blue-500 bg-blue-500/20 border-blue-500/30',
-          badge: 'bg-blue-500 text-white',
+          className: "text-blue-500 bg-blue-500/20 border-blue-500/30",
+          badge: "bg-blue-500 text-white",
         };
     }
   };
@@ -48,28 +48,26 @@ export const RecentAlerts = ({ alerts, onResolve }: RecentAlertsProps) => {
     try {
       await onResolve(alertId);
       toast({
-        title: 'Alert Resolved',
-        description: 'The alert has been marked as resolved.',
+        title: "Alert Resolved",
+        description: "The alert has been marked as resolved.",
       });
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast({
-        title: 'Error',
-        description: 'Failed to resolve alert.',
-        variant: 'destructive',
+        title: "Error",
+        description: "Failed to resolve alert.",
+        variant: "destructive",
       });
     }
   };
 
-  const unresolvedAlerts = alerts.filter(a => !a.resolved);
+  const unresolvedAlerts = alerts.filter((a) => !a.resolved);
 
   return (
     <Card className="p-6 bg-card border-border">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-semibold">Recent Alerts</h3>
-        <Badge variant="secondary">
-          {unresolvedAlerts.length} unresolved
-        </Badge>
+        <Badge variant="secondary">{unresolvedAlerts.length} unresolved</Badge>
       </div>
 
       {alerts.length === 0 ? (
@@ -87,8 +85,8 @@ export const RecentAlerts = ({ alerts, onResolve }: RecentAlertsProps) => {
               <div
                 key={alert.id}
                 className={cn(
-                  'p-4 rounded-lg border transition-all',
-                  alert.resolved ? 'opacity-60 bg-muted/20' : config.className
+                  "p-4 rounded-lg border transition-all",
+                  alert.resolved ? "opacity-60 bg-muted/20" : config.className,
                 )}
               >
                 <div className="flex items-start gap-3">
@@ -96,18 +94,14 @@ export const RecentAlerts = ({ alerts, onResolve }: RecentAlertsProps) => {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
                       <h4 className="font-medium truncate">{alert.title}</h4>
-                      <Badge className={cn('text-xs', config.badge)}>
-                        {alert.severity}
-                      </Badge>
+                      <Badge className={cn("text-xs", config.badge)}>{alert.severity}</Badge>
                       {alert.resolved && (
                         <Badge variant="outline" className="text-xs text-primary">
                           Resolved
                         </Badge>
                       )}
                     </div>
-                    <p className="text-sm text-muted-foreground line-clamp-2">
-                      {alert.message}
-                    </p>
+                    <p className="text-sm text-muted-foreground line-clamp-2">{alert.message}</p>
                     <div className="flex items-center justify-between mt-2">
                       <span className="text-xs text-muted-foreground">
                         {formatDistanceToNow(new Date(alert.created_at), { addSuffix: true })}

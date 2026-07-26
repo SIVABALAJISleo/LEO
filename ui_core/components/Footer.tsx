@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
-import { Zap, Github, Twitter, Linkedin, Mail } from 'lucide-react';
+import { Link } from "react-router-dom";
+import { Zap, Github, Twitter, Linkedin, Mail } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -25,7 +25,10 @@ const Footer = () => {
               <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
                 <Linkedin className="h-5 w-5" />
               </a>
-              <a href="mailto:hello@hyper.app" className="text-muted-foreground hover:text-primary transition-colors">
+              <a
+                href="mailto:hello@hyper.app"
+                className="text-muted-foreground hover:text-primary transition-colors"
+              >
                 <Mail className="h-5 w-5" />
               </a>
             </div>
@@ -36,22 +39,34 @@ const Footer = () => {
             <h3 className="font-semibold mb-4">Product</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link to="/pricing" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link
+                  to="/pricing"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
                   Pricing
                 </Link>
               </li>
               <li>
-                <Link to="/docs" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link
+                  to="/docs"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
                   Documentation
                 </Link>
               </li>
               <li>
-                <Link to="/playground" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link
+                  to="/playground"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
                   API Playground
                 </Link>
               </li>
               <li>
-                <Link to="/system/status" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link
+                  to="/system/status"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
                   System Status
                 </Link>
               </li>
@@ -63,12 +78,18 @@ const Footer = () => {
             <h3 className="font-semibold mb-4">Company</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link to="/legal/contact" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link
+                  to="/legal/contact"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
                   Contact
                 </Link>
               </li>
               <li>
-                <Link to="/billing/enterprise" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link
+                  to="/billing/enterprise"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
                   Enterprise
                 </Link>
               </li>
@@ -80,22 +101,34 @@ const Footer = () => {
             <h3 className="font-semibold mb-4">Legal</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link to="/legal/terms" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link
+                  to="/legal/terms"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
                   Terms of Service
                 </Link>
               </li>
               <li>
-                <Link to="/legal/privacy" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link
+                  to="/legal/privacy"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link to="/legal/refund" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link
+                  to="/legal/refund"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
                   Refund Policy
                 </Link>
               </li>
               <li>
-                <Link to="/legal/disclaimer" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link
+                  to="/legal/disclaimer"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
                   Disclaimer
                 </Link>
               </li>

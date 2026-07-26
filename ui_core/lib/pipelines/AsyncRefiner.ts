@@ -3,82 +3,82 @@
  * Background workers refine results after response and update cache.
  */
 
-import { PersistentCache } from '../memory/PersistentCache';
+import { PersistentCache } from "../memory/PersistentCache";
 
 export interface RefinementTask {
-    id: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    roughResult: any;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    refine: (rough: any) => Promise<any>;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    onComplete?: (refined: any) => void;
+  id: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  roughResult: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  refine: (rough: any) => Promise<any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onComplete?: (refined: any) => void;
 }
 
 export class AsyncRefiner {
-    private static instance: AsyncRefiner;
-    private queue: RefinementTask[] = [];
-    private active = false;
-    private cache: PersistentCache;
+  private static instance: AsyncRefiner;
+  private queue: RefinementTask[] = [];
+  private active = false;
+  private cache: PersistentCache;
 
-    private constructor() {
-        this.cache = PersistentCache.getInstance();
-        this.startWorker();
+  private constructor() {
+    this.cache = PersistentCache.getInstance();
+    this.startWorker();
+  }
+
+  static getInstance(): AsyncRefiner {
+    if (!AsyncRefiner.instance) {
+      AsyncRefiner.instance = new AsyncRefiner();
     }
+    return AsyncRefiner.instance;
+  }
 
-    static getInstance(): AsyncRefiner {
-        if (!AsyncRefiner.instance) {
-            AsyncRefiner.instance = new AsyncRefiner();
-        }
-        return AsyncRefiner.instance;
-    }
+  /**
+   * Schedule background refinement
+   */
+  schedule(task: RefinementTask): void {
+    this.queue.push(task);
+    console.log(`[AsyncRefiner] Scheduled ${task.id}, queue: ${this.queue.length}`);
+  }
 
-    /**
-     * Schedule background refinement
-     */
-    schedule(task: RefinementTask): void {
-        this.queue.push(task);
-        console.log(`[AsyncRefiner] Scheduled ${task.id}, queue: ${this.queue.length}`);
-    }
+  /**
+   * Background worker loop
+   */
+  private startWorker(): void {
+    const processNext = async () => {
+      if (this.queue.length === 0) {
+        this.active = false;
+        setTimeout(processNext, 1000); // Check again in 1s
+        return;
+      }
 
-    /**
-     * Background worker loop
-     */
-    private startWorker(): void {
-        const processNext = async () => {
-            if (this.queue.length === 0) {
-                this.active = false;
-                setTimeout(processNext, 1000); // Check again in 1s
-                return;
-            }
+      this.active = true;
+      const task = this.queue.shift()!;
 
-            this.active = true;
-            const task = this.queue.shift()!;
+      try {
+        console.log(`[AsyncRefiner] Refining ${task.id}...`);
+        const refined = await task.refine(task.roughResult);
 
-            try {
-                console.log(`[AsyncRefiner] Refining ${task.id}...`);
-                const refined = await task.refine(task.roughResult);
+        // Update cache with refined result
+        // (would need query vector in real implementation)
 
-                // Update cache with refined result
-                // (would need query vector in real implementation)
+        task.onComplete?.(refined);
+        console.log(`[AsyncRefiner] Completed ${task.id}`);
+      } catch (error) {
+        console.error(`[AsyncRefiner] Failed to refine ${task.id}:`, error);
+      }
 
-                task.onComplete?.(refined);
-                console.log(`[AsyncRefiner] Completed ${task.id}`);
-            } catch (error) {
-                console.error(`[AsyncRefiner] Failed to refine ${task.id}:`, error);
-            }
+      // Process next when idle
+      requestIdleCallback(() => processNext(), { timeout: 100 });
+    };
 
-            // Process next when idle
-            requestIdleCallback(() => processNext(), { timeout: 100 });
-        };
+    processNext();
+  }
 
-        processNext();
-    }
-
-    getStats() {
-        return {
-            queueLength: this.queue.length,
-            active: this.active
-        };
-    }
+  getStats() {
+    return {
+      queueLength: this.queue.length,
+      active: this.active,
+    };
+  }
 }

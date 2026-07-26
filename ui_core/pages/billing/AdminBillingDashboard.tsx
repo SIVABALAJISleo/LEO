@@ -1,16 +1,23 @@
-import { useState, useEffect } from 'react';
-import { firebaseClient as supabase } from '@/integrations/firebase/client';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  DollarSign, 
-  TrendingUp, 
-  Users, 
-  AlertTriangle, 
+import { useState, useEffect } from "react";
+import { firebaseClient as supabase } from "@/integrations/firebase/client";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  DollarSign,
+  TrendingUp,
+  Users,
+  AlertTriangle,
   RefreshCw,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   CheckCircle,
@@ -20,10 +27,10 @@ import {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   CreditCard,
   ShieldAlert,
-  Loader2
-} from 'lucide-react';
-import { formatDistanceToNow, format } from 'date-fns';
-import { useAdminRole } from '@/hooks/useAdminRole';
+  Loader2,
+} from "lucide-react";
+import { formatDistanceToNow, format } from "date-fns";
+import { useAdminRole } from "@/hooks/useAdminRole";
 
 interface Payment {
   id: string;
@@ -66,16 +73,24 @@ export default function AdminBillingDashboard() {
   const fetchData = async () => {
     try {
       const [paymentsRes, webhooksRes, subscriptionsRes] = await Promise.all([
-        supabase.from('payments').select('*').order('created_at', { ascending: false }).limit(100),
-        supabase.from('payment_webhook_events').select('*').order('created_at', { ascending: false }).limit(50),
-        supabase.from('billing_subscriptions').select('*').order('created_at', { ascending: false }).limit(100),
+        supabase.from("payments").select("*").order("created_at", { ascending: false }).limit(100),
+        supabase
+          .from("payment_webhook_events")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(50),
+        supabase
+          .from("billing_subscriptions")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(100),
       ]);
 
       if (paymentsRes.data) setPayments(paymentsRes.data as Payment[]);
       if (webhooksRes.data) setWebhooks(webhooksRes.data as WebhookEvent[]);
       if (subscriptionsRes.data) setSubscriptions(subscriptionsRes.data as Subscription[]);
     } catch (err) {
-      console.error('Admin billing fetch error:', err);
+      console.error("Admin billing fetch error:", err);
     } finally {
       setLoading(false);
     }
@@ -113,7 +128,7 @@ export default function AdminBillingDashboard() {
             <CardDescription>Admin privileges required.</CardDescription>
           </CardHeader>
           <CardContent className="text-center">
-            <Button onClick={() => window.location.href = '/dashboard'}>
+            <Button onClick={() => (window.location.href = "/dashboard")}>
               Return to Dashboard
             </Button>
           </CardContent>
@@ -124,29 +139,37 @@ export default function AdminBillingDashboard() {
 
   // Calculate stats
   const totalRevenue = payments
-    .filter(p => p.status === 'succeeded')
+    .filter((p) => p.status === "succeeded")
     .reduce((sum, p) => sum + Number(p.amount), 0);
   const monthlyRevenue = payments
-    .filter(p => p.status === 'succeeded' && new Date(p.created_at).getMonth() === new Date().getMonth())
+    .filter(
+      (p) =>
+        p.status === "succeeded" && new Date(p.created_at).getMonth() === new Date().getMonth(),
+    )
     .reduce((sum, p) => sum + Number(p.amount), 0);
-  const failedPayments = payments.filter(p => p.status === 'failed');
+  const failedPayments = payments.filter((p) => p.status === "failed");
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const pendingPayments = payments.filter(p => p.status === 'pending');
-  const refundedPayments = payments.filter(p => p.status === 'refunded');
-  const activeSubscriptions = subscriptions.filter(s => s.status === 'active');
-  const webhookErrors = webhooks.filter(w => w.error_message);
+  const pendingPayments = payments.filter((p) => p.status === "pending");
+  const refundedPayments = payments.filter((p) => p.status === "refunded");
+  const activeSubscriptions = subscriptions.filter((s) => s.status === "active");
+  const webhookErrors = webhooks.filter((w) => w.error_message);
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+    return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(amount);
   };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'succeeded': return <Badge className="bg-green-500/20 text-green-500">Succeeded</Badge>;
-      case 'failed': return <Badge variant="destructive">Failed</Badge>;
-      case 'pending': return <Badge variant="secondary">Pending</Badge>;
-      case 'refunded': return <Badge className="bg-orange-500/20 text-orange-500">Refunded</Badge>;
-      default: return <Badge variant="outline">{status}</Badge>;
+      case "succeeded":
+        return <Badge className="bg-green-500/20 text-green-500">Succeeded</Badge>;
+      case "failed":
+        return <Badge variant="destructive">Failed</Badge>;
+      case "pending":
+        return <Badge variant="secondary">Pending</Badge>;
+      case "refunded":
+        return <Badge className="bg-orange-500/20 text-orange-500">Refunded</Badge>;
+      default:
+        return <Badge variant="outline">{status}</Badge>;
     }
   };
 
@@ -168,7 +191,7 @@ export default function AdminBillingDashboard() {
             <p className="text-muted-foreground">Admin-only • Read-only view</p>
           </div>
           <Button variant="outline" size="sm" onClick={handleRefresh} disabled={refreshing}>
-            <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? "animate-spin" : ""}`} />
             Refresh
           </Button>
         </div>
@@ -251,9 +274,11 @@ export default function AdminBillingDashboard() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {payments.map(payment => (
+                      {payments.map((payment) => (
                         <TableRow key={payment.id}>
-                          <TableCell className="font-mono text-xs">{payment.id.slice(0, 8)}...</TableCell>
+                          <TableCell className="font-mono text-xs">
+                            {payment.id.slice(0, 8)}...
+                          </TableCell>
                           <TableCell>
                             <Badge variant="outline">{payment.provider}</Badge>
                           </TableCell>
@@ -286,17 +311,19 @@ export default function AdminBillingDashboard() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {subscriptions.map(sub => (
+                      {subscriptions.map((sub) => (
                         <TableRow key={sub.id}>
-                          <TableCell className="font-mono text-xs">{sub.user_id.slice(0, 8)}...</TableCell>
+                          <TableCell className="font-mono text-xs">
+                            {sub.user_id.slice(0, 8)}...
+                          </TableCell>
                           <TableCell className="capitalize">{sub.plan}</TableCell>
                           <TableCell>
-                            <Badge variant={sub.status === 'active' ? 'default' : 'secondary'}>
+                            <Badge variant={sub.status === "active" ? "default" : "secondary"}>
                               {sub.status}
                             </Badge>
                           </TableCell>
                           <TableCell className="text-xs text-muted-foreground">
-                            {format(new Date(sub.created_at), 'PPP')}
+                            {format(new Date(sub.created_at), "PPP")}
                           </TableCell>
                         </TableRow>
                       ))}
@@ -312,10 +339,11 @@ export default function AdminBillingDashboard() {
               <CardHeader>
                 <CardTitle className="text-sm">Webhook Health</CardTitle>
                 <CardDescription>
-                  {webhookErrors.length === 0 
-                    ? <span className="text-green-500">All webhooks processed successfully</span>
-                    : <span className="text-destructive">{webhookErrors.length} errors detected</span>
-                  }
+                  {webhookErrors.length === 0 ? (
+                    <span className="text-green-500">All webhooks processed successfully</span>
+                  ) : (
+                    <span className="text-destructive">{webhookErrors.length} errors detected</span>
+                  )}
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-0">
@@ -330,17 +358,18 @@ export default function AdminBillingDashboard() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {webhooks.map(webhook => (
+                      {webhooks.map((webhook) => (
                         <TableRow key={webhook.id}>
                           <TableCell>
                             <Badge variant="outline">{webhook.provider}</Badge>
                           </TableCell>
                           <TableCell className="font-mono text-xs">{webhook.event_type}</TableCell>
                           <TableCell>
-                            {webhook.error_message 
-                              ? <Badge variant="destructive">Error</Badge>
-                              : <Badge className="bg-green-500/20 text-green-500">OK</Badge>
-                            }
+                            {webhook.error_message ? (
+                              <Badge variant="destructive">Error</Badge>
+                            ) : (
+                              <Badge className="bg-green-500/20 text-green-500">OK</Badge>
+                            )}
                           </TableCell>
                           <TableCell className="text-xs text-muted-foreground">
                             {formatDistanceToNow(new Date(webhook.created_at), { addSuffix: true })}

@@ -4,11 +4,16 @@ import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 
 interface IntelliGPUOnboardingProps {
-  onNavigate: (view: "home" | "docs" | "playground" | "pricing" | "swarms" | "auth" | "onboarding") => void;
+  onNavigate: (
+    view: "home" | "docs" | "playground" | "pricing" | "swarms" | "auth" | "onboarding",
+  ) => void;
   onComplete: () => void;
 }
 
-export const IntelliGPUOnboarding: React.FC<IntelliGPUOnboardingProps> = ({ onNavigate, onComplete }) => {
+export const IntelliGPUOnboarding: React.FC<IntelliGPUOnboardingProps> = ({
+  onNavigate,
+  onComplete,
+}) => {
   const [step, setStep] = useState(1);
   const [fullName, setFullName] = useState("SIVA");
   const [company, setCompany] = useState("Acme Corp");
@@ -56,7 +61,9 @@ export const IntelliGPUOnboarding: React.FC<IntelliGPUOnboardingProps> = ({ onNa
           {/* Header Branding */}
           <div className="flex items-center justify-center gap-2 mb-6">
             <Cpu className="h-6 w-6 text-[#76B900]" />
-            <span className="text-lg font-black tracking-tight text-white font-display">IntelliGPU</span>
+            <span className="text-lg font-black tracking-tight text-white font-display">
+              IntelliGPU
+            </span>
           </div>
 
           {/* Progress Section */}
@@ -80,13 +87,20 @@ export const IntelliGPUOnboarding: React.FC<IntelliGPUOnboardingProps> = ({ onNa
                 <div className="bg-[#76B900]/10 border border-[#76B900]/30 p-4 rounded-full mb-4 shadow-[0_0_15px_rgba(118,185,0,0.1)]">
                   <User className="h-8 w-8 text-[#76B900]" />
                 </div>
-                <h2 className="text-xl font-black text-white tracking-tight">Complete Your Profile</h2>
-                <p className="text-slate-400 text-xs mt-1 text-center">Tell us a bit about yourself</p>
+                <h2 className="text-xl font-black text-white tracking-tight">
+                  Complete Your Profile
+                </h2>
+                <p className="text-slate-400 text-xs mt-1 text-center">
+                  Tell us a bit about yourself
+                </p>
               </div>
 
               <div className="space-y-4">
                 <div>
-                  <label htmlFor="fullName" className="block text-slate-300 font-bold text-xs uppercase mb-2">
+                  <label
+                    htmlFor="fullName"
+                    className="block text-slate-300 font-bold text-xs uppercase mb-2"
+                  >
                     Full Name
                   </label>
                   <input
@@ -101,7 +115,10 @@ export const IntelliGPUOnboarding: React.FC<IntelliGPUOnboardingProps> = ({ onNa
                 </div>
 
                 <div>
-                  <label htmlFor="company" className="block text-slate-300 font-bold text-xs uppercase mb-2">
+                  <label
+                    htmlFor="company"
+                    className="block text-slate-300 font-bold text-xs uppercase mb-2"
+                  >
                     Company (Optional)
                   </label>
                   <input
@@ -124,8 +141,12 @@ export const IntelliGPUOnboarding: React.FC<IntelliGPUOnboardingProps> = ({ onNa
                 <div className="bg-[#76B900]/10 border border-[#76B900]/30 p-4 rounded-full mb-4 shadow-[0_0_15px_rgba(118,185,0,0.1)]">
                   <Settings className="h-8 w-8 text-[#76B900]" />
                 </div>
-                <h2 className="text-xl font-black text-white tracking-tight">Enable Optimization Modules</h2>
-                <p className="text-slate-400 text-xs mt-1 text-center">Choose which modules to enable by default</p>
+                <h2 className="text-xl font-black text-white tracking-tight">
+                  Enable Optimization Modules
+                </h2>
+                <p className="text-slate-400 text-xs mt-1 text-center">
+                  Choose which modules to enable by default
+                </p>
               </div>
 
               <div className="space-y-3">
@@ -173,7 +194,9 @@ export const IntelliGPUOnboarding: React.FC<IntelliGPUOnboardingProps> = ({ onNa
                             : "border-slate-700 bg-transparent"
                         }`}
                       >
-                        {enabledModules[mod.id] && <CheckCircle2 className="h-3 w-3 text-black stroke-[3px]" />}
+                        {enabledModules[mod.id] && (
+                          <CheckCircle2 className="h-3 w-3 text-black stroke-[3px]" />
+                        )}
                       </div>
                     </div>
                     <div>
@@ -194,14 +217,28 @@ export const IntelliGPUOnboarding: React.FC<IntelliGPUOnboardingProps> = ({ onNa
                   <Palette className="h-8 w-8 text-[#76B900]" />
                 </div>
                 <h2 className="text-xl font-black text-white tracking-tight">Choose Your Theme</h2>
-                <p className="text-slate-400 text-xs mt-1 text-center font-medium">Select your preferred appearance</p>
+                <p className="text-slate-400 text-xs mt-1 text-center font-medium">
+                  Select your preferred appearance
+                </p>
               </div>
 
               <div className="space-y-3">
                 {[
-                  { id: "dark", label: "Dark Mode", desc: "Default dark theme with NVIDIA green accents" },
-                  { id: "light", label: "Light Mode", desc: "Clean light theme for bright environments" },
-                  { id: "system", label: "System", desc: "Automatically match your system preference" }
+                  {
+                    id: "dark",
+                    label: "Dark Mode",
+                    desc: "Default dark theme with NVIDIA green accents",
+                  },
+                  {
+                    id: "light",
+                    label: "Light Mode",
+                    desc: "Clean light theme for bright environments",
+                  },
+                  {
+                    id: "system",
+                    label: "System",
+                    desc: "Automatically match your system preference",
+                  },
                 ].map((t) => (
                   <button
                     key={t.id}
@@ -213,11 +250,11 @@ export const IntelliGPUOnboarding: React.FC<IntelliGPUOnboardingProps> = ({ onNa
                     }`}
                   >
                     <div className="mr-3 mt-0.5">
-                      <div className={`h-4.5 w-4.5 rounded-full border flex items-center justify-center transition-all ${
-                        selectedTheme === t.id
-                          ? "border-[#76B900]"
-                          : "border-slate-700"
-                      }`}>
+                      <div
+                        className={`h-4.5 w-4.5 rounded-full border flex items-center justify-center transition-all ${
+                          selectedTheme === t.id ? "border-[#76B900]" : "border-slate-700"
+                        }`}
+                      >
                         {selectedTheme === t.id && (
                           <div className="h-2 w-2 rounded-full bg-[#76B900]" />
                         )}

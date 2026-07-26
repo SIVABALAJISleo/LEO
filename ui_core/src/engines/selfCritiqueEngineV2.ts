@@ -41,32 +41,42 @@ export class SelfCritiqueEngineV2 {
       missingInformation: [],
       reasoningFlaws: [],
       weakAssumptions: [],
-      contradictions: []
+      contradictions: [],
     };
 
     // Factual Mistakes check
     if (answerLower.includes("unlimited vram")) {
-      flawsDetected.factualMistakes.push("Fact violation: Integrated GPUs share system memory and do not have unlimited VRAM.");
+      flawsDetected.factualMistakes.push(
+        "Fact violation: Integrated GPUs share system memory and do not have unlimited VRAM.",
+      );
     }
 
     // Missing Information check
     if (queryLower.includes("stripe") && !answerLower.includes("hmac")) {
-      flawsDetected.missingInformation.push("Missing security detail: Payload validation requires cryptographic HMAC verification check.");
+      flawsDetected.missingInformation.push(
+        "Missing security detail: Payload validation requires cryptographic HMAC verification check.",
+      );
     }
 
     // Reasoning Flaws check
     if (queryLower.includes("latency") && answerLower.includes("zero latency")) {
-      flawsDetected.reasoningFlaws.push("Reasoning flaw: Local file access or compilation guarantees non-zero latency overhead.");
+      flawsDetected.reasoningFlaws.push(
+        "Reasoning flaw: Local file access or compilation guarantees non-zero latency overhead.",
+      );
     }
 
     // Weak Assumptions check
     if (queryLower.includes("rollback") && !answerLower.includes("health check")) {
-      flawsDetected.weakAssumptions.push("Weak assumption: Assumes rollback is immediate without verifying cluster health signals.");
+      flawsDetected.weakAssumptions.push(
+        "Weak assumption: Assumes rollback is immediate without verifying cluster health signals.",
+      );
     }
 
     // Contradictions check
     if (answerLower.includes("yes") && answerLower.includes("no")) {
-      flawsDetected.contradictions.push("Logical contradiction: The draft asserts both Yes and No outcomes simultaneously.");
+      flawsDetected.contradictions.push(
+        "Logical contradiction: The draft asserts both Yes and No outcomes simultaneously.",
+      );
     }
 
     // Generate steps
@@ -76,35 +86,49 @@ export class SelfCritiqueEngineV2 {
     critiqueCycles.push({
       stage: "Draft",
       content: draftAnswer,
-      flawsDetected: { factualMistakes: [], missingInformation: [], reasoningFlaws: [], weakAssumptions: [], contradictions: [] },
-      timestamp: Date.now()
+      flawsDetected: {
+        factualMistakes: [],
+        missingInformation: [],
+        reasoningFlaws: [],
+        weakAssumptions: [],
+        contradictions: [],
+      },
+      timestamp: Date.now(),
     });
 
     // Critique step
-    const hasFlaws = Object.values(flawsDetected).some(f => f.length > 0);
+    const hasFlaws = Object.values(flawsDetected).some((f) => f.length > 0);
     critiqueCycles.push({
       stage: "Critique",
-      content: hasFlaws 
+      content: hasFlaws
         ? `Critique output: Found ${Object.values(flawsDetected).reduce((acc, f) => acc + f.length, 0)} flaw(s) inside the draft.`
         : "Critique output: No structural or security flaws detected in the draft answer.",
       flawsDetected,
-      timestamp: Date.now() + 5
+      timestamp: Date.now() + 5,
     });
 
     // Improvement Step
     let improvedContent = draftAnswer;
     if (hasFlaws) {
       if (flawsDetected.factualMistakes.length > 0) {
-        improvedContent = improvedContent.replace(/unlimited vram/gi, "shared host system memory constraints");
+        improvedContent = improvedContent.replace(
+          /unlimited vram/gi,
+          "shared host system memory constraints",
+        );
       }
       if (flawsDetected.missingInformation.length > 0) {
-        improvedContent += " Verification requires verifying payloads using Stripe signature checks with webhook secret key tokens.";
+        improvedContent +=
+          " Verification requires verifying payloads using Stripe signature checks with webhook secret key tokens.";
       }
       if (flawsDetected.reasoningFlaws.length > 0) {
-        improvedContent = improvedContent.replace(/zero latency/gi, "sub-millisecond scheduling latency");
+        improvedContent = improvedContent.replace(
+          /zero latency/gi,
+          "sub-millisecond scheduling latency",
+        );
       }
       if (flawsDetected.weakAssumptions.length > 0) {
-        improvedContent += " Dynamic rollbacks monitor Prometheus status checks before isolating the nodes.";
+        improvedContent +=
+          " Dynamic rollbacks monitor Prometheus status checks before isolating the nodes.";
       }
       if (flawsDetected.contradictions.length > 0) {
         improvedContent = improvedContent.replace(/yes|no/gi, "conditional outcome");
@@ -117,16 +141,29 @@ export class SelfCritiqueEngineV2 {
     critiqueCycles.push({
       stage: "Improvement",
       content: improvedContent,
-      flawsDetected: { factualMistakes: [], missingInformation: [], reasoningFlaws: [], weakAssumptions: [], contradictions: [] },
-      timestamp: Date.now() + 10
+      flawsDetected: {
+        factualMistakes: [],
+        missingInformation: [],
+        reasoningFlaws: [],
+        weakAssumptions: [],
+        contradictions: [],
+      },
+      timestamp: Date.now() + 10,
     });
 
     // Verification Step
     critiqueCycles.push({
       stage: "Verification",
-      content: "Verification step: Comparing refined content with correctness parameters. Status: PASSED.",
-      flawsDetected: { factualMistakes: [], missingInformation: [], reasoningFlaws: [], weakAssumptions: [], contradictions: [] },
-      timestamp: Date.now() + 15
+      content:
+        "Verification step: Comparing refined content with correctness parameters. Status: PASSED.",
+      flawsDetected: {
+        factualMistakes: [],
+        missingInformation: [],
+        reasoningFlaws: [],
+        weakAssumptions: [],
+        contradictions: [],
+      },
+      timestamp: Date.now() + 15,
     });
 
     // Final answer formulation
@@ -134,8 +171,14 @@ export class SelfCritiqueEngineV2 {
     critiqueCycles.push({
       stage: "Final",
       content: finalAnswer,
-      flawsDetected: { factualMistakes: [], missingInformation: [], reasoningFlaws: [], weakAssumptions: [], contradictions: [] },
-      timestamp: Date.now() + 20
+      flawsDetected: {
+        factualMistakes: [],
+        missingInformation: [],
+        reasoningFlaws: [],
+        weakAssumptions: [],
+        contradictions: [],
+      },
+      timestamp: Date.now() + 20,
     });
 
     const hallucinationRatePct = hasFlaws ? 0.25 : 0.01;
@@ -145,7 +188,7 @@ export class SelfCritiqueEngineV2 {
       draftAnswer,
       critiqueCycles,
       finalAnswer,
-      hallucinationRatePct
+      hallucinationRatePct,
     };
   }
 }

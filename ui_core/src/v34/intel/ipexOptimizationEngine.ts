@@ -19,16 +19,16 @@ export class IpexOptimizationEngine {
     ompNumThreads: 8,
     kmpAffinity: "granularity=fine,compact,1,0",
     useJemalloc: true,
-    enableAutoKernelTuning: true
+    enableAutoKernelTuning: true,
   };
 
   applyOptimizations(coresCount: number): IpexRuntimeStatus {
     this.currentSettings.ompNumThreads = Math.max(2, coresCount);
-    
+
     return {
       activeSettings: this.currentSettings,
       threadConcurrencyRatio: 0.96,
-      memoryFragmentationRate: 0.045
+      memoryFragmentationRate: 0.045,
     };
   }
 

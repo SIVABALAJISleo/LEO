@@ -21,17 +21,19 @@ export class ScientificDiscoveryEngine {
   public discoverHypotheses(
     datasetSummary: string,
     independentVar: string,
-    dependentVar: string
+    dependentVar: string,
   ): DiscoveryReport {
-    const isThermal = datasetSummary.toLowerCase().includes("thermal") || datasetSummary.toLowerCase().includes("heat");
-    
+    const isThermal =
+      datasetSummary.toLowerCase().includes("thermal") ||
+      datasetSummary.toLowerCase().includes("heat");
+
     const hypotheses: DiscoveryHypothesis[] = [
       {
         title: "Causal parameter scaling",
         claim: `Quantization scaling of ${independentVar} restricts ${dependentVar} bounds.`,
         causalMechanism: "BitClamping -> LowerMemoryBandwidth -> FusedALUCycles",
-        confidenceScore: isThermal ? 0.94 : 0.88
-      }
+        confidenceScore: isThermal ? 0.94 : 0.88,
+      },
     ];
 
     const evidenceGaps: string[] = [];
@@ -44,7 +46,7 @@ export class ScientificDiscoveryEngine {
     return {
       hypotheses,
       evidenceGaps,
-      suggestedExperiment
+      suggestedExperiment,
     };
   }
 }

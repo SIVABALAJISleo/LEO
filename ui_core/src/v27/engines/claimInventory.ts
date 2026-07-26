@@ -31,7 +31,7 @@ export class ClaimInventory {
         operator: ">=",
         status: "UNVERIFIED",
         measuredValue: null,
-        confidence: null
+        confidence: null,
       },
       {
         claimId: "C-HALL",
@@ -41,7 +41,7 @@ export class ClaimInventory {
         operator: "<=",
         status: "UNVERIFIED",
         measuredValue: null,
-        confidence: null
+        confidence: null,
       },
       {
         claimId: "C-MEMO",
@@ -51,7 +51,7 @@ export class ClaimInventory {
         operator: ">=",
         status: "UNVERIFIED",
         measuredValue: null,
-        confidence: null
+        confidence: null,
       },
       {
         claimId: "C-SEAR",
@@ -61,7 +61,7 @@ export class ClaimInventory {
         operator: ">=",
         status: "UNVERIFIED",
         measuredValue: null,
-        confidence: null
+        confidence: null,
       },
       {
         claimId: "C-RAGG",
@@ -71,7 +71,7 @@ export class ClaimInventory {
         operator: ">=",
         status: "UNVERIFIED",
         measuredValue: null,
-        confidence: null
+        confidence: null,
       },
       {
         claimId: "C-AGEN",
@@ -81,7 +81,7 @@ export class ClaimInventory {
         operator: ">=",
         status: "UNVERIFIED",
         measuredValue: null,
-        confidence: null
+        confidence: null,
       },
       {
         claimId: "C-ENTR",
@@ -91,8 +91,8 @@ export class ClaimInventory {
         operator: ">=",
         status: "UNVERIFIED",
         measuredValue: null,
-        confidence: null
-      }
+        confidence: null,
+      },
     ];
   }
 
@@ -101,7 +101,7 @@ export class ClaimInventory {
   }
 
   updateClaim(claimId: string, measuredValue: number, confidence: number, status: ClaimStatus) {
-    const claim = this.claims.find(c => c.claimId === claimId);
+    const claim = this.claims.find((c) => c.claimId === claimId);
     if (claim) {
       claim.measuredValue = parseFloat(measuredValue.toFixed(4));
       claim.confidence = parseFloat(confidence.toFixed(4));

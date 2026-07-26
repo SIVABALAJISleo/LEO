@@ -5,12 +5,12 @@
 // Label clearly as "Planned / Simulated / Estimated"
 // Never claim real execution
 
-type VeryHeavyJobType = 
-  | 'llm_training' 
-  | 'video_rendering' 
-  | 'massive_simulation' 
-  | 'large_dataset_processing'
-  | 'distributed_training';
+type VeryHeavyJobType =
+  | "llm_training"
+  | "video_rendering"
+  | "massive_simulation"
+  | "large_dataset_processing"
+  | "distributed_training";
 
 interface TrainingTrajectory {
   epochs: number[];
@@ -50,7 +50,7 @@ interface RepresentativeSample {
 
 interface VeryHeavySimulation {
   jobType: VeryHeavyJobType;
-  status: 'approximated' | 'estimated' | 'planned'; // HONEST: renamed from 'simulated'
+  status: "approximated" | "estimated" | "planned"; // HONEST: renamed from 'simulated'
   disclaimer: string;
   trajectory?: TrainingTrajectory;
   convergence?: ConvergenceEstimate;
@@ -64,7 +64,8 @@ interface VeryHeavySimulation {
 }
 
 class VeryHeavySimulator {
-  private readonly DISCLAIMER = 'This is a simulation/estimate. No actual GPU compute was performed.';
+  private readonly DISCLAIMER =
+    "This is a simulation/estimate. No actual GPU compute was performed.";
 
   // Check if a job type is very-heavy
   isVeryHeavy(jobType: string, memoryMb: number, estimatedDurationSec: number): boolean {
@@ -74,17 +75,17 @@ class VeryHeavySimulator {
     // - Duration > 1 hour
     // - Known impossible tasks
     const veryHeavyTypes = [
-      'llm_training',
-      'llm_finetuning',
-      'video_4k_rendering',
-      'distributed_training',
-      'full_dataset_training',
+      "llm_training",
+      "llm_finetuning",
+      "video_4k_rendering",
+      "distributed_training",
+      "full_dataset_training",
     ];
-    
+
     if (veryHeavyTypes.includes(jobType)) return true;
     if (memoryMb > 16384) return true;
     if (estimatedDurationSec > 3600) return true;
-    
+
     return false;
   }
 
@@ -96,18 +97,18 @@ class VeryHeavySimulator {
       datasetSize?: number;
       epochs?: number;
       resolution?: string;
-    }
+    },
   ): VeryHeavySimulation {
     switch (jobType) {
-      case 'llm_training':
+      case "llm_training":
         return this.simulateLLMTraining(params);
-      case 'video_rendering':
+      case "video_rendering":
         return this.simulateVideoRendering(params);
-      case 'massive_simulation':
+      case "massive_simulation":
         return this.simulateMassiveSimulation(params);
-      case 'large_dataset_processing':
+      case "large_dataset_processing":
         return this.simulateDatasetProcessing(params);
-      case 'distributed_training':
+      case "distributed_training":
         return this.simulateDistributedTraining(params);
       default:
         return this.createGenericSimulation(jobType);
@@ -121,26 +122,26 @@ class VeryHeavySimulator {
   }): VeryHeavySimulation {
     const modelSize = params.modelSize || 1000000000; // 1B params
     const epochs = params.epochs || 10;
-    
+
     // Generate training trajectory
     const trajectory: TrainingTrajectory = {
       epochs: Array.from({ length: epochs }, (_, i) => i + 1),
       loss: this.generateLossCurve(epochs),
       accuracy: this.generateAccuracyCurve(epochs),
       learningRate: this.generateLRSchedule(epochs),
-      estimatedTimePerEpoch: modelSize / 1000000 * 0.5, // hours
+      estimatedTimePerEpoch: (modelSize / 1000000) * 0.5, // hours
     };
-    
+
     const convergence: ConvergenceEstimate = {
       expectedEpochsToConverge: Math.ceil(epochs * 0.8),
       expectedFinalLoss: 0.08, // Fixed estimate - no random values
-      expectedFinalAccuracy: 0.90, // Fixed estimate - no random values
+      expectedFinalAccuracy: 0.9, // Fixed estimate - no random values
       confidence: 0.72,
     };
-    
+
     return {
-      jobType: 'llm_training',
-      status: 'approximated', // HONEST: this is an approximation/estimate
+      jobType: "llm_training",
+      status: "approximated", // HONEST: this is an approximation/estimate
       disclaimer: this.DISCLAIMER,
       trajectory,
       convergence,
@@ -148,23 +149,23 @@ class VeryHeavySimulator {
       checkpoints: this.generateCheckpoints(epochs),
       samples: this.generateTrainingSamples(),
       estimatedTotalTime: `${Math.round(trajectory.estimatedTimePerEpoch * epochs)} hours`,
-      estimatedTotalCost: `$${Math.round(modelSize / 1000000 * epochs * 0.02)}`,
+      estimatedTotalCost: `$${Math.round((modelSize / 1000000) * epochs * 0.02)}`,
       feasibilityScore: 0.15, // Low for single laptop
       recommendations: [
-        'Consider using a smaller model variant',
-        'Use knowledge distillation instead',
-        'Pre-compute on cloud and transfer weights',
-        'Use LoRA/PEFT for efficient fine-tuning',
+        "Consider using a smaller model variant",
+        "Use knowledge distillation instead",
+        "Pre-compute on cloud and transfer weights",
+        "Use LoRA/PEFT for efficient fine-tuning",
       ],
     };
   }
 
   private simulateVideoRendering(params: { resolution?: string }): VeryHeavySimulation {
-    const resolution = params.resolution || '4K';
-    
+    const resolution = params.resolution || "4K";
+
     return {
-      jobType: 'video_rendering',
-      status: 'estimated',
+      jobType: "video_rendering",
+      status: "estimated",
       disclaimer: this.DISCLAIMER,
       costCurve: {
         computeUnits: [1, 10, 100, 1000],
@@ -172,20 +173,22 @@ class VeryHeavySimulator {
         timeHours: [1, 10, 100, 1000],
       },
       checkpoints: [],
-      samples: [{
-        id: 'preview-frame',
-        type: 'image',
-        preview: `Preview frame at ${resolution}`,
-        fullResultEstimate: 'Full render would take ~48 hours',
-      }],
-      estimatedTotalTime: '48+ hours',
-      estimatedTotalCost: '$200-500 (cloud rendering)',
+      samples: [
+        {
+          id: "preview-frame",
+          type: "image",
+          preview: `Preview frame at ${resolution}`,
+          fullResultEstimate: "Full render would take ~48 hours",
+        },
+      ],
+      estimatedTotalTime: "48+ hours",
+      estimatedTotalCost: "$200-500 (cloud rendering)",
       feasibilityScore: 0.05,
       recommendations: [
-        'Render preview at lower resolution',
-        'Use cloud rendering service',
-        'Compress to lower bitrate',
-        'Render key frames only',
+        "Render preview at lower resolution",
+        "Use cloud rendering service",
+        "Compress to lower bitrate",
+        "Render key frames only",
       ],
     };
   }
@@ -193,50 +196,54 @@ class VeryHeavySimulator {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private simulateMassiveSimulation(params: Record<string, unknown>): VeryHeavySimulation {
     return {
-      jobType: 'massive_simulation',
-      status: 'planned',
+      jobType: "massive_simulation",
+      status: "planned",
       disclaimer: this.DISCLAIMER,
       checkpoints: [],
-      samples: [{
-        id: 'sample-output',
-        type: 'data',
-        preview: 'Monte Carlo simulation preview',
-        fullResultEstimate: 'Full simulation requires distributed compute',
-      }],
-      estimatedTotalTime: '72+ hours',
-      estimatedTotalCost: '$1000+ (cloud compute)',
+      samples: [
+        {
+          id: "sample-output",
+          type: "data",
+          preview: "Monte Carlo simulation preview",
+          fullResultEstimate: "Full simulation requires distributed compute",
+        },
+      ],
+      estimatedTotalTime: "72+ hours",
+      estimatedTotalCost: "$1000+ (cloud compute)",
       feasibilityScore: 0.02,
       recommendations: [
-        'Reduce simulation resolution',
-        'Use approximation methods',
-        'Run subset of scenarios',
-        'Parallelize on cloud infrastructure',
+        "Reduce simulation resolution",
+        "Use approximation methods",
+        "Run subset of scenarios",
+        "Parallelize on cloud infrastructure",
       ],
     };
   }
 
   private simulateDatasetProcessing(params: { datasetSize?: number }): VeryHeavySimulation {
     const size = params.datasetSize || 1000000;
-    
+
     return {
-      jobType: 'large_dataset_processing',
-      status: 'estimated',
+      jobType: "large_dataset_processing",
+      status: "estimated",
       disclaimer: this.DISCLAIMER,
       checkpoints: [],
-      samples: [{
-        id: 'sample-processed',
-        type: 'data',
-        preview: `Processed ${Math.min(1000, size)} sample records`,
-        fullResultEstimate: `Full dataset: ${size} records`,
-      }],
+      samples: [
+        {
+          id: "sample-processed",
+          type: "data",
+          preview: `Processed ${Math.min(1000, size)} sample records`,
+          fullResultEstimate: `Full dataset: ${size} records`,
+        },
+      ],
       estimatedTotalTime: `${Math.ceil(size / 10000)} hours`,
       estimatedTotalCost: `$${Math.ceil(size / 50000)}`,
       feasibilityScore: size < 100000 ? 0.5 : 0.1,
       recommendations: [
-        'Process in batches',
-        'Use streaming pipeline',
-        'Sample dataset for testing',
-        'Use distributed processing',
+        "Process in batches",
+        "Use streaming pipeline",
+        "Sample dataset for testing",
+        "Use distributed processing",
       ],
     };
   }
@@ -244,8 +251,8 @@ class VeryHeavySimulator {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private simulateDistributedTraining(params: Record<string, unknown>): VeryHeavySimulation {
     return {
-      jobType: 'distributed_training',
-      status: 'planned',
+      jobType: "distributed_training",
+      status: "planned",
       disclaimer: this.DISCLAIMER,
       trajectory: {
         epochs: [1, 2, 3, 4, 5],
@@ -256,14 +263,14 @@ class VeryHeavySimulator {
       },
       checkpoints: [],
       samples: [],
-      estimatedTotalTime: '10+ hours',
-      estimatedTotalCost: '$50-100',
+      estimatedTotalTime: "10+ hours",
+      estimatedTotalCost: "$50-100",
       feasibilityScore: 0.0, // Not possible on single laptop
       recommendations: [
-        'Single laptop cannot run distributed training',
-        'Use cloud cluster with 4+ GPUs',
-        'Consider model parallelism alternatives',
-        'Use gradient checkpointing to reduce memory',
+        "Single laptop cannot run distributed training",
+        "Use cloud cluster with 4+ GPUs",
+        "Consider model parallelism alternatives",
+        "Use gradient checkpointing to reduce memory",
       ],
     };
   }
@@ -271,17 +278,17 @@ class VeryHeavySimulator {
   private createGenericSimulation(jobType: VeryHeavyJobType): VeryHeavySimulation {
     return {
       jobType,
-      status: 'estimated',
+      status: "estimated",
       disclaimer: this.DISCLAIMER,
       checkpoints: [],
       samples: [],
-      estimatedTotalTime: 'Unknown',
-      estimatedTotalCost: 'Unknown',
+      estimatedTotalTime: "Unknown",
+      estimatedTotalCost: "Unknown",
       feasibilityScore: 0.1,
       recommendations: [
-        'Break down into smaller tasks',
-        'Use approximation methods',
-        'Consider cloud compute for this workload',
+        "Break down into smaller tasks",
+        "Use approximation methods",
+        "Consider cloud compute for this workload",
       ],
     };
   }
@@ -310,13 +317,11 @@ class VeryHeavySimulator {
 
   private generateLRSchedule(epochs: number): number[] {
     const lr = 0.001;
-    return Array.from({ length: epochs }, (_, i) => 
-      lr * Math.pow(0.9, Math.floor(i / 3))
-    );
+    return Array.from({ length: epochs }, (_, i) => lr * Math.pow(0.9, Math.floor(i / 3)));
   }
 
   private generateCostCurve(epochs: number, modelSize: number): CostCurve {
-    const baseRate = modelSize / 1000000000 * 0.5; // $/hour
+    const baseRate = (modelSize / 1000000000) * 0.5; // $/hour
     return {
       computeUnits: Array.from({ length: epochs }, (_, i) => i + 1),
       estimatedCostUsd: Array.from({ length: epochs }, (_, i) => (i + 1) * baseRate * 2),
@@ -341,20 +346,25 @@ class VeryHeavySimulator {
   private generateTrainingSamples(): RepresentativeSample[] {
     return [
       {
-        id: 'sample-1',
-        type: 'text',
-        preview: 'Sample output after simulated training...',
-        fullResultEstimate: 'Full model would require cloud training',
+        id: "sample-1",
+        type: "text",
+        preview: "Sample output after simulated training...",
+        fullResultEstimate: "Full model would require cloud training",
       },
     ];
   }
 
   // Get status badge variant (HONEST labeling)
-  getStatusBadgeVariant(status: 'approximated' | 'estimated' | 'planned'): 'secondary' | 'outline' | 'default' {
+  getStatusBadgeVariant(
+    status: "approximated" | "estimated" | "planned",
+  ): "secondary" | "outline" | "default" {
     switch (status) {
-      case 'approximated': return 'secondary';
-      case 'estimated': return 'outline';
-      case 'planned': return 'default';
+      case "approximated":
+        return "secondary";
+      case "estimated":
+        return "outline";
+      case "planned":
+        return "default";
     }
   }
 }

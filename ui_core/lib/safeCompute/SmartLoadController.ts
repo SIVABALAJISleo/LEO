@@ -2,7 +2,7 @@
 // Limits job rate when laptop is busy
 // Smooths performance to prevent overheating
 
-import { SystemLoad, ComputeConfig } from './types';
+import { SystemLoad, ComputeConfig } from "./types";
 
 class SmartLoadController {
   private config: ComputeConfig = {
@@ -40,7 +40,8 @@ class SmartLoadController {
     this.systemLoad = {
       ...this.systemLoad,
       ...updates,
-      isOverheating: (updates.temperature ?? this.systemLoad.temperature) > this.config.thermalThreshold,
+      isOverheating:
+        (updates.temperature ?? this.systemLoad.temperature) > this.config.thermalThreshold,
     };
     this.notifyListeners();
   }
@@ -54,8 +55,7 @@ class SmartLoadController {
 
   shouldDowngradeComplexity(): boolean {
     // Auto-downgrade if RAM is low
-    return this.config.autoDowngradeEnabled && 
-           this.systemLoad.availableRam < 2048;
+    return this.config.autoDowngradeEnabled && this.systemLoad.availableRam < 2048;
   }
 
   getRecommendedJobLimit(): number {
@@ -65,13 +65,13 @@ class SmartLoadController {
     return this.config.maxConcurrentJobs;
   }
 
-  getLoadStatus(): 'idle' | 'light' | 'moderate' | 'heavy' | 'critical' {
+  getLoadStatus(): "idle" | "light" | "moderate" | "heavy" | "critical" {
     const avgLoad = (this.systemLoad.cpuUsage + this.systemLoad.memoryUsage) / 2;
-    if (this.systemLoad.isOverheating) return 'critical';
-    if (avgLoad < 20) return 'idle';
-    if (avgLoad < 50) return 'light';
-    if (avgLoad < 75) return 'moderate';
-    return 'heavy';
+    if (this.systemLoad.isOverheating) return "critical";
+    if (avgLoad < 20) return "idle";
+    if (avgLoad < 50) return "light";
+    if (avgLoad < 75) return "moderate";
+    return "heavy";
   }
 
   /**
@@ -111,7 +111,7 @@ class SmartLoadController {
   }
 
   private notifyListeners(): void {
-    this.listeners.forEach(listener => listener(this.systemLoad));
+    this.listeners.forEach((listener) => listener(this.systemLoad));
   }
 }
 

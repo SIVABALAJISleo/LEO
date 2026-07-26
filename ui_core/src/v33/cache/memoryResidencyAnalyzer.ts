@@ -19,18 +19,17 @@ export class MemoryResidencyAnalyzer {
     l2Hits: number,
     l3Hits: number,
     ramHits: number,
-    pageFaults: number
+    pageFaults: number,
   ): CacheAccessStats {
     const totalAccesses = l1Hits + l2Hits + l3Hits + ramHits + pageFaults;
-    
+
     // Cache efficiency score computes how much RAM fetches are avoided
     // L1 hits = weight 1.0, L2 hits = weight 0.8, L3 hits = weight 0.5, RAM = 0.05
-    let efficiencyNumerator = (l1Hits * 1.0) + (l2Hits * 0.8) + (l3Hits * 0.5) + (ramHits * 0.05);
-    
-    let cacheEfficiencyScore = totalAccesses > 0 
-      ? (efficiencyNumerator / totalAccesses) * 100 
-      : 100;
-    
+    let efficiencyNumerator = l1Hits * 1.0 + l2Hits * 0.8 + l3Hits * 0.5 + ramHits * 0.05;
+
+    let cacheEfficiencyScore =
+      totalAccesses > 0 ? (efficiencyNumerator / totalAccesses) * 100 : 100;
+
     // Penalize page faults
     if (pageFaults > 0) {
       cacheEfficiencyScore -= (pageFaults / (totalAccesses || 1)) * 200;

@@ -36,7 +36,7 @@ export class SourceRanker {
       url,
       sourceDomain,
       credibilityWeight,
-      isTrustedPartner
+      isTrustedPartner,
     };
   }
 }

@@ -21,7 +21,7 @@ export class NpuExecutionEngine {
       powerDrawWatts: this.currentDrawWatts,
       continuousMonitoringActive: true,
       driverVersion: "v2026.06.12.8710",
-      executionEfficiencyPct: 94.6
+      executionEfficiencyPct: 94.6,
     };
   }
 

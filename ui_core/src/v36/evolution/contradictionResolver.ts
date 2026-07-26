@@ -6,19 +6,19 @@ export class ContradictionResolver {
     primary: string,
     secondary: string,
     primaryConf: number,
-    secondaryConf: number
+    secondaryConf: number,
   ): { resolvedText: string; resolvedConfidence: number; flagged: boolean } {
     if (primaryConf >= secondaryConf) {
       return {
         resolvedText: primary,
         resolvedConfidence: primaryConf,
-        flagged: Math.abs(primaryConf - secondaryConf) < 0.05
+        flagged: Math.abs(primaryConf - secondaryConf) < 0.05,
       };
     }
     return {
       resolvedText: secondary,
       resolvedConfidence: secondaryConf,
-      flagged: Math.abs(primaryConf - secondaryConf) < 0.05
+      flagged: Math.abs(primaryConf - secondaryConf) < 0.05,
     };
   }
 }

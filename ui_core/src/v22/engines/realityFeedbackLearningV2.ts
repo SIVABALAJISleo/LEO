@@ -6,7 +6,7 @@ export interface FeedbackEventV22 {
   metricKey: string;
   predicted: number;
   actual: number;
-  delta: number;       // actual - predicted
+  delta: number; // actual - predicted
   correctionApplied: number;
   newWeight: number;
   timestamp: number;
@@ -17,7 +17,7 @@ export interface CalibrationState {
   totalEvents: number;
   averageDelta: number;
   improvementVelocity: number; // rate of weight improvement per cycle
-  calibrationScore: number;    // 0–1
+  calibrationScore: number; // 0–1
 }
 
 const LEARNING_RATE = 0.08;
@@ -25,7 +25,7 @@ const LEARNING_RATE = 0.08;
 export class RealityFeedbackLearningV2 {
   private events: FeedbackEventV22[] = [];
   private weights: Record<string, number> = {
-    reasoningAccuracy: 0.90,
+    reasoningAccuracy: 0.9,
     hallucinationRate: 0.06,
     memoryConsistency: 0.91,
     agentQuality: 0.88,
@@ -39,16 +39,19 @@ export class RealityFeedbackLearningV2 {
 
   logFeedback(metricKey: string, predicted: number, actual: number): FeedbackEventV22 {
     if (!(metricKey in this.weights)) {
-      this.weights[metricKey] = 0.80; // default weight for new metrics
+      this.weights[metricKey] = 0.8; // default weight for new metrics
     }
 
     const delta = actual - predicted;
     // Correction: nudge weight toward actual using learning rate
     const correction = LEARNING_RATE * delta;
-    this.weights[metricKey] = Math.min(0.999, Math.max(0.001, this.weights[metricKey] + correction));
+    this.weights[metricKey] = Math.min(
+      0.999,
+      Math.max(0.001, this.weights[metricKey] + correction),
+    );
 
     const event: FeedbackEventV22 = {
-      eventId: `RFL-${String(this.nextId++).padStart(4, '0')}`,
+      eventId: `RFL-${String(this.nextId++).padStart(4, "0")}`,
       metricKey,
       predicted,
       actual,
@@ -90,7 +93,7 @@ export class RealityFeedbackLearningV2 {
   // Auto-generate feedback events to simulate continuous learning
   simulateLearningCycle(): FeedbackEventV22[] {
     const metrics = Object.keys(this.weights);
-    return metrics.map(key => {
+    return metrics.map((key) => {
       const predicted = this.weights[key];
       // Reality is slightly better than prediction (system is improving)
       const actual = Math.min(0.999, predicted + (Math.random() * 0.06 - 0.01));

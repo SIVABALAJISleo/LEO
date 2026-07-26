@@ -4,12 +4,14 @@
 export class RoboticsResilienceEngine {
   public evaluateRobotState(
     localizationConfidence: number,
-    sensorNoiseRatio: number
+    sensorNoiseRatio: number,
   ): { targetScore: number; stable: boolean } {
-    const targetScore = parseFloat((localizationConfidence * (1.0 - sensorNoiseRatio * 0.5) * 100).toFixed(1));
+    const targetScore = parseFloat(
+      (localizationConfidence * (1.0 - sensorNoiseRatio * 0.5) * 100).toFixed(1),
+    );
     return {
       targetScore,
-      stable: targetScore >= 95.0
+      stable: targetScore >= 95.0,
     };
   }
 }

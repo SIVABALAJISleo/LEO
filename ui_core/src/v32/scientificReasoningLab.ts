@@ -19,22 +19,25 @@ export interface HypothesisValidationReport {
 
 export class ScientificReasoningLab {
   rankHypotheses(statements: string[]): ScientificHypothesis[] {
-    return statements.map((stmt, idx) => {
-      const id = `hyp-${100 + idx}`;
-      const contradicts = stmt.toLowerCase().includes("gravity") || stmt.toLowerCase().includes("absolute zero");
-      const evidence = parseFloat((6.5 + (stmt.length % 4) * 0.8).toFixed(2));
-      
-      const rankScore = parseFloat((evidence * (contradicts ? 0.25 : 1.0)).toFixed(2));
+    return statements
+      .map((stmt, idx) => {
+        const id = `hyp-${100 + idx}`;
+        const contradicts =
+          stmt.toLowerCase().includes("gravity") || stmt.toLowerCase().includes("absolute zero");
+        const evidence = parseFloat((6.5 + (stmt.length % 4) * 0.8).toFixed(2));
 
-      return {
-        id,
-        statement: stmt,
-        causalLinkage: ["A causes B", "B influences dynamic C"],
-        contradictsExistingTruths: contradicts,
-        empiricalEvidenceScore: evidence,
-        rankScore
-      };
-    }).sort((a, b) => b.rankScore - a.rankScore);
+        const rankScore = parseFloat((evidence * (contradicts ? 0.25 : 1.0)).toFixed(2));
+
+        return {
+          id,
+          statement: stmt,
+          causalLinkage: ["A causes B", "B influences dynamic C"],
+          contradictsExistingTruths: contradicts,
+          empiricalEvidenceScore: evidence,
+          rankScore,
+        };
+      })
+      .sort((a, b) => b.rankScore - a.rankScore);
   }
 
   validateHypothesis(hyp: ScientificHypothesis): HypothesisValidationReport {
@@ -46,7 +49,7 @@ export class ScientificReasoningLab {
     return {
       testedHypothesis: hyp,
       contradictionLogs,
-      isValidated: contradictionLogs.length === 0
+      isValidated: contradictionLogs.length === 0,
     };
   }
 }

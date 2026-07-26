@@ -1,12 +1,12 @@
-import { Power, PowerOff, Copy, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Power, PowerOff, Copy, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Badge } from '@/components/ui/badge';
+} from "@/components/ui/dropdown-menu";
+import { Badge } from "@/components/ui/badge";
 
 interface BatchActionsProps {
   selectedCount: number;
@@ -21,7 +21,7 @@ export function BatchActions({
   onEnableAll,
   onDisableAll,
   onApplyTemplate,
-  onClearSelection
+  onClearSelection,
 }: BatchActionsProps) {
   if (selectedCount === 0) return null;
 
@@ -60,25 +60,14 @@ export function BatchActions({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
-            <DropdownMenuItem onClick={onApplyTemplate}>
-              High Performance Template
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={onApplyTemplate}>
-              Memory Optimized Template
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={onApplyTemplate}>
-              Balanced Template
-            </DropdownMenuItem>
+            <DropdownMenuItem onClick={onApplyTemplate}>High Performance Template</DropdownMenuItem>
+            <DropdownMenuItem onClick={onApplyTemplate}>Memory Optimized Template</DropdownMenuItem>
+            <DropdownMenuItem onClick={onApplyTemplate}>Balanced Template</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
 
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={onClearSelection}
-        className="shrink-0"
-      >
+      <Button variant="ghost" size="icon" onClick={onClearSelection} className="shrink-0">
         <X className="h-4 w-4" />
       </Button>
     </div>

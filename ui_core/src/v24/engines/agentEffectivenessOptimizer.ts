@@ -27,7 +27,7 @@ export class AgentEffectivenessOptimizer {
         latencyMs: 125,
         reliability: 0.995,
         verificationRate: 0.99,
-        status: "Active-Promoted"
+        status: "Active-Promoted",
       },
       {
         name: "FactSentinel-V24",
@@ -36,7 +36,7 @@ export class AgentEffectivenessOptimizer {
         latencyMs: 85,
         reliability: 0.998,
         verificationRate: 0.995,
-        status: "Active-Promoted"
+        status: "Active-Promoted",
       },
       {
         name: "ColloquialTranslator-V24",
@@ -45,7 +45,7 @@ export class AgentEffectivenessOptimizer {
         latencyMs: 160,
         reliability: 0.965,
         verificationRate: 0.96,
-        status: "Active-Standard"
+        status: "Active-Standard",
       },
       {
         name: "LegacyTokenizer-V10",
@@ -54,7 +54,7 @@ export class AgentEffectivenessOptimizer {
         latencyMs: 380,
         reliability: 0.702,
         verificationRate: 0.65,
-        status: "Active-Standard" // candidate for retirement
+        status: "Active-Standard", // candidate for retirement
       },
       {
         name: "MathSMTProver-V20",
@@ -63,8 +63,8 @@ export class AgentEffectivenessOptimizer {
         latencyMs: 250,
         reliability: 0.941,
         verificationRate: 0.95,
-        status: "Active-Standard"
-      }
+        status: "Active-Standard",
+      },
     ];
   }
 
@@ -73,8 +73,8 @@ export class AgentEffectivenessOptimizer {
     const promoted: string[] = [];
     const retired: string[] = [];
 
-    this.agents = this.agents.map(a => {
-      const compositeScore = (a.accuracy * 0.4) + (a.reliability * 0.3) + (a.verificationRate * 0.3);
+    this.agents = this.agents.map((a) => {
+      const compositeScore = a.accuracy * 0.4 + a.reliability * 0.3 + a.verificationRate * 0.3;
 
       if (compositeScore > 0.985 && a.status !== "Active-Promoted") {
         a.status = "Active-Promoted";
@@ -100,7 +100,7 @@ export class AgentEffectivenessOptimizer {
 
     return {
       agents: this.agents,
-      log
+      log,
     };
   }
 
@@ -113,7 +113,7 @@ export class AgentEffectivenessOptimizer {
   }
 
   registerMetric(name: string, success: boolean, latencyMs: number) {
-    const a = this.agents.find(ag => ag.name === name);
+    const a = this.agents.find((ag) => ag.name === name);
     if (a) {
       a.latencyMs = Math.round(a.latencyMs * 0.9 + latencyMs * 0.1);
       const outputVal = success ? 1.0 : 0.0;

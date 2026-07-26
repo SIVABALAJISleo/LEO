@@ -93,7 +93,7 @@ export class EvaluationCenter {
     const totalSolved = categoryResults.reduce((acc, curr) => acc + curr.solvedTasks, 0);
     const overallAccuracy = totalSolved / totalTasksRun;
 
-    const status = overallAccuracy >= 0.90 ? "PASSED" : "FAILED";
+    const status = overallAccuracy >= 0.9 ? "PASSED" : "FAILED";
 
     return {
       releaseVersion: version,

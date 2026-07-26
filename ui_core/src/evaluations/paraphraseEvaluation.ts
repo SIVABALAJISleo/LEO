@@ -13,6 +13,6 @@ export const runParaphraseEvaluation = async (): Promise<ParaphraseEvaluationRes
   return {
     totalPairs: 50000,
     intentClusteringAccuracy: parseFloat(clustering.toFixed(2)),
-    semanticSimilarityAccuracy: parseFloat(semantic.toFixed(2))
+    semanticSimilarityAccuracy: parseFloat(semantic.toFixed(2)),
   };
 };

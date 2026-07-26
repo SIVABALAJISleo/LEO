@@ -36,7 +36,7 @@ export class EnterpriseReliabilityEngine {
         slaLimit: "< 250ms",
         observed: "310ms under peak load",
         remedyAction: "Swapped routing from WebGPU solver to local GGUF fallback server",
-        resolved: true
+        resolved: true,
       },
       {
         id: "INC-2402",
@@ -44,21 +44,21 @@ export class EnterpriseReliabilityEngine {
         slaLimit: "> 95% intent accuracy",
         observed: "89% on broken phonetic slang",
         remedyAction: "Replaced old V11 normalizer with V24 IntentRecoveryEngine",
-        resolved: true
-      }
+        resolved: true,
+      },
     ];
   }
 
   audit(): ReliabilityAuditReport {
     // Return telemetry metrics
-    const unresolvedCount = this.incidents.filter(i => !i.resolved).length;
-    
+    const unresolvedCount = this.incidents.filter((i) => !i.resolved).length;
+
     return {
       availabilityPct: parseFloat(this.availability.toFixed(4)),
       slaCompliancePct: parseFloat(this.compliance.toFixed(4)),
       errorRatePct: parseFloat(this.errorRate.toFixed(4)),
       activeIncidents: this.incidents,
-      recoveryStatus: unresolvedCount > 0 ? "DEGRADED" : "OPERATIONAL"
+      recoveryStatus: unresolvedCount > 0 ? "DEGRADED" : "OPERATIONAL",
     };
   }
 
@@ -69,7 +69,7 @@ export class EnterpriseReliabilityEngine {
       slaLimit: limit,
       observed,
       remedyAction: remedy,
-      resolved: false
+      resolved: false,
     });
     this.availability = Math.max(0.99, this.availability - 0.0005);
     this.compliance = Math.max(0.99, this.compliance - 0.001);
@@ -77,7 +77,7 @@ export class EnterpriseReliabilityEngine {
   }
 
   resolveIncident(id: string) {
-    const inc = this.incidents.find(i => i.id === id);
+    const inc = this.incidents.find((i) => i.id === id);
     if (inc) {
       inc.resolved = true;
       this.availability = Math.min(0.9999, this.availability + 0.0002);

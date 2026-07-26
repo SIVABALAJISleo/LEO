@@ -2,17 +2,17 @@
 // In the future, this can be replaced with real math, ML inference, etc.
 
 interface IncomingMessage {
-  type: 'run-demo';
+  type: "run-demo";
   payload: unknown;
 }
 
 interface DoneMessage {
-  type: 'done';
+  type: "done";
   durationMs: number;
 }
 
 self.onmessage = (event: MessageEvent<IncomingMessage>) => {
-  if (!event.data || event.data.type !== 'run-demo') return;
+  if (!event.data || event.data.type !== "run-demo") return;
 
   const start = performance.now();
 
@@ -25,11 +25,10 @@ self.onmessage = (event: MessageEvent<IncomingMessage>) => {
   const durationMs = performance.now() - start;
 
   const msg: DoneMessage = {
-    type: 'done',
+    type: "done",
     durationMs,
   };
 
   // eslint-disable-next-line no-restricted-globals
   (self as unknown as Worker).postMessage(msg);
 };
-

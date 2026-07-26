@@ -5,14 +5,14 @@ export class LocalizationCorrector {
   public adjustDrift(
     measuredLat: number,
     projectedLat: number,
-    driftThreshold: number = 0.0001
+    driftThreshold: number = 0.0001,
   ): { correctedLat: number; driftDetected: boolean } {
     const diff = Math.abs(measuredLat - projectedLat);
     const driftDetected = diff > driftThreshold;
 
     return {
       correctedLat: driftDetected ? projectedLat : measuredLat,
-      driftDetected
+      driftDetected,
     };
   }
 }

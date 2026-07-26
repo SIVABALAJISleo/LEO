@@ -16,7 +16,7 @@ export class TernaryQuantizationEngine {
     let similaritySum = 0;
     let totalRows = weightMatrix.length;
 
-    weightMatrix.forEach(row => {
+    weightMatrix.forEach((row) => {
       originalSizeBytes += row.length * 4; // float32 = 4 bytes
       // Ternary weights are represented as log2(3) = 1.58 bits, packed into bytes.
       quantizedSizeBytes += Math.ceil((row.length * 1.58) / 8);
@@ -24,8 +24,8 @@ export class TernaryQuantizationEngine {
       // Simulate ternary quantization: weights mapped to {-1, 0, 1} scaled by mean absolute value
       const absValues = row.map(Math.abs);
       const meanAbs = absValues.reduce((a, b) => a + b, 0) / (row.length || 1);
-      
-      const quantizedRow = row.map(v => {
+
+      const quantizedRow = row.map((v) => {
         if (v > 0.5 * meanAbs) return 1;
         if (v < -0.5 * meanAbs) return -1;
         return 0;
@@ -38,19 +38,20 @@ export class TernaryQuantizationEngine {
       for (let i = 0; i < row.length; i++) {
         dotProduct += row[i] * (quantizedRow[i] * meanAbs);
         origNormSq += row[i] * row[i];
-        quantNormSq += (quantizedRow[i] * meanAbs) * (quantizedRow[i] * meanAbs);
+        quantNormSq += quantizedRow[i] * meanAbs * (quantizedRow[i] * meanAbs);
       }
 
-      const rowSimilarity = origNormSq > 0 && quantNormSq > 0
-        ? dotProduct / (Math.sqrt(origNormSq) * Math.sqrt(quantNormSq))
-        : 1.0;
-      
+      const rowSimilarity =
+        origNormSq > 0 && quantNormSq > 0
+          ? dotProduct / (Math.sqrt(origNormSq) * Math.sqrt(quantNormSq))
+          : 1.0;
+
       similaritySum += rowSimilarity;
     });
 
     const averageSimilarity = similaritySum / (totalRows || 1);
     // Empirical formula for accuracy retention based on weight similarity
-    const accuracyRetentionRate = parseFloat((0.85 + (averageSimilarity * 0.14)).toFixed(4));
+    const accuracyRetentionRate = parseFloat((0.85 + averageSimilarity * 0.14).toFixed(4));
 
     return {
       originalSizeBytes,

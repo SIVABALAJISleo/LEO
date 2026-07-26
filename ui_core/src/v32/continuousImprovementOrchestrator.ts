@@ -22,7 +22,7 @@ export class ContinuousImprovementOrchestrator {
       phaseName: "Measure",
       actionTaken: "Evaluated Real-World utility, checking user retry and completion rates.",
       metricObserved: currentUtilityScore,
-      stabilized: true
+      stabilized: true,
     });
 
     // Step 2: Learn
@@ -31,7 +31,7 @@ export class ContinuousImprovementOrchestrator {
       phaseName: "Learn",
       actionTaken: "Extracted learning weights adjustments from user action logs.",
       metricObserved: 0.945, // weight bias
-      stabilized: true
+      stabilized: true,
     });
 
     // Step 3: Detect Weakness
@@ -39,9 +39,11 @@ export class ContinuousImprovementOrchestrator {
     localLogs.push({
       loopIndex,
       phaseName: "DetectWeakness",
-      actionTaken: hasWeakness ? "Identified latency bottlenecks in paged block maps." : "Baseline parameters within standard boundary limits.",
+      actionTaken: hasWeakness
+        ? "Identified latency bottlenecks in paged block maps."
+        : "Baseline parameters within standard boundary limits.",
       metricObserved: hasWeakness ? 120 : 0,
-      stabilized: true
+      stabilized: true,
     });
 
     // Step 4: Prioritize & Improve
@@ -50,7 +52,7 @@ export class ContinuousImprovementOrchestrator {
       phaseName: "Improve",
       actionTaken: "Dispatched automated cache compaction and key pruning parameters to KV Cache.",
       metricObserved: 4.5, // compression ratio speedup
-      stabilized: true
+      stabilized: true,
     });
 
     // Step 5: Validate & Deploy
@@ -59,7 +61,7 @@ export class ContinuousImprovementOrchestrator {
       phaseName: "Deploy",
       actionTaken: "Staged new prefix matched index schemas and deployed to CPU/iGPU routers.",
       metricObserved: 99.6, // post-test accuracy
-      stabilized: true
+      stabilized: true,
     });
 
     this.eventsLog.push(...localLogs);

@@ -3,11 +3,14 @@
 
 export class SurrogateSimulator {
   private cache: Record<string, number> = {
-    "navier_stokes_laminar": 0.084,
-    "maxwell_electric_flux": 1.240
+    navier_stokes_laminar: 0.084,
+    maxwell_electric_flux: 1.24,
   };
 
-  public resolveSurrogate(systemKey: string, defaultValue: number): { value: number; cachedUsed: boolean } {
+  public resolveSurrogate(
+    systemKey: string,
+    defaultValue: number,
+  ): { value: number; cachedUsed: boolean } {
     const key = systemKey.toLowerCase();
     if (this.cache[key] !== undefined) {
       return { value: this.cache[key], cachedUsed: true };

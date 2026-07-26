@@ -10,10 +10,17 @@ import { HumanIntentRecoveryV2, IntentAuditV26 } from "./engines/humanIntentReco
 import { KnowledgeFreshnessEngine, FreshnessNode } from "./engines/knowledgeFreshnessEngine";
 import { RealityFeedbackNetworkV3, FeedbackEventV26 } from "./engines/realityFeedbackNetworkV3";
 import { FailureImmuneSystem, VaccineNode } from "./engines/failureImmuneSystem";
-import { FrontierTestingUniverse, AdversarialAttackResult } from "./engines/frontierTestingUniverse";
+import {
+  FrontierTestingUniverse,
+  AdversarialAttackResult,
+} from "./engines/frontierTestingUniverse";
 import { TrustCalibrationEngine, CalibrationBin } from "./engines/trustCalibrationEngine";
 import { RealityGradeProductScore, RealityGradeScores } from "./engines/realityGradeProductScore";
-import { RealityConvergenceLoop, RealityStep, PlatformRealityState } from "./engines/realityConvergenceLoop";
+import {
+  RealityConvergenceLoop,
+  RealityStep,
+  PlatformRealityState,
+} from "./engines/realityConvergenceLoop";
 
 export interface MasterRealityResult {
   cycleId: string;
@@ -86,26 +93,26 @@ export class RealityExecutionOrchestrator {
     const uncertaintyResult = this.uncertaintyGovernor.assess(
       targetQuery,
       benchmarkMetric.realityAccuracy,
-      citationsCount
+      citationsCount,
     );
 
     // 8. Correlate estimated confidence with observed correctness (Phase 11)
     const calibrationResult = this.calibrationEngine.calibrate(
       uncertaintyResult.confidenceScore,
-      benchmarkMetric.realityAccuracy
+      benchmarkMetric.realityAccuracy,
     );
 
     // 9. Run the autonomous feedback loop and register vaccines (Phase 9 & 13)
-    if (intentResult.ambiguityScore > 0.60) {
+    if (intentResult.ambiguityScore > 0.6) {
       this.immuneSystem.registerFailure(
         "Highly ambiguous query syntax resulting in parser conflict",
-        "Introduce intent-clarification prompt blocks in humanIntentRecoveryV2.ts"
+        "Introduce intent-clarification prompt blocks in humanIntentRecoveryV2.ts",
       );
     }
-    if (anomalyResult.rarityWeight > 0.80) {
+    if (anomalyResult.rarityWeight > 0.8) {
       this.immuneSystem.registerFailure(
         "Long-tail reasoning edge case bounds tripped solver timeout",
-        "Enable SMT topology validation checkpoints inside longTailReasoningEngine.ts"
+        "Enable SMT topology validation checkpoints inside longTailReasoningEngine.ts",
       );
     }
 
@@ -117,7 +124,7 @@ export class RealityExecutionOrchestrator {
     const feedbackEvent = this.feedbackNetwork.logFeedback(
       "Reasoning Accuracy",
       uncertaintyResult.confidenceScore,
-      benchmarkMetric.realityAccuracy
+      benchmarkMetric.realityAccuracy,
     );
 
     // 10. Generate adversarial inputs (Phase 10)
@@ -126,7 +133,7 @@ export class RealityExecutionOrchestrator {
     // 11. Compute final Reality-Grade Product Score (Phase 12)
     const alignmentScore = this.feedbackNetwork.getAlignmentScore();
     const scores = this.productScore.compute({
-      reasoning: benchmarkMetric.realityAccuracy + (realityState.overallAlignment * 0.01),
+      reasoning: benchmarkMetric.realityAccuracy + realityState.overallAlignment * 0.01,
       memory: 0.985,
       search: 0.991,
       rag: 0.992,
@@ -134,7 +141,7 @@ export class RealityExecutionOrchestrator {
       verification: uncertaintyResult.verificationStatus === "VERIFIED_PASS" ? 0.987 : 0.945,
       freshness: freshnessResult.averageFreshness,
       resilience: resilienceResult.systemStatus === "OPTIMAL" ? 0.992 : 0.965,
-      realityAlignment: alignmentScore
+      realityAlignment: alignmentScore,
     });
 
     return {
@@ -152,7 +159,7 @@ export class RealityExecutionOrchestrator {
       adversarialAttacks,
       calibrationResult,
       realityState,
-      scores
+      scores,
     };
   }
 }

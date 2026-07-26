@@ -3,7 +3,7 @@
 interface SystemStatus {
   featureComplete: boolean;
   lockedAt: string | null;
-  allowedOperations: ('bugfix' | 'tuning' | 'scaling')[];
+  allowedOperations: ("bugfix" | "tuning" | "scaling")[];
   experimentalDisabled: boolean;
   version: string;
 }
@@ -27,9 +27,9 @@ class CompletionLockEngine {
   private status: SystemStatus = {
     featureComplete: true,
     lockedAt: new Date().toISOString(),
-    allowedOperations: ['bugfix', 'tuning', 'scaling'],
+    allowedOperations: ["bugfix", "tuning", "scaling"],
     experimentalDisabled: true,
-    version: '1.0.0-FINAL',
+    version: "1.0.0-FINAL",
   };
 
   private constructor() {}
@@ -49,9 +49,7 @@ class CompletionLockEngine {
   // Check if an operation is allowed
   isOperationAllowed(operation: string): boolean {
     if (!this.status.featureComplete) return true;
-    return this.status.allowedOperations.includes(
-      operation as 'bugfix' | 'tuning' | 'scaling'
-    );
+    return this.status.allowedOperations.includes(operation as "bugfix" | "tuning" | "scaling");
   }
 
   // Check if experimental features are disabled
@@ -67,13 +65,13 @@ class CompletionLockEngine {
   // Run verification checks
   runVerification(): VerificationResult {
     const checks = {
-      noUndefinedStates: true,       // Final state resolver handles this
-      noIntelligenceLeaks: true,     // Strict secrecy enforced
-      noFakeInstantResults: true,    // Approximate-first is honest
-      noGpuOverload: true,           // Saturation guard handles this
-      noDeadlocks: true,             // Final state resolver prevents this
-      multiLaptopStable: true,       // Compute executor handles this
-      uxCalmHonest: true,            // Hard limit acknowledger ensures this
+      noUndefinedStates: true, // Final state resolver handles this
+      noIntelligenceLeaks: true, // Strict secrecy enforced
+      noFakeInstantResults: true, // Approximate-first is honest
+      noGpuOverload: true, // Saturation guard handles this
+      noDeadlocks: true, // Final state resolver prevents this
+      multiLaptopStable: true, // Compute executor handles this
+      uxCalmHonest: true, // Hard limit acknowledger ensures this
     };
 
     const passedCount = Object.values(checks).filter(Boolean).length;
@@ -89,17 +87,17 @@ class CompletionLockEngine {
   // Get final assertion
   getFinalAssertion(): string {
     const verification = this.runVerification();
-    
+
     if (verification.passed) {
-      return 'HYPER: COVERAGE-MAXIMIZED · CONSTRAINT-PRUNED · REALITY-LOCKED · INTELLIGENCE-COMPLETE';
+      return "HYPER: COVERAGE-MAXIMIZED · CONSTRAINT-PRUNED · REALITY-LOCKED · INTELLIGENCE-COMPLETE";
     }
-    
+
     return `HYPER: ${verification.confidence}% verified. Review required.`;
   }
 
   // Get locked truth statement
   getLockedTruth(): string {
-    return 'HYPER operates at the maximum coverage physically, legally, and mathematically possible.';
+    return "HYPER operates at the maximum coverage physically, legally, and mathematically possible.";
   }
 
   // Get coverage status (owner-only)
@@ -112,12 +110,12 @@ class CompletionLockEngine {
     missingFeature: false;
   } {
     return {
-      realWorldCoverage: 0.965,      // ~96.5% exact execution
-      practicalUsefulness: 0.985,    // ~98.5% with intelligent resolution
-      remainingGap: 0.015,           // ~1.5% purely non-actionable
-      gapCause: 'Non-software constraints resolved via intelligent approximation where viable',
+      realWorldCoverage: 0.965, // ~96.5% exact execution
+      practicalUsefulness: 0.985, // ~98.5% with intelligent resolution
+      remainingGap: 0.015, // ~1.5% purely non-actionable
+      gapCause: "Non-software constraints resolved via intelligent approximation where viable",
       userBlame: false,
-      missingFeature: false
+      missingFeature: false,
     };
   }
 }

@@ -12,13 +12,13 @@ export interface CompressionReport {
 
 export class KvCompressionEngine {
   pruneAndCompress(
-    originalSizeKb: number, 
+    originalSizeKb: number,
     attentionMapSparsity: number = 75,
-    groupingLevel: "low" | "medium" | "high" = "medium"
+    groupingLevel: "low" | "medium" | "high" = "medium",
   ): CompressionReport {
     // Pruning relies on attention map sparsity: higher sparsity means we prune more insignificant keys
     const pruneMultiplier = 1.0 + (attentionMapSparsity / 100) * 3.0; // 1x to 4x reduction from pruning
-    
+
     // Semantic grouping maps similar keys together
     let groupMultiplier = 1.2;
     let semanticGroups = 12;
@@ -32,10 +32,10 @@ export class KvCompressionEngine {
 
     const totalRatio = parseFloat((pruneMultiplier * groupMultiplier).toFixed(2));
     const compressedSizeKb = Math.round(originalSizeKb / totalRatio);
-    
+
     // Recompute loss based on how aggressively we prune
     const prunedPercent = attentionMapSparsity;
-    let retainedAccuracyPct = 100 - (prunedPercent * 0.03); // e.g. 75% prune = 97.75% accuracy retained
+    let retainedAccuracyPct = 100 - prunedPercent * 0.03; // e.g. 75% prune = 97.75% accuracy retained
     if (groupingLevel === "high") retainedAccuracyPct -= 0.5;
 
     return {
@@ -44,7 +44,7 @@ export class KvCompressionEngine {
       compressionRatio: totalRatio,
       pruningThreshold: parseFloat((attentionMapSparsity / 100).toFixed(2)),
       retainedAccuracyPct: parseFloat(retainedAccuracyPct.toFixed(2)),
-      semanticGroupsCount: semanticGroups
+      semanticGroupsCount: semanticGroups,
     };
   }
 }

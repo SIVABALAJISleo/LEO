@@ -14,15 +14,22 @@ interface Particle {
   velocityY: number;
 }
 
-type ExplosionType = 'radial' | 'spiral' | 'wave';
+type ExplosionType = "radial" | "spiral" | "wave";
 
 export const HeroParticles = () => {
   const [particles, setParticles] = useState<Particle[]>([]);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isMouseDown, setIsMouseDown] = useState(false);
-  const [explosionPoint, setExplosionPoint] = useState<{ x: number; y: number; time: number; type: ExplosionType } | null>(null);
-  const [explosionRings, setExplosionRings] = useState<Array<{ id: number; x: number; y: number; time: number; type: ExplosionType }>>([]);
-  const [explosionType, setExplosionType] = useState<ExplosionType>('radial');
+  const [explosionPoint, setExplosionPoint] = useState<{
+    x: number;
+    y: number;
+    time: number;
+    type: ExplosionType;
+  } | null>(null);
+  const [explosionRings, setExplosionRings] = useState<
+    Array<{ id: number; x: number; y: number; time: number; type: ExplosionType }>
+  >([]);
+  const [explosionType, setExplosionType] = useState<ExplosionType>("radial");
   const containerRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<number>();
 
@@ -55,28 +62,31 @@ export const HeroParticles = () => {
 
     const handleMouseDown = () => setIsMouseDown(true);
     const handleMouseUp = () => setIsMouseDown(false);
-    
+
     const handleDoubleClick = (e: MouseEvent) => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
       const x = ((e.clientX - rect.left) / rect.width) * 100;
       const y = ((e.clientY - rect.top) / rect.height) * 100;
-      
+
       // Cycle through explosion types
-      const types: ExplosionType[] = ['radial', 'spiral', 'wave'];
+      const types: ExplosionType[] = ["radial", "spiral", "wave"];
       const currentIndex = types.indexOf(explosionType);
       const nextType = types[(currentIndex + 1) % types.length];
       setExplosionType(nextType);
-      
+
       setExplosionPoint({ x, y, time: Date.now(), type: nextType });
-      
+
       // Add explosion rings for visual effect
       const ringId = Date.now();
-      setExplosionRings(prev => [...prev, { id: ringId, x, y, time: Date.now(), type: nextType }]);
-      
+      setExplosionRings((prev) => [
+        ...prev,
+        { id: ringId, x, y, time: Date.now(), type: nextType },
+      ]);
+
       // Remove ring after animation
       setTimeout(() => {
-        setExplosionRings(prev => prev.filter(ring => ring.id !== ringId));
+        setExplosionRings((prev) => prev.filter((ring) => ring.id !== ringId));
       }, 1000);
     };
 
@@ -84,14 +94,14 @@ export const HeroParticles = () => {
     window.addEventListener("mousedown", handleMouseDown);
     window.addEventListener("mouseup", handleMouseUp);
     window.addEventListener("dblclick", handleDoubleClick);
-    
+
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mousedown", handleMouseDown);
       window.removeEventListener("mouseup", handleMouseUp);
       window.removeEventListener("dblclick", handleDoubleClick);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -104,25 +114,25 @@ export const HeroParticles = () => {
             const dy = particle.y - explosionPoint.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
             const explosionRadius = 50;
-            
+
             if (distance < explosionRadius) {
               const force = (explosionRadius - distance) / explosionRadius;
               const angle = Math.atan2(dy, dx);
               const timeProgress = (Date.now() - explosionPoint.time) / 800;
-              
+
               let pushX = 0;
               let pushY = 0;
-              
+
               switch (explosionPoint.type) {
-                case 'radial':
+                case "radial":
                   // Strong outward burst
                   // eslint-disable-next-line no-case-declarations
                   const radialStrength = 10;
                   pushX = Math.cos(angle) * force * radialStrength;
                   pushY = Math.sin(angle) * force * radialStrength;
                   break;
-                  
-                case 'spiral':
+
+                case "spiral":
                   // Spiral outward with rotation
                   // eslint-disable-next-line no-case-declarations
                   const spiralStrength = 7;
@@ -133,8 +143,8 @@ export const HeroParticles = () => {
                   pushX = Math.cos(spiralAngle) * force * spiralStrength;
                   pushY = Math.sin(spiralAngle) * force * spiralStrength;
                   break;
-                  
-                case 'wave':
+
+                case "wave":
                   // Wave ripple effect - particles move in waves
                   // eslint-disable-next-line no-case-declarations
                   const waveStrength = 6;
@@ -146,7 +156,7 @@ export const HeroParticles = () => {
                   pushY = Math.sin(angle) * force * waveStrength * waveFactor;
                   break;
               }
-              
+
               return {
                 ...particle,
                 velocityX: pushX,
@@ -156,7 +166,7 @@ export const HeroParticles = () => {
               };
             }
           }
-          
+
           const dx = mousePosition.x - particle.x;
           const dy = mousePosition.y - particle.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
@@ -204,7 +214,7 @@ export const HeroParticles = () => {
               y: particle.y + toBaseY,
             };
           }
-        })
+        }),
       );
 
       animationRef.current = requestAnimationFrame(animate);
@@ -220,16 +230,17 @@ export const HeroParticles = () => {
 
   // Calculate particle connections for neural network effect
   const connectionDistance = 25; // Maximum distance to draw connections
-  const connections: Array<{ x1: number; y1: number; x2: number; y2: number; opacity: number }> = [];
+  const connections: Array<{ x1: number; y1: number; x2: number; y2: number; opacity: number }> =
+    [];
   const particleConnectionCount = new Map<number, number>();
-  
+
   particles.forEach((particle, i) => {
     let connectionCount = 0;
     particles.slice(i + 1).forEach((otherParticle) => {
       const dx = particle.x - otherParticle.x;
       const dy = particle.y - otherParticle.y;
       const distance = Math.sqrt(dx * dx + dy * dy);
-      
+
       if (distance < connectionDistance) {
         connectionCount++;
         // Opacity based on distance - closer particles have more visible connections
@@ -245,23 +256,23 @@ export const HeroParticles = () => {
     });
     particleConnectionCount.set(particle.id, connectionCount);
   });
-  
+
   // Helper function to get particle color based on velocity and connections
   const getParticleColor = (particle: Particle) => {
     const velocity = Math.abs(particle.velocityX) + Math.abs(particle.velocityY);
     const connections = particleConnectionCount.get(particle.id) || 0;
-    
+
     // High velocity or many connections = warmer colors (towards red/orange)
     // Low velocity and few connections = cooler colors (towards blue/cyan)
     const intensity = Math.min(velocity * 5 + connections * 0.5, 1);
-    
+
     // Interpolate between primary (base) and accent colors based on intensity
     if (intensity > 0.6) {
-      return 'hsl(var(--accent))'; // High activity - accent color
+      return "hsl(var(--accent))"; // High activity - accent color
     } else if (intensity > 0.3) {
-      return 'hsl(var(--primary))'; // Medium activity - primary color
+      return "hsl(var(--primary))"; // Medium activity - primary color
     } else {
-      return 'hsl(var(--primary) / 0.7)'; // Low activity - muted primary
+      return "hsl(var(--primary) / 0.7)"; // Low activity - muted primary
     }
   };
 
@@ -271,7 +282,11 @@ export const HeroParticles = () => {
       <svg className="absolute inset-0 w-full h-full pointer-events-none">
         <defs>
           {connections.map((_, i) => (
-            <linearGradient key={`gradient-${i}`} id={`flow-gradient-${i}`} gradientUnits="userSpaceOnUse">
+            <linearGradient
+              key={`gradient-${i}`}
+              id={`flow-gradient-${i}`}
+              gradientUnits="userSpaceOnUse"
+            >
               <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0">
                 <animate
                   attributeName="offset"
@@ -324,12 +339,15 @@ export const HeroParticles = () => {
           />
         ))}
       </svg>
-      
+
       {/* Explosion rings */}
       {explosionRings.map((ring) => {
-        const ringClass = ring.type === 'spiral' ? 'explosion-ring-spiral' : 
-                         ring.type === 'wave' ? 'explosion-ring-wave' : 
-                         'explosion-ring';
+        const ringClass =
+          ring.type === "spiral"
+            ? "explosion-ring-spiral"
+            : ring.type === "wave"
+              ? "explosion-ring-wave"
+              : "explosion-ring";
         return (
           <div
             key={ring.id}
@@ -337,27 +355,34 @@ export const HeroParticles = () => {
             style={{
               left: `${ring.x}%`,
               top: `${ring.y}%`,
-              width: '20px',
-              height: '20px',
-              transform: 'translate(-50%, -50%)',
+              width: "20px",
+              height: "20px",
+              transform: "translate(-50%, -50%)",
               animation: `${ringClass} 1s ease-out forwards`,
-              borderColor: ring.type === 'spiral' ? 'hsl(var(--accent))' : 
-                          ring.type === 'wave' ? 'hsl(var(--primary))' :
-                          'hsl(var(--primary))',
-              boxShadow: `0 0 20px ${ring.type === 'spiral' ? 'hsl(var(--accent) / 0.8)' : 
-                                     ring.type === 'wave' ? 'hsl(var(--primary) / 0.6)' :
-                                     'hsl(var(--primary) / 0.8)'}`,
+              borderColor:
+                ring.type === "spiral"
+                  ? "hsl(var(--accent))"
+                  : ring.type === "wave"
+                    ? "hsl(var(--primary))"
+                    : "hsl(var(--primary))",
+              boxShadow: `0 0 20px ${
+                ring.type === "spiral"
+                  ? "hsl(var(--accent) / 0.8)"
+                  : ring.type === "wave"
+                    ? "hsl(var(--primary) / 0.6)"
+                    : "hsl(var(--primary) / 0.8)"
+              }`,
             }}
           />
         );
       })}
-      
+
       {/* Explosion type indicator */}
       <div className="absolute top-4 left-4 px-4 py-2 rounded-lg bg-background/80 backdrop-blur-sm border border-border pointer-events-none">
         <p className="text-xs text-muted-foreground mb-1">Double-click explosion:</p>
         <p className="text-sm font-medium text-foreground capitalize">{explosionType}</p>
       </div>
-      
+
       {/* Cursor indicator when mouse is held down */}
       {isMouseDown && (
         <div
@@ -365,10 +390,10 @@ export const HeroParticles = () => {
           style={{
             left: `${mousePosition.x}%`,
             top: `${mousePosition.y}%`,
-            width: '80px',
-            height: '80px',
-            transform: 'translate(-50%, -50%)',
-            boxShadow: '0 0 30px hsl(var(--primary) / 0.5)',
+            width: "80px",
+            height: "80px",
+            transform: "translate(-50%, -50%)",
+            boxShadow: "0 0 30px hsl(var(--primary) / 0.5)",
           }}
         />
       )}
@@ -391,13 +416,25 @@ export const HeroParticles = () => {
           />
         );
       })}
-      
+
       {/* Floating geometric shapes */}
-      <div className="absolute top-20 left-10 w-16 h-16 border-2 border-primary/30 rotate-45 animate-float" style={{ animationDuration: "8s" }} />
-      <div className="absolute top-40 right-20 w-20 h-20 border-2 border-primary/20 animate-float" style={{ animationDuration: "12s", animationDelay: "2s" }} />
-      <div className="absolute bottom-32 left-1/4 w-12 h-12 border-2 border-primary/25 rotate-12 animate-float" style={{ animationDuration: "10s", animationDelay: "1s" }} />
-      <div className="absolute top-1/3 right-1/3 w-8 h-8 bg-primary/10 rounded-full animate-float" style={{ animationDuration: "15s", animationDelay: "3s" }} />
-      
+      <div
+        className="absolute top-20 left-10 w-16 h-16 border-2 border-primary/30 rotate-45 animate-float"
+        style={{ animationDuration: "8s" }}
+      />
+      <div
+        className="absolute top-40 right-20 w-20 h-20 border-2 border-primary/20 animate-float"
+        style={{ animationDuration: "12s", animationDelay: "2s" }}
+      />
+      <div
+        className="absolute bottom-32 left-1/4 w-12 h-12 border-2 border-primary/25 rotate-12 animate-float"
+        style={{ animationDuration: "10s", animationDelay: "1s" }}
+      />
+      <div
+        className="absolute top-1/3 right-1/3 w-8 h-8 bg-primary/10 rounded-full animate-float"
+        style={{ animationDuration: "15s", animationDelay: "3s" }}
+      />
+
       {/* Circuit-like connecting lines */}
       <svg className="absolute inset-0 w-full h-full opacity-20">
         <defs>
@@ -407,9 +444,35 @@ export const HeroParticles = () => {
             <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0" />
           </linearGradient>
         </defs>
-        <line x1="10%" y1="20%" x2="90%" y2="30%" stroke="url(#lineGradient)" strokeWidth="1" className="animate-pulse" />
-        <line x1="20%" y1="80%" x2="80%" y2="70%" stroke="url(#lineGradient)" strokeWidth="1" className="animate-pulse" style={{ animationDelay: "1s" }} />
-        <line x1="5%" y1="50%" x2="30%" y2="60%" stroke="url(#lineGradient)" strokeWidth="1" className="animate-pulse" style={{ animationDelay: "2s" }} />
+        <line
+          x1="10%"
+          y1="20%"
+          x2="90%"
+          y2="30%"
+          stroke="url(#lineGradient)"
+          strokeWidth="1"
+          className="animate-pulse"
+        />
+        <line
+          x1="20%"
+          y1="80%"
+          x2="80%"
+          y2="70%"
+          stroke="url(#lineGradient)"
+          strokeWidth="1"
+          className="animate-pulse"
+          style={{ animationDelay: "1s" }}
+        />
+        <line
+          x1="5%"
+          y1="50%"
+          x2="30%"
+          y2="60%"
+          stroke="url(#lineGradient)"
+          strokeWidth="1"
+          className="animate-pulse"
+          style={{ animationDelay: "2s" }}
+        />
       </svg>
     </div>
   );

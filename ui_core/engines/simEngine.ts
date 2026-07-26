@@ -1,5 +1,5 @@
-import { runCpuJob } from './cpuEngine';
-import { runGpuJob } from './gpuEngine';
+import { runCpuJob } from "./cpuEngine";
+import { runGpuJob } from "./gpuEngine";
 
 export interface SimulationJobPayload {
   steps?: number;
@@ -17,7 +17,7 @@ export interface SimulationJobResult {
 // event-driven simulations here.
 export async function runSimulationJob(
   jobId: string,
-  payload: SimulationJobPayload
+  payload: SimulationJobPayload,
 ): Promise<SimulationJobResult> {
   const [cpuRes, gpuRes] = await Promise.all([
     runCpuJob(jobId, payload),
@@ -28,7 +28,6 @@ export async function runSimulationJob(
     jobId,
     cpuDurationMs: cpuRes.durationMs,
     gpuNote: gpuRes.note,
-    note: 'Simulation engine placeholder. Replace with efficient SDF/event-driven logic.',
+    note: "Simulation engine placeholder. Replace with efficient SDF/event-driven logic.",
   };
 }
-

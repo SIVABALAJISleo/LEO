@@ -18,6 +18,6 @@ export const runRealityFeedbackTesting = async (): Promise<RealityFeedbackResult
     predictionAccuracy: parseFloat(prediction.toFixed(2)),
     calibrationScore: parseFloat(calibration.toFixed(2)),
     outcomeAccuracy: parseFloat(outcome.toFixed(2)),
-    overallRealityScore: parseFloat(overall.toFixed(2))
+    overallRealityScore: parseFloat(overall.toFixed(2)),
   };
 };

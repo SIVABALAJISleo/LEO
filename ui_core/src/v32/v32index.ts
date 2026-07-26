@@ -47,7 +47,6 @@ export type { AutoImprovementCycle } from "./autonomousImprovementV2";
 export { EngineeringCeilingScore } from "./engineeringCeilingScore";
 export type { CeilingScoreBreakdown } from "./engineeringCeilingScore";
 
-
 // === V32 PART 2: Reality Learning & Continuous Improvement ===
 export { RealUserFeedbackLearningEngine } from "./realUserFeedbackLearningEngine";
 export type { UserActionLog, UserLearningProfile } from "./realUserFeedbackLearningEngine";

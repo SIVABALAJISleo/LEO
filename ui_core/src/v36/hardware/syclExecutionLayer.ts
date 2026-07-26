@@ -4,11 +4,11 @@
 export class SYCLExecutionLayer {
   public executeMatrixMultiplyKernel(
     dim: number,
-    syclQueueId: string
+    syclQueueId: string,
   ): { kernelMs: number; error: boolean } {
     return {
       kernelMs: Math.round(dim * 0.05 + 1.2),
-      error: false
+      error: false,
     };
   }
 }

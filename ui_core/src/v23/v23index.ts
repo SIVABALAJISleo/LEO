@@ -30,7 +30,10 @@ export { ContinuousEvaluationLoop } from "./engines/continuousEvaluationLoop";
 export type { DomainBenchmarkV23, ReleaseGateReportV23 } from "./engines/continuousEvaluationLoop";
 
 export { PerformanceIntelligenceGovernor } from "./engines/performanceIntelligenceGovernor";
-export type { ResourceTelemetryV23, TelemetryReportV23 } from "./engines/performanceIntelligenceGovernor";
+export type {
+  ResourceTelemetryV23,
+  TelemetryReportV23,
+} from "./engines/performanceIntelligenceGovernor";
 
 export { QualityImprovementLoop } from "./engines/qualityImprovementLoop";
 export type { ImprovementStepV23, LoopStateV23 } from "./engines/qualityImprovementLoop";

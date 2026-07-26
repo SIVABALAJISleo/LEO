@@ -18,7 +18,7 @@ export class KnowledgeDistillationEngine {
     // Distill/compress multi-line steps into a short canonical solution
     const distilledSummary = `[Distilled Reference: ${topicId}] Executed optimized pathway: ${steps[0]} combined with ${steps[steps.length - 1]}`;
     const sizeBytes = distilledSummary.length * 2;
-    
+
     // Simulate scoring validation (checking consistency, removing circular logic)
     const validationScore = parseFloat((0.85 + Math.random() * 0.14).toFixed(2));
 
@@ -28,7 +28,7 @@ export class KnowledgeDistillationEngine {
       distilledSummary,
       validationScore,
       sizeBytes,
-      reuseCount: 0
+      reuseCount: 0,
     };
 
     this.registry.push(fragment);
@@ -40,7 +40,7 @@ export class KnowledgeDistillationEngine {
   }
 
   incrementReuse(topicId: string): number {
-    const frag = this.registry.find(f => f.topicId === topicId);
+    const frag = this.registry.find((f) => f.topicId === topicId);
     if (frag) {
       frag.reuseCount++;
       return frag.reuseCount;

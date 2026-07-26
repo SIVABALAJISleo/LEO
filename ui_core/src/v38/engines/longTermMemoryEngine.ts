@@ -3,7 +3,8 @@
 
 export interface MemoryCell {
   id: string;
-  type: "working" | "episodic" | "semantic" | "procedural" | "consolidation" | "reflection" | "failure";
+  type:
+    "working" | "episodic" | "semantic" | "procedural" | "consolidation" | "reflection" | "failure";
   statement: string;
   relevanceScore: number;
   decayWeight: number;
@@ -15,19 +16,21 @@ export class LongTermMemoryEngine {
     {
       id: "mc-1",
       type: "failure",
-      statement: "VRAM overflow occurred when thread count was set above 8 cores on Intel UHD 12th Gen.",
+      statement:
+        "VRAM overflow occurred when thread count was set above 8 cores on Intel UHD 12th Gen.",
       relevanceScore: 0.96,
       decayWeight: 1.0,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     },
     {
       id: "mc-2",
       type: "reflection",
-      statement: "Ternary weights are more resource efficient than FP16 on local CPU architectures.",
+      statement:
+        "Ternary weights are more resource efficient than FP16 on local CPU architectures.",
       relevanceScore: 0.92,
       decayWeight: 0.98,
-      timestamp: Date.now()
-    }
+      timestamp: Date.now(),
+    },
   ];
 
   /**
@@ -35,12 +38,12 @@ export class LongTermMemoryEngine {
    */
   public queryMemory(query: string): MemoryCell[] {
     const qLower = query.toLowerCase();
-    
+
     // Simple filter matching
     return this.cells
-      .filter(cell => {
+      .filter((cell) => {
         const words = qLower.split(/\s+/);
-        return words.some(w => cell.statement.toLowerCase().includes(w) && w.length > 3);
+        return words.some((w) => cell.statement.toLowerCase().includes(w) && w.length > 3);
       })
       .sort((a, b) => b.relevanceScore - a.relevanceScore);
   }
@@ -55,7 +58,7 @@ export class LongTermMemoryEngine {
       statement,
       relevanceScore: score,
       decayWeight: 1.0,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
     this.cells.push(cell);
     return cell;

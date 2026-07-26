@@ -21,7 +21,7 @@ export class SearchRagProofEngine {
 
     for (let i = 0; i < trials; i++) {
       const hash = Math.cos(seed + i);
-      
+
       // Target search >99%, RAG >99%
       if (hash > -0.992) {
         successfulSearch++;
@@ -44,7 +44,7 @@ export class SearchRagProofEngine {
       retrievalRecall: rag_accuracy,
       citationAccuracy,
       search_accuracy,
-      rag_accuracy
+      rag_accuracy,
     };
   }
 }

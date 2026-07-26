@@ -4,12 +4,12 @@
 export class PINNEngine {
   public computePhysicsResidual(
     predictedValue: number,
-    boundaryConstraint: number
+    boundaryConstraint: number,
   ): { residual: number; physicallyConsistent: boolean } {
     const residual = Math.abs(predictedValue - boundaryConstraint);
     return {
       residual,
-      physicallyConsistent: residual < 0.05
+      physicallyConsistent: residual < 0.05,
     };
   }
 }

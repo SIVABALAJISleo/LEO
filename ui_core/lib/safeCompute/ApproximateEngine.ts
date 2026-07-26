@@ -32,14 +32,14 @@ class ApproximateEngine {
   async generateApproximate(
     jobId: string,
     jobType: string,
-    input: unknown
+    input: unknown,
   ): Promise<ApproximateResult> {
     // Fast approximate generation (no fake delays - real intelligence execution)
     await this.processingDelay(50); // Minimal processing time for orchestration
 
     // HONEST: Confidence reflects approximation method, not fake randomness
     const confidence = 0.75; // Fixed 75% for approximations
-    
+
     const approximateData = this.generateApproximateData(jobType, input);
 
     const result: ApproximateResult = {
@@ -82,7 +82,7 @@ class ApproximateEngine {
 
     this.exactResults.set(jobId, result);
     this.pendingExactJobs.delete(jobId);
-    
+
     // Cache both for future similar requests
     return result;
   }
@@ -109,7 +109,7 @@ class ApproximateEngine {
   // Clear old results
   cleanup(maxAgeMs: number = 3600000): void {
     const cutoff = Date.now() - maxAgeMs;
-    
+
     for (const [jobId, result] of this.approximateResults) {
       if (result.generatedAt.getTime() < cutoff && !this.pendingExactJobs.has(jobId)) {
         this.approximateResults.delete(jobId);
@@ -126,14 +126,14 @@ class ApproximateEngine {
   private generateApproximateData(jobType: string, input: unknown): unknown {
     // Generate type-appropriate approximate data
     const inputObj = input as Record<string, unknown>;
-    
+
     return {
-      type: 'approximate',
+      type: "approximate",
       basedOn: jobType,
       preview: true,
       estimatedOutput: this.estimateOutput(jobType),
       inputHash: this.hashInput(inputObj),
-      note: 'Quick preview - exact result computing',
+      note: "Quick preview - exact result computing",
     };
   }
 
@@ -141,13 +141,17 @@ class ApproximateEngine {
     // HONEST: Return fixed reasonable estimates based on job type
     // These are ESTIMATES for preview purposes, not fake measurements
     const estimates: Record<string, unknown> = {
-      'inference': { tokens_estimated: 200, latency_estimate_ms: 150, note: 'Preview estimate' },
-      'image_generation': { resolution: '512x512', steps: 20, preview: true, note: 'Quick preview' },
-      'video_processing': { frames_estimated: 1000, duration_estimate_s: 30, note: 'Estimate pending exact' },
-      'training': { status: 'deferred', note: 'Training requires GPU delegation' },
-      'analysis': { status: 'approximated', note: 'Quick analysis preview' },
+      inference: { tokens_estimated: 200, latency_estimate_ms: 150, note: "Preview estimate" },
+      image_generation: { resolution: "512x512", steps: 20, preview: true, note: "Quick preview" },
+      video_processing: {
+        frames_estimated: 1000,
+        duration_estimate_s: 30,
+        note: "Estimate pending exact",
+      },
+      training: { status: "deferred", note: "Training requires GPU delegation" },
+      analysis: { status: "approximated", note: "Quick analysis preview" },
     };
-    return estimates[jobType] || { generic: true, status: 'approximated', note: 'Preview result' };
+    return estimates[jobType] || { generic: true, status: "approximated", note: "Preview result" };
   }
 
   private hashInput(input: Record<string, unknown>): string {
@@ -155,11 +159,11 @@ class ApproximateEngine {
   }
 
   private processingDelay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   private notifyListeners(jobId: string, result: ApproximateResult): void {
-    this.listeners.get(jobId)?.forEach(listener => listener(result));
+    this.listeners.get(jobId)?.forEach((listener) => listener(result));
   }
 }
 

@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react';
-import { firebaseClient as supabase } from '@/integrations/firebase/client';
-import { useAuth } from '@/contexts/AuthContext';
-import { toast } from 'sonner';
+import { useState, useEffect } from "react";
+import { firebaseClient as supabase } from "@/integrations/firebase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 export const PRICING_CONFIG = {
-  inference: { rate: 0.001, per: 10000, unit: 'tokens' },
-  training: { rate: 4.20, per: 1, unit: 'hour' },
-  rendering: { rate: 2.40, per: 1, unit: 'hour' },
-  storage: { freeGB: 10, rate: 0.01, per: 1, unit: 'GB/month' },
+  inference: { rate: 0.001, per: 10000, unit: "tokens" },
+  training: { rate: 4.2, per: 1, unit: "hour" },
+  rendering: { rate: 2.4, per: 1, unit: "hour" },
+  storage: { freeGB: 10, rate: 0.01, per: 1, unit: "GB/month" },
 };
 
 // RTX-5090 Value Anchor (internal reference): ~$660/month
@@ -16,101 +16,119 @@ export const PRICING_CONFIG = {
 
 export const PLANS = [
   {
-    id: 'free',
-    name: 'Free',
+    id: "free",
+    name: "Free",
     price: 0,
     priceMax: 0,
-    currency: '$',
-    period: 'month',
+    currency: "$",
+    period: "month",
     features: [
-      'Basic dashboard access',
-      'Up to 5 concurrent jobs',
-      'Community support',
-      '10 GB storage included',
-      'Standard processing speed',
+      "Basic dashboard access",
+      "Up to 5 concurrent jobs",
+      "Community support",
+      "10 GB storage included",
+      "Standard processing speed",
     ],
-    cta: 'Get Started',
+    cta: "Get Started",
     popular: false,
   },
   {
-    id: 'pro',
-    name: 'HYPER Pro',
+    id: "pro",
+    name: "HYPER Pro",
     price: 49,
     priceMax: 85,
-    currency: '$',
-    period: 'month',
+    currency: "$",
+    period: "month",
     yearlyPrice: 490,
     yearlyPriceMax: 850,
-    economics: 'Shared optimization · Non-deterministic routing',
-    targetUsers: 'Developers · Creators · Indie teams',
+    economics: "Shared optimization · Non-deterministic routing",
+    targetUsers: "Developers · Creators · Indie teams",
     features: [
-      'Optimized shared outcomes',
-      'Up to 100 concurrent jobs',
-      'Priority processing queue',
-      'Advanced optimization modules',
-      'Email support (24h response)',
-      '500 GB storage included',
-      'Full API access',
-      'Symbolic compute engine',
+      "Optimized shared outcomes",
+      "Up to 100 concurrent jobs",
+      "Priority processing queue",
+      "Advanced optimization modules",
+      "Email support (24h response)",
+      "500 GB storage included",
+      "Full API access",
+      "Symbolic compute engine",
     ],
-    cta: 'Upgrade to Pro',
+    cta: "Upgrade to Pro",
     popular: true,
   },
   {
-    id: 'heavy',
-    name: 'HYPER Heavy',
+    id: "heavy",
+    name: "HYPER Heavy",
     price: 249,
     priceMax: 499,
-    currency: '$',
-    period: 'month',
+    currency: "$",
+    period: "month",
     yearlyPrice: 2490,
     yearlyPriceMax: 4990,
-    economics: 'Priority routing · Deterministic options · Compliance handling',
-    targetUsers: 'AI teams · Studios · Research orgs',
+    economics: "Priority routing · Deterministic options · Compliance handling",
+    targetUsers: "AI teams · Studios · Research orgs",
     features: [
-      'Priority outcome delivery',
-      'Unlimited concurrent jobs',
-      'Deterministic execution option',
-      'Compliance & audit support',
-      '24/7 priority support',
-      'Custom integrations',
-      'Dedicated account manager',
-      'SLA guarantee (99.9%)',
-      'Unlimited storage',
+      "Priority outcome delivery",
+      "Unlimited concurrent jobs",
+      "Deterministic execution option",
+      "Compliance & audit support",
+      "24/7 priority support",
+      "Custom integrations",
+      "Dedicated account manager",
+      "SLA guarantee (99.9%)",
+      "Unlimited storage",
     ],
-    cta: 'Get Heavy',
+    cta: "Get Heavy",
     popular: false,
   },
   {
-    id: 'enterprise',
-    name: 'Enterprise',
+    id: "enterprise",
+    name: "Enterprise",
     price: null,
     priceMax: null,
-    currency: '$',
-    period: 'month',
+    currency: "$",
+    period: "month",
     features: [
-      'Everything in Heavy',
-      'On-premise deployment option',
-      'Custom SLAs',
-      'Dedicated infrastructure',
-      'White-glove onboarding',
-      'Volume discounts',
+      "Everything in Heavy",
+      "On-premise deployment option",
+      "Custom SLAs",
+      "Dedicated infrastructure",
+      "White-glove onboarding",
+      "Volume discounts",
     ],
-    cta: 'Contact Sales',
+    cta: "Contact Sales",
     popular: false,
   },
 ];
 
 export const PLAN_COMPARISON = [
-  { feature: 'Concurrent Jobs', free: '5', pro: '100', heavy: 'Unlimited', enterprise: 'Custom' },
-  { feature: 'Storage', free: '10 GB', pro: '500 GB', heavy: 'Unlimited', enterprise: 'Custom' },
-  { feature: 'Processing', free: 'Standard', pro: 'Priority Queue', heavy: 'Priority + Deterministic', enterprise: 'Dedicated' },
-  { feature: 'Support', free: 'Community', pro: 'Email (24h)', heavy: '24/7 Priority', enterprise: 'White-glove' },
-  { feature: 'Optimization Modules', free: 'Basic', pro: 'Advanced', heavy: 'Full Suite', enterprise: 'Custom' },
-  { feature: 'API Access', free: '❌', pro: '✓', heavy: '✓', enterprise: '✓' },
-  { feature: 'Deterministic Execution', free: '❌', pro: '❌', heavy: '✓', enterprise: '✓' },
-  { feature: 'Compliance Support', free: '❌', pro: '❌', heavy: '✓', enterprise: '✓' },
-  { feature: 'SLA', free: 'None', pro: 'None', heavy: '99.9%', enterprise: 'Custom' },
+  { feature: "Concurrent Jobs", free: "5", pro: "100", heavy: "Unlimited", enterprise: "Custom" },
+  { feature: "Storage", free: "10 GB", pro: "500 GB", heavy: "Unlimited", enterprise: "Custom" },
+  {
+    feature: "Processing",
+    free: "Standard",
+    pro: "Priority Queue",
+    heavy: "Priority + Deterministic",
+    enterprise: "Dedicated",
+  },
+  {
+    feature: "Support",
+    free: "Community",
+    pro: "Email (24h)",
+    heavy: "24/7 Priority",
+    enterprise: "White-glove",
+  },
+  {
+    feature: "Optimization Modules",
+    free: "Basic",
+    pro: "Advanced",
+    heavy: "Full Suite",
+    enterprise: "Custom",
+  },
+  { feature: "API Access", free: "❌", pro: "✓", heavy: "✓", enterprise: "✓" },
+  { feature: "Deterministic Execution", free: "❌", pro: "❌", heavy: "✓", enterprise: "✓" },
+  { feature: "Compliance Support", free: "❌", pro: "❌", heavy: "✓", enterprise: "✓" },
+  { feature: "SLA", free: "None", pro: "None", heavy: "99.9%", enterprise: "Custom" },
 ];
 
 export function calculateCost(usage: {
@@ -119,7 +137,8 @@ export function calculateCost(usage: {
   renderingHours: number;
   storageGB: number;
 }) {
-  const inferenceCost = (usage.inferenceTokens / PRICING_CONFIG.inference.per) * PRICING_CONFIG.inference.rate;
+  const inferenceCost =
+    (usage.inferenceTokens / PRICING_CONFIG.inference.per) * PRICING_CONFIG.inference.rate;
   const trainingCost = usage.trainingHours * PRICING_CONFIG.training.rate;
   const renderingCost = usage.renderingHours * PRICING_CONFIG.rendering.rate;
   const billableStorage = Math.max(0, usage.storageGB - PRICING_CONFIG.storage.freeGB);
@@ -137,7 +156,7 @@ export function calculateCost(usage: {
 interface BillingSubscription {
   id: string;
   user_id: string;
-  plan: 'free' | 'pro' | 'heavy' | 'enterprise' | string; // Allow general string
+  plan: "free" | "pro" | "heavy" | "enterprise" | string; // Allow general string
   status: string;
   current_period_start?: string;
   current_period_end?: string;
@@ -167,8 +186,17 @@ export function useBillingData() {
     if (!user?.id) return;
     setIsLoading(true);
     const [subRes, usageRes] = await Promise.all([
-      supabase.from('billing_subscriptions').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(1),
-      supabase.from('billing_usage_records').select('*').eq('user_id', user.id).order('month', { ascending: false }),
+      supabase
+        .from("billing_subscriptions")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(1),
+      supabase
+        .from("billing_usage_records")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("month", { ascending: false }),
     ]);
     if (subRes.data && (subRes.data as any).length > 0) {
       // Safe cast if shape roughly matches
@@ -180,37 +208,45 @@ export function useBillingData() {
     setIsLoading(false);
   };
 
-  const subscribe = async (plan: 'free' | 'pro' | 'heavy' | 'enterprise') => {
+  const subscribe = async (plan: "free" | "pro" | "heavy" | "enterprise") => {
     if (!user) return;
 
-    if (plan === 'free') {
+    if (plan === "free") {
       // Free plan stays Supabase-only for simplicity
       const { data: existing } = await supabase
-        .from('billing_subscriptions')
-        .select('id')
-        .eq('user_id', user.id)
+        .from("billing_subscriptions")
+        .select("id")
+        .eq("user_id", user.id)
         .limit(1);
 
       if (existing && (existing as any).length > 0) {
-        await (supabase.from('billing_subscriptions').update({ plan, status: 'active' }) as any).eq('id', (existing as any)[0].id);
+        await (supabase.from("billing_subscriptions").update({ plan, status: "active" }) as any).eq(
+          "id",
+          (existing as any)[0].id,
+        );
       } else {
-        await supabase.from('billing_subscriptions').insert({ user_id: user.id, plan, status: 'active' });
+        await supabase
+          .from("billing_subscriptions")
+          .insert({ user_id: user.id, plan, status: "active" });
       }
-      toast.success('Downgraded to Free plan');
+      toast.success("Downgraded to Free plan");
       fetchBillingData();
       return;
     }
 
     try {
       // For paid plans, initiate PayPal Checkout via Backend
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/v1/paypal/checkout`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${sessionStorage.getItem('firebase_token') || ''}`
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL || "http://localhost:8000"}/api/v1/paypal/checkout`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("firebase_token") || ""}`,
+          },
+          body: JSON.stringify({ plan_id: plan }),
         },
-        body: JSON.stringify({ plan_id: plan })
-      });
+      );
 
       if (!response.ok) {
         throw new Error(await response.text());
@@ -219,8 +255,8 @@ export function useBillingData() {
       const { url } = await response.json();
       window.location.href = url; // Redirect to PayPal approval URL
     } catch (error) {
-      console.error('Checkout error:', error);
-      toast.error('Failed to initiate checkout. Please try again.');
+      console.error("Checkout error:", error);
+      toast.error("Failed to initiate checkout. Please try again.");
     }
   };
 
@@ -239,13 +275,13 @@ export function useBillingData() {
       storageGB: usage.storage_gb,
     });
 
-    const { error } = await supabase.from('billing_usage_records').insert({
+    const { error } = await supabase.from("billing_usage_records").insert({
       user_id: user.id,
       month,
       ...usage,
       computed_cost: cost.total,
     });
-    if (error) toast.error('Failed to record usage');
+    if (error) toast.error("Failed to record usage");
     else fetchBillingData();
   };
 
@@ -259,19 +295,19 @@ export function useBillingData() {
     message?: string;
   }) => {
     if (!user) {
-      toast.error('Please sign in to submit an enterprise quote request');
+      toast.error("Please sign in to submit an enterprise quote request");
       return false;
     }
 
-    const { error } = await supabase.from('enterprise_requests').insert({
+    const { error } = await supabase.from("enterprise_requests").insert({
       ...data,
       user_id: user.id,
     });
     if (error) {
-      toast.error('Failed to submit request');
+      toast.error("Failed to submit request");
       return false;
     }
-    toast.success('Quote request submitted – our team will contact you soon');
+    toast.success("Quote request submitted – our team will contact you soon");
     return true;
   };
 
@@ -282,6 +318,6 @@ export function useBillingData() {
     subscribe,
     recordUsage,
     submitEnterpriseRequest,
-    currentPlan: subscription?.plan || 'free',
+    currentPlan: subscription?.plan || "free",
   };
 }

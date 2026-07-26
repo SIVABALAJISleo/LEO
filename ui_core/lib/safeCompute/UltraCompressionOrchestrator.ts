@@ -2,17 +2,21 @@
 // Combines all compression layers into unified pipeline
 // Routes jobs through proper classification
 
-import { inputNormalizer } from './InputNormalizer';
-import { temporalBatcher } from './TemporalBatcher';
+import { inputNormalizer } from "./InputNormalizer";
+import { temporalBatcher } from "./TemporalBatcher";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { resultCompressor } from './ResultCompressor';
+import { resultCompressor } from "./ResultCompressor";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { probabilisticEngine, type ProcessingMethod, type ConfidenceResult } from './ProbabilisticEngine';
-import { deviceCapabilityDetector, type ComputeRouting } from './DeviceCapabilityDetector';
-import { veryHeavySimulator, type VeryHeavySimulation } from './VeryHeavySimulator';
-import { stateCompressor } from './StateCompressor';
+import {
+  probabilisticEngine,
+  type ProcessingMethod,
+  type ConfidenceResult,
+} from "./ProbabilisticEngine";
+import { deviceCapabilityDetector, type ComputeRouting } from "./DeviceCapabilityDetector";
+import { veryHeavySimulator, type VeryHeavySimulation } from "./VeryHeavySimulator";
+import { stateCompressor } from "./StateCompressor";
 
-export type JobClassification = 'light' | 'medium' | 'heavy' | 'very_heavy';
+export type JobClassification = "light" | "medium" | "heavy" | "very_heavy";
 
 interface ClassifiedJob {
   id: string;
@@ -62,33 +66,33 @@ class UltraCompressionOrchestrator {
     jobType: string,
     input: unknown,
     memoryMb: number = 0,
-    estimatedDurationSec: number = 0
+    estimatedDurationSec: number = 0,
   ): ClassifiedJob {
     const normalized = inputNormalizer.normalize(input);
     const routing = deviceCapabilityDetector.getComputeRouting();
-    
+
     let classification: JobClassification;
     let statusLabel: string;
 
     // Check for very heavy first
     if (veryHeavySimulator.isVeryHeavy(jobType, memoryMb, estimatedDurationSec)) {
-      classification = 'very_heavy';
-      statusLabel = 'Simulated / Estimated';
+      classification = "very_heavy";
+      statusLabel = "Simulated / Estimated";
     }
     // Light jobs: no GPU, instant
     else if (this.isLightJob(jobType, memoryMb)) {
-      classification = 'light';
-      statusLabel = 'Instant';
+      classification = "light";
+      statusLabel = "Instant";
     }
     // Medium: can run on client
     else if (routing.canRunQuantized || routing.canRunProgressive) {
-      classification = 'medium';
-      statusLabel = 'Client-Computed';
+      classification = "medium";
+      statusLabel = "Client-Computed";
     }
     // Heavy: needs server GPU
     else {
-      classification = 'heavy';
-      statusLabel = 'Queued';
+      classification = "heavy";
+      statusLabel = "Queued";
     }
 
     return {
@@ -110,43 +114,47 @@ class UltraCompressionOrchestrator {
     stateCompressor.checkpoint(id, 0, { classification }, originalInput);
 
     switch (classification) {
-      case 'light':
+      case "light":
         return this.processLight(id, signature, originalInput);
-      
-      case 'medium':
+
+      case "medium":
         return this.processMedium(id, signature, originalInput);
-      
-      case 'heavy':
+
+      case "heavy":
         return this.processHeavy(id, signature, originalInput);
-      
-      case 'very_heavy':
+
+      case "very_heavy":
         return this.processVeryHeavy(id, signature, originalInput);
-      
+
       default:
         throw new Error(`Unknown classification: ${classification}`);
     }
   }
 
   // Light job: instant, cached
-  private async processLight(jobId: string, signature: string, input: unknown): Promise<ProcessingResult> {
+  private async processLight(
+    jobId: string,
+    signature: string,
+    input: unknown,
+  ): Promise<ProcessingResult> {
     // Check cache first
     const cached = inputNormalizer.getCachedResult(signature);
     if (cached) {
       const evaluation = probabilisticEngine.evaluateResult(signature, cached.result, {
-        method: 'cached',
+        method: "cached",
         cacheHits: 1,
         batchSize: 1,
         computeTimeMs: 0,
       });
 
       stateCompressor.checkpoint(jobId, 100, { completed: true }, input);
-      
+
       return {
         jobId,
-        classification: 'light',
+        classification: "light",
         result: cached.result,
         confidence: cached.confidence,
-        processingMethod: 'cached',
+        processingMethod: "cached",
         estimatedAccuracy: evaluation.estimatedAccuracy,
         wasFromCache: true,
         batchSize: 1,
@@ -157,9 +165,9 @@ class UltraCompressionOrchestrator {
     // Process instantly
     const result = { processed: true, input, timestamp: new Date().toISOString() };
     inputNormalizer.cacheResult(signature, result);
-    
+
     const evaluation = probabilisticEngine.evaluateResult(signature, result, {
-      method: 'cached',
+      method: "cached",
       cacheHits: 0,
       batchSize: 1,
       computeTimeMs: 10,
@@ -169,10 +177,10 @@ class UltraCompressionOrchestrator {
 
     return {
       jobId,
-      classification: 'light',
+      classification: "light",
       result,
       confidence: evaluation.confidence,
-      processingMethod: 'cached',
+      processingMethod: "cached",
       estimatedAccuracy: evaluation.estimatedAccuracy,
       wasFromCache: false,
       batchSize: 1,
@@ -181,16 +189,20 @@ class UltraCompressionOrchestrator {
   }
 
   // Medium job: client-side compute
-  private async processMedium(jobId: string, signature: string, input: unknown): Promise<ProcessingResult> {
+  private async processMedium(
+    jobId: string,
+    signature: string,
+    input: unknown,
+  ): Promise<ProcessingResult> {
     // Check cache first
     const cached = inputNormalizer.getCachedResult(signature);
     if (cached) {
       return {
         jobId,
-        classification: 'medium',
+        classification: "medium",
         result: cached.result,
         confidence: cached.confidence,
-        processingMethod: 'cached',
+        processingMethod: "cached",
         estimatedAccuracy: cached.confidence * 0.98,
         wasFromCache: true,
         batchSize: 1,
@@ -203,7 +215,7 @@ class UltraCompressionOrchestrator {
     inputNormalizer.cacheResult(signature, result);
 
     const evaluation = probabilisticEngine.evaluateResult(signature, result, {
-      method: 'client',
+      method: "client",
       cacheHits: 0,
       batchSize: 1,
       computeTimeMs: 500,
@@ -213,10 +225,10 @@ class UltraCompressionOrchestrator {
 
     return {
       jobId,
-      classification: 'medium',
+      classification: "medium",
       result,
       confidence: evaluation.confidence,
-      processingMethod: 'client',
+      processingMethod: "client",
       estimatedAccuracy: evaluation.estimatedAccuracy,
       wasFromCache: false,
       batchSize: 1,
@@ -225,16 +237,20 @@ class UltraCompressionOrchestrator {
   }
 
   // Heavy job: batched, GPU queued
-  private async processHeavy(jobId: string, signature: string, input: unknown): Promise<ProcessingResult> {
+  private async processHeavy(
+    jobId: string,
+    signature: string,
+    input: unknown,
+  ): Promise<ProcessingResult> {
     // Check cache first
     const cached = inputNormalizer.getCachedResult(signature);
     if (cached) {
       return {
         jobId,
-        classification: 'heavy',
+        classification: "heavy",
         result: cached.result,
         confidence: cached.confidence,
-        processingMethod: 'cached',
+        processingMethod: "cached",
         estimatedAccuracy: cached.confidence * 0.98,
         wasFromCache: true,
         batchSize: 1,
@@ -247,17 +263,17 @@ class UltraCompressionOrchestrator {
       // Wait for existing computation
       return new Promise((resolve) => {
         inputNormalizer.registerPending(signature, jobId);
-        
+
         const checkInterval = setInterval(() => {
           const result = inputNormalizer.getCachedResult(signature);
           if (result) {
             clearInterval(checkInterval);
             resolve({
               jobId,
-              classification: 'heavy',
+              classification: "heavy",
               result: result.result,
               confidence: result.confidence,
-              processingMethod: 'blended',
+              processingMethod: "blended",
               estimatedAccuracy: result.confidence * 0.95,
               wasFromCache: true,
               batchSize: 1,
@@ -271,15 +287,15 @@ class UltraCompressionOrchestrator {
     // Use temporal batching
     return new Promise((resolve) => {
       inputNormalizer.registerPending(signature, jobId);
-      
+
       temporalBatcher.addJob(jobId, signature, input, (batchResult) => {
         const batchStats = temporalBatcher.getBatchingStats();
-        
+
         inputNormalizer.cacheResult(signature, batchResult);
         this.gpuJobsToday++;
-        
+
         const evaluation = probabilisticEngine.evaluateResult(signature, batchResult, {
-          method: 'fresh_gpu',
+          method: "fresh_gpu",
           cacheHits: 0,
           batchSize: batchStats.averageBatchSize,
           computeTimeMs: 2000,
@@ -290,10 +306,10 @@ class UltraCompressionOrchestrator {
 
         resolve({
           jobId,
-          classification: 'heavy',
+          classification: "heavy",
           result: batchResult,
           confidence: evaluation.confidence,
-          processingMethod: 'fresh_gpu',
+          processingMethod: "fresh_gpu",
           estimatedAccuracy: evaluation.estimatedAccuracy,
           wasFromCache: false,
           batchSize: Math.round(batchStats.averageBatchSize),
@@ -304,13 +320,20 @@ class UltraCompressionOrchestrator {
   }
 
   // Very heavy job: approximation only (honest - no simulation claims)
-  private async processVeryHeavy(jobId: string, signature: string, input: unknown): Promise<ProcessingResult> {
+  private async processVeryHeavy(
+    jobId: string,
+    signature: string,
+    input: unknown,
+  ): Promise<ProcessingResult> {
     // Determine very heavy type
-    const jobType = (input as { type?: string })?.type || 'llm_training';
-    const simulation = veryHeavySimulator.simulate(jobType as Parameters<typeof veryHeavySimulator.simulate>[0], input as Record<string, unknown>);
+    const jobType = (input as { type?: string })?.type || "llm_training";
+    const simulation = veryHeavySimulator.simulate(
+      jobType as Parameters<typeof veryHeavySimulator.simulate>[0],
+      input as Record<string, unknown>,
+    );
 
     const evaluation = probabilisticEngine.evaluateResult(signature, simulation, {
-      method: 'approximated', // Honest: this is an approximation, not a real simulation
+      method: "approximated", // Honest: this is an approximation, not a real simulation
       cacheHits: 0,
       batchSize: 1,
       computeTimeMs: 100,
@@ -320,10 +343,10 @@ class UltraCompressionOrchestrator {
 
     return {
       jobId,
-      classification: 'very_heavy',
+      classification: "very_heavy",
       result: simulation,
       confidence: evaluation.confidence,
-      processingMethod: 'approximated', // Honest terminology
+      processingMethod: "approximated", // Honest terminology
       estimatedAccuracy: evaluation.estimatedAccuracy,
       wasFromCache: false,
       batchSize: 1,
@@ -335,7 +358,7 @@ class UltraCompressionOrchestrator {
 
   // Simulate client-side compute
   private async simulateClientCompute(input: unknown): Promise<unknown> {
-    await new Promise(resolve => setTimeout(resolve, 200));
+    await new Promise((resolve) => setTimeout(resolve, 200));
     return {
       clientProcessed: true,
       input,
@@ -345,22 +368,23 @@ class UltraCompressionOrchestrator {
   }
 
   private isLightJob(jobType: string, memoryMb: number): boolean {
-    const lightTypes = ['text_analysis', 'metadata', 'validation', 'search', 'format'];
-    return lightTypes.some(t => jobType.toLowerCase().includes(t)) || memoryMb < 100;
+    const lightTypes = ["text_analysis", "metadata", "validation", "search", "format"];
+    return lightTypes.some((t) => jobType.toLowerCase().includes(t)) || memoryMb < 100;
   }
 
   // Get compression metrics
   getMetrics(): CompressionMetrics {
     const inputStats = inputNormalizer.getCompressionStats();
     const batchStats = temporalBatcher.getBatchingStats();
-    
+
     return {
       compressionRatio: inputStats.compressionRatio,
       cacheHitRate: inputStats.cacheHitRate,
       averageBatchSize: batchStats.averageBatchSize,
       freshGpuJobsToday: this.gpuJobsToday,
       totalJobsProcessed: this.totalJobsProcessed,
-      computesSaved: batchStats.totalComputesSaved + 
+      computesSaved:
+        batchStats.totalComputesSaved +
         Math.floor(this.totalJobsProcessed * inputStats.cacheHitRate),
     };
   }
@@ -380,7 +404,7 @@ class UltraCompressionOrchestrator {
     const now = new Date();
     const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
     const msUntilMidnight = tomorrow.getTime() - now.getTime();
-    
+
     setTimeout(() => {
       this.gpuJobsToday = 0;
       this.notifyListeners();
@@ -395,7 +419,7 @@ class UltraCompressionOrchestrator {
 
   private notifyListeners(): void {
     const metrics = this.getMetrics();
-    this.listeners.forEach(l => l(metrics));
+    this.listeners.forEach((l) => l(metrics));
   }
 }
 

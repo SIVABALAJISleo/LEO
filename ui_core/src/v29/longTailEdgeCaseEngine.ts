@@ -23,20 +23,20 @@ export class LongTailEdgeCaseEngine {
         source: "failed-tasks",
         failureSignature: "SMT solver timeout under dense coordinate recursive routing constraints",
         remedyAction: "Switch to TopologicalWorldModel mapping zones and corridor corridors",
-        occurrencesCount: 15
+        occurrencesCount: 15,
       },
       {
         caseId: "EC-2902",
         source: "adversarial-tests",
         failureSignature: "Adversarial prompt injection attempting to leak local database secrets",
         remedyAction: "Inject minhash verification checkpoints inside conformal governors",
-        occurrencesCount: 8
-      }
+        occurrencesCount: 8,
+      },
     ];
   }
 
-  registerFailure(source: EdgeCaseRecord['source'], signature: string, remedy: string) {
-    const existing = this.library.find(e => e.failureSignature === signature);
+  registerFailure(source: EdgeCaseRecord["source"], signature: string, remedy: string) {
+    const existing = this.library.find((e) => e.failureSignature === signature);
     if (existing) {
       existing.occurrencesCount++;
     } else {
@@ -45,7 +45,7 @@ export class LongTailEdgeCaseEngine {
         source,
         failureSignature: signature,
         remedyAction: remedy,
-        occurrencesCount: 1
+        occurrencesCount: 1,
       });
     }
   }

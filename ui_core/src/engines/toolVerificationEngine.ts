@@ -25,7 +25,13 @@ export class ToolVerificationEngine {
     const queryLower = query.toLowerCase();
 
     // 1. Calculator Check
-    if (/\d+/.test(queryLower) && (queryLower.includes("+") || queryLower.includes("-") || queryLower.includes("*") || queryLower.includes("/"))) {
+    if (
+      /\d+/.test(queryLower) &&
+      (queryLower.includes("+") ||
+        queryLower.includes("-") ||
+        queryLower.includes("*") ||
+        queryLower.includes("/"))
+    ) {
       const match = queryLower.match(/(\d+)\s*([\+\-\*\/])\s*(\d+)/);
       if (match) {
         const num1 = parseFloat(match[1]);
@@ -61,7 +67,8 @@ export class ToolVerificationEngine {
       checks.push({
         tool: "code_execution",
         status: "passed",
-        rationale: "Code syntax check and execution security policies validated in sandboxed runner.",
+        rationale:
+          "Code syntax check and execution security policies validated in sandboxed runner.",
       });
     } else {
       checks.push({
@@ -72,7 +79,11 @@ export class ToolVerificationEngine {
     }
 
     // 3. Database constraints
-    if (queryLower.includes("select") || queryLower.includes("table") || queryLower.includes("sqlite")) {
+    if (
+      queryLower.includes("select") ||
+      queryLower.includes("table") ||
+      queryLower.includes("sqlite")
+    ) {
       checks.push({
         tool: "database",
         status: "passed",
@@ -101,7 +112,11 @@ export class ToolVerificationEngine {
     });
 
     // 6. Symbolic Solver
-    if (queryLower.includes("proof") || queryLower.includes("induction") || queryLower.includes("solve")) {
+    if (
+      queryLower.includes("proof") ||
+      queryLower.includes("induction") ||
+      queryLower.includes("solve")
+    ) {
       checks.push({
         tool: "symbolic_solver",
         status: "passed",

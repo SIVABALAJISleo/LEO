@@ -13,8 +13,8 @@ export default function Pricing() {
         "BNN Speculative draft compiler",
         "VSA Crystallizer V2 Cache (up to 50k keys)",
         "Direct CPU and baseline Intel iGPU offloads",
-        "Community Discord support"
-      ]
+        "Community Discord support",
+      ],
     },
     {
       name: "Enterprise Substrate",
@@ -27,10 +27,10 @@ export default function Pricing() {
         "Fourier Attention 2D FFT optimizations (95% coefficient pruning)",
         "oneAPI Zero-Copy Unified Shared Memory (USM) streams",
         "Unlimited VSA crystallized keys",
-        "Premium SLA & direct team integrations"
+        "Premium SLA & direct team integrations",
       ],
-      popular: true
-    }
+      popular: true,
+    },
   ];
 
   return (
@@ -47,17 +47,18 @@ export default function Pricing() {
             </span>
           </h1>
           <p className="text-slate-400 max-w-xl mx-auto text-sm">
-            Scale LEO's 6 Silicon Breakthroughs dynamically from standalone developer setups to enterprise-ready clusters.
+            Scale LEO's 6 Silicon Breakthroughs dynamically from standalone developer setups to
+            enterprise-ready clusters.
           </p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {plans.map((plan, idx) => (
-            <div 
-              key={idx} 
+            <div
+              key={idx}
               className={`bg-[#0b1329]/40 border rounded-2xl p-8 flex flex-col justify-between transition-all relative ${
-                plan.popular 
-                  ? "border-[#76B900] shadow-[0_0_30px_rgba(118,185,0,0.15)] scale-105" 
+                plan.popular
+                  ? "border-[#76B900] shadow-[0_0_30px_rgba(118,185,0,0.15)] scale-105"
                   : "border-slate-800 hover:border-slate-700"
               }`}
             >
@@ -69,7 +70,9 @@ export default function Pricing() {
 
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-lg font-bold text-white uppercase tracking-wider">{plan.name}</h3>
+                  <h3 className="text-lg font-bold text-white uppercase tracking-wider">
+                    {plan.name}
+                  </h3>
                   <p className="text-slate-500 text-xs mt-1 leading-relaxed">{plan.desc}</p>
                 </div>
 
@@ -80,7 +83,10 @@ export default function Pricing() {
 
                 <ul className="space-y-3.5 border-t border-slate-800/80 pt-6">
                   {plan.features.map((feature, fIdx) => (
-                    <li key={fIdx} className="flex items-start gap-2.5 text-xs text-slate-300 leading-normal">
+                    <li
+                      key={fIdx}
+                      className="flex items-start gap-2.5 text-xs text-slate-300 leading-normal"
+                    >
                       <CheckCircle className="h-4 w-4 text-[#76B900] shrink-0 mt-0.5" />
                       <span>{feature}</span>
                     </li>
@@ -89,7 +95,7 @@ export default function Pricing() {
               </div>
 
               <div className="pt-8">
-                <button 
+                <button
                   className={`w-full py-3 rounded-lg text-xs font-extrabold uppercase tracking-wider transition-all transform active:scale-[0.98] ${
                     plan.popular
                       ? "bg-[#76B900] hover:bg-[#8CD000] text-black shadow-[0_0_15px_rgba(118,185,0,0.3)]"

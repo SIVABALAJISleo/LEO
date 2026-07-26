@@ -7,7 +7,7 @@
 export interface ScenarioProjection {
   caseType: "Best Case" | "Worst Case" | "Most Likely Case";
   projectedOutcome: string;
-  probability: number;      // 0 to 1
+  probability: number; // 0 to 1
   latencyEstimateMs: number;
   resourceOffloadPct: number;
   unresolvedRisks: string[];
@@ -33,32 +33,49 @@ export class WorldModelV3 {
     const suggestedMitigations: string[] = [];
 
     // Base Scenario parameters
-    let bestCaseOutcome = "Mesh scales perfectly to 1,000+ edge nodes; latency drops to 2ms; central infrastructure costs zero out.";
-    let worstCaseOutcome = "Consensus network experiences partitioned split-brain states; queue grows indefinitely; Vulkan drivers crash, causing execution timeouts.";
-    let mostLikelyOutcome = "Offloading 75% of embeddings to WebGPU succeeds. Stale crystals undergo decay cycle, maintaining memory size at 250MB bounds.";
+    let bestCaseOutcome =
+      "Mesh scales perfectly to 1,000+ edge nodes; latency drops to 2ms; central infrastructure costs zero out.";
+    let worstCaseOutcome =
+      "Consensus network experiences partitioned split-brain states; queue grows indefinitely; Vulkan drivers crash, causing execution timeouts.";
+    let mostLikelyOutcome =
+      "Offloading 75% of embeddings to WebGPU succeeds. Stale crystals undergo decay cycle, maintaining memory size at 250MB bounds.";
 
-    if (contextLower.includes("stripe") || contextLower.includes("billing") || contextLower.includes("webhook")) {
-      bestCaseOutcome = "All checkout completions processed instantly. 100% verified using HMAC signature keys. Rollbacks never active.";
-      worstCaseOutcome = "Malicious signature bypass payload succeeds, triggering 500 server crashes. Rolling back database takes 15 minutes.";
-      mostLikelyOutcome = "Webhook logs verify signature tokens successfully. Telemetry routes metrics to Grafana charts in sub-seconds.";
-      
+    if (
+      contextLower.includes("stripe") ||
+      contextLower.includes("billing") ||
+      contextLower.includes("webhook")
+    ) {
+      bestCaseOutcome =
+        "All checkout completions processed instantly. 100% verified using HMAC signature keys. Rollbacks never active.";
+      worstCaseOutcome =
+        "Malicious signature bypass payload succeeds, triggering 500 server crashes. Rolling back database takes 15 minutes.";
+      mostLikelyOutcome =
+        "Webhook logs verify signature tokens successfully. Telemetry routes metrics to Grafana charts in sub-seconds.";
+
       suggestedMitigations.push(
         "Rotate Webhook keys every 30 days automatically.",
-        "Implement rate-limits on webhook endpoint to block brute-force attempts."
+        "Implement rate-limits on webhook endpoint to block brute-force attempts.",
       );
-    } else if (contextLower.includes("gpu") || contextLower.includes("acceleration") || contextLower.includes("hardware")) {
-      bestCaseOutcome = "Apple Neural Engine and WebGPU run parallel embeddings, accelerating calculations 10x with zero main thread lag.";
-      worstCaseOutcome = "WebGPU shader compilation hangs on older hardware, blocking browser rendering threads, leading to frozen states.";
-      mostLikelyOutcome = "WebGPU compiles successfully on 82% of clients. Fallback Vulkan pipeline initiates for others, yielding ~14ms latency.";
+    } else if (
+      contextLower.includes("gpu") ||
+      contextLower.includes("acceleration") ||
+      contextLower.includes("hardware")
+    ) {
+      bestCaseOutcome =
+        "Apple Neural Engine and WebGPU run parallel embeddings, accelerating calculations 10x with zero main thread lag.";
+      worstCaseOutcome =
+        "WebGPU shader compilation hangs on older hardware, blocking browser rendering threads, leading to frozen states.";
+      mostLikelyOutcome =
+        "WebGPU compiles successfully on 82% of clients. Fallback Vulkan pipeline initiates for others, yielding ~14ms latency.";
 
       suggestedMitigations.push(
         "Compile shaders asynchronously in background service workers.",
-        "Include a lazy fallback script prioritizing basic WASM if GPU pipelines are unresponsive."
+        "Include a lazy fallback script prioritizing basic WASM if GPU pipelines are unresponsive.",
       );
     } else {
       suggestedMitigations.push(
         "Establish partition guards inside the Gossip CRDT network.",
-        "Trigger proactive garbage collection on expired memory nodes."
+        "Trigger proactive garbage collection on expired memory nodes.",
       );
     }
 
@@ -69,15 +86,15 @@ export class WorldModelV3 {
         probability: 0.25,
         latencyEstimateMs: 8,
         resourceOffloadPct: 98.0,
-        unresolvedRisks: []
+        unresolvedRisks: [],
       },
       {
         caseType: "Worst Case",
         projectedOutcome: worstCaseOutcome,
-        probability: 0.10,
+        probability: 0.1,
         latencyEstimateMs: 4500,
         resourceOffloadPct: 0.0,
-        unresolvedRisks: ["VRAM paging overflow", "Consensus timeout"]
+        unresolvedRisks: ["VRAM paging overflow", "Consensus timeout"],
       },
       {
         caseType: "Most Likely Case",
@@ -85,8 +102,8 @@ export class WorldModelV3 {
         probability: 0.65,
         latencyEstimateMs: 45,
         resourceOffloadPct: 82.5,
-        unresolvedRisks: ["Minor driver discrepancy"]
-      }
+        unresolvedRisks: ["Minor driver discrepancy"],
+      },
     );
 
     // Uncertainty estimate: calculated based on the probability dispersion
@@ -98,7 +115,7 @@ export class WorldModelV3 {
       timestamp: Date.now(),
       uncertaintyScore,
       projections,
-      suggestedMitigations
+      suggestedMitigations,
     };
   }
 }

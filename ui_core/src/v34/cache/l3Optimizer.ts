@@ -13,12 +13,12 @@ export class L3Optimizer {
 
   lockPage(pageId: string, sizeBytes: number): L3PageStatus {
     const fits = sizeBytes <= this.l3CapacityBytes;
-    
+
     return {
       pageId,
       lockedInL3: fits,
       sizeBytes,
-      evictionPriority: fits ? "none" : "high"
+      evictionPriority: fits ? "none" : "high",
     };
   }
 }

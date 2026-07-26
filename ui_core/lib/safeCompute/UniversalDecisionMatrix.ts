@@ -1,14 +1,14 @@
 /**
  * UNIVERSAL DECISION MATRIX (ALWAYS ON)
- * 
+ *
  * The real "brain" of the system - runs every task/frame/object
- * 
+ *
  * RESPONSIBILITIES:
  * 1. CRITICALITY SCORING (deterministic)
  * 2. PARALLEL TRUTH SOURCES (always run)
  * 3. DECISION RULES (no exceptions)
  * 4. TRUTH GUARD (always on)
- * 
+ *
  * ABSOLUTE RULES:
  * - No fake compute
  * - No physics lies  
@@ -17,15 +17,15 @@
  */
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { masterPredictorEngine, PredictorResult } from './MasterPredictorEngine';
+import { masterPredictorEngine, PredictorResult } from "./MasterPredictorEngine";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { knowledgeLookupVault, LookupMatch } from './KnowledgeLookupVault';
+import { knowledgeLookupVault, LookupMatch } from "./KnowledgeLookupVault";
 
 // ============================================
 // TYPES
 // ============================================
 
-export type CriticalityLevel = 'HIGH' | 'MEDIUM' | 'LOW';
+export type CriticalityLevel = "HIGH" | "MEDIUM" | "LOW";
 
 export interface CriticalityScore {
   level: CriticalityLevel;
@@ -38,7 +38,7 @@ export interface CriticalityScore {
 }
 
 export interface TruthSource {
-  name: 'prediction' | 'vault' | 'local_compute' | 'swarm';
+  name: "prediction" | "vault" | "local_compute" | "swarm";
   available: boolean;
   confidence: number;
   latencyMs: number;
@@ -61,7 +61,7 @@ export interface MatrixDecision {
   truthSources: TruthSource[];
   selectedSource: TruthSource | null;
   truthGuard: TruthGuardResult;
-  finalPath: 'RAW_COMPUTE' | 'PREDICTION' | 'VAULT' | 'SWARM' | 'EXPLAIN';
+  finalPath: "RAW_COMPUTE" | "PREDICTION" | "VAULT" | "SWARM" | "EXPLAIN";
   reason: string;
   decisionTimeMs: number;
   gpuAvoided: boolean;
@@ -70,7 +70,7 @@ export interface MatrixDecision {
 
 export interface MatrixStats {
   totalDecisions: number;
-  byPath: Record<MatrixDecision['finalPath'], number>;
+  byPath: Record<MatrixDecision["finalPath"], number>;
   byCriticality: Record<CriticalityLevel, number>;
   correctionRate: number;
   avgDecisionTimeMs: number;
@@ -84,20 +84,20 @@ export interface MatrixStats {
 
 const CRITICALITY_WEIGHTS = {
   userInteractive: 0.35,
-  outcomeAffecting: 0.30,
-  visuallyDominant: 0.20,
+  outcomeAffecting: 0.3,
+  visuallyDominant: 0.2,
   backgroundOnly: -0.25, // Reduces criticality
 } as const;
 
-const HIGH_CRITICALITY_THRESHOLD = 0.70;
-const MEDIUM_CRITICALITY_THRESHOLD = 0.40;
+const HIGH_CRITICALITY_THRESHOLD = 0.7;
+const MEDIUM_CRITICALITY_THRESHOLD = 0.4;
 
 // ============================================
 // PREDICTION CONFIDENCE THRESHOLD
 // ============================================
 
 const PREDICTION_CONFIDENCE_THRESHOLD = 0.99;
-const VAULT_SIMILARITY_THRESHOLD = 0.90;
+const VAULT_SIMILARITY_THRESHOLD = 0.9;
 const LATENCY_DRIFT_THRESHOLD_MS = 50;
 const VISUAL_DELTA_THRESHOLD = 0.02;
 
@@ -107,7 +107,7 @@ const VISUAL_DELTA_THRESHOLD = 0.02;
 
 class UniversalDecisionMatrixCore {
   private static instance: UniversalDecisionMatrixCore;
-  
+
   private stats: MatrixStats = {
     totalDecisions: 0,
     byPath: {
@@ -127,7 +127,7 @@ class UniversalDecisionMatrixCore {
     gpuAvoidanceRate: 0,
     lastUpdated: new Date(),
   };
-  
+
   private decisionTimes: number[] = [];
   private corrections = 0;
   private gpuAvoided = 0;
@@ -157,7 +157,7 @@ class UniversalDecisionMatrixCore {
       requireExact?: boolean;
       swarmAvailable?: boolean;
       localGpuAvailable?: boolean;
-    } = {}
+    } = {},
   ): Promise<MatrixDecision> {
     const startTime = performance.now();
 
@@ -165,26 +165,17 @@ class UniversalDecisionMatrixCore {
     const criticality = this.scoreCriticality(workloadType, context);
 
     // ===== STEP 2: PARALLEL TRUTH SOURCES =====
-    const truthSources = await this.gatherTruthSources(
-      workloadId,
-      workloadType,
-      input,
-      context
-    );
+    const truthSources = await this.gatherTruthSources(workloadId, workloadType, input, context);
 
     // ===== STEP 3: DECISION RULES =====
     const { selectedSource, finalPath, reason } = this.applyDecisionRules(
       criticality,
       truthSources,
-      context
+      context,
     );
 
     // ===== STEP 4: TRUTH GUARD =====
-    const truthGuard = this.applyTruthGuard(
-      selectedSource,
-      truthSources,
-      context.maxLatencyMs
-    );
+    const truthGuard = this.applyTruthGuard(selectedSource, truthSources, context.maxLatencyMs);
 
     // If truth guard failed, fall back
     let actualPath = finalPath;
@@ -199,7 +190,7 @@ class UniversalDecisionMatrixCore {
     }
 
     // Track GPU avoidance
-    const gpuWasAvoided = actualPath !== 'RAW_COMPUTE' && actualPath !== 'EXPLAIN';
+    const gpuWasAvoided = actualPath !== "RAW_COMPUTE" && actualPath !== "EXPLAIN";
     if (gpuWasAvoided) this.gpuAvoided++;
     if (truthGuard.correctionApplied) this.corrections++;
 
@@ -230,35 +221,29 @@ class UniversalDecisionMatrixCore {
       isVisuallyDominant?: boolean;
       isBackground?: boolean;
       affectsOutcome?: boolean;
-    }
+    },
   ): CriticalityScore {
     const type = workloadType.toLowerCase();
 
     // Determine flags from context or workload type
-    const isUserInteractive = context.isInteractive ?? (
-      type.includes('interactive') || 
-      type.includes('realtime') || 
-      type.includes('input')
-    );
+    const isUserInteractive =
+      context.isInteractive ??
+      (type.includes("interactive") || type.includes("realtime") || type.includes("input"));
 
-    const isOutcomeAffecting = context.affectsOutcome ?? (
-      type.includes('final') ||
-      type.includes('production') ||
-      type.includes('export') ||
-      type.includes('critical')
-    );
+    const isOutcomeAffecting =
+      context.affectsOutcome ??
+      (type.includes("final") ||
+        type.includes("production") ||
+        type.includes("export") ||
+        type.includes("critical"));
 
-    const isVisuallyDominant = context.isVisuallyDominant ?? (
-      type.includes('hero') ||
-      type.includes('main') ||
-      type.includes('primary')
-    );
+    const isVisuallyDominant =
+      context.isVisuallyDominant ??
+      (type.includes("hero") || type.includes("main") || type.includes("primary"));
 
-    const isBackgroundOnly = context.isBackground ?? (
-      type.includes('background') ||
-      type.includes('prefetch') ||
-      type.includes('warmup')
-    );
+    const isBackgroundOnly =
+      context.isBackground ??
+      (type.includes("background") || type.includes("prefetch") || type.includes("warmup"));
 
     // Calculate deterministic score
     let score = 0;
@@ -271,16 +256,16 @@ class UniversalDecisionMatrixCore {
     score = Math.max(0, Math.min(1, score));
 
     // Determine level
-    let level: CriticalityLevel = 'LOW';
-    if (score >= HIGH_CRITICALITY_THRESHOLD) level = 'HIGH';
-    else if (score >= MEDIUM_CRITICALITY_THRESHOLD) level = 'MEDIUM';
+    let level: CriticalityLevel = "LOW";
+    if (score >= HIGH_CRITICALITY_THRESHOLD) level = "HIGH";
+    else if (score >= MEDIUM_CRITICALITY_THRESHOLD) level = "MEDIUM";
 
     // Generate reason
     const reasons: string[] = [];
-    if (isUserInteractive) reasons.push('user-interactive');
-    if (isOutcomeAffecting) reasons.push('outcome-affecting');
-    if (isVisuallyDominant) reasons.push('visually-dominant');
-    if (isBackgroundOnly) reasons.push('background-only');
+    if (isUserInteractive) reasons.push("user-interactive");
+    if (isOutcomeAffecting) reasons.push("outcome-affecting");
+    if (isVisuallyDominant) reasons.push("visually-dominant");
+    if (isBackgroundOnly) reasons.push("background-only");
 
     return {
       level,
@@ -289,7 +274,7 @@ class UniversalDecisionMatrixCore {
       isVisuallyDominant,
       isBackgroundOnly,
       score,
-      reason: reasons.length > 0 ? reasons.join(', ') : 'standard workload',
+      reason: reasons.length > 0 ? reasons.join(", ") : "standard workload",
     };
   }
 
@@ -300,7 +285,7 @@ class UniversalDecisionMatrixCore {
     workloadId: string,
     workloadType: string,
     input: unknown,
-    context: { swarmAvailable?: boolean; localGpuAvailable?: boolean }
+    context: { swarmAvailable?: boolean; localGpuAvailable?: boolean },
   ): Promise<TruthSource[]> {
     const sources: TruthSource[] = [];
     const startTimes: Record<string, number> = {};
@@ -311,15 +296,12 @@ class UniversalDecisionMatrixCore {
       (async (): Promise<TruthSource> => {
         startTimes.prediction = performance.now();
         try {
-          const result = masterPredictorEngine.predict(
-            workloadId,
-            workloadType,
-            input,
-            { minConfidence: 0.90 }
-          );
+          const result = masterPredictorEngine.predict(workloadId, workloadType, input, {
+            minConfidence: 0.9,
+          });
           return {
-            name: 'prediction',
-            available: result.decision.path === 'SHORTCUT' || result.decision.path === 'LOOKUP',
+            name: "prediction",
+            available: result.decision.path === "SHORTCUT" || result.decision.path === "LOOKUP",
             confidence: result.decision.confidence,
             latencyMs: performance.now() - startTimes.prediction,
             result: result.result,
@@ -327,7 +309,7 @@ class UniversalDecisionMatrixCore {
           };
         } catch {
           return {
-            name: 'prediction',
+            name: "prediction",
             available: false,
             confidence: 0,
             latencyMs: performance.now() - startTimes.prediction,
@@ -343,19 +325,21 @@ class UniversalDecisionMatrixCore {
           const lookupKey = `${workloadType}_${JSON.stringify(input).slice(0, 50)}`;
           const match = knowledgeLookupVault.lookup(
             { workloadType, key: lookupKey },
-            { minConfidence: 0.85 }
+            { minConfidence: 0.85 },
           );
           return {
-            name: 'vault',
+            name: "vault",
             available: match.found && match.canUse,
             confidence: match.similarity,
             latencyMs: performance.now() - startTimes.vault,
             result: match.entry?.value,
-            verified: match.entry?.source === 'verified_historical' || match.entry?.source === 'reference_dataset',
+            verified:
+              match.entry?.source === "verified_historical" ||
+              match.entry?.source === "reference_dataset",
           };
         } catch {
           return {
-            name: 'vault',
+            name: "vault",
             available: false,
             confidence: 0,
             latencyMs: performance.now() - startTimes.vault,
@@ -369,7 +353,7 @@ class UniversalDecisionMatrixCore {
 
     // 3. Local Compute (always available if GPU present)
     sources.push({
-      name: 'local_compute',
+      name: "local_compute",
       available: context.localGpuAvailable ?? false,
       confidence: 1.0, // Raw compute is always accurate
       latencyMs: 0, // Will be measured at execution
@@ -378,7 +362,7 @@ class UniversalDecisionMatrixCore {
 
     // 4. Swarm (if available)
     sources.push({
-      name: 'swarm',
+      name: "swarm",
       available: context.swarmAvailable ?? false,
       confidence: 0.95, // Swarm results need consensus
       latencyMs: 0,
@@ -394,28 +378,32 @@ class UniversalDecisionMatrixCore {
   private applyDecisionRules(
     criticality: CriticalityScore,
     sources: TruthSource[],
-    context: { requireExact?: boolean }
-  ): { selectedSource: TruthSource | null; finalPath: MatrixDecision['finalPath']; reason: string } {
-    const prediction = sources.find(s => s.name === 'prediction');
-    const vault = sources.find(s => s.name === 'vault');
-    const localCompute = sources.find(s => s.name === 'local_compute');
-    const swarm = sources.find(s => s.name === 'swarm');
+    context: { requireExact?: boolean },
+  ): {
+    selectedSource: TruthSource | null;
+    finalPath: MatrixDecision["finalPath"];
+    reason: string;
+  } {
+    const prediction = sources.find((s) => s.name === "prediction");
+    const vault = sources.find((s) => s.name === "vault");
+    const localCompute = sources.find((s) => s.name === "local_compute");
+    const swarm = sources.find((s) => s.name === "swarm");
 
     // RULE 1: If CRITICALITY == HIGH → Use Raw Compute ONLY
     // Prediction forbidden for critical tasks
-    if (criticality.level === 'HIGH' || context.requireExact) {
+    if (criticality.level === "HIGH" || context.requireExact) {
       if (localCompute?.available) {
         return {
           selectedSource: localCompute,
-          finalPath: 'RAW_COMPUTE',
-          reason: 'HIGH criticality requires raw compute for accuracy',
+          finalPath: "RAW_COMPUTE",
+          reason: "HIGH criticality requires raw compute for accuracy",
         };
       }
       // No local compute available for critical task
       return {
         selectedSource: null,
-        finalPath: 'EXPLAIN',
-        reason: 'HIGH criticality task requires local GPU which is not available',
+        finalPath: "EXPLAIN",
+        reason: "HIGH criticality task requires local GPU which is not available",
       };
     }
 
@@ -423,7 +411,7 @@ class UniversalDecisionMatrixCore {
     if (prediction?.available && prediction.confidence >= PREDICTION_CONFIDENCE_THRESHOLD) {
       return {
         selectedSource: prediction,
-        finalPath: 'PREDICTION',
+        finalPath: "PREDICTION",
         reason: `Prediction confidence ${(prediction.confidence * 100).toFixed(1)}% >= ${PREDICTION_CONFIDENCE_THRESHOLD * 100}%`,
       };
     }
@@ -432,7 +420,7 @@ class UniversalDecisionMatrixCore {
     if (vault?.available && vault.confidence >= VAULT_SIMILARITY_THRESHOLD) {
       return {
         selectedSource: vault,
-        finalPath: 'VAULT',
+        finalPath: "VAULT",
         reason: `Vault match ${(vault.confidence * 100).toFixed(1)}% >= ${VAULT_SIMILARITY_THRESHOLD * 100}%`,
       };
     }
@@ -441,8 +429,8 @@ class UniversalDecisionMatrixCore {
     if (swarm?.available) {
       return {
         selectedSource: swarm,
-        finalPath: 'SWARM',
-        reason: 'Swarm execution available for distributed workload',
+        finalPath: "SWARM",
+        reason: "Swarm execution available for distributed workload",
       };
     }
 
@@ -450,16 +438,16 @@ class UniversalDecisionMatrixCore {
     if (localCompute?.available) {
       return {
         selectedSource: localCompute,
-        finalPath: 'RAW_COMPUTE',
-        reason: 'Fallback to local raw compute',
+        finalPath: "RAW_COMPUTE",
+        reason: "Fallback to local raw compute",
       };
     }
 
     // No options available
     return {
       selectedSource: null,
-      finalPath: 'EXPLAIN',
-      reason: 'No execution path available - physics limited',
+      finalPath: "EXPLAIN",
+      reason: "No execution path available - physics limited",
     };
   }
 
@@ -469,7 +457,7 @@ class UniversalDecisionMatrixCore {
   private applyTruthGuard(
     selectedSource: TruthSource | null,
     allSources: TruthSource[],
-    maxLatencyMs?: number
+    maxLatencyMs?: number,
   ): TruthGuardResult {
     if (!selectedSource) {
       return {
@@ -482,11 +470,12 @@ class UniversalDecisionMatrixCore {
     }
 
     // Check 1: Confidence threshold (acts as delta comparison)
-    const deltaComparison = selectedSource.confidence >= (1 - VISUAL_DELTA_THRESHOLD);
+    const deltaComparison = selectedSource.confidence >= 1 - VISUAL_DELTA_THRESHOLD;
 
     // Check 2: Physics consistency (verified sources pass)
-    const physicsConsistency = selectedSource.verified || 
-      selectedSource.name === 'local_compute' ||
+    const physicsConsistency =
+      selectedSource.verified ||
+      selectedSource.name === "local_compute" ||
       selectedSource.confidence >= 0.98;
 
     // Check 3: Latency threshold
@@ -504,7 +493,7 @@ class UniversalDecisionMatrixCore {
       if (!deltaComparison) {
         correctionReason = `Confidence ${(selectedSource.confidence * 100).toFixed(1)}% below threshold`;
       } else if (!physicsConsistency) {
-        correctionReason = 'Physics consistency check failed';
+        correctionReason = "Physics consistency check failed";
       } else if (!latencyThreshold) {
         correctionReason = `Latency ${selectedSource.latencyMs.toFixed(1)}ms exceeded threshold`;
       }
@@ -526,54 +515,56 @@ class UniversalDecisionMatrixCore {
   private handleFallback(
     sources: TruthSource[],
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    context: { localGpuAvailable?: boolean }
-  ): { path: MatrixDecision['finalPath']; source: TruthSource | null; reason: string } {
+    context: { localGpuAvailable?: boolean },
+  ): { path: MatrixDecision["finalPath"]; source: TruthSource | null; reason: string } {
     // Recovery order: Vault → Local Raw Compute → Swarm → Explain
-    const vault = sources.find(s => s.name === 'vault' && s.available);
+    const vault = sources.find((s) => s.name === "vault" && s.available);
     if (vault) {
-      return { path: 'VAULT', source: vault, reason: 'Fallback to vault' };
+      return { path: "VAULT", source: vault, reason: "Fallback to vault" };
     }
 
-    const localCompute = sources.find(s => s.name === 'local_compute' && s.available);
+    const localCompute = sources.find((s) => s.name === "local_compute" && s.available);
     if (localCompute) {
-      return { path: 'RAW_COMPUTE', source: localCompute, reason: 'Fallback to local raw compute' };
+      return { path: "RAW_COMPUTE", source: localCompute, reason: "Fallback to local raw compute" };
     }
 
-    const swarm = sources.find(s => s.name === 'swarm' && s.available);
+    const swarm = sources.find((s) => s.name === "swarm" && s.available);
     if (swarm) {
-      return { path: 'SWARM', source: swarm, reason: 'Fallback to swarm' };
+      return { path: "SWARM", source: swarm, reason: "Fallback to swarm" };
     }
 
     // Never block - explain
-    return { path: 'EXPLAIN', source: null, reason: 'No fallback available - providing explanation' };
+    return {
+      path: "EXPLAIN",
+      source: null,
+      reason: "No fallback available - providing explanation",
+    };
   }
 
   /**
    * Update statistics
    */
   private updateStats(
-    path: MatrixDecision['finalPath'],
+    path: MatrixDecision["finalPath"],
     criticality: CriticalityLevel,
-    decisionTimeMs: number
+    decisionTimeMs: number,
   ): void {
     this.stats.totalDecisions++;
     this.stats.byPath[path]++;
     this.stats.byCriticality[criticality]++;
-    
+
     this.decisionTimes.push(decisionTimeMs);
     if (this.decisionTimes.length > 1000) this.decisionTimes.shift();
-    
-    this.stats.avgDecisionTimeMs = 
+
+    this.stats.avgDecisionTimeMs =
       this.decisionTimes.reduce((a, b) => a + b, 0) / this.decisionTimes.length;
-    
-    this.stats.correctionRate = this.stats.totalDecisions > 0 
-      ? this.corrections / this.stats.totalDecisions 
-      : 0;
-    
-    this.stats.gpuAvoidanceRate = this.stats.totalDecisions > 0
-      ? this.gpuAvoided / this.stats.totalDecisions
-      : 0;
-    
+
+    this.stats.correctionRate =
+      this.stats.totalDecisions > 0 ? this.corrections / this.stats.totalDecisions : 0;
+
+    this.stats.gpuAvoidanceRate =
+      this.stats.totalDecisions > 0 ? this.gpuAvoided / this.stats.totalDecisions : 0;
+
     this.stats.lastUpdated = new Date();
   }
 
@@ -602,7 +593,7 @@ class UniversalDecisionMatrixCore {
       stats: this.getStats(),
       coveragePercent,
       physicsLockedPercent,
-      truthStatement: 
+      truthStatement:
         `GPUs are not replaced. GPU dependency is intelligently avoided when unnecessary. ` +
         `Physics-locked tasks (${physicsLockedPercent.toFixed(1)}%) are rare, optional, and transparently handled.`,
     };

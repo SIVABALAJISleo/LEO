@@ -27,13 +27,35 @@ export class WorldModelEngine {
 
   private initializeDefaultMap() {
     const defaultNodes: WorldNode[] = [
-      { id: "v30-node-1", type: "room", label: "Cleanroom Alpha", connections: ["v30-node-2"], properties: { classISO: 5, tempC: 21.5 } },
-      { id: "v30-node-2", type: "zone", label: "Gantry Crane Pathway", connections: ["v30-node-1", "v30-node-3"], properties: { payloadLimitKg: 500 } },
-      { id: "v30-node-3", type: "landmark", label: "Calibration Target 04", connections: ["v30-node-2"], properties: { opticalAccuracyMm: 0.05 } }
+      {
+        id: "v30-node-1",
+        type: "room",
+        label: "Cleanroom Alpha",
+        connections: ["v30-node-2"],
+        properties: { classISO: 5, tempC: 21.5 },
+      },
+      {
+        id: "v30-node-2",
+        type: "zone",
+        label: "Gantry Crane Pathway",
+        connections: ["v30-node-1", "v30-node-3"],
+        properties: { payloadLimitKg: 500 },
+      },
+      {
+        id: "v30-node-3",
+        type: "landmark",
+        label: "Calibration Target 04",
+        connections: ["v30-node-2"],
+        properties: { opticalAccuracyMm: 0.05 },
+      },
     ];
 
-    defaultNodes.forEach(n => this.nodes.set(n.id, n));
-    this.addEvent("v30-node-1", "CalibrationReset", "Initial environmental scan completed successfully");
+    defaultNodes.forEach((n) => this.nodes.set(n.id, n));
+    this.addEvent(
+      "v30-node-1",
+      "CalibrationReset",
+      "Initial environmental scan completed successfully",
+    );
   }
 
   getNodes(): WorldNode[] {
@@ -54,7 +76,7 @@ export class WorldModelEngine {
       nodeId,
       eventType,
       description,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
     this.events.push(event);
   }
@@ -69,7 +91,7 @@ export class WorldModelEngine {
     const paths = Array.from(this.nodes.keys());
     return {
       simulatedPath: paths,
-      confidence: query.includes("optimal") ? 0.995 : 0.942
+      confidence: query.includes("optimal") ? 0.995 : 0.942,
     };
   }
 }

@@ -31,7 +31,7 @@ export class OpenvinoIntelligencePipeline {
       igpuOffloadActive: this.igpuOffloadActive,
       powerDrawWatts,
       tokensPerSecond,
-      intelligencePerWatt: parseFloat((tokensPerSecond / powerDrawWatts).toFixed(3))
+      intelligencePerWatt: parseFloat((tokensPerSecond / powerDrawWatts).toFixed(3)),
     };
   }
 

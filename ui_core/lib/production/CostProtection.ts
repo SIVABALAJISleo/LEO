@@ -32,11 +32,11 @@ interface CostCeiling {
 
 interface AbuseEvent {
   id: string;
-  type: 'rate-limit' | 'burst' | 'cost-exceeded' | 'suspicious-pattern';
+  type: "rate-limit" | "burst" | "cost-exceeded" | "suspicious-pattern";
   key: string;
   details: string;
   timestamp: Date;
-  action: 'throttle' | 'temp-ban' | 'alert' | 'none';
+  action: "throttle" | "temp-ban" | "alert" | "none";
   duration?: number;
 }
 
@@ -64,7 +64,7 @@ class CostProtection {
   private costCeilings: Map<string, CostCeiling> = new Map();
   private abuseEvents: AbuseEvent[] = [];
   private customLimits: Map<string, RateLimitConfig> = new Map();
-  
+
   private stats: CostProtectionStats = {
     totalRequests: 0,
     blockedRequests: 0,
@@ -128,7 +128,7 @@ class CostProtection {
       return {
         allowed: false,
         retryAfter: Math.ceil((state.blockedUntil.getTime() - now.getTime()) / 1000),
-        reason: 'Temporarily blocked due to excessive requests',
+        reason: "Temporarily blocked due to excessive requests",
       };
     } else if (state.blocked) {
       // Unblock if time has passed
@@ -153,15 +153,15 @@ class CostProtection {
     if (state.burstCount > config.burstLimit) {
       this.stats.burstDetections++;
       this.recordAbuseEvent({
-        type: 'burst',
+        type: "burst",
         key: fullKey,
         details: `Burst limit exceeded: ${state.burstCount}/${config.burstLimit}`,
-        action: 'throttle',
+        action: "throttle",
       });
       return {
         allowed: false,
         retryAfter: Math.ceil(config.burstWindowMs / 1000),
-        reason: 'Too many requests in a short time',
+        reason: "Too many requests in a short time",
       };
     }
 
@@ -177,26 +177,28 @@ class CostProtection {
         state.blockedUntil = new Date(now.getTime() + this.TEMP_BAN_DURATION_MS);
         this.stats.tempBans++;
         this.recordAbuseEvent({
-          type: 'rate-limit',
+          type: "rate-limit",
           key: fullKey,
           details: `Temp ban applied after ${state.violations} violations`,
-          action: 'temp-ban',
+          action: "temp-ban",
           duration: this.TEMP_BAN_DURATION_MS,
         });
       } else {
         this.recordAbuseEvent({
-          type: 'rate-limit',
+          type: "rate-limit",
           key: fullKey,
           details: `Rate limit exceeded: ${state.requestCount}/${config.maxRequests}`,
-          action: 'throttle',
+          action: "throttle",
         });
       }
 
-      const retryAfter = Math.ceil((state.windowStart.getTime() + config.windowMs - now.getTime()) / 1000);
+      const retryAfter = Math.ceil(
+        (state.windowStart.getTime() + config.windowMs - now.getTime()) / 1000,
+      );
       return {
         allowed: false,
         retryAfter: Math.max(1, retryAfter),
-        reason: 'Rate limit exceeded',
+        reason: "Rate limit exceeded",
       };
     }
 
@@ -212,7 +214,7 @@ class CostProtection {
   setCostCeiling(userId: string, dailyLimit: number, monthlyLimit: number): void {
     const existing = this.costCeilings.get(userId);
     const now = new Date();
-    
+
     this.costCeilings.set(userId, {
       userId,
       dailyLimit,
@@ -249,24 +251,24 @@ class CostProtection {
     if (ceiling.currentDailySpend + amount > ceiling.dailyLimit) {
       this.stats.costExceeded++;
       this.recordAbuseEvent({
-        type: 'cost-exceeded',
+        type: "cost-exceeded",
         key: userId,
         details: `Daily cost ceiling exceeded: ${ceiling.currentDailySpend + amount} > ${ceiling.dailyLimit}`,
-        action: 'alert',
+        action: "alert",
       });
-      return { allowed: false, reason: 'Daily spending limit reached' };
+      return { allowed: false, reason: "Daily spending limit reached" };
     }
 
     // Check monthly limit
     if (ceiling.currentMonthlySpend + amount > ceiling.monthlyLimit) {
       this.stats.costExceeded++;
       this.recordAbuseEvent({
-        type: 'cost-exceeded',
+        type: "cost-exceeded",
         key: userId,
         details: `Monthly cost ceiling exceeded: ${ceiling.currentMonthlySpend + amount} > ${ceiling.monthlyLimit}`,
-        action: 'alert',
+        action: "alert",
       });
-      return { allowed: false, reason: 'Monthly spending limit reached' };
+      return { allowed: false, reason: "Monthly spending limit reached" };
     }
 
     return { allowed: true };
@@ -304,7 +306,7 @@ class CostProtection {
     const { key, action } = params;
     const fullKey = `${action}:${key}`;
     const state = this.rateLimits.get(fullKey);
-    
+
     if (!state) return false;
 
     // Check for suspicious patterns:
@@ -314,10 +316,10 @@ class CostProtection {
 
     if (state.violations > 3 && state.requestCount > 50) {
       this.recordAbuseEvent({
-        type: 'suspicious-pattern',
+        type: "suspicious-pattern",
         key: fullKey,
-        details: 'Suspicious request pattern detected',
-        action: 'alert',
+        details: "Suspicious request pattern detected",
+        action: "alert",
       });
       return true;
     }
@@ -337,7 +339,7 @@ class CostProtection {
 
   // ===== ABUSE EVENTS =====
 
-  private recordAbuseEvent(params: Omit<AbuseEvent, 'id' | 'timestamp'>): void {
+  private recordAbuseEvent(params: Omit<AbuseEvent, "id" | "timestamp">): void {
     const event: AbuseEvent = {
       id: `abuse_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       ...params,
@@ -403,33 +405,49 @@ class CostProtection {
 
   private saveToStorage(): void {
     try {
-      localStorage.setItem('hyper_cost_protection', JSON.stringify({
-        rateLimits: Array.from(this.rateLimits.entries()),
-        costCeilings: Array.from(this.costCeilings.entries()),
-        abuseEvents: this.abuseEvents.slice(0, 100),
-        stats: this.stats,
-      }));
+      localStorage.setItem(
+        "hyper_cost_protection",
+        JSON.stringify({
+          rateLimits: Array.from(this.rateLimits.entries()),
+          costCeilings: Array.from(this.costCeilings.entries()),
+          abuseEvents: this.abuseEvents.slice(0, 100),
+          stats: this.stats,
+        }),
+      );
     } catch (e) {
-      console.warn('[CostProtection] Failed to save state:', e);
+      console.warn("[CostProtection] Failed to save state:", e);
     }
   }
 
   private loadFromStorage(): void {
     try {
-      const data = localStorage.getItem('hyper_cost_protection');
+      const data = localStorage.getItem("hyper_cost_protection");
       if (data) {
         const parsed = JSON.parse(data);
         if (parsed.rateLimits) {
-          this.rateLimits = new Map(parsed.rateLimits.map(([k, v]: [string, RateLimitState]) => [
-            k,
-            { ...v, windowStart: new Date(v.windowStart), burstWindowStart: new Date(v.burstWindowStart), blockedUntil: v.blockedUntil ? new Date(v.blockedUntil) : undefined }
-          ]));
+          this.rateLimits = new Map(
+            parsed.rateLimits.map(([k, v]: [string, RateLimitState]) => [
+              k,
+              {
+                ...v,
+                windowStart: new Date(v.windowStart),
+                burstWindowStart: new Date(v.burstWindowStart),
+                blockedUntil: v.blockedUntil ? new Date(v.blockedUntil) : undefined,
+              },
+            ]),
+          );
         }
         if (parsed.costCeilings) {
-          this.costCeilings = new Map(parsed.costCeilings.map(([k, v]: [string, CostCeiling]) => [
-            k,
-            { ...v, lastResetDaily: new Date(v.lastResetDaily), lastResetMonthly: new Date(v.lastResetMonthly) }
-          ]));
+          this.costCeilings = new Map(
+            parsed.costCeilings.map(([k, v]: [string, CostCeiling]) => [
+              k,
+              {
+                ...v,
+                lastResetDaily: new Date(v.lastResetDaily),
+                lastResetMonthly: new Date(v.lastResetMonthly),
+              },
+            ]),
+          );
         }
         if (parsed.abuseEvents) {
           this.abuseEvents = parsed.abuseEvents.map((e: AbuseEvent) => ({
@@ -442,7 +460,7 @@ class CostProtection {
         }
       }
     } catch (e) {
-      console.warn('[CostProtection] Failed to load state:', e);
+      console.warn("[CostProtection] Failed to load state:", e);
     }
   }
 

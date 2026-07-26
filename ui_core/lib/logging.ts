@@ -1,4 +1,4 @@
-import { firebaseClient as supabase } from '@/integrations/firebase/client';
+import { firebaseClient as supabase } from "@/integrations/firebase/client";
 
 export interface LogEntry {
   message: string;
@@ -6,7 +6,7 @@ export interface LogEntry {
   componentName?: string;
   jobId?: string;
   moduleName?: string;
-  severity?: 'info' | 'warning' | 'error' | 'critical';
+  severity?: "info" | "warning" | "error" | "critical";
   metadata?: Record<string, unknown>;
 }
 
@@ -20,16 +20,18 @@ export async function logError(entry: LogEntry): Promise<void> {
     componentName,
     jobId,
     moduleName,
-    severity = 'error',
+    severity = "error",
     metadata = {},
   } = entry;
 
   try {
     // Get current user if authenticated
-    const { data: { user } } = await supabase.auth.getUser();
-    
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
     // Log to Supabase
-    const { error } = await supabase.from('error_logs').insert({
+    const { error } = await supabase.from("error_logs").insert({
       user_id: user?.id || null,
       error_message: message,
       stack_trace: stack || null,
@@ -40,12 +42,12 @@ export async function logError(entry: LogEntry): Promise<void> {
       metadata: {
         ...metadata,
         timestamp: new Date().toISOString(),
-        url: typeof window !== 'undefined' ? window.location.href : null,
+        url: typeof window !== "undefined" ? window.location.href : null,
       },
     });
 
     if (error) {
-      console.error('Failed to log error to database:', error);
+      console.error("Failed to log error to database:", error);
     }
 
     // In production, you could also send to an external service like Sentry
@@ -54,23 +56,23 @@ export async function logError(entry: LogEntry): Promise<void> {
     // }
   } catch (e) {
     // Fallback to console if logging fails
-    console.error('Logging failed:', e);
-    console.error('Original error:', message, stack);
+    console.error("Logging failed:", e);
+    console.error("Original error:", message, stack);
   }
 }
 
 /**
  * Log a warning
  */
-export async function logWarning(entry: Omit<LogEntry, 'severity'>): Promise<void> {
-  return logError({ ...entry, severity: 'warning' });
+export async function logWarning(entry: Omit<LogEntry, "severity">): Promise<void> {
+  return logError({ ...entry, severity: "warning" });
 }
 
 /**
  * Log an info message
  */
-export async function logInfo(entry: Omit<LogEntry, 'severity'>): Promise<void> {
-  return logError({ ...entry, severity: 'info' });
+export async function logInfo(entry: Omit<LogEntry, "severity">): Promise<void> {
+  return logError({ ...entry, severity: "info" });
 }
 
 /**

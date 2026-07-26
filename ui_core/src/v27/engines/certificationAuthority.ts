@@ -41,7 +41,7 @@ export class CertificationAuthority {
     const certifiedClaims: CertifiedResult[] = [];
     let passedCount = 0;
 
-    claims.forEach(c => {
+    claims.forEach((c) => {
       let measuredValue = 0;
       let variance = 0.0001; // default tight variance for stable systems
       let sampleSize = 10000;
@@ -85,12 +85,17 @@ export class CertificationAuthority {
       }
 
       // Perform statistical validation
-      const bounds = this.validationEngine.calculateBounds(c.claimId, sampleSize, measuredValue, variance);
+      const bounds = this.validationEngine.calculateBounds(
+        c.claimId,
+        sampleSize,
+        measuredValue,
+        variance,
+      );
 
       // Check if target matches operator condition
       let met = false;
       const targetPercent = c.targetValue * 100;
-      
+
       if (c.operator === ">=") {
         met = measuredValue >= targetPercent;
       } else if (c.operator === "<=") {
@@ -98,8 +103,8 @@ export class CertificationAuthority {
       }
 
       // A claim is accepted (PROVEN) ONLY when benchmarked, reproducible, and met target
-      const status: ClaimStatus = (met && bounds.isValid) ? "PROVEN" : "UNPROVEN";
-      
+      const status: ClaimStatus = met && bounds.isValid ? "PROVEN" : "UNPROVEN";
+
       if (status === "PROVEN") {
         passedCount++;
       }
@@ -115,28 +120,28 @@ export class CertificationAuthority {
         confidenceInterval: bounds.confidenceInterval,
         reproducibility: bounds.reproducibilityScore,
         status,
-        statisticalConfidence: 99 // 99% CI using z = 2.576
+        statisticalConfidence: 99, // 99% CI using z = 2.576
       });
     });
 
     // Compute composite product score based on measured results
     const overallProductScore = parseFloat(
       (
-        (proofData.reasoningAcc * 0.15) +
-        (proofData.memoryConsistency * 0.15) +
-        (proofData.searchAcc * 0.10) +
-        (proofData.ragAcc * 0.15) +
-        (proofData.agentAcc * 0.15) +
-        (proofData.enterpriseAcc * 0.15) +
-        ((100 - proofData.hallucinationRate) * 0.15)
-      ).toFixed(2)
+        proofData.reasoningAcc * 0.15 +
+        proofData.memoryConsistency * 0.15 +
+        proofData.searchAcc * 0.1 +
+        proofData.ragAcc * 0.15 +
+        proofData.agentAcc * 0.15 +
+        proofData.enterpriseAcc * 0.15 +
+        (100 - proofData.hallucinationRate) * 0.15
+      ).toFixed(2),
     );
 
     return {
       timestamp: Date.now(),
       overallProductScore: Math.min(99.0, Math.max(95.0, overallProductScore)),
       isEntirePlatformCertified: passedCount === claims.length,
-      certifiedClaims
+      certifiedClaims,
     };
   }
 }

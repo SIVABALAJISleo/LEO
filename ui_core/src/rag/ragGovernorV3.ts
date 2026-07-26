@@ -23,9 +23,21 @@ export interface RagPipelineReport {
 
 export class RagGovernorV3 {
   private documentStore: { docId: string; text: string; date: number }[] = [
-    { docId: "doc-billing", text: "Stripe signature checking requires whsec_prod keys in production webhooks.", date: Date.now() - 86400000 },
-    { docId: "doc-webgpu", text: "Local embeddings offload to WebGPU with fallback to Vulkan or WASM.", date: Date.now() - 172800000 },
-    { docId: "doc-gossip", text: "Gossip protocol nodes use CRDT tables to avoid split-brain states.", date: Date.now() - 259200000 }
+    {
+      docId: "doc-billing",
+      text: "Stripe signature checking requires whsec_prod keys in production webhooks.",
+      date: Date.now() - 86400000,
+    },
+    {
+      docId: "doc-webgpu",
+      text: "Local embeddings offload to WebGPU with fallback to Vulkan or WASM.",
+      date: Date.now() - 172800000,
+    },
+    {
+      docId: "doc-gossip",
+      text: "Gossip protocol nodes use CRDT tables to avoid split-brain states.",
+      date: Date.now() - 259200000,
+    },
   ];
 
   /**
@@ -37,7 +49,7 @@ export class RagGovernorV3 {
     const citationsVerified: string[] = [];
 
     this.documentStore.forEach((doc, idx) => {
-      const relevance = doc.text.toLowerCase().includes(queryLower) ? 0.95 : 0.20;
+      const relevance = doc.text.toLowerCase().includes(queryLower) ? 0.95 : 0.2;
       const hoursOld = (Date.now() - doc.date) / 3600000;
       const freshness = Math.max(0.5, 1.0 - hoursOld / 720); // decays over 30 days
 
@@ -46,12 +58,14 @@ export class RagGovernorV3 {
         text: doc.text,
         sourceDoc: doc.docId,
         freshnessScore: parseFloat(freshness.toFixed(4)),
-        similarityScore: relevance
+        similarityScore: relevance,
       });
     });
 
     // Rerank: sort by similarity * freshness
-    retrieved.sort((a, b) => (b.similarityScore * b.freshnessScore) - (a.similarityScore * a.freshnessScore));
+    retrieved.sort(
+      (a, b) => b.similarityScore * b.freshnessScore - a.similarityScore * a.freshnessScore,
+    );
 
     const topChunk = retrieved[0];
     let finalAnswer = "No highly relevant context chunks were retrieved to answer the query.";
@@ -63,7 +77,11 @@ export class RagGovernorV3 {
       hallucinationRisk = 0.015; // extremely low risk due to direct citation verification
     }
 
-    const ragScore = topChunk ? parseFloat((topChunk.similarityScore * topChunk.freshnessScore * (1 - hallucinationRisk)).toFixed(4)) : 0.1;
+    const ragScore = topChunk
+      ? parseFloat(
+          (topChunk.similarityScore * topChunk.freshnessScore * (1 - hallucinationRisk)).toFixed(4),
+        )
+      : 0.1;
 
     return {
       rawQuery: query,
@@ -71,7 +89,7 @@ export class RagGovernorV3 {
       citationsVerified,
       finalAnswer,
       hallucinationRisk,
-      ragScore
+      ragScore,
     };
   }
 
@@ -79,7 +97,7 @@ export class RagGovernorV3 {
     this.documentStore.push({
       docId,
       text,
-      date: Date.now()
+      date: Date.now(),
     });
   }
 }

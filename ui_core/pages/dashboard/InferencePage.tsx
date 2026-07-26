@@ -1,36 +1,81 @@
-import { useState, useRef } from 'react';
-import { hyperClient } from '@/lib/api';
-import { useJobsData, CreateJobInput } from '@/hooks/useJobsData';
-import { useModulesData } from '@/hooks/useModulesData';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useState, useRef } from "react";
+import { hyperClient } from "@/lib/api";
+import { useJobsData, CreateJobInput } from "@/hooks/useJobsData";
+import { useModulesData } from "@/hooks/useModulesData";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Progress } from '@/components/ui/progress';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { useToast } from '@/hooks/use-toast';
-import { Play, Upload, ChevronDown, Wand2, Clock, CheckCircle, XCircle, Loader2, Eye, RotateCw } from 'lucide-react';
-import { format, formatDistanceToNow } from 'date-fns';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { useToast } from "@/hooks/use-toast";
+import {
+  Play,
+  Upload,
+  ChevronDown,
+  Wand2,
+  Clock,
+  CheckCircle,
+  XCircle,
+  Loader2,
+  Eye,
+  RotateCw,
+} from "lucide-react";
+import { format, formatDistanceToNow } from "date-fns";
 
 const MODULE_NAMES = [
-  'AdaptiveDowngrade', 'ProgressiveCompute', 'TemporalReconstruction', 'PerceptualValidation',
-  'MixtureOfExperts', 'SemanticCache', 'VectorSearch', 'RateLimiting',
-  'ChaosResilience', 'HardwareBalancing', 'TileSolver', 'ProbabilisticCore',
-  'AsyncOffload', 'SelfProfiling', 'BehaviorEmulation'
+  "AdaptiveDowngrade",
+  "ProgressiveCompute",
+  "TemporalReconstruction",
+  "PerceptualValidation",
+  "MixtureOfExperts",
+  "SemanticCache",
+  "VectorSearch",
+  "RateLimiting",
+  "ChaosResilience",
+  "HardwareBalancing",
+  "TileSolver",
+  "ProbabilisticCore",
+  "AsyncOffload",
+  "SelfProfiling",
+  "BehaviorEmulation",
 ];
 
 const RECOMMENDED_MODULES = [
-  'AdaptiveDowngrade', 'ProgressiveCompute', 'MixtureOfExperts',
-  'SemanticCache', 'HardwareBalancing', 'SelfProfiling'
+  "AdaptiveDowngrade",
+  "ProgressiveCompute",
+  "MixtureOfExperts",
+  "SemanticCache",
+  "HardwareBalancing",
+  "SelfProfiling",
 ];
 
 const InferencePage = () => {
@@ -39,42 +84,43 @@ const InferencePage = () => {
   const { moduleConfigs } = useModulesData();
   const { toast } = useToast();
 
-  const [selectedModel, setSelectedModel] = useState('');
-  const [inputText, setInputText] = useState('');
+  const [selectedModel, setSelectedModel] = useState("");
+  const [inputText, setInputText] = useState("");
   const [selectedModules, setSelectedModules] = useState<string[]>([]);
   const [priority, setPriority] = useState(5);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [batchSize, setBatchSize] = useState(1);
   const [timeout, setTimeoutVal] = useState(30000);
-  const [callbackUrl, setCallbackUrl] = useState('');
+  const [callbackUrl, setCallbackUrl] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [detailJobId, setDetailJobId] = useState<string | null>(null);
   const [batchFile, setBatchFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const activeJobs = jobs.filter(j => ['queued', 'running'].includes(j.status));
-  const jobHistory = jobs.filter(j => !['queued', 'running'].includes(j.status)).slice(0, 20);
+  const activeJobs = jobs.filter((j) => ["queued", "running"].includes(j.status));
+  const jobHistory = jobs.filter((j) => !["queued", "running"].includes(j.status)).slice(0, 20);
 
   const toggleModule = (moduleName: string) => {
-    setSelectedModules(prev =>
-      prev.includes(moduleName)
-        ? prev.filter(m => m !== moduleName)
-        : [...prev, moduleName]
+    setSelectedModules((prev) =>
+      prev.includes(moduleName) ? prev.filter((m) => m !== moduleName) : [...prev, moduleName],
     );
   };
 
   const applyRecommended = () => {
     setSelectedModules(RECOMMENDED_MODULES);
-    toast({ title: 'Applied Recommended Modules', description: `${RECOMMENDED_MODULES.length} modules selected` });
+    toast({
+      title: "Applied Recommended Modules",
+      description: `${RECOMMENDED_MODULES.length} modules selected`,
+    });
   };
 
   const handleSubmit = async () => {
     if (!selectedModel) {
-      toast({ title: 'Error', description: 'Please select a model', variant: 'destructive' });
+      toast({ title: "Error", description: "Please select a model", variant: "destructive" });
       return;
     }
     if (!inputText.trim()) {
-      toast({ title: 'Error', description: 'Please enter input text', variant: 'destructive' });
+      toast({ title: "Error", description: "Please enter input text", variant: "destructive" });
       return;
     }
 
@@ -85,11 +131,11 @@ const InferencePage = () => {
         priority,
         input_data: { text: inputText, batch_size: batchSize },
         enabled_modules: selectedModules,
-        optimization_options: { timeout, callback_url: callbackUrl || undefined }
+        optimization_options: { timeout, callback_url: callbackUrl || undefined },
       };
 
       await createJob(input);
-      setInputText('');
+      setInputText("");
       setSelectedModules([]);
     } finally {
       setIsSubmitting(false);
@@ -98,17 +144,17 @@ const InferencePage = () => {
 
   const handleBatchUpload = async () => {
     if (!batchFile) {
-      toast({ title: 'Error', description: 'Please select a file', variant: 'destructive' });
+      toast({ title: "Error", description: "Please select a file", variant: "destructive" });
       return;
     }
 
-    const isCsv = batchFile.name.toLowerCase().endsWith('.csv');
+    const isCsv = batchFile.name.toLowerCase().endsWith(".csv");
 
     try {
       if (isCsv && selectedModel) {
         // Legacy Batch Support for CSV
         const text = await batchFile.text();
-        const lines = text.split('\n').filter(l => l.trim());
+        const lines = text.split("\n").filter((l) => l.trim());
 
         for (const line of lines.slice(0, 50)) {
           const input: CreateJobInput = {
@@ -116,43 +162,54 @@ const InferencePage = () => {
             priority,
             input_data: { text: line, batch_size: batchSize },
             enabled_modules: selectedModules,
-            optimization_options: { timeout }
+            optimization_options: { timeout },
           };
           await createJob(input);
         }
-        toast({ title: 'Batch Created', description: `Created ${Math.min(lines.length, 50)} jobs from CSV` });
+        toast({
+          title: "Batch Created",
+          description: `Created ${Math.min(lines.length, 50)} jobs from CSV`,
+        });
       } else {
         // Universal Document Ingestion for RAG
         const result = await hyperClient.uploadFile(batchFile);
         toast({
-          title: 'Document Ingested',
-          description: `Successfully ingested ${batchFile.name} (${result.content_length} chars) for RAG.`
+          title: "Document Ingested",
+          description: `Successfully ingested ${batchFile.name} (${result.content_length} chars) for RAG.`,
         });
       }
 
       setBatchFile(null);
-      if (fileInputRef.current) fileInputRef.current.value = '';
+      if (fileInputRef.current) fileInputRef.current.value = "";
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      toast({ title: 'Error', description: err.message, variant: 'destructive' });
+      toast({ title: "Error", description: err.message, variant: "destructive" });
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'completed': return <CheckCircle className="h-4 w-4 text-primary" />;
-      case 'failed': return <XCircle className="h-4 w-4 text-destructive" />;
-      case 'running': return <Loader2 className="h-4 w-4 text-primary animate-spin" />;
-      default: return <Clock className="h-4 w-4 text-muted-foreground" />;
+      case "completed":
+        return <CheckCircle className="h-4 w-4 text-primary" />;
+      case "failed":
+        return <XCircle className="h-4 w-4 text-destructive" />;
+      case "running":
+        return <Loader2 className="h-4 w-4 text-primary animate-spin" />;
+      default:
+        return <Clock className="h-4 w-4 text-muted-foreground" />;
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'completed': return 'default';
-      case 'failed': return 'destructive';
-      case 'running': return 'secondary';
-      default: return 'outline';
+      case "completed":
+        return "default";
+      case "failed":
+        return "destructive";
+      case "running":
+        return "secondary";
+      default:
+        return "outline";
     }
   };
 
@@ -193,13 +250,15 @@ const InferencePage = () => {
                     <SelectValue placeholder="Select a model" />
                   </SelectTrigger>
                   <SelectContent>
-                    {models.map(m => (
+                    {models.map((m) => (
                       <SelectItem key={m.id} value={m.id}>
                         {m.name} ({m.model_type})
                       </SelectItem>
                     ))}
                     {models.length === 0 && (
-                      <SelectItem value="demo" disabled>No models available</SelectItem>
+                      <SelectItem value="demo" disabled>
+                        No models available
+                      </SelectItem>
                     )}
                   </SelectContent>
                 </Select>
@@ -212,7 +271,7 @@ const InferencePage = () => {
                   min={1}
                   max={10}
                   value={priority}
-                  onChange={e => setPriority(parseInt(e.target.value) || 5)}
+                  onChange={(e) => setPriority(parseInt(e.target.value) || 5)}
                 />
               </div>
             </div>
@@ -223,7 +282,7 @@ const InferencePage = () => {
                 id="input"
                 placeholder="Enter your prompt or input data..."
                 value={inputText}
-                onChange={e => setInputText(e.target.value)}
+                onChange={(e) => setInputText(e.target.value)}
                 className="min-h-[120px]"
               />
             </div>
@@ -238,20 +297,21 @@ const InferencePage = () => {
                 </Button>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
-                {MODULE_NAMES.map(module => (
+                {MODULE_NAMES.map((module) => (
                   <div
                     key={module}
-                    className={`flex items-center gap-2 p-2 rounded-md border cursor-pointer transition-colors ${selectedModules.includes(module)
-                      ? 'border-primary bg-primary/10'
-                      : 'border-border hover:border-primary/50'
-                      }`}
+                    className={`flex items-center gap-2 p-2 rounded-md border cursor-pointer transition-colors ${
+                      selectedModules.includes(module)
+                        ? "border-primary bg-primary/10"
+                        : "border-border hover:border-primary/50"
+                    }`}
                     onClick={() => toggleModule(module)}
                   >
                     <Checkbox
                       checked={selectedModules.includes(module)}
                       onCheckedChange={() => toggleModule(module)}
                     />
-                    <span className="text-xs">{module.replace(/([A-Z])/g, ' $1').trim()}</span>
+                    <span className="text-xs">{module.replace(/([A-Z])/g, " $1").trim()}</span>
                   </div>
                 ))}
               </div>
@@ -262,7 +322,9 @@ const InferencePage = () => {
               <CollapsibleTrigger asChild>
                 <Button variant="ghost" className="w-full justify-between">
                   Advanced Options
-                  <ChevronDown className={`h-4 w-4 transition-transform ${showAdvanced ? 'rotate-180' : ''}`} />
+                  <ChevronDown
+                    className={`h-4 w-4 transition-transform ${showAdvanced ? "rotate-180" : ""}`}
+                  />
                 </Button>
               </CollapsibleTrigger>
               <CollapsibleContent className="space-y-4 pt-4">
@@ -275,7 +337,7 @@ const InferencePage = () => {
                       min={1}
                       max={64}
                       value={batchSize}
-                      onChange={e => setBatchSize(parseInt(e.target.value) || 1)}
+                      onChange={(e) => setBatchSize(parseInt(e.target.value) || 1)}
                     />
                   </div>
                   <div className="space-y-2">
@@ -285,7 +347,7 @@ const InferencePage = () => {
                       type="number"
                       min={1000}
                       value={timeout}
-                      onChange={e => setTimeoutVal(parseInt(e.target.value) || 30000)}
+                      onChange={(e) => setTimeoutVal(parseInt(e.target.value) || 30000)}
                     />
                   </div>
                   <div className="space-y-2">
@@ -295,7 +357,7 @@ const InferencePage = () => {
                       type="url"
                       placeholder="https://..."
                       value={callbackUrl}
-                      onChange={e => setCallbackUrl(e.target.value)}
+                      onChange={(e) => setCallbackUrl(e.target.value)}
                     />
                   </div>
                 </div>
@@ -329,7 +391,9 @@ const InferencePage = () => {
               <Upload className="h-5 w-5 text-primary" />
               Universal Ingestion
             </CardTitle>
-            <CardDescription>Upload any file (PDF, DOCX, CSV) to context-enrich the engine</CardDescription>
+            <CardDescription>
+              Upload any file (PDF, DOCX, CSV) to context-enrich the engine
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
@@ -338,30 +402,22 @@ const InferencePage = () => {
                 type="file"
                 accept=".csv,.txt,.pdf,.docx"
                 className="hidden"
-                onChange={e => setBatchFile(e.target.files?.[0] || null)}
+                onChange={(e) => setBatchFile(e.target.files?.[0] || null)}
               />
               <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
               <p className="text-sm text-muted-foreground mb-2">
-                {batchFile ? batchFile.name : 'Drop any file here or click to browse'}
+                {batchFile ? batchFile.name : "Drop any file here or click to browse"}
               </p>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => fileInputRef.current?.click()}
-              >
+              <Button variant="outline" size="sm" onClick={() => fileInputRef.current?.click()}>
                 Choose File
               </Button>
             </div>
             <p className="text-xs text-muted-foreground">
               Supports: PDF, DOCX, CSV, TXT. Documents will be indexed for RAG.
             </p>
-            <Button
-              className="w-full"
-              onClick={handleBatchUpload}
-              disabled={!batchFile}
-            >
+            <Button className="w-full" onClick={handleBatchUpload} disabled={!batchFile}>
               <Upload className="h-4 w-4 mr-2" />
-              {batchFile?.name.endsWith('.csv') ? 'Process Batch' : 'Ingest Document'}
+              {batchFile?.name.endsWith(".csv") ? "Process Batch" : "Ingest Document"}
             </Button>
           </CardContent>
         </Card>
@@ -372,9 +428,7 @@ const InferencePage = () => {
         <TabsList className="mb-4">
           <TabsTrigger value="active" className="flex items-center gap-2">
             Active Jobs
-            {activeJobs.length > 0 && (
-              <Badge variant="secondary">{activeJobs.length}</Badge>
-            )}
+            {activeJobs.length > 0 && <Badge variant="secondary">{activeJobs.length}</Badge>}
           </TabsTrigger>
           <TabsTrigger value="history">Job History</TabsTrigger>
         </TabsList>
@@ -402,10 +456,10 @@ const InferencePage = () => {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    activeJobs.map(job => (
+                    activeJobs.map((job) => (
                       <TableRow key={job.id} className="border-border">
                         <TableCell className="font-mono text-sm">{job.id.slice(0, 8)}...</TableCell>
-                        <TableCell>{job.model?.name || 'Unknown'}</TableCell>
+                        <TableCell>{job.model?.name || "Unknown"}</TableCell>
                         <TableCell>
                           <Badge variant={getStatusColor(job.status)}>
                             <span className="flex items-center gap-1">
@@ -420,16 +474,23 @@ const InferencePage = () => {
                           </div>
                         </TableCell>
                         <TableCell className="text-muted-foreground text-sm">
-                          {job.started_at ? formatDistanceToNow(new Date(job.started_at), { addSuffix: true }) : '-'}
+                          {job.started_at
+                            ? formatDistanceToNow(new Date(job.started_at), { addSuffix: true })
+                            : "-"}
                         </TableCell>
                         <TableCell>
                           <Badge variant="outline">
-                            {Array.isArray(job.enabled_modules) ? job.enabled_modules.length : 0} modules
+                            {Array.isArray(job.enabled_modules) ? job.enabled_modules.length : 0}{" "}
+                            modules
                           </Badge>
                         </TableCell>
                         <TableCell>
                           <div className="flex gap-1">
-                            <Button variant="ghost" size="sm" onClick={() => setDetailJobId(job.id)}>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setDetailJobId(job.id)}
+                            >
                               <Eye className="h-4 w-4" />
                             </Button>
                             <Button variant="ghost" size="sm" onClick={() => cancelJob(job.id)}>
@@ -469,10 +530,10 @@ const InferencePage = () => {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    jobHistory.map(job => (
+                    jobHistory.map((job) => (
                       <TableRow key={job.id} className="border-border">
                         <TableCell className="font-mono text-sm">{job.id.slice(0, 8)}...</TableCell>
-                        <TableCell>{job.model?.name || 'Unknown'}</TableCell>
+                        <TableCell>{job.model?.name || "Unknown"}</TableCell>
                         <TableCell>
                           <Badge variant={getStatusColor(job.status)}>
                             <span className="flex items-center gap-1">
@@ -482,20 +543,26 @@ const InferencePage = () => {
                           </Badge>
                         </TableCell>
                         <TableCell className="text-primary">
-                          {job.latency_ms ? `${job.latency_ms}ms` : '-'}
+                          {job.latency_ms ? `${job.latency_ms}ms` : "-"}
                         </TableCell>
                         <TableCell className="text-primary">
-                          {job.speedup ? `${job.speedup.toFixed(1)}x` : '-'}
+                          {job.speedup ? `${job.speedup.toFixed(1)}x` : "-"}
                         </TableCell>
                         <TableCell className="text-muted-foreground text-sm">
-                          {job.completed_at ? format(new Date(job.completed_at), 'MMM d, HH:mm') : '-'}
+                          {job.completed_at
+                            ? format(new Date(job.completed_at), "MMM d, HH:mm")
+                            : "-"}
                         </TableCell>
                         <TableCell>
                           <div className="flex gap-1">
-                            <Button variant="ghost" size="sm" onClick={() => setDetailJobId(job.id)}>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setDetailJobId(job.id)}
+                            >
                               <Eye className="h-4 w-4" />
                             </Button>
-                            {job.status === 'failed' && (
+                            {job.status === "failed" && (
                               <Button variant="ghost" size="sm" onClick={() => retryJob(job.id)}>
                                 <RotateCw className="h-4 w-4" />
                               </Button>
@@ -533,7 +600,7 @@ const InferencePage = () => {
                 </div>
                 <div>
                   <Label className="text-muted-foreground">Model</Label>
-                  <p>{selectedJob.model?.name || 'Unknown'}</p>
+                  <p>{selectedJob.model?.name || "Unknown"}</p>
                 </div>
                 <div>
                   <Label className="text-muted-foreground">Priority</Label>
@@ -541,20 +608,27 @@ const InferencePage = () => {
                 </div>
                 <div>
                   <Label className="text-muted-foreground">Latency</Label>
-                  <p className="text-primary">{selectedJob.latency_ms ? `${selectedJob.latency_ms}ms` : '-'}</p>
+                  <p className="text-primary">
+                    {selectedJob.latency_ms ? `${selectedJob.latency_ms}ms` : "-"}
+                  </p>
                 </div>
                 <div>
                   <Label className="text-muted-foreground">Speedup</Label>
-                  <p className="text-primary">{selectedJob.speedup ? `${selectedJob.speedup.toFixed(2)}x` : '-'}</p>
+                  <p className="text-primary">
+                    {selectedJob.speedup ? `${selectedJob.speedup.toFixed(2)}x` : "-"}
+                  </p>
                 </div>
               </div>
 
               <div>
                 <Label className="text-muted-foreground">Enabled Modules</Label>
                 <div className="flex flex-wrap gap-1 mt-1">
-                  {Array.isArray(selectedJob.enabled_modules) && selectedJob.enabled_modules.map((m: string) => (
-                    <Badge key={m} variant="outline">{m}</Badge>
-                  ))}
+                  {Array.isArray(selectedJob.enabled_modules) &&
+                    selectedJob.enabled_modules.map((m: string) => (
+                      <Badge key={m} variant="outline">
+                        {m}
+                      </Badge>
+                    ))}
                 </div>
               </div>
 
@@ -582,9 +656,13 @@ const InferencePage = () => {
               )}
 
               <div className="grid grid-cols-2 gap-4 text-sm text-muted-foreground">
-                <div>Created: {format(new Date(selectedJob.created_at), 'PPpp')}</div>
-                {selectedJob.started_at && <div>Started: {format(new Date(selectedJob.started_at), 'PPpp')}</div>}
-                {selectedJob.completed_at && <div>Completed: {format(new Date(selectedJob.completed_at), 'PPpp')}</div>}
+                <div>Created: {format(new Date(selectedJob.created_at), "PPpp")}</div>
+                {selectedJob.started_at && (
+                  <div>Started: {format(new Date(selectedJob.started_at), "PPpp")}</div>
+                )}
+                {selectedJob.completed_at && (
+                  <div>Completed: {format(new Date(selectedJob.completed_at), "PPpp")}</div>
+                )}
               </div>
             </div>
           )}

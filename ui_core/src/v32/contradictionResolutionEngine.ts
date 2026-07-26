@@ -14,7 +14,8 @@ export interface KnowledgeNode {
 export interface ResolutionVerdict {
   nodeAId: string;
   nodeBId: string;
-  resolutionAction: "Replace_A_With_B" | "Replace_B_With_A" | "Merge_Fields" | "Quarantine_Both" | "Flag_For_Human";
+  resolutionAction:
+    "Replace_A_With_B" | "Replace_B_With_A" | "Merge_Fields" | "Quarantine_Both" | "Flag_For_Human";
   reasoning: string;
   verifiedKnowledgeState: string;
 }
@@ -22,10 +23,21 @@ export interface ResolutionVerdict {
 export class ContradictionResolutionEngine {
   resolveConflict(a: KnowledgeNode, b: KnowledgeNode): ResolutionVerdict {
     // Score factors
-    const scoreA = a.sourceAuthority * 0.4 + (a.historicalSuccessCount * 0.3) + (a.freshnessTimestamp * 0.0000000001 * 0.3);
-    const scoreB = b.sourceAuthority * 0.4 + (b.historicalSuccessCount * 0.3) + (b.freshnessTimestamp * 0.0000000001 * 0.3);
+    const scoreA =
+      a.sourceAuthority * 0.4 +
+      a.historicalSuccessCount * 0.3 +
+      a.freshnessTimestamp * 0.0000000001 * 0.3;
+    const scoreB =
+      b.sourceAuthority * 0.4 +
+      b.historicalSuccessCount * 0.3 +
+      b.freshnessTimestamp * 0.0000000001 * 0.3;
 
-    let resolutionAction: "Replace_A_With_B" | "Replace_B_With_A" | "Merge_Fields" | "Quarantine_Both" | "Flag_For_Human" = "Flag_For_Human";
+    let resolutionAction:
+      | "Replace_A_With_B"
+      | "Replace_B_With_A"
+      | "Merge_Fields"
+      | "Quarantine_Both"
+      | "Flag_For_Human" = "Flag_For_Human";
     let reasoning = "";
     let verifiedKnowledgeState = "";
 
@@ -48,7 +60,8 @@ export class ContradictionResolutionEngine {
     } else if (Math.abs(a.freshnessTimestamp - b.freshnessTimestamp) < 3600 * 24 * 1000) {
       // Very close timestamps and comparable authority => flag/quarantine
       resolutionAction = "Quarantine_Both";
-      reasoning = "High contradiction parity with similar timestamps and authority levels. Quarantining nodes.";
+      reasoning =
+        "High contradiction parity with similar timestamps and authority levels. Quarantining nodes.";
       verifiedKnowledgeState = `[QUARANTINED CONTRADICTION] Option A: "${a.statement}" vs Option B: "${b.statement}"`;
     } else {
       // Prefer fresher node
@@ -68,7 +81,7 @@ export class ContradictionResolutionEngine {
       nodeBId: b.id,
       resolutionAction,
       reasoning,
-      verifiedKnowledgeState
+      verifiedKnowledgeState,
     };
   }
 }

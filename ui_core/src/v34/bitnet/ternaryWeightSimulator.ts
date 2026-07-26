@@ -35,7 +35,9 @@ export class TernaryWeightSimulator {
     const originalMean = originalSum / totalSize;
     const simulatedMean = simulatedSum / totalSize;
     const clampedValuesPct = parseFloat(((nonZeroCount / totalSize) * 100).toFixed(1));
-    const quantizationLossDb = parseFloat((0.85 + Math.abs(originalMean - simulatedMean) * 4.2).toFixed(2));
+    const quantizationLossDb = parseFloat(
+      (0.85 + Math.abs(originalMean - simulatedMean) * 4.2).toFixed(2),
+    );
 
     return {
       matrixRows: rows,
@@ -43,7 +45,7 @@ export class TernaryWeightSimulator {
       clampedValuesPct,
       originalMean: parseFloat(originalMean.toFixed(4)),
       simulatedMean: parseFloat(simulatedMean.toFixed(4)),
-      quantizationLossDb
+      quantizationLossDb,
     };
   }
 }

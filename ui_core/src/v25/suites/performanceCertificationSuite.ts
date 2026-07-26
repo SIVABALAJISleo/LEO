@@ -26,13 +26,13 @@ export class PerformanceCertificationSuite {
       ramUsageGb: 4.8,
       p99LatencyMs: 135,
       queriesPerSecond: 280,
-      intelligencePerWatt: 97.4
+      intelligencePerWatt: 97.4,
     };
 
     return {
       timestamp: Date.now(),
       telemetry,
-      efficiencyRating: "Optimal"
+      efficiencyRating: "Optimal",
     };
   }
 }

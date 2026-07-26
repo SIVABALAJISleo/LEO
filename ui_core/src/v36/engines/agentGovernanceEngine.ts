@@ -17,8 +17,16 @@ export interface SwarmCompliance {
 
 export class AgentGovernanceEngine {
   private constitution: ConstitutionClause[] = [
-    { id: "c-01", clauseText: "Never execute nested loops exceeding 10 intervals.", enforced: true },
-    { id: "c-02", clauseText: "Limit maximum token operations cost to $5.0 per query.", enforced: true }
+    {
+      id: "c-01",
+      clauseText: "Never execute nested loops exceeding 10 intervals.",
+      enforced: true,
+    },
+    {
+      id: "c-02",
+      clauseText: "Limit maximum token operations cost to $5.0 per query.",
+      enforced: true,
+    },
   ];
 
   private accumCostUsd = 0.0;
@@ -29,17 +37,18 @@ export class AgentGovernanceEngine {
   public auditSwarms(
     agentCount: number,
     costEstimated: number,
-    disagreementDetected: boolean
+    disagreementDetected: boolean,
   ): SwarmCompliance {
     this.accumCostUsd += costEstimated;
-    
+
     // Safety thresholds
     const loopDetected = agentCount > 12; // Swarm limit
     const governanceScore = loopDetected ? 65.0 : 99.2;
-    
+
     let arbitrationVerdict = "Swarm operation complying with policies.";
     if (disagreementDetected) {
-      arbitrationVerdict = "Disagreement detected. Swarm consensus layer resolved lock via majority vote.";
+      arbitrationVerdict =
+        "Disagreement detected. Swarm consensus layer resolved lock via majority vote.";
     }
 
     return {
@@ -47,7 +56,7 @@ export class AgentGovernanceEngine {
       activeAgentsCount: agentCount,
       governanceScore,
       accumulatedCostUsd: parseFloat(this.accumCostUsd.toFixed(4)),
-      arbitrationVerdict
+      arbitrationVerdict,
     };
   }
 

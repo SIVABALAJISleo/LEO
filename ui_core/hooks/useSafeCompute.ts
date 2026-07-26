@@ -1,29 +1,29 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from "react";
 import {
   SafeComputeJob,
   SafeComputeStatus,
   JobQueueStats,
   SystemLoad,
   ModelVariant,
-} from '@/lib/safeCompute/types';
-import { safeComputeJobManager } from '@/lib/safeCompute/SafeComputeJobManager';
-import { smartLoadController } from '@/lib/safeCompute/SmartLoadController';
-import { offlineJobRunner } from '@/lib/safeCompute/OfflineJobRunner';
-import { thermalGuardian } from '@/lib/safeCompute/ThermalGuardian';
-import { adaptiveModelSelector } from '@/lib/safeCompute/AdaptiveModelSelector';
-import { metricSeparator } from '@/lib/safeCompute/MetricSeparator';
-import { saturationGuard } from '@/lib/safeCompute/SaturationGuard';
-import { similarityCollapseEngine } from '@/lib/safeCompute/SimilarityCollapseEngine';
-import { completionLock } from '@/lib/safeCompute/CompletionLock';
-import { perceptionEquivalence } from '@/lib/safeCompute/PerceptionEquivalence';
-import { progressiveCertainty } from '@/lib/safeCompute/ProgressiveCertainty';
-import { outcomeSubstitution } from '@/lib/safeCompute/OutcomeSubstitution';
-import { finalGapResolution } from '@/lib/safeCompute/FinalGapResolution';
-import { constraintInversion } from '@/lib/safeCompute/ConstraintInversion';
-import { impactNullification } from '@/lib/safeCompute/ImpactNullification';
-import { workloadReassignment } from '@/lib/safeCompute/WorkloadReassignment';
-import { reflexDelegation } from '@/lib/safeCompute/ReflexDelegation';
-import { executionClassRouter } from '@/lib/safeCompute/ExecutionClassRouter';
+} from "@/lib/safeCompute/types";
+import { safeComputeJobManager } from "@/lib/safeCompute/SafeComputeJobManager";
+import { smartLoadController } from "@/lib/safeCompute/SmartLoadController";
+import { offlineJobRunner } from "@/lib/safeCompute/OfflineJobRunner";
+import { thermalGuardian } from "@/lib/safeCompute/ThermalGuardian";
+import { adaptiveModelSelector } from "@/lib/safeCompute/AdaptiveModelSelector";
+import { metricSeparator } from "@/lib/safeCompute/MetricSeparator";
+import { saturationGuard } from "@/lib/safeCompute/SaturationGuard";
+import { similarityCollapseEngine } from "@/lib/safeCompute/SimilarityCollapseEngine";
+import { completionLock } from "@/lib/safeCompute/CompletionLock";
+import { perceptionEquivalence } from "@/lib/safeCompute/PerceptionEquivalence";
+import { progressiveCertainty } from "@/lib/safeCompute/ProgressiveCertainty";
+import { outcomeSubstitution } from "@/lib/safeCompute/OutcomeSubstitution";
+import { finalGapResolution } from "@/lib/safeCompute/FinalGapResolution";
+import { constraintInversion } from "@/lib/safeCompute/ConstraintInversion";
+import { impactNullification } from "@/lib/safeCompute/ImpactNullification";
+import { workloadReassignment } from "@/lib/safeCompute/WorkloadReassignment";
+import { reflexDelegation } from "@/lib/safeCompute/ReflexDelegation";
+import { executionClassRouter } from "@/lib/safeCompute/ExecutionClassRouter";
 
 export function useSafeCompute() {
   const [jobs, setJobs] = useState<SafeComputeJob[]>([]);
@@ -32,7 +32,9 @@ export function useSafeCompute() {
   const [pendingSyncs, setPendingSyncs] = useState(0);
   const [thermalState, setThermalState] = useState(thermalGuardian.getState());
   const [currentModel, setCurrentModel] = useState<ModelVariant | null>(null);
-  const [queueStats, setQueueStats] = useState<JobQueueStats>(safeComputeJobManager.getQueueStats());
+  const [queueStats, setQueueStats] = useState<JobQueueStats>(
+    safeComputeJobManager.getQueueStats(),
+  );
 
   useEffect(() => {
     // Subscribe to job updates
@@ -67,7 +69,7 @@ export function useSafeCompute() {
     smartLoadController.setDefaultUnknownMetrics();
     thermalGuardian.setDefaultUnknownTemperatures();
     adaptiveModelSelector.selectOptimalModel(smartLoadController.getSystemLoad());
-    
+
     // No interval for fake metrics - agent will push real updates when connected
 
     return () => {
@@ -128,18 +130,21 @@ export function useSafeCompute() {
   }, []);
 
   // Perception-Equivalence methods
-  const checkPerceptionEquivalence = useCallback((
-    taskId: string,
-    metadata: {
-      outputConsumer: 'human' | 'machine' | 'mixed';
-      perceptionThresholdMet: boolean;
-      allowsSilentCorrection: boolean;
-      category: string;
-      requiresDeterminism: boolean;
-    }
-  ) => {
-    return perceptionEquivalence.checkApplicability(taskId, metadata);
-  }, []);
+  const checkPerceptionEquivalence = useCallback(
+    (
+      taskId: string,
+      metadata: {
+        outputConsumer: "human" | "machine" | "mixed";
+        perceptionThresholdMet: boolean;
+        allowsSilentCorrection: boolean;
+        category: string;
+        requiresDeterminism: boolean;
+      },
+    ) => {
+      return perceptionEquivalence.checkApplicability(taskId, metadata);
+    },
+    [],
+  );
 
   const getPerceptionStatus = useCallback(() => {
     return perceptionEquivalence.getStatus();
@@ -158,28 +163,34 @@ export function useSafeCompute() {
   }, []);
 
   // Progressive-Certainty methods
-  const initializeProgressiveResponse = useCallback((
-    taskId: string,
-    metadata: {
-      isHeavy: boolean;
-      isUncertain: boolean;
-      isTimeBound: boolean;
-      estimatedDurationMs: number;
-    }
-  ) => {
-    return progressiveCertainty.initializeProgressiveResponse(taskId, metadata);
-  }, []);
+  const initializeProgressiveResponse = useCallback(
+    (
+      taskId: string,
+      metadata: {
+        isHeavy: boolean;
+        isUncertain: boolean;
+        isTimeBound: boolean;
+        estimatedDurationMs: number;
+      },
+    ) => {
+      return progressiveCertainty.initializeProgressiveResponse(taskId, metadata);
+    },
+    [],
+  );
 
-  const updateProgressiveCertainty = useCallback((
-    taskId: string,
-    update: {
-      phase?: 'progressive' | 'converging' | 'complete';
-      confidenceLevel?: number;
-      userMessage?: string;
-    }
-  ) => {
-    return progressiveCertainty.updateProgress(taskId, update);
-  }, []);
+  const updateProgressiveCertainty = useCallback(
+    (
+      taskId: string,
+      update: {
+        phase?: "progressive" | "converging" | "complete";
+        confidenceLevel?: number;
+        userMessage?: string;
+      },
+    ) => {
+      return progressiveCertainty.updateProgress(taskId, update);
+    },
+    [],
+  );
 
   const getCertaintyStatus = useCallback(() => {
     return progressiveCertainty.getStatus();
@@ -202,28 +213,34 @@ export function useSafeCompute() {
   }, []);
 
   // Outcome-Substitution methods
-  const checkOutcomeSubstitution = useCallback((
-    taskId: string,
-    metadata: {
-      successMetric: 'goal_based' | 'mechanism_based';
-      outcomePreserved: boolean;
-      requiresOriginalMechanism: boolean;
-      requestsCertifiedEquivalence: boolean;
-    }
-  ) => {
-    return outcomeSubstitution.checkApplicability(taskId, metadata);
-  }, []);
+  const checkOutcomeSubstitution = useCallback(
+    (
+      taskId: string,
+      metadata: {
+        successMetric: "goal_based" | "mechanism_based";
+        outcomePreserved: boolean;
+        requiresOriginalMechanism: boolean;
+        requestsCertifiedEquivalence: boolean;
+      },
+    ) => {
+      return outcomeSubstitution.checkApplicability(taskId, metadata);
+    },
+    [],
+  );
 
-  const canAvoidBruteForce = useCallback((
-    taskId: string,
-    metadata: {
-      requiresExhaustiveComputation: boolean;
-      hasDecisionBounds: boolean;
-      hasGuaranteeShortcut: boolean;
-    }
-  ) => {
-    return outcomeSubstitution.canAvoidBruteForce(taskId, metadata);
-  }, []);
+  const canAvoidBruteForce = useCallback(
+    (
+      taskId: string,
+      metadata: {
+        requiresExhaustiveComputation: boolean;
+        hasDecisionBounds: boolean;
+        hasGuaranteeShortcut: boolean;
+      },
+    ) => {
+      return outcomeSubstitution.canAvoidBruteForce(taskId, metadata);
+    },
+    [],
+  );
 
   const getOutcomeStatus = useCallback(() => {
     return outcomeSubstitution.getStatus();
@@ -242,84 +259,102 @@ export function useSafeCompute() {
   }, []);
 
   // Final Gap Resolution methods
-  const checkOutcomeGovernance = useCallback((
-    taskId: string,
-    metadata: {
-      hasReflexDependency?: boolean;
-      reflexLatencyMs?: number;
-      isPrivateHeavyCompute?: boolean;
-      requiresGlobalSync?: boolean;
-      isRegulated?: boolean;
-      requiresZeroTolerance?: boolean;
-    }
-  ) => {
-    return finalGapResolution.checkOutcomeGovernance(taskId, metadata);
-  }, []);
+  const checkOutcomeGovernance = useCallback(
+    (
+      taskId: string,
+      metadata: {
+        hasReflexDependency?: boolean;
+        reflexLatencyMs?: number;
+        isPrivateHeavyCompute?: boolean;
+        requiresGlobalSync?: boolean;
+        isRegulated?: boolean;
+        requiresZeroTolerance?: boolean;
+      },
+    ) => {
+      return finalGapResolution.checkOutcomeGovernance(taskId, metadata);
+    },
+    [],
+  );
 
-  const isDecisionComplete = useCallback((
-    taskId: string,
-    state: {
-      userCanDecide: boolean;
-      userCanProceed: boolean;
-      hasBoundedResult?: boolean;
-      hasEquivalenceClass?: boolean;
-      hasSufficientConvergence?: boolean;
-      hasExternalOrchestration?: boolean;
-      hasSilentCorrection?: boolean;
-    }
-  ) => {
-    return finalGapResolution.isDecisionComplete(taskId, state);
-  }, []);
+  const isDecisionComplete = useCallback(
+    (
+      taskId: string,
+      state: {
+        userCanDecide: boolean;
+        userCanProceed: boolean;
+        hasBoundedResult?: boolean;
+        hasEquivalenceClass?: boolean;
+        hasSufficientConvergence?: boolean;
+        hasExternalOrchestration?: boolean;
+        hasSilentCorrection?: boolean;
+      },
+    ) => {
+      return finalGapResolution.isDecisionComplete(taskId, state);
+    },
+    [],
+  );
 
-  const neutralizeReflexDependency = useCallback((
-    taskId: string,
-    metadata: {
-      requiredLatencyMs: number;
-      actionEnvelope?: unknown;
-      preAuthorizedZones?: string[];
-      hasRollbackAuthority?: boolean;
-      hasPeerLatencyIsolation?: boolean;
-    }
-  ) => {
-    return finalGapResolution.neutralizeReflexDependency(taskId, metadata);
-  }, []);
+  const neutralizeReflexDependency = useCallback(
+    (
+      taskId: string,
+      metadata: {
+        requiredLatencyMs: number;
+        actionEnvelope?: unknown;
+        preAuthorizedZones?: string[];
+        hasRollbackAuthority?: boolean;
+        hasPeerLatencyIsolation?: boolean;
+      },
+    ) => {
+      return finalGapResolution.neutralizeReflexDependency(taskId, metadata);
+    },
+    [],
+  );
 
-  const createDecisionEnvelope = useCallback((
-    taskId: string,
-    metadata: {
-      estimatedMinBound: number;
-      estimatedMaxBound: number;
-      equivalenceGroup: string;
-      canDeferCertification: boolean;
-    }
-  ) => {
-    return finalGapResolution.createDecisionEnvelope(taskId, metadata);
-  }, []);
+  const createDecisionEnvelope = useCallback(
+    (
+      taskId: string,
+      metadata: {
+        estimatedMinBound: number;
+        estimatedMaxBound: number;
+        equivalenceGroup: string;
+        canDeferCertification: boolean;
+      },
+    ) => {
+      return finalGapResolution.createDecisionEnvelope(taskId, metadata);
+    },
+    [],
+  );
 
-  const createTemporalTruthLayer = useCallback((
-    taskId: string,
-    metadata: {
-      draftValue: unknown;
-      isDraftSufficient: boolean;
-      stableValue?: unknown;
-      isStableExact?: boolean;
-      stableEtaMs?: number;
-    }
-  ) => {
-    return finalGapResolution.createTemporalTruthLayer(taskId, metadata);
-  }, []);
+  const createTemporalTruthLayer = useCallback(
+    (
+      taskId: string,
+      metadata: {
+        draftValue: unknown;
+        isDraftSufficient: boolean;
+        stableValue?: unknown;
+        isStableExact?: boolean;
+        stableEtaMs?: number;
+      },
+    ) => {
+      return finalGapResolution.createTemporalTruthLayer(taskId, metadata);
+    },
+    [],
+  );
 
-  const delegateRegulatedExecution = useCallback((
-    taskId: string,
-    metadata: {
-      certifiedExecutor: string;
-      inputsManaged: boolean;
-      proofsLogged: boolean;
-      integrityVerified: boolean;
-    }
-  ) => {
-    return finalGapResolution.delegateRegulatedExecution(taskId, metadata);
-  }, []);
+  const delegateRegulatedExecution = useCallback(
+    (
+      taskId: string,
+      metadata: {
+        certifiedExecutor: string;
+        inputsManaged: boolean;
+        proofsLogged: boolean;
+        integrityVerified: boolean;
+      },
+    ) => {
+      return finalGapResolution.delegateRegulatedExecution(taskId, metadata);
+    },
+    [],
+  );
 
   const getFinalGapStatus = useCallback(() => {
     return finalGapResolution.getStatus();
@@ -346,7 +381,7 @@ export function useSafeCompute() {
     thermalState,
     currentModel,
     queueStats,
-    
+
     // Methods
     getStatus,
     canAcceptJob,
@@ -354,20 +389,20 @@ export function useSafeCompute() {
     getThermalLevel,
     getRecommendedAction,
     getModelRecommendation,
-    
+
     // Enforcement methods
     getMetrics,
     getSaturationStatus,
     checkWorkloadCollapse,
     getSystemVerification,
-    
+
     // Perception-Equivalence methods
     checkPerceptionEquivalence,
     getPerceptionStatus,
     confirmCeilingSafety,
     getPerceptionAssertion,
     verifyExperientialCompleteness,
-    
+
     // Progressive-Certainty methods
     initializeProgressiveResponse,
     updateProgressiveCertainty,
@@ -376,7 +411,7 @@ export function useSafeCompute() {
     confirmCertaintySafety,
     getCertaintyAssertion,
     verifyTrustCompleteness,
-    
+
     // Outcome-Substitution methods
     checkOutcomeSubstitution,
     canAvoidBruteForce,
@@ -384,7 +419,7 @@ export function useSafeCompute() {
     confirmOutcomeSafety,
     getOutcomeAssertion,
     verifyOutcomeCompleteness,
-    
+
     // Final Gap Resolution methods
     checkOutcomeGovernance,
     isDecisionComplete,
@@ -396,218 +431,329 @@ export function useSafeCompute() {
     confirmFinalGapSafety,
     getFinalGapAssertion,
     verifyGapClosure,
-    
+
     // Constraint Inversion methods
-    invertConstraint: useCallback((
-      taskId: string,
-      constraint: 'physical_time' | 'novelty' | 'determinism' | 'hardware_fragility',
-      metadata?: {
-        canPreExecute?: boolean;
-        hasBoundedPossibilities?: boolean;
-        hasExternalAuthority?: boolean;
-        canDesignForFailure?: boolean;
-      }
-    ) => constraintInversion.invertConstraint(taskId, constraint, metadata), []),
-    
-    applyTemporalInversion: useCallback((
-      taskId: string,
-      metadata: { intentDetected: boolean; preExecutionPossible: boolean; rollbackCost: 'zero' | 'low' | 'medium' }
-    ) => constraintInversion.applyTemporalInversion(taskId, metadata), []),
-    
-    applyOutcomeSpaceBounding: useCallback((
-      taskId: string,
-      possibilities: string[],
-      weights: Record<string, number>
-    ) => constraintInversion.applyOutcomeSpaceBounding(taskId, possibilities, weights), []),
-    
-    applyAuthorityDelegation: useCallback((
-      taskId: string,
-      delegateTo: string,
-      artifactTypes: ('logs' | 'traces' | 'proofs')[]
-    ) => constraintInversion.applyAuthorityDelegation(taskId, delegateTo, artifactTypes), []),
-    
-    applyEntropyDilution: useCallback((
-      taskId: string,
-      design: { hasCheckpoints: boolean; isIdempotent: boolean; hasReplicas: number }
-    ) => constraintInversion.applyEntropyDilution(taskId, design), []),
-    
+    invertConstraint: useCallback(
+      (
+        taskId: string,
+        constraint: "physical_time" | "novelty" | "determinism" | "hardware_fragility",
+        metadata?: {
+          canPreExecute?: boolean;
+          hasBoundedPossibilities?: boolean;
+          hasExternalAuthority?: boolean;
+          canDesignForFailure?: boolean;
+        },
+      ) => constraintInversion.invertConstraint(taskId, constraint, metadata),
+      [],
+    ),
+
+    applyTemporalInversion: useCallback(
+      (
+        taskId: string,
+        metadata: {
+          intentDetected: boolean;
+          preExecutionPossible: boolean;
+          rollbackCost: "zero" | "low" | "medium";
+        },
+      ) => constraintInversion.applyTemporalInversion(taskId, metadata),
+      [],
+    ),
+
+    applyOutcomeSpaceBounding: useCallback(
+      (taskId: string, possibilities: string[], weights: Record<string, number>) =>
+        constraintInversion.applyOutcomeSpaceBounding(taskId, possibilities, weights),
+      [],
+    ),
+
+    applyAuthorityDelegation: useCallback(
+      (taskId: string, delegateTo: string, artifactTypes: ("logs" | "traces" | "proofs")[]) =>
+        constraintInversion.applyAuthorityDelegation(taskId, delegateTo, artifactTypes),
+      [],
+    ),
+
+    applyEntropyDilution: useCallback(
+      (
+        taskId: string,
+        design: { hasCheckpoints: boolean; isIdempotent: boolean; hasReplicas: number },
+      ) => constraintInversion.applyEntropyDilution(taskId, design),
+      [],
+    ),
+
     getConstraintInversionStatus: useCallback(() => constraintInversion.getStatus(), []),
     confirmConstraintSafety: useCallback(() => constraintInversion.confirmCeilingSafety(), []),
     getConstraintAssertion: useCallback(() => constraintInversion.getFinalAssertion(), []),
-    verifyInversionCompleteness: useCallback(() => constraintInversion.verifyInversionCompleteness(), []),
-    
+    verifyInversionCompleteness: useCallback(
+      () => constraintInversion.verifyInversionCompleteness(),
+      [],
+    ),
+
     // Impact Nullification methods
-    nullifyImpact: useCallback((
-      taskId: string,
-      constraintType: 'temporal' | 'entropy' | 'asymmetry' | 'reality' | 'expectation'
-    ) => impactNullification.nullifyImpact(taskId, constraintType), []),
-    
-    applyTemporalInversionNullification: useCallback((
-      taskId: string,
-      metadata: { canCommitEarly: boolean; resultCanBeBounded: boolean; resultCanBeReversible: boolean }
-    ) => impactNullification.applyTemporalInversion(taskId, metadata), []),
-    
-    applyEntropyBounding: useCallback((
-      taskId: string,
-      metadata: { impossibilityRegions: string[]; dominanceRanges: [number, number][]; confidenceMin: number; confidenceMax: number }
-    ) => impactNullification.applyEntropyBounding(taskId, metadata), []),
-    
-    applyAsymmetryCollapse: useCallback((
-      taskId: string,
-      metadata: { expertDecomposition: boolean; delegatedIntelligence: boolean; ensembleCollapse: boolean }
-    ) => impactNullification.applyAsymmetryCollapse(taskId, metadata), []),
-    
-    applyRealityDecoupling: useCallback((
-      taskId: string,
-      metadata: { hasCheckpoints: boolean; hasReplayLog: boolean; stateIsSerializable: boolean; hasRedundancy: boolean }
-    ) => impactNullification.applyRealityDecoupling(taskId, metadata), []),
-    
-    applyExpectationGovernance: useCallback((
-      taskId: string,
-      metadata: { earlyAnchor: boolean; continuousSignals: boolean; noSilence: boolean; noSurprise: boolean; noAmbiguity: boolean }
-    ) => impactNullification.applyExpectationGovernance(taskId, metadata), []),
-    
+    nullifyImpact: useCallback(
+      (
+        taskId: string,
+        constraintType: "temporal" | "entropy" | "asymmetry" | "reality" | "expectation",
+      ) => impactNullification.nullifyImpact(taskId, constraintType),
+      [],
+    ),
+
+    applyTemporalInversionNullification: useCallback(
+      (
+        taskId: string,
+        metadata: {
+          canCommitEarly: boolean;
+          resultCanBeBounded: boolean;
+          resultCanBeReversible: boolean;
+        },
+      ) => impactNullification.applyTemporalInversion(taskId, metadata),
+      [],
+    ),
+
+    applyEntropyBounding: useCallback(
+      (
+        taskId: string,
+        metadata: {
+          impossibilityRegions: string[];
+          dominanceRanges: [number, number][];
+          confidenceMin: number;
+          confidenceMax: number;
+        },
+      ) => impactNullification.applyEntropyBounding(taskId, metadata),
+      [],
+    ),
+
+    applyAsymmetryCollapse: useCallback(
+      (
+        taskId: string,
+        metadata: {
+          expertDecomposition: boolean;
+          delegatedIntelligence: boolean;
+          ensembleCollapse: boolean;
+        },
+      ) => impactNullification.applyAsymmetryCollapse(taskId, metadata),
+      [],
+    ),
+
+    applyRealityDecoupling: useCallback(
+      (
+        taskId: string,
+        metadata: {
+          hasCheckpoints: boolean;
+          hasReplayLog: boolean;
+          stateIsSerializable: boolean;
+          hasRedundancy: boolean;
+        },
+      ) => impactNullification.applyRealityDecoupling(taskId, metadata),
+      [],
+    ),
+
+    applyExpectationGovernance: useCallback(
+      (
+        taskId: string,
+        metadata: {
+          earlyAnchor: boolean;
+          continuousSignals: boolean;
+          noSilence: boolean;
+          noSurprise: boolean;
+          noAmbiguity: boolean;
+        },
+      ) => impactNullification.applyExpectationGovernance(taskId, metadata),
+      [],
+    ),
+
     getImpactNullificationStatus: useCallback(() => impactNullification.getStatus(), []),
     confirmImpactSafety: useCallback(() => impactNullification.confirmCeilingSafety(), []),
     getImpactAssertion: useCallback(() => impactNullification.getFinalAssertion(), []),
-    verifyNullificationCompleteness: useCallback(() => impactNullification.verifyNullificationCompleteness(), []),
-    
+    verifyNullificationCompleteness: useCallback(
+      () => impactNullification.verifyNullificationCompleteness(),
+      [],
+    ),
+
     // Workload Reassignment methods
-    classifyWorkload: useCallback((
-      workloadId: string,
-      characteristics: {
-        latencyRequirement: 'ultra_low' | 'normal' | 'flexible';
-        isDeterministic: boolean;
-        isDeviceBound: boolean;
-        isPredictable: boolean;
-        isProgressiveAcceptable: boolean;
-        isRare: boolean;
-        requiresSynchronization: boolean;
-      }
-    ) => workloadReassignment.classifyWorkload(workloadId, characteristics), []),
-    
-    executeWorkload: useCallback((workloadId: string) => 
-      workloadReassignment.executeWorkload(workloadId), []),
-    
-    handleLocalReflexExecution: useCallback((workloadId: string) => 
-      workloadReassignment.handleLocalReflexExecution(workloadId), []),
-    
-    handleIntelligenceDominantExecution: useCallback((workloadId: string) => 
-      workloadReassignment.handleIntelligenceDominantExecution(workloadId), []),
-    
-    handleBurstFederatedExecution: useCallback((workloadId: string) => 
-      workloadReassignment.handleBurstFederatedExecution(workloadId), []),
-    
-    getCoverageAccounting: useCallback(() => 
-      workloadReassignment.getCoverageAccounting(), []),
-    
-    validateExecutionBehavior: useCallback((workloadId: string) => 
-      workloadReassignment.validateExecutionBehavior(workloadId), []),
-    
-    getWorkloadReassignmentStatus: useCallback(() => 
-      workloadReassignment.getWorkloadReassignmentStatus(), []),
-    
-    confirmWorkloadSafety: useCallback(() => 
-      workloadReassignment.confirmWorkloadSafety(), []),
-    
-    getWorkloadAssertion: useCallback(() => 
-      workloadReassignment.getWorkloadAssertion(), []),
-    
-    verifyReassignmentCompleteness: useCallback(() => 
-      workloadReassignment.verifyReassignmentCompleteness(), []),
-    
+    classifyWorkload: useCallback(
+      (
+        workloadId: string,
+        characteristics: {
+          latencyRequirement: "ultra_low" | "normal" | "flexible";
+          isDeterministic: boolean;
+          isDeviceBound: boolean;
+          isPredictable: boolean;
+          isProgressiveAcceptable: boolean;
+          isRare: boolean;
+          requiresSynchronization: boolean;
+        },
+      ) => workloadReassignment.classifyWorkload(workloadId, characteristics),
+      [],
+    ),
+
+    executeWorkload: useCallback(
+      (workloadId: string) => workloadReassignment.executeWorkload(workloadId),
+      [],
+    ),
+
+    handleLocalReflexExecution: useCallback(
+      (workloadId: string) => workloadReassignment.handleLocalReflexExecution(workloadId),
+      [],
+    ),
+
+    handleIntelligenceDominantExecution: useCallback(
+      (workloadId: string) => workloadReassignment.handleIntelligenceDominantExecution(workloadId),
+      [],
+    ),
+
+    handleBurstFederatedExecution: useCallback(
+      (workloadId: string) => workloadReassignment.handleBurstFederatedExecution(workloadId),
+      [],
+    ),
+
+    getCoverageAccounting: useCallback(() => workloadReassignment.getCoverageAccounting(), []),
+
+    validateExecutionBehavior: useCallback(
+      (workloadId: string) => workloadReassignment.validateExecutionBehavior(workloadId),
+      [],
+    ),
+
+    getWorkloadReassignmentStatus: useCallback(
+      () => workloadReassignment.getWorkloadReassignmentStatus(),
+      [],
+    ),
+
+    confirmWorkloadSafety: useCallback(() => workloadReassignment.confirmWorkloadSafety(), []),
+
+    getWorkloadAssertion: useCallback(() => workloadReassignment.getWorkloadAssertion(), []),
+
+    verifyReassignmentCompleteness: useCallback(
+      () => workloadReassignment.verifyReassignmentCompleteness(),
+      [],
+    ),
+
     // Reflex-Delegation + Outcome-Space Lock methods
-    reassignReflexTask: useCallback((
-      taskId: string,
-      metadata: {
-        requiredLatencyMs: number;
-        isUserInputDependent: boolean;
-        requiresRealTimeResponse: boolean;
-      }
-    ) => reflexDelegation.reassignReflexTask(taskId, metadata), []),
-    
-    resolveByOutcomeSpace: useCallback((
-      taskId: string,
-      computeMetadata: {
-        isNovelComputation: boolean;
-        isPrivate: boolean;
-        isNonCacheable: boolean;
-        canProvideBoundedRanges: boolean;
-        canProvideConfidenceEnvelopes: boolean;
-        canProvideDominanceRegions: boolean;
-        canProvideDecisionSufficientEstimates: boolean;
-      }
-    ) => reflexDelegation.resolveByOutcomeSpace(taskId, computeMetadata), []),
-    
-    canHandleWithoutBlocking: useCallback((
-      taskId: string,
-      taskMetadata: {
-        requiredLatencyMs: number;
-        isNovelComputation: boolean;
-        isPrivate: boolean;
-      }
-    ) => reflexDelegation.canHandleWithoutBlocking(taskId, taskMetadata), []),
-    
-    confirmGapElimination: useCallback(() => 
-      reflexDelegation.confirmGapElimination(), []),
-    
-    getReflexDelegationStatus: useCallback(() => 
-      reflexDelegation.getStatus(), []),
-    
-    getReflexFinalAssertion: useCallback(() => 
-      reflexDelegation.getFinalAssertion(), []),
-    
-    confirmReflexCeilingSafety: useCallback(() => 
-      reflexDelegation.confirmCeilingSafety(), []),
-    
-    verifyConstraintClassification: useCallback(() => 
-      reflexDelegation.verifyConstraintClassification(), []),
-    
+    reassignReflexTask: useCallback(
+      (
+        taskId: string,
+        metadata: {
+          requiredLatencyMs: number;
+          isUserInputDependent: boolean;
+          requiresRealTimeResponse: boolean;
+        },
+      ) => reflexDelegation.reassignReflexTask(taskId, metadata),
+      [],
+    ),
+
+    resolveByOutcomeSpace: useCallback(
+      (
+        taskId: string,
+        computeMetadata: {
+          isNovelComputation: boolean;
+          isPrivate: boolean;
+          isNonCacheable: boolean;
+          canProvideBoundedRanges: boolean;
+          canProvideConfidenceEnvelopes: boolean;
+          canProvideDominanceRegions: boolean;
+          canProvideDecisionSufficientEstimates: boolean;
+        },
+      ) => reflexDelegation.resolveByOutcomeSpace(taskId, computeMetadata),
+      [],
+    ),
+
+    canHandleWithoutBlocking: useCallback(
+      (
+        taskId: string,
+        taskMetadata: {
+          requiredLatencyMs: number;
+          isNovelComputation: boolean;
+          isPrivate: boolean;
+        },
+      ) => reflexDelegation.canHandleWithoutBlocking(taskId, taskMetadata),
+      [],
+    ),
+
+    confirmGapElimination: useCallback(() => reflexDelegation.confirmGapElimination(), []),
+
+    getReflexDelegationStatus: useCallback(() => reflexDelegation.getStatus(), []),
+
+    getReflexFinalAssertion: useCallback(() => reflexDelegation.getFinalAssertion(), []),
+
+    confirmReflexCeilingSafety: useCallback(() => reflexDelegation.confirmCeilingSafety(), []),
+
+    verifyConstraintClassification: useCallback(
+      () => reflexDelegation.verifyConstraintClassification(),
+      [],
+    ),
+
     // Execution-Class Guarantee Lock methods
-    classifyExecutionClass: useCallback((
-      workloadId: string,
-      criteria: {
-        classA?: { requiresSubEightMsLatency: boolean; isDeterministicHardwareLoop: boolean; noApproximationAllowed: boolean };
-        classB?: { isHumanConsumedOutput: boolean; approximationAcceptable: boolean; progressiveRefinementAcceptable: boolean };
-        classC?: { isRareMassiveCompute: boolean; isTimeBoxed: boolean; noPermamentHardwareRequired: boolean };
-        classD?: { isInfrastructureSupplier: boolean; isCloudGpuOperator: boolean; isHardwareVendor: boolean };
-      }
-    ) => executionClassRouter.classifyWorkload(workloadId, criteria), []),
-    
-    quickClassifyExecution: useCallback((
-      workloadId: string,
-      characteristics: {
-        latencyMs: number;
-        isHumanOutput: boolean;
-        isMassiveCompute: boolean;
-        isProvider: boolean;
-      }
-    ) => executionClassRouter.quickClassify(workloadId, characteristics), []),
-    
-    verifyResponsibilityGuarantee: useCallback((workloadId: string) => 
-      executionClassRouter.verifyResponsibilityGuarantee(workloadId), []),
-    
-    getExecutionCoverageAccounting: useCallback(() => 
-      executionClassRouter.getCoverageAccounting(), []),
-    
-    validateNoDisallowedStates: useCallback((workloadId: string) => 
-      executionClassRouter.validateNoDisallowedStates(workloadId), []),
-    
-    getExecutionRouterStatus: useCallback(() => 
-      executionClassRouter.getStatus(), []),
-    
-    getExecutionFinalAssertion: useCallback(() => 
-      executionClassRouter.getFinalAssertion(), []),
-    
-    confirmExecutionFinalLock: useCallback(() => 
-      executionClassRouter.confirmFinalLock(), []),
-    
-    getExecutionClassification: useCallback((workloadId: string) => 
-      executionClassRouter.getClassification(workloadId), []),
-    
-    getAllExecutionClassifications: useCallback(() => 
-      executionClassRouter.getAllClassifications(), []),
-    
+    classifyExecutionClass: useCallback(
+      (
+        workloadId: string,
+        criteria: {
+          classA?: {
+            requiresSubEightMsLatency: boolean;
+            isDeterministicHardwareLoop: boolean;
+            noApproximationAllowed: boolean;
+          };
+          classB?: {
+            isHumanConsumedOutput: boolean;
+            approximationAcceptable: boolean;
+            progressiveRefinementAcceptable: boolean;
+          };
+          classC?: {
+            isRareMassiveCompute: boolean;
+            isTimeBoxed: boolean;
+            noPermamentHardwareRequired: boolean;
+          };
+          classD?: {
+            isInfrastructureSupplier: boolean;
+            isCloudGpuOperator: boolean;
+            isHardwareVendor: boolean;
+          };
+        },
+      ) => executionClassRouter.classifyWorkload(workloadId, criteria),
+      [],
+    ),
+
+    quickClassifyExecution: useCallback(
+      (
+        workloadId: string,
+        characteristics: {
+          latencyMs: number;
+          isHumanOutput: boolean;
+          isMassiveCompute: boolean;
+          isProvider: boolean;
+        },
+      ) => executionClassRouter.quickClassify(workloadId, characteristics),
+      [],
+    ),
+
+    verifyResponsibilityGuarantee: useCallback(
+      (workloadId: string) => executionClassRouter.verifyResponsibilityGuarantee(workloadId),
+      [],
+    ),
+
+    getExecutionCoverageAccounting: useCallback(
+      () => executionClassRouter.getCoverageAccounting(),
+      [],
+    ),
+
+    validateNoDisallowedStates: useCallback(
+      (workloadId: string) => executionClassRouter.validateNoDisallowedStates(workloadId),
+      [],
+    ),
+
+    getExecutionRouterStatus: useCallback(() => executionClassRouter.getStatus(), []),
+
+    getExecutionFinalAssertion: useCallback(() => executionClassRouter.getFinalAssertion(), []),
+
+    confirmExecutionFinalLock: useCallback(() => executionClassRouter.confirmFinalLock(), []),
+
+    getExecutionClassification: useCallback(
+      (workloadId: string) => executionClassRouter.getClassification(workloadId),
+      [],
+    ),
+
+    getAllExecutionClassifications: useCallback(
+      () => executionClassRouter.getAllClassifications(),
+      [],
+    ),
+
     // Constants
     isEnabled: true,
     isFeatureComplete: completionLock.isFeatureComplete(),
@@ -627,8 +773,8 @@ export function useSafeCompute() {
     is100PercentGuaranteed: true,
     usefulnessLevel: 1.0, // 100% by routing guarantee
     blockingDrawbacks: 0, // 0%
-    residualGap: 'none (reclassified, not ignored)',
+    residualGap: "none (reclassified, not ignored)",
     exactExecutionCeiling: 0.65, // unchanged
-    systemState: 'EXECUTION-ROUTED · RESPONSIBILITY-COMPLETE · 100% GUARANTEED',
+    systemState: "EXECUTION-ROUTED · RESPONSIBILITY-COMPLETE · 100% GUARANTEED",
   };
 }

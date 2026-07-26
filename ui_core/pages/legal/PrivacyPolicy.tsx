@@ -1,11 +1,11 @@
-import { Link } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Footer } from '@/components/Footer';
-import { Navbar } from '@/components/Navbar';
+import { Link } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Footer } from "@/components/Footer";
+import { Navbar } from "@/components/Navbar";
 
-const PRIVACY_VERSION = '1.0.0';
-const EFFECTIVE_DATE = '2026-01-09';
+const PRIVACY_VERSION = "1.0.0";
+const EFFECTIVE_DATE = "2026-01-09";
 
 const PrivacyPolicy = () => {
   return (
@@ -26,7 +26,7 @@ const PrivacyPolicy = () => {
           </p>
 
           <h2>1. Information We Collect</h2>
-          
+
           <h3>Account Information</h3>
           <p>When you create an account, we collect:</p>
           <ul>
@@ -46,8 +46,8 @@ const PrivacyPolicy = () => {
 
           <h3>Job Data</h3>
           <p>
-            We process the input data you submit for jobs. This data is used solely to provide
-            the Service and is not shared with third parties.
+            We process the input data you submit for jobs. This data is used solely to provide the
+            Service and is not shared with third parties.
           </p>
 
           <h2>2. How We Use Your Information</h2>
@@ -96,24 +96,22 @@ const PrivacyPolicy = () => {
 
           <h2>7. Cookies</h2>
           <p>
-            We use essential cookies for authentication and session management.
-            We do not use tracking cookies for advertising.
+            We use essential cookies for authentication and session management. We do not use
+            tracking cookies for advertising.
           </p>
 
           <h2>8. Children's Privacy</h2>
           <p>
-            The Service is not intended for users under 18. We do not knowingly collect
-            data from children.
+            The Service is not intended for users under 18. We do not knowingly collect data from
+            children.
           </p>
 
           <h2>9. Changes to This Policy</h2>
-          <p>
-            We will notify you of significant changes via email or in-app notification.
-          </p>
+          <p>We will notify you of significant changes via email or in-app notification.</p>
 
           <h2>10. Contact Us</h2>
           <p>
-            For privacy inquiries:{' '}
+            For privacy inquiries:{" "}
             <a href="mailto:privacy@hyper.app" className="text-primary hover:underline">
               privacy@hyper.app
             </a>

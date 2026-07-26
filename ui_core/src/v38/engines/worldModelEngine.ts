@@ -40,7 +40,7 @@ export class WorldModelEngine {
         step: idx + 1,
         simulatedAction: p,
         predictedOutcome,
-        collisionRiskRatio
+        collisionRiskRatio,
       });
     });
 
@@ -50,7 +50,7 @@ export class WorldModelEngine {
     return {
       passedSafetyVerification,
       overallRiskFactor: parseFloat(overallRiskFactor.toFixed(3)),
-      simulationLog
+      simulationLog,
     };
   }
 }

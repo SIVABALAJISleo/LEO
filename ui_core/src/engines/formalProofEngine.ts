@@ -42,9 +42,10 @@ export class FormalProofEngine {
         proofSteps.push(
           "Step 1: Introduce variables a, b and hypotheses h, k.",
           "Step 2: Apply Nat.add_pos, utilizing h.",
-          "Step 3: Close goals. Q.E.D."
+          "Step 3: Close goals. Q.E.D.",
         );
-        answer = "Lean Proof Verified: The math claim that the sum of positive integers is positive holds true mathematically.";
+        answer =
+          "Lean Proof Verified: The math claim that the sum of positive integers is positive holds true mathematically.";
         break;
 
       case "Coq":
@@ -53,7 +54,7 @@ export class FormalProofEngine {
         proofSteps.push(
           "Step 1: Intros n m Hn Hm.",
           "Step 2: Induction n; simpl.",
-          "Step 3: Apply Nat.lt_0_succ. Admitted."
+          "Step 3: Apply Nat.lt_0_succ. Admitted.",
         );
         answer = "Coq Proof Verified: Inductive proof completed.";
         break;
@@ -64,15 +65,20 @@ export class FormalProofEngine {
         proofSteps.push(
           "Step 1: Parse variables onto Z3 SMT context.",
           "Step 2: Push negated assertions to find contradictions.",
-          "Step 3: Solver returns unsat (meaning claim is verified)."
+          "Step 3: Solver returns unsat (meaning claim is verified).",
         );
         verificationStatus = "proven";
-        answer = "Z3 SMT Solver Verified: Negated claim is unsatisfiable, proving original claim holds.";
+        answer =
+          "Z3 SMT Solver Verified: Negated claim is unsatisfiable, proving original claim holds.";
         break;
     }
 
     // Edge check: If claim contains false assertions, refute it
-    if (claimLower.includes("unlimited vram") || claimLower.includes("zero latency") || claimLower.includes("bypass security")) {
+    if (
+      claimLower.includes("unlimited vram") ||
+      claimLower.includes("zero latency") ||
+      claimLower.includes("bypass security")
+    ) {
       verificationStatus = "refuted";
       answer = `Refuted: Solver ${solver} successfully generated counter-examples disproving the claim.`;
     }
@@ -87,10 +93,10 @@ export class FormalProofEngine {
         formalRepresentation,
         proofSteps,
         verificationStatus,
-        timeMs
+        timeMs,
       },
       answer,
-      isVerified: verificationStatus === "proven"
+      isVerified: verificationStatus === "proven",
     };
   }
 }

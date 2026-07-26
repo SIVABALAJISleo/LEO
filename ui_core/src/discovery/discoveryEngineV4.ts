@@ -18,14 +18,27 @@ export class DiscoveryEngineV4 {
     let statementB = "Attempt peer Gossip sync routing query to trace missing knowledge indices.";
     let statementC = "Escalate runtime context immediately to secondary cloud backup instances.";
 
-    if (queryLower.includes("stripe") || queryLower.includes("billing") || queryLower.includes("webhook")) {
-      statementA = "Webhook key rotation mismatch: The local database has a stale whsec signature token.";
-      statementB = "Stripe sandbox environment mismatch: Webhook signature is authenticated using live keys on test instances.";
-      statementC = "Payload tampering signature break: An unauthenticated webhook event is attempting gateway bypass attacks.";
-    } else if (queryLower.includes("vulkan") || queryLower.includes("webgpu") || queryLower.includes("hardware")) {
+    if (
+      queryLower.includes("stripe") ||
+      queryLower.includes("billing") ||
+      queryLower.includes("webhook")
+    ) {
+      statementA =
+        "Webhook key rotation mismatch: The local database has a stale whsec signature token.";
+      statementB =
+        "Stripe sandbox environment mismatch: Webhook signature is authenticated using live keys on test instances.";
+      statementC =
+        "Payload tampering signature break: An unauthenticated webhook event is attempting gateway bypass attacks.";
+    } else if (
+      queryLower.includes("vulkan") ||
+      queryLower.includes("webgpu") ||
+      queryLower.includes("hardware")
+    ) {
       statementA = "WebGPU shader compiler thread freeze: WebGPU device driver is unresponsive.";
-      statementB = "iGPU VRAM Vaging saturation: Local model weights are exceeding system allocation thresholds.";
-      statementC = "Pipeline compilation error: Vulkan shader parameters mismatched with client GPU configurations.";
+      statementB =
+        "iGPU VRAM Vaging saturation: Local model weights are exceeding system allocation thresholds.";
+      statementC =
+        "Pipeline compilation error: Vulkan shader parameters mismatched with client GPU configurations.";
     }
 
     hypotheses.push(
@@ -34,10 +47,10 @@ export class DiscoveryEngineV4 {
         statement: statementA,
         evidenceWeight: 0.82,
         noveltyScore: 0.35,
-        plausibilityScore: 0.90,
+        plausibilityScore: 0.9,
         consistencyScore: 0.92,
         verificationCost: "low",
-        confidenceRating: 0.81
+        confidenceRating: 0.81,
       },
       {
         id: "H-B",
@@ -47,25 +60,31 @@ export class DiscoveryEngineV4 {
         plausibilityScore: 0.75,
         consistencyScore: 0.85,
         verificationCost: "medium",
-        confidenceRating: 0.72
+        confidenceRating: 0.72,
       },
       {
         id: "H-C",
         statement: statementC,
-        evidenceWeight: 0.40,
+        evidenceWeight: 0.4,
         noveltyScore: 0.88,
         plausibilityScore: 0.45,
-        consistencyScore: 0.60,
+        consistencyScore: 0.6,
         verificationCost: "high",
-        confidenceRating: 0.55
-      }
+        confidenceRating: 0.55,
+      },
     );
 
     // Sort by confidenceRating
-    hypotheses.forEach(h => {
-      const costFactor = h.verificationCost === "low" ? 1.0 : h.verificationCost === "medium" ? 0.7 : 0.4;
+    hypotheses.forEach((h) => {
+      const costFactor =
+        h.verificationCost === "low" ? 1.0 : h.verificationCost === "medium" ? 0.7 : 0.4;
       h.confidenceRating = parseFloat(
-        ((h.evidenceWeight * 0.35) + (h.plausibilityScore * 0.30) + (h.consistencyScore * 0.20) + (costFactor * 0.15)).toFixed(4)
+        (
+          h.evidenceWeight * 0.35 +
+          h.plausibilityScore * 0.3 +
+          h.consistencyScore * 0.2 +
+          costFactor * 0.15
+        ).toFixed(4),
       );
     });
 
@@ -76,7 +95,7 @@ export class DiscoveryEngineV4 {
     const actionPlan: string[] = [
       `1. Query validation checklist on hypothesis: ${primaryHypothesis.id} - ${primaryHypothesis.statement}`,
       `2. Verify constraint consistency index: ${(primaryHypothesis.consistencyScore * 100).toFixed(0)}%`,
-      `3. Launch auto-remediation targeting cost factor bounds: ${primaryHypothesis.verificationCost}`
+      `3. Launch auto-remediation targeting cost factor bounds: ${primaryHypothesis.verificationCost}`,
     ];
 
     return {
@@ -84,7 +103,7 @@ export class DiscoveryEngineV4 {
       retrievalFailureConfirmed: true,
       hypotheses,
       primaryHypothesis,
-      actionPlan
+      actionPlan,
     };
   }
 }

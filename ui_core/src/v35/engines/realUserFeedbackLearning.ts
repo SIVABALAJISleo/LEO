@@ -24,8 +24,8 @@ export class RealUserFeedbackLearning {
       query: "Optimize compiler register pack",
       userRating: 4,
       userCorrection: "Use AVX-VNNI instead of base AVX512 registers.",
-      timestamp: Date.now() - 600000
-    }
+      timestamp: Date.now() - 600000,
+    },
   ];
 
   /**
@@ -34,7 +34,7 @@ export class RealUserFeedbackLearning {
   public logFeedbackAndLearn(
     query: string,
     userRating: number,
-    userCorrection: string
+    userCorrection: string,
   ): FeedbackIntelligenceStats {
     if (userCorrection.trim().length > 0) {
       this.feedbackLog.push({
@@ -42,16 +42,16 @@ export class RealUserFeedbackLearning {
         query,
         userRating,
         userCorrection,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       });
     }
 
     const totalFeedbackSamples = this.feedbackLog.length;
-    
+
     // Success rate is simulated based on average user ratings
     const sumRatings = this.feedbackLog.reduce((acc, curr) => acc + curr.userRating, 0);
     const averageRating = sumRatings / totalFeedbackSamples;
-    
+
     const successRatePct = parseFloat(((averageRating / 5.0) * 100).toFixed(2));
     const failureRatePct = parseFloat((100.0 - successRatePct).toFixed(2));
 
@@ -64,7 +64,7 @@ export class RealUserFeedbackLearning {
       failureRatePct,
       totalFeedbackSamples,
       calibrationAdjustmentDelta,
-      feedbackRecords: [...this.feedbackLog]
+      feedbackRecords: [...this.feedbackLog],
     };
   }
 

@@ -10,10 +10,42 @@ export interface ExpertActivationStatus {
 
 export class SparseActivationEngine {
   private activeStates = new Map<string, ExpertActivationStatus>([
-    ["exp-code", { expertId: "exp-code", name: "Code Expert", isActive: false, allocationBytes: 256 * 1024 * 1024 }],
-    ["exp-math", { expertId: "exp-math", name: "Math Expert", isActive: false, allocationBytes: 256 * 1024 * 1024 }],
-    ["exp-logic", { expertId: "exp-logic", name: "Logic Expert", isActive: false, allocationBytes: 256 * 1024 * 1024 }],
-    ["exp-default", { expertId: "exp-default", name: "General Expert", isActive: true, allocationBytes: 128 * 1024 * 1024 }]
+    [
+      "exp-code",
+      {
+        expertId: "exp-code",
+        name: "Code Expert",
+        isActive: false,
+        allocationBytes: 256 * 1024 * 1024,
+      },
+    ],
+    [
+      "exp-math",
+      {
+        expertId: "exp-math",
+        name: "Math Expert",
+        isActive: false,
+        allocationBytes: 256 * 1024 * 1024,
+      },
+    ],
+    [
+      "exp-logic",
+      {
+        expertId: "exp-logic",
+        name: "Logic Expert",
+        isActive: false,
+        allocationBytes: 256 * 1024 * 1024,
+      },
+    ],
+    [
+      "exp-default",
+      {
+        expertId: "exp-default",
+        name: "General Expert",
+        isActive: true,
+        allocationBytes: 128 * 1024 * 1024,
+      },
+    ],
   ]);
 
   activateExpert(expertId: string): ExpertActivationStatus[] {

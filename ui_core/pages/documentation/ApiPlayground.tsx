@@ -1,26 +1,44 @@
-import { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useState, useEffect } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
-import { useToast } from '@/hooks/use-toast';
-import { firebaseClient as supabase } from '@/integrations/firebase/client';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/hooks/use-toast";
+import { firebaseClient as supabase } from "@/integrations/firebase/client";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Play, Star, StarOff, Clock, Copy, ChevronRight, Book, Code, Zap, Send, Loader2 } from 'lucide-react';
+import {
+  Play,
+  Star,
+  StarOff,
+  Clock,
+  Copy,
+  ChevronRight,
+  Book,
+  Code,
+  Zap,
+  Send,
+  Loader2,
+} from "lucide-react";
 
 interface Endpoint {
   id: string;
   name: string;
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE';
+  method: "GET" | "POST" | "PUT" | "DELETE";
   path: string;
   description: string;
   parameters: { name: string; type: string; required: boolean; description: string }[];
@@ -41,105 +59,140 @@ interface HistoryItem {
 
 const ENDPOINTS: Endpoint[] = [
   {
-    id: 'create-job',
-    name: 'Create Inference Job',
-    method: 'POST',
-    path: '/api/v1/inference',
-    description: 'Submit a new inference job with optional optimization modules',
+    id: "create-job",
+    name: "Create Inference Job",
+    method: "POST",
+    path: "/api/v1/inference",
+    description: "Submit a new inference job with optional optimization modules",
     parameters: [
-      { name: 'model_id', type: 'string', required: true, description: 'The ID of the model to use' },
-      { name: 'input', type: 'string', required: true, description: 'The input text or data' },
-      { name: 'modules', type: 'array', required: false, description: 'List of optimization modules to enable' },
-      { name: 'priority', type: 'number', required: false, description: 'Job priority (1-10)' },
+      {
+        name: "model_id",
+        type: "string",
+        required: true,
+        description: "The ID of the model to use",
+      },
+      { name: "input", type: "string", required: true, description: "The input text or data" },
+      {
+        name: "modules",
+        type: "array",
+        required: false,
+        description: "List of optimization modules to enable",
+      },
+      { name: "priority", type: "number", required: false, description: "Job priority (1-10)" },
     ],
-    example: { model_id: 'llama-70b', input: 'Explain quantum computing', modules: ['Quantization', 'KernelOptimization'], priority: 5 }
+    example: {
+      model_id: "llama-70b",
+      input: "Explain quantum computing",
+      modules: ["Quantization", "KernelOptimization"],
+      priority: 5,
+    },
   },
   {
-    id: 'get-job',
-    name: 'Get Job Status',
-    method: 'GET',
-    path: '/api/v1/inference/{job_id}',
-    description: 'Retrieve the current status and results of an inference job',
+    id: "get-job",
+    name: "Get Job Status",
+    method: "GET",
+    path: "/api/v1/inference/{job_id}",
+    description: "Retrieve the current status and results of an inference job",
     parameters: [
-      { name: 'job_id', type: 'string', required: true, description: 'The ID of the job to query' }
+      { name: "job_id", type: "string", required: true, description: "The ID of the job to query" },
     ],
-    example: { job_id: 'abc123' }
+    example: { job_id: "abc123" },
   },
   {
-    id: 'list-jobs',
-    name: 'List Jobs',
-    method: 'GET',
-    path: '/api/v1/inference',
-    description: 'List all inference jobs with optional filtering',
+    id: "list-jobs",
+    name: "List Jobs",
+    method: "GET",
+    path: "/api/v1/inference",
+    description: "List all inference jobs with optional filtering",
     parameters: [
-      { name: 'status', type: 'string', required: false, description: 'Filter by status (queued, running, completed, failed)' },
-      { name: 'limit', type: 'number', required: false, description: 'Maximum number of results' }
+      {
+        name: "status",
+        type: "string",
+        required: false,
+        description: "Filter by status (queued, running, completed, failed)",
+      },
+      { name: "limit", type: "number", required: false, description: "Maximum number of results" },
     ],
-    example: { status: 'completed', limit: 10 }
+    example: { status: "completed", limit: 10 },
   },
   {
-    id: 'cancel-job',
-    name: 'Cancel Job',
-    method: 'DELETE',
-    path: '/api/v1/inference/{job_id}',
-    description: 'Cancel a running or queued inference job',
+    id: "cancel-job",
+    name: "Cancel Job",
+    method: "DELETE",
+    path: "/api/v1/inference/{job_id}",
+    description: "Cancel a running or queued inference job",
     parameters: [
-      { name: 'job_id', type: 'string', required: true, description: 'The ID of the job to cancel' }
+      {
+        name: "job_id",
+        type: "string",
+        required: true,
+        description: "The ID of the job to cancel",
+      },
     ],
-    example: { job_id: 'abc123' }
+    example: { job_id: "abc123" },
   },
   {
-    id: 'list-models',
-    name: 'List Models',
-    method: 'GET',
-    path: '/api/v1/models',
-    description: 'Get a list of available models',
+    id: "list-models",
+    name: "List Models",
+    method: "GET",
+    path: "/api/v1/models",
+    description: "Get a list of available models",
     parameters: [
-      { name: 'type', type: 'string', required: false, description: 'Filter by model type' }
+      { name: "type", type: "string", required: false, description: "Filter by model type" },
     ],
-    example: { type: 'llm' }
+    example: { type: "llm" },
   },
   {
-    id: 'get-metrics',
-    name: 'Get Performance Metrics',
-    method: 'GET',
-    path: '/api/v1/metrics',
-    description: 'Retrieve system performance metrics',
+    id: "get-metrics",
+    name: "Get Performance Metrics",
+    method: "GET",
+    path: "/api/v1/metrics",
+    description: "Retrieve system performance metrics",
     parameters: [
-      { name: 'period', type: 'string', required: false, description: 'Time period (1h, 24h, 7d)' },
-      { name: 'module', type: 'string', required: false, description: 'Filter by module name' }
+      { name: "period", type: "string", required: false, description: "Time period (1h, 24h, 7d)" },
+      { name: "module", type: "string", required: false, description: "Filter by module name" },
     ],
-    example: { period: '24h' }
+    example: { period: "24h" },
   },
   {
-    id: 'list-modules',
-    name: 'List Optimization Modules',
-    method: 'GET',
-    path: '/api/v1/modules',
-    description: 'Get available optimization modules and their status',
+    id: "list-modules",
+    name: "List Optimization Modules",
+    method: "GET",
+    path: "/api/v1/modules",
+    description: "Get available optimization modules and their status",
     parameters: [],
-    example: {}
+    example: {},
   },
   {
-    id: 'configure-module',
-    name: 'Configure Module',
-    method: 'PUT',
-    path: '/api/v1/modules/{module_name}',
-    description: 'Update configuration for an optimization module',
+    id: "configure-module",
+    name: "Configure Module",
+    method: "PUT",
+    path: "/api/v1/modules/{module_name}",
+    description: "Update configuration for an optimization module",
     parameters: [
-      { name: 'module_name', type: 'string', required: true, description: 'Name of the module' },
-      { name: 'enabled', type: 'boolean', required: false, description: 'Enable or disable the module' },
-      { name: 'settings', type: 'object', required: false, description: 'Module-specific settings' }
+      { name: "module_name", type: "string", required: true, description: "Name of the module" },
+      {
+        name: "enabled",
+        type: "boolean",
+        required: false,
+        description: "Enable or disable the module",
+      },
+      {
+        name: "settings",
+        type: "object",
+        required: false,
+        description: "Module-specific settings",
+      },
     ],
-    example: { module_name: 'Quantization', enabled: true, settings: { precision: '4bit' } }
-  }
+    example: { module_name: "Quantization", enabled: true, settings: { precision: "4bit" } },
+  },
 ];
 
 const ApiPlayground = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [selectedEndpoint, setSelectedEndpoint] = useState<Endpoint>(ENDPOINTS[0]);
-  const [apiKey, setApiKey] = useState('');
+  const [apiKey, setApiKey] = useState("");
   const [requestBody, setRequestBody] = useState(JSON.stringify(ENDPOINTS[0].example, null, 2));
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [response, setResponse] = useState<Record<string, any> | null>(null);
@@ -164,7 +217,11 @@ const ApiPlayground = () => {
 
   const executeRequest = async () => {
     if (!apiKey) {
-      toast({ title: 'API Key Required', description: 'Please enter your API key', variant: 'destructive' });
+      toast({
+        title: "API Key Required",
+        description: "Please enter your API key",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -172,7 +229,7 @@ const ApiPlayground = () => {
     try {
       // Call actual edge function
       const startTime = Date.now();
-      
+
       let parsedRequest = {};
       try {
         parsedRequest = JSON.parse(requestBody);
@@ -181,12 +238,12 @@ const ApiPlayground = () => {
       }
 
       // Attempt real API call
-      const { data, error } = await supabase.functions.invoke('jobs', {
+      const { data, error } = await supabase.functions.invoke("jobs", {
         body: {
-          action: 'create',
+          action: "create",
           ...parsedRequest,
           endpoint: selectedEndpoint.path,
-        }
+        },
       });
 
       const latencyMs = Date.now() - startTime;
@@ -195,17 +252,17 @@ const ApiPlayground = () => {
         success: !error,
         data: data || {
           id: `job_${Date.now()}`,
-          status: 'queued',
+          status: "queued",
           endpoint: selectedEndpoint.path,
           method: selectedEndpoint.method,
           ...parsedRequest,
           created_at: new Date().toISOString(),
-          note: 'Job submitted to pipeline'
+          note: "Job submitted to pipeline",
         },
         meta: {
           request_id: `req_${Date.now()}`,
-          latency_ms: latencyMs // Real measured latency
-        }
+          latency_ms: latencyMs, // Real measured latency
+        },
       };
 
       setResponse(apiResponse);
@@ -216,39 +273,42 @@ const ApiPlayground = () => {
         request: parsedRequest,
         response: apiResponse,
         timestamp: new Date(),
-        status: error ? 500 : 200
+        status: error ? 500 : 200,
       };
-      setHistory(prev => [historyItem, ...prev.slice(0, 19)]);
+      setHistory((prev) => [historyItem, ...prev.slice(0, 19)]);
 
-      toast({ title: 'Request Sent', description: `Latency: ${latencyMs}ms` });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      toast({ title: "Request Sent", description: `Latency: ${latencyMs}ms` });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      toast({ title: 'Request Failed', description: err.message, variant: 'destructive' });
+      toast({ title: "Request Failed", description: err.message, variant: "destructive" });
     } finally {
       setLoading(false);
     }
   };
 
   const toggleFavorite = (endpointId: string) => {
-    setFavorites(prev => 
-      prev.includes(endpointId) 
-        ? prev.filter(id => id !== endpointId)
-        : [...prev, endpointId]
+    setFavorites((prev) =>
+      prev.includes(endpointId) ? prev.filter((id) => id !== endpointId) : [...prev, endpointId],
     );
   };
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    toast({ title: 'Copied', description: 'Copied to clipboard' });
+    toast({ title: "Copied", description: "Copied to clipboard" });
   };
 
   const getMethodColor = (method: string) => {
     switch (method) {
-      case 'GET': return 'bg-blue-500/20 text-blue-400';
-      case 'POST': return 'bg-green-500/20 text-green-400';
-      case 'PUT': return 'bg-yellow-500/20 text-yellow-400';
-      case 'DELETE': return 'bg-red-500/20 text-red-400';
-      default: return 'bg-muted text-muted-foreground';
+      case "GET":
+        return "bg-blue-500/20 text-blue-400";
+      case "POST":
+        return "bg-green-500/20 text-green-400";
+      case "PUT":
+        return "bg-yellow-500/20 text-yellow-400";
+      case "DELETE":
+        return "bg-red-500/20 text-red-400";
+      default:
+        return "bg-muted text-muted-foreground";
     }
   };
 
@@ -264,17 +324,17 @@ const ApiPlayground = () => {
             </h2>
             <p className="text-sm text-muted-foreground mt-1">Interactive API documentation</p>
           </div>
-          
+
           <ScrollArea className="flex-1">
             <div className="p-2">
               {favorites.length > 0 && (
                 <div className="mb-4">
                   <p className="text-xs text-muted-foreground px-2 mb-2">FAVORITES</p>
-                  {ENDPOINTS.filter(e => favorites.includes(e.id)).map(endpoint => (
+                  {ENDPOINTS.filter((e) => favorites.includes(e.id)).map((endpoint) => (
                     <div
                       key={`fav-${endpoint.id}`}
                       className={`flex items-center gap-2 p-2 rounded-md cursor-pointer mb-1 ${
-                        selectedEndpoint.id === endpoint.id ? 'bg-primary/20' : 'hover:bg-muted'
+                        selectedEndpoint.id === endpoint.id ? "bg-primary/20" : "hover:bg-muted"
                       }`}
                       onClick={() => setSelectedEndpoint(endpoint)}
                     >
@@ -282,9 +342,12 @@ const ApiPlayground = () => {
                         {endpoint.method}
                       </Badge>
                       <span className="text-sm truncate flex-1">{endpoint.name}</span>
-                      <Star 
+                      <Star
                         className="h-4 w-4 text-yellow-500 fill-yellow-500"
-                        onClick={(e) => { e.stopPropagation(); toggleFavorite(endpoint.id); }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleFavorite(endpoint.id);
+                        }}
                       />
                     </div>
                   ))}
@@ -293,11 +356,11 @@ const ApiPlayground = () => {
               )}
 
               <p className="text-xs text-muted-foreground px-2 mb-2">ALL ENDPOINTS</p>
-              {ENDPOINTS.map(endpoint => (
+              {ENDPOINTS.map((endpoint) => (
                 <div
                   key={endpoint.id}
                   className={`flex items-center gap-2 p-2 rounded-md cursor-pointer mb-1 ${
-                    selectedEndpoint.id === endpoint.id ? 'bg-primary/20' : 'hover:bg-muted'
+                    selectedEndpoint.id === endpoint.id ? "bg-primary/20" : "hover:bg-muted"
                   }`}
                   onClick={() => setSelectedEndpoint(endpoint)}
                 >
@@ -306,7 +369,10 @@ const ApiPlayground = () => {
                   </Badge>
                   <span className="text-sm truncate flex-1">{endpoint.name}</span>
                   <button
-                    onClick={(e) => { e.stopPropagation(); toggleFavorite(endpoint.id); }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleFavorite(endpoint.id);
+                    }}
                     className="opacity-50 hover:opacity-100"
                   >
                     {favorites.includes(endpoint.id) ? (
@@ -329,7 +395,7 @@ const ApiPlayground = () => {
                   RECENT REQUESTS
                 </p>
                 <ScrollArea className="h-32">
-                  {history.slice(0, 5).map(item => (
+                  {history.slice(0, 5).map((item) => (
                     <div
                       key={item.id}
                       className="flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-muted text-sm"
@@ -343,7 +409,10 @@ const ApiPlayground = () => {
                         {item.endpoint.method.slice(0, 3)}
                       </Badge>
                       <span className="truncate flex-1">{item.endpoint.name}</span>
-                      <Badge variant={item.status === 200 ? 'default' : 'destructive'} className="text-xs">
+                      <Badge
+                        variant={item.status === 200 ? "default" : "destructive"}
+                        className="text-xs"
+                      >
                         {item.status}
                       </Badge>
                     </div>
@@ -382,10 +451,10 @@ const ApiPlayground = () => {
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
                     <Label>API Key</Label>
-                    <Input 
+                    <Input
                       type="password"
                       value={apiKey}
-                      onChange={e => setApiKey(e.target.value)}
+                      onChange={(e) => setApiKey(e.target.value)}
                       placeholder="igpu_your_api_key"
                     />
                   </div>
@@ -394,11 +463,17 @@ const ApiPlayground = () => {
                     <div className="space-y-2">
                       <Label>Parameters</Label>
                       <div className="bg-muted rounded-lg p-3 space-y-2">
-                        {selectedEndpoint.parameters.map(param => (
+                        {selectedEndpoint.parameters.map((param) => (
                           <div key={param.name} className="flex items-start gap-2 text-sm">
                             <code className="text-primary">{param.name}</code>
-                            <Badge variant="outline" className="text-xs">{param.type}</Badge>
-                            {param.required && <Badge variant="secondary" className="text-xs">required</Badge>}
+                            <Badge variant="outline" className="text-xs">
+                              {param.type}
+                            </Badge>
+                            {param.required && (
+                              <Badge variant="secondary" className="text-xs">
+                                required
+                              </Badge>
+                            )}
                             <span className="text-muted-foreground">{param.description}</span>
                           </div>
                         ))}
@@ -410,7 +485,7 @@ const ApiPlayground = () => {
                     <Label>Request Body</Label>
                     <Textarea
                       value={requestBody}
-                      onChange={e => setRequestBody(e.target.value)}
+                      onChange={(e) => setRequestBody(e.target.value)}
                       className="font-mono text-sm min-h-[200px]"
                     />
                   </div>
@@ -439,7 +514,11 @@ const ApiPlayground = () => {
                     Response
                   </CardTitle>
                   {response && (
-                    <Button variant="ghost" size="sm" onClick={() => copyToClipboard(JSON.stringify(response, null, 2))}>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => copyToClipboard(JSON.stringify(response, null, 2))}
+                    >
                       <Copy className="h-4 w-4" />
                     </Button>
                   )}
@@ -477,7 +556,7 @@ const ApiPlayground = () => {
                   </TabsList>
                   <TabsContent value="curl" className="mt-4">
                     <pre className="text-sm font-mono bg-muted p-4 rounded-lg overflow-x-auto">
-{`curl -X ${selectedEndpoint.method} \\
+                      {`curl -X ${selectedEndpoint.method} \\
   https://api.hyper.dev${selectedEndpoint.path} \\
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
@@ -486,7 +565,7 @@ const ApiPlayground = () => {
                   </TabsContent>
                   <TabsContent value="python" className="mt-4">
                     <pre className="text-sm font-mono bg-muted p-4 rounded-lg overflow-x-auto">
-{`import requests
+                      {`import requests
 
 response = requests.${selectedEndpoint.method.toLowerCase()}(
     "https://api.hyper.dev${selectedEndpoint.path}",
@@ -502,7 +581,7 @@ print(response.json())`}
                   </TabsContent>
                   <TabsContent value="javascript" className="mt-4">
                     <pre className="text-sm font-mono bg-muted p-4 rounded-lg overflow-x-auto">
-{`const response = await fetch(
+                      {`const response = await fetch(
   "https://api.hyper.dev${selectedEndpoint.path}",
   {
     method: "${selectedEndpoint.method}",

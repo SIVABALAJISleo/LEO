@@ -27,23 +27,37 @@ export class SelfCritic {
     if (rawAnswer.length < 50) {
       weaknesses.push("Explanation is terse; lacks depth and background context.");
     }
-    if (!answerLower.includes("for example") && !answerLower.includes("such as") && !answerLower.includes("instance")) {
+    if (
+      !answerLower.includes("for example") &&
+      !answerLower.includes("such as") &&
+      !answerLower.includes("instance")
+    ) {
       weaknesses.push("Missing concrete practical examples to support structural claims.");
     }
 
     // 2. Risk detection
     if (queryLower.includes("startup") || queryLower.includes("business")) {
-      risks.push("Financial growth plan assumes immediate traction without accounting for customer acquisition costs (CAC).");
-      missingAssumptions.push("Assumes steady-state hosting costs; does not account for scaling spikes.");
+      risks.push(
+        "Financial growth plan assumes immediate traction without accounting for customer acquisition costs (CAC).",
+      );
+      missingAssumptions.push(
+        "Assumes steady-state hosting costs; does not account for scaling spikes.",
+      );
     }
     if (queryLower.includes("stripe") || queryLower.includes("billing")) {
-      risks.push("Failure to cryptographically verify Stripe signature headers leads to replay attacks and forged invoice updates.");
-      missingAssumptions.push("Assumes network transport security (HTTPS) handles application-level payload signature validation.");
+      risks.push(
+        "Failure to cryptographically verify Stripe signature headers leads to replay attacks and forged invoice updates.",
+      );
+      missingAssumptions.push(
+        "Assumes network transport security (HTTPS) handles application-level payload signature validation.",
+      );
     }
 
     // 3. Contradiction checking
     if (answerLower.includes("local execution") && answerLower.includes("cloud API mandatory")) {
-      contradictions.push("Answer specifies both fully local execution and mandatory cloud API usage.");
+      contradictions.push(
+        "Answer specifies both fully local execution and mandatory cloud API usage.",
+      );
     }
 
     // 4. Answer refinement to eliminate hallucination
@@ -61,7 +75,7 @@ export class SelfCritic {
 
     // Ensure strict hallucination guard statement is added
     improvedAnswer = improvedAnswer.replace(/\[hallucinated_fact\]/gi, "verified factual data");
-    
+
     return {
       weaknesses,
       risks,

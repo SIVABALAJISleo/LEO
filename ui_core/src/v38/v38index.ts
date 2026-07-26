@@ -15,15 +15,27 @@ export type { MemoryCell } from "./engines/longTermMemoryEngine";
 
 // 4. Scientific Reasoning Engine
 export { ScientificReasoningEngine } from "./engines/scientificReasoningEngine";
-export type { DebateParticipant, VerificationStep, ScientificReport } from "./engines/scientificReasoningEngine";
+export type {
+  DebateParticipant,
+  VerificationStep,
+  ScientificReport,
+} from "./engines/scientificReasoningEngine";
 
 // 5. Causal Reasoning Engine
 export { CausalReasoningEngine } from "./engines/causalReasoningEngine";
-export type { CausalVariable, CausalIntervention, CausalReport } from "./engines/causalReasoningEngine";
+export type {
+  CausalVariable,
+  CausalIntervention,
+  CausalReport,
+} from "./engines/causalReasoningEngine";
 
 // 6. Self Improvement Engine
 export { SelfImprovementEngine } from "./engines/selfImprovementEngine";
-export type { FailureLog, ImprovementPlan, SelfImprovementReport } from "./engines/selfImprovementEngine";
+export type {
+  FailureLog,
+  ImprovementPlan,
+  SelfImprovementReport,
+} from "./engines/selfImprovementEngine";
 
 // 7. Reality Adaptation Engine
 export { RealityAdaptationEngine } from "./engines/realityAdaptationEngine";

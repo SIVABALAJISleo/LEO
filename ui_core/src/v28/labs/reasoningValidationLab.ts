@@ -25,7 +25,7 @@ export class ReasoningValidationLab {
       mathematics: parseFloat((95.8 + mathNoise * 100).toFixed(2)),
       planning: parseFloat((96.2 - logicNoise * 50).toFixed(2)),
       cybersecurity: parseFloat((96.5 + mathNoise * 50).toFixed(2)),
-      businessWorkflows: parseFloat((96.8 + logicNoise * 20).toFixed(2))
+      businessWorkflows: parseFloat((96.8 + logicNoise * 20).toFixed(2)),
     };
 
     const overallAccuracy = parseFloat(
@@ -36,14 +36,14 @@ export class ReasoningValidationLab {
           accuracyByCategories.cybersecurity +
           accuracyByCategories.businessWorkflows) /
         5
-      ).toFixed(2)
+      ).toFixed(2),
     );
 
     return {
       totalTasksRun: 100000,
       accuracyByCategories,
       overallAccuracy,
-      sampleVariance: 0.000045 // baseline target variance
+      sampleVariance: 0.000045, // baseline target variance
     };
   }
 }

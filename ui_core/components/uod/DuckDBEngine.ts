@@ -1,5 +1,5 @@
-import * as duckdb from '@duckdb/duckdb-wasm';
-import * as arrow from 'apache-arrow';
+import * as duckdb from "@duckdb/duckdb-wasm";
+import * as arrow from "apache-arrow";
 
 class DuckDBEngine {
   private db: duckdb.AsyncDuckDB | null = null;
@@ -11,7 +11,7 @@ class DuckDBEngine {
     const bundle = await duckdb.selectBundle(JSDELIVR_BUNDLES);
 
     const worker_url = URL.createObjectURL(
-      new Blob([`importScripts("${bundle.mainWorker!}");`], { type: 'text/javascript' })
+      new Blob([`importScripts("${bundle.mainWorker!}");`], { type: "text/javascript" }),
     );
 
     const worker = new Worker(worker_url);

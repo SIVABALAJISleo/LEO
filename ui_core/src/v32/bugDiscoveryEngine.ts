@@ -22,50 +22,53 @@ export class BugDiscoveryEngine {
   scanCodeBlock(fileName: string, code: string): BugDiscoveryTelemetry {
     const bugsFound: BugRecord[] = [];
     const lines = code.split("\n");
-    
+
     // Simple mock heuristic checking
     const codeLower = code.toLowerCase();
 
     if (codeLower.includes("innerhtml") || codeLower.includes("eval(")) {
       bugsFound.push({
         fileName,
-        lineNumber: lines.findIndex(l => l.includes("innerHTML") || l.includes("eval(")) + 1,
+        lineNumber: lines.findIndex((l) => l.includes("innerHTML") || l.includes("eval(")) + 1,
         bugType: "SecurityVulnerability",
         severity: "Critical",
-        description: "Execution of arbitrary string script or innerHTML modification bypassing sanitization.",
-        remediationSnippet: "Use DOMPurify or textContent instead of innerHTML / eval()."
+        description:
+          "Execution of arbitrary string script or innerHTML modification bypassing sanitization.",
+        remediationSnippet: "Use DOMPurify or textContent instead of innerHTML / eval().",
       });
     }
 
     if (codeLower.includes("setinterval") && !codeLower.includes("clearinterval")) {
       bugsFound.push({
         fileName,
-        lineNumber: lines.findIndex(l => l.includes("setInterval")) + 1,
+        lineNumber: lines.findIndex((l) => l.includes("setInterval")) + 1,
         bugType: "MemoryLeak",
         severity: "High",
-        description: "setInterval initiated without matching clearInterval hooks, causing active V8 memory retainers.",
-        remediationSnippet: "Ensure a matching clearInterval is returned in useEffect cleanups."
+        description:
+          "setInterval initiated without matching clearInterval hooks, causing active V8 memory retainers.",
+        remediationSnippet: "Ensure a matching clearInterval is returned in useEffect cleanups.",
       });
     }
 
     if (codeLower.includes("xmlhttprequest")) {
       bugsFound.push({
         fileName,
-        lineNumber: lines.findIndex(l => l.includes("XMLHttpRequest")) + 1,
+        lineNumber: lines.findIndex((l) => l.includes("XMLHttpRequest")) + 1,
         bugType: "SyntaxError",
         severity: "Low",
         description: "Legacy XMLHttpRequest syntax detected. Recommend updating to Fetch API.",
-        remediationSnippet: "const res = await fetch(url);"
+        remediationSnippet: "const res = await fetch(url);",
       });
     }
 
-    const leakRiskScore = codeLower.includes("setinterval") && !codeLower.includes("clearinterval") ? 82 : 12;
+    const leakRiskScore =
+      codeLower.includes("setinterval") && !codeLower.includes("clearinterval") ? 82 : 12;
 
     return {
       bugsFound,
       totalScannedLines: lines.length,
       unresolvedCount: bugsFound.length,
-      leakRiskScore
+      leakRiskScore,
     };
   }
 }

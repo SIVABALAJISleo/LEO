@@ -2,7 +2,7 @@
 // Multi-path reasoning with contradiction detection and self-critique
 
 export interface ReasoningPath {
-  id: 'A' | 'B' | 'C';
+  id: "A" | "B" | "C";
   paradigm: string;
   steps: { premise: string; inference: string; confidence: number }[];
   conclusion: string;
@@ -16,7 +16,7 @@ export interface AmplifiedReasoningResult {
   pathB: ReasoningPath;
   pathC: ReasoningPath;
   consensusConclusion: string;
-  winningPath: 'A' | 'B' | 'C';
+  winningPath: "A" | "B" | "C";
   contradictionsEliminated: string[];
   selfCritiqueNotes: string[];
   finalConfidence: number;
@@ -24,14 +24,14 @@ export interface AmplifiedReasoningResult {
 }
 
 const PARADIGMS = [
-  'Deductive Chain',
-  'Inductive Pattern Recognition',
-  'Abductive Inference',
-  'Causal Graph Analysis',
-  'Counterfactual Verification',
+  "Deductive Chain",
+  "Inductive Pattern Recognition",
+  "Abductive Inference",
+  "Causal Graph Analysis",
+  "Counterfactual Verification",
 ];
 
-const buildPath = (question: string, id: 'A' | 'B' | 'C', paradigm: string): ReasoningPath => {
+const buildPath = (question: string, id: "A" | "B" | "C", paradigm: string): ReasoningPath => {
   const steps = [
     {
       premise: `Establish domain context for: "${question.slice(0, 60)}..."`,
@@ -46,13 +46,15 @@ const buildPath = (question: string, id: 'A' | 'B' | 'C', paradigm: string): Rea
     {
       premise: `Synthesize sub-conclusions into a coherent answer model.`,
       inference: `Verify internal consistency; reject contradictory assertions.`,
-      confidence: 0.90 + Math.random() * 0.07,
+      confidence: 0.9 + Math.random() * 0.07,
     },
   ];
   const avgConf = steps.reduce((s, st) => s + st.confidence, 0) / steps.length;
   const contradictions =
     Math.random() < 0.3
-      ? [`Path ${id} detected implicit assumption conflict in step 2 — resolved via evidence weighting.`]
+      ? [
+          `Path ${id} detected implicit assumption conflict in step 2 — resolved via evidence weighting.`,
+        ]
       : [];
   return {
     id,
@@ -71,24 +73,31 @@ export class ReasoningAmplifierV2 {
   amplify(question: string): AmplifiedReasoningResult {
     this.totalQueries++;
     const paradigmIndices = this.pickThree();
-    const pathA = buildPath(question, 'A', PARADIGMS[paradigmIndices[0]]);
-    const pathB = buildPath(question, 'B', PARADIGMS[paradigmIndices[1]]);
-    const pathC = buildPath(question, 'C', PARADIGMS[paradigmIndices[2]]);
+    const pathA = buildPath(question, "A", PARADIGMS[paradigmIndices[0]]);
+    const pathB = buildPath(question, "B", PARADIGMS[paradigmIndices[1]]);
+    const pathC = buildPath(question, "C", PARADIGMS[paradigmIndices[2]]);
 
     // Pick winner: highest confidence path
     const paths = [pathA, pathB, pathC];
-    const winner = paths.reduce((best, p) => (p.confidenceScore > best.confidenceScore ? p : best), pathA);
+    const winner = paths.reduce(
+      (best, p) => (p.confidenceScore > best.confidenceScore ? p : best),
+      pathA,
+    );
 
-    const allContradictions = [...pathA.contradictionsFound, ...pathB.contradictionsFound, ...pathC.contradictionsFound];
+    const allContradictions = [
+      ...pathA.contradictionsFound,
+      ...pathB.contradictionsFound,
+      ...pathC.contradictionsFound,
+    ];
 
     const selfCritique = [
-      `Cross-path consistency check: Paths A/B/C agreement on core claim = ${winner.confidenceScore > 0.93 ? 'HIGH' : 'MODERATE'}.`,
+      `Cross-path consistency check: Paths A/B/C agreement on core claim = ${winner.confidenceScore > 0.93 ? "HIGH" : "MODERATE"}.`,
       `Contradiction elimination: ${allContradictions.length} conflicts resolved via evidence weighting.`,
       `Self-critique: Final answer anchored to ${winner.paradigm} — highest empirical support in this domain.`,
     ];
 
     const finalConf = (pathA.confidenceScore + pathB.confidenceScore + pathC.confidenceScore) / 3;
-    const accuracy = Math.min(0.97, 0.90 + finalConf * 0.07);
+    const accuracy = Math.min(0.97, 0.9 + finalConf * 0.07);
     this.totalAccuracySum += accuracy;
 
     return {

@@ -20,30 +20,30 @@ export class SolutionReusabilityEngine {
       this.totalFlopsAvoided += estimatedFlops;
     }
 
-    const cacheHitRatio = this.totalQueriesEvaluated > 0
-      ? this.totalCacheHits / this.totalQueriesEvaluated
-      : 0.0;
+    const cacheHitRatio =
+      this.totalQueriesEvaluated > 0 ? this.totalCacheHits / this.totalQueriesEvaluated : 0.0;
 
     // Compute Avoidance Score: scales with cache hit ratio and avoided FLOPS significance
     const computeAvoidanceScore = parseFloat(
-      Math.min(99.8, (cacheHitRatio * 90.0) + (this.totalFlopsAvoided > 0 ? 9.8 : 0)).toFixed(1)
+      Math.min(99.8, cacheHitRatio * 90.0 + (this.totalFlopsAvoided > 0 ? 9.8 : 0)).toFixed(1),
     );
 
     return {
       timestamp: Date.now(),
       cacheHitRatio: parseFloat(cacheHitRatio.toFixed(3)),
       totalFlopsSaved: this.totalFlopsAvoided,
-      computeAvoidanceScore
+      computeAvoidanceScore,
     };
   }
 
   getMetrics(): ReusabilityReport {
-    const ratio = this.totalQueriesEvaluated > 0 ? this.totalCacheHits / this.totalQueriesEvaluated : 0.0;
+    const ratio =
+      this.totalQueriesEvaluated > 0 ? this.totalCacheHits / this.totalQueriesEvaluated : 0.0;
     return {
       timestamp: Date.now(),
       cacheHitRatio: parseFloat(ratio.toFixed(3)),
       totalFlopsSaved: this.totalFlopsAvoided,
-      computeAvoidanceScore: parseFloat(Math.min(99.8, ratio * 100).toFixed(1))
+      computeAvoidanceScore: parseFloat(Math.min(99.8, ratio * 100).toFixed(1)),
     };
   }
 }

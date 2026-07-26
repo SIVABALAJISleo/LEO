@@ -14,7 +14,7 @@ export interface QuantizationProfile {
 
 export class QuantizationOptimizationEngine {
   private baseMemoryFP16 = 24576; // 24 GB for Llama-7B equivalent
-  private baseLatencyFP16 = 45;   // ms per token
+  private baseLatencyFP16 = 45; // ms per token
 
   getProfiles(modelName: string): QuantizationProfile[] {
     const isBigModel = modelName.toLowerCase().includes("large") || modelName.includes("70b");
@@ -29,7 +29,7 @@ export class QuantizationOptimizationEngine {
         perplexity: 5.42,
         memoryMb: baseMem,
         vramSavedMb: 0,
-        accuracyLossPct: 0.0
+        accuracyLossPct: 0.0,
       },
       {
         precision: "INT8",
@@ -37,7 +37,7 @@ export class QuantizationOptimizationEngine {
         perplexity: 5.45,
         memoryMb: baseMem * 0.5,
         vramSavedMb: baseMem * 0.5,
-        accuracyLossPct: 0.05
+        accuracyLossPct: 0.05,
       },
       {
         precision: "INT4_AWQ",
@@ -45,7 +45,7 @@ export class QuantizationOptimizationEngine {
         perplexity: 5.58,
         memoryMb: baseMem * 0.28,
         vramSavedMb: baseMem * 0.72,
-        accuracyLossPct: 0.85
+        accuracyLossPct: 0.85,
       },
       {
         precision: "INT4_GPTQ",
@@ -53,23 +53,23 @@ export class QuantizationOptimizationEngine {
         perplexity: 5.62,
         memoryMb: baseMem * 0.25,
         vramSavedMb: baseMem * 0.75,
-        accuracyLossPct: 1.15
-      }
+        accuracyLossPct: 1.15,
+      },
     ];
   }
 
   recommendBestProfile(profiles: QuantizationProfile[], vramLimitMb: number): QuantizationProfile {
     // Recommend best profile that fits inside vramLimitMb, prioritizing AWQ for accuracy
-    const matching = profiles.filter(p => p.memoryMb <= vramLimitMb);
+    const matching = profiles.filter((p) => p.memoryMb <= vramLimitMb);
     if (matching.length === 0) {
       // Return maximum compressed profile
-      return profiles.reduce((prev, curr) => prev.memoryMb < curr.memoryMb ? prev : curr);
+      return profiles.reduce((prev, curr) => (prev.memoryMb < curr.memoryMb ? prev : curr));
     }
     // Prioritize lowest latency with accuracyLossPct < 1%
-    const preferred = matching.filter(p => p.accuracyLossPct < 1.0);
+    const preferred = matching.filter((p) => p.accuracyLossPct < 1.0);
     if (preferred.length > 0) {
-      return preferred.reduce((prev, curr) => prev.latencyMs < curr.latencyMs ? prev : curr);
+      return preferred.reduce((prev, curr) => (prev.latencyMs < curr.latencyMs ? prev : curr));
     }
-    return matching.reduce((prev, curr) => prev.latencyMs < curr.latencyMs ? prev : curr);
+    return matching.reduce((prev, curr) => (prev.latencyMs < curr.latencyMs ? prev : curr));
   }
 }

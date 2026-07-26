@@ -10,14 +10,14 @@ export interface TileCoordinate {
 }
 
 export class TileEngine {
-  private static TILE_BASE = '/cdn/tiles';
+  private static TILE_BASE = "/cdn/tiles";
 
   /**
    * Fetches a data tile for a specific spatial coordinate.
    */
   public static async loadTile(coord: TileCoordinate): Promise<any> {
     const path = `${this.TILE_BASE}/z${coord.z}/x${coord.x}_y${coord.y}.json`;
-    
+
     try {
       const res = await fetch(path);
       if (!res.ok) return null; // Uncharted Zone
@@ -35,7 +35,7 @@ export class TileEngine {
     return {
       x: domain.length % 10, // Deterministic mapping
       y: Math.floor(time / 1000000),
-      z: 1 // Default zoom
+      z: 1, // Default zoom
     };
   }
 }

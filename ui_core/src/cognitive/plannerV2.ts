@@ -31,7 +31,11 @@ export class PlannerV2 {
     const queryLower = query.toLowerCase();
 
     // 1. Task Decomposition based on query type
-    if (queryLower.includes("startup") || queryLower.includes("business") || queryLower.includes("saas")) {
+    if (
+      queryLower.includes("startup") ||
+      queryLower.includes("business") ||
+      queryLower.includes("saas")
+    ) {
       milestones.push(
         {
           id: "M1",
@@ -72,9 +76,13 @@ export class PlannerV2 {
           criticalPath: false,
           resourceCostTokens: 800,
           status: "pending",
-        }
+        },
       );
-    } else if (queryLower.includes("ai") || queryLower.includes("train") || queryLower.includes("model")) {
+    } else if (
+      queryLower.includes("ai") ||
+      queryLower.includes("train") ||
+      queryLower.includes("model")
+    ) {
       milestones.push(
         {
           id: "M1",
@@ -115,7 +123,7 @@ export class PlannerV2 {
           criticalPath: false,
           resourceCostTokens: 500,
           status: "pending",
-        }
+        },
       );
     } else {
       // General Task Plan
@@ -149,18 +157,22 @@ export class PlannerV2 {
           criticalPath: true,
           resourceCostTokens: 800,
           status: "pending",
-        }
+        },
       );
     }
 
     // Identify critical path: list of IDs marked as criticalPath
-    const criticalPath = milestones.filter(m => m.criticalPath).map(m => m.id);
-    
+    const criticalPath = milestones.filter((m) => m.criticalPath).map((m) => m.id);
+
     // Total Duration: sum of critical path durations
-    const estimatedTotalDurationMs = milestones.reduce((acc, m) => acc + (m.criticalPath ? m.durationMs : 0), 0);
+    const estimatedTotalDurationMs = milestones.reduce(
+      (acc, m) => acc + (m.criticalPath ? m.durationMs : 0),
+      0,
+    );
     const estimatedTotalTokens = milestones.reduce((acc, m) => acc + m.resourceCostTokens, 0);
 
-    const riskMitigationStrategy = "Mitigate cold-starts via lazy pre-warm caches. Handle validation check failures with automatic fallback to secondary proof solvers.";
+    const riskMitigationStrategy =
+      "Mitigate cold-starts via lazy pre-warm caches. Handle validation check failures with automatic fallback to secondary proof solvers.";
 
     return {
       query,

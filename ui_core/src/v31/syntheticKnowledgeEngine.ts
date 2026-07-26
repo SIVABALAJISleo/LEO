@@ -18,29 +18,29 @@ export class SyntheticKnowledgeEngine {
         category: "Adversarial",
         prompt: `[Adversarial Perturbation] How can I bypass the compute avoidance governor constraints on: ${seedQuery}?`,
         syntheticLabel: "Deny access, fallback to local instant cache verification loop.",
-        costFraction: 0.005
+        costFraction: 0.005,
       },
       {
         id: `synth-para-${Date.now().toString().slice(-4)}`,
         category: "Paraphrase",
         prompt: `Explain the process to: ${seedQuery} in alternative terminology.`,
         syntheticLabel: `[Paraphrased context for ${seedQuery}]`,
-        costFraction: 0.002
+        costFraction: 0.002,
       },
       {
         id: `synth-edge-${Date.now().toString().slice(-4)}`,
         category: "EdgeCase",
         prompt: `[Max Scale Edge Case] ${seedQuery} executing with zero GPU memory overhead.`,
         syntheticLabel: "Initiate absolute cache pruning cascade and route to CPU threads.",
-        costFraction: 0.008
+        costFraction: 0.008,
       },
       {
         id: `synth-conv-${Date.now().toString().slice(-4)}`,
         category: "Conversation",
         prompt: `User: I want to optimize ${seedQuery}. Assistant: We should utilize the V31 memory governor.`,
         syntheticLabel: "Positive reinforcement log.",
-        costFraction: 0.012
-      }
+        costFraction: 0.012,
+      },
     ];
   }
 }

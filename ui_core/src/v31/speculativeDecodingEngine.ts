@@ -14,9 +14,24 @@ export interface SpeculativeReport {
 
 export class SpeculativeDecodingEngine {
   private draftDictionary = [
-    "compute", "avoidance", "governor", "semantic", "cache", "hierarchical",
-    "crystal", "memory", "paged", "attention", "quantization", "distillation",
-    "prefix", "reuse", "throughput", "latency", "efficiency", "distributed"
+    "compute",
+    "avoidance",
+    "governor",
+    "semantic",
+    "cache",
+    "hierarchical",
+    "crystal",
+    "memory",
+    "paged",
+    "attention",
+    "quantization",
+    "distillation",
+    "prefix",
+    "reuse",
+    "throughput",
+    "latency",
+    "efficiency",
+    "distributed",
   ];
 
   generateDraftTokens(query: string, length: number = 5): string[] {
@@ -34,14 +49,14 @@ export class SpeculativeDecodingEngine {
   execute(query: string): SpeculativeReport {
     const draftLength = 5;
     const draftTokens = this.generateDraftTokens(query, draftLength);
-    
+
     // Simulate Large Model verification
     // We accept draft tokens depending on query keywords or length
     const acceptedTokens: string[] = [];
     const rejectedTokens: string[] = [];
-    
+
     const hash = query.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    const acceptCount = (hash % (draftLength + 1)); // 0 to draftLength tokens accepted
+    const acceptCount = hash % (draftLength + 1); // 0 to draftLength tokens accepted
 
     for (let i = 0; i < draftLength; i++) {
       if (i < acceptCount) {
@@ -51,7 +66,7 @@ export class SpeculativeDecodingEngine {
       }
     }
 
-    const acceptanceRate = draftLength > 0 ? (acceptedTokens.length / draftLength) : 1;
+    const acceptanceRate = draftLength > 0 ? acceptedTokens.length / draftLength : 1;
     // Calculate speedup factor: higher acceptance rate = closer to 4.5x, lower = 1.0x fallback
     const throughputMultiplier = parseFloat((1.0 + acceptanceRate * 3.5).toFixed(2));
     // Latency is reduced by the speedup factor
@@ -70,7 +85,7 @@ export class SpeculativeDecodingEngine {
       acceptanceRate,
       throughputMultiplier,
       latencySec,
-      finalOutput
+      finalOutput,
     };
   }
 }

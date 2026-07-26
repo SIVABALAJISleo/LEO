@@ -27,7 +27,7 @@ export class CodeGovernor {
    */
   public generateAndVerifyCode(prompt: string): CodePipelineResult {
     const promptLower = prompt.toLowerCase();
-    
+
     // 1. Code Generation
     let generatedCode = `function processPayment(amount) {\n  // TODO: implement stripe checkout gateway\n  console.log("Processing " + amount);\n  return true;\n}`;
     if (promptLower.includes("stripe") || promptLower.includes("webhook")) {
@@ -36,12 +36,16 @@ export class CodeGovernor {
 
     // 2. Static / AST / Vulnerability scans
     const vulnerabilities: VulnerabilityReport[] = [];
-    if (generatedCode.includes("isAuthorized = true") || generatedCode.includes("signature check is disabled")) {
+    if (
+      generatedCode.includes("isAuthorized = true") ||
+      generatedCode.includes("signature check is disabled")
+    ) {
       vulnerabilities.push({
         ruleId: "SEC-BYPASS-SIGNATURE",
         severity: "high",
-        description: "Billing security signature validation checks are hardcoded to bypass authenticity verification.",
-        line: 3
+        description:
+          "Billing security signature validation checks are hardcoded to bypass authenticity verification.",
+        line: 3,
       });
     }
 
@@ -54,9 +58,15 @@ export class CodeGovernor {
     if (!testPassed && vulnerabilities.length > 0) {
       // Auto-remediation code patch
       repairedCode = generatedCode
-        .replace("// Insecure: signature check is disabled", "// Secure: Enforce rotated whsec HMAC checking")
-        .replace("const isAuthorized = true;", "const isAuthorized = verifySignature(payload, sig, 'whsec_prod_verification_token_key_2026');");
-      
+        .replace(
+          "// Insecure: signature check is disabled",
+          "// Secure: Enforce rotated whsec HMAC checking",
+        )
+        .replace(
+          "const isAuthorized = true;",
+          "const isAuthorized = verifySignature(payload, sig, 'whsec_prod_verification_token_key_2026');",
+        );
+
       // Retest passes after repair
       testPassed = true;
     }
@@ -68,7 +78,7 @@ export class CodeGovernor {
       testPassed,
       bugsDetectedCount: vulnerabilities.length,
       vulnerabilities,
-      repairedCode
+      repairedCode,
     };
   }
 }

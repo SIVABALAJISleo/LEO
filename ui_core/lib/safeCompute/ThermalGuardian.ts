@@ -55,7 +55,7 @@ class ThermalGuardian {
 
   updateTemperatures(cpuTemp: number, gpuTemp: number): void {
     const maxTemp = Math.max(cpuTemp, gpuTemp);
-    
+
     this.state = {
       cpuTemp,
       gpuTemp,
@@ -63,7 +63,7 @@ class ThermalGuardian {
       throttlingActive: maxTemp >= this.thresholds.warning,
       emergencyShutdownPending: maxTemp >= this.thresholds.emergency,
     };
-    
+
     this.notifyListeners();
   }
 
@@ -74,26 +74,26 @@ class ThermalGuardian {
     return 100;
   }
 
-  getThermalLevel(): 'safe' | 'warning' | 'critical' | 'emergency' {
+  getThermalLevel(): "safe" | "warning" | "critical" | "emergency" {
     const maxTemp = Math.max(this.state.cpuTemp, this.state.gpuTemp);
-    
-    if (maxTemp >= this.thresholds.emergency) return 'emergency';
-    if (maxTemp >= this.thresholds.critical) return 'critical';
-    if (maxTemp >= this.thresholds.warning) return 'warning';
-    return 'safe';
+
+    if (maxTemp >= this.thresholds.emergency) return "emergency";
+    if (maxTemp >= this.thresholds.critical) return "critical";
+    if (maxTemp >= this.thresholds.warning) return "warning";
+    return "safe";
   }
 
   shouldPauseJobs(): boolean {
-    return this.isActive && this.getThermalLevel() !== 'safe';
+    return this.isActive && this.getThermalLevel() !== "safe";
   }
 
   shouldThrottleJobs(): boolean {
     const level = this.getThermalLevel();
-    return this.isActive && (level === 'warning' || level === 'critical');
+    return this.isActive && (level === "warning" || level === "critical");
   }
 
   shouldEmergencyStop(): boolean {
-    return this.isActive && this.getThermalLevel() === 'emergency';
+    return this.isActive && this.getThermalLevel() === "emergency";
   }
 
   // Mark job as paused due to thermal
@@ -103,7 +103,7 @@ class ThermalGuardian {
 
   // Resume job after thermal recovery
   resumeJobAfterThermal(jobId: string): boolean {
-    if (this.pausedJobs.has(jobId) && this.getThermalLevel() === 'safe') {
+    if (this.pausedJobs.has(jobId) && this.getThermalLevel() === "safe") {
       this.pausedJobs.delete(jobId);
       return true;
     }
@@ -116,31 +116,31 @@ class ThermalGuardian {
 
   // Get recommended action based on thermal state
   getRecommendedAction(): {
-    action: 'continue' | 'throttle' | 'pause' | 'stop';
+    action: "continue" | "throttle" | "pause" | "stop";
     message: string;
   } {
     const level = this.getThermalLevel();
-    
+
     switch (level) {
-      case 'emergency':
+      case "emergency":
         return {
-          action: 'stop',
-          message: 'Emergency thermal shutdown - all jobs stopped for safety',
+          action: "stop",
+          message: "Emergency thermal shutdown - all jobs stopped for safety",
         };
-      case 'critical':
+      case "critical":
         return {
-          action: 'pause',
-          message: 'Critical temperature - jobs paused until cooldown',
+          action: "pause",
+          message: "Critical temperature - jobs paused until cooldown",
         };
-      case 'warning':
+      case "warning":
         return {
-          action: 'throttle',
-          message: 'Elevated temperature - job speed reduced',
+          action: "throttle",
+          message: "Elevated temperature - job speed reduced",
         };
       default:
         return {
-          action: 'continue',
-          message: 'Temperature normal - full speed operation',
+          action: "continue",
+          message: "Temperature normal - full speed operation",
         };
     }
   }
@@ -170,7 +170,7 @@ class ThermalGuardian {
   }
 
   private notifyListeners(): void {
-    this.listeners.forEach(listener => listener(this.state));
+    this.listeners.forEach((listener) => listener(this.state));
   }
 }
 

@@ -12,13 +12,17 @@ export interface AnomalyReport {
 export class FailureImmuneSystem {
   private log: AnomalyReport[] = [];
 
-  public reportFailure(moduleName: string, errorLog: string, severity: AnomalyReport["severity"]): void {
+  public reportFailure(
+    moduleName: string,
+    errorLog: string,
+    severity: AnomalyReport["severity"],
+  ): void {
     this.log.push({
       id: `err-${(100 + Math.random() * 900).toFixed(0)}`,
       moduleName,
       errorLog,
       severity,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
   }
 

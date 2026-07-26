@@ -2,8 +2,8 @@
 // Research-based real-time hardware dependence minimizer
 // Implements client-side prediction, rollback reconciliation, and error compensation
 
-export type PredictionConfidence = 'certain' | 'likely' | 'possible' | 'uncertain';
-export type ReconciliationStrategy = 'accept_prediction' | 'accept_reality' | 'merge' | 'rollback';
+export type PredictionConfidence = "certain" | "likely" | "possible" | "uncertain";
+export type ReconciliationStrategy = "accept_prediction" | "accept_reality" | "merge" | "rollback";
 
 export interface CausalPrediction {
   predictionId: string;
@@ -32,7 +32,7 @@ export interface ReconciliationResult {
   reconciledState: unknown;
   compensationApplied: boolean;
   compensationDetails: string | null;
-  userExperienceImpact: 'none' | 'minimal' | 'noticeable' | 'significant';
+  userExperienceImpact: "none" | "minimal" | "noticeable" | "significant";
   timestamp: string;
 }
 
@@ -49,8 +49,8 @@ export interface CausalityBufferStats {
 // Prediction confidence thresholds
 const CONFIDENCE_THRESHOLDS = {
   certain: 0.95,
-  likely: 0.80,
-  possible: 0.60,
+  likely: 0.8,
+  possible: 0.6,
   uncertain: 0.0,
 };
 
@@ -88,18 +88,18 @@ class PredictiveCausalityBuffer {
     causalContext?: string[];
   }): CausalPrediction {
     const predictionId = `pred_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
+
     // Calculate confidence based on action type and context
     const { confidence, confidenceScore } = this.calculateConfidence(
       params.actionType,
-      params.causalContext || []
+      params.causalContext || [],
     );
 
     // Generate predicted state
     const predictedState = this.generatePredictedState(
       params.currentState,
       params.actionType,
-      params.actionParams
+      params.actionParams,
     );
 
     const prediction: CausalPrediction = {
@@ -111,7 +111,7 @@ class PredictiveCausalityBuffer {
       predictedAt: new Date().toISOString(),
       validUntilMs: this.calculateValidityWindow(confidence),
       causalChain: [
-        ...params.causalContext || [],
+        ...(params.causalContext || []),
         `${params.actionType}:${predictionId.substring(5, 13)}`,
       ],
     };
@@ -126,42 +126,44 @@ class PredictiveCausalityBuffer {
     // Update stats
     this.stats.totalPredictions++;
 
-    console.log(`[CausalityBuffer] Prediction ${predictionId}: ${confidence} (${(confidenceScore * 100).toFixed(1)}%)`);
+    console.log(
+      `[CausalityBuffer] Prediction ${predictionId}: ${confidence} (${(confidenceScore * 100).toFixed(1)}%)`,
+    );
     return prediction;
   }
 
   private calculateConfidence(
     actionType: string,
-    context: string[]
+    context: string[],
   ): { confidence: PredictionConfidence; confidenceScore: number } {
     // Action types with high predictability
-    const highPredictability = ['increment', 'decrement', 'toggle', 'set', 'append', 'remove'];
-    const mediumPredictability = ['update', 'transform', 'calculate', 'process'];
-    const lowPredictability = ['fetch', 'query', 'search', 'external'];
+    const highPredictability = ["increment", "decrement", "toggle", "set", "append", "remove"];
+    const mediumPredictability = ["update", "transform", "calculate", "process"];
+    const lowPredictability = ["fetch", "query", "search", "external"];
 
     let baseScore = 0.75;
 
-    if (highPredictability.some(a => actionType.toLowerCase().includes(a))) {
+    if (highPredictability.some((a) => actionType.toLowerCase().includes(a))) {
       baseScore = 0.95;
-    } else if (mediumPredictability.some(a => actionType.toLowerCase().includes(a))) {
-      baseScore = 0.80;
-    } else if (lowPredictability.some(a => actionType.toLowerCase().includes(a))) {
-      baseScore = 0.50;
+    } else if (mediumPredictability.some((a) => actionType.toLowerCase().includes(a))) {
+      baseScore = 0.8;
+    } else if (lowPredictability.some((a) => actionType.toLowerCase().includes(a))) {
+      baseScore = 0.5;
     }
 
     // Adjust based on causal chain length (longer chains = less confidence)
-    const chainPenalty = Math.min(0.20, context.length * 0.03);
-    const finalScore = Math.max(0.30, baseScore - chainPenalty);
+    const chainPenalty = Math.min(0.2, context.length * 0.03);
+    const finalScore = Math.max(0.3, baseScore - chainPenalty);
 
     let confidence: PredictionConfidence;
     if (finalScore >= CONFIDENCE_THRESHOLDS.certain) {
-      confidence = 'certain';
+      confidence = "certain";
     } else if (finalScore >= CONFIDENCE_THRESHOLDS.likely) {
-      confidence = 'likely';
+      confidence = "likely";
     } else if (finalScore >= CONFIDENCE_THRESHOLDS.possible) {
-      confidence = 'possible';
+      confidence = "possible";
     } else {
-      confidence = 'uncertain';
+      confidence = "uncertain";
     }
 
     return { confidence, confidenceScore: finalScore };
@@ -170,27 +172,31 @@ class PredictiveCausalityBuffer {
   private generatePredictedState(
     currentState: unknown,
     actionType: string,
-    actionParams: Record<string, unknown>
+    actionParams: Record<string, unknown>,
   ): unknown {
     // Simple state prediction based on action type
     // In production, this would use learned models
-    if (typeof currentState !== 'object' || currentState === null) {
+    if (typeof currentState !== "object" || currentState === null) {
       return currentState;
     }
 
     const state = { ...(currentState as Record<string, unknown>) };
 
     // Apply predicted mutations based on action type
-    if (actionType.includes('increment') && actionParams.field) {
+    if (actionType.includes("increment") && actionParams.field) {
       const field = actionParams.field as string;
-      if (typeof state[field] === 'number') {
-        state[field] = (state[field] as number) + (actionParams.amount as number || 1);
+      if (typeof state[field] === "number") {
+        state[field] = (state[field] as number) + ((actionParams.amount as number) || 1);
       }
-    } else if (actionType.includes('set') && actionParams.field && actionParams.value !== undefined) {
+    } else if (
+      actionType.includes("set") &&
+      actionParams.field &&
+      actionParams.value !== undefined
+    ) {
       state[actionParams.field as string] = actionParams.value;
-    } else if (actionType.includes('toggle') && actionParams.field) {
+    } else if (actionType.includes("toggle") && actionParams.field) {
       const field = actionParams.field as string;
-      if (typeof state[field] === 'boolean') {
+      if (typeof state[field] === "boolean") {
         state[field] = !state[field];
       }
     }
@@ -205,10 +211,10 @@ class PredictiveCausalityBuffer {
   private calculateValidityWindow(confidence: PredictionConfidence): number {
     // Validity window in milliseconds based on confidence
     const windows: Record<PredictionConfidence, number> = {
-      certain: 30000,    // 30 seconds
-      likely: 15000,     // 15 seconds
-      possible: 5000,    // 5 seconds
-      uncertain: 1000,   // 1 second
+      certain: 30000, // 30 seconds
+      likely: 15000, // 15 seconds
+      possible: 5000, // 5 seconds
+      uncertain: 1000, // 1 second
     };
     return windows[confidence];
   }
@@ -226,7 +232,7 @@ class PredictiveCausalityBuffer {
   // Check prediction against reality
   checkAgainstReality(predictionId: string, actualState: unknown): RealityCheck {
     const prediction = this.predictionCache.get(predictionId);
-    
+
     if (!prediction) {
       return {
         predictionId,
@@ -262,23 +268,23 @@ class PredictiveCausalityBuffer {
     if (predicted === null || actual === null) return 1;
     if (typeof predicted !== typeof actual) return 1;
 
-    if (typeof predicted === 'object' && typeof actual === 'object') {
+    if (typeof predicted === "object" && typeof actual === "object") {
       const predObj = predicted as Record<string, unknown>;
       const actObj = actual as Record<string, unknown>;
-      
+
       // Ignore prediction metadata
-      const predKeys = Object.keys(predObj).filter(k => !k.startsWith('_'));
-      const actKeys = Object.keys(actObj).filter(k => !k.startsWith('_'));
-      
+      const predKeys = Object.keys(predObj).filter((k) => !k.startsWith("_"));
+      const actKeys = Object.keys(actObj).filter((k) => !k.startsWith("_"));
+
       const allKeys = new Set([...predKeys, ...actKeys]);
       let mismatches = 0;
-      
+
       for (const key of allKeys) {
         if (JSON.stringify(predObj[key]) !== JSON.stringify(actObj[key])) {
           mismatches++;
         }
       }
-      
+
       return allKeys.size > 0 ? mismatches / allKeys.size : 0;
     }
 
@@ -294,13 +300,13 @@ class PredictiveCausalityBuffer {
     if (!prediction) {
       return {
         predictionId,
-        strategy: 'accept_reality',
+        strategy: "accept_reality",
         originalPrediction: null,
         actualReality: actualState,
         reconciledState: actualState,
         compensationApplied: false,
         compensationDetails: null,
-        userExperienceImpact: 'none',
+        userExperienceImpact: "none",
         timestamp: new Date().toISOString(),
       };
     }
@@ -310,34 +316,34 @@ class PredictiveCausalityBuffer {
     let reconciledState: unknown;
     let compensationApplied = false;
     let compensationDetails: string | null = null;
-    let userExperienceImpact: ReconciliationResult['userExperienceImpact'];
+    let userExperienceImpact: ReconciliationResult["userExperienceImpact"];
 
     if (reality.matchesPrediction) {
       // Prediction was accurate - accept reality (minimal impact)
-      strategy = 'accept_reality';
+      strategy = "accept_reality";
       reconciledState = actualState;
-      userExperienceImpact = 'none';
-    } else if (reality.deviationScore <= 0.30) {
+      userExperienceImpact = "none";
+    } else if (reality.deviationScore <= 0.3) {
       // Minor deviation - merge states
-      strategy = 'merge';
+      strategy = "merge";
       reconciledState = this.mergeStates(prediction.predictedState, actualState);
       compensationApplied = true;
       compensationDetails = `Merged states with ${(reality.deviationScore * 100).toFixed(1)}% deviation`;
-      userExperienceImpact = 'minimal';
-    } else if (reality.deviationScore <= 0.50) {
+      userExperienceImpact = "minimal";
+    } else if (reality.deviationScore <= 0.5) {
       // Moderate deviation - accept reality with compensation
-      strategy = 'accept_reality';
+      strategy = "accept_reality";
       reconciledState = actualState;
       compensationApplied = true;
       compensationDetails = `Applied smooth transition from predicted to actual state`;
-      userExperienceImpact = 'noticeable';
+      userExperienceImpact = "noticeable";
     } else {
       // Major deviation - rollback
-      strategy = 'rollback';
+      strategy = "rollback";
       reconciledState = actualState;
       compensationApplied = true;
       compensationDetails = `Rollback required - ${(reality.deviationScore * 100).toFixed(1)}% deviation exceeded threshold`;
-      userExperienceImpact = 'significant';
+      userExperienceImpact = "significant";
       this.stats.rollbacks++;
     }
 
@@ -358,10 +364,10 @@ class PredictiveCausalityBuffer {
     if (compensationApplied) {
       this.stats.compensationsApplied++;
     }
-    this.stats.avgReconciliationTimeMs = (
+    this.stats.avgReconciliationTimeMs =
       (this.stats.avgReconciliationTimeMs * (this.stats.reconciliations - 1) +
-       (Date.now() - startTime)) / this.stats.reconciliations
-    );
+        (Date.now() - startTime)) /
+      this.stats.reconciliations;
 
     // Store in history
     this.reconciliationHistory.push(result);
@@ -369,25 +375,27 @@ class PredictiveCausalityBuffer {
       this.reconciliationHistory = this.reconciliationHistory.slice(-500);
     }
 
-    console.log(`[CausalityBuffer] Reconciled ${predictionId}: ${strategy}, impact: ${userExperienceImpact}`);
+    console.log(
+      `[CausalityBuffer] Reconciled ${predictionId}: ${strategy}, impact: ${userExperienceImpact}`,
+    );
     return result;
   }
 
   private mergeStates(predicted: unknown, actual: unknown): unknown {
-    if (typeof predicted !== 'object' || typeof actual !== 'object') {
+    if (typeof predicted !== "object" || typeof actual !== "object") {
       return actual;
     }
 
     const predObj = predicted as Record<string, unknown>;
     const actObj = actual as Record<string, unknown>;
-    
+
     // Merge: prefer actual values, keep predicted for missing keys
     const merged = { ...predObj, ...actObj };
-    
+
     // Remove prediction metadata
     delete merged._predicted;
     delete merged._predictionTimestamp;
-    
+
     return merged;
   }
 
@@ -407,8 +415,8 @@ class PredictiveCausalityBuffer {
   }
 
   // Get user experience impact summary
-  getUXImpactSummary(): Record<ReconciliationResult['userExperienceImpact'], number> {
-    const summary: Record<ReconciliationResult['userExperienceImpact'], number> = {
+  getUXImpactSummary(): Record<ReconciliationResult["userExperienceImpact"], number> {
+    const summary: Record<ReconciliationResult["userExperienceImpact"], number> = {
       none: 0,
       minimal: 0,
       noticeable: 0,
@@ -430,13 +438,16 @@ class PredictiveCausalityBuffer {
   // Get truth statement
   getTruthStatement(): string {
     const accuracy = (this.stats.avgPredictionAccuracy * 100).toFixed(1);
-    const rollbackRate = this.stats.totalPredictions > 0 
-      ? ((this.stats.rollbacks / this.stats.totalPredictions) * 100).toFixed(2)
-      : '0.00';
-    
-    return `Predictive Causality Buffer: ${this.stats.totalPredictions} predictions made, ` +
-           `${accuracy}% accuracy, ${rollbackRate}% rollback rate. ` +
-           `Instant user experience preserved while hardware remains authoritative.`;
+    const rollbackRate =
+      this.stats.totalPredictions > 0
+        ? ((this.stats.rollbacks / this.stats.totalPredictions) * 100).toFixed(2)
+        : "0.00";
+
+    return (
+      `Predictive Causality Buffer: ${this.stats.totalPredictions} predictions made, ` +
+      `${accuracy}% accuracy, ${rollbackRate}% rollback rate. ` +
+      `Instant user experience preserved while hardware remains authoritative.`
+    );
   }
 }
 

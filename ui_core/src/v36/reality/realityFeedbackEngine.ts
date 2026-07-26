@@ -18,7 +18,7 @@ export class RealityFeedbackEngine {
       id,
       prediction,
       confidence,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
   }
 

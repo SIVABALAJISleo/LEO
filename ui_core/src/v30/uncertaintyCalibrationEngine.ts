@@ -12,14 +12,14 @@ export interface CalibrationReport {
 
 export class UncertaintyCalibrationEngine {
   calibratePrediction(
-    accuracyEstimate: number, 
-    sampleSize: number, 
-    significanceLevelAlpha: number = 0.05
+    accuracyEstimate: number,
+    sampleSize: number,
+    significanceLevelAlpha: number = 0.05,
   ): CalibrationReport {
     // Standard error calculation for proportion
     const variance = (accuracyEstimate * (1 - accuracyEstimate)) / sampleSize;
     const standardError = Math.sqrt(variance > 0 ? variance : 0.00001);
-    
+
     // Critical value for 95% confidence (approx 1.96)
     const z = significanceLevelAlpha === 0.01 ? 2.576 : 1.96;
     const marginOfError = z * standardError;
@@ -41,7 +41,7 @@ export class UncertaintyCalibrationEngine {
       classification,
       marginOfError,
       confidenceInterval: [lowerBound, upperBound],
-      empiricalCoveragePassed: lowerBound <= accuracyEstimate && accuracyEstimate <= upperBound
+      empiricalCoveragePassed: lowerBound <= accuracyEstimate && accuracyEstimate <= upperBound,
     };
   }
 }

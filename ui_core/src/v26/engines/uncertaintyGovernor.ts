@@ -17,7 +17,7 @@ export class UncertaintyGovernor {
 
     let uncertaintyClass: UncertaintyClass = "Verified";
     let confidenceScore = compositeAccuracy;
-    let verificationStatus: UncertaintyResolution['verificationStatus'] = "VERIFIED_PASS";
+    let verificationStatus: UncertaintyResolution["verificationStatus"] = "VERIFIED_PASS";
     const unknownAreas: string[] = [];
 
     if (hasUnk || citationCount === 0) {
@@ -25,7 +25,7 @@ export class UncertaintyGovernor {
       confidenceScore = 0.25;
       verificationStatus = "UNCALIBRATED_WARNING";
       unknownAreas.push("Target parameters contain empty citation indexes.");
-    } else if (compositeAccuracy < 0.80) {
+    } else if (compositeAccuracy < 0.8) {
       uncertaintyClass = "Uncertain";
       verificationStatus = "UNCALIBRATED_WARNING";
       unknownAreas.push("Platform aggregated accuracy fell below 80% threshold.");
@@ -38,7 +38,7 @@ export class UncertaintyGovernor {
       confidenceScore: parseFloat(confidenceScore.toFixed(3)),
       evidenceCitationsCount: citationCount,
       unknownAreas,
-      verificationStatus
+      verificationStatus,
     };
   }
 }

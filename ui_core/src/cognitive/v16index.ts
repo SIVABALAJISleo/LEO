@@ -6,10 +6,17 @@ export type { V16BenchmarkDomain, UniverseV16Report } from "../evaluation_univer
 export { UniversalReasoningCore } from "../engines/universalReasoningCore";
 
 export { FormalProofEngine } from "../engines/formalProofEngine";
-export type { TheoremSolver, ProofTelemetry, ProofEngineReport } from "../engines/formalProofEngine";
+export type {
+  TheoremSolver,
+  ProofTelemetry,
+  ProofEngineReport,
+} from "../engines/formalProofEngine";
 
 export { VerificationMesh } from "../verification/verificationMesh";
-export type { VerificationCheckV16, VerificationMeshReport } from "../verification/verificationMesh";
+export type {
+  VerificationCheckV16,
+  VerificationMeshReport,
+} from "../verification/verificationMesh";
 
 export { RealityFeedbackEngineV3 } from "../learning/realityFeedbackEngineV3";
 
@@ -26,7 +33,11 @@ export { DiscoveryEngineV4 } from "../discovery/discoveryEngineV4";
 export { WorldModelV4 } from "../world/worldModelV4";
 
 export { DebateFrameworkV16 } from "../agents/debateFrameworkV16";
-export type { AgentStatementV16, DebatePhaseV16, DebateV16Report } from "../agents/debateFrameworkV16";
+export type {
+  AgentStatementV16,
+  DebatePhaseV16,
+  DebateV16Report,
+} from "../agents/debateFrameworkV16";
 
 export { IntentReconstructionEngine } from "../language/intentReconstruction";
 export type { IntentReconstructionReport } from "../language/intentReconstruction";

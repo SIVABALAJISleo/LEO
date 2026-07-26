@@ -18,13 +18,18 @@ export class ActiveInferenceEngine {
    */
   public evaluateStatement(
     statement: string,
-    existingDatabaseFacts: string[]
+    existingDatabaseFacts: string[],
   ): ActiveInferenceResult {
     const sLower = statement.toLowerCase();
-    
+
     // Step 1: Detect uncertainty
-    const hasUncertainKeywords = sLower.includes("maybe") || sLower.includes("predict") || sLower.includes("unknown") || sLower.includes("weather") || sLower.includes("price");
-    
+    const hasUncertainKeywords =
+      sLower.includes("maybe") ||
+      sLower.includes("predict") ||
+      sLower.includes("unknown") ||
+      sLower.includes("weather") ||
+      sLower.includes("price");
+
     let initialConfidence = 0.95;
     const toolsTriggered: string[] = [];
     const evidenceGathered: string[] = [];
@@ -40,10 +45,13 @@ export class ActiveInferenceEngine {
     // Step 2: Search for evidence / Query tools if uncertain
     if (initialConfidence < 0.6) {
       toolsTriggered.push("LocalWebSearch", "OntologyLookup");
-      
+
       // Simulating evidence search
-      const matchedFact = existingDatabaseFacts.find(f => 
-        f.toLowerCase().split(" ").some(word => sLower.includes(word) && word.length > 3)
+      const matchedFact = existingDatabaseFacts.find((f) =>
+        f
+          .toLowerCase()
+          .split(" ")
+          .some((word) => sLower.includes(word) && word.length > 3),
       );
 
       if (matchedFact) {
@@ -75,7 +83,7 @@ export class ActiveInferenceEngine {
       confidenceState,
       evidenceGathered,
       toolsTriggered,
-      beliefUpdated
+      beliefUpdated,
     };
   }
 }

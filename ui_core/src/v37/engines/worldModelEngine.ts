@@ -36,7 +36,9 @@ export class WorldModelEngine {
         riskDetected = true;
         expectedState = "Potential memory leak or security violation";
         riskCount++;
-        recommendedAdjustments.push(`Step ${idx + 1}: Override action '${act}' with safe sandbox equivalent.`);
+        recommendedAdjustments.push(
+          `Step ${idx + 1}: Override action '${act}' with safe sandbox equivalent.`,
+        );
       } else if (actLower.includes("write")) {
         safetyScore = 0.85;
         expectedState = "Data written; indexing file updates";
@@ -47,7 +49,7 @@ export class WorldModelEngine {
         simulatedAction: act,
         expectedState,
         safetyScore,
-        riskDetected
+        riskDetected,
       });
     });
 
@@ -58,9 +60,9 @@ export class WorldModelEngine {
       overallRiskScore,
       passedSafetyVerification,
       simulationTrace,
-      recommendedAdjustments: passedSafetyVerification 
-        ? ["All simulated steps verified as safe."] 
-        : recommendedAdjustments
+      recommendedAdjustments: passedSafetyVerification
+        ? ["All simulated steps verified as safe."]
+        : recommendedAdjustments,
     };
   }
 }

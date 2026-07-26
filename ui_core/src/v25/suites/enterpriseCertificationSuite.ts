@@ -23,7 +23,7 @@ export class EnterpriseCertificationSuite {
       slaCompliance: 0.9991, // 99.91%
       averageLatencyMs: 115,
       recoveryUptimePct: 0.9995,
-      errorRate: 0.0008
+      errorRate: 0.0008,
     };
 
     const passed = stats.availability >= 0.99 && stats.slaCompliance >= 0.99;
@@ -32,7 +32,7 @@ export class EnterpriseCertificationSuite {
       timestamp: Date.now(),
       stats,
       passed,
-      activeSLABreaches: 0
+      activeSLABreaches: 0,
     };
   }
 }

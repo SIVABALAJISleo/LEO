@@ -23,7 +23,7 @@ export class UserUnderstandingCertificationSuite {
       { caseId: "C-3", category: "Typos", accuracy: 0.982, resolved: true },
       { caseId: "C-4", category: "Abbreviations", accuracy: 0.985, resolved: true },
       { caseId: "C-5", category: "Incomplete", accuracy: 0.952, resolved: true },
-      { caseId: "C-6", category: "Contradictory", accuracy: 0.941, resolved: true }
+      { caseId: "C-6", category: "Contradictory", accuracy: 0.941, resolved: true },
     ];
 
     const sumAccuracy = cases.reduce((sum, c) => sum + c.accuracy, 0);
@@ -35,7 +35,7 @@ export class UserUnderstandingCertificationSuite {
       timestamp: Date.now(),
       overallUnderstandingScore: parseFloat(overallUnderstandingScore.toFixed(4)),
       passed,
-      cases
+      cases,
     };
   }
 }

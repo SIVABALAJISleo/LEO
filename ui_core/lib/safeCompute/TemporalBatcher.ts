@@ -15,7 +15,7 @@ interface BatchWindow {
   jobs: BatchedJob[];
   windowStart: Date;
   windowEnd: Date;
-  status: 'collecting' | 'processing' | 'completed';
+  status: "collecting" | "processing" | "completed";
 }
 
 class TemporalBatcher {
@@ -35,10 +35,10 @@ class TemporalBatcher {
 
   // Add job to batching window
   addJob(
-    jobId: string, 
-    signature: string, 
+    jobId: string,
+    signature: string,
     input: unknown,
-    onComplete: (result: unknown) => void
+    onComplete: (result: unknown) => void,
   ): { windowId: string; position: number; estimatedWait: number } {
     // Check if we already have a result for this signature
     if (this.completedResults.has(signature)) {
@@ -49,8 +49,8 @@ class TemporalBatcher {
     }
 
     let window = this.windows.get(signature);
-    
-    if (!window || window.status !== 'collecting') {
+
+    if (!window || window.status !== "collecting") {
       // Create new window
       const now = new Date();
       window = {
@@ -58,10 +58,10 @@ class TemporalBatcher {
         jobs: [],
         windowStart: now,
         windowEnd: new Date(now.getTime() + this.windowDurationMs),
-        status: 'collecting',
+        status: "collecting",
       };
       this.windows.set(signature, window);
-      
+
       // Schedule window processing
       setTimeout(() => this.processWindow(signature), this.windowDurationMs);
     }
@@ -78,7 +78,7 @@ class TemporalBatcher {
     this.notifyListeners();
 
     const estimatedWait = window.windowEnd.getTime() - Date.now();
-    
+
     return {
       windowId: signature,
       position: window.jobs.length,
@@ -89,26 +89,26 @@ class TemporalBatcher {
   // Process a batch window
   private async processWindow(signature: string): Promise<void> {
     const window = this.windows.get(signature);
-    if (!window || window.status !== 'collecting') return;
+    if (!window || window.status !== "collecting") return;
 
-    window.status = 'processing';
+    window.status = "processing";
     this.notifyListeners();
 
     try {
       // Use the first job's input as the canonical input
       const canonicalInput = window.jobs[0]?.input;
-      
+
       let result: unknown;
       if (this.processCallback) {
         result = await this.processCallback(signature, canonicalInput);
       } else {
         // Simulated processing
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        result = { 
-          signature, 
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        result = {
+          signature,
           processedAt: new Date().toISOString(),
           batchSize: window.jobs.length,
-          status: 'success'
+          status: "success",
         };
       }
 
@@ -121,18 +121,18 @@ class TemporalBatcher {
           try {
             callback(result);
           } catch (e) {
-            console.error('Callback error:', e);
+            console.error("Callback error:", e);
           }
         }
       }
 
-      window.status = 'completed';
+      window.status = "completed";
       this.notifyListeners();
     } catch (error) {
       // On error, notify all jobs
       for (const job of window.jobs) {
         for (const callback of job.callbacks) {
-          callback({ error: String(error), status: 'failed' });
+          callback({ error: String(error), status: "failed" });
         }
       }
     }
@@ -140,13 +140,13 @@ class TemporalBatcher {
 
   // Get current window status
   getWindowStatus(signature: string): {
-    status: 'none' | 'collecting' | 'processing' | 'completed';
+    status: "none" | "collecting" | "processing" | "completed";
     jobCount: number;
     timeRemaining: number;
   } {
     const window = this.windows.get(signature);
     if (!window) {
-      return { status: 'none', jobCount: 0, timeRemaining: 0 };
+      return { status: "none", jobCount: 0, timeRemaining: 0 };
     }
 
     return {
@@ -158,8 +158,9 @@ class TemporalBatcher {
 
   // Get all active windows
   getActiveWindows(): BatchWindow[] {
-    return Array.from(this.windows.values())
-      .filter(w => w.status === 'collecting' || w.status === 'processing');
+    return Array.from(this.windows.values()).filter(
+      (w) => w.status === "collecting" || w.status === "processing",
+    );
   }
 
   // Get batching stats
@@ -170,12 +171,12 @@ class TemporalBatcher {
     totalComputesSaved: number;
   } {
     const windows = Array.from(this.windows.values());
-    const completedWindows = windows.filter(w => w.status === 'completed');
+    const completedWindows = windows.filter((w) => w.status === "completed");
     const totalJobs = completedWindows.reduce((sum, w) => sum + w.jobs.length, 0);
     const computesSaved = totalJobs - completedWindows.length;
 
     return {
-      activeWindows: windows.filter(w => w.status !== 'completed').length,
+      activeWindows: windows.filter((w) => w.status !== "completed").length,
       totalJobsBatched: totalJobs,
       averageBatchSize: completedWindows.length > 0 ? totalJobs / completedWindows.length : 0,
       totalComputesSaved: computesSaved,
@@ -189,15 +190,14 @@ class TemporalBatcher {
 
   private notifyListeners(): void {
     const windows = Array.from(this.windows.values());
-    this.listeners.forEach(l => l(windows));
+    this.listeners.forEach((l) => l(windows));
   }
 
   // Clear completed windows older than maxAgeMs
   cleanup(maxAgeMs: number = 60 * 60 * 1000): void {
     const now = Date.now();
     for (const [key, window] of this.windows.entries()) {
-      if (window.status === 'completed' && 
-          now - window.windowEnd.getTime() > maxAgeMs) {
+      if (window.status === "completed" && now - window.windowEnd.getTime() > maxAgeMs) {
         this.windows.delete(key);
       }
     }

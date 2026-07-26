@@ -3,7 +3,7 @@
 export interface SafeComputeJob {
   id: string;
   userId: string;
-  status: 'queued' | 'processing' | 'completed' | 'failed' | 'paused';
+  status: "queued" | "processing" | "completed" | "failed" | "paused";
   progress: number;
   priority: number;
   createdAt: Date;
@@ -35,7 +35,7 @@ export interface ComputeConfig {
 export interface ModelVariant {
   id: string;
   name: string;
-  size: 'tiny' | 'small' | 'medium' | 'large';
+  size: "tiny" | "small" | "medium" | "large";
   requiredRamMb: number;
   accuracy: number;
   speed: number;

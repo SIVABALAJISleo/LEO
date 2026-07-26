@@ -1,7 +1,8 @@
 // LEO AI V35 — Hardware-Aware Runtime
 // Detects and optimizes execution layouts for Intel CPUs, iGPUs, NPUs, and GGUF quantization formats.
 
-export type ExecutionDevice = "OpenVINO_iGPU" | "IPEX_LLM_CPU" | "SYCL_Shared" | "NPU_LowPower" | "Fallback_CPU";
+export type ExecutionDevice =
+  "OpenVINO_iGPU" | "IPEX_LLM_CPU" | "SYCL_Shared" | "NPU_LowPower" | "Fallback_CPU";
 
 export interface HardwareSpecification {
   cpuCoresCount: number;
@@ -24,7 +25,7 @@ export class HardwareAwareRuntime {
     hasSyclSupport: true,
     hasIpexExtensions: true,
     hasOpenVinoLibs: true,
-    totalSystemRamGB: 16
+    totalSystemRamGB: 16,
   };
 
   /**
@@ -32,7 +33,7 @@ export class HardwareAwareRuntime {
    */
   public planOptimalExecution(
     taskMemoryMB: number,
-    operationType: "vector" | "matrix" | "logical"
+    operationType: "vector" | "matrix" | "logical",
   ): RuntimeOptimization {
     let assignedDevice: ExecutionDevice = "Fallback_CPU";
     let memorySharedAllocationMB = 256;
@@ -42,17 +43,20 @@ export class HardwareAwareRuntime {
     if (operationType === "vector" && this.localSpec.hasOpenVinoLibs) {
       assignedDevice = "OpenVINO_iGPU";
       memorySharedAllocationMB = 1024;
-      optimizationDirectives = "Enabling OpenVINO dynamic vector layouts on Meteor Lake Execution Units.";
+      optimizationDirectives =
+        "Enabling OpenVINO dynamic vector layouts on Meteor Lake Execution Units.";
       threadAffinityPin = []; // Offloaded to GPU
     } else if (operationType === "matrix" && this.localSpec.hasIpexExtensions) {
       assignedDevice = "IPEX_LLM_CPU";
       memorySharedAllocationMB = 2048;
-      optimizationDirectives = "Bypass FP32 multiplications. Load 4-bit INT quantization via Intel Extension for PyTorch.";
+      optimizationDirectives =
+        "Bypass FP32 multiplications. Load 4-bit INT quantization via Intel Extension for PyTorch.";
       threadAffinityPin = [0, 1, 2, 3, 4, 5, 6, 7]; // Performance Core pinning
     } else if (this.localSpec.hasSyclSupport && taskMemoryMB < 500) {
       assignedDevice = "SYCL_Shared";
       memorySharedAllocationMB = 512;
-      optimizationDirectives = "Submit thread queue to SYCL compiler lanes with USM shared registers.";
+      optimizationDirectives =
+        "Submit thread queue to SYCL compiler lanes with USM shared registers.";
       threadAffinityPin = [0, 1];
     } else {
       assignedDevice = "NPU_LowPower";
@@ -65,7 +69,7 @@ export class HardwareAwareRuntime {
       assignedDevice,
       threadAffinityPin,
       memorySharedAllocationMB,
-      optimizationDirectives
+      optimizationDirectives,
     };
   }
 

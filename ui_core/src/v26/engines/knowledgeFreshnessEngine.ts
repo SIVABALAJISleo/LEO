@@ -27,7 +27,7 @@ export class KnowledgeFreshnessEngine {
         sourceTrust: 0.98,
         verificationHistoryCount: 5,
         lastUpdated: Date.now() - 3600000 * 2,
-        status: "CURRENT"
+        status: "CURRENT",
       },
       {
         key: "K-V26-2",
@@ -36,45 +36,45 @@ export class KnowledgeFreshnessEngine {
         sourceTrust: 0.99,
         verificationHistoryCount: 3,
         lastUpdated: Date.now() - 3600000 * 12,
-        status: "CURRENT"
+        status: "CURRENT",
       },
       {
         key: "K-V26-3",
         topic: "Mocked API Key mock configs (historical 0763f03 code legacy)",
         freshnessValue: 0.15,
-        sourceTrust: 0.20,
+        sourceTrust: 0.2,
         verificationHistoryCount: 0,
         lastUpdated: Date.now() - 3600000 * 480, // old
-        status: "EXPIRED_RETIRED"
-      }
+        status: "EXPIRED_RETIRED",
+      },
     ];
   }
 
   auditFreshness(): { nodes: FreshnessNode[]; averageFreshness: number } {
-    this.nodes = this.nodes.map(n => {
+    this.nodes = this.nodes.map((n) => {
       // Decay freshness
       const ageHours = (Date.now() - n.lastUpdated) / 3600000;
       if (ageHours > 100 && n.status !== "EXPIRED_RETIRED") {
         n.freshnessValue = parseFloat(Math.max(0.1, n.freshnessValue - 0.05).toFixed(3));
-        if (n.freshnessValue < 0.40) {
+        if (n.freshnessValue < 0.4) {
           n.status = "REVALIDATING";
         }
       }
       return n;
     });
 
-    const activeNodes = this.nodes.filter(n => n.status !== "EXPIRED_RETIRED");
+    const activeNodes = this.nodes.filter((n) => n.status !== "EXPIRED_RETIRED");
     const sum = activeNodes.reduce((s, n) => s + n.freshnessValue, 0);
     const averageFreshness = activeNodes.length > 0 ? sum / activeNodes.length : 0.95;
 
     return {
       nodes: this.nodes,
-      averageFreshness: parseFloat(averageFreshness.toFixed(3))
+      averageFreshness: parseFloat(averageFreshness.toFixed(3)),
     };
   }
 
   triggerRevalidation(key: string) {
-    const node = this.nodes.find(n => n.key === key);
+    const node = this.nodes.find((n) => n.key === key);
     if (node) {
       node.freshnessValue = 1.0;
       node.status = "CURRENT";

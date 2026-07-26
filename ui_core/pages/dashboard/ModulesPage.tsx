@@ -1,14 +1,14 @@
-import { useState, useMemo } from 'react';
-import { Cpu, RefreshCw } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
-import { ModuleFilters } from '@/components/modules/ModuleFilters';
-import { ModuleCard } from '@/components/modules/ModuleCard';
-import { ConfigureModal } from '@/components/modules/ConfigureModal';
-import { StatsDrawer } from '@/components/modules/StatsDrawer';
-import { BatchActions } from '@/components/modules/BatchActions';
-import { useModulesData, ModuleData } from '@/hooks/useModulesData';
-import { useToast } from '@/hooks/use-toast';
+import { useState, useMemo } from "react";
+import { Cpu, RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ModuleFilters } from "@/components/modules/ModuleFilters";
+import { ModuleCard } from "@/components/modules/ModuleCard";
+import { ConfigureModal } from "@/components/modules/ConfigureModal";
+import { StatsDrawer } from "@/components/modules/StatsDrawer";
+import { BatchActions } from "@/components/modules/BatchActions";
+import { useModulesData, ModuleData } from "@/hooks/useModulesData";
+import { useToast } from "@/hooks/use-toast";
 
 export default function ModulesPage() {
   const { toast } = useToast();
@@ -19,14 +19,14 @@ export default function ModulesPage() {
     refetch,
     toggleModuleEnabled,
     batchToggleModules,
-    applySettingsTemplate
+    applySettingsTemplate,
   } = useModulesData();
 
   // Filter & Sort state
-  const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [sortBy, setSortBy] = useState('name');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [sortBy, setSortBy] = useState("name");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
   // Selection state
   const [selectedModules, setSelectedModules] = useState<Set<string>>(new Set());
@@ -42,16 +42,15 @@ export default function ModulesPage() {
     // Search filter
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      result = result.filter(m => 
-        m.name.toLowerCase().includes(query) ||
-        m.description.toLowerCase().includes(query)
+      result = result.filter(
+        (m) => m.name.toLowerCase().includes(query) || m.description.toLowerCase().includes(query),
       );
     }
 
     // Status filter
-    if (statusFilter !== 'all') {
-      result = result.filter(m => {
-        const status = m.status?.status?.toLowerCase() || 'idle';
+    if (statusFilter !== "all") {
+      result = result.filter((m) => {
+        const status = m.status?.status?.toLowerCase() || "idle";
         return status === statusFilter.toLowerCase();
       });
     }
@@ -60,27 +59,29 @@ export default function ModulesPage() {
     result.sort((a, b) => {
       let comparison = 0;
       switch (sortBy) {
-        case 'name':
+        case "name":
           comparison = a.name.localeCompare(b.name);
           break;
-        case 'health':
+        case "health":
           comparison = (a.status?.health_score ?? 100) - (b.status?.health_score ?? 100);
           break;
-        case 'speedup':
+        case "speedup":
           comparison = (a.config?.speedup_achieved ?? 0) - (b.config?.speedup_achieved ?? 0);
           break;
-        case 'compression':
-          comparison = (a.config?.compression_ratio_achieved ?? 0) - (b.config?.compression_ratio_achieved ?? 0);
+        case "compression":
+          comparison =
+            (a.config?.compression_ratio_achieved ?? 0) -
+            (b.config?.compression_ratio_achieved ?? 0);
           break;
       }
-      return sortOrder === 'asc' ? comparison : -comparison;
+      return sortOrder === "asc" ? comparison : -comparison;
     });
 
     return result;
   }, [modules, searchQuery, statusFilter, sortBy, sortOrder]);
 
   const handleSelectModule = (moduleName: string, selected: boolean) => {
-    setSelectedModules(prev => {
+    setSelectedModules((prev) => {
       const newSet = new Set(prev);
       if (selected) {
         newSet.add(moduleName);
@@ -110,13 +111,13 @@ export default function ModulesPage() {
     const template = {
       auto_tune: true,
       optimization_level: 2,
-      cache_enabled: true
+      cache_enabled: true,
     };
     await applySettingsTemplate(Array.from(selectedModules), template);
     handleClearSelection();
     toast({
-      title: 'Template Applied',
-      description: 'Balanced settings applied to selected modules.'
+      title: "Template Applied",
+      description: "Balanced settings applied to selected modules.",
     });
   };
 
@@ -145,7 +146,7 @@ export default function ModulesPage() {
           </div>
         </div>
         <Button variant="outline" onClick={refetch} disabled={loading}>
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`} />
           Refresh
         </Button>
       </div>
@@ -159,7 +160,7 @@ export default function ModulesPage() {
         sortBy={sortBy}
         onSortByChange={setSortBy}
         sortOrder={sortOrder}
-        onSortOrderToggle={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
+        onSortOrderToggle={() => setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))}
       />
 
       {/* Batch Actions */}

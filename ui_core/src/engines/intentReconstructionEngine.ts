@@ -16,28 +16,28 @@ export interface ReconstructedIntent {
 
 export class IntentReconstructionEngine {
   private static slangMap: Record<string, string> = {
-    "bro": "user",
-    "bruh": "user",
-    "wanna": "want to",
-    "gonna": "going to",
-    "plz": "please",
-    "pls": "please",
-    "thx": "thanks",
-    "ty": "thank you",
-    "u": "you",
-    "r": "are",
+    bro: "user",
+    bruh: "user",
+    wanna: "want to",
+    gonna: "going to",
+    plz: "please",
+    pls: "please",
+    thx: "thanks",
+    ty: "thank you",
+    u: "you",
+    r: "are",
   };
 
   private static tamilEnglishMap: Record<string, string> = {
-    "eppadi": "how to",
-    "seivadhu": "do",
-    "panradhu": "do",
-    "epdi": "how to",
-    "solunga": "tell me",
-    "enaku": "for me",
-    "venum": "need",
-    "panna": "to do",
-    "pannunga": "please do",
+    eppadi: "how to",
+    seivadhu: "do",
+    panradhu: "do",
+    epdi: "how to",
+    solunga: "tell me",
+    enaku: "for me",
+    venum: "need",
+    panna: "to do",
+    pannunga: "please do",
   };
 
   public reconstruct(text: string): ReconstructedIntent {
@@ -80,12 +80,21 @@ export class IntentReconstructionEngine {
     // 2. Map repaired phrasing to clear canonical target
     let reconstructed = normalized;
     if (normalized.includes("startup fail") || normalized.includes("startup help")) {
-      reconstructed = "User is seeking recovery strategy and planning roadmaps after a SaaS startup failure.";
-    } else if (normalized.includes("train ai") || normalized.includes("train artificial intelligence")) {
-      reconstructed = "How can I train a local artificial intelligence model under CPU-first constraints?";
+      reconstructed =
+        "User is seeking recovery strategy and planning roadmaps after a SaaS startup failure.";
+    } else if (
+      normalized.includes("train ai") ||
+      normalized.includes("train artificial intelligence")
+    ) {
+      reconstructed =
+        "How can I train a local artificial intelligence model under CPU-first constraints?";
     } else {
       reconstructed = normalized.charAt(0).toUpperCase() + normalized.slice(1);
-      if (!reconstructed.endsWith("?") && !reconstructed.endsWith(".") && !reconstructed.endsWith("!")) {
+      if (
+        !reconstructed.endsWith("?") &&
+        !reconstructed.endsWith(".") &&
+        !reconstructed.endsWith("!")
+      ) {
         reconstructed += "?";
       }
     }
@@ -98,7 +107,7 @@ export class IntentReconstructionEngine {
       confidence,
       changes,
       isTamilEnglish,
-      isSlang
+      isSlang,
     };
   }
 }

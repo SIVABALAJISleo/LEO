@@ -14,7 +14,7 @@ export class EvidenceGraphBuilder {
     this.nodes[id] = {
       nodeId: id,
       sourceLabel: label,
-      referencedNodes: references
+      referencedNodes: references,
     };
   }
 

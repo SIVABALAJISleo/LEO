@@ -25,7 +25,7 @@ export class CausalReasoningEngine {
   private scm: CausalVariable[] = [
     { name: "CPUThermals", value: 0.45, determinedBy: [] },
     { name: "CoreThrottling", value: 0.85, determinedBy: ["CPUThermals"] },
-    { name: "LatencySpike", value: 0.90, determinedBy: ["CoreThrottling"] }
+    { name: "LatencySpike", value: 0.9, determinedBy: ["CoreThrottling"] },
   ];
 
   /**
@@ -48,7 +48,7 @@ export class CausalReasoningEngine {
       correlationCoefficient: 0.94,
       causationConfirmed,
       counterfactualAssertion,
-      interventionOutcome
+      interventionOutcome,
     };
   }
 }

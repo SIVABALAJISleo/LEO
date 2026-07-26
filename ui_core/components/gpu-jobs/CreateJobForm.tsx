@@ -1,33 +1,39 @@
-import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Slider } from '@/components/ui/slider';
-import { Textarea } from '@/components/ui/textarea';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, Plus, AlertTriangle, CheckCircle2 } from 'lucide-react';
-import { useGpuJobs } from '@/hooks/useGpuJobs';
-import { JOB_TYPE_OPTIONS, GPU_MEMORY_LIMIT_MB } from '@/lib/gpuJobTypes';
+import { useState } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { Textarea } from "@/components/ui/textarea";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Loader2, Plus, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { useGpuJobs } from "@/hooks/useGpuJobs";
+import { JOB_TYPE_OPTIONS, GPU_MEMORY_LIMIT_MB } from "@/lib/gpuJobTypes";
 
 export function CreateJobForm() {
   const { createJob, getMemoryReport } = useGpuJobs();
   const [loading, setLoading] = useState(false);
-  const [jobType, setJobType] = useState('');
-  const [jobName, setJobName] = useState('');
+  const [jobType, setJobType] = useState("");
+  const [jobName, setJobName] = useState("");
   const [priority, setPriority] = useState([5]);
-  const [payload, setPayload] = useState('{}');
+  const [payload, setPayload] = useState("{}");
   const [memoryRequired, setMemoryRequired] = useState(4096);
 
   const memoryReport = getMemoryReport();
-  const selectedJobType = JOB_TYPE_OPTIONS.find(o => o.value === jobType);
+  const selectedJobType = JOB_TYPE_OPTIONS.find((o) => o.value === jobType);
   const estimatedMemory = selectedJobType?.memoryEstimate || memoryRequired;
   const canSubmit = jobType && estimatedMemory <= memoryReport.max_job_size_mb;
 
   const handleJobTypeChange = (value: string) => {
     setJobType(value);
-    const option = JOB_TYPE_OPTIONS.find(o => o.value === value);
+    const option = JOB_TYPE_OPTIONS.find((o) => o.value === value);
     if (option) {
       setMemoryRequired(option.memoryEstimate);
     }
@@ -51,14 +57,14 @@ export function CreateJobForm() {
         job_name: jobName || undefined,
         payload: parsedPayload,
         priority: priority[0],
-        memory_required_mb: memoryRequired
+        memory_required_mb: memoryRequired,
       });
 
       // Reset form
-      setJobType('');
-      setJobName('');
+      setJobType("");
+      setJobName("");
       setPriority([5]);
-      setPayload('{}');
+      setPayload("{}");
       setMemoryRequired(4096);
     } finally {
       setLoading(false);
@@ -81,7 +87,8 @@ export function CreateJobForm() {
             <Alert className="border-primary/30 bg-primary/10">
               <CheckCircle2 className="h-4 w-4 text-primary" />
               <AlertDescription>
-                GPU ready: {memoryReport.available_mb.toLocaleString()}MB available (max job: {memoryReport.max_job_size_mb.toLocaleString()}MB)
+                GPU ready: {memoryReport.available_mb.toLocaleString()}MB available (max job:{" "}
+                {memoryReport.max_job_size_mb.toLocaleString()}MB)
               </AlertDescription>
             </Alert>
           ) : (
@@ -101,7 +108,7 @@ export function CreateJobForm() {
                   <SelectValue placeholder="Select job type" />
                 </SelectTrigger>
                 <SelectContent>
-                  {JOB_TYPE_OPTIONS.map(option => (
+                  {JOB_TYPE_OPTIONS.map((option) => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.label} (~{(option.memoryEstimate / 1024).toFixed(1)}GB)
                     </SelectItem>
@@ -162,11 +169,7 @@ export function CreateJobForm() {
             />
           </div>
 
-          <Button 
-            type="submit" 
-            disabled={loading || !canSubmit}
-            className="w-full"
-          >
+          <Button type="submit" disabled={loading || !canSubmit} className="w-full">
             {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

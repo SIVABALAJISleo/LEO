@@ -26,13 +26,17 @@ export class HardeningTelemetry {
   /**
    * Log OpenTelemetry spans.
    */
-  public logTelemetry(name: string, payload: any, severity: "info" | "warning" | "error" | "critical" = "info"): TelemetryEvent {
+  public logTelemetry(
+    name: string,
+    payload: any,
+    severity: "info" | "warning" | "error" | "critical" = "info",
+  ): TelemetryEvent {
     const event: TelemetryEvent = {
       eventId: "OTel-event-" + Math.floor(Math.random() * 10000),
       name,
       payload: JSON.stringify(payload),
       severity,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
 
     this.eventsLog.push(event);
@@ -50,7 +54,9 @@ export class HardeningTelemetry {
    * Simulates Sentry captureException.
    */
   private triggerSentryAlert(event: TelemetryEvent): void {
-    console.error(`[SENTRY ERROR PORTAL] Captured Exception Event: ${event.eventId} - Name: ${event.name}.`);
+    console.error(
+      `[SENTRY ERROR PORTAL] Captured Exception Event: ${event.eventId} - Name: ${event.name}.`,
+    );
   }
 
   /**
@@ -58,7 +64,9 @@ export class HardeningTelemetry {
    */
   private triggerPagerDutyAlert(event: TelemetryEvent): string {
     const pdIncidentId = "PD-incident-" + Math.floor(Math.random() * 100000);
-    console.warn(`[PAGERDUTY ALARM] Alerting SRE queue! Incident: ${pdIncidentId}. Severity: ${event.severity.toUpperCase()}. Details: ${event.name}`);
+    console.warn(
+      `[PAGERDUTY ALARM] Alerting SRE queue! Incident: ${pdIncidentId}. Severity: ${event.severity.toUpperCase()}. Details: ${event.name}`,
+    );
     return pdIncidentId;
   }
 
@@ -68,12 +76,12 @@ export class HardeningTelemetry {
   public executeRollback(version: string, reason: string): RollbackAction {
     this.canaryWeight = 0; // Immediately dump canary weight to isolate release
     this.logTelemetry("Canary Rollback Executed", { targetVersion: version, reason }, "critical");
-    
+
     return {
       targetVersion: version,
       activeRollbackTriggered: true,
       canaryWeightSet: this.canaryWeight,
-      reason
+      reason,
     };
   }
 
@@ -101,7 +109,11 @@ export interface IncidentAlertV16 {
 export class HardeningTelemetryV16 extends HardeningTelemetry {
   private alertsLog: IncidentAlertV16[] = [];
 
-  public logV16Event(name: string, payload: any, severity: TelemetryEvent["severity"]): TelemetryEvent {
+  public logV16Event(
+    name: string,
+    payload: any,
+    severity: TelemetryEvent["severity"],
+  ): TelemetryEvent {
     const event = this.logTelemetry(name, payload, severity);
     if (severity === "critical") {
       const alert: IncidentAlertV16 = {
@@ -109,7 +121,7 @@ export class HardeningTelemetryV16 extends HardeningTelemetry {
         source: "V16 Substrate Governor",
         canaryWeightSnapshot: this.getCanaryWeight(),
         triggeredRollback: false,
-        resolved: false
+        resolved: false,
       };
       this.alertsLog.push(alert);
     }
@@ -122,7 +134,7 @@ export class HardeningTelemetryV16 extends HardeningTelemetry {
       source: "V16 Substrate Governor",
       canaryWeightSnapshot: this.getCanaryWeight(),
       triggeredRollback: true,
-      resolved: false
+      resolved: false,
     };
     this.alertsLog.push(alert);
 
@@ -134,4 +146,3 @@ export class HardeningTelemetryV16 extends HardeningTelemetry {
     return this.alertsLog;
   }
 }
-

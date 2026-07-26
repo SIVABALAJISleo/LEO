@@ -13,22 +13,25 @@ export interface ExcellenceScoreBreakdown {
 }
 
 export class RealWorldExcellenceScore {
-  calculateExcellenceIndex(breakdown: ExcellenceScoreBreakdown): ExcellenceScoreBreakdown & { index: number; } {
-    
+  calculateExcellenceIndex(
+    breakdown: ExcellenceScoreBreakdown,
+  ): ExcellenceScoreBreakdown & { index: number } {
     // Weighted index score
-    const index = parseFloat((
-      breakdown.userSatisfactionPct * 0.2 +
-      breakdown.knowledgeFreshnessPct * 0.15 +
-      breakdown.workflowEfficiencyPct * 0.15 +
-      breakdown.agentHealthPct * 0.15 +
-      breakdown.realityAlignmentPct * 0.15 +
-      breakdown.failureReductionPct * 0.1 +
-      breakdown.economicEfficiencyPct * 0.1
-    ).toFixed(1));
+    const index = parseFloat(
+      (
+        breakdown.userSatisfactionPct * 0.2 +
+        breakdown.knowledgeFreshnessPct * 0.15 +
+        breakdown.workflowEfficiencyPct * 0.15 +
+        breakdown.agentHealthPct * 0.15 +
+        breakdown.realityAlignmentPct * 0.15 +
+        breakdown.failureReductionPct * 0.1 +
+        breakdown.economicEfficiencyPct * 0.1
+      ).toFixed(1),
+    );
 
     return {
       ...breakdown,
-      index
+      index,
     };
   }
 }

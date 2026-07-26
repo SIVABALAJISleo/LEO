@@ -18,7 +18,7 @@ export class RealityBenchmarkEngine {
       syntheticAccuracy: synthAcc,
       realityAccuracy,
       realityGapIndex,
-      logCountParsed: 14200 // simulated prod log size
+      logCountParsed: 14200, // simulated prod log size
     };
   }
 }

@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom';
-import { Cpu } from 'lucide-react';
-import { Card } from '@/components/ui/card';
+import { Link } from "react-router-dom";
+import { Cpu } from "lucide-react";
+import { Card } from "@/components/ui/card";
 
 interface AuthLayoutProps {
   children: React.ReactNode;
@@ -18,17 +18,11 @@ export const AuthLayout = ({ children, title, description }: AuthLayoutProps) =>
       <Card className="relative w-full max-w-md p-8 bg-card border-border shadow-card animate-fade-in">
         <Link to="/" className="flex items-center justify-center space-x-2 mb-8 group">
           <Cpu className="h-8 w-8 text-primary group-hover:animate-float" />
-          <span className="text-2xl font-display font-bold">
-            HYPER
-          </span>
+          <span className="text-2xl font-display font-bold">HYPER</span>
         </Link>
 
-        <h2 className="text-3xl font-display font-bold text-center mb-2">
-          {title}
-        </h2>
-        <p className="text-foreground/60 text-center mb-8">
-          {description}
-        </p>
+        <h2 className="text-3xl font-display font-bold text-center mb-2">{title}</h2>
+        <p className="text-foreground/60 text-center mb-8">{description}</p>
 
         {children}
 

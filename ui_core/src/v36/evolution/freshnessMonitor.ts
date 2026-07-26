@@ -10,7 +10,7 @@ export class FreshnessMonitor {
       return parseFloat((baseConfidence * 0.75).toFixed(3)); // Outdated
     }
     if (daysElapsed > 30) {
-      return parseFloat((baseConfidence * 0.90).toFixed(3)); // Aging
+      return parseFloat((baseConfidence * 0.9).toFixed(3)); // Aging
     }
     return baseConfidence; // Fresh
   }

@@ -20,7 +20,7 @@ export class MemoryValidationLab {
     const semanticDriftRate = parseFloat(Math.max(0.1, 0.85 + noise * 5).toFixed(2));
 
     const overallMemoryConsistency = parseFloat(
-      (100 - contradictionRate - semanticDriftRate).toFixed(2)
+      (100 - contradictionRate - semanticDriftRate).toFixed(2),
     );
 
     return {
@@ -29,7 +29,7 @@ export class MemoryValidationLab {
       contradictionRate,
       temporalConsistency,
       semanticDriftRate,
-      overallMemoryConsistency
+      overallMemoryConsistency,
     };
   }
 }

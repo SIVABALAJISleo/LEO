@@ -19,7 +19,7 @@ export class EnterpriseProofEngine {
 
     for (let i = 0; i < trials; i++) {
       const hash = Math.cos(seed * (i + 1));
-      
+
       // Target reliability 99.1%
       if (hash > -0.991) {
         compliantTrials++;
@@ -36,7 +36,7 @@ export class EnterpriseProofEngine {
       slaComplianceRate,
       meanTimeToRecoverySec,
       activeErrorContainmentRate: 99.85,
-      enterprise_reliability
+      enterprise_reliability,
     };
   }
 }

@@ -18,7 +18,7 @@ export class FeedbackCollector {
       query,
       ratingValue,
       userEdits,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
     this.ratingsLog.push(rating);
     return rating;

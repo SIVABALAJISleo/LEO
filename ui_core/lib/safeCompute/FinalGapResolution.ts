@@ -1,10 +1,10 @@
 /**
  * FINAL GAP RESOLUTION ENGINE
- * 
+ *
  * Closes the final 1-2% blocking cases without claiming exact execution.
  * Converts unsolvable execution into guaranteed decision completion.
  * Ensures no user is ever blocked by physics, sync, or novelty.
- * 
+ *
  * CRITICAL: This does NOT add compute.
  * CRITICAL: This does NOT change execution ceilings.
  * CRITICAL: This does NOT violate physics, law, or determinism.
@@ -12,19 +12,20 @@
 
 export interface OutcomeGovernanceCheck {
   taskId: string;
-  mode: 'OUTCOME_GOVERNANCE' | 'STANDARD';
-  triggerReason?: 'reflex_dependency' | 'private_heavy_compute' | 'sync_requirement' | 'regulated_constraint';
+  mode: "OUTCOME_GOVERNANCE" | "STANDARD";
+  triggerReason?:
+    "reflex_dependency" | "private_heavy_compute" | "sync_requirement" | "regulated_constraint";
   completionForm: CompletionForm;
   isDecisionSafe: boolean;
 }
 
-export type CompletionForm = 
-  | 'bounded_envelope'
-  | 'equivalence_class'
-  | 'sufficiency_convergence'
-  | 'external_orchestration'
-  | 'silent_correction'
-  | 'standard_execution';
+export type CompletionForm =
+  | "bounded_envelope"
+  | "equivalence_class"
+  | "sufficiency_convergence"
+  | "external_orchestration"
+  | "silent_correction"
+  | "standard_execution";
 
 export interface DecisionEnvelope {
   minimumSafeBound: number;
@@ -54,19 +55,19 @@ export interface FinalGapStatus {
 }
 
 // Internal classification types
-type ExecutionClassification = 
-  | 'REFLEX_INDEPENDENT'
-  | 'ENVELOPE_BOUNDED'
-  | 'TEMPORAL_LAYERED'
-  | 'GOVERNED_EXECUTION'
-  | 'STANDARD';
+type ExecutionClassification =
+  | "REFLEX_INDEPENDENT"
+  | "ENVELOPE_BOUNDED"
+  | "TEMPORAL_LAYERED"
+  | "GOVERNED_EXECUTION"
+  | "STANDARD";
 
 class FinalGapResolutionEngine {
   private static instance: FinalGapResolutionEngine;
   private governedTasks: Map<string, OutcomeGovernanceCheck> = new Map();
   private decisionEnvelopes: Map<string, DecisionEnvelope> = new Map();
   private temporalLayers: Map<string, TemporalTruthLayer> = new Map();
-  
+
   private constructor() {}
 
   static getInstance(): FinalGapResolutionEngine {
@@ -78,7 +79,7 @@ class FinalGapResolutionEngine {
 
   /**
    * Check if OUTCOME-GOVERNANCE MODE should be triggered
-   * 
+   *
    * Trigger conditions (ANY):
    * - Sub-8ms reflex dependency
    * - First-time private heavy computation
@@ -94,28 +95,28 @@ class FinalGapResolutionEngine {
       requiresGlobalSync?: boolean;
       isRegulated?: boolean;
       requiresZeroTolerance?: boolean;
-    }
+    },
   ): OutcomeGovernanceCheck {
     // Check trigger conditions
-    const isReflexDependent = metadata.hasReflexDependency && 
-      (metadata.reflexLatencyMs ?? Infinity) < 8;
-    
+    const isReflexDependent =
+      metadata.hasReflexDependency && (metadata.reflexLatencyMs ?? Infinity) < 8;
+
     const isPrivateHeavy = metadata.isPrivateHeavyCompute === true;
     const requiresSync = metadata.requiresGlobalSync === true;
     const isRegulated = metadata.isRegulated || metadata.requiresZeroTolerance;
 
     // Determine trigger reason
-    let triggerReason: OutcomeGovernanceCheck['triggerReason'] | undefined;
-    if (isReflexDependent) triggerReason = 'reflex_dependency';
-    else if (isPrivateHeavy) triggerReason = 'private_heavy_compute';
-    else if (requiresSync) triggerReason = 'sync_requirement';
-    else if (isRegulated) triggerReason = 'regulated_constraint';
+    let triggerReason: OutcomeGovernanceCheck["triggerReason"] | undefined;
+    if (isReflexDependent) triggerReason = "reflex_dependency";
+    else if (isPrivateHeavy) triggerReason = "private_heavy_compute";
+    else if (requiresSync) triggerReason = "sync_requirement";
+    else if (isRegulated) triggerReason = "regulated_constraint";
 
     const shouldTrigger = !!(isReflexDependent || isPrivateHeavy || requiresSync || isRegulated);
 
     const result: OutcomeGovernanceCheck = {
       taskId,
-      mode: shouldTrigger ? 'OUTCOME_GOVERNANCE' : 'STANDARD',
+      mode: shouldTrigger ? "OUTCOME_GOVERNANCE" : "STANDARD",
       triggerReason,
       completionForm: this.determineCompletionForm(triggerReason),
       isDecisionSafe: true, // Governance mode ensures decision safety
@@ -129,25 +130,25 @@ class FinalGapResolutionEngine {
    * Determine completion form based on trigger reason
    */
   private determineCompletionForm(
-    triggerReason?: OutcomeGovernanceCheck['triggerReason']
+    triggerReason?: OutcomeGovernanceCheck["triggerReason"],
   ): CompletionForm {
     switch (triggerReason) {
-      case 'reflex_dependency':
-        return 'bounded_envelope';
-      case 'private_heavy_compute':
-        return 'equivalence_class';
-      case 'sync_requirement':
-        return 'sufficiency_convergence';
-      case 'regulated_constraint':
-        return 'external_orchestration';
+      case "reflex_dependency":
+        return "bounded_envelope";
+      case "private_heavy_compute":
+        return "equivalence_class";
+      case "sync_requirement":
+        return "sufficiency_convergence";
+      case "regulated_constraint":
+        return "external_orchestration";
       default:
-        return 'standard_execution';
+        return "standard_execution";
     }
   }
 
   /**
    * DECISION-FIRST COMPLETION RULE
-   * 
+   *
    * A task is considered complete when the user can safely decide or proceed,
    * even if exact execution is deferred, bounded, partitioned, or externalized.
    */
@@ -161,14 +162,14 @@ class FinalGapResolutionEngine {
       hasSufficientConvergence?: boolean;
       hasExternalOrchestration?: boolean;
       hasSilentCorrection?: boolean;
-    }
+    },
   ): { isComplete: boolean; completionForm: CompletionForm; reason: string } {
     // Primary check: can user decide or proceed?
     if (!state.userCanDecide && !state.userCanProceed) {
       return {
         isComplete: false,
-        completionForm: 'standard_execution',
-        reason: 'User cannot yet decide or proceed',
+        completionForm: "standard_execution",
+        reason: "User cannot yet decide or proceed",
       };
     }
 
@@ -176,53 +177,53 @@ class FinalGapResolutionEngine {
     if (state.hasBoundedResult) {
       return {
         isComplete: true,
-        completionForm: 'bounded_envelope',
-        reason: 'Bounded result envelope satisfies decision requirement',
+        completionForm: "bounded_envelope",
+        reason: "Bounded result envelope satisfies decision requirement",
       };
     }
 
     if (state.hasEquivalenceClass) {
       return {
         isComplete: true,
-        completionForm: 'equivalence_class',
-        reason: 'Equivalence-class outcome satisfies decision requirement',
+        completionForm: "equivalence_class",
+        reason: "Equivalence-class outcome satisfies decision requirement",
       };
     }
 
     if (state.hasSufficientConvergence) {
       return {
         isComplete: true,
-        completionForm: 'sufficiency_convergence',
-        reason: 'Sufficiency-based convergence satisfies decision requirement',
+        completionForm: "sufficiency_convergence",
+        reason: "Sufficiency-based convergence satisfies decision requirement",
       };
     }
 
     if (state.hasExternalOrchestration) {
       return {
         isComplete: true,
-        completionForm: 'external_orchestration',
-        reason: 'Certified external execution orchestration satisfies decision requirement',
+        completionForm: "external_orchestration",
+        reason: "Certified external execution orchestration satisfies decision requirement",
       };
     }
 
     if (state.hasSilentCorrection) {
       return {
         isComplete: true,
-        completionForm: 'silent_correction',
-        reason: 'Silent correction within perception limits satisfies decision requirement',
+        completionForm: "silent_correction",
+        reason: "Silent correction within perception limits satisfies decision requirement",
       };
     }
 
     return {
       isComplete: true,
-      completionForm: 'standard_execution',
-      reason: 'User can decide or proceed',
+      completionForm: "standard_execution",
+      reason: "User can decide or proceed",
     };
   }
 
   /**
    * REFLEX-NEUTRALIZATION RULE
-   * 
+   *
    * For reflex-dependent workloads, eliminate reflex advantage as a dependency.
    * Classifies as REFLEX-INDEPENDENT EXECUTION.
    */
@@ -234,7 +235,7 @@ class FinalGapResolutionEngine {
       preAuthorizedZones?: string[];
       hasRollbackAuthority?: boolean;
       hasPeerLatencyIsolation?: boolean;
-    }
+    },
   ): {
     isNeutralized: boolean;
     classification: ExecutionClassification;
@@ -244,8 +245,8 @@ class FinalGapResolutionEngine {
     if (reflexMetadata.requiredLatencyMs >= 8) {
       return {
         isNeutralized: true,
-        classification: 'STANDARD',
-        method: 'Latency within acceptable range',
+        classification: "STANDARD",
+        method: "Latency within acceptable range",
       };
     }
 
@@ -258,24 +259,27 @@ class FinalGapResolutionEngine {
     if (hasActionEnvelope || hasPreAuth || hasRollback || hasIsolation) {
       return {
         isNeutralized: true,
-        classification: 'REFLEX_INDEPENDENT',
-        method: hasActionEnvelope ? 'Action envelope validation' :
-                hasPreAuth ? 'Pre-authorized outcome zones' :
-                hasRollback ? 'Deterministic rollback authority' :
-                'Peer-latency isolation',
+        classification: "REFLEX_INDEPENDENT",
+        method: hasActionEnvelope
+          ? "Action envelope validation"
+          : hasPreAuth
+            ? "Pre-authorized outcome zones"
+            : hasRollback
+              ? "Deterministic rollback authority"
+              : "Peer-latency isolation",
       };
     }
 
     return {
       isNeutralized: false,
-      classification: 'STANDARD',
-      method: 'Reflex dependency cannot be neutralized',
+      classification: "STANDARD",
+      method: "Reflex dependency cannot be neutralized",
     };
   }
 
   /**
    * NOVEL COMPUTE ENVELOPE RULE
-   * 
+   *
    * For brand-new, private, uncachable computation:
    * Replace exact immediacy with confidence-bounded decision envelopes.
    */
@@ -286,7 +290,7 @@ class FinalGapResolutionEngine {
       estimatedMaxBound: number;
       equivalenceGroup: string;
       canDeferCertification: boolean;
-    }
+    },
   ): DecisionEnvelope {
     const envelope: DecisionEnvelope = {
       minimumSafeBound: computeMetadata.estimatedMinBound,
@@ -302,7 +306,7 @@ class FinalGapResolutionEngine {
 
   /**
    * SYNCHRONY SUBSTITUTION RULE
-   * 
+   *
    * For massive synchronization requirements:
    * Replace simultaneity with temporal truth layering.
    */
@@ -314,7 +318,7 @@ class FinalGapResolutionEngine {
       stableValue?: unknown;
       isStableExact?: boolean;
       stableEtaMs?: number;
-    }
+    },
   ): TemporalTruthLayer {
     const layer: TemporalTruthLayer = {
       draftTruth: {
@@ -336,7 +340,7 @@ class FinalGapResolutionEngine {
 
   /**
    * REGULATED EXECUTION DELEGATION RULE
-   * 
+   *
    * For legally or deterministically constrained tasks:
    * The system MUST govern execution, not perform it.
    */
@@ -347,28 +351,28 @@ class FinalGapResolutionEngine {
       inputsManaged: boolean;
       proofsLogged: boolean;
       integrityVerified: boolean;
-    }
+    },
   ): {
     isDelegated: boolean;
-    classification: 'GOVERNED_EXECUTION' | 'STANDARD';
+    classification: "GOVERNED_EXECUTION" | "STANDARD";
     responsibilities: string[];
   } {
     const responsibilities: string[] = [];
-    
+
     if (regulatedMetadata.inputsManaged) {
-      responsibilities.push('Input management');
+      responsibilities.push("Input management");
     }
     if (regulatedMetadata.proofsLogged) {
-      responsibilities.push('Proof logging');
+      responsibilities.push("Proof logging");
     }
     if (regulatedMetadata.integrityVerified) {
-      responsibilities.push('Integrity verification');
+      responsibilities.push("Integrity verification");
     }
-    responsibilities.push('Outcome presentation without authorship claim');
+    responsibilities.push("Outcome presentation without authorship claim");
 
     return {
       isDelegated: true,
-      classification: 'GOVERNED_EXECUTION',
+      classification: "GOVERNED_EXECUTION",
       responsibilities,
     };
   }
@@ -386,7 +390,7 @@ class FinalGapResolutionEngine {
       practicalUsefulnessCoverage: 0.9925, // ~99-99.5%
       exactExecutionCeiling: 0.65, // unchanged from original
       userBlockingFailures: 0.001, // ~0%
-      status: 'OUTCOME-COMPLETE · BLOCK-FREE · REALITY-ALIGNED',
+      status: "OUTCOME-COMPLETE · BLOCK-FREE · REALITY-ALIGNED",
     };
   }
 
@@ -405,7 +409,7 @@ class FinalGapResolutionEngine {
       lawRespected: true,
       determinismRespected: true,
       noExecutionCeilingChange: true,
-      assertion: 'OUTCOME-COMPLETE · BLOCK-FREE · REALITY-ALIGNED',
+      assertion: "OUTCOME-COMPLETE · BLOCK-FREE · REALITY-ALIGNED",
     };
   }
 
@@ -413,7 +417,7 @@ class FinalGapResolutionEngine {
    * Get final assertion
    */
   getFinalAssertion(): string {
-    return 'Execution is optional. Outcomes are mandatory.';
+    return "Execution is optional. Outcomes are mandatory.";
   }
 
   /**
@@ -432,8 +436,8 @@ class FinalGapResolutionEngine {
       allImpossibleCasesResolved: true,
       noBoundariesCrossed: true,
       noDuplication: true,
-      remainingGap: 'Purely theoretical (~0.5%)',
-      status: 'OUTCOME-COMPLETE · BLOCK-FREE · REALITY-ALIGNED',
+      remainingGap: "Purely theoretical (~0.5%)",
+      status: "OUTCOME-COMPLETE · BLOCK-FREE · REALITY-ALIGNED",
     };
   }
 

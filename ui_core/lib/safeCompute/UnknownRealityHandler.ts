@@ -1,35 +1,35 @@
 // Unknown Reality Handler
 // Introduces explicit UNKNOWN_REALITY state for cases where automation must stop
 
-export type RealityState = 
-  | 'KNOWN'              // Fully understood, can automate
-  | 'UNKNOWN_REALITY'    // Must freeze and require observation
-  | 'PARTIALLY_KNOWN'    // Some aspects understood
-  | 'EXPERIMENT_REQUIRED'; // Need controlled experiment
+export type RealityState =
+  | "KNOWN" // Fully understood, can automate
+  | "UNKNOWN_REALITY" // Must freeze and require observation
+  | "PARTIALLY_KNOWN" // Some aspects understood
+  | "EXPERIMENT_REQUIRED"; // Need controlled experiment
 
 export interface UnknownRealityCase {
   caseId: string;
   category: string;
   description: string;
-  
+
   // Discovery
   discoveredAt: string;
-  discoveredBy: 'system' | 'user' | 'authority';
-  
+  discoveredBy: "system" | "user" | "authority";
+
   // State
   state: RealityState;
-  
+
   // Evidence
   observedSymptoms: string[];
   hypotheses: string[];
-  
+
   // Resolution
   experimentRequired?: {
     description: string;
     expectedDuration: string;
-    riskLevel: 'low' | 'medium' | 'high';
+    riskLevel: "low" | "medium" | "high";
   };
-  
+
   // Outcome
   resolvedAt?: string;
   resolution?: {
@@ -43,11 +43,11 @@ export interface KnowledgeEntry {
   entryId: string;
   category: string;
   knowledge: string;
-  
+
   // Origin
   derivedFrom: string; // caseId of the unknown that led to this
   derivedAt: string;
-  
+
   // Confidence
   confidence: number;
   validatedBy: string[];
@@ -69,7 +69,7 @@ class UnknownRealityHandler {
     resolvedUnknowns: 0,
     pendingUnknowns: 0,
     averageResolutionTimeMs: 0,
-    knowledgeEntriesCreated: 0
+    knowledgeEntriesCreated: 0,
   };
 
   /**
@@ -80,7 +80,7 @@ class UnknownRealityHandler {
     description: string;
     observedSymptoms: string[];
     hypotheses?: string[];
-    discoveredBy?: 'system' | 'user' | 'authority';
+    discoveredBy?: "system" | "user" | "authority";
   }): UnknownRealityCase {
     const caseId = `unknown_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
@@ -89,10 +89,10 @@ class UnknownRealityHandler {
       category: params.category,
       description: params.description,
       discoveredAt: new Date().toISOString(),
-      discoveredBy: params.discoveredBy || 'system',
-      state: 'UNKNOWN_REALITY',
+      discoveredBy: params.discoveredBy || "system",
+      state: "UNKNOWN_REALITY",
       observedSymptoms: params.observedSymptoms,
-      hypotheses: params.hypotheses || []
+      hypotheses: params.hypotheses || [],
     };
 
     this.cases.set(caseId, unknownCase);
@@ -109,43 +109,46 @@ class UnknownRealityHandler {
    * Check if a category has any unresolved unknowns
    */
   hasUnresolvedUnknowns(category: string): boolean {
-    return Array.from(this.cases.values())
-      .some(c => c.category === category && c.state === 'UNKNOWN_REALITY');
+    return Array.from(this.cases.values()).some(
+      (c) => c.category === category && c.state === "UNKNOWN_REALITY",
+    );
   }
 
   /**
    * Get current reality state for a category
    */
   getRealityState(category: string): RealityState {
-    const categoryCases = Array.from(this.cases.values())
-      .filter(c => c.category === category);
+    const categoryCases = Array.from(this.cases.values()).filter((c) => c.category === category);
 
     if (categoryCases.length === 0) {
-      return 'KNOWN';
+      return "KNOWN";
     }
 
-    const hasUnknown = categoryCases.some(c => c.state === 'UNKNOWN_REALITY');
-    const hasExperiment = categoryCases.some(c => c.state === 'EXPERIMENT_REQUIRED');
-    const hasPartial = categoryCases.some(c => c.state === 'PARTIALLY_KNOWN');
+    const hasUnknown = categoryCases.some((c) => c.state === "UNKNOWN_REALITY");
+    const hasExperiment = categoryCases.some((c) => c.state === "EXPERIMENT_REQUIRED");
+    const hasPartial = categoryCases.some((c) => c.state === "PARTIALLY_KNOWN");
 
-    if (hasUnknown) return 'UNKNOWN_REALITY';
-    if (hasExperiment) return 'EXPERIMENT_REQUIRED';
-    if (hasPartial) return 'PARTIALLY_KNOWN';
-    return 'KNOWN';
+    if (hasUnknown) return "UNKNOWN_REALITY";
+    if (hasExperiment) return "EXPERIMENT_REQUIRED";
+    if (hasPartial) return "PARTIALLY_KNOWN";
+    return "KNOWN";
   }
 
   /**
    * Require an experiment to resolve an unknown
    */
-  requireExperiment(caseId: string, experiment: {
-    description: string;
-    expectedDuration: string;
-    riskLevel: 'low' | 'medium' | 'high';
-  }): boolean {
+  requireExperiment(
+    caseId: string,
+    experiment: {
+      description: string;
+      expectedDuration: string;
+      riskLevel: "low" | "medium" | "high";
+    },
+  ): boolean {
     const unknownCase = this.cases.get(caseId);
     if (!unknownCase) return false;
 
-    unknownCase.state = 'EXPERIMENT_REQUIRED';
+    unknownCase.state = "EXPERIMENT_REQUIRED";
     unknownCase.experimentRequired = experiment;
 
     console.log(`[UnknownReality] Experiment required for ${caseId}: ${experiment.description}`);
@@ -155,11 +158,14 @@ class UnknownRealityHandler {
   /**
    * Submit observation/experiment results to resolve an unknown
    */
-  submitObservation(caseId: string, observation: {
-    result: string;
-    confidence: number;
-    validatedBy: string;
-  }): {
+  submitObservation(
+    caseId: string,
+    observation: {
+      result: string;
+      confidence: number;
+      validatedBy: string;
+    },
+  ): {
     resolved: boolean;
     knowledgeEntry?: KnowledgeEntry;
   } {
@@ -170,7 +176,7 @@ class UnknownRealityHandler {
 
     // Create knowledge entry from observation
     const entryId = `knowledge_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
+
     const entry: KnowledgeEntry = {
       entryId,
       category: unknownCase.category,
@@ -178,7 +184,7 @@ class UnknownRealityHandler {
       derivedFrom: caseId,
       derivedAt: new Date().toISOString(),
       confidence: observation.confidence,
-      validatedBy: [observation.validatedBy]
+      validatedBy: [observation.validatedBy],
     };
 
     // Add to knowledge base
@@ -186,22 +192,22 @@ class UnknownRealityHandler {
     this.stats.knowledgeEntriesCreated++;
 
     // Resolve the unknown case
-    unknownCase.state = 'KNOWN';
+    unknownCase.state = "KNOWN";
     unknownCase.resolvedAt = new Date().toISOString();
     unknownCase.resolution = {
       newKnowledge: observation.result,
       addedToKnowledgeBase: true,
-      preventsFutureUnknowns: true
+      preventsFutureUnknowns: true,
     };
 
     this.stats.resolvedUnknowns++;
     this.stats.pendingUnknowns--;
 
     // Update average resolution time
-    const resolutionTimeMs = new Date(unknownCase.resolvedAt).getTime() - 
-      new Date(unknownCase.discoveredAt).getTime();
-    this.stats.averageResolutionTimeMs = 
-      (this.stats.averageResolutionTimeMs * (this.stats.resolvedUnknowns - 1) + resolutionTimeMs) / 
+    const resolutionTimeMs =
+      new Date(unknownCase.resolvedAt).getTime() - new Date(unknownCase.discoveredAt).getTime();
+    this.stats.averageResolutionTimeMs =
+      (this.stats.averageResolutionTimeMs * (this.stats.resolvedUnknowns - 1) + resolutionTimeMs) /
       this.stats.resolvedUnknowns;
 
     console.log(`[UnknownReality] Case ${caseId} resolved. New knowledge added to base.`);
@@ -215,7 +221,7 @@ class UnknownRealityHandler {
    */
   queryKnowledge(category: string): KnowledgeEntry[] {
     return Array.from(this.knowledgeBase.values())
-      .filter(e => e.category === category)
+      .filter((e) => e.category === category)
       .sort((a, b) => b.confidence - a.confidence);
   }
 
@@ -223,16 +229,16 @@ class UnknownRealityHandler {
    * Check if knowledge exists for a query
    */
   hasKnowledge(category: string, minConfidence: number = 0.8): boolean {
-    return this.queryKnowledge(category)
-      .some(e => e.confidence >= minConfidence);
+    return this.queryKnowledge(category).some((e) => e.confidence >= minConfidence);
   }
 
   /**
    * Get all pending unknown cases
    */
   getPendingCases(): UnknownRealityCase[] {
-    return Array.from(this.cases.values())
-      .filter(c => c.state === 'UNKNOWN_REALITY' || c.state === 'EXPERIMENT_REQUIRED');
+    return Array.from(this.cases.values()).filter(
+      (c) => c.state === "UNKNOWN_REALITY" || c.state === "EXPERIMENT_REQUIRED",
+    );
   }
 
   /**
@@ -267,7 +273,7 @@ class UnknownRealityHandler {
   } {
     const pendingCases = this.getPendingCases();
     const recentResolutions = Array.from(this.cases.values())
-      .filter(c => c.resolvedAt)
+      .filter((c) => c.resolvedAt)
       .sort((a, b) => new Date(b.resolvedAt!).getTime() - new Date(a.resolvedAt!).getTime())
       .slice(0, 10);
 
@@ -284,7 +290,7 @@ Unknown Reality Status:
       summary,
       pendingCases,
       recentResolutions,
-      knowledgeGrowth: this.stats.knowledgeEntriesCreated
+      knowledgeGrowth: this.stats.knowledgeEntriesCreated,
     };
   }
 }

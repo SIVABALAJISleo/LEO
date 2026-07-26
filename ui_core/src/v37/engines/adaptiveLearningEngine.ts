@@ -18,19 +18,19 @@ export class AdaptiveLearningEngine {
   public logReinforcement(
     actionId: string,
     rating: number,
-    category: ReinforcementSignal["category"]
+    category: ReinforcementSignal["category"],
   ): ReinforcementSignal {
     const feedbackMetric = rating / 5.0; // scale 1-5 to 0-1.0
-    
+
     // Calculate adaptive reinforcement delta
-    const baseDelta = feedbackMetric - 0.70; // 0.70 is standard target baseline
+    const baseDelta = feedbackMetric - 0.7; // 0.70 is standard target baseline
     const adjustmentApplied = parseFloat((baseDelta * 0.15).toFixed(4));
 
     const signal: ReinforcementSignal = {
       actionId,
       feedbackMetric,
       adjustmentApplied,
-      category
+      category,
     };
 
     this.signals.push(signal);

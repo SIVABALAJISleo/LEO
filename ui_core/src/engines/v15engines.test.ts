@@ -22,14 +22,17 @@ describe("Antigravity AI V15 Evolving Substrate Tests", () => {
     const universe = new EvaluationUniverse();
     const report = universe.runUniverseEvaluation();
     expect(report.totalEvaluationTasks).toBe(101000); // 101,000 tasks simulated
-    expect(report.overallAccuracy).toBeGreaterThan(0.90);
+    expect(report.overallAccuracy).toBeGreaterThan(0.9);
     expect(report.averageLatencyMs).toBeLessThan(300);
     expect(report.benchmarks.length).toBe(10);
   });
 
   it("Phase 2: Self Critique Engine V2 executes loop & flags flaws", () => {
     const engine = new SelfCritiqueEngineV2();
-    const report = engine.executeSelfCritique("billing stripe", "Yes, it works, but no, it fails with unlimited vram.");
+    const report = engine.executeSelfCritique(
+      "billing stripe",
+      "Yes, it works, but no, it fails with unlimited vram.",
+    );
     expect(report.critiqueCycles.length).toBe(5); // Draft -> Critique -> Improve -> Verify -> Final
     expect(report.finalAnswer).toContain("webhook secret");
     expect(report.finalAnswer).toContain("NO");
@@ -38,7 +41,7 @@ describe("Antigravity AI V15 Evolving Substrate Tests", () => {
 
   it("Phase 3: Universal Reasoning Engine supports 7 paradigms", () => {
     const engine = new UniversalReasoningEngine();
-    
+
     const deductive = engine.performReasoning("iGPU local execution", "Deductive");
     expect(deductive.conclusion).toContain("Deductive Conclusion");
     expect(deductive.premises.length).toBe(2);
@@ -59,7 +62,7 @@ describe("Antigravity AI V15 Evolving Substrate Tests", () => {
 
   it("Phase 5: Tool Verified Intelligence verifies calculations & DB keys", () => {
     const verifier = new ToolVerifier();
-    
+
     // Correct Math
     const res1 = verifier.verifyAnswer("What is 10 + 20?", "Calculation: 30");
     expect(res1.isVerified).toBe(true);
@@ -94,18 +97,18 @@ describe("Antigravity AI V15 Evolving Substrate Tests", () => {
   it("Phase 7: Knowledge Immune System quarantines bad knowledge", () => {
     const immune = new KnowledgeImmuneSystem();
     const crystals = immune.auditCrystals();
-    
-    const quarantined = crystals.find(c => c.id === "V15-C04");
+
+    const quarantined = crystals.find((c) => c.id === "V15-C04");
     expect(quarantined?.status).toBe("quarantined");
 
-    const strengthened = crystals.find(c => c.id === "V15-C01");
+    const strengthened = crystals.find((c) => c.id === "V15-C01");
     expect(strengthened?.status).toBe("strengthened");
   });
 
   it("Phase 8: Memory Immune System resolves duplicates and contradictions", () => {
     const immune = new MemoryImmuneSystem();
     const report = immune.consolidateMemory();
-    
+
     expect(report.duplicatesRemoved).toBe(1);
     expect(report.contradictionsResolved).toBe(1);
     expect(report.remainingCount).toBe(2); // original 4 blocks -> 2 remaining
@@ -115,7 +118,7 @@ describe("Antigravity AI V15 Evolving Substrate Tests", () => {
   it("Phase 9: Meta Learning Governor recommends promoted strategies", () => {
     const gov = new MetaLearningGovernor();
     const recs = gov.recommendStrategies();
-    
+
     expect(recs.reasoning.promoted).toBe(true);
     expect(recs.retrieval.id).toBe("S-RETR-01");
     expect(recs.agent.id).toBe("S-AGEN-01");
@@ -129,7 +132,7 @@ describe("Antigravity AI V15 Evolving Substrate Tests", () => {
   it("Phase 10: World Model V3 projects best/worst/likely cases", () => {
     const wm = new WorldModelV3();
     const report = wm.projectFutureScenarios("stripe webhooks");
-    
+
     expect(report.projections.length).toBe(3);
     expect(report.projections[0].caseType).toBe("Best Case");
     expect(report.projections[1].caseType).toBe("Worst Case");
@@ -140,7 +143,7 @@ describe("Antigravity AI V15 Evolving Substrate Tests", () => {
   it("Phase 11: Discovery Engine V3 handles retrieval failure", () => {
     const discovery = new DiscoveryEngineV3();
     const report = discovery.handleRetrievalFailure("webgpu compilation");
-    
+
     expect(report.retrievalFailureConfirmed).toBe(true);
     expect(report.hypotheses.length).toBe(3);
     expect(report.primaryHypothesis.id).toBe("H-A");
@@ -149,7 +152,7 @@ describe("Antigravity AI V15 Evolving Substrate Tests", () => {
 
   it("Phase 12: Intent Reconstruction Engine restores broken input", () => {
     const recon = new IntentReconstructionEngine();
-    
+
     const res1 = recon.reconstructIntent("bro startup fail wat do");
     expect(res1.featuresDetected.isSlang).toBe(true);
     expect(res1.reconstructedQuery).toContain("SaaS startup is failing");
@@ -161,34 +164,39 @@ describe("Antigravity AI V15 Evolving Substrate Tests", () => {
 
   it("Phase 13: Confidence Calibration Engine assigns status levels", () => {
     const engine = new ConfidenceEngine();
-    
+
     // Fully Verified
     const res1 = engine.calibrateOutput("Calculated sum: 30", 0.95, 0.95, 3, 3);
     expect(res1.verificationStatus).toBe("fully_verified");
     expect(res1.evidenceLevel).toBe("strong");
-    expect(res1.calibratedConfidence).toBeGreaterThan(0.90);
+    expect(res1.calibratedConfidence).toBeGreaterThan(0.9);
 
     // Unverified
-    const res2 = engine.calibrateOutput("Calculated sum: 99", 0.40, 0.50, 0, 3);
+    const res2 = engine.calibrateOutput("Calculated sum: 99", 0.4, 0.5, 0, 3);
     expect(res2.verificationStatus).toBe("unverified");
-    expect(res2.calibratedConfidence).toBeLessThan(0.40);
+    expect(res2.calibratedConfidence).toBeLessThan(0.4);
   });
 
   it("Phase 14: Distributed Mesh votes and resolves conflicts", () => {
     const mesh = new DistributedMesh();
-    
+
     const vote = mesh.validateAcrossMesh("V15-C01");
     expect(vote.consensusReached).toBe(true);
     expect(vote.votingNodesCount).toBe(3);
 
-    const conflict = mesh.resolveConflict("node-alpha-403", "8GB VRAM", "node-beta-201", "16GB VRAM");
+    const conflict = mesh.resolveConflict(
+      "node-alpha-403",
+      "8GB VRAM",
+      "node-beta-201",
+      "16GB VRAM",
+    );
     expect(conflict.conflictResolved).toBe(true);
     expect(conflict.resolutionWinnerId).toBe("node-alpha-403");
   });
 
   it("Phase 15: Enterprise Hardening logs telemetry and rolls back", () => {
     const tele = new HardeningTelemetry();
-    
+
     tele.logTelemetry("Active deployment status", { health: 1.0 });
     expect(tele.getEventsLog().length).toBe(1);
 
@@ -201,14 +209,20 @@ describe("Antigravity AI V15 Evolving Substrate Tests", () => {
   it("Phase 16: Upgraded iGPU Acceleration resolves metrics and searches", async () => {
     const igpu = new iGPUAccelerationEngine();
     const metrics = igpu.getMetrics();
-    
+
     expect(metrics.gpuMemoryOffloadPct).toBe(94.5);
     expect(metrics.embeddingExecutionTimeMs).toBe(4);
 
     const embeddings = await igpu.generateEmbeddings("reconstruct");
     expect(embeddings.length).toBe(128);
 
-    const search = await igpu.executeVectorSearch([1, 0], [[0.8, 0.6], [0.1, 0.9]]);
+    const search = await igpu.executeVectorSearch(
+      [1, 0],
+      [
+        [0.8, 0.6],
+        [0.1, 0.9],
+      ],
+    );
     expect(search.length).toBe(2);
     expect(search[0]).toBeCloseTo(0.8);
   });
@@ -216,7 +230,7 @@ describe("Antigravity AI V15 Evolving Substrate Tests", () => {
   it("Phase 17: Autonomous Improvement Loop runs cycle steps", () => {
     const loop = new SelfImprovementLoop();
     const report = loop.executeImprovementCycle(0.92);
-    
+
     expect(report.steps.length).toBe(6);
     expect(report.steps[0].stage).toBe("Evaluate");
     expect(report.steps[5].stage).toBe("Measure");

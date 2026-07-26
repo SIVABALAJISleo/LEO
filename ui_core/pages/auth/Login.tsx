@@ -1,24 +1,24 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { z } from 'zod';
-import { useAuth } from '@/contexts/AuthContext';
-import { AuthLayout } from '@/components/auth/AuthLayout';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
-import { useToast } from '@/hooks/use-toast';
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { z } from "zod";
+import { useAuth } from "@/contexts/AuthContext";
+import { AuthLayout } from "@/components/auth/AuthLayout";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useToast } from "@/hooks/use-toast";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Mail, Lock, Loader2, User } from 'lucide-react';
+import { Mail, Lock, Loader2, User } from "lucide-react";
 
 const loginSchema = z.object({
-  username: z.string().min(3, 'Username must be at least 3 characters'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
+  username: z.string().min(3, "Username must be at least 3 characters"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ username?: string; password?: string }>({});
@@ -36,8 +36,8 @@ const Login = () => {
       if (error instanceof z.ZodError) {
         const fieldErrors: { username?: string; password?: string } = {};
         error.errors.forEach((err) => {
-          if (err.path[0] === 'username') fieldErrors.username = err.message;
-          if (err.path[0] === 'password') fieldErrors.password = err.message;
+          if (err.path[0] === "username") fieldErrors.username = err.message;
+          if (err.path[0] === "password") fieldErrors.password = err.message;
         });
         setErrors(fieldErrors);
       }
@@ -57,27 +57,28 @@ const Login = () => {
 
       if (error) {
         toast({
-          title: 'Login Failed',
-          description: error.message === 'Invalid login credentials'
-            ? 'Invalid email or password. Please try again.'
-            : error.message,
-          variant: 'destructive',
+          title: "Login Failed",
+          description:
+            error.message === "Invalid login credentials"
+              ? "Invalid email or password. Please try again."
+              : error.message,
+          variant: "destructive",
         });
         return;
       }
 
       toast({
-        title: 'Welcome back!',
-        description: 'You have been signed in successfully.',
+        title: "Welcome back!",
+        description: "You have been signed in successfully.",
       });
 
-      navigate('/dashboard/home');
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      navigate("/dashboard/home");
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error: unknown) {
       toast({
-        title: 'Error',
-        description: 'An unexpected error occurred. Please try again.',
-        variant: 'destructive',
+        title: "Error",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
       });
     } finally {
       setLoading(false);
@@ -100,13 +101,11 @@ const Login = () => {
               placeholder="johndoe"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className={`pl-10 ${errors.username ? 'border-destructive' : ''}`}
+              className={`pl-10 ${errors.username ? "border-destructive" : ""}`}
               disabled={loading}
             />
           </div>
-          {errors.username && (
-            <p className="text-sm text-destructive">{errors.username}</p>
-          )}
+          {errors.username && <p className="text-sm text-destructive">{errors.username}</p>}
         </div>
 
         <div className="space-y-2">
@@ -119,13 +118,11 @@ const Login = () => {
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className={`pl-10 ${errors.password ? 'border-destructive' : ''}`}
+              className={`pl-10 ${errors.password ? "border-destructive" : ""}`}
               disabled={loading}
             />
           </div>
-          {errors.password && (
-            <p className="text-sm text-destructive">{errors.password}</p>
-          )}
+          {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
         </div>
 
         <div className="flex items-center justify-between">
@@ -139,33 +136,26 @@ const Login = () => {
               Remember me
             </Label>
           </div>
-          <Link
-            to="/auth/forgot-password"
-            className="text-sm text-primary hover:underline"
-          >
+          <Link to="/auth/forgot-password" className="text-sm text-primary hover:underline">
             Forgot password?
           </Link>
         </div>
 
-        <Button
-          type="submit"
-          className="w-full bg-gradient-primary shadow-glow"
-          disabled={loading}
-        >
+        <Button type="submit" className="w-full bg-gradient-primary shadow-glow" disabled={loading}>
           {loading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               Signing in...
             </>
           ) : (
-            'Sign In'
+            "Sign In"
           )}
         </Button>
       </form>
 
       <div className="mt-6 text-center">
         <p className="text-sm text-muted-foreground">
-          Don't have an account?{' '}
+          Don't have an account?{" "}
           <Link to="/auth/signup" className="text-primary hover:underline">
             Sign up
           </Link>

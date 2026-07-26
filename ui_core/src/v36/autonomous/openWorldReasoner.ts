@@ -4,25 +4,29 @@
 export class OpenWorldReasoner {
   public reasonUnexpectedObstacle(
     obstacleLabel: string,
-    confidence: number
+    confidence: number,
   ): { actionPlan: string; recalculationNeeded: boolean } {
     if (confidence < 0.4) {
       return {
-        actionPlan: "Uncertain sensor match. Maintain current speed while increasing camera frequency.",
-        recalculationNeeded: false
+        actionPlan:
+          "Uncertain sensor match. Maintain current speed while increasing camera frequency.",
+        recalculationNeeded: false,
       };
     }
-    
-    if (obstacleLabel.toLowerCase().includes("construction") || obstacleLabel.toLowerCase().includes("debris")) {
+
+    if (
+      obstacleLabel.toLowerCase().includes("construction") ||
+      obstacleLabel.toLowerCase().includes("debris")
+    ) {
       return {
         actionPlan: "Halt trajectory. Trigger alternate route planning.",
-        recalculationNeeded: true
+        recalculationNeeded: true,
       };
     }
 
     return {
       actionPlan: "Slow down. Proceed with adaptive steering checks.",
-      recalculationNeeded: true
+      recalculationNeeded: true,
     };
   }
 }

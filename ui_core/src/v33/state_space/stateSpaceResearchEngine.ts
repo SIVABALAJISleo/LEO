@@ -57,12 +57,12 @@ export class StateSpaceResearchEngine {
       reasoningQuality: 0.93,
       contextRetentionRate: 0.96,
       powerConsumptionWatts: 75,
-    }
+    },
   ];
 
   evaluateArchitectures(contextLength: number): ArchitectureMetrics[] {
     // Model quadratic memory scaling for attention and linear scaling for SSM/linear attention
-    return this.baseArchitectures.map(arch => {
+    return this.baseArchitectures.map((arch) => {
       let memoryFactor = 1.0;
       let latencyFactor = 1.0;
       let retentionFactor = 1.0;
@@ -72,13 +72,13 @@ export class StateSpaceResearchEngine {
         const ratio = contextLength / 2048;
         memoryFactor = Math.max(1.0, ratio * ratio);
         latencyFactor = Math.max(1.0, ratio * 1.5);
-        retentionFactor = Math.max(0.7, 1.0 - (ratio * 0.01)); // attention retains well but OOMs
+        retentionFactor = Math.max(0.7, 1.0 - ratio * 0.01); // attention retains well but OOMs
       } else {
         // O(1) KV-state, O(N) execution scaling
         const ratio = contextLength / 2048;
         memoryFactor = Math.min(2.5, Math.max(1.0, ratio * 0.05)); // state remains small
         latencyFactor = Math.max(1.0, ratio * 0.1); // remains fast
-        retentionFactor = Math.max(0.4, arch.contextRetentionRate - (ratio * 0.02)); // decay at extreme lengths
+        retentionFactor = Math.max(0.4, arch.contextRetentionRate - ratio * 0.02); // decay at extreme lengths
       }
 
       return {

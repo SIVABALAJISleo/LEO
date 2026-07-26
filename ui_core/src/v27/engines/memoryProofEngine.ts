@@ -20,11 +20,11 @@ export class MemoryProofEngine {
 
     for (let i = 0; i < trials; i++) {
       const hash = Math.sin(seed * (i + 1));
-      
+
       // Target consistency 98.5%
       if (hash > 0.985) {
         contradictions++;
-      } else if (hash < -0.990) {
+      } else if (hash < -0.99) {
         driftCount++;
       } else {
         successfulRecalls++;
@@ -34,7 +34,7 @@ export class MemoryProofEngine {
     const recallAccuracy = parseFloat(((successfulRecalls / trials) * 100).toFixed(2));
     const contradictionRate = parseFloat(((contradictions / trials) * 100).toFixed(2));
     const driftRate = parseFloat(((driftCount / trials) * 100).toFixed(2));
-    
+
     // Memory consistency calculation
     const memory_consistency = parseFloat((100 - contradictionRate - driftRate).toFixed(2));
 
@@ -43,7 +43,7 @@ export class MemoryProofEngine {
       recallAccuracy,
       contradictionRate,
       driftRate,
-      memory_consistency
+      memory_consistency,
     };
   }
 }

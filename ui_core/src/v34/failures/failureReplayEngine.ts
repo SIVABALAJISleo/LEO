@@ -21,7 +21,7 @@ export class FailureReplayEngine {
     const result: ReplayResult = {
       replayedCaseId: caseId,
       hasPassedCheck: isFixed,
-      remediationLatencyMs: isFixed ? Math.round(Math.random() * 45 + 10) : 0
+      remediationLatencyMs: isFixed ? Math.round(Math.random() * 45 + 10) : 0,
     };
     this.replaysHistory.push(result);
     return result;
@@ -34,21 +34,21 @@ export class FailureReplayEngine {
         timestamp: Date.now(),
         totalReplaysAttempted: 0,
         fixedBugsCount: 0,
-        robustnessScore: 90.0 // high baseline robustness
+        robustnessScore: 90.0, // high baseline robustness
       };
     }
 
-    const fixed = this.replaysHistory.filter(r => r.hasPassedCheck).length;
+    const fixed = this.replaysHistory.filter((r) => r.hasPassedCheck).length;
     const ratio = fixed / total;
-    
+
     // Robustness Score: starts at 90.0 baseline, gains with fixed tests, drops on failures
-    const robustnessScore = parseFloat((90.0 + (ratio * 10.0) - ((total - fixed) * 5.0)).toFixed(1));
+    const robustnessScore = parseFloat((90.0 + ratio * 10.0 - (total - fixed) * 5.0).toFixed(1));
 
     return {
       timestamp: Date.now(),
       totalReplaysAttempted: total,
       fixedBugsCount: fixed,
-      robustnessScore: Math.min(100.0, Math.max(0.0, robustnessScore))
+      robustnessScore: Math.min(100.0, Math.max(0.0, robustnessScore)),
     };
   }
 }

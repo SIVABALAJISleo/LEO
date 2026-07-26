@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { firebaseClient as supabase } from '@/integrations/firebase/client';
-import { useAuth } from '@/contexts/AuthContext';
-import { toast } from 'sonner';
+import { useState, useEffect } from "react";
+import { firebaseClient as supabase } from "@/integrations/firebase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 export function usePersonalizationData() {
   const { user } = useAuth();
@@ -20,9 +20,17 @@ export function usePersonalizationData() {
   const fetchAll = async () => {
     setIsLoading(true);
     const [behaviorRes, settingsRes, recsRes] = await Promise.all([
-      supabase.from('user_behaviors').select('*').order('recorded_at', { ascending: false }).limit(50),
-      supabase.from('personalization_settings').select('*').single(),
-      supabase.from('recommendations').select('*').eq('is_dismissed', false).order('priority', { ascending: true }),
+      supabase
+        .from("user_behaviors")
+        .select("*")
+        .order("recorded_at", { ascending: false })
+        .limit(50),
+      supabase.from("personalization_settings").select("*").single(),
+      supabase
+        .from("recommendations")
+        .select("*")
+        .eq("is_dismissed", false)
+        .order("priority", { ascending: true }),
     ]);
     if (behaviorRes.data) setBehaviors(behaviorRes.data);
     if (settingsRes.data) setSettings(settingsRes.data);
@@ -31,30 +39,59 @@ export function usePersonalizationData() {
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const trackBehavior = async (behaviorType: string, action: string, target?: string, metadata?: any) => {
+  const trackBehavior = async (
+    behaviorType: string,
+    action: string,
+    target?: string,
+    metadata?: any,
+  ) => {
     if (!user) return;
-    await supabase.from('user_behaviors').insert({ user_id: user.id, behavior_type: behaviorType, action, target, metadata });
+    await supabase
+      .from("user_behaviors")
+      .insert({ user_id: user.id, behavior_type: behaviorType, action, target, metadata });
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const updateSettings = async (data: Partial<any>) => {
     if (!user) return;
     if (settings) {
-      const { error } = await supabase.from('personalization_settings').update({ ...data, updated_at: new Date().toISOString() }).eq('user_id', user.id);
-      if (error) toast.error('Failed to update');
-      else { toast.success('Settings updated'); fetchAll(); }
+      const { error } = await supabase
+        .from("personalization_settings")
+        .update({ ...data, updated_at: new Date().toISOString() })
+        .eq("user_id", user.id);
+      if (error) toast.error("Failed to update");
+      else {
+        toast.success("Settings updated");
+        fetchAll();
+      }
     } else {
-      const { error } = await supabase.from('personalization_settings').insert({ ...data, user_id: user.id });
-      if (error) toast.error('Failed to save');
-      else { toast.success('Settings saved'); fetchAll(); }
+      const { error } = await supabase
+        .from("personalization_settings")
+        .insert({ ...data, user_id: user.id });
+      if (error) toast.error("Failed to save");
+      else {
+        toast.success("Settings saved");
+        fetchAll();
+      }
     }
   };
 
   const dismissRecommendation = async (id: string) => {
-    const { error } = await supabase.from('recommendations').update({ is_dismissed: true, dismissed_at: new Date().toISOString() }).eq('id', id);
-    if (error) toast.error('Failed to dismiss');
+    const { error } = await supabase
+      .from("recommendations")
+      .update({ is_dismissed: true, dismissed_at: new Date().toISOString() })
+      .eq("id", id);
+    if (error) toast.error("Failed to dismiss");
     else fetchAll();
   };
 
-  return { behaviors, settings, recommendations, isLoading, trackBehavior, updateSettings, dismissRecommendation };
+  return {
+    behaviors,
+    settings,
+    recommendations,
+    isLoading,
+    trackBehavior,
+    updateSettings,
+    dismissRecommendation,
+  };
 }

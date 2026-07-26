@@ -18,48 +18,48 @@ export interface CanonicalizedIntent {
 
 export class IntentCanonicalizer {
   private static slangMap: Record<string, string> = {
-    "bro": "friend/user",
-    "bruh": "user",
+    bro: "friend/user",
+    bruh: "user",
     "how to": "how can I",
-    "wanna": "want to",
-    "gonna": "going to",
-    "plz": "please",
-    "pls": "please",
-    "thx": "thanks",
-    "ty": "thank you",
-    "u": "you",
-    "r": "are",
-    "d": "the",
-    "n": "and",
-    "y": "why",
+    wanna: "want to",
+    gonna: "going to",
+    plz: "please",
+    pls: "please",
+    thx: "thanks",
+    ty: "thank you",
+    u: "you",
+    r: "are",
+    d: "the",
+    n: "and",
+    y: "why",
   };
 
   private static tamilEnglishMap: Record<string, string> = {
-    "eppadi": "how to",
-    "seivadhu": "do",
-    "panradhu": "do",
-    "epdi": "how to",
-    "solunga": "tell me",
-    "enaku": "for me",
-    "venum": "need",
-    "panna": "to do",
-    "pannunga": "please do",
-    "theriyadhu": "don't know",
-    "mudiyum": "can",
-    "mudiyadhu": "cannot",
+    eppadi: "how to",
+    seivadhu: "do",
+    panradhu: "do",
+    epdi: "how to",
+    solunga: "tell me",
+    enaku: "for me",
+    venum: "need",
+    panna: "to do",
+    pannunga: "please do",
+    theriyadhu: "don't know",
+    mudiyum: "can",
+    mudiyadhu: "cannot",
   };
 
   private static abbreviationMap: Record<string, string> = {
-    "ai": "artificial intelligence",
-    "ml": "machine learning",
-    "db": "database",
-    "api": "application programming interface",
-    "hpa": "horizontal pod autoscaler",
-    "rag": "retrieval augmented generation",
-    "gpu": "graphics processing unit",
-    "cpu": "central processing unit",
-    "pto": "paid time off",
-    "hr": "human resources",
+    ai: "artificial intelligence",
+    ml: "machine learning",
+    db: "database",
+    api: "application programming interface",
+    hpa: "horizontal pod autoscaler",
+    rag: "retrieval augmented generation",
+    gpu: "graphics processing unit",
+    cpu: "central processing unit",
+    pto: "paid time off",
+    hr: "human resources",
   };
 
   public canonicalize(query: string): CanonicalizedIntent {
@@ -75,7 +75,7 @@ export class IntentCanonicalizer {
     const resolvedWords = words.map((word) => {
       // Remove punctuation for lookup
       const cleanWord = word.replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, "");
-      
+
       // Tamil-English Check
       if (IntentCanonicalizer.tamilEnglishMap[cleanWord]) {
         hasTamilEnglish = true;
@@ -121,7 +121,10 @@ export class IntentCanonicalizer {
 
     // 2. Intent Template Normalization
     let intent = original;
-    if (normalized.includes("how train artificial intelligence") || normalized.includes("train ai")) {
+    if (
+      normalized.includes("how train artificial intelligence") ||
+      normalized.includes("train ai")
+    ) {
       intent = "How can I train an artificial intelligence model?";
     } else if (normalized.includes("help startup") || normalized.includes("startup planning")) {
       intent = "User requests startup planning assistance and strategic SaaS roadmap.";

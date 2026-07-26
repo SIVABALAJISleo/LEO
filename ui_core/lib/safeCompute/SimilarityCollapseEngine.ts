@@ -13,7 +13,7 @@ interface CollapseResult {
   collapsed: boolean;
   parentWorkloadId?: string;
   similarityScore: number;
-  method: 'exact' | 'semantic' | 'structural' | 'none';
+  method: "exact" | "semantic" | "structural" | "none";
 }
 
 interface PendingWorkload {
@@ -51,16 +51,16 @@ class SimilarityCollapseEngine {
   }
 
   private normalizeInput(input: unknown): string {
-    if (typeof input === 'string') {
-      return input.toLowerCase().trim().replace(/\s+/g, ' ');
+    if (typeof input === "string") {
+      return input.toLowerCase().trim().replace(/\s+/g, " ");
     }
     return JSON.stringify(input);
   }
 
   private extractStructure(input: unknown): string {
-    if (typeof input === 'object' && input !== null) {
+    if (typeof input === "object" && input !== null) {
       const keys = Object.keys(input).sort();
-      return keys.join('|');
+      return keys.join("|");
     }
     return typeof input;
   }
@@ -69,7 +69,7 @@ class SimilarityCollapseEngine {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
       const char = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash;
     }
     return Math.abs(hash).toString(36);
@@ -78,7 +78,7 @@ class SimilarityCollapseEngine {
   // Check if workload can be collapsed with existing one
   checkCollapse(workloadId: string, input: unknown): CollapseResult {
     this.totalWorkloads++;
-    
+
     const semanticHash = this.generateSemanticHash(input);
     const structuralHash = this.generateStructuralHash(input);
 
@@ -90,7 +90,7 @@ class SimilarityCollapseEngine {
           collapsed: true,
           parentWorkloadId: id,
           similarityScore: 1.0,
-          method: 'exact',
+          method: "exact",
         };
       }
     }
@@ -103,7 +103,7 @@ class SimilarityCollapseEngine {
           collapsed: true,
           parentWorkloadId: id,
           similarityScore: 0.95,
-          method: 'semantic',
+          method: "semantic",
         };
       }
     }
@@ -117,7 +117,7 @@ class SimilarityCollapseEngine {
           collapsed: true,
           parentWorkloadId: id,
           similarityScore: 0.85,
-          method: 'structural',
+          method: "structural",
         };
       }
     }
@@ -134,7 +134,7 @@ class SimilarityCollapseEngine {
     return {
       collapsed: false,
       similarityScore: 0,
-      method: 'none',
+      method: "none",
     };
   }
 
@@ -162,7 +162,7 @@ class SimilarityCollapseEngine {
     if (!pending) return 0;
 
     const count = pending.resolvers.length;
-    pending.resolvers.forEach(resolve => resolve(result));
+    pending.resolvers.forEach((resolve) => resolve(result));
     this.pendingWorkloads.delete(workloadId);
 
     return count;

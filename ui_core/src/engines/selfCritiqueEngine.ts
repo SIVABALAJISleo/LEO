@@ -27,22 +27,40 @@ export class SelfCritiqueEngine {
     // 1. Direct lexical contradiction check
     if (answerLower.includes("yes") && answerLower.includes("no")) {
       hallucinationDetected = true;
-      contradictions.push("Direct self-contradiction: Output contains both 'yes' and 'no' stances.");
-      refinedAnswer = "Self-Critique Resolution: The absolute premise in the query is fallacious, leading to contradictions. Resolved: No, because constraints dictate otherwise.";
+      contradictions.push(
+        "Direct self-contradiction: Output contains both 'yes' and 'no' stances.",
+      );
+      refinedAnswer =
+        "Self-Critique Resolution: The absolute premise in the query is fallacious, leading to contradictions. Resolved: No, because constraints dictate otherwise.";
     }
 
     // 2. Risk check (e.g. dynamic pricing or rate-limiting risk)
-    if (queryLower.includes("pricing") || queryLower.includes("billing") || queryLower.includes("stripe")) {
-      risks.push("HMAC check bypass risk: Toggling off signature verification leaves gateway exposed to fake payment events.");
+    if (
+      queryLower.includes("pricing") ||
+      queryLower.includes("billing") ||
+      queryLower.includes("stripe")
+    ) {
+      risks.push(
+        "HMAC check bypass risk: Toggling off signature verification leaves gateway exposed to fake payment events.",
+      );
       missingAssumptions.push("Assumes webhook key remains static without temporal rotation.");
     }
 
     // 3. AI / Hardware limitations
-    if (queryLower.includes("gpu") || queryLower.includes("hardware") || queryLower.includes("local")) {
+    if (
+      queryLower.includes("gpu") ||
+      queryLower.includes("hardware") ||
+      queryLower.includes("local")
+    ) {
       if (answerLower.includes("zero latency") || answerLower.includes("instant")) {
         hallucinationDetected = true;
-        contradictions.push("Latency hallucination: Local GGUF initialization requires non-zero cold-starts.");
-        refinedAnswer = refinedAnswer.replace(/zero latency|instantly/gi, "efficiently with lazy-load caching");
+        contradictions.push(
+          "Latency hallucination: Local GGUF initialization requires non-zero cold-starts.",
+        );
+        refinedAnswer = refinedAnswer.replace(
+          /zero latency|instantly/gi,
+          "efficiently with lazy-load caching",
+        );
       }
     }
 

@@ -14,13 +14,13 @@ export class ExpertRouter {
       {
         expertId: activeExpertId,
         weight: 0.88,
-        routedTokensCount: Math.round(tokensCount * 0.88)
+        routedTokensCount: Math.round(tokensCount * 0.88),
       },
       {
         expertId: "exp-fallback",
         weight: 0.12,
-        routedTokensCount: Math.round(tokensCount * 0.12)
-      }
+        routedTokensCount: Math.round(tokensCount * 0.12),
+      },
     ];
   }
 }

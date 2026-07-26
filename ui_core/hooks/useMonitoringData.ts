@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
-import { firebaseClient as supabase } from '@/integrations/firebase/client';
-import { useAuth } from '@/contexts/AuthContext';
+import { useState, useEffect, useCallback } from "react";
+import { firebaseClient as supabase } from "@/integrations/firebase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 export interface PerformanceMetric {
   id: string;
@@ -60,19 +60,19 @@ export function useMonitoringData() {
   const [moduleConfigs, setModuleConfigs] = useState<ModuleConfig[]>([]);
   const [dateRange, setDateRange] = useState<{ start: Date; end: Date }>({
     start: new Date(Date.now() - 24 * 60 * 60 * 1000),
-    end: new Date()
+    end: new Date(),
   });
 
   const fetchPerformanceMetrics = useCallback(async () => {
     if (!user) return;
-    
+
     const { data, error } = await supabase
-      .from('performance_metrics')
-      .select('*')
-      .eq('user_id', user.id)
-      .gte('recorded_at', dateRange.start.toISOString())
-      .lte('recorded_at', dateRange.end.toISOString())
-      .order('recorded_at', { ascending: false })
+      .from("performance_metrics")
+      .select("*")
+      .eq("user_id", user.id)
+      .gte("recorded_at", dateRange.start.toISOString())
+      .lte("recorded_at", dateRange.end.toISOString())
+      .order("recorded_at", { ascending: false })
       .limit(500);
 
     if (error) throw error;
@@ -83,12 +83,12 @@ export function useMonitoringData() {
     if (!user) return;
 
     const { data, error } = await supabase
-      .from('system_metrics')
-      .select('*')
-      .eq('user_id', user.id)
-      .gte('recorded_at', dateRange.start.toISOString())
-      .lte('recorded_at', dateRange.end.toISOString())
-      .order('recorded_at', { ascending: false })
+      .from("system_metrics")
+      .select("*")
+      .eq("user_id", user.id)
+      .gte("recorded_at", dateRange.start.toISOString())
+      .lte("recorded_at", dateRange.end.toISOString())
+      .order("recorded_at", { ascending: false })
       .limit(100);
 
     if (error) throw error;
@@ -99,10 +99,10 @@ export function useMonitoringData() {
     if (!user) return;
 
     const { data, error } = await supabase
-      .from('alerts')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false })
+      .from("alerts")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
       .limit(100);
 
     if (error) throw error;
@@ -113,9 +113,9 @@ export function useMonitoringData() {
     if (!user) return;
 
     const { data, error } = await supabase
-      .from('module_configs')
-      .select('*')
-      .eq('user_id', user.id);
+      .from("module_configs")
+      .select("*")
+      .eq("user_id", user.id);
 
     if (error) throw error;
     setModuleConfigs(data || []);
@@ -129,9 +129,9 @@ export function useMonitoringData() {
         fetchPerformanceMetrics(),
         fetchSystemMetrics(),
         fetchAlerts(),
-        fetchModuleConfigs()
+        fetchModuleConfigs(),
       ]);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -143,10 +143,10 @@ export function useMonitoringData() {
     if (!user) return;
 
     const { error } = await supabase
-      .from('alerts')
+      .from("alerts")
       .update({ resolved: true, resolved_at: new Date().toISOString() })
-      .eq('id', alertId)
-      .eq('user_id', user.id);
+      .eq("id", alertId)
+      .eq("user_id", user.id);
 
     if (error) throw error;
     await fetchAlerts();
@@ -161,10 +161,27 @@ export function useMonitoringData() {
     if (!user) return;
 
     const channel = supabase
-      .channel('monitoring-updates')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'performance_metrics', filter: `user_id=eq.${user.id}` }, () => fetchPerformanceMetrics())
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'system_metrics', filter: `user_id=eq.${user.id}` }, () => fetchSystemMetrics())
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'alerts', filter: `user_id=eq.${user.id}` }, () => fetchAlerts())
+      .channel("monitoring-updates")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "performance_metrics",
+          filter: `user_id=eq.${user.id}`,
+        },
+        () => fetchPerformanceMetrics(),
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "system_metrics", filter: `user_id=eq.${user.id}` },
+        () => fetchSystemMetrics(),
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "alerts", filter: `user_id=eq.${user.id}` },
+        () => fetchAlerts(),
+      )
       .subscribe();
 
     return () => {
@@ -174,16 +191,22 @@ export function useMonitoringData() {
 
   // Calculate KPIs
   const kpis = {
-    avgLatency: performanceMetrics.length > 0
-      ? performanceMetrics.reduce((sum, m) => sum + (m.latency_ms || 0), 0) / performanceMetrics.filter(m => m.latency_ms).length || 0
-      : 0,
-    avgThroughput: performanceMetrics.length > 0
-      ? performanceMetrics.reduce((sum, m) => sum + (m.throughput_rps || 0), 0) / performanceMetrics.filter(m => m.throughput_rps).length || 0
-      : 0,
-    avgCacheHit: performanceMetrics.length > 0
-      ? performanceMetrics.reduce((sum, m) => sum + (m.cache_hit_ratio || 0), 0) / performanceMetrics.filter(m => m.cache_hit_ratio).length || 0
-      : 0,
-    activeModules: moduleConfigs.filter(m => m.enabled).length
+    avgLatency:
+      performanceMetrics.length > 0
+        ? performanceMetrics.reduce((sum, m) => sum + (m.latency_ms || 0), 0) /
+            performanceMetrics.filter((m) => m.latency_ms).length || 0
+        : 0,
+    avgThroughput:
+      performanceMetrics.length > 0
+        ? performanceMetrics.reduce((sum, m) => sum + (m.throughput_rps || 0), 0) /
+            performanceMetrics.filter((m) => m.throughput_rps).length || 0
+        : 0,
+    avgCacheHit:
+      performanceMetrics.length > 0
+        ? performanceMetrics.reduce((sum, m) => sum + (m.cache_hit_ratio || 0), 0) /
+            performanceMetrics.filter((m) => m.cache_hit_ratio).length || 0
+        : 0,
+    activeModules: moduleConfigs.filter((m) => m.enabled).length,
   };
 
   return {
@@ -197,6 +220,6 @@ export function useMonitoringData() {
     dateRange,
     setDateRange,
     refreshAll,
-    resolveAlert
+    resolveAlert,
   };
 }

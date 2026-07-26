@@ -11,20 +11,23 @@ import { EnterpriseCertificationSuite } from "./suites/enterpriseCertificationSu
 import { PerformanceCertificationSuite } from "./suites/performanceCertificationSuite";
 import { ProductGapAnalyzer } from "./engines/productGapAnalyzer";
 import { AutonomousConvergenceEngine } from "./engines/autonomousConvergenceEngine";
-import { ProductCertificationReport, CertificationScoresV25 } from "./engines/productCertificationReport";
+import {
+  ProductCertificationReport,
+  CertificationScoresV25,
+} from "./engines/productCertificationReport";
 
 export interface MasterCertificationResult {
   cycleId: string;
-  reasoningReport: ReturnType<ReasoningCertificationSuite['runSuite']>;
-  hallucinationReport: ReturnType<HallucinationCertificationSuite['runSuite']>;
-  memoryReport: ReturnType<MemoryCertificationSuite['runSuite']>;
-  searchRagReport: ReturnType<SearchRagCertificationSuite['runSuite']>;
-  agentReport: ReturnType<AgentCertificationSuite['runSuite']>;
-  intentReport: ReturnType<UserUnderstandingCertificationSuite['runSuite']>;
-  enterpriseReport: ReturnType<EnterpriseCertificationSuite['runSuite']>;
-  performanceReport: ReturnType<PerformanceCertificationSuite['runSuite']>;
-  gapAnalysis: ReturnType<ProductGapAnalyzer['analyzeGaps']>;
-  convergenceReport: ReturnType<AutonomousConvergenceEngine['executeCycle']>;
+  reasoningReport: ReturnType<ReasoningCertificationSuite["runSuite"]>;
+  hallucinationReport: ReturnType<HallucinationCertificationSuite["runSuite"]>;
+  memoryReport: ReturnType<MemoryCertificationSuite["runSuite"]>;
+  searchRagReport: ReturnType<SearchRagCertificationSuite["runSuite"]>;
+  agentReport: ReturnType<AgentCertificationSuite["runSuite"]>;
+  intentReport: ReturnType<UserUnderstandingCertificationSuite["runSuite"]>;
+  enterpriseReport: ReturnType<EnterpriseCertificationSuite["runSuite"]>;
+  performanceReport: ReturnType<PerformanceCertificationSuite["runSuite"]>;
+  gapAnalysis: ReturnType<ProductGapAnalyzer["analyzeGaps"]>;
+  convergenceReport: ReturnType<AutonomousConvergenceEngine["executeCycle"]>;
   certification: CertificationScoresV25;
 }
 
@@ -79,7 +82,7 @@ export class BenchmarkCertificationOrchestrator {
       rag: searchRagReport.overallPrecision,
       agent: agentReport.averageRoutingAccuracy,
       enterprise: enterpriseReport.stats.slaCompliance,
-      performance: performanceReport.telemetry.intelligencePerWatt / 100
+      performance: performanceReport.telemetry.intelligencePerWatt / 100,
     };
 
     // 3. Identify and analyze gaps (Phase 10)
@@ -103,7 +106,7 @@ export class BenchmarkCertificationOrchestrator {
       performanceReport,
       gapAnalysis,
       convergenceReport,
-      certification
+      certification,
     };
   }
 }

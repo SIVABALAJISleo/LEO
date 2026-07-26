@@ -26,7 +26,7 @@ export class MultiAgentGovernanceEngine {
     let budgetOvercount = 0;
     let deadlockCount = 0;
 
-    agents.forEach(a => {
+    agents.forEach((a) => {
       // Loop detection: if an agent repeats the exact same action 3 or more times
       if (a.consecutiveDuplicateActionsCount >= 3) {
         a.healthStatus = "Loop_Detected";
@@ -45,14 +45,22 @@ export class MultiAgentGovernanceEngine {
     });
 
     const totalCount = agents.length || 1;
-    const agentHealthScore = Math.max(10, parseFloat(
-      (100 - (loopCount / totalCount) * 45 - (budgetOvercount / totalCount) * 35 - (deadlockCount / totalCount) * 20).toFixed(1)
-    ));
+    const agentHealthScore = Math.max(
+      10,
+      parseFloat(
+        (
+          100 -
+          (loopCount / totalCount) * 45 -
+          (budgetOvercount / totalCount) * 35 -
+          (deadlockCount / totalCount) * 20
+        ).toFixed(1),
+      ),
+    );
 
     return {
       agentStates: agents,
       arbitratedSolutionsCount: this.arbitratedCount,
-      agentHealthScore
+      agentHealthScore,
     };
   }
 }

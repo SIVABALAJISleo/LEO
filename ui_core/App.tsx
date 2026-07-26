@@ -31,9 +31,7 @@ function PageLoader() {
 
 function SwarmDashboardRoute() {
   const [activeSection, setActiveSection] = useState("dashboard");
-  return (
-    <AdminDashboard activeSection={activeSection} setActiveSection={setActiveSection} />
-  );
+  return <AdminDashboard activeSection={activeSection} setActiveSection={setActiveSection} />;
 }
 
 export default function App() {

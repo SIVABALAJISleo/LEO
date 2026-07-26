@@ -26,50 +26,60 @@ export class WorkflowLearningEngine {
       actionName: action,
       toolUsed: tool,
       delayMs: delay,
-      failed
+      failed,
     });
   }
 
-  evaluateEfficiency(): { suggestions: OptimizationSuggestion[]; workflowEfficiencyScore: number; } {
+  evaluateEfficiency(): { suggestions: OptimizationSuggestion[]; workflowEfficiencyScore: number } {
     const suggestions: OptimizationSuggestion[] = [];
     let bottleneckCount = 0;
     let failureCount = 0;
 
-    this.activeSequence.forEach(s => {
+    this.activeSequence.forEach((s) => {
       if (s.delayMs > 4000) bottleneckCount++;
       if (s.failed) failureCount++;
     });
 
     // Heuristics: search for repeating action sequences (manual copy-paste triggers)
-    const consecutiveGittable = this.activeSequence.filter(s => s.toolUsed.includes("git")).length;
+    const consecutiveGittable = this.activeSequence.filter((s) =>
+      s.toolUsed.includes("git"),
+    ).length;
     if (consecutiveGittable > 3) {
       suggestions.push({
         targetStepsRange: [1, this.activeSequence.length],
-        problemDescription: "Frequent, repetitive Git commit and checkout command iterations detected.",
-        proposedAutomationFix: "Consolidate into an automated Git staging and backup macro function.",
-        estimatedTimeSavedMinutes: 12.0
+        problemDescription:
+          "Frequent, repetitive Git commit and checkout command iterations detected.",
+        proposedAutomationFix:
+          "Consolidate into an automated Git staging and backup macro function.",
+        estimatedTimeSavedMinutes: 12.0,
       });
     }
 
-    const testFailures = this.activeSequence.filter(s => s.actionName.includes("test") && s.failed).length;
+    const testFailures = this.activeSequence.filter(
+      (s) => s.actionName.includes("test") && s.failed,
+    ).length;
     if (testFailures > 2) {
       suggestions.push({
         targetStepsRange: [1, this.activeSequence.length],
         problemDescription: "High frequency of consecutive test verification failures.",
-        proposedAutomationFix: "Integrate V32 Autonomous Failure Hunter V2 to pre-test code changes in the background.",
-        estimatedTimeSavedMinutes: 25.0
+        proposedAutomationFix:
+          "Integrate V32 Autonomous Failure Hunter V2 to pre-test code changes in the background.",
+        estimatedTimeSavedMinutes: 25.0,
       });
     }
 
     // Baseline index is 100, drops with delay bottlenecks and failures
     const stepsCount = this.activeSequence.length || 1;
-    const workflowEfficiencyScore = Math.max(10, parseFloat(
-      (100 - (bottleneckCount / stepsCount) * 40 - (failureCount / stepsCount) * 35).toFixed(1)
-    ));
+    const workflowEfficiencyScore = Math.max(
+      10,
+      parseFloat(
+        (100 - (bottleneckCount / stepsCount) * 40 - (failureCount / stepsCount) * 35).toFixed(1),
+      ),
+    );
 
     return {
       suggestions,
-      workflowEfficiencyScore
+      workflowEfficiencyScore,
     };
   }
 

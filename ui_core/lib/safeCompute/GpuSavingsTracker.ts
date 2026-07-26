@@ -1,22 +1,22 @@
 /**
  * GPU SAVINGS TRACKER
- * 
+ *
  * Tracks and exposes GPU efficiency metrics showing:
  * - % GPU compute avoided
  * - % jobs downgraded safely
  * - % reuse achieved
  * - % delegation prevented
- * 
+ *
  * This measures REAL IMPACT - not FLOPS.
  */
 
 export interface GpuSavingsScore {
   // Core metrics
-  computeAvoidedPercent: number;    // % of jobs where GPU was skipped entirely
-  safeDowngradePercent: number;     // % of jobs that used reduced precision/res
-  reusePercent: number;             // % of results served from cache/similarity
+  computeAvoidedPercent: number; // % of jobs where GPU was skipped entirely
+  safeDowngradePercent: number; // % of jobs that used reduced precision/res
+  reusePercent: number; // % of results served from cache/similarity
   delegationPreventedPercent: number; // % of jobs handled locally vs sent out
-  
+
   // Efficiency breakdown
   totalJobsProcessed: number;
   jobsAvoidedGpu: number;
@@ -25,16 +25,16 @@ export interface GpuSavingsScore {
   jobsCollapsed: number;
   jobsDelegated: number;
   jobsDeferred: number;
-  
+
   // Impact metrics
   estimatedGpuHoursSaved: number;
-  estimatedCostSaved: number;       // In USD (rough estimate)
+  estimatedCostSaved: number; // In USD (rough estimate)
   effectiveThroughputMultiplier: number; // How much more work done vs raw GPU
-  
+
   // Quality assurance
   averageQualityScore: number;
-  qualityViolations: number;        // Jobs that fell below quality floor
-  
+  qualityViolations: number; // Jobs that fell below quality floor
+
   // Timestamps
   trackerStartedAt: Date;
   lastUpdatedAt: Date;
@@ -43,7 +43,8 @@ export interface GpuSavingsScore {
 export interface JobSavingsRecord {
   jobId: string;
   savedGpu: boolean;
-  savingsType: 'avoided' | 'downgraded' | 'cached' | 'collapsed' | 'delegated' | 'deferred' | 'none';
+  savingsType:
+    "avoided" | "downgraded" | "cached" | "collapsed" | "delegated" | "deferred" | "none";
   gpuHoursSaved: number;
   qualityScore: number;
   timestamp: Date;
@@ -53,7 +54,7 @@ class GpuSavingsTrackerEngine {
   private static instance: GpuSavingsTrackerEngine;
   private records: JobSavingsRecord[] = [];
   private startedAt: Date = new Date();
-  
+
   // Running totals for efficiency
   private totals = {
     processed: 0,
@@ -82,18 +83,18 @@ class GpuSavingsTrackerEngine {
    */
   async syncWithBackend(): Promise<void> {
     try {
-      const response = await fetch('/api/status/impact');
-      if (!response.ok) throw new Error('Failed to fetch impact metrics');
+      const response = await fetch("/api/status/impact");
+      if (!response.ok) throw new Error("Failed to fetch impact metrics");
       const data = await response.json();
-      
+
       // Update totals based on real backend data
       this.totals.avoided = data.compute_avoided_count;
       this.totals.cached = data.cache_hits;
       this.totals.processed = data.compute_avoided_count + data.cache_hits;
-      
-      console.log('GPU Savings synced with backend:', data);
+
+      console.log("GPU Savings synced with backend:", data);
     } catch (error) {
-      console.error('Failed to sync GPU savings:', error);
+      console.error("Failed to sync GPU savings:", error);
     }
   }
 
@@ -102,14 +103,14 @@ class GpuSavingsTrackerEngine {
    */
   recordJobSavings(
     jobId: string,
-    savingsType: JobSavingsRecord['savingsType'],
+    savingsType: JobSavingsRecord["savingsType"],
     gpuHoursSaved: number,
     qualityScore: number,
-    qualityFloor: number = 0.8
+    qualityFloor: number = 0.8,
   ): void {
     const record: JobSavingsRecord = {
       jobId,
-      savedGpu: savingsType !== 'none' && savingsType !== 'delegated',
+      savedGpu: savingsType !== "none" && savingsType !== "delegated",
       savingsType,
       gpuHoursSaved,
       qualityScore,
@@ -117,33 +118,33 @@ class GpuSavingsTrackerEngine {
     };
 
     this.records.push(record);
-    
+
     // Update running totals
     this.totals.processed++;
     this.totals.gpuHoursSaved += gpuHoursSaved;
     this.totals.qualitySum += qualityScore;
-    
+
     if (qualityScore < qualityFloor) {
       this.totals.qualityViolations++;
     }
 
     switch (savingsType) {
-      case 'avoided':
+      case "avoided":
         this.totals.avoided++;
         break;
-      case 'downgraded':
+      case "downgraded":
         this.totals.downgraded++;
         break;
-      case 'cached':
+      case "cached":
         this.totals.cached++;
         break;
-      case 'collapsed':
+      case "collapsed":
         this.totals.collapsed++;
         break;
-      case 'delegated':
+      case "delegated":
         this.totals.delegated++;
         break;
-      case 'deferred':
+      case "deferred":
         this.totals.deferred++;
         break;
     }
@@ -197,9 +198,9 @@ class GpuSavingsTrackerEngine {
    */
   getEfficiencySummary(): string {
     const score = this.getSavingsScore();
-    
+
     if (score.totalJobsProcessed === 0) {
-      return 'No jobs processed yet. Efficiency metrics will appear after workload execution.';
+      return "No jobs processed yet. Efficiency metrics will appear after workload execution.";
     }
 
     const lines = [
@@ -212,7 +213,7 @@ class GpuSavingsTrackerEngine {
       `└─ Quality Score: ${score.averageQualityScore} (${score.qualityViolations} violations)`,
     ];
 
-    return lines.join('\n');
+    return lines.join("\n");
   }
 
   /**
@@ -220,14 +221,38 @@ class GpuSavingsTrackerEngine {
    */
   getSavingsBreakdown(): Array<{ type: string; count: number; percent: number }> {
     const total = this.totals.processed || 1;
-    
+
     return [
-      { type: 'GPU Avoided', count: this.totals.avoided, percent: Math.round((this.totals.avoided / total) * 100) },
-      { type: 'Downgraded', count: this.totals.downgraded, percent: Math.round((this.totals.downgraded / total) * 100) },
-      { type: 'Cache Hit', count: this.totals.cached, percent: Math.round((this.totals.cached / total) * 100) },
-      { type: 'Collapsed', count: this.totals.collapsed, percent: Math.round((this.totals.collapsed / total) * 100) },
-      { type: 'Delegated', count: this.totals.delegated, percent: Math.round((this.totals.delegated / total) * 100) },
-      { type: 'Deferred', count: this.totals.deferred, percent: Math.round((this.totals.deferred / total) * 100) },
+      {
+        type: "GPU Avoided",
+        count: this.totals.avoided,
+        percent: Math.round((this.totals.avoided / total) * 100),
+      },
+      {
+        type: "Downgraded",
+        count: this.totals.downgraded,
+        percent: Math.round((this.totals.downgraded / total) * 100),
+      },
+      {
+        type: "Cache Hit",
+        count: this.totals.cached,
+        percent: Math.round((this.totals.cached / total) * 100),
+      },
+      {
+        type: "Collapsed",
+        count: this.totals.collapsed,
+        percent: Math.round((this.totals.collapsed / total) * 100),
+      },
+      {
+        type: "Delegated",
+        count: this.totals.delegated,
+        percent: Math.round((this.totals.delegated / total) * 100),
+      },
+      {
+        type: "Deferred",
+        count: this.totals.deferred,
+        percent: Math.round((this.totals.deferred / total) * 100),
+      },
     ];
   }
 
@@ -236,7 +261,7 @@ class GpuSavingsTrackerEngine {
    */
   isEfficiencyTargetMet(targetPercent: number = 50): boolean {
     const score = this.getSavingsScore();
-    return (score.computeAvoidedPercent + score.reusePercent) >= targetPercent;
+    return score.computeAvoidedPercent + score.reusePercent >= targetPercent;
   }
 
   /**

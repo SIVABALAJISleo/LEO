@@ -24,14 +24,20 @@ export interface RouteNavigationReport {
 export class RoboticsGovernor {
   private robots: RobotState[] = [
     { robotId: "agv-01", status: "idle", batteryPct: 88, currentCoordinates: { x: 5, y: 12 } },
-    { robotId: "agv-02", status: "navigating", batteryPct: 42, currentCoordinates: { x: 22, y: 45 }, assignedTaskId: "task-reorder-908" }
+    {
+      robotId: "agv-02",
+      status: "navigating",
+      batteryPct: 42,
+      currentCoordinates: { x: 22, y: 45 },
+      assignedTaskId: "task-reorder-908",
+    },
   ];
 
   /**
    * Generates dynamic route paths utilizing HD maps and validates maneuvers via behavior trees.
    */
   public planRoute(robotId: string, destination: { x: number; y: number }): RouteNavigationReport {
-    const robot = this.robots.find(r => r.robotId === robotId);
+    const robot = this.robots.find((r) => r.robotId === robotId);
     const startX = robot ? robot.currentCoordinates.x : 0;
     const startY = robot ? robot.currentCoordinates.y : 0;
 
@@ -39,7 +45,7 @@ export class RoboticsGovernor {
     const pathNodes = [
       { x: startX, y: startY },
       { x: Math.floor((startX + destination.x) / 2), y: Math.floor((startY + destination.y) / 2) },
-      { x: destination.x, y: destination.y }
+      { x: destination.x, y: destination.y },
     ];
 
     // Behavior Tree evaluations
@@ -61,12 +67,12 @@ export class RoboticsGovernor {
       pathNodes,
       behaviorTreeState,
       taskAssigned: robot?.assignedTaskId || "task-inventory-sweep",
-      collisionAvoidanceTriggered
+      collisionAvoidanceTriggered,
     };
   }
 
   public updateRobotCoordinates(robotId: string, x: number, y: number): void {
-    const robot = this.robots.find(r => r.robotId === robotId);
+    const robot = this.robots.find((r) => r.robotId === robotId);
     if (robot) {
       robot.currentCoordinates = { x, y };
       robot.status = "navigating";

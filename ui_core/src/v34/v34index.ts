@@ -119,7 +119,11 @@ export { EfficiencyEvaluator } from "./certification/efficiencyEvaluator";
 export { TernaryReasoningEngine } from "./engines/ternaryReasoningEngine";
 export type { TernaryTelemetry, TernaryInferenceResult } from "./engines/ternaryReasoningEngine";
 export { HeterogeneousComputeOrchestrator } from "./engines/heterogeneousComputeOrchestrator";
-export type { DeviceType, TaskProfile, DeviceTelemetry } from "./engines/heterogeneousComputeOrchestrator";
+export type {
+  DeviceType,
+  TaskProfile,
+  DeviceTelemetry,
+} from "./engines/heterogeneousComputeOrchestrator";
 export { ExternalizedMemoryEngine } from "./engines/externalizedMemoryEngine";
 export type { FactDetails, RetrievalSummary } from "./engines/externalizedMemoryEngine";
 export { MoeRouterEngine } from "./engines/moeRouterEngine";

@@ -22,17 +22,19 @@ export class ScientificReasoningLayer {
    */
   public evaluateScientificQuery(
     independentVar: string,
-    dependentVar: string
+    dependentVar: string,
   ): ScienceEvaluationResult {
     const correlationFound = true;
-    const causationVerified = independentVar.toLowerCase().includes("quantization") || independentVar.toLowerCase().includes("cache");
-    
+    const causationVerified =
+      independentVar.toLowerCase().includes("quantization") ||
+      independentVar.toLowerCase().includes("cache");
+
     // Simulate symbolic logic resolution sequence
     const symbolicLogicTrace: string[] = [
       `Define variables: X = ${independentVar}, Y = ${dependentVar}`,
       "Map causal directed graph: X -> Z -> Y",
       "Constraint solver check: all parameters fall within CPU thermal limits",
-      "Contradiction detection: verified zero overlapping variable definitions"
+      "Contradiction detection: verified zero overlapping variable definitions",
     ];
 
     const hypotheses: ScientificHypothesis[] = [
@@ -40,8 +42,8 @@ export class ScientificReasoningLayer {
         title: "Thermal dynamic decay rate",
         claim: "Restricting registers to ternary values limits thermal dissipation rates.",
         causalLink: "TernaryWeights -> ReducedEnergyDraw -> LowerJouleOutput",
-        verificationStatus: causationVerified ? "Verified" : "Unchecked"
-      }
+        verificationStatus: causationVerified ? "Verified" : "Unchecked",
+      },
     ];
 
     // V35 Target: 92–97% scientific reasoning quality
@@ -52,7 +54,7 @@ export class ScientificReasoningLayer {
       correlationFound,
       causationVerified,
       scientificReasoningQualityPct,
-      symbolicLogicTrace
+      symbolicLogicTrace,
     };
   }
 }

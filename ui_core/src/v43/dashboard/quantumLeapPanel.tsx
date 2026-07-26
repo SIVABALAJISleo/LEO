@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
 import { MetricCard } from "./OmegaShared";
 
@@ -12,20 +12,20 @@ export const QuantumLeapPanel = () => {
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-3 gap-4">
-          <MetricCard 
-            label="Max Task Size" 
+          <MetricCard
+            label="Max Task Size"
             value="Infinite"
             comparison="Limited only by time, not hardware"
             status="UNBOUNDED"
           />
-          <MetricCard 
-            label="Queue Depth" 
+          <MetricCard
+            label="Queue Depth"
             value="1,000,000+"
             comparison="Tasks processed when compute available"
             status="SCALABLE"
           />
-          <MetricCard 
-            label="Cost per Task" 
+          <MetricCard
+            label="Cost per Task"
             value="$0.0001"
             comparison="vs $0.02 on cloud GPU"
             status="NEAR-ZERO"

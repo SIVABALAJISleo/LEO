@@ -14,7 +14,7 @@ import {
   IntentReconstructionEngine,
   ConfidenceEngineV16,
   HardeningTelemetryV16,
-  iGPUAccelerationEngineV16
+  iGPUAccelerationEngineV16,
 } from "../cognitive/v16index";
 
 describe("Antigravity AI V16 Intelligence Maximization Engine Tests", () => {
@@ -29,7 +29,7 @@ describe("Antigravity AI V16 Intelligence Maximization Engine Tests", () => {
 
   it("Phase 2: Universal Reasoning Core supports 7 procedural logic paradigms", () => {
     const core = new UniversalReasoningCore();
-    
+
     const deductive = core.reason("offload check", "Deductive");
     expect(deductive.conclusion).toContain("Deductive Proof");
     expect(deductive.premises.length).toBe(2);
@@ -54,7 +54,11 @@ describe("Antigravity AI V16 Intelligence Maximization Engine Tests", () => {
     expect(z3Report.isVerified).toBe(true);
     expect(z3Report.proof.verificationStatus).toBe("proven");
 
-    const refutedReport = engine.verifyClaim("Verify system latency", "system has zero latency", "Lean");
+    const refutedReport = engine.verifyClaim(
+      "Verify system latency",
+      "system has zero latency",
+      "Lean",
+    );
     expect(refutedReport.isVerified).toBe(false);
     expect(refutedReport.proof.verificationStatus).toBe("refuted");
   });
@@ -97,10 +101,10 @@ describe("Antigravity AI V16 Intelligence Maximization Engine Tests", () => {
     const immune = new KnowledgeImmuneSystem();
     const crystals = immune.auditCrystals();
 
-    const quarantined = crystals.find(c => c.id === "V16-C04");
+    const quarantined = crystals.find((c) => c.id === "V16-C04");
     expect(quarantined?.status).toBe("quarantined");
 
-    const strengthened = crystals.find(c => c.id === "V16-C01");
+    const strengthened = crystals.find((c) => c.id === "V16-C01");
     expect(strengthened?.status).toBe("strengthened");
   });
 
@@ -177,12 +181,12 @@ describe("Antigravity AI V16 Intelligence Maximization Engine Tests", () => {
     const res1 = engine.calibrateOutputV16("Verification checks out", 0.95, 0.95, 3, 3);
     expect(res1.evidenceLevel).toBe("strong");
     expect(res1.verificationStatus).toBe("fully_verified");
-    expect(res1.calibratedConfidence).toBeGreaterThan(0.90);
+    expect(res1.calibratedConfidence).toBeGreaterThan(0.9);
 
     // Weak Evidence -> Capped at 0.30
-    const res2 = engine.calibrateOutputV16("Weak reasoning trace", 0.40, 0.50, 0, 3);
+    const res2 = engine.calibrateOutputV16("Weak reasoning trace", 0.4, 0.5, 0, 3);
     expect(res2.evidenceLevel).toBe("weak");
-    expect(res2.calibratedConfidence).toBeLessThanOrEqual(0.30);
+    expect(res2.calibratedConfidence).toBeLessThanOrEqual(0.3);
   });
 
   it("Phase 14: iGPU Swarm Computing offloads embeddings and simulates probability on local hardware", async () => {

@@ -17,7 +17,7 @@ export class ReasoningCacheEngine {
       trajectoryId,
       premise,
       conclusions,
-      computationFlopsSaved: flopsSaved
+      computationFlopsSaved: flopsSaved,
     };
     this.cache.set(premise.toLowerCase(), traj);
     return traj;

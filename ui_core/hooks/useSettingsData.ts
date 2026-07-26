@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
-import { firebaseClient as supabase } from '@/integrations/firebase/client';
-import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
+import { useState, useEffect, useCallback } from "react";
+import { firebaseClient as supabase } from "@/integrations/firebase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 export interface Profile {
   id: string;
@@ -42,9 +42,9 @@ export function useSettingsData() {
     if (!user) return;
 
     const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('user_id', user.id)
+      .from("profiles")
+      .select("*")
+      .eq("user_id", user.id)
       .single();
 
     if (!error && data) {
@@ -57,10 +57,10 @@ export function useSettingsData() {
 
     // Use safe view that excludes key_hash
     const { data, error } = await supabase
-      .from('api_keys')
-      .select('id, user_id, key_name, key_prefix, is_active, created_at, last_used_at, expires_at')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false });
+      .from("api_keys")
+      .select("id, user_id, key_name, key_prefix, is_active, created_at, last_used_at, expires_at")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false });
 
     if (!error) {
       setApiKeys(data || []);
@@ -71,9 +71,9 @@ export function useSettingsData() {
     if (!user) return;
 
     const { data, error } = await supabase
-      .from('subscriptions')
-      .select('*')
-      .eq('user_id', user.id)
+      .from("subscriptions")
+      .select("*")
+      .eq("user_id", user.id)
       .single();
 
     if (!error && data) {
@@ -95,19 +95,16 @@ export function useSettingsData() {
     if (!user || !profile) return false;
 
     try {
-      const { error } = await supabase
-        .from('profiles')
-        .update(updates)
-        .eq('user_id', user.id);
+      const { error } = await supabase.from("profiles").update(updates).eq("user_id", user.id);
 
       if (error) throw error;
 
-      toast({ title: 'Profile Updated', description: 'Your profile has been saved.' });
+      toast({ title: "Profile Updated", description: "Your profile has been saved." });
       await fetchProfile();
       return true;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      toast({ title: 'Error', description: err.message, variant: 'destructive' });
+      toast({ title: "Error", description: err.message, variant: "destructive" });
       return false;
     }
   };
@@ -117,26 +114,26 @@ export function useSettingsData() {
 
     try {
       // Use server-side edge function for secure key generation
-      const { data, error } = await supabase.functions.invoke('generate-api-key', {
-        body: { key_name: keyName }
+      const { data, error } = await supabase.functions.invoke("generate-api-key", {
+        body: { key_name: keyName },
       });
 
       if (error) throw error;
 
       if (!data.success) {
-        throw new Error(data.error || 'Failed to generate API key');
+        throw new Error(data.error || "Failed to generate API key");
       }
 
-      toast({ 
-        title: 'API Key Created', 
-        description: 'Copy your key now - it won\'t be shown again!' 
+      toast({
+        title: "API Key Created",
+        description: "Copy your key now - it won't be shown again!",
       });
       await fetchApiKeys();
       // Return the plaintext key only once for the user to copy
       return data.key;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      toast({ title: 'Error', description: err.message, variant: 'destructive' });
+      toast({ title: "Error", description: err.message, variant: "destructive" });
       return null;
     }
   };
@@ -146,18 +143,18 @@ export function useSettingsData() {
 
     try {
       const { error } = await supabase
-        .from('api_keys')
+        .from("api_keys")
         .update({ is_active: false })
-        .eq('id', keyId)
-        .eq('user_id', user.id);
+        .eq("id", keyId)
+        .eq("user_id", user.id);
 
       if (error) throw error;
 
-      toast({ title: 'API Key Revoked', description: 'The API key has been deactivated.' });
+      toast({ title: "API Key Revoked", description: "The API key has been deactivated." });
       await fetchApiKeys();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      toast({ title: 'Error', description: err.message, variant: 'destructive' });
+      toast({ title: "Error", description: err.message, variant: "destructive" });
     }
   };
 
@@ -166,18 +163,18 @@ export function useSettingsData() {
 
     try {
       const { error } = await supabase
-        .from('api_keys')
+        .from("api_keys")
         .delete()
-        .eq('id', keyId)
-        .eq('user_id', user.id);
+        .eq("id", keyId)
+        .eq("user_id", user.id);
 
       if (error) throw error;
 
-      toast({ title: 'API Key Deleted', description: 'The API key has been permanently deleted.' });
+      toast({ title: "API Key Deleted", description: "The API key has been permanently deleted." });
       await fetchApiKeys();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      toast({ title: 'Error', description: err.message, variant: 'destructive' });
+      toast({ title: "Error", description: err.message, variant: "destructive" });
     }
   };
 
@@ -190,6 +187,6 @@ export function useSettingsData() {
     generateApiKey,
     revokeApiKey,
     deleteApiKey,
-    refreshAll
+    refreshAll,
   };
 }

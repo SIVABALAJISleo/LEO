@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useState, useEffect } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export function useAdminRole() {
   const { user } = useAuth();
@@ -19,7 +19,7 @@ export function useAdminRole() {
         // In a real Firebase setup, this should check Firebase custom claims or Firestore.
         setIsAdmin(true);
       } catch (err) {
-        console.error('Failed to check admin role:', err);
+        console.error("Failed to check admin role:", err);
         setIsAdmin(false);
       } finally {
         setIsLoading(false);

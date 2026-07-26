@@ -1,8 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
-import { firebaseClient as supabase } from '@/integrations/firebase/client';
-import { useAuth } from '@/contexts/AuthContext';
-import { toast } from 'sonner';
-import type { Json } from '@/integrations/supabase/types';
+import { useState, useEffect, useCallback } from "react";
+import { firebaseClient as supabase } from "@/integrations/firebase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
+import type { Json } from "@/integrations/supabase/types";
 
 export interface WorkloadPrediction {
   id: string;
@@ -61,25 +61,25 @@ export interface PredictionAccuracy {
 }
 
 export const PREDICTION_TYPES = [
-  { value: 'concurrent_users', label: 'Concurrent Users' },
-  { value: 'inference_requests', label: 'Inference Requests' },
-  { value: 'avg_latency', label: 'Average Latency' },
-  { value: 'memory_usage', label: 'Memory Usage' },
-  { value: 'gpu_utilization', label: 'GPU Utilization' },
+  { value: "concurrent_users", label: "Concurrent Users" },
+  { value: "inference_requests", label: "Inference Requests" },
+  { value: "avg_latency", label: "Average Latency" },
+  { value: "memory_usage", label: "Memory Usage" },
+  { value: "gpu_utilization", label: "GPU Utilization" },
 ];
 
 export const TIME_HORIZONS = [
-  { value: '1h', label: '1 Hour' },
-  { value: '6h', label: '6 Hours' },
-  { value: '24h', label: '24 Hours' },
-  { value: '7d', label: '7 Days' },
+  { value: "1h", label: "1 Hour" },
+  { value: "6h", label: "6 Hours" },
+  { value: "24h", label: "24 Hours" },
+  { value: "7d", label: "7 Days" },
 ];
 
 export const RESOURCE_TYPES = [
-  { value: 'gpu', label: 'GPU Instances' },
-  { value: 'cpu', label: 'CPU Nodes' },
-  { value: 'memory', label: 'Memory' },
-  { value: 'storage', label: 'Storage' },
+  { value: "gpu", label: "GPU Instances" },
+  { value: "cpu", label: "CPU Nodes" },
+  { value: "memory", label: "Memory" },
+  { value: "storage", label: "Storage" },
 ];
 
 export const usePredictiveScalingData = () => {
@@ -93,47 +93,46 @@ export const usePredictiveScalingData = () => {
 
   const fetchData = useCallback(async () => {
     if (!user) return;
-    
+
     setIsLoading(true);
     try {
       // Fetch predictions
       const { data: predictionsData, error: predictionsError } = await supabase
-        .from('workload_predictions')
-        .select('*')
-        .order('target_time', { ascending: true });
-      
+        .from("workload_predictions")
+        .select("*")
+        .order("target_time", { ascending: true });
+
       if (predictionsError) throw predictionsError;
       setPredictions((predictionsData || []) as WorkloadPrediction[]);
 
       // Fetch scaling actions
       const { data: actionsData, error: actionsError } = await supabase
-        .from('scaling_actions')
-        .select('*')
-        .order('created_at', { ascending: false });
-      
+        .from("scaling_actions")
+        .select("*")
+        .order("created_at", { ascending: false });
+
       if (actionsError) throw actionsError;
       setScalingActions((actionsData || []) as ScalingAction[]);
 
       // Fetch cost analysis
       const { data: costData, error: costError } = await supabase
-        .from('cost_analysis')
-        .select('*')
-        .order('period_end', { ascending: false });
-      
+        .from("cost_analysis")
+        .select("*")
+        .order("period_end", { ascending: false });
+
       if (costError) throw costError;
       setCostAnalysis((costData || []) as CostAnalysis[]);
 
       // Fetch accuracy metrics
       const { data: accuracyData, error: accuracyError } = await supabase
-        .from('prediction_accuracy')
-        .select('*')
-        .order('recorded_at', { ascending: false });
-      
+        .from("prediction_accuracy")
+        .select("*")
+        .order("recorded_at", { ascending: false });
+
       if (accuracyError) throw accuracyError;
       setAccuracyMetrics((accuracyData || []) as PredictionAccuracy[]);
-
     } catch (err) {
-      console.error('Error fetching predictive scaling data:', err);
+      console.error("Error fetching predictive scaling data:", err);
       setError(err as Error);
     } finally {
       setIsLoading(false);
@@ -150,23 +149,23 @@ export const usePredictiveScalingData = () => {
     is_anomaly?: boolean;
   }) => {
     if (!user) return null;
-    
+
     try {
       const { data: prediction, error } = await supabase
-        .from('workload_predictions')
+        .from("workload_predictions")
         .insert({
           user_id: user.id,
           ...data,
         })
         .select()
         .single();
-      
+
       if (error) throw error;
       await fetchData();
       return prediction;
     } catch (err) {
-      console.error('Error creating prediction:', err);
-      toast.error('Failed to create prediction');
+      console.error("Error creating prediction:", err);
+      toast.error("Failed to create prediction");
       return null;
     }
   };
@@ -181,87 +180,87 @@ export const usePredictiveScalingData = () => {
     latency_impact?: number;
   }) => {
     if (!user) return null;
-    
+
     try {
       const { data: action, error } = await supabase
-        .from('scaling_actions')
+        .from("scaling_actions")
         .insert({
           user_id: user.id,
-          status: 'pending',
+          status: "pending",
           ...data,
         })
         .select()
         .single();
-      
+
       if (error) throw error;
-      toast.success('Scaling action proposed');
+      toast.success("Scaling action proposed");
       await fetchData();
       return action;
     } catch (err) {
-      console.error('Error proposing scaling action:', err);
-      toast.error('Failed to propose scaling action');
+      console.error("Error proposing scaling action:", err);
+      toast.error("Failed to propose scaling action");
       return null;
     }
   };
 
   const executeScalingAction = async (actionId: string) => {
     if (!user) return;
-    
+
     try {
       const { error } = await supabase
-        .from('scaling_actions')
+        .from("scaling_actions")
         .update({
-          status: 'executed',
+          status: "executed",
           executed_at: new Date().toISOString(),
         })
-        .eq('id', actionId);
-      
+        .eq("id", actionId);
+
       if (error) throw error;
-      toast.success('Scaling action executed');
+      toast.success("Scaling action executed");
       await fetchData();
     } catch (err) {
-      console.error('Error executing scaling action:', err);
-      toast.error('Failed to execute scaling action');
+      console.error("Error executing scaling action:", err);
+      toast.error("Failed to execute scaling action");
     }
   };
 
   const cancelScalingAction = async (actionId: string) => {
     if (!user) return;
-    
+
     try {
       const { error } = await supabase
-        .from('scaling_actions')
-        .update({ status: 'cancelled' })
-        .eq('id', actionId);
-      
+        .from("scaling_actions")
+        .update({ status: "cancelled" })
+        .eq("id", actionId);
+
       if (error) throw error;
-      toast.success('Scaling action cancelled');
+      toast.success("Scaling action cancelled");
       await fetchData();
     } catch (err) {
-      console.error('Error cancelling scaling action:', err);
-      toast.error('Failed to cancel scaling action');
+      console.error("Error cancelling scaling action:", err);
+      toast.error("Failed to cancel scaling action");
     }
   };
 
   const generatePredictions = async (predictionType: string, timeHorizon: string) => {
     if (!user) return;
-    
+
     // Simulate prediction generation based on historical data
     const now = new Date();
-    
+
     let intervals: number;
     let intervalMs: number;
-    
+
     switch (timeHorizon) {
-      case '1h':
+      case "1h":
         intervals = 12;
         intervalMs = 5 * 60 * 1000;
         break;
-      case '6h':
+      case "6h":
         intervals = 12;
         intervalMs = 30 * 60 * 1000;
         break;
-      case '24h':
+      case "24h":
         intervals = 24;
         intervalMs = 60 * 60 * 1000;
         break;
@@ -273,7 +272,7 @@ export const usePredictiveScalingData = () => {
     // HONEST: Predictions require actual model - queue for ML processing
     for (let i = 0; i < intervals; i++) {
       const targetTime = new Date(now.getTime() + (i + 1) * intervalMs);
-      
+
       await createPrediction({
         prediction_type: predictionType,
         time_horizon: timeHorizon,
@@ -284,15 +283,15 @@ export const usePredictiveScalingData = () => {
         is_anomaly: null, // Requires analysis
       });
     }
-    
-    toast.success('Predictions queued for ML processing');
+
+    toast.success("Predictions queued for ML processing");
   };
 
   const getUpcomingPredictions = (hours: number = 24) => {
     const now = new Date();
     const cutoff = new Date(now.getTime() + hours * 60 * 60 * 1000);
-    
-    return predictions.filter(p => {
+
+    return predictions.filter((p) => {
       const targetTime = new Date(p.target_time);
       return targetTime >= now && targetTime <= cutoff;
     });
@@ -303,12 +302,12 @@ export const usePredictiveScalingData = () => {
   };
 
   const getAverageAccuracy = (predictionType?: string) => {
-    const filtered = predictionType 
-      ? accuracyMetrics.filter(a => a.prediction_type === predictionType)
+    const filtered = predictionType
+      ? accuracyMetrics.filter((a) => a.prediction_type === predictionType)
       : accuracyMetrics;
-    
+
     if (filtered.length === 0) return null;
-    
+
     const sum = filtered.reduce((acc, m) => acc + (m.accuracy_percent || 0), 0);
     return sum / filtered.length;
   };

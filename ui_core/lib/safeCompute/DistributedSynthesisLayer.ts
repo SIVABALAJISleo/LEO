@@ -1,18 +1,18 @@
 /**
  * DISTRIBUTED SYNTHESIS LAYER
- * 
+ *
  * Handles edge/swarm execution with:
  * - Stateless job slicing
  * - Consensus verification when accuracy-critical
  * - Transparent delegation (never claims local execution if remote is used)
- * 
+ *
  * ABSOLUTE RULES:
  * - Never claim GPU replacement
  * - Never hide delegation or cloud usage
  * - Always verify results when accuracy-critical
  */
 
-export type SwarmNodeType = 'edge' | 'peer' | 'cloud' | 'local';
+export type SwarmNodeType = "edge" | "peer" | "cloud" | "local";
 
 export interface SwarmNode {
   id: string;
@@ -29,7 +29,7 @@ export interface JobSlice {
   sliceIndex: number;
   totalSlices: number;
   payload: unknown;
-  status: 'pending' | 'processing' | 'completed' | 'failed';
+  status: "pending" | "processing" | "completed" | "failed";
   assignedNode?: string;
   result?: unknown;
   startedAt?: Date;
@@ -65,10 +65,10 @@ const MIN_NODES_FOR_CONSENSUS = 2;
 
 class DistributedSynthesisLayerCore {
   private static instance: DistributedSynthesisLayerCore;
-  
+
   private nodes: Map<string, SwarmNode> = new Map();
   private activeJobs: Map<string, JobSlice[]> = new Map();
-  
+
   private stats: DistributedStats = {
     totalJobs: 0,
     successfulJobs: 0,
@@ -78,7 +78,7 @@ class DistributedSynthesisLayerCore {
     nodesActive: 0,
     lastUpdated: new Date(),
   };
-  
+
   private latencies: number[] = [];
 
   private constructor() {
@@ -99,9 +99,9 @@ class DistributedSynthesisLayerCore {
   private initializeDefaultNodes(): void {
     // Note: In production, nodes would be discovered dynamically
     // These represent what WOULD be available if connected
-    this.nodes.set('local', {
-      id: 'local',
-      type: 'local',
+    this.nodes.set("local", {
+      id: "local",
+      type: "local",
       available: false, // Requires agent
       latencyMs: 0,
       reliability: 1.0,
@@ -114,7 +114,7 @@ class DistributedSynthesisLayerCore {
    */
   registerNode(node: SwarmNode): void {
     this.nodes.set(node.id, node);
-    this.stats.nodesActive = Array.from(this.nodes.values()).filter(n => n.available).length;
+    this.stats.nodesActive = Array.from(this.nodes.values()).filter((n) => n.available).length;
     this.stats.lastUpdated = new Date();
   }
 
@@ -123,7 +123,7 @@ class DistributedSynthesisLayerCore {
    */
   removeNode(nodeId: string): void {
     this.nodes.delete(nodeId);
-    this.stats.nodesActive = Array.from(this.nodes.values()).filter(n => n.available).length;
+    this.stats.nodesActive = Array.from(this.nodes.values()).filter((n) => n.available).length;
     this.stats.lastUpdated = new Date();
   }
 
@@ -131,7 +131,7 @@ class DistributedSynthesisLayerCore {
    * Get available nodes
    */
   getAvailableNodes(): SwarmNode[] {
-    return Array.from(this.nodes.values()).filter(n => n.available);
+    return Array.from(this.nodes.values()).filter((n) => n.available);
   }
 
   /**
@@ -146,7 +146,7 @@ class DistributedSynthesisLayerCore {
       minNodes?: number;
       maxLatencyMs?: number;
       sliceCount?: number;
-    } = {}
+    } = {},
   ): Promise<DistributedJobResult> {
     const startTime = performance.now();
     const availableNodes = this.getAvailableNodes();
@@ -163,8 +163,9 @@ class DistributedSynthesisLayerCore {
         executedRemotely: false,
         nodesUsed: [],
         totalLatencyMs: performance.now() - startTime,
-        explanation: `Insufficient nodes: ${availableNodes.length}/${minNodes} available. ` +
-                     `Register nodes in Device Registry to enable distributed execution.`,
+        explanation:
+          `Insufficient nodes: ${availableNodes.length}/${minNodes} available. ` +
+          `Register nodes in Device Registry to enable distributed execution.`,
       };
     }
 
@@ -205,8 +206,8 @@ class DistributedSynthesisLayerCore {
       slices: results,
       consensusReached: aggregatedResult.consensusReached,
       consensusScore: aggregatedResult.consensusScore,
-      executedRemotely: availableNodes.some(n => n.type !== 'local'),
-      nodesUsed: [...new Set(results.map(s => s.assignedNode).filter(Boolean) as string[])],
+      executedRemotely: availableNodes.some((n) => n.type !== "local"),
+      nodesUsed: [...new Set(results.map((s) => s.assignedNode).filter(Boolean) as string[])],
       totalLatencyMs,
       explanation: aggregatedResult.explanation,
     };
@@ -217,7 +218,7 @@ class DistributedSynthesisLayerCore {
    */
   private createSlices(jobId: string, payload: unknown, count: number): JobSlice[] {
     const slices: JobSlice[] = [];
-    
+
     for (let i = 0; i < count; i++) {
       slices.push({
         id: `${jobId}_slice_${i}`,
@@ -225,10 +226,10 @@ class DistributedSynthesisLayerCore {
         sliceIndex: i,
         totalSlices: count,
         payload: this.partitionPayload(payload, i, count),
-        status: 'pending',
+        status: "pending",
       });
     }
-    
+
     return slices;
   }
 
@@ -243,15 +244,15 @@ class DistributedSynthesisLayerCore {
       const end = Math.min(start + chunkSize, payload.length);
       return payload.slice(start, end);
     }
-    
+
     // For objects, include partition metadata
-    if (typeof payload === 'object' && payload !== null) {
+    if (typeof payload === "object" && payload !== null) {
       return {
         ...payload,
         _partition: { index, total },
       };
     }
-    
+
     // For primitives, just return as-is
     return payload;
   }
@@ -259,18 +260,15 @@ class DistributedSynthesisLayerCore {
   /**
    * Assign slices to nodes
    */
-  private assignSlicesToNodes(
-    slices: JobSlice[],
-    nodes: SwarmNode[]
-  ): Map<string, JobSlice> {
+  private assignSlicesToNodes(slices: JobSlice[], nodes: SwarmNode[]): Map<string, JobSlice> {
     const assignments = new Map<string, JobSlice>();
-    
+
     slices.forEach((slice, i) => {
       const node = nodes[i % nodes.length];
       slice.assignedNode = node.id;
       assignments.set(slice.id, slice);
     });
-    
+
     return assignments;
   }
 
@@ -280,38 +278,40 @@ class DistributedSynthesisLayerCore {
    */
   private async executeSlices(
     assignments: Map<string, JobSlice>,
-    maxLatencyMs?: number
+    maxLatencyMs?: number,
   ): Promise<JobSlice[]> {
     const results: JobSlice[] = [];
-    
+
     // In a real implementation, these would be actual remote calls
     // Here we mark them as completed with placeholder results
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     for (const [_, slice] of assignments) {
-      const node = this.nodes.get(slice.assignedNode || '');
-      
-      slice.status = 'processing';
+      const node = this.nodes.get(slice.assignedNode || "");
+
+      slice.status = "processing";
       slice.startedAt = new Date();
-      
+
       // Simulated execution time (would be real remote call)
       const executionTime = node ? node.latencyMs : 50;
-      await new Promise(resolve => setTimeout(resolve, Math.min(executionTime, maxLatencyMs ?? 1000)));
-      
+      await new Promise((resolve) =>
+        setTimeout(resolve, Math.min(executionTime, maxLatencyMs ?? 1000)),
+      );
+
       // Mark as completed (real implementation would have actual results)
-      slice.status = 'completed';
+      slice.status = "completed";
       slice.completedAt = new Date();
       slice.result = {
         computed: true,
         nodeId: slice.assignedNode,
-        nodeType: node?.type || 'unknown',
+        nodeType: node?.type || "unknown",
         // Note: This is NOT a simulated result - it's a placeholder
         // Real results would come from actual remote execution
         _placeholder: true,
       };
-      
+
       results.push(slice);
     }
-    
+
     return results;
   }
 
@@ -320,7 +320,7 @@ class DistributedSynthesisLayerCore {
    */
   private aggregateResults(
     slices: JobSlice[],
-    requireConsensus?: boolean
+    requireConsensus?: boolean,
   ): {
     success: boolean;
     result: unknown;
@@ -328,7 +328,7 @@ class DistributedSynthesisLayerCore {
     consensusScore: number;
     explanation: string;
   } {
-    const completedSlices = slices.filter(s => s.status === 'completed');
+    const completedSlices = slices.filter((s) => s.status === "completed");
     const successRate = completedSlices.length / slices.length;
 
     // Check consensus if required
@@ -348,7 +348,7 @@ class DistributedSynthesisLayerCore {
     const success = successRate >= 0.5 && (!requireConsensus || consensusReached);
 
     // Aggregate results
-    const aggregatedResult = completedSlices.map(s => s.result);
+    const aggregatedResult = completedSlices.map((s) => s.result);
 
     return {
       success,
@@ -392,7 +392,7 @@ class DistributedSynthesisLayerCore {
       local: 0,
     };
 
-    availableNodes.forEach(n => {
+    availableNodes.forEach((n) => {
       nodesByType[n.type]++;
     });
 
@@ -400,9 +400,10 @@ class DistributedSynthesisLayerCore {
       available: availableNodes.length > 0,
       nodesOnline: availableNodes.length,
       nodesByType,
-      explanation: availableNodes.length > 0
-        ? `${availableNodes.length} node(s) available for distributed execution`
-        : 'No nodes available. Register a local agent or connect external compute.',
+      explanation:
+        availableNodes.length > 0
+          ? `${availableNodes.length} node(s) available for distributed execution`
+          : "No nodes available. Register a local agent or connect external compute.",
     };
   }
 }

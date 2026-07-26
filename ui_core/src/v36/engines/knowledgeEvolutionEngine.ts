@@ -18,26 +18,30 @@ export interface IngestionReport {
 
 export class KnowledgeEvolutionEngine {
   private conceptsList: EvolutionConcept[] = [
-    { id: "c-101", sourceUrl: "arxiv.org/abs/bitnet", conceptText: "1.58-bit models use addition.", sourceRank: 5, timestamp: Date.now() - 3600000 }
+    {
+      id: "c-101",
+      sourceUrl: "arxiv.org/abs/bitnet",
+      conceptText: "1.58-bit models use addition.",
+      sourceRank: 5,
+      timestamp: Date.now() - 3600000,
+    },
   ];
 
   /**
    * Evaluates research, resolves contradiction values, and formats freshness metrics.
    */
-  public ingestConcept(
-    sourceUrl: string,
-    conceptText: string,
-    rank: number
-  ): IngestionReport {
+  public ingestConcept(sourceUrl: string, conceptText: string, rank: number): IngestionReport {
     const freshRatio = 0.98;
-    const contradictionFound = conceptText.toLowerCase().includes("deprecated") || conceptText.toLowerCase().includes("conflict");
+    const contradictionFound =
+      conceptText.toLowerCase().includes("deprecated") ||
+      conceptText.toLowerCase().includes("conflict");
 
     const newConcept: EvolutionConcept = {
       id: `c-${(100 + Math.random() * 900).toFixed(0)}`,
       sourceUrl,
       conceptText,
       sourceRank: rank,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
     this.conceptsList.push(newConcept);
 
@@ -50,7 +54,7 @@ export class KnowledgeEvolutionEngine {
       contradictionFound,
       sourceReliabilityScore: parseFloat(((rank / 5) * 100).toFixed(1)),
       freshnessScore: parseFloat((freshRatio * 100).toFixed(1)),
-      replacedOutdatedKeys
+      replacedOutdatedKeys,
     };
   }
 

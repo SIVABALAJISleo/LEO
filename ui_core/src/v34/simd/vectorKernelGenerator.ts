@@ -21,7 +21,7 @@ export class VectorKernelGenerator {
     arraySize: number,
     isQuantized: boolean,
     precision: "INT8" | "INT4" | "FP16",
-    hasAvx512 = false
+    hasAvx512 = false,
   ): SimdInstructionPlan {
     let scheduledInstructionSet: "AVX2" | "AVX512" | "VNNI" | "Scalar" = "Scalar";
     let estimatedThroughputGflops = 1.5;
@@ -38,7 +38,8 @@ export class VectorKernelGenerator {
       const plan = this.avx.planFloatingPointLoad(arraySize, hasAvx512);
       scheduledInstructionSet = plan.instructionWidth;
       estimatedThroughputGflops = plan.estimatedThroughputGflops;
-      simdUtilizationScore = plan.instructionWidth === "AVX512" ? 92.5 : (plan.instructionWidth === "AVX2" ? 72.0 : 20.0);
+      simdUtilizationScore =
+        plan.instructionWidth === "AVX512" ? 92.5 : plan.instructionWidth === "AVX2" ? 72.0 : 20.0;
       planLog = `AVX kernel aligned. Unroll factor: ${plan.unrollFactor}, registers: ${plan.registerCountUsed}.`;
     }
 
@@ -48,7 +49,7 @@ export class VectorKernelGenerator {
       scheduledInstructionSet,
       estimatedThroughputGflops: parseFloat(estimatedThroughputGflops.toFixed(2)),
       simdUtilizationScore: parseFloat(simdUtilizationScore.toFixed(1)),
-      planLog
+      planLog,
     };
   }
 }

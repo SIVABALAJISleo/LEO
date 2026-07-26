@@ -4,13 +4,15 @@
 export class CausalValidationEngine {
   public validateCausation(
     correlationCoeff: number,
-    confoundingFactorsCount: number
+    confoundingFactorsCount: number,
   ): { score: number; isCausal: boolean } {
     // Causation score reduces with more confounding factors
-    const score = parseFloat((correlationCoeff / (1.0 + confoundingFactorsCount * 0.15)).toFixed(3));
+    const score = parseFloat(
+      (correlationCoeff / (1.0 + confoundingFactorsCount * 0.15)).toFixed(3),
+    );
     return {
       score,
-      isCausal: score > 0.75
+      isCausal: score > 0.75,
     };
   }
 }

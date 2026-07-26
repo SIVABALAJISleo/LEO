@@ -19,15 +19,15 @@ export const runSecurityTesting = async (): Promise<SecurityScoreReport> => {
     "RAG Poisoning",
     "API Abuse",
     "Token Theft",
-    "Privilege Escalation"
+    "Privilege Escalation",
   ];
 
-  const results: SecurityAttackResult[] = attackVectors.map(attack => {
+  const results: SecurityAttackResult[] = attackVectors.map((attack) => {
     return {
       attackType: attack,
       detectionRate: parseFloat((98.5 + Math.random() * 1.4).toFixed(2)),
       blockRate: parseFloat((99.0 + Math.random() * 0.9).toFixed(2)),
-      recoveryRate: parseFloat((99.5 + Math.random() * 0.4).toFixed(2))
+      recoveryRate: parseFloat((99.5 + Math.random() * 0.4).toFixed(2)),
     };
   });
 
@@ -35,6 +35,6 @@ export const runSecurityTesting = async (): Promise<SecurityScoreReport> => {
 
   return {
     overallSecurityScore: parseFloat(overall.toFixed(2)),
-    attackResults: results
+    attackResults: results,
   };
 };

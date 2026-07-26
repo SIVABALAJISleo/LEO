@@ -22,7 +22,7 @@ export class ProductScoreGovernor {
     agent: number,
     verification: number,
     enterprise: number,
-    performance: number
+    performance: number,
   ): ConvergenceScores {
     // Round metrics to 3 decimals
     const reasoningScore = parseFloat(reasoning.toFixed(3));
@@ -37,15 +37,15 @@ export class ProductScoreGovernor {
     // Weighted Overall Score: target 95%–98%
     const overallProductScore = parseFloat(
       (
-        (reasoningScore * 0.20) +
-        (memoryScore * 0.15) +
-        (searchScore * 0.10) +
-        (ragScore * 0.15) +
-        (agentScore * 0.10) +
-        (verificationScore * 0.10) +
-        (enterpriseScore * 0.10) +
-        (performanceScore * 0.10)
-      ).toFixed(4)
+        reasoningScore * 0.2 +
+        memoryScore * 0.15 +
+        searchScore * 0.1 +
+        ragScore * 0.15 +
+        agentScore * 0.1 +
+        verificationScore * 0.1 +
+        enterpriseScore * 0.1 +
+        performanceScore * 0.1
+      ).toFixed(4),
     );
 
     return {
@@ -57,7 +57,7 @@ export class ProductScoreGovernor {
       verificationScore,
       enterpriseScore,
       performanceScore,
-      overallProductScore: Math.min(0.99, Math.max(0.95, overallProductScore))
+      overallProductScore: Math.min(0.99, Math.max(0.95, overallProductScore)),
     };
   }
 }

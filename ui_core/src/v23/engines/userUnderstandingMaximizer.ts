@@ -4,7 +4,8 @@
 export interface IntentNormalization {
   originalQuery: string;
   normalizedQuery: string;
-  detectedLanguageMode: "English" | "Tamil-English (Tanglish)" | "Slang/Abbreviations" | "Contradictory/Incomplete";
+  detectedLanguageMode:
+    "English" | "Tamil-English (Tanglish)" | "Slang/Abbreviations" | "Contradictory/Incomplete";
   intentConfidence: number; // target: 95%+
   primaryTopic: string;
   clarificationsPrompted?: string;
@@ -19,7 +20,7 @@ export class UserUnderstandingMaximizer {
     const trimmed = query.trim();
 
     let normalizedQuery = trimmed;
-    let detectedLanguageMode: IntentNormalization['detectedLanguageMode'] = "English";
+    let detectedLanguageMode: IntentNormalization["detectedLanguageMode"] = "English";
     let intentConfidence = 0.98;
     let primaryTopic = "General Inquiry";
     let clarificationsPrompted: string | undefined;
@@ -35,7 +36,7 @@ export class UserUnderstandingMaximizer {
       detectedLanguageMode = "Tamil-English (Tanglish)";
       intentConfidence = 0.96;
       primaryTopic = "Tamil Dialect Localization Mapping";
-      
+
       // Expand Tanglish words to clean English
       normalizedQuery = trimmed
         .replace(/eppadi/i, "how to")
@@ -79,15 +80,16 @@ export class UserUnderstandingMaximizer {
       detectedLanguageMode,
       intentConfidence,
       primaryTopic,
-      clarificationsPrompted
+      clarificationsPrompted,
     };
   }
 
   getStats() {
     return {
-      averageIntentAccuracy: this.totalQueries > 0 
-        ? parseFloat((this.confidenceAccumulator / this.totalQueries).toFixed(3))
-        : 0.968
+      averageIntentAccuracy:
+        this.totalQueries > 0
+          ? parseFloat((this.confidenceAccumulator / this.totalQueries).toFixed(3))
+          : 0.968,
     };
   }
 }

@@ -22,21 +22,22 @@ export class FailureImmuneSystem {
         vaccineId: "VAC-261",
         failurePattern: "Cyclic dependency wait deadlocks on Agent routes",
         occurrencesCount: 14,
-        vaccineStrategy: "Enforce parentfallback routing constraints inside agentEffectivenessOptimizer.ts",
-        retestedAndPassed: true
+        vaccineStrategy:
+          "Enforce parentfallback routing constraints inside agentEffectivenessOptimizer.ts",
+        retestedAndPassed: true,
       },
       {
         vaccineId: "VAC-262",
         failurePattern: "Memory lock collisions under high parallel writes",
         occurrencesCount: 8,
         vaccineStrategy: "Inject minhash verification checkpoints in memoryStabilityMaximizer.ts",
-        retestedAndPassed: true
-      }
+        retestedAndPassed: true,
+      },
     ];
   }
 
   registerFailure(pattern: string, strategy: string) {
-    const existing = this.vaccines.find(v => v.failurePattern === pattern);
+    const existing = this.vaccines.find((v) => v.failurePattern === pattern);
     if (existing) {
       existing.occurrencesCount++;
     } else {
@@ -45,7 +46,7 @@ export class FailureImmuneSystem {
         failurePattern: pattern,
         occurrencesCount: 1,
         vaccineStrategy: strategy,
-        retestedAndPassed: true
+        retestedAndPassed: true,
       });
     }
   }

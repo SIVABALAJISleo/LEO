@@ -9,12 +9,23 @@ export interface ConstitutionRule {
 
 export class AgentGovernanceEngine {
   private rules: ConstitutionRule[] = [
-    { ruleId: "rule-1", statement: "Do not exceed maximum allocated execution cost bounds.", active: true },
-    { ruleId: "rule-2", statement: "Arbitrate loops prior to executing concurrent writes.", active: true }
+    {
+      ruleId: "rule-1",
+      statement: "Do not exceed maximum allocated execution cost bounds.",
+      active: true,
+    },
+    {
+      ruleId: "rule-2",
+      statement: "Arbitrate loops prior to executing concurrent writes.",
+      active: true,
+    },
   ];
 
   public checkCompliance(actionLabel: string): { compliant: boolean; violatedRuleId?: string } {
-    if (actionLabel.toLowerCase().includes("overwrite_all") || actionLabel.toLowerCase().includes("leak")) {
+    if (
+      actionLabel.toLowerCase().includes("overwrite_all") ||
+      actionLabel.toLowerCase().includes("leak")
+    ) {
       return { compliant: false, violatedRuleId: "rule-1" };
     }
     return { compliant: true };

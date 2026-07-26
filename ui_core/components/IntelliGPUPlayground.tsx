@@ -80,7 +80,9 @@ export const IntelliGPUPlayground = () => {
 
               <div className="space-y-6">
                 <div>
-                  <Label htmlFor="apiKey" className="text-slate-300 font-bold text-xs uppercase">API Key</Label>
+                  <Label htmlFor="apiKey" className="text-slate-300 font-bold text-xs uppercase">
+                    API Key
+                  </Label>
                   <input
                     id="apiKey"
                     type="password"
@@ -95,21 +97,34 @@ export const IntelliGPUPlayground = () => {
                 </div>
 
                 <div>
-                  <Label htmlFor="endpoint" className="text-slate-300 font-bold text-xs uppercase">Endpoint</Label>
+                  <Label htmlFor="endpoint" className="text-slate-300 font-bold text-xs uppercase">
+                    Endpoint
+                  </Label>
                   <Select value={endpoint} onValueChange={setEndpoint}>
                     <SelectTrigger className="w-full mt-2 bg-[#020813] border-slate-800 text-slate-300 text-xs">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="bg-[#030c1b] border-slate-800 text-slate-300">
-                      <SelectItem value="infer" className="text-xs">AI Inference</SelectItem>
-                      <SelectItem value="render" className="text-xs">Rendering</SelectItem>
-                      <SelectItem value="train" className="text-xs">Model Training</SelectItem>
+                      <SelectItem value="infer" className="text-xs">
+                        AI Inference
+                      </SelectItem>
+                      <SelectItem value="render" className="text-xs">
+                        Rendering
+                      </SelectItem>
+                      <SelectItem value="train" className="text-xs">
+                        Model Training
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div>
-                  <Label htmlFor="requestBody" className="text-slate-300 font-bold text-xs uppercase">Request Body (JSON)</Label>
+                  <Label
+                    htmlFor="requestBody"
+                    className="text-slate-300 font-bold text-xs uppercase"
+                  >
+                    Request Body (JSON)
+                  </Label>
                   <Textarea
                     id="requestBody"
                     value={requestBody}
@@ -206,7 +221,9 @@ export const IntelliGPUPlayground = () => {
                   onClick={() => setRequestBody(example.body)}
                 >
                   <h3 className="font-bold text-slate-200 mb-1 text-xs">{example.title}</h3>
-                  <p className="text-[11px] text-slate-500 mb-3 leading-relaxed">{example.description}</p>
+                  <p className="text-[11px] text-slate-500 mb-3 leading-relaxed">
+                    {example.description}
+                  </p>
                   <div className="text-[10px] text-[#76B900] font-bold group-hover:translate-x-1 transition-transform">
                     Click to use →
                   </div>

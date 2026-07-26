@@ -18,29 +18,35 @@ export class EdgeCaseDiscoveryUniverseV2 {
         type: "Rare",
         description: `Sudden total solar eclipse triggers zero-lux lighting variation during query "${contextKeyword}".`,
         severityRank: 6.8,
-        expectedSystemReaction: "Activate on-board auxiliary illumination arrays and rely on active LiDAR depth mapping."
+        expectedSystemReaction:
+          "Activate on-board auxiliary illumination arrays and rely on active LiDAR depth mapping.",
       },
       {
         id: "v2-edge-002",
         type: "Adversarial",
         description: `Intentional sensor projection spoofing mimics coordinates mismatch for "${contextKeyword}".`,
         severityRank: 9.4,
-        expectedSystemReaction: "Reject visual inputs. Escalate to inertial dead-reckoning and secondary IMU verification."
+        expectedSystemReaction:
+          "Reject visual inputs. Escalate to inertial dead-reckoning and secondary IMU verification.",
       },
       {
         id: "v2-edge-003",
         type: "Impossible",
-        description: "Simultaneous spatial localization requests return conflicting overlapping dimensions.",
+        description:
+          "Simultaneous spatial localization requests return conflicting overlapping dimensions.",
         severityRank: 8.5,
-        expectedSystemReaction: "Initiate absolute safety shutdown. Freeze gantry cranes actuators immediately."
+        expectedSystemReaction:
+          "Initiate absolute safety shutdown. Freeze gantry cranes actuators immediately.",
       },
       {
         id: "v2-edge-004",
         type: "Contradictory",
-        description: "Logic input requests optimization checks while disabling model cascade pipelines.",
+        description:
+          "Logic input requests optimization checks while disabling model cascade pipelines.",
         severityRank: 5.2,
-        expectedSystemReaction: "Execute via symbolic algebraic calculator bypass, logging governance override warnings."
-      }
+        expectedSystemReaction:
+          "Execute via symbolic algebraic calculator bypass, logging governance override warnings.",
+      },
     ];
   }
 }

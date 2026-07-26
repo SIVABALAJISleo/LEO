@@ -4,7 +4,8 @@
 export interface IntentReconstructionV24 {
   originalQuery: string;
   recoveredQuery: string;
-  dialectDetected: "English" | "Tamil-English (Tanglish)" | "Abbreviated Slang" | "Ambiguous/Contradictory";
+  dialectDetected:
+    "English" | "Tamil-English (Tanglish)" | "Abbreviated Slang" | "Ambiguous/Contradictory";
   accuracyScore: number; // target: 95%+
   primaryOperationalDomain: string;
   clarifyingSubQuestion?: string;
@@ -19,7 +20,7 @@ export class IntentRecoveryEngine {
     const trimmed = query.trim();
 
     let recoveredQuery = trimmed;
-    let dialectDetected: IntentReconstructionV24['dialectDetected'] = "English";
+    let dialectDetected: IntentReconstructionV24["dialectDetected"] = "English";
     let accuracyScore = 0.985;
     let primaryOperationalDomain = "General Query";
     let clarifyingSubQuestion: string | undefined;
@@ -75,12 +76,12 @@ export class IntentRecoveryEngine {
       dialectDetected,
       accuracyScore,
       primaryOperationalDomain,
-      clarifyingSubQuestion
+      clarifyingSubQuestion,
     };
   }
 
   getAverageAccuracy(): number {
-    return this.totalQueries > 0 
+    return this.totalQueries > 0
       ? parseFloat((this.scoreSum / this.totalQueries).toFixed(3))
       : 0.969; // baseline 95%+
   }

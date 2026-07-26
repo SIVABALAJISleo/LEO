@@ -2,8 +2,8 @@
 // Research-based first-experiment load reducer
 // Uses neural surrogates with explicit uncertainty bounds - NEVER claims certainty
 
-export type SurrogateType = 'pinn' | 'neural_operator' | 'gaussian_process' | 'ensemble';
-export type UncertaintyLevel = 'low' | 'medium' | 'high' | 'extreme';
+export type SurrogateType = "pinn" | "neural_operator" | "gaussian_process" | "ensemble";
+export type UncertaintyLevel = "low" | "medium" | "high" | "extreme";
 
 export interface SurrogateConfig {
   type: SurrogateType;
@@ -49,38 +49,38 @@ export interface SurrogateStats {
 
 // Predefined surrogate models (simulated - would be real ML models in production)
 const AVAILABLE_SURROGATES: Record<string, SurrogateConfig> = {
-  'thermal_dynamics': {
-    type: 'pinn',
-    domain: 'thermal',
-    trainedOn: 'heat_transfer_simulations_v2',
+  thermal_dynamics: {
+    type: "pinn",
+    domain: "thermal",
+    trainedOn: "heat_transfer_simulations_v2",
     accuracyBound: 0.05,
-    uncertaintyModel: 'ensemble_dropout',
+    uncertaintyModel: "ensemble_dropout",
   },
-  'fluid_flow': {
-    type: 'neural_operator',
-    domain: 'fluid',
-    trainedOn: 'cfd_simulations_v1',
+  fluid_flow: {
+    type: "neural_operator",
+    domain: "fluid",
+    trainedOn: "cfd_simulations_v1",
     accuracyBound: 0.08,
-    uncertaintyModel: 'deep_ensemble',
+    uncertaintyModel: "deep_ensemble",
   },
-  'structural_stress': {
-    type: 'gaussian_process',
-    domain: 'structural',
-    trainedOn: 'fea_simulations_v3',
+  structural_stress: {
+    type: "gaussian_process",
+    domain: "structural",
+    trainedOn: "fea_simulations_v3",
     accuracyBound: 0.03,
-    uncertaintyModel: 'gp_variance',
+    uncertaintyModel: "gp_variance",
   },
-  'material_properties': {
-    type: 'ensemble',
-    domain: 'materials',
-    trainedOn: 'materials_database_v4',
-    accuracyBound: 0.10,
-    uncertaintyModel: 'bootstrap_aggregation',
+  material_properties: {
+    type: "ensemble",
+    domain: "materials",
+    trainedOn: "materials_database_v4",
+    accuracyBound: 0.1,
+    uncertaintyModel: "bootstrap_aggregation",
   },
 };
 
 // Confidence thresholds for escalation
-const ESCALATION_THRESHOLD = 0.70;
+const ESCALATION_THRESHOLD = 0.7;
 const HIGH_UNCERTAINTY_THRESHOLD = 0.25;
 
 class PhysicsSurrogateEngine {
@@ -128,13 +128,13 @@ class PhysicsSurrogateEngine {
       // No surrogate available - escalate immediately
       return {
         predictionId,
-        surrogateType: 'ensemble',
+        surrogateType: "ensemble",
         domain: params.domain,
         inputParameters: params.inputParameters,
         predictedOutput: {},
         uncertaintyBounds: {},
         confidenceScore: 0,
-        uncertaintyLevel: 'extreme',
+        uncertaintyLevel: "extreme",
         advisoryOnly: true,
         escalationRequired: true,
         escalationReason: `No trained surrogate available for domain: ${params.domain}`,
@@ -145,39 +145,41 @@ class PhysicsSurrogateEngine {
     // Generate prediction with uncertainty
     const { output, uncertainty, confidence } = this.computeSurrogatePrediction(
       surrogateConfig,
-      params.inputParameters
+      params.inputParameters,
     );
 
     // Determine uncertainty level
-    const avgUncertainty = Object.values(uncertainty).reduce(
-      (sum, u) => sum + (u.upper - u.lower) / (Math.abs(output[Object.keys(u)[0]] || 1) || 1),
-      0
-    ) / Math.max(Object.keys(uncertainty).length, 1);
+    const avgUncertainty =
+      Object.values(uncertainty).reduce(
+        (sum, u) => sum + (u.upper - u.lower) / (Math.abs(output[Object.keys(u)[0]] || 1) || 1),
+        0,
+      ) / Math.max(Object.keys(uncertainty).length, 1);
 
     let uncertaintyLevel: UncertaintyLevel;
-    if (avgUncertainty < 0.10) {
-      uncertaintyLevel = 'low';
+    if (avgUncertainty < 0.1) {
+      uncertaintyLevel = "low";
     } else if (avgUncertainty < HIGH_UNCERTAINTY_THRESHOLD) {
-      uncertaintyLevel = 'medium';
-    } else if (avgUncertainty < 0.50) {
-      uncertaintyLevel = 'high';
+      uncertaintyLevel = "medium";
+    } else if (avgUncertainty < 0.5) {
+      uncertaintyLevel = "high";
     } else {
-      uncertaintyLevel = 'extreme';
+      uncertaintyLevel = "extreme";
     }
 
     // Determine if escalation is needed
-    const escalationRequired = confidence < ESCALATION_THRESHOLD || 
-                                uncertaintyLevel === 'extreme' ||
-                                this.checkInputOutOfDistribution(params.inputParameters, surrogateConfig);
+    const escalationRequired =
+      confidence < ESCALATION_THRESHOLD ||
+      uncertaintyLevel === "extreme" ||
+      this.checkInputOutOfDistribution(params.inputParameters, surrogateConfig);
 
     let escalationReason: string | null = null;
     if (escalationRequired) {
       if (confidence < ESCALATION_THRESHOLD) {
         escalationReason = `Confidence ${(confidence * 100).toFixed(1)}% below ${ESCALATION_THRESHOLD * 100}% threshold`;
-      } else if (uncertaintyLevel === 'extreme') {
-        escalationReason = 'Extreme uncertainty - real experiment required';
+      } else if (uncertaintyLevel === "extreme") {
+        escalationReason = "Extreme uncertainty - real experiment required";
       } else {
-        escalationReason = 'Input parameters outside training distribution';
+        escalationReason = "Input parameters outside training distribution";
       }
     }
 
@@ -201,14 +203,12 @@ class PhysicsSurrogateEngine {
     if (escalationRequired) {
       this.stats.escalations++;
     }
-    this.stats.avgConfidenceScore = (
+    this.stats.avgConfidenceScore =
       (this.stats.avgConfidenceScore * (this.stats.totalPredictions - 1) + confidence) /
-      this.stats.totalPredictions
-    );
-    this.stats.avgUncertainty = (
+      this.stats.totalPredictions;
+    this.stats.avgUncertainty =
       (this.stats.avgUncertainty * (this.stats.totalPredictions - 1) + avgUncertainty) /
-      this.stats.totalPredictions
-    );
+      this.stats.totalPredictions;
 
     // Store prediction
     this.predictionHistory.push(prediction);
@@ -216,15 +216,17 @@ class PhysicsSurrogateEngine {
       this.predictionHistory = this.predictionHistory.slice(-500);
     }
 
-    console.log(`[PhysicsSurrogate] ${params.domain} prediction: ${uncertaintyLevel} uncertainty, ` +
-                `confidence: ${(confidence * 100).toFixed(1)}%, escalate: ${escalationRequired}`);
-    
+    console.log(
+      `[PhysicsSurrogate] ${params.domain} prediction: ${uncertaintyLevel} uncertainty, ` +
+        `confidence: ${(confidence * 100).toFixed(1)}%, escalate: ${escalationRequired}`,
+    );
+
     return prediction;
   }
 
   private computeSurrogatePrediction(
     config: SurrogateConfig,
-    inputs: Record<string, number>
+    inputs: Record<string, number>,
   ): {
     output: Record<string, number>;
     uncertainty: Record<string, { lower: number; upper: number }>;
@@ -232,21 +234,21 @@ class PhysicsSurrogateEngine {
   } {
     // Simulated surrogate prediction
     // In production, this would call actual ML models
-    
+
     const output: Record<string, number> = {};
     const uncertainty: Record<string, { lower: number; upper: number }> = {};
 
     // Generate predictions based on domain
     switch (config.domain) {
-      case 'thermal':
+      case "thermal":
         output.temperature = this.simulateThermalPrediction(inputs);
         output.heatFlux = output.temperature * 0.1;
         break;
-      case 'fluid':
+      case "fluid":
         output.velocity = this.simulateFluidPrediction(inputs);
         output.pressure = output.velocity * 100;
         break;
-      case 'structural':
+      case "structural":
         output.stress = this.simulateStructuralPrediction(inputs);
         output.strain = output.stress / 200000; // Approximate E for steel
         break;
@@ -276,7 +278,7 @@ class PhysicsSurrogateEngine {
     const area = inputs.area || 1;
     const heatTransferCoeff = inputs.htc || 10;
     const ambientTemp = inputs.ambient || 25;
-    
+
     // Simple thermal equilibrium approximation
     return ambientTemp + power / (heatTransferCoeff * area);
   }
@@ -284,21 +286,21 @@ class PhysicsSurrogateEngine {
   private simulateFluidPrediction(inputs: Record<string, number>): number {
     const flowRate = inputs.flowRate || inputs.Q || 1;
     const area = inputs.area || 0.01;
-    
+
     return flowRate / area; // Simple velocity calculation
   }
 
   private simulateStructuralPrediction(inputs: Record<string, number>): number {
     const force = inputs.force || inputs.F || 1000;
     const area = inputs.area || 0.001;
-    
+
     return force / area; // Simple stress calculation
   }
 
   private calculateConfidence(inputs: Record<string, number>, config: SurrogateConfig): number {
     // Base confidence from model accuracy
     let confidence = 1 - config.accuracyBound;
-    
+
     // Reduce confidence for extreme input values
     for (const value of Object.values(inputs)) {
       if (Math.abs(value) > 10000) {
@@ -308,21 +310,21 @@ class PhysicsSurrogateEngine {
         confidence *= 0.8;
       }
     }
-    
+
     // Model-specific confidence adjustments
-    if (config.type === 'gaussian_process') {
+    if (config.type === "gaussian_process") {
       confidence *= 0.95; // GPs provide well-calibrated uncertainty
-    } else if (config.type === 'ensemble') {
-      confidence *= 0.90; // Ensembles are robust
+    } else if (config.type === "ensemble") {
+      confidence *= 0.9; // Ensembles are robust
     }
-    
+
     return Math.max(0.3, Math.min(0.99, confidence));
   }
 
   private checkInputOutOfDistribution(
     inputs: Record<string, number>,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    config: SurrogateConfig
+    config: SurrogateConfig,
   ): boolean {
     // Check for extreme values that might be outside training distribution
     for (const value of Object.values(inputs)) {
@@ -338,8 +340,8 @@ class PhysicsSurrogateEngine {
 
   // Validate a prediction against actual experimental data
   validate(predictionId: string, actualOutput: Record<string, number>): ValidationResult {
-    const prediction = this.predictionHistory.find(p => p.predictionId === predictionId);
-    
+    const prediction = this.predictionHistory.find((p) => p.predictionId === predictionId);
+
     if (!prediction) {
       return {
         predictionId,
@@ -358,10 +360,10 @@ class PhysicsSurrogateEngine {
     for (const [key, actual] of Object.entries(actualOutput)) {
       const predicted = prediction.predictedOutput[key];
       const bounds = prediction.uncertaintyBounds[key];
-      
+
       if (predicted !== undefined) {
         deviations[key] = Math.abs(actual - predicted) / Math.abs(predicted || 1);
-        
+
         if (bounds) {
           if (actual < bounds.lower || actual > bounds.upper) {
             allWithinBounds = false;
@@ -370,8 +372,7 @@ class PhysicsSurrogateEngine {
       }
     }
 
-    const surrogateAccurate = allWithinBounds && 
-      Object.values(deviations).every(d => d < 0.15);
+    const surrogateAccurate = allWithinBounds && Object.values(deviations).every((d) => d < 0.15);
 
     const result: ValidationResult = {
       predictionId,
@@ -399,7 +400,7 @@ class PhysicsSurrogateEngine {
 
   // Get prediction by ID
   getPrediction(predictionId: string): SurrogatePrediction | undefined {
-    return this.predictionHistory.find(p => p.predictionId === predictionId);
+    return this.predictionHistory.find((p) => p.predictionId === predictionId);
   }
 
   // Get statistics
@@ -428,11 +429,13 @@ class PhysicsSurrogateEngine {
   getTruthStatement(): string {
     const accuracy = (this.getValidationAccuracy() * 100).toFixed(1);
     const escalationRate = (this.getEscalationRate() * 100).toFixed(1);
-    
-    return `Physics Surrogate Engine (ADVISORY ONLY): ${this.stats.totalPredictions} predictions made, ` +
-           `${accuracy}% validation accuracy, ${escalationRate}% escalation rate. ` +
-           `All predictions include explicit uncertainty bounds. ` +
-           `Surrogates NEVER claim certainty - real experiments remain authoritative.`;
+
+    return (
+      `Physics Surrogate Engine (ADVISORY ONLY): ${this.stats.totalPredictions} predictions made, ` +
+      `${accuracy}% validation accuracy, ${escalationRate}% escalation rate. ` +
+      `All predictions include explicit uncertainty bounds. ` +
+      `Surrogates NEVER claim certainty - real experiments remain authoritative.`
+    );
   }
 }
 

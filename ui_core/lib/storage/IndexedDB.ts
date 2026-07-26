@@ -1,23 +1,23 @@
-import Dexie, { Table } from 'dexie';
+import Dexie, { Table } from "dexie";
 
 export interface SyncItem {
-    id: string;
-    key: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    value: any;
-    status: 'pending' | 'synced' | 'conflict';
-    timestamp: number;
+  id: string;
+  key: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  value: any;
+  status: "pending" | "synced" | "conflict";
+  timestamp: number;
 }
 
 export class HyperDB extends Dexie {
-    syncQueue!: Table<SyncItem>;
+  syncQueue!: Table<SyncItem>;
 
-    constructor() {
-        super('HyperDB');
-        this.version(1).stores({
-            syncQueue: 'id, key, status, timestamp'
-        });
-    }
+  constructor() {
+    super("HyperDB");
+    this.version(1).stores({
+      syncQueue: "id, key, status, timestamp",
+    });
+  }
 }
 
 export const db = new HyperDB();

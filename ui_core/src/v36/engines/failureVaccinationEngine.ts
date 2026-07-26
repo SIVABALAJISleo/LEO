@@ -1,7 +1,8 @@
 // LEO AI V36 — Failure Vaccination Engine
 // Compiles regression test vaccines from error reports (reasoning, hallucination, coding, etc.).
 
-export type FailureCategory = "reasoning" | "hallucination" | "coding" | "workflow" | "retrieval" | "planning";
+export type FailureCategory =
+  "reasoning" | "hallucination" | "coding" | "workflow" | "retrieval" | "planning";
 
 export interface LoggedFailure {
   id: string;
@@ -23,16 +24,13 @@ export class FailureVaccinationEngine {
   /**
    * Tracks model failures and generates regression test vectors (vaccines).
    */
-  public vaccinateFailure(
-    category: FailureCategory,
-    errorLog: string
-  ): VaccineReport {
+  public vaccinateFailure(category: FailureCategory, errorLog: string): VaccineReport {
     const failureId = `fail-${(100 + Math.random() * 900).toFixed(0)}`;
     this.log.push({
       id: failureId,
       category,
       errorLog,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
 
     const generatedSamplesCount = Math.round(errorLog.length * 0.15 + 4);
@@ -43,7 +41,7 @@ export class FailureVaccinationEngine {
       vaccineId,
       generatedSamplesCount,
       testMask,
-      remedyScore: 98.6 // Target resolution safety index
+      remedyScore: 98.6, // Target resolution safety index
     };
   }
 

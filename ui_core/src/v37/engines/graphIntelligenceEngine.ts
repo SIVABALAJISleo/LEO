@@ -27,13 +27,13 @@ export class GraphIntelligenceEngine {
     { id: "A", label: "Intel Core i5 Thermals", type: "Fact" },
     { id: "B", label: "Core Throttle Limit", type: "Concept" },
     { id: "C", label: "Inference Latency Spike", type: "Failure" },
-    { id: "D", label: "Dynamic Quantization Auto-clamp", type: "Hypothesis" }
+    { id: "D", label: "Dynamic Quantization Auto-clamp", type: "Hypothesis" },
   ];
 
   private edges: GraphEdge[] = [
     { source: "A", target: "B", relation: "causes", weight: 0.92 },
     { source: "B", target: "C", relation: "causes", weight: 0.88 },
-    { source: "D", target: "A", relation: "refines", weight: 0.75 }
+    { source: "D", target: "A", relation: "refines", weight: 0.75 },
   ];
 
   /**
@@ -42,7 +42,7 @@ export class GraphIntelligenceEngine {
   public discoverCausality(startId: string, endId: string): GraphReasoningReport {
     const traversedNodes: string[] = [];
     const inferredConclusions: string[] = [];
-    
+
     // Find path using simple BFS/DFS simulation
     const queue: string[] = [startId];
     const visited = new Set<string>([startId]);
@@ -58,7 +58,7 @@ export class GraphIntelligenceEngine {
         break;
       }
 
-      const outgoing = this.edges.filter(e => e.source === current);
+      const outgoing = this.edges.filter((e) => e.source === current);
       for (const edge of outgoing) {
         if (!visited.has(edge.target)) {
           visited.add(edge.target);
@@ -80,7 +80,7 @@ export class GraphIntelligenceEngine {
       }
       path.unshift(startId);
 
-      const resolvedPathLabels = path.map(id => this.nodes.find(n => n.id === id)?.label || id);
+      const resolvedPathLabels = path.map((id) => this.nodes.find((n) => n.id === id)?.label || id);
       inferredConclusions.push(`Chain confirms: ${resolvedPathLabels.join(" -> ")}`);
 
       return {
@@ -88,7 +88,7 @@ export class GraphIntelligenceEngine {
         inferredConclusions,
         hopsCount: path.length - 1,
         reasoningConfidence: 0.85,
-        causalChain: resolvedPathLabels.join(" causes ")
+        causalChain: resolvedPathLabels.join(" causes "),
       };
     }
 
@@ -96,12 +96,17 @@ export class GraphIntelligenceEngine {
       traversedNodes,
       inferredConclusions: ["No causal connection resolved dynamically."],
       hopsCount: 0,
-      reasoningConfidence: 0.20,
-      causalChain: "Disconnected"
+      reasoningConfidence: 0.2,
+      causalChain: "Disconnected",
     };
   }
 
-  public addCausalEdge(source: string, target: string, relation: GraphEdge["relation"], weight: number) {
+  public addCausalEdge(
+    source: string,
+    target: string,
+    relation: GraphEdge["relation"],
+    weight: number,
+  ) {
     this.edges.push({ source, target, relation, weight });
   }
 

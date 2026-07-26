@@ -34,10 +34,11 @@ export class QualityImprovementLoop {
         measuredMetric: "Tamil-English Intent Normalization",
         measuredBaseline: 0.892,
         weaknessDetected: "Tamil phonetic spelling deviations skipped by parser",
-        proposedFix: "Inject Tanglish phonetic phoneme mapping matrices into UserUnderstandingMaximizer",
+        proposedFix:
+          "Inject Tanglish phonetic phoneme mapping matrices into UserUnderstandingMaximizer",
         postTestAccuracy: 0.962,
         deploySuccess: true,
-        timestamp: Date.now() - 3600000 * 20
+        timestamp: Date.now() - 3600000 * 20,
       },
       {
         cycleIndex: 2,
@@ -47,8 +48,8 @@ export class QualityImprovementLoop {
         proposedFix: "Increase formal path weighting variables within reasoningConsensusV3",
         postTestAccuracy: 0.971,
         deploySuccess: true,
-        timestamp: Date.now() - 3600000 * 10
-      }
+        timestamp: Date.now() - 3600000 * 10,
+      },
     ];
     this.currentAggregatedScore = 0.972;
   }
@@ -63,12 +64,14 @@ export class QualityImprovementLoop {
       proposedFix: "Enforce minhash lock checks inside memoryPerfectionEngine.ts",
       postTestAccuracy: 0.985,
       deploySuccess: true,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
 
     this.executedCycles.push(newStep);
-    this.currentAggregatedScore = parseFloat(Math.min(0.995, this.currentAggregatedScore + 0.004).toFixed(4));
-    
+    this.currentAggregatedScore = parseFloat(
+      Math.min(0.995, this.currentAggregatedScore + 0.004).toFixed(4),
+    );
+
     return newStep;
   }
 
@@ -76,8 +79,9 @@ export class QualityImprovementLoop {
     return {
       currentScore: this.currentAggregatedScore,
       totalCyclesExecuted: this.executedCycles.length,
-      lastImprovementApplied: this.executedCycles[this.executedCycles.length - 1]?.proposedFix || "None",
-      timeline: this.executedCycles
+      lastImprovementApplied:
+        this.executedCycles[this.executedCycles.length - 1]?.proposedFix || "None",
+      timeline: this.executedCycles,
     };
   }
 }

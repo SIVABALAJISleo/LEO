@@ -19,9 +19,12 @@ export class XpuExecutionPlanner {
   private ipex = new IpexOptimizationEngine();
   private sycl = new SyclAccelerationManager();
 
-  planExecution(dataSize: number, taskType: "MatrixMultiply" | "LinearScan" | "LogicBranching"): IntelExecutionReport {
+  planExecution(
+    dataSize: number,
+    taskType: "MatrixMultiply" | "LinearScan" | "LogicBranching",
+  ): IntelExecutionReport {
     const caps = this.detector.detectCapabilities();
-    
+
     let assignedDevice: "Intel_CPU" | "Intel_iGPU_Xe" | "Intel_XPU_Arc" = "Intel_CPU";
     let hasVectorAccelerated = false;
     let activeThreadsUsed = 1;
@@ -34,7 +37,8 @@ export class XpuExecutionPlanner {
       activeThreadsUsed = ipexStatus.activeSettings.ompNumThreads;
       hasVectorAccelerated = caps.hasVnni;
       intelUtilizationScore = 88.0;
-      planningLog = "Routed to multi-threaded CPU. OpenMP threads bound for logic branches execution.";
+      planningLog =
+        "Routed to multi-threaded CPU. OpenMP threads bound for logic branches execution.";
     } else if (taskType === "MatrixMultiply" && caps.igpuExecutionUnits > 0) {
       assignedDevice = "Intel_iGPU_Xe";
       const syclStatus = this.sycl.submitKernel(dataSize);
@@ -55,7 +59,7 @@ export class XpuExecutionPlanner {
       hasVectorAccelerated,
       activeThreadsUsed,
       intelUtilizationScore,
-      planningLog
+      planningLog,
     };
   }
 }

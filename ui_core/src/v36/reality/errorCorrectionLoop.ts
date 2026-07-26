@@ -13,18 +13,19 @@ export class ErrorCorrectionLoop {
 
   public queueCorrection(sourceKey: string, errorScore: number): string {
     const taskId = `task-${(100 + Math.random() * 900).toFixed(0)}`;
-    
+
     this.tasks.push({
       id: taskId,
       sourceKey,
-      remedyAction: errorScore > 0.15 ? "Schedule agent parameter adjustment" : "Merge concept properties",
-      resolved: false
+      remedyAction:
+        errorScore > 0.15 ? "Schedule agent parameter adjustment" : "Merge concept properties",
+      resolved: false,
     });
 
     return taskId;
   }
 
   public getPendingTasks(): CorrectionTask[] {
-    return this.tasks.filter(t => !t.resolved);
+    return this.tasks.filter((t) => !t.resolved);
   }
 }

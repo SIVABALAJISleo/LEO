@@ -27,7 +27,7 @@ export class RootCauseEliminator {
         fixStrategy: "Introduce minhash duplicate checking and temporal confidence decay",
         testedScore: 0.985,
         measuredGainPct: 8.5,
-        deployed: true
+        deployed: true,
       },
       {
         id: "ERR-002",
@@ -36,16 +36,17 @@ export class RootCauseEliminator {
         fixStrategy: "Implement a Tanglish phoneme dictionary and query expansion module",
         testedScore: 0.962,
         measuredGainPct: 7.2,
-        deployed: true
+        deployed: true,
       },
       {
         id: "ERR-003",
         symptom: "Agent Cyclic Delegation Deadlocks",
         rootCause: "Cycles in agent dependency graphs where Agent A waits for Agent B's subtask",
-        fixStrategy: "Acyclic routing table constraints with automated fallback to parent coordinator",
+        fixStrategy:
+          "Acyclic routing table constraints with automated fallback to parent coordinator",
         testedScore: 0.991,
         measuredGainPct: 9.1,
-        deployed: true
+        deployed: true,
       },
       {
         id: "ERR-004",
@@ -54,7 +55,7 @@ export class RootCauseEliminator {
         fixStrategy: "Apply semantic chunk partitioning and dynamic temporal weights",
         testedScore: 0.981,
         measuredGainPct: 6.4,
-        deployed: true
+        deployed: true,
       },
       {
         id: "ERR-005",
@@ -63,14 +64,18 @@ export class RootCauseEliminator {
         fixStrategy: "Enforce strict verification threshold and confidence bounds scaling",
         testedScore: 0.993,
         measuredGainPct: 11.3,
-        deployed: true
-      }
+        deployed: true,
+      },
     ];
   }
 
   diagnose(failures: string[]): FailureDiagnosis[] {
     // Dynamically match list and identify strategies
-    return this.diagnosedFailures.filter(f => failures.includes(f.symptom) || failures.some(fail => fail.toLowerCase().includes(f.symptom.toLowerCase())));
+    return this.diagnosedFailures.filter(
+      (f) =>
+        failures.includes(f.symptom) ||
+        failures.some((fail) => fail.toLowerCase().includes(f.symptom.toLowerCase())),
+    );
   }
 
   getAllDiagnoses(): FailureDiagnosis[] {
@@ -78,7 +83,7 @@ export class RootCauseEliminator {
   }
 
   triggerFix(id: string): { success: boolean; gain: number } {
-    const diag = this.diagnosedFailures.find(f => f.id === id);
+    const diag = this.diagnosedFailures.find((f) => f.id === id);
     if (diag) {
       diag.deployed = true;
       return { success: true, gain: diag.measuredGainPct };

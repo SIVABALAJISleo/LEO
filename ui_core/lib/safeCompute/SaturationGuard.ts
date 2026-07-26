@@ -1,11 +1,11 @@
 // HYPER Saturation Guard - Fail-fast when thresholds hit
 
-type ResourceType = 'gpu' | 'memory' | 'io' | 'coordination';
+type ResourceType = "gpu" | "memory" | "io" | "coordination";
 
 interface ResourceThresholds {
-  gpu: number;       // 0-100%
-  memory: number;    // 0-100%
-  io: number;        // 0-100%
+  gpu: number; // 0-100%
+  memory: number; // 0-100%
+  io: number; // 0-100%
   coordination: number; // concurrent jobs
 }
 
@@ -14,7 +14,7 @@ interface SaturationStatus {
   resource: ResourceType | null;
   currentLoad: number;
   threshold: number;
-  action: 'accept' | 'queue' | 'defer' | 'reject';
+  action: "accept" | "queue" | "defer" | "reject";
 }
 
 const DEFAULT_THRESHOLDS: ResourceThresholds = {
@@ -52,16 +52,16 @@ class SaturationGuardEngine {
   private checkAndNotify(): void {
     const status = this.getStatus();
     if (status.saturated) {
-      this.listeners.forEach(l => l(status));
+      this.listeners.forEach((l) => l(status));
     }
   }
 
   getStatus(): SaturationStatus {
     // Check each resource
-    for (const resource of ['gpu', 'memory', 'io', 'coordination'] as ResourceType[]) {
+    for (const resource of ["gpu", "memory", "io", "coordination"] as ResourceType[]) {
       const current = this.currentLoads[resource];
       const threshold = this.thresholds[resource];
-      
+
       if (current >= threshold) {
         return {
           saturated: true,
@@ -78,40 +78,40 @@ class SaturationGuardEngine {
       resource: null,
       currentLoad: 0,
       threshold: 0,
-      action: 'accept',
+      action: "accept",
     };
   }
 
   private determineAction(
-    resource: ResourceType, 
-    current: number, 
-    threshold: number
-  ): 'accept' | 'queue' | 'defer' | 'reject' {
+    resource: ResourceType,
+    current: number,
+    threshold: number,
+  ): "accept" | "queue" | "defer" | "reject" {
     const overloadPercent = ((current - threshold) / threshold) * 100;
-    
-    if (overloadPercent < 5) return 'queue';
-    if (overloadPercent < 15) return 'defer';
-    return 'reject';
+
+    if (overloadPercent < 5) return "queue";
+    if (overloadPercent < 15) return "defer";
+    return "reject";
   }
 
   // Check if we can accept a new heavy job
   canAcceptHeavyJob(): { allowed: boolean; reason?: string } {
     const status = this.getStatus();
-    
+
     if (!status.saturated) {
       return { allowed: true };
     }
 
     const reasons: Record<ResourceType, string> = {
-      gpu: 'GPU is at capacity',
-      memory: 'Memory limit reached',
-      io: 'Storage bandwidth saturated',
-      coordination: 'Maximum concurrent jobs reached',
+      gpu: "GPU is at capacity",
+      memory: "Memory limit reached",
+      io: "Storage bandwidth saturated",
+      coordination: "Maximum concurrent jobs reached",
     };
 
     return {
       allowed: false,
-      reason: status.resource ? reasons[status.resource] : 'System at capacity',
+      reason: status.resource ? reasons[status.resource] : "System at capacity",
     };
   }
 
@@ -119,27 +119,27 @@ class SaturationGuardEngine {
   onSaturation(callback: (status: SaturationStatus) => void): () => void {
     this.listeners.push(callback);
     return () => {
-      this.listeners = this.listeners.filter(l => l !== callback);
+      this.listeners = this.listeners.filter((l) => l !== callback);
     };
   }
 
   // Get user-friendly status text (no internals exposed)
   getStatusText(): string {
     const status = this.getStatus();
-    
+
     if (!status.saturated) {
-      return 'System ready';
+      return "System ready";
     }
 
     switch (status.action) {
-      case 'queue':
-        return 'Processing capacity limited. New tasks will be queued.';
-      case 'defer':
-        return 'System busy. Heavy tasks will be scheduled for later.';
-      case 'reject':
-        return 'System at capacity. Please try again shortly.';
+      case "queue":
+        return "Processing capacity limited. New tasks will be queued.";
+      case "defer":
+        return "System busy. Heavy tasks will be scheduled for later.";
+      case "reject":
+        return "System at capacity. Please try again shortly.";
       default:
-        return 'System ready';
+        return "System ready";
     }
   }
 

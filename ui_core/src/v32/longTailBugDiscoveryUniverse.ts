@@ -16,10 +16,11 @@ export class LongTailBugDiscoveryUniverse {
     {
       riskId: "risk-race-01",
       category: "RaceCondition",
-      description: "Concurrent prefix caching updates read-write locks conflict during simultaneous workspace sessions.",
+      description:
+        "Concurrent prefix caching updates read-write locks conflict during simultaneous workspace sessions.",
       probabilityPct: 0.05,
       impactSeverity: "High",
-      mitigated: false
+      mitigated: false,
     },
     {
       riskId: "risk-leak-02",
@@ -27,16 +28,17 @@ export class LongTailBugDiscoveryUniverse {
       description: "Paged memory blocks indexing fail to de-allocate during aborted prefill loops.",
       probabilityPct: 0.12,
       impactSeverity: "Critical",
-      mitigated: false
+      mitigated: false,
     },
     {
       riskId: "risk-dist-03",
       category: "DistributedFailure",
-      description: "Cooperative peer nodes drop connections during high bandwidth model cascade routing offload.",
+      description:
+        "Cooperative peer nodes drop connections during high bandwidth model cascade routing offload.",
       probabilityPct: 0.85,
       impactSeverity: "Medium",
-      mitigated: true
-    }
+      mitigated: true,
+    },
   ];
 
   runSyntheticSweeps(scenarioCount: number): RiskIncident[] {
@@ -45,10 +47,11 @@ export class LongTailBugDiscoveryUniverse {
       this.registry.push({
         riskId: `risk-adv-${Date.now().toString().slice(-4)}`,
         category: "AdversarialInput",
-        description: "Malformed token sequences crafted to trigger infinite speculative decoding verification feedback loops.",
+        description:
+          "Malformed token sequences crafted to trigger infinite speculative decoding verification feedback loops.",
         probabilityPct: 0.01,
         impactSeverity: "High",
-        mitigated: false
+        mitigated: false,
       });
     }
     return [...this.registry];
@@ -58,15 +61,15 @@ export class LongTailBugDiscoveryUniverse {
     return this.registry;
   }
 
-  getMitigationStatus(): { total: number; mitigatedCount: number; safetyCoveragePct: number; } {
+  getMitigationStatus(): { total: number; mitigatedCount: number; safetyCoveragePct: number } {
     const total = this.registry.length;
-    const mitigatedCount = this.registry.filter(r => r.mitigated).length;
+    const mitigatedCount = this.registry.filter((r) => r.mitigated).length;
     const safetyCoveragePct = parseFloat(((mitigatedCount / total) * 100).toFixed(1));
 
     return {
       total,
       mitigatedCount,
-      safetyCoveragePct
+      safetyCoveragePct,
     };
   }
 }

@@ -36,17 +36,17 @@ class ResultCompressor {
   compress(signature: string, result: unknown): CompressedResult {
     const resultJson = JSON.stringify(result);
     const originalSize = new Blob([resultJson]).size;
-    
+
     // Find or create a matching base
     const base = this.findOrCreateBase(result);
-    
+
     // Generate transformation vector
     const vector = this.generateVector(base, result);
-    
+
     this.vectors.set(vector.id, vector);
-    
+
     const compressedSize = this.estimateCompressedSize(base, vector);
-    
+
     const compressed: CompressedResult = {
       baseId: base.id,
       vectorId: vector.id,
@@ -54,7 +54,7 @@ class ResultCompressor {
       originalSize,
       compressedSize,
     };
-    
+
     this.resultIndex.set(signature, compressed);
     return compressed;
   }
@@ -66,11 +66,11 @@ class ResultCompressor {
 
     const base = this.bases.get(compressed.baseId);
     const vector = this.vectors.get(compressed.vectorId);
-    
+
     if (!base || !vector) return null;
 
     base.accessCount++;
-    
+
     // Reconstruct from base + vector
     return this.reconstruct(base, vector);
   }
@@ -78,14 +78,14 @@ class ResultCompressor {
   // Find an existing base that matches the result type, or create new
   private findOrCreateBase(result: unknown): LatentBase {
     const type = this.getResultType(result);
-    
+
     // Look for existing base of same type
     for (const base of this.bases.values()) {
       if (base.type === type) {
         return base;
       }
     }
-    
+
     // Create new base
     const base: LatentBase = {
       id: `base-${Date.now()}`,
@@ -95,7 +95,7 @@ class ResultCompressor {
       createdAt: new Date(),
       accessCount: 0,
     };
-    
+
     this.bases.set(base.id, base);
     return base;
   }
@@ -103,7 +103,7 @@ class ResultCompressor {
   // Generate transformation vector from base to result
   private generateVector(base: LatentBase, result: unknown): TransformVector {
     const transforms = this.computeTransforms(base, result);
-    
+
     return {
       id: `vec-${Date.now()}`,
       baseId: base.id,
@@ -116,10 +116,10 @@ class ResultCompressor {
   }
 
   private getResultType(result: unknown): string {
-    if (Array.isArray(result)) return 'array';
-    if (result === null) return 'null';
-    if (typeof result === 'object') {
-      const keys = Object.keys(result).sort().join(',');
+    if (Array.isArray(result)) return "array";
+    if (result === null) return "null";
+    if (typeof result === "object") {
+      const keys = Object.keys(result).sort().join(",");
       return `object:${keys.slice(0, 50)}`;
     }
     return typeof result;
@@ -129,7 +129,7 @@ class ResultCompressor {
     if (Array.isArray(result)) {
       return [result.length];
     }
-    if (result && typeof result === 'object') {
+    if (result && typeof result === "object") {
       return [Object.keys(result).length];
     }
     return [1];
@@ -139,16 +139,16 @@ class ResultCompressor {
     // Simplified: create hash-based transforms
     const json = JSON.stringify(result);
     const transforms: number[] = [];
-    
+
     for (let i = 0; i < Math.min(32, json.length); i++) {
       transforms.push(json.charCodeAt(i) / 255);
     }
-    
+
     // Pad to fixed length
     while (transforms.length < 32) {
       transforms.push(0);
     }
-    
+
     return transforms;
   }
 
@@ -183,12 +183,12 @@ class ResultCompressor {
   } {
     let totalOriginal = 0;
     let totalCompressed = 0;
-    
+
     for (const compressed of this.resultIndex.values()) {
       totalOriginal += compressed.originalSize;
       totalCompressed += compressed.compressedSize;
     }
-    
+
     return {
       basesCount: this.bases.size,
       vectorsCount: this.vectors.size,

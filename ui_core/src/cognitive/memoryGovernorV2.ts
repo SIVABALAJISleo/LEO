@@ -60,7 +60,9 @@ export class MemoryGovernorV2 {
     const processed = this.blocks.map((block) => {
       // Calculate temporal exponential decay: weight = confidence * e^(-decay_rate * time)
       const age = now - block.timestamp;
-      const weight = parseFloat((block.confidence * Math.exp(-0.693 * (age / halfLife))).toFixed(4));
+      const weight = parseFloat(
+        (block.confidence * Math.exp(-0.693 * (age / halfLife))).toFixed(4),
+      );
       return { ...block, weight };
     });
 
@@ -82,11 +84,16 @@ export class MemoryGovernorV2 {
         const t1 = b.content.toLowerCase();
         const t2 = block.content.toLowerCase();
         // Simple contradiction heuristic (e.g. one says complete, other says failing)
-        return (t1.includes("complete") && t2.includes("failing")) || (t1.includes("failing") && t2.includes("complete"));
+        return (
+          (t1.includes("complete") && t2.includes("failing")) ||
+          (t1.includes("failing") && t2.includes("complete"))
+        );
       });
 
       if (contradicting) {
-        console.log(`[MEMORY GOVERNOR V2] Contradiction found between ${contradicting.id} and ${block.id}.`);
+        console.log(
+          `[MEMORY GOVERNOR V2] Contradiction found between ${contradicting.id} and ${block.id}.`,
+        );
         // Resolve contradiction by keeping the one with higher weight/confidence
         if (block.weight > contradicting.weight) {
           // Replace contradicting block
@@ -110,7 +117,11 @@ export class MemoryGovernorV2 {
     return this.blocks;
   }
 
-  public insertMemory(content: string, source: string, category: "episodic" | "semantic"): MemoryBlock {
+  public insertMemory(
+    content: string,
+    source: string,
+    category: "episodic" | "semantic",
+  ): MemoryBlock {
     const newBlock: MemoryBlock = {
       id: `MEM-${String(this.blocks.length + 1).padStart(3, "0")}`,
       content,

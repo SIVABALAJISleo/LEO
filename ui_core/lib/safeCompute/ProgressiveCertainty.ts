@@ -1,10 +1,10 @@
 /**
  * PROGRESSIVE CERTAINTY ENGINE
- * 
+ *
  * Guarantees user trust under uncertainty by providing immediate,
  * progressive, confidence-building responses even when final execution
  * is incomplete.
- * 
+ *
  * CRITICAL: This does NOT increase execution ceilings.
  * This does NOT claim instant physical completion.
  * This operates above existing intelligence layers.
@@ -12,7 +12,7 @@
 
 export interface ProgressiveResponse {
   taskId: string;
-  phase: 'immediate' | 'progressive' | 'converging' | 'complete';
+  phase: "immediate" | "progressive" | "converging" | "complete";
   stabilitySignals: StabilitySignal[];
   confidenceLevel: number; // 0-1
   userMessage: string;
@@ -20,7 +20,7 @@ export interface ProgressiveResponse {
 }
 
 export interface StabilitySignal {
-  type: 'protected' | 'resumable' | 'in_progress' | 'checkpointed' | 'queued';
+  type: "protected" | "resumable" | "in_progress" | "checkpointed" | "queued";
   label: string;
   timestamp: number;
 }
@@ -35,7 +35,7 @@ export interface ProgressiveCertaintyStatus {
 
 export interface CertaintyClassification {
   taskId: string;
-  classification: 'PROGRESSIVE_CERTAINTY' | 'INSTANT_COMPLETE' | 'REQUIRES_BLOCKING';
+  classification: "PROGRESSIVE_CERTAINTY" | "INSTANT_COMPLETE" | "REQUIRES_BLOCKING";
   reason: string;
   satisfiedForCoverage: boolean;
 }
@@ -48,7 +48,7 @@ class ProgressiveCertaintyEngine {
   private static instance: ProgressiveCertaintyEngine;
   private activeTasks: Map<string, ProgressiveResponse> = new Map();
   private completedTasks: Map<string, CertaintyClassification> = new Map();
-  
+
   private constructor() {}
 
   static getInstance(): ProgressiveCertaintyEngine {
@@ -69,11 +69,11 @@ class ProgressiveCertaintyEngine {
       isUncertain: boolean;
       isTimeBound: boolean;
       estimatedDurationMs: number;
-    }
+    },
   ): ProgressiveResponse {
-    const needsProgressive = 
-      taskMetadata.isHeavy || 
-      taskMetadata.isUncertain || 
+    const needsProgressive =
+      taskMetadata.isHeavy ||
+      taskMetadata.isUncertain ||
       taskMetadata.isTimeBound ||
       taskMetadata.estimatedDurationMs > IMMEDIATE_THRESHOLD_MS;
 
@@ -81,10 +81,10 @@ class ProgressiveCertaintyEngine {
       // Task can complete instantly - no progressive response needed
       return {
         taskId,
-        phase: 'complete',
+        phase: "complete",
         stabilitySignals: [],
         confidenceLevel: 1.0,
-        userMessage: 'Complete',
+        userMessage: "Complete",
         isBlocking: false,
       };
     }
@@ -92,21 +92,21 @@ class ProgressiveCertaintyEngine {
     // Create immediate progressive response
     const response: ProgressiveResponse = {
       taskId,
-      phase: 'immediate',
+      phase: "immediate",
       stabilitySignals: [
         {
-          type: 'protected',
-          label: 'Your request is protected',
+          type: "protected",
+          label: "Your request is protected",
           timestamp: Date.now(),
         },
         {
-          type: 'in_progress',
-          label: 'Processing started',
+          type: "in_progress",
+          label: "Processing started",
           timestamp: Date.now(),
         },
       ],
       confidenceLevel: 0.2,
-      userMessage: 'Processing your request...',
+      userMessage: "Processing your request...",
       isBlocking: false, // NEVER block user
     };
 
@@ -121,11 +121,11 @@ class ProgressiveCertaintyEngine {
   updateProgress(
     taskId: string,
     update: {
-      phase?: 'progressive' | 'converging' | 'complete';
+      phase?: "progressive" | "converging" | "complete";
       confidenceLevel?: number;
       userMessage?: string;
       additionalSignal?: StabilitySignal;
-    }
+    },
   ): ProgressiveResponse | null {
     const existing = this.activeTasks.get(taskId);
     if (!existing) return null;
@@ -135,17 +135,17 @@ class ProgressiveCertaintyEngine {
       phase: update.phase ?? existing.phase,
       confidenceLevel: update.confidenceLevel ?? existing.confidenceLevel,
       userMessage: update.userMessage ?? existing.userMessage,
-      stabilitySignals: update.additionalSignal 
+      stabilitySignals: update.additionalSignal
         ? [...existing.stabilitySignals, update.additionalSignal]
         : existing.stabilitySignals,
     };
 
-    if (updated.phase === 'complete') {
+    if (updated.phase === "complete") {
       this.activeTasks.delete(taskId);
       this.completedTasks.set(taskId, {
         taskId,
-        classification: 'PROGRESSIVE_CERTAINTY',
-        reason: 'Task completed through progressive certainty flow',
+        classification: "PROGRESSIVE_CERTAINTY",
+        reason: "Task completed through progressive certainty flow",
         satisfiedForCoverage: true,
       });
     } else {
@@ -158,10 +158,7 @@ class ProgressiveCertaintyEngine {
   /**
    * Check if task should use progressive certainty
    */
-  shouldApplyProgressiveCertainty(
-    estimatedDurationMs: number,
-    isUserFacing: boolean
-  ): boolean {
+  shouldApplyProgressiveCertainty(estimatedDurationMs: number, isUserFacing: boolean): boolean {
     // Progressive certainty applies to any user-facing task
     // that might exceed immediate response threshold
     return isUserFacing && estimatedDurationMs > IMMEDIATE_THRESHOLD_MS;
@@ -175,11 +172,13 @@ class ProgressiveCertaintyEngine {
     const task = this.activeTasks.get(taskId);
     if (!task) {
       // Even for unknown tasks, provide a stability signal
-      return [{
-        type: 'protected',
-        label: 'System ready',
-        timestamp: Date.now(),
-      }];
+      return [
+        {
+          type: "protected",
+          label: "System ready",
+          timestamp: Date.now(),
+        },
+      ];
     }
     return task.stabilitySignals;
   }
@@ -195,16 +194,16 @@ class ProgressiveCertaintyEngine {
     if (active) {
       return {
         taskId,
-        classification: 'PROGRESSIVE_CERTAINTY',
-        reason: 'Task in progressive execution - counts as satisfied for coverage',
+        classification: "PROGRESSIVE_CERTAINTY",
+        reason: "Task in progressive execution - counts as satisfied for coverage",
         satisfiedForCoverage: true, // Progressive tasks count as satisfied
       };
     }
 
     return {
       taskId,
-      classification: 'INSTANT_COMPLETE',
-      reason: 'Task completed instantly',
+      classification: "INSTANT_COMPLETE",
+      reason: "Task completed instantly",
       satisfiedForCoverage: true,
     };
   }
@@ -224,7 +223,7 @@ class ProgressiveCertaintyEngine {
 
   /**
    * Confirm ceiling safety - LOCKED
-   * 
+   *
    * Explicitly confirms:
    * - No physics laws violated
    * - No deterministic or legal constraints bypassed
@@ -240,7 +239,7 @@ class ProgressiveCertaintyEngine {
       physicsRespected: true,
       constraintsRespected: true,
       noFalseGuarantees: true,
-      assertion: 'CERTAINTY-ALIGNED · TRUST-SEALED · 95%-LOCKED',
+      assertion: "CERTAINTY-ALIGNED · TRUST-SEALED · 95%-LOCKED",
     };
   }
 
@@ -248,7 +247,7 @@ class ProgressiveCertaintyEngine {
    * Get final assertion for system state
    */
   getFinalAssertion(): string {
-    return 'Users don\'t demand instant truth — they demand continuous certainty.';
+    return "Users don't demand instant truth — they demand continuous certainty.";
   }
 
   /**
@@ -266,7 +265,7 @@ class ProgressiveCertaintyEngine {
       perceivedLatencyNeutralized: true,
       heavyUsersPredictable: true,
       noCapabilityConfidenceGap: true,
-      status: 'CERTAINTY-ALIGNED · TRUST-SEALED · 95%-LOCKED',
+      status: "CERTAINTY-ALIGNED · TRUST-SEALED · 95%-LOCKED",
     };
   }
 

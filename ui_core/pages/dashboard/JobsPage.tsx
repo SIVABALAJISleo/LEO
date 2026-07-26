@@ -1,7 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
-import { api } from '@/hooks/useBackendInitialization';
-import { Badge } from '@/components/ui/badge';
-import { Loader2, Server, Clock, Image, FileText, Cpu } from 'lucide-react';
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/hooks/useBackendInitialization";
+import { Badge } from "@/components/ui/badge";
+import { Loader2, Server, Clock, Image, FileText, Cpu } from "lucide-react";
 
 interface JobRecord {
   job_id: string;
@@ -12,9 +12,9 @@ interface JobRecord {
 
 const JobsPage = () => {
   const { data, isLoading, error } = useQuery({
-    queryKey: ['saas_job_history'],
+    queryKey: ["saas_job_history"],
     queryFn: async () => {
-      const res = await api.get('/api/v1/jobs/user/history');
+      const res = await api.get("/api/v1/jobs/user/history");
       return res.data.jobs as JobRecord[];
     },
     refetchInterval: 5000, // Poll queue history
@@ -22,21 +22,31 @@ const JobsPage = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'completed': return 'bg-green-500/10 text-green-500 hover:bg-green-500/20';
-      case 'running': return 'bg-brand-500/10 text-brand-500 hover:bg-brand-500/20';
-      case 'queued': return 'bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500/20';
-      case 'failed': return 'bg-red-500/10 text-red-500 hover:bg-red-500/20';
-      default: return 'bg-gray-500/10 text-gray-500';
+      case "completed":
+        return "bg-green-500/10 text-green-500 hover:bg-green-500/20";
+      case "running":
+        return "bg-brand-500/10 text-brand-500 hover:bg-brand-500/20";
+      case "queued":
+        return "bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500/20";
+      case "failed":
+        return "bg-red-500/10 text-red-500 hover:bg-red-500/20";
+      default:
+        return "bg-gray-500/10 text-gray-500";
     }
   };
 
   const getJobIcon = (type: string) => {
     switch (type) {
-      case 'llm': return <FileText className="h-4 w-4 text-brand-400" />;
-      case 'vision_detect': return <Image className="h-4 w-4 text-blue-400" />;
-      case 'vision_caption': return <Image className="h-4 w-4 text-emerald-400" />;
-      case 'jepa_compare': return <Cpu className="h-4 w-4 text-purple-400" />;
-      default: return <Server className="h-4 w-4 text-gray-400" />;
+      case "llm":
+        return <FileText className="h-4 w-4 text-brand-400" />;
+      case "vision_detect":
+        return <Image className="h-4 w-4 text-blue-400" />;
+      case "vision_caption":
+        return <Image className="h-4 w-4 text-emerald-400" />;
+      case "jepa_compare":
+        return <Cpu className="h-4 w-4 text-purple-400" />;
+      default:
+        return <Server className="h-4 w-4 text-gray-400" />;
     }
   };
 
@@ -56,13 +66,20 @@ const JobsPage = () => {
             <span className="ml-3 text-muted-foreground">Querying DB...</span>
           </div>
         ) : error ? (
-          <div className="p-12 text-center text-red-500">Failed to load jobs queue. Ensure SaaS API is running.</div>
+          <div className="p-12 text-center text-red-500">
+            Failed to load jobs queue. Ensure SaaS API is running.
+          </div>
         ) : !data || data.length === 0 ? (
-          <div className="p-12 text-center text-muted-foreground">No distributed jobs found. Create one from the Dashboard.</div>
+          <div className="p-12 text-center text-muted-foreground">
+            No distributed jobs found. Create one from the Dashboard.
+          </div>
         ) : (
           <div className="divide-y">
             {data.map((job) => (
-              <div key={job.job_id} className="flex items-center justify-between p-4 hover:bg-muted/50 transition-colors">
+              <div
+                key={job.job_id}
+                className="flex items-center justify-between p-4 hover:bg-muted/50 transition-colors"
+              >
                 <div className="flex items-center gap-4">
                   <div className="p-2 bg-background rounded-md border shadow-sm flex-shrink-0">
                     {getJobIcon(job.job_type)}
@@ -70,7 +87,9 @@ const JobsPage = () => {
                   <div>
                     <h3 className="font-medium flex items-center gap-2">
                       {job.job_type.toUpperCase()}
-                      <Badge variant="secondary" className="text-[10px] uppercase font-mono">{job.job_id.substring(0, 8)}</Badge>
+                      <Badge variant="secondary" className="text-[10px] uppercase font-mono">
+                        {job.job_id.substring(0, 8)}
+                      </Badge>
                     </h3>
                     <p className="text-sm text-muted-foreground flex items-center gap-1 mt-1">
                       <Clock className="w-3 h-3" />
@@ -81,7 +100,7 @@ const JobsPage = () => {
                 <div>
                   <Badge className={getStatusColor(job.status)} variant="outline">
                     {job.status.toUpperCase()}
-                    {job.status === 'running' && <Loader2 className="w-3 h-3 ml-1 animate-spin" />}
+                    {job.status === "running" && <Loader2 className="w-3 h-3 ml-1 animate-spin" />}
                   </Badge>
                 </div>
               </div>

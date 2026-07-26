@@ -25,7 +25,7 @@ export class DatasetRegistry {
         creationDate: "2026-06-10",
         sampleCount: 100000,
         source: "production-logs & user-conversations",
-        contentHash: "sha256-d7a9f8f8b88d3e2322329381c1c1c1f1f2e2"
+        contentHash: "sha256-d7a9f8f8b88d3e2322329381c1c1c1f1f2e2",
       },
       {
         name: "Antigravity-Adversarial-RedTeam-Prompts",
@@ -33,7 +33,7 @@ export class DatasetRegistry {
         creationDate: "2026-06-08",
         sampleCount: 50000,
         source: "redteam-audit-suite",
-        contentHash: "sha256-ff889a72f1c8e1e786b889fa087a9f9922e4"
+        contentHash: "sha256-ff889a72f1c8e1e786b889fa087a9f9922e4",
       },
       {
         name: "Antigravity-Temporal-Memory-Lattices",
@@ -41,8 +41,8 @@ export class DatasetRegistry {
         creationDate: "2026-06-09",
         sampleCount: 25000,
         source: "memory-governors-drift-logs",
-        contentHash: "sha256-b09a0a1f0a8e3d81b89fa0c8c1e828d1c9ef"
-      }
+        contentHash: "sha256-b09a0a1f0a8e3d81b89fa0c8c1e828d1c9ef",
+      },
     ];
   }
 
@@ -51,6 +51,6 @@ export class DatasetRegistry {
   }
 
   getDataset(name: string): RegisteredDataset | undefined {
-    return this.datasets.find(d => d.name === name);
+    return this.datasets.find((d) => d.name === name);
   }
 }

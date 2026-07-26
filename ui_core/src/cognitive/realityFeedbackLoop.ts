@@ -18,7 +18,7 @@ export class RealityFeedbackLoop {
   private feedbackHistory: FeedbackRecord[] = [];
   private currentModelWeights: Record<string, number> = {
     crystallizationWeight: 0.95,
-    localInferenceConfidence: 0.90,
+    localInferenceConfidence: 0.9,
     activeResearchRate: 0.85,
     gpuAccelerationPriority: 0.88,
   };
@@ -26,10 +26,15 @@ export class RealityFeedbackLoop {
   /**
    * Records an observation and computes feedback adjustments.
    */
-  public logReality(predictionId: string, metric: string, predictedValue: number, observedValue: number): FeedbackRecord {
+  public logReality(
+    predictionId: string,
+    metric: string,
+    predictedValue: number,
+    observedValue: number,
+  ): FeedbackRecord {
     const error = Math.abs(predictedValue - observedValue);
     const errorPercentage = predictedValue > 0 ? (error / predictedValue) * 100 : 0;
-    
+
     // Gradient weight adjustment
     // If observed latency is much higher, reduce confidence in that path
     const learningRate = 0.05;
@@ -38,7 +43,10 @@ export class RealityFeedbackLoop {
 
     // Apply weight adjustments to system config
     if (metric in this.currentModelWeights) {
-      this.currentModelWeights[metric] = Math.max(0.1, Math.min(1.0, this.currentModelWeights[metric] + weightAdjustment));
+      this.currentModelWeights[metric] = Math.max(
+        0.1,
+        Math.min(1.0, this.currentModelWeights[metric] + weightAdjustment),
+      );
     }
 
     const record: FeedbackRecord = {

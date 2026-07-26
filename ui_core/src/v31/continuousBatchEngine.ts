@@ -34,16 +34,16 @@ export class ContinuousBatchEngine {
       generatedTokensCount: 0,
       maxTokens,
       state: "Queued",
-      arrivalTimestamp: Date.now()
+      arrivalTimestamp: Date.now(),
     });
     return id;
   }
 
   processIteration(): ContinuousBatchTelemetry {
     // 1. Merge requests that have similar prompts/prefixes (Simulate Prefix Reuse Integration)
-    const activeRequests = this.queue.filter(r => r.state !== "Completed");
+    const activeRequests = this.queue.filter((r) => r.state !== "Completed");
     const groupedPrompts: Record<number, BatchRequest[]> = {};
-    activeRequests.forEach(r => {
+    activeRequests.forEach((r) => {
       // Group by prompt length as a simple prefix/size similarity heuristic
       const lengthKey = r.promptLengthTokens;
       if (!groupedPrompts[lengthKey]) groupedPrompts[lengthKey] = [];
@@ -53,16 +53,16 @@ export class ContinuousBatchEngine {
     Object.entries(groupedPrompts).forEach(([_, reqs]) => {
       if (reqs.length > 1) {
         // Merge! We compress them into one processing prefix
-        this.mergedCount += (reqs.length - 1);
+        this.mergedCount += reqs.length - 1;
       }
     });
 
     // 2. Select requests to run in active batch (Prefill + Decoding mix)
     let prefillCount = 0;
     let decodingCount = 0;
-    
+
     let activeRunningCount = 0;
-    this.queue.forEach(r => {
+    this.queue.forEach((r) => {
       if (r.state === "Completed") return;
 
       if (r.state === "Queued" && activeRunningCount < this.maxBatchSize) {
@@ -78,7 +78,7 @@ export class ContinuousBatchEngine {
         r.generatedTokensCount++;
         decodingCount++;
         activeRunningCount++;
-        
+
         if (r.generatedTokensCount >= r.maxTokens) {
           r.state = "Completed";
           this.completedCount++;
@@ -87,11 +87,11 @@ export class ContinuousBatchEngine {
     });
 
     const activeBatchSize = prefillCount + decodingCount;
-    const queuedRequestsCount = this.queue.filter(r => r.state === "Queued").length;
+    const queuedRequestsCount = this.queue.filter((r) => r.state === "Queued").length;
 
     // Throughput increases with batch size (continuous batching efficiency)
     const baseThroughput = 40; // tokens/sec
-    const efficiencyMultiplier = 1.0 + (activeBatchSize * 0.45);
+    const efficiencyMultiplier = 1.0 + activeBatchSize * 0.45;
     const throughputTokensPerSec = parseFloat((baseThroughput * efficiencyMultiplier).toFixed(1));
     const averageLatencyMs = Math.round(1000 / (throughputTokensPerSec / (activeBatchSize || 1)));
 
@@ -101,7 +101,7 @@ export class ContinuousBatchEngine {
       completedRequestsCount: this.completedCount,
       averageLatencyMs,
       throughputTokensPerSec,
-      mergedRequestsCount: this.mergedCount
+      mergedRequestsCount: this.mergedCount,
     };
   }
 

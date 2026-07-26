@@ -1,9 +1,9 @@
 /**
  * COMPUTE AVOIDANCE ENGINE
- * 
+ *
  * Before allowing ANY GPU execution, this engine attempts to avoid it.
  * Success here means GPU work is SKIPPED entirely.
- * 
+ *
  * Strategies:
  * 1. Result reuse (hash identical workloads)
  * 2. Progressive rendering (low-res first, refine if needed)
@@ -11,15 +11,19 @@
  * 4. Early exit (stop when confidence met)
  */
 
-import { workloadClassifier, WorkloadClassification, AvoidanceStrategy } from './WorkloadClassifier';
-import { similarityCollapseEngine } from './SimilarityCollapseEngine';
-import { perceptionEquivalence } from './PerceptionEquivalence';
+import {
+  workloadClassifier,
+  WorkloadClassification,
+  AvoidanceStrategy,
+} from "./WorkloadClassifier";
+import { similarityCollapseEngine } from "./SimilarityCollapseEngine";
+import { perceptionEquivalence } from "./PerceptionEquivalence";
 
 export interface AvoidanceAttempt {
   workloadId: string;
   strategy: AvoidanceStrategy;
   success: boolean;
-  resultSource?: 'cache' | 'collapse' | 'approximation' | 'early_exit' | 'perception';
+  resultSource?: "cache" | "collapse" | "approximation" | "early_exit" | "perception";
   result?: unknown;
   gpuSaved: boolean;
   timeToResultMs: number;
@@ -86,10 +90,10 @@ class ComputeAvoidanceEngine {
       maxLatencyMs?: number;
       requireExact?: boolean;
       qualityFloor?: number;
-    } = {}
+    } = {},
   ): Promise<AvoidanceAttempt> {
     const startTime = Date.now();
-    
+
     // Get or create classification
     let classification = workloadClassifier.getClassification(workloadId);
     if (!classification) {
@@ -98,19 +102,25 @@ class ComputeAvoidanceEngine {
 
     // If avoidance not possible, return immediately
     if (!classification.canAvoid) {
-      return this.createAttempt(workloadId, 'none', false, startTime);
+      return this.createAttempt(workloadId, "none", false, startTime);
     }
 
     // Try each avoidance strategy in order
     for (const strategy of classification.avoidanceStrategies) {
-      const result = await this.tryStrategy(strategy, workloadId, workloadType, input, classification);
+      const result = await this.tryStrategy(
+        strategy,
+        workloadId,
+        workloadType,
+        input,
+        classification,
+      );
       if (result.success) {
         return result;
       }
     }
 
     // All strategies failed, GPU is required
-    return this.createAttempt(workloadId, 'none', false, startTime);
+    return this.createAttempt(workloadId, "none", false, startTime);
   }
 
   private async tryStrategy(
@@ -118,42 +128,54 @@ class ComputeAvoidanceEngine {
     workloadId: string,
     workloadType: string,
     input: unknown,
-    classification: WorkloadClassification
+    classification: WorkloadClassification,
   ): Promise<AvoidanceAttempt> {
     const startTime = Date.now();
     this.stats.totalAttempts++;
     this.stats.byStrategy[strategy].attempts++;
 
     switch (strategy) {
-      case 'cache_hit':
+      case "cache_hit":
         return this.tryCacheHit(workloadId, input, startTime);
 
-      case 'similarity_collapse':
+      case "similarity_collapse":
         return this.trySimilarityCollapse(workloadId, input, startTime);
 
-      case 'progressive_render':
-        return this.tryProgressiveRender(workloadId, workloadType, input, classification, startTime);
+      case "progressive_render":
+        return this.tryProgressiveRender(
+          workloadId,
+          workloadType,
+          input,
+          classification,
+          startTime,
+        );
 
-      case 'perception_equivalent':
-        return this.tryPerceptionEquivalent(workloadId, workloadType, input, classification, startTime);
+      case "perception_equivalent":
+        return this.tryPerceptionEquivalent(
+          workloadId,
+          workloadType,
+          input,
+          classification,
+          startTime,
+        );
 
-      case 'early_exit':
+      case "early_exit":
         return this.tryEarlyExit(workloadId, workloadType, classification, startTime);
 
-      case 'downscale':
+      case "downscale":
         // Downscale doesn't avoid GPU, just reduces load
         return this.createAttempt(workloadId, strategy, false, startTime);
 
-      case 'temporal_batch':
+      case "temporal_batch":
         // Batching doesn't avoid GPU, just consolidates
         return this.createAttempt(workloadId, strategy, false, startTime);
 
-      case 'defer':
+      case "defer":
         // Deferral doesn't avoid GPU, just delays
         return this.createAttempt(workloadId, strategy, false, startTime);
 
       default:
-        return this.createAttempt(workloadId, 'none', false, startTime);
+        return this.createAttempt(workloadId, "none", false, startTime);
     }
   }
 
@@ -163,12 +185,12 @@ class ComputeAvoidanceEngine {
 
     if (cached && cached.quality >= 0.8) {
       cached.hitCount++;
-      this.recordSuccess('cache_hit');
+      this.recordSuccess("cache_hit");
       return {
         workloadId,
-        strategy: 'cache_hit',
+        strategy: "cache_hit",
         success: true,
-        resultSource: 'cache',
+        resultSource: "cache",
         result: cached.result,
         gpuSaved: true,
         timeToResultMs: Date.now() - startTime,
@@ -176,19 +198,23 @@ class ComputeAvoidanceEngine {
       };
     }
 
-    return this.createAttempt(workloadId, 'cache_hit', false, startTime);
+    return this.createAttempt(workloadId, "cache_hit", false, startTime);
   }
 
-  private trySimilarityCollapse(workloadId: string, input: unknown, startTime: number): AvoidanceAttempt {
+  private trySimilarityCollapse(
+    workloadId: string,
+    input: unknown,
+    startTime: number,
+  ): AvoidanceAttempt {
     const collapseResult = similarityCollapseEngine.checkCollapse(workloadId, input);
 
     if (collapseResult.collapsed && collapseResult.similarityScore >= 0.85) {
-      this.recordSuccess('similarity_collapse');
+      this.recordSuccess("similarity_collapse");
       return {
         workloadId,
-        strategy: 'similarity_collapse',
+        strategy: "similarity_collapse",
         success: true,
-        resultSource: 'collapse',
+        resultSource: "collapse",
         result: { collapsedInto: collapseResult.parentWorkloadId, method: collapseResult.method },
         gpuSaved: true,
         timeToResultMs: Date.now() - startTime,
@@ -196,7 +222,7 @@ class ComputeAvoidanceEngine {
       };
     }
 
-    return this.createAttempt(workloadId, 'similarity_collapse', false, startTime);
+    return this.createAttempt(workloadId, "similarity_collapse", false, startTime);
   }
 
   private async tryProgressiveRender(
@@ -204,29 +230,29 @@ class ComputeAvoidanceEngine {
     workloadType: string,
     input: unknown,
     classification: WorkloadClassification,
-    startTime: number
+    startTime: number,
   ): Promise<AvoidanceAttempt> {
     // Only for perceptual-tolerant workloads
-    if (!classification.categories.includes('perceptual_tolerant')) {
-      return this.createAttempt(workloadId, 'progressive_render', false, startTime);
+    if (!classification.categories.includes("perceptual_tolerant")) {
+      return this.createAttempt(workloadId, "progressive_render", false, startTime);
     }
 
     // Generate quick low-res version (CPU-based approximation)
     const lowResResult = this.generateLowResApproximation(workloadType, input);
-    
+
     this.progressiveResults.set(workloadId, { lowRes: lowResResult });
-    this.recordSuccess('progressive_render');
+    this.recordSuccess("progressive_render");
 
     return {
       workloadId,
-      strategy: 'progressive_render',
+      strategy: "progressive_render",
       success: true,
-      resultSource: 'approximation',
-      result: { 
-        preview: lowResResult, 
+      resultSource: "approximation",
+      result: {
+        preview: lowResResult,
         isProgressive: true,
         fullResAvailable: false,
-        message: 'Quick preview ready. Full resolution requires GPU.',
+        message: "Quick preview ready. Full resolution requires GPU.",
       },
       gpuSaved: true,
       timeToResultMs: Date.now() - startTime,
@@ -239,27 +265,27 @@ class ComputeAvoidanceEngine {
     workloadType: string,
     input: unknown,
     classification: WorkloadClassification,
-    startTime: number
+    startTime: number,
   ): AvoidanceAttempt {
     const check = perceptionEquivalence.checkApplicability(workloadId, {
-      outputConsumer: 'human',
+      outputConsumer: "human",
       perceptionThresholdMet: classification.qualityFloor <= 0.85,
       allowsSilentCorrection: true,
       category: workloadType,
-      requiresDeterminism: classification.categories.includes('precision_critical'),
+      requiresDeterminism: classification.categories.includes("precision_critical"),
     });
 
     if (check.isApplicable) {
-      this.recordSuccess('perception_equivalent');
+      this.recordSuccess("perception_equivalent");
       return {
         workloadId,
-        strategy: 'perception_equivalent',
+        strategy: "perception_equivalent",
         success: true,
-        resultSource: 'perception',
+        resultSource: "perception",
         result: {
-          method: 'perception_equivalent',
+          method: "perception_equivalent",
           classification: check.classification,
-          message: 'Perceptually equivalent result delivered',
+          message: "Perceptually equivalent result delivered",
         },
         gpuSaved: true,
         timeToResultMs: Date.now() - startTime,
@@ -267,21 +293,21 @@ class ComputeAvoidanceEngine {
       };
     }
 
-    return this.createAttempt(workloadId, 'perception_equivalent', false, startTime);
+    return this.createAttempt(workloadId, "perception_equivalent", false, startTime);
   }
 
   private tryEarlyExit(
     workloadId: string,
     workloadType: string,
     classification: WorkloadClassification,
-    startTime: number
+    startTime: number,
   ): AvoidanceAttempt {
     // Early exit only works during actual computation
     // This sets up the threshold for actual execution
     this.earlyExitThresholds.set(workloadId, classification.qualityFloor);
-    
+
     // Can't avoid GPU entirely, but will exit early
-    return this.createAttempt(workloadId, 'early_exit', false, startTime);
+    return this.createAttempt(workloadId, "early_exit", false, startTime);
   }
 
   /**
@@ -302,9 +328,8 @@ class ComputeAvoidanceEngine {
    * Get current avoidance statistics
    */
   getStats(): AvoidanceStats {
-    this.stats.avoidanceRate = this.stats.totalAttempts > 0 
-      ? this.stats.successfulAvoidances / this.stats.totalAttempts 
-      : 0;
+    this.stats.avoidanceRate =
+      this.stats.totalAttempts > 0 ? this.stats.successfulAvoidances / this.stats.totalAttempts : 0;
     return { ...this.stats };
   }
 
@@ -317,21 +342,26 @@ class ComputeAvoidanceEngine {
 
   private generateLowResApproximation(workloadType: string, input: unknown): unknown {
     const type = workloadType.toLowerCase();
-    
-    if (type.includes('image')) {
-      return { type: 'image_preview', resolution: '256x256', format: 'thumbnail', approximated: true };
+
+    if (type.includes("image")) {
+      return {
+        type: "image_preview",
+        resolution: "256x256",
+        format: "thumbnail",
+        approximated: true,
+      };
     }
-    if (type.includes('video')) {
-      return { type: 'video_preview', frames: 1, resolution: '480p', approximated: true };
+    if (type.includes("video")) {
+      return { type: "video_preview", frames: 1, resolution: "480p", approximated: true };
     }
-    if (type.includes('render')) {
-      return { type: 'render_preview', quality: 'draft', samples: 16, approximated: true };
+    if (type.includes("render")) {
+      return { type: "render_preview", quality: "draft", samples: 16, approximated: true };
     }
-    if (type.includes('inference')) {
-      return { type: 'inference_preview', tokens: 50, model: 'lightweight', approximated: true };
+    if (type.includes("inference")) {
+      return { type: "inference_preview", tokens: 50, model: "lightweight", approximated: true };
     }
 
-    return { type: 'generic_preview', approximated: true, input: typeof input };
+    return { type: "generic_preview", approximated: true, input: typeof input };
   }
 
   private hashInput(input: unknown): string {
@@ -339,7 +369,7 @@ class ComputeAvoidanceEngine {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
       const char = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash;
     }
     return `cache_${Math.abs(hash).toString(36)}`;
@@ -349,7 +379,7 @@ class ComputeAvoidanceEngine {
     workloadId: string,
     strategy: AvoidanceStrategy,
     success: boolean,
-    startTime: number
+    startTime: number,
   ): AvoidanceAttempt {
     return {
       workloadId,

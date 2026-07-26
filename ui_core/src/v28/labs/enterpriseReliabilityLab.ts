@@ -26,7 +26,7 @@ export class EnterpriseReliabilityLab {
       meanTimeToRecoverySec,
       peakLoadConcurrency,
       slaComplianceRate,
-      agentSuccessRate
+      agentSuccessRate,
     };
   }
 }

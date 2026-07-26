@@ -16,7 +16,7 @@ export class CacheResidentInferenceEngine {
 
   registerModel(name: string, sizeBytes: number) {
     const isCacheable = sizeBytes <= this.cacheCapacityBytes;
-    
+
     this.registry.set(name, {
       modelName: name,
       sizeBytes,
@@ -36,12 +36,12 @@ export class CacheResidentInferenceEngine {
 
     // Determine residency based on capacity. If active and fits, mark as resident.
     const fitsInCache = record.sizeBytes <= this.cacheCapacityBytes;
-    
+
     if (fitsInCache) {
       record.residentInCache = true;
       record.hitCount += count;
       // Resident weight reads have low latency (L3 cache = ~10ns, RAM = ~100ns)
-      record.avgReadLatencyNs = 12; 
+      record.avgReadLatencyNs = 12;
     } else {
       record.residentInCache = false;
       record.missCount += count;

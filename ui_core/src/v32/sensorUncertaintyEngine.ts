@@ -17,13 +17,15 @@ export interface FusedState {
 
 export class SensorUncertaintyEngine {
   fuseReadings(readings: SensorReading[]): FusedState {
-    let sumX = 0, sumY = 0, sumZ = 0;
+    let sumX = 0,
+      sumY = 0,
+      sumZ = 0;
     let weightSum = 0;
     let filteredAnomaliesCount = 0;
 
-    readings.forEach(r => {
+    readings.forEach((r) => {
       // Anomaly detection: if values deviate too far, skip or flag
-      const hasExtremeValue = r.rawSignal.some(v => Math.abs(v) > 500);
+      const hasExtremeValue = r.rawSignal.some((v) => Math.abs(v) > 500);
       if (hasExtremeValue || r.anomalyDetected) {
         filteredAnomaliesCount++;
         return; // Filter out anomalous sensor readings
@@ -31,11 +33,11 @@ export class SensorUncertaintyEngine {
 
       // Weight is inversely proportional to standard deviation (lower variance = higher confidence)
       const weight = 1.0 / (r.noiseStdDev * r.noiseStdDev || 0.01);
-      
+
       sumX += r.rawSignal[0] * weight;
       sumY += r.rawSignal[1] * weight;
       sumZ += (r.rawSignal[2] || 0) * weight;
-      
+
       weightSum += weight;
     });
 
@@ -43,17 +45,19 @@ export class SensorUncertaintyEngine {
     const fusedPosition = [
       parseFloat((sumX / finalWeight).toFixed(3)),
       parseFloat((sumY / finalWeight).toFixed(3)),
-      parseFloat((sumZ / finalWeight).toFixed(3))
+      parseFloat((sumZ / finalWeight).toFixed(3)),
     ];
 
     // Compute overall confidence score
     const avgNoise = readings.reduce((acc, r) => acc + r.noiseStdDev, 0) / (readings.length || 1);
-    const overallConfidence = parseFloat(Math.max(0.1, 1.0 - (avgNoise * 0.12) - (filteredAnomaliesCount * 0.1)).toFixed(2));
+    const overallConfidence = parseFloat(
+      Math.max(0.1, 1.0 - avgNoise * 0.12 - filteredAnomaliesCount * 0.1).toFixed(2),
+    );
 
     return {
       fusedPosition,
       overallConfidence,
-      filteredAnomaliesCount
+      filteredAnomaliesCount,
     };
   }
 }

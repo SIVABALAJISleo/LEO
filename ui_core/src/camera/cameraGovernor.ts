@@ -27,12 +27,15 @@ export class CameraGovernor {
   /**
    * Evaluates camera frames, applying scene change thresholds to bypass duplicate processing.
    */
-  public processCameraFeed(cameraName: string, simulatedFrameDiffPct: number): CameraAnalyticsReport {
+  public processCameraFeed(
+    cameraName: string,
+    simulatedFrameDiffPct: number,
+  ): CameraAnalyticsReport {
     this.frameCount += 30; // simulate 30 frames analyzed
-    
+
     // Scene change filter optimization
     const sceneChangeDetected = simulatedFrameDiffPct >= 5.0; // 5% diff threshold
-    
+
     const activeEvents: CameraEvent[] = [];
     let framesProcessedCount = 1;
 
@@ -44,7 +47,7 @@ export class CameraGovernor {
           cameraName,
           eventType: "intrusion",
           timestamp: Date.now(),
-          confidence: 0.94
+          confidence: 0.94,
         });
       }
     } else {
@@ -52,7 +55,7 @@ export class CameraGovernor {
     }
 
     // Savings = (1 - (processed / total)) * 100
-    const processingSavingsPct = parseFloat(((1 - (framesProcessedCount / 30)) * 100).toFixed(2));
+    const processingSavingsPct = parseFloat(((1 - framesProcessedCount / 30) * 100).toFixed(2));
 
     return {
       cameraName,
@@ -60,7 +63,7 @@ export class CameraGovernor {
       framesProcessedCount,
       sceneChangeDetected,
       activeEvents,
-      processingSavingsPct
+      processingSavingsPct,
     };
   }
 }

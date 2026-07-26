@@ -20,10 +20,10 @@ export class IntelCapabilityDetector {
       generation: "Raptor Lake / Meteor Lake (13th/14th Gen)",
       hasAvx2: true,
       hasAvx512: false, // Core Ultra has AVX2 but not AVX512 in standard client architectures
-      hasVnni: true,    // Vector Neural Network Instructions support
-      hasXmx: true,     // Intel Xe Matrix Extensions on Xe-LPG iGPU
+      hasVnni: true, // Vector Neural Network Instructions support
+      hasXmx: true, // Intel Xe Matrix Extensions on Xe-LPG iGPU
       igpuExecutionUnits: 96,
-      isPlatformOptimized: true
+      isPlatformOptimized: true,
     };
   }
 }

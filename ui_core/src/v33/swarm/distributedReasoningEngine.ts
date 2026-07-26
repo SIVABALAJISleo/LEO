@@ -39,7 +39,7 @@ export class DistributedReasoningEngine {
 
     // Identify the best non-pruned branch
     const sorted = [...branches]
-      .filter(b => !b.isPruned)
+      .filter((b) => !b.isPruned)
       .sort((a, b) => b.terminalLeafScore - a.terminalLeafScore);
 
     const optimalBranch = sorted[0] || branches[0];

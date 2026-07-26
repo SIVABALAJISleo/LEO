@@ -9,17 +9,17 @@ export const Navbar = () => {
 
   useEffect(() => {
     // Check for saved preference or default to dark
-    const saved = localStorage.getItem('theme');
-    const prefersDark = saved === 'dark' || (!saved && true);
+    const saved = localStorage.getItem("theme");
+    const prefersDark = saved === "dark" || (!saved && true);
     setIsDark(prefersDark);
-    document.documentElement.classList.toggle('dark', prefersDark);
+    document.documentElement.classList.toggle("dark", prefersDark);
   }, []);
 
   const toggleTheme = () => {
     const newTheme = !isDark;
     setIsDark(newTheme);
-    localStorage.setItem('theme', newTheme ? 'dark' : 'light');
-    document.documentElement.classList.toggle('dark', newTheme);
+    localStorage.setItem("theme", newTheme ? "dark" : "light");
+    document.documentElement.classList.toggle("dark", newTheme);
   };
 
   return (
@@ -31,17 +31,21 @@ export const Navbar = () => {
               <Zap className="h-8 w-8 text-primary group-hover:animate-float" />
               <div className="absolute inset-0 blur-lg bg-primary/30 group-hover:bg-primary/50 transition-all" />
             </div>
-            <span className="text-xl font-bold text-foreground hyper-logo">
-              HYPER
-            </span>
+            <span className="text-xl font-bold text-foreground hyper-logo">HYPER</span>
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/documentation" className="text-foreground/80 hover:text-primary transition-colors">
+            <Link
+              to="/documentation"
+              className="text-foreground/80 hover:text-primary transition-colors"
+            >
               Documentation
             </Link>
-            <Link to="/playground" className="text-foreground/80 hover:text-primary transition-colors">
+            <Link
+              to="/playground"
+              className="text-foreground/80 hover:text-primary transition-colors"
+            >
               API Playground
             </Link>
             <Link to="/pricing" className="text-foreground/80 hover:text-primary transition-colors">
@@ -66,10 +70,7 @@ export const Navbar = () => {
             <Button variant="ghost" size="icon" onClick={toggleTheme} className="rounded-full">
               {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </Button>
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="text-foreground"
-            >
+            <button onClick={() => setIsOpen(!isOpen)} className="text-foreground">
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
@@ -100,7 +101,9 @@ export const Navbar = () => {
               Pricing
             </Link>
             <Link to="/auth" onClick={() => setIsOpen(false)}>
-              <Button variant="ghost" className="w-full">Sign In</Button>
+              <Button variant="ghost" className="w-full">
+                Sign In
+              </Button>
             </Link>
             <Link to="/auth" onClick={() => setIsOpen(false)}>
               <Button className="w-full bg-gradient-primary">Get Started</Button>

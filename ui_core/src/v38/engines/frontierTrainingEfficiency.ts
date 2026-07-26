@@ -14,9 +14,9 @@ export class FrontierTrainingEfficiency {
    * Plans hyperparameter directives to minimize training cost.
    */
   public prescribeTrainingParameters(
-    targetComplexity: "low" | "medium" | "high"
+    targetComplexity: "low" | "medium" | "high",
   ): TrainingDirectives {
-    let syntheticRatio = 0.50;
+    let syntheticRatio = 0.5;
     let activeLearningBatchCount = 100;
     let distillationTemperature = 2.0;
     let curriculumStage = "Curriculum Phase 1: Syntactic Verification Core";
@@ -29,7 +29,7 @@ export class FrontierTrainingEfficiency {
       curriculumStage = "Curriculum Phase 3: Scientific Claims Debates";
       expectedTflopsSaved = 9.8e6;
     } else if (targetComplexity === "medium") {
-      syntheticRatio = 0.70;
+      syntheticRatio = 0.7;
       activeLearningBatchCount = 250;
       distillationTemperature = 1.5;
       curriculumStage = "Curriculum Phase 2: Causal Link Parsing";
@@ -41,7 +41,7 @@ export class FrontierTrainingEfficiency {
       activeLearningBatchCount,
       distillationTemperature,
       curriculumStage,
-      expectedTflopsSaved
+      expectedTflopsSaved,
     };
   }
 }

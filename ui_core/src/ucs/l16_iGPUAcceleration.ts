@@ -12,7 +12,8 @@ export interface iGPUMetrics {
   embeddingExecutionTimeMs: number;
   rerankExecutionTimeMs: number;
   gpuMemoryOffloadPct: number;
-  activeAccelerationTarget: "Intel iGPU" | "AMD iGPU" | "Apple M-Series ANE" | "Generic WebGPU" | "Generic Vulkan";
+  activeAccelerationTarget:
+    "Intel iGPU" | "AMD iGPU" | "Apple M-Series ANE" | "Generic WebGPU" | "Generic Vulkan";
 }
 
 export class iGPUAccelerationEngine {
@@ -27,7 +28,7 @@ export class iGPUAccelerationEngine {
    */
   public getMetrics(): iGPUMetrics {
     const rawBackend = this.hal.resolveOptimalBackend();
-    
+
     let dispatchTable: iGPUMetrics["dispatchTable"] = "WebGPU";
     let activeAccelerationTarget: iGPUMetrics["activeAccelerationTarget"] = "Generic WebGPU";
 
@@ -49,10 +50,10 @@ export class iGPUAccelerationEngine {
     return {
       dispatchTable,
       pipelineState: "ready",
-      embeddingExecutionTimeMs: 4,  // accelerated from 14ms
-      rerankExecutionTimeMs: 12,    // accelerated from 45ms
-      gpuMemoryOffloadPct: 94.5,     // increased offloading from 82.5%
-      activeAccelerationTarget
+      embeddingExecutionTimeMs: 4, // accelerated from 14ms
+      rerankExecutionTimeMs: 12, // accelerated from 45ms
+      gpuMemoryOffloadPct: 94.5, // increased offloading from 82.5%
+      activeAccelerationTarget,
     };
   }
 
@@ -60,35 +61,42 @@ export class iGPUAccelerationEngine {
    * Generates vector embeddings instantly on the local integrated GPU / Neural Engine.
    */
   public async generateEmbeddings(text: string): Promise<number[]> {
-    console.log(`[iGPU V15] Dispatching embedding shader threads directly to client hardware acceleration target.`);
-    
+    console.log(
+      `[iGPU V15] Dispatching embedding shader threads directly to client hardware acceleration target.`,
+    );
+
     // Generate a 128-dimensional mock normalized vector
     const size = 128;
     const mockVector = Array.from({ length: size }, () => Math.random());
     const magnitude = Math.sqrt(mockVector.reduce((sum, val) => sum + val * val, 0));
-    
-    return mockVector.map(v => v / magnitude);
+
+    return mockVector.map((v) => v / magnitude);
   }
 
   /**
    * Executes semantic reranking directly on the iGPU.
    */
   public async rerank(results: any[]): Promise<any[]> {
-    console.log(`[iGPU V15] Performing parallel cosine similarity scoring across search space on iGPU WebGPU/ANE pipeline...`);
+    console.log(
+      `[iGPU V15] Performing parallel cosine similarity scoring across search space on iGPU WebGPU/ANE pipeline...`,
+    );
     const metrics = this.getMetrics();
-    
+
     return results.map((item, idx) => ({
       ...item,
-      igpuRelevanceScore: parseFloat((0.995 - (idx * 0.03)).toFixed(4)),
+      igpuRelevanceScore: parseFloat((0.995 - idx * 0.03).toFixed(4)),
       dispatchTableUsed: metrics.dispatchTable,
-      acceleratorUsed: metrics.activeAccelerationTarget
+      acceleratorUsed: metrics.activeAccelerationTarget,
     }));
   }
 
   /**
    * Offloads vector search operations onto WebGPU shaders.
    */
-  public async executeVectorSearch(queryVector: number[], targetPool: number[][]): Promise<number[]> {
+  public async executeVectorSearch(
+    queryVector: number[],
+    targetPool: number[][],
+  ): Promise<number[]> {
     console.log(`[iGPU V15] Running parallel distance dot-products directly on GPU VRAM.`);
     return targetPool.map((vec) => {
       // Dot product calculation
@@ -116,12 +124,14 @@ export class iGPUAccelerationEngineV16 extends iGPUAccelerationEngine {
       vulkanEnabled: this.supportsVulkan,
       onnxLoaded: this.supportsOnnx,
       llamaCppActive: this.supportsLlamaCpp,
-      localInferenceTimeMs: 14.2
+      localInferenceTimeMs: 14.2,
     };
   }
 
   public async executeLocalInference(prompt: string, model: string): Promise<string> {
-    console.log(`[iGPU V16] Running local inference via llama.cpp/ONNX backend target for model: ${model}`);
+    console.log(
+      `[iGPU V16] Running local inference via llama.cpp/ONNX backend target for model: ${model}`,
+    );
     return `[Local llama.cpp inference response for: "${prompt}"] Success.`;
   }
 
@@ -130,5 +140,3 @@ export class iGPUAccelerationEngineV16 extends iGPUAccelerationEngine {
     return cases.map(() => parseFloat((Math.random() * 0.4 + 0.3).toFixed(4)));
   }
 }
-
-

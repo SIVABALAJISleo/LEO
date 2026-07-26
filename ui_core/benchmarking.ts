@@ -25,7 +25,7 @@ export function calculateEfficiency(
 
   return {
     efficiencyRating,
-    status: 'Goal equivalence (local vs simulated cloud) computed.',
+    status: "Goal equivalence (local vs simulated cloud) computed.",
     bypassSuccess: local <= cloud,
     localLatencyMs: local,
     simulatedCloudLatencyMs: cloud,
@@ -33,4 +33,3 @@ export function calculateEfficiency(
     simulatedCloudCostUsd,
   };
 }
-

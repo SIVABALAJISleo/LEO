@@ -33,42 +33,36 @@
 
 // ──── Core Types ────
 export type {
-    GovernedInput,
-    GovernedOutput,
-    ExplainabilityTrace,
-    PipelineContext,
-    DomainDefinition,
-    DomainState,
-    DistributionSnapshot,
-    DriftReport,
-    OutcomeFeedback,
-    SemanticLogEntry,
-    SchemaContract,
-    GovernedMemoryEntry,
-    ProbationRecord,
-} from './types';
+  GovernedInput,
+  GovernedOutput,
+  ExplainabilityTrace,
+  PipelineContext,
+  DomainDefinition,
+  DomainState,
+  DistributionSnapshot,
+  DriftReport,
+  OutcomeFeedback,
+  SemanticLogEntry,
+  SchemaContract,
+  GovernedMemoryEntry,
+  ProbationRecord,
+} from "./types";
 
-export {
-    TerminalAction,
-    AuthorityLevel,
-    DecisionMode,
-    DomainStatus,
-    PipelineStage,
-} from './types';
+export { TerminalAction, AuthorityLevel, DecisionMode, DomainStatus, PipelineStage } from "./types";
 
 // ──── Pipeline ────
-export { GovernedPipeline } from './GovernedPipeline';
-export type { GovernedExecutor } from './GovernedPipeline';
+export { GovernedPipeline } from "./GovernedPipeline";
+export type { GovernedExecutor } from "./GovernedPipeline";
 
 // ──── Modules ────
-export { SchemaEnforcer } from './SchemaEnforcer';
-export { SemanticLogger } from './SemanticLogger';
-export { DomainRegistry } from './DomainRegistry';
-export { DriftMonitor } from './DriftMonitor';
-export { AdversarialShield } from './AdversarialShield';
-export { ConfidenceGate } from './ConfidenceGate';
-export { AuthorityController } from './AuthorityController';
-export { OutcomeFeedbackLoop } from './OutcomeFeedbackLoop';
-export { MemoryGovernor } from './MemoryGovernor';
-export { InherentLimitHandler, InherentLimit } from './InherentLimitHandler';
-export { FailureTerminator } from './FailureTerminator';
+export { SchemaEnforcer } from "./SchemaEnforcer";
+export { SemanticLogger } from "./SemanticLogger";
+export { DomainRegistry } from "./DomainRegistry";
+export { DriftMonitor } from "./DriftMonitor";
+export { AdversarialShield } from "./AdversarialShield";
+export { ConfidenceGate } from "./ConfidenceGate";
+export { AuthorityController } from "./AuthorityController";
+export { OutcomeFeedbackLoop } from "./OutcomeFeedbackLoop";
+export { MemoryGovernor } from "./MemoryGovernor";
+export { InherentLimitHandler, InherentLimit } from "./InherentLimitHandler";
+export { FailureTerminator } from "./FailureTerminator";

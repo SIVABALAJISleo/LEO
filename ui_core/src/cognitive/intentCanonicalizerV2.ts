@@ -38,45 +38,45 @@ export interface CanonicalizedIntentV2 {
 
 export class IntentCanonicalizerV2 {
   private static slangMap: Record<string, string> = {
-    "bro": "friend/user",
-    "bruh": "user",
+    bro: "friend/user",
+    bruh: "user",
     "how to": "how can I",
-    "wanna": "want to",
-    "gonna": "going to",
-    "plz": "please",
-    "pls": "please",
-    "thx": "thanks",
-    "ty": "thank you",
-    "u": "you",
-    "r": "are",
-    "d": "the",
-    "n": "and",
+    wanna: "want to",
+    gonna: "going to",
+    plz: "please",
+    pls: "please",
+    thx: "thanks",
+    ty: "thank you",
+    u: "you",
+    r: "are",
+    d: "the",
+    n: "and",
   };
 
   private static tamilEnglishMap: Record<string, string> = {
-    "eppadi": "how to",
-    "seivadhu": "do",
-    "panradhu": "do",
-    "epdi": "how to",
-    "solunga": "tell me",
-    "enaku": "for me",
-    "venum": "need",
-    "panna": "to do",
-    "pannunga": "please do",
-    "theriyadhu": "don't know",
-    "mudiyum": "can",
-    "mudiyadhu": "cannot",
+    eppadi: "how to",
+    seivadhu: "do",
+    panradhu: "do",
+    epdi: "how to",
+    solunga: "tell me",
+    enaku: "for me",
+    venum: "need",
+    panna: "to do",
+    pannunga: "please do",
+    theriyadhu: "don't know",
+    mudiyum: "can",
+    mudiyadhu: "cannot",
   };
 
   private static abbreviationMap: Record<string, string> = {
-    "ai": "artificial intelligence",
-    "ml": "machine learning",
-    "db": "database",
-    "api": "application programming interface",
-    "hpa": "horizontal pod autoscaler",
-    "rag": "retrieval augmented generation",
-    "gpu": "graphics processing unit",
-    "cpu": "central processing unit",
+    ai: "artificial intelligence",
+    ml: "machine learning",
+    db: "database",
+    api: "application programming interface",
+    hpa: "horizontal pod autoscaler",
+    rag: "retrieval augmented generation",
+    gpu: "graphics processing unit",
+    cpu: "central processing unit",
   };
 
   public canonicalize(query: string): CanonicalizedIntentV2 {
@@ -134,31 +134,38 @@ export class IntentCanonicalizerV2 {
     const nodes: GraphNode[] = [];
     const edges: GraphEdge[] = [];
 
-    if (normalized.includes("how train artificial intelligence") || normalized.includes("train ai")) {
+    if (
+      normalized.includes("how train artificial intelligence") ||
+      normalized.includes("train ai")
+    ) {
       intent = "How can I train an artificial intelligence model?";
       nodes.push(
         { id: "user", label: "User", type: "subject" },
         { id: "train", label: "Train Model", type: "action" },
         { id: "ai", label: "AI Model", type: "target" },
-        { id: "local", label: "Local Runtime", type: "modifier" }
+        { id: "local", label: "Local Runtime", type: "modifier" },
       );
       edges.push(
         { source: "user", target: "train", label: "desires" },
         { source: "train", target: "ai", label: "targets" },
-        { source: "train", target: "local", label: "runs_on" }
+        { source: "train", target: "local", label: "runs_on" },
       );
-    } else if (normalized.includes("help startup") || normalized.includes("startup planning") || normalized.includes("startup help")) {
+    } else if (
+      normalized.includes("help startup") ||
+      normalized.includes("startup planning") ||
+      normalized.includes("startup help")
+    ) {
       intent = "User requests startup strategy and execution planning assistance.";
       nodes.push(
         { id: "user", label: "User", type: "subject" },
         { id: "req", label: "Request Strategy", type: "action" },
         { id: "startup", label: "SaaS Startup", type: "target" },
-        { id: "roadmap", label: "Execution Roadmap", type: "modifier" }
+        { id: "roadmap", label: "Execution Roadmap", type: "modifier" },
       );
       edges.push(
         { source: "user", target: "req", label: "initiates" },
         { source: "req", target: "startup", label: "about" },
-        { source: "startup", target: "roadmap", label: "requires" }
+        { source: "startup", target: "roadmap", label: "requires" },
       );
     } else {
       // General Fallback Graph
@@ -170,11 +177,11 @@ export class IntentCanonicalizerV2 {
       nodes.push(
         { id: "user", label: "User", type: "subject" },
         { id: "query", label: "Submit Query", type: "action" },
-        { id: "intent", label: "Canonical Intent", type: "target" }
+        { id: "intent", label: "Canonical Intent", type: "target" },
       );
       edges.push(
         { source: "user", target: "query", label: "submits" },
-        { source: "query", target: "intent", label: "maps_to" }
+        { source: "query", target: "intent", label: "maps_to" },
       );
     }
 

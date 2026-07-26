@@ -23,14 +23,15 @@ export class TernaryReasoningEngine {
    */
   public executeTernaryInference(
     prompt: string,
-    numWeightsMillion: number = 3000
+    numWeightsMillion: number = 3000,
   ): TernaryInferenceResult {
     const originalWeightSizeGB = (numWeightsMillion * 4) / 1024; // FP32 model size in GB
     // Ternary requires log2(3) = 1.58 bits per weight.
     const quantizedWeightSizeGB = (numWeightsMillion * 1.58) / 8 / 1024;
 
-    const memoryReductionPct = ((originalWeightSizeGB - quantizedWeightSizeGB) / originalWeightSizeGB) * 100;
-    
+    const memoryReductionPct =
+      ((originalWeightSizeGB - quantizedWeightSizeGB) / originalWeightSizeGB) * 100;
+
     // Simulating Ternary FLOP reduction
     // Regular GEMM: N multiplications and N additions.
     // Ternary GEMM: Addition/subtraction only (since weight is -1, 0, or 1).
@@ -46,11 +47,57 @@ export class TernaryReasoningEngine {
     let outputTokens: string[] = ["ternary_node_init"];
 
     if (normalizedPrompt.includes("code") || normalizedPrompt.includes("program")) {
-      outputTokens = ["const", " ", "ternaryAdd", " ", "=", " ", "(a,", " ", "b)", " ", "=>", " ", "a", " ", "+", " ", "b;"];
+      outputTokens = [
+        "const",
+        " ",
+        "ternaryAdd",
+        " ",
+        "=",
+        " ",
+        "(a,",
+        " ",
+        "b)",
+        " ",
+        "=>",
+        " ",
+        "a",
+        " ",
+        "+",
+        " ",
+        "b;",
+      ];
     } else if (normalizedPrompt.includes("math") || normalizedPrompt.includes("solve")) {
-      outputTokens = ["x", " ", "=", " ", "1.58", " ", "(ternary", " ", "quantized", " ", "approximation", " ", "resolved)"];
+      outputTokens = [
+        "x",
+        " ",
+        "=",
+        " ",
+        "1.58",
+        " ",
+        "(ternary",
+        " ",
+        "quantized",
+        " ",
+        "approximation",
+        " ",
+        "resolved)",
+      ];
     } else {
-      outputTokens = ["low-bit", " ", "symbolic", " ", "inference", " ", "completed", " ", "on", " ", "i5-CPU", " ", "registers"];
+      outputTokens = [
+        "low-bit",
+        " ",
+        "symbolic",
+        " ",
+        "inference",
+        " ",
+        "completed",
+        " ",
+        "on",
+        " ",
+        "i5-CPU",
+        " ",
+        "registers",
+      ];
     }
 
     // Heuristics for weight clamping simulation
@@ -67,8 +114,8 @@ export class TernaryReasoningEngine {
         memoryReductionPct,
         originalWeightSizeGB,
         quantizedWeightSizeGB,
-        latencySavedMs
-      }
+        latencySavedMs,
+      },
     };
   }
 }

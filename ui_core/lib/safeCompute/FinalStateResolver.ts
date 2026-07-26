@@ -5,12 +5,12 @@
  */
 
 export type FinalJobState =
-  | 'instantly_served'
-  | 'approximation_accepted'
-  | 'exact_computing'
-  | 'deferred_by_design'
-  | 'paused_resumable'
-  | 'user_cancelled';
+  | "instantly_served"
+  | "approximation_accepted"
+  | "exact_computing"
+  | "deferred_by_design"
+  | "paused_resumable"
+  | "user_cancelled";
 
 export interface ResolvedJobState {
   jobId: string;
@@ -38,34 +38,34 @@ export interface JobStateInput {
   isHeavy: boolean;
   confidenceScore: number | null;
   hasCheckpoint: boolean;
-  userAction?: 'accept_approximate' | 'wait_exact' | 'cancel';
-  systemAction?: 'defer' | 'pause' | 'complete';
+  userAction?: "accept_approximate" | "wait_exact" | "cancel";
+  systemAction?: "defer" | "pause" | "complete";
 }
 
 const STATE_LABELS: Record<FinalJobState, { label: string; description: string }> = {
   instantly_served: {
-    label: 'Complete',
-    description: 'Result delivered instantly',
+    label: "Complete",
+    description: "Result delivered instantly",
   },
   approximation_accepted: {
-    label: 'Quick Result',
-    description: 'Fast result accepted',
+    label: "Quick Result",
+    description: "Fast result accepted",
   },
   exact_computing: {
-    label: 'Processing',
-    description: 'Full computation in progress',
+    label: "Processing",
+    description: "Full computation in progress",
   },
   deferred_by_design: {
-    label: 'Scheduled',
-    description: 'Queued for processing',
+    label: "Scheduled",
+    description: "Queued for processing",
   },
   paused_resumable: {
-    label: 'Paused',
-    description: 'Can be resumed',
+    label: "Paused",
+    description: "Can be resumed",
   },
   user_cancelled: {
-    label: 'Cancelled',
-    description: 'Stopped by request',
+    label: "Cancelled",
+    description: "Stopped by request",
   },
 };
 
@@ -94,7 +94,7 @@ class FinalStateResolverEngine {
       stateLabel: label,
       stateDescription: description,
       confidenceScore: input.confidenceScore,
-      isApproximate: state === 'approximation_accepted',
+      isApproximate: state === "approximation_accepted",
       checkpointAvailable: input.hasCheckpoint,
       resolvedAt: new Date(),
       metadata: this.buildMetadata(input, state),
@@ -124,9 +124,13 @@ class FinalStateResolverEngine {
   /**
    * Transition a job to a new state
    */
-  transition(jobId: string, userId: string, action: 'accept_approximate' | 'wait_exact' | 'cancel' | 'pause' | 'resume'): ResolvedJobState {
+  transition(
+    jobId: string,
+    userId: string,
+    action: "accept_approximate" | "wait_exact" | "cancel" | "pause" | "resume",
+  ): ResolvedJobState {
     const current = this.getCurrentState(jobId);
-    
+
     if (!current) {
       throw new Error(`No state found for job ${jobId}`);
     }
@@ -134,67 +138,67 @@ class FinalStateResolverEngine {
     let newInput: JobStateInput;
 
     switch (action) {
-      case 'accept_approximate':
+      case "accept_approximate":
         newInput = {
           jobId,
           userId,
-          currentStatus: 'completed',
+          currentStatus: "completed",
           isFromCache: false,
           isFresh: false,
           isHeavy: false,
           confidenceScore: current.confidenceScore,
           hasCheckpoint: current.checkpointAvailable,
-          userAction: 'accept_approximate',
+          userAction: "accept_approximate",
         };
         break;
 
-      case 'wait_exact':
+      case "wait_exact":
         newInput = {
           jobId,
           userId,
-          currentStatus: 'running',
+          currentStatus: "running",
           isFromCache: false,
           isFresh: true,
           isHeavy: true,
           confidenceScore: null,
           hasCheckpoint: current.checkpointAvailable,
-          userAction: 'wait_exact',
+          userAction: "wait_exact",
         };
         break;
 
-      case 'cancel':
+      case "cancel":
         newInput = {
           jobId,
           userId,
-          currentStatus: 'cancelled',
+          currentStatus: "cancelled",
           isFromCache: false,
           isFresh: false,
           isHeavy: false,
           confidenceScore: null,
           hasCheckpoint: current.checkpointAvailable,
-          userAction: 'cancel',
+          userAction: "cancel",
         };
         break;
 
-      case 'pause':
+      case "pause":
         newInput = {
           jobId,
           userId,
-          currentStatus: 'paused',
+          currentStatus: "paused",
           isFromCache: false,
           isFresh: false,
           isHeavy: true,
           confidenceScore: current.confidenceScore,
           hasCheckpoint: true,
-          systemAction: 'pause',
+          systemAction: "pause",
         };
         break;
 
-      case 'resume':
+      case "resume":
         newInput = {
           jobId,
           userId,
-          currentStatus: 'running',
+          currentStatus: "running",
           isFromCache: false,
           isFresh: true,
           isHeavy: true,
@@ -217,9 +221,9 @@ class FinalStateResolverEngine {
     const validTransitions: Record<FinalJobState, FinalJobState[]> = {
       instantly_served: [], // Terminal state
       approximation_accepted: [], // Terminal state
-      exact_computing: ['paused_resumable', 'user_cancelled', 'instantly_served'],
-      deferred_by_design: ['exact_computing', 'user_cancelled', 'paused_resumable'],
-      paused_resumable: ['exact_computing', 'user_cancelled'],
+      exact_computing: ["paused_resumable", "user_cancelled", "instantly_served"],
+      deferred_by_design: ["exact_computing", "user_cancelled", "paused_resumable"],
+      paused_resumable: ["exact_computing", "user_cancelled"],
       user_cancelled: [], // Terminal state
     };
 
@@ -231,12 +235,12 @@ class FinalStateResolverEngine {
    */
   getStateSummary(state: FinalJobState): { icon: string; color: string; action?: string } {
     const summaries: Record<FinalJobState, { icon: string; color: string; action?: string }> = {
-      instantly_served: { icon: '✓', color: 'green' },
-      approximation_accepted: { icon: '⚡', color: 'blue' },
-      exact_computing: { icon: '◐', color: 'primary', action: 'View Progress' },
-      deferred_by_design: { icon: '◷', color: 'yellow', action: 'View Queue' },
-      paused_resumable: { icon: '⏸', color: 'orange', action: 'Resume' },
-      user_cancelled: { icon: '✕', color: 'gray' },
+      instantly_served: { icon: "✓", color: "green" },
+      approximation_accepted: { icon: "⚡", color: "blue" },
+      exact_computing: { icon: "◐", color: "primary", action: "View Progress" },
+      deferred_by_design: { icon: "◷", color: "yellow", action: "View Queue" },
+      paused_resumable: { icon: "⏸", color: "orange", action: "Resume" },
+      user_cancelled: { icon: "✕", color: "gray" },
     };
 
     return summaries[state];
@@ -246,83 +250,79 @@ class FinalStateResolverEngine {
 
   private determineState(input: JobStateInput): FinalJobState {
     // User actions take precedence
-    if (input.userAction === 'cancel') {
-      return 'user_cancelled';
+    if (input.userAction === "cancel") {
+      return "user_cancelled";
     }
 
-    if (input.userAction === 'accept_approximate') {
-      return 'approximation_accepted';
+    if (input.userAction === "accept_approximate") {
+      return "approximation_accepted";
     }
 
     // System actions
-    if (input.systemAction === 'pause') {
-      return 'paused_resumable';
+    if (input.systemAction === "pause") {
+      return "paused_resumable";
     }
 
-    if (input.systemAction === 'defer') {
-      return 'deferred_by_design';
+    if (input.systemAction === "defer") {
+      return "deferred_by_design";
     }
 
     // Status-based resolution
     switch (input.currentStatus) {
-      case 'completed':
+      case "completed":
         if (input.isFromCache && !input.isFresh) {
-          return 'instantly_served';
+          return "instantly_served";
         }
         return input.confidenceScore !== null && input.confidenceScore < 0.9
-          ? 'approximation_accepted'
-          : 'instantly_served';
+          ? "approximation_accepted"
+          : "instantly_served";
 
-      case 'running':
-      case 'processing':
-        return 'exact_computing';
+      case "running":
+      case "processing":
+        return "exact_computing";
 
-      case 'queued':
-      case 'pending':
-        return 'deferred_by_design';
+      case "queued":
+      case "pending":
+        return "deferred_by_design";
 
-      case 'paused':
-      case 'thermal_paused':
-        return 'paused_resumable';
+      case "paused":
+      case "thermal_paused":
+        return "paused_resumable";
 
-      case 'cancelled':
-      case 'failed':
-        return 'user_cancelled';
+      case "cancelled":
+      case "failed":
+        return "user_cancelled";
 
       default:
         // Default to deferred if status is ambiguous
-        return 'deferred_by_design';
+        return "deferred_by_design";
     }
   }
 
-  private buildMetadata(
-    input: JobStateInput,
-    state: FinalJobState
-  ): ResolvedJobState['metadata'] {
-    const metadata: ResolvedJobState['metadata'] = {};
+  private buildMetadata(input: JobStateInput, state: FinalJobState): ResolvedJobState["metadata"] {
+    const metadata: ResolvedJobState["metadata"] = {};
 
     if (input.isFromCache) {
-      metadata.processingMethod = 'cached';
+      metadata.processingMethod = "cached";
     } else if (input.isHeavy) {
-      metadata.processingMethod = 'fresh_compute';
+      metadata.processingMethod = "fresh_compute";
     } else {
-      metadata.processingMethod = 'optimized';
+      metadata.processingMethod = "optimized";
     }
 
-    if (state === 'deferred_by_design' || state === 'exact_computing') {
+    if (state === "deferred_by_design" || state === "exact_computing") {
       // Estimate completion based on typical processing time
       const estimatedMinutes = input.isHeavy ? 5 : 1;
       metadata.estimatedCompletion = new Date(Date.now() + estimatedMinutes * 60 * 1000);
     }
 
-    if (state === 'paused_resumable') {
-      metadata.pauseReason = 'System pause for optimization';
+    if (state === "paused_resumable") {
+      metadata.pauseReason = "System pause for optimization";
     }
 
-    if (state === 'user_cancelled') {
-      metadata.cancellationReason = input.userAction === 'cancel' 
-        ? 'Cancelled by user' 
-        : 'System cancellation';
+    if (state === "user_cancelled") {
+      metadata.cancellationReason =
+        input.userAction === "cancel" ? "Cancelled by user" : "System cancellation";
     }
 
     return metadata;
@@ -331,12 +331,12 @@ class FinalStateResolverEngine {
   private addToHistory(jobId: string, state: ResolvedJobState): void {
     const history = this.stateHistory.get(jobId) || [];
     history.push(state);
-    
+
     // Keep only last 10 states per job
     if (history.length > 10) {
       history.shift();
     }
-    
+
     this.stateHistory.set(jobId, history);
   }
 }

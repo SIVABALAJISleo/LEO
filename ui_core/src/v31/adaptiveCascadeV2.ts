@@ -24,15 +24,19 @@ export interface CascadeResultV2 {
 }
 
 export class AdaptiveCascadeV2 {
-  private threshold = 0.80; // Confidence threshold to stop cascading
+  private threshold = 0.8; // Confidence threshold to stop cascading
 
   evaluate(query: string): CascadeResultV2 {
     const steps: CascadeStepV2[] = [];
     const queryLower = query.toLowerCase();
 
     // Determine target complexity features
-    const hasMath = queryLower.includes("solve") || queryLower.includes("equation") || queryLower.includes("calculate");
-    const hasReasoning = queryLower.includes("why") || queryLower.includes("prove") || queryLower.includes("logic");
+    const hasMath =
+      queryLower.includes("solve") ||
+      queryLower.includes("equation") ||
+      queryLower.includes("calculate");
+    const hasReasoning =
+      queryLower.includes("why") || queryLower.includes("prove") || queryLower.includes("logic");
     const isUltraLong = query.length > 80;
 
     let solved = false;
@@ -43,17 +47,17 @@ export class AdaptiveCascadeV2 {
     // Tier 1: Tiny (1B)
     {
       // Tiny struggles with math and reasoning
-      let conf = 0.90;
+      let conf = 0.9;
       if (hasMath) conf -= 0.35;
-      if (hasReasoning) conf -= 0.30;
+      if (hasReasoning) conf -= 0.3;
       if (isUltraLong) conf -= 0.15;
       conf = parseFloat(Math.max(0.1, conf).toFixed(2));
-      
+
       const flops = 1.2;
       const latency = 0.05;
       totalFlops += flops;
       totalLatency += latency;
-      
+
       const resolved = conf >= this.threshold;
       steps.push({
         tier: "Tiny_1B",
@@ -62,9 +66,9 @@ export class AdaptiveCascadeV2 {
         routed: true,
         resolved,
         flopsConsumedGiga: flops,
-        latencySec: latency
+        latencySec: latency,
       });
-      
+
       if (resolved) {
         solved = true;
         finalModelTier = "Tiny_1B";
@@ -74,7 +78,7 @@ export class AdaptiveCascadeV2 {
     // Tier 2: Small (7B)
     if (!solved) {
       let conf = 0.88;
-      if (hasMath) conf -= 0.20;
+      if (hasMath) conf -= 0.2;
       if (hasReasoning) conf -= 0.15;
       conf = parseFloat(Math.max(0.1, conf).toFixed(2));
 
@@ -91,7 +95,7 @@ export class AdaptiveCascadeV2 {
         routed: true,
         resolved,
         flopsConsumedGiga: flops,
-        latencySec: latency
+        latencySec: latency,
       });
 
       if (resolved) {
@@ -99,13 +103,21 @@ export class AdaptiveCascadeV2 {
         finalModelTier = "Small_7B";
       }
     } else {
-      steps.push({ tier: "Small_7B", confidenceScore: 0, thresholdScore: this.threshold, routed: false, resolved: false, flopsConsumedGiga: 0, latencySec: 0 });
+      steps.push({
+        tier: "Small_7B",
+        confidenceScore: 0,
+        thresholdScore: this.threshold,
+        routed: false,
+        resolved: false,
+        flopsConsumedGiga: 0,
+        latencySec: 0,
+      });
     }
 
     // Tier 3: Medium (13B)
     if (!solved) {
       let conf = 0.94;
-      if (hasMath) conf -= 0.10;
+      if (hasMath) conf -= 0.1;
       conf = parseFloat(Math.max(0.1, conf).toFixed(2));
 
       const flops = 15.6;
@@ -121,7 +133,7 @@ export class AdaptiveCascadeV2 {
         routed: true,
         resolved,
         flopsConsumedGiga: flops,
-        latencySec: latency
+        latencySec: latency,
       });
 
       if (resolved) {
@@ -129,7 +141,15 @@ export class AdaptiveCascadeV2 {
         finalModelTier = "Medium_13B";
       }
     } else {
-      steps.push({ tier: "Medium_13B", confidenceScore: 0, thresholdScore: this.threshold, routed: false, resolved: false, flopsConsumedGiga: 0, latencySec: 0 });
+      steps.push({
+        tier: "Medium_13B",
+        confidenceScore: 0,
+        thresholdScore: this.threshold,
+        routed: false,
+        resolved: false,
+        flopsConsumedGiga: 0,
+        latencySec: 0,
+      });
     }
 
     // Tier 4: Large (70B)
@@ -147,11 +167,19 @@ export class AdaptiveCascadeV2 {
         routed: true,
         resolved: true,
         flopsConsumedGiga: flops,
-        latencySec: latency
+        latencySec: latency,
       });
       finalModelTier = "Large_70B";
     } else {
-      steps.push({ tier: "Large_70B", confidenceScore: 0, thresholdScore: this.threshold, routed: false, resolved: false, flopsConsumedGiga: 0, latencySec: 0 });
+      steps.push({
+        tier: "Large_70B",
+        confidenceScore: 0,
+        thresholdScore: this.threshold,
+        routed: false,
+        resolved: false,
+        flopsConsumedGiga: 0,
+        latencySec: 0,
+      });
     }
 
     const resolvedAnswer = `[Cascade Responding Model: ${finalModelTier}] Processed with confidence matching constraints.`;
@@ -162,7 +190,7 @@ export class AdaptiveCascadeV2 {
       finalModelTier,
       totalFlopsGiga: parseFloat(totalFlops.toFixed(1)),
       totalLatencySec: parseFloat(totalLatency.toFixed(3)),
-      resolvedAnswer
+      resolvedAnswer,
     };
   }
 }

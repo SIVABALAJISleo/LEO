@@ -43,7 +43,7 @@ export interface Edge {
 }
 
 export interface Shape {
-  type: 'rectangle' | 'circle' | 'polygon' | 'freeform';
+  type: "rectangle" | "circle" | "polygon" | "freeform";
   bounds: Region;
   vertices?: { x: number; y: number }[];
 }
@@ -85,20 +85,20 @@ class SymbolicComputeEngine {
    */
   async toSymbolic(
     data: ArrayBuffer | ImageData,
-    options: { quality?: number; maxSymbols?: number } = {}
+    options: { quality?: number; maxSymbols?: number } = {},
   ): Promise<SymbolicRepresentation> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { quality = 0.8, maxSymbols = 64 } = options;
 
     // Extract color groups
     const colorGroups = await this.extractColorGroups(data, Math.ceil(maxSymbols * 0.25));
-    
+
     // Extract structure
     const structure = await this.extractStructure(data);
-    
+
     // Extract motion (if video/animation)
     const motion = await this.extractMotion(data);
-    
+
     // Generate latent symbols
     const latentSymbols = await this.generateLatentSymbols(data, maxSymbols);
 
@@ -122,10 +122,10 @@ class SymbolicComputeEngine {
   async fromSymbolic(
     symbolic: SymbolicRepresentation,
     targetWidth: number,
-    targetHeight: number
+    targetHeight: number,
   ): Promise<ImageData> {
     const imageData = new ImageData(targetWidth, targetHeight);
-    
+
     // Reconstruct from color groups
     for (const group of symbolic.colorGroups) {
       const rgb = this.hslToRgb(group.dominantHue, group.saturation, group.lightness);
@@ -165,19 +165,23 @@ class SymbolicComputeEngine {
     const complexityFactor = 1 + symbolic.structure.complexity * 2;
     const symbolFactor = 1 + symbolic.latentSymbols.length / 64;
     const resolutionFactor = targetResolution / (1920 * 1080);
-    
+
     return Math.ceil(baseTime * complexityFactor * symbolFactor * resolutionFactor);
   }
 
   // Private helper methods
-  private async extractColorGroups(data: ArrayBuffer | ImageData, maxGroups: number): Promise<ColorGroup[]> {
+  private async extractColorGroups(
+    data: ArrayBuffer | ImageData,
+    maxGroups: number,
+  ): Promise<ColorGroup[]> {
     // Simplified color quantization
     const groups: ColorGroup[] = [];
     const colorMap = new Map<string, number>();
 
     // Sample colors
     if (data instanceof ImageData) {
-      for (let i = 0; i < data.data.length; i += 16) { // Sample every 4th pixel
+      for (let i = 0; i < data.data.length; i += 16) {
+        // Sample every 4th pixel
         const r = data.data[i];
         const g = data.data[i + 1];
         const b = data.data[i + 2];
@@ -193,7 +197,7 @@ class SymbolicComputeEngine {
 
     for (let i = 0; i < Math.min(maxGroups, sorted.length); i++) {
       const [key, count] = sorted[i];
-      const [h, s, l] = key.split('-').map(Number);
+      const [h, s, l] = key.split("-").map(Number);
       groups.push({
         id: `cg-${i}`,
         dominantHue: h * 30,
@@ -223,13 +227,16 @@ class SymbolicComputeEngine {
     return [];
   }
 
-  private async generateLatentSymbols(data: ArrayBuffer | ImageData, maxSymbols: number): Promise<LatentSymbol[]> {
+  private async generateLatentSymbols(
+    data: ArrayBuffer | ImageData,
+    maxSymbols: number,
+  ): Promise<LatentSymbol[]> {
     // Generate placeholder latent representations (HONEST: requires ML model for real embeddings)
     const symbols: LatentSymbol[] = [];
     for (let i = 0; i < Math.min(8, maxSymbols); i++) {
       symbols.push({
         id: `ls-${i}`,
-        type: 'region',
+        type: "region",
         embedding: new Array(16).fill(0.5), // Placeholder - real embeddings require ML model
         confidence: 0.75, // Fixed confidence for placeholder
       });
@@ -241,7 +248,7 @@ class SymbolicComputeEngine {
     colorGroups: ColorGroup[],
     structure: StructureMap,
     motion: MotionVector[],
-    latentSymbols: LatentSymbol[]
+    latentSymbols: LatentSymbol[],
   ): number {
     let size = 0;
     size += colorGroups.length * 64; // Approximate bytes per color group
@@ -253,18 +260,28 @@ class SymbolicComputeEngine {
   }
 
   private rgbToHsl(r: number, g: number, b: number): { h: number; s: number; l: number } {
-    r /= 255; g /= 255; b /= 255;
-    const max = Math.max(r, g, b), min = Math.min(r, g, b);
-    let h = 0, s = 0;
+    r /= 255;
+    g /= 255;
+    b /= 255;
+    const max = Math.max(r, g, b),
+      min = Math.min(r, g, b);
+    let h = 0,
+      s = 0;
     const l = (max + min) / 2;
 
     if (max !== min) {
       const d = max - min;
       s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
       switch (max) {
-        case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
-        case g: h = ((b - r) / d + 2) / 6; break;
-        case b: h = ((r - g) / d + 4) / 6; break;
+        case r:
+          h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+          break;
+        case g:
+          h = ((b - r) / d + 2) / 6;
+          break;
+        case b:
+          h = ((r - g) / d + 4) / 6;
+          break;
       }
     }
 
@@ -281,23 +298,27 @@ class SymbolicComputeEngine {
       const hue2rgb = (p: number, q: number, t: number) => {
         if (t < 0) t += 1;
         if (t > 1) t -= 1;
-        if (t < 1/6) return p + (q - p) * 6 * t;
-        if (t < 1/2) return q;
-        if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+        if (t < 1 / 6) return p + (q - p) * 6 * t;
+        if (t < 1 / 2) return q;
+        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
         return p;
       };
 
       const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
       const p = 2 * l - q;
-      r = hue2rgb(p, q, h + 1/3);
+      r = hue2rgb(p, q, h + 1 / 3);
       g = hue2rgb(p, q, h);
-      b = hue2rgb(p, q, h - 1/3);
+      b = hue2rgb(p, q, h - 1 / 3);
     }
 
     return { r: Math.round(r * 255), g: Math.round(g * 255), b: Math.round(b * 255) };
   }
 
-  private fillRegion(imageData: ImageData, region: Region, rgb: { r: number; g: number; b: number }): void {
+  private fillRegion(
+    imageData: ImageData,
+    region: Region,
+    rgb: { r: number; g: number; b: number },
+  ): void {
     const { width } = imageData;
     for (let y = region.y; y < region.y + region.height; y++) {
       for (let x = region.x; x < region.x + region.width; x++) {

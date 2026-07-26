@@ -6,7 +6,14 @@ export type DeviceType = "CPU" | "iGPU" | "NPU";
 export interface TaskProfile {
   id: string;
   name: string;
-  type: "reasoning" | "graph_traversal" | "symbolic" | "vector_ops" | "embeddings" | "quant_inference" | "background_agent";
+  type:
+    | "reasoning"
+    | "graph_traversal"
+    | "symbolic"
+    | "vector_ops"
+    | "embeddings"
+    | "quant_inference"
+    | "background_agent";
   complexity: "low" | "medium" | "high";
 }
 
@@ -51,7 +58,7 @@ export class HeterogeneousComputeOrchestrator {
     let energyJoules = 0.5;
     let throughputTokensSec = 45;
 
-    const scale = task.complexity === "high" ? 3 : (task.complexity === "medium" ? 1.8 : 0.8);
+    const scale = task.complexity === "high" ? 3 : task.complexity === "medium" ? 1.8 : 0.8;
 
     if (deviceAssigned === "CPU") {
       // 12th Gen Core i5 performance simulation
@@ -74,7 +81,7 @@ export class HeterogeneousComputeOrchestrator {
       latencyMs,
       energyJoules,
       throughputTokensSec,
-      deviceAssigned
+      deviceAssigned,
     };
   }
 }

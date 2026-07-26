@@ -11,12 +11,24 @@ export interface MoERoutingReport {
 }
 
 export class IntelligencePerComputeEngine {
-  private expertsList = ["LogicPlanner", "MathSolver", "CodeGenerator", "CausalAnalyst", "RoboticsSynthesizer", "LiteratureReviewer", "EdgeCaseVaccinator", "PhysicsSurrogate"];
+  private expertsList = [
+    "LogicPlanner",
+    "MathSolver",
+    "CodeGenerator",
+    "CausalAnalyst",
+    "RoboticsSynthesizer",
+    "LiteratureReviewer",
+    "EdgeCaseVaccinator",
+    "PhysicsSurrogate",
+  ];
 
   /**
    * Routes query prompts to a sparse set of active experts based on semantics.
    */
-  public routeQuery(prompt: string, powerMode: "BatterySaver" | "Balanced" | "HighPerformance"): MoERoutingReport {
+  public routeQuery(
+    prompt: string,
+    powerMode: "BatterySaver" | "Balanced" | "HighPerformance",
+  ): MoERoutingReport {
     const sLower = prompt.toLowerCase();
     const activeExpertIds: string[] = [];
 
@@ -49,7 +61,7 @@ export class IntelligencePerComputeEngine {
 
     const sparseActivationRatio = finalExperts.length / this.expertsList.length;
     const speculativeAcceptRate = powerMode === "BatterySaver" ? 0.95 : 0.86;
-    
+
     // Simulate lazy evaluation: calculate refinement passes needed
     const refinementPassesCount = sLower.length > 100 ? 3 : 1;
     const computeSavedFlops = (this.expertsList.length - finalExperts.length) * 1.5e7;
@@ -60,7 +72,7 @@ export class IntelligencePerComputeEngine {
       speculativeAcceptRate,
       computeSavedFlops,
       refinementPassesCount,
-      reason: `MoE activated [${finalExperts.join(", ")}] under ${powerMode} settings.`
+      reason: `MoE activated [${finalExperts.join(", ")}] under ${powerMode} settings.`,
     };
   }
 }

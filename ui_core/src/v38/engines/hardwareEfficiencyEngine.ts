@@ -14,10 +14,7 @@ export class HardwareEfficiencyEngine {
   /**
    * Plans precision variables to fit workspace constraint properties.
    */
-  public evaluateWorkload(
-    ramLimitGb: number,
-    isVectorOp: boolean
-  ): EfficiencyDirectives {
+  public evaluateWorkload(ramLimitGb: number, isVectorOp: boolean): EfficiencyDirectives {
     let architectureType: EfficiencyDirectives["architectureType"] = "Transformer_FP16";
     let quantizationBits = 16;
     let activeThreads = 8;
@@ -47,10 +44,10 @@ export class HardwareEfficiencyEngine {
     return {
       architectureType,
       quantizationBits,
-      memoryMappedRatio: 0.90, // Memory map 90% of model weight arrays
+      memoryMappedRatio: 0.9, // Memory map 90% of model weight arrays
       kernelFusionEnabled: true,
       activeThreads,
-      expectedSpeedup
+      expectedSpeedup,
     };
   }
 }

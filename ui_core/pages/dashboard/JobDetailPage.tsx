@@ -1,20 +1,20 @@
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { firebaseClient as supabase } from '@/integrations/firebase/client';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
-import { useGpuJobs } from '@/hooks/useGpuJobs';
-import { GpuJob, getStatusBadgeVariant, getStatusMessage } from '@/lib/gpuJobTypes';
-import { formatDistanceToNow, format } from 'date-fns';
-import { 
-  ArrowLeft, 
-  Clock, 
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { firebaseClient as supabase } from "@/integrations/firebase/client";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { useGpuJobs } from "@/hooks/useGpuJobs";
+import { GpuJob, getStatusBadgeVariant, getStatusMessage } from "@/lib/gpuJobTypes";
+import { formatDistanceToNow, format } from "date-fns";
+import {
+  ArrowLeft,
+  Clock,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  Cpu, 
+  Cpu,
   Download,
   Loader2,
   XCircle,
@@ -27,8 +27,8 @@ import {
   Sparkles,
   Gauge,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  Zap
-} from 'lucide-react';
+  Zap,
+} from "lucide-react";
 
 interface JobLog {
   id: string;
@@ -41,7 +41,7 @@ export default function JobDetailPage() {
   const { jobId } = useParams();
   const navigate = useNavigate();
   const { cancelJob, getQueuePosition } = useGpuJobs();
-  
+
   const [job, setJob] = useState<GpuJob | null>(null);
   const [logs, setLogs] = useState<JobLog[]>([]);
   const [loading, setLoading] = useState(true);
@@ -51,11 +51,7 @@ export default function JobDetailPage() {
     if (!jobId) return;
 
     const fetchJob = async () => {
-      const { data } = await supabase
-        .from('gpu_jobs')
-        .select('*')
-        .eq('id', jobId)
-        .single();
+      const { data } = await supabase.from("gpu_jobs").select("*").eq("id", jobId).single();
 
       if (data) {
         setJob(data as unknown as GpuJob);
@@ -65,10 +61,10 @@ export default function JobDetailPage() {
 
     const fetchLogs = async () => {
       const { data } = await supabase
-        .from('job_logs')
-        .select('*')
-        .eq('job_id', jobId)
-        .order('ts', { ascending: false })
+        .from("job_logs")
+        .select("*")
+        .eq("job_id", jobId)
+        .order("ts", { ascending: false })
         .limit(100);
 
       if (data) {
@@ -83,28 +79,28 @@ export default function JobDetailPage() {
     const channel = supabase
       .channel(`job-${jobId}`)
       .on(
-        'postgres_changes',
+        "postgres_changes",
         {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'gpu_jobs',
-          filter: `id=eq.${jobId}`
+          event: "UPDATE",
+          schema: "public",
+          table: "gpu_jobs",
+          filter: `id=eq.${jobId}`,
         },
         (payload) => {
           setJob(payload.new as unknown as GpuJob);
-        }
+        },
       )
       .on(
-        'postgres_changes',
+        "postgres_changes",
         {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'job_logs',
-          filter: `job_id=eq.${jobId}`
+          event: "INSERT",
+          schema: "public",
+          table: "job_logs",
+          filter: `job_id=eq.${jobId}`,
         },
         (payload) => {
-          setLogs(prev => [payload.new as JobLog, ...prev]);
-        }
+          setLogs((prev) => [payload.new as JobLog, ...prev]);
+        },
       )
       .subscribe();
 
@@ -133,8 +129,10 @@ export default function JobDetailPage() {
       <div className="text-center py-12">
         <AlertTriangle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
         <h2 className="text-xl font-semibold mb-2">Job Not Found</h2>
-        <p className="text-muted-foreground mb-4">This job doesn't exist or you don't have access to it.</p>
-        <Button onClick={() => navigate('/dashboard/jobs')}>
+        <p className="text-muted-foreground mb-4">
+          This job doesn't exist or you don't have access to it.
+        </p>
+        <Button onClick={() => navigate("/dashboard/jobs")}>
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Jobs
         </Button>
@@ -143,40 +141,40 @@ export default function JobDetailPage() {
   }
 
   const queuePosition = getQueuePosition(job.id);
-  const isRunning = job.status === 'running';
-  const isQueued = job.status === 'queued' || job.status === 'pending';
-  const isComplete = job.status === 'completed';
-  const isFailed = job.status === 'failed' || job.status === 'too_large';
+  const isRunning = job.status === "running";
+  const isQueued = job.status === "queued" || job.status === "pending";
+  const isComplete = job.status === "completed";
+  const isFailed = job.status === "failed" || job.status === "too_large";
 
   // Transparency helpers (HONEST labels)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getProcessingMethod = (j: GpuJob): string => {
-    if (j.job_tier === 'very_heavy') return 'Approximated (Requires Delegation)';
-    if (j.job_tier === 'light') return 'Cached/Instant';
-    if (j.job_tier === 'medium') return 'Client-Computed';
-    if (j.result_data && !j.worker_id) return 'Blended/Cached';
-    if (j.worker_id) return 'Fresh GPU';
-    return 'Queued';
+    if (j.job_tier === "very_heavy") return "Approximated (Requires Delegation)";
+    if (j.job_tier === "light") return "Cached/Instant";
+    if (j.job_tier === "medium") return "Client-Computed";
+    if (j.result_data && !j.worker_id) return "Blended/Cached";
+    if (j.worker_id) return "Fresh GPU";
+    return "Queued";
   };
 
   const getConfidenceScore = (j: GpuJob): number => {
     const resultData = j.result_data as { confidence?: number } | null;
     if (resultData?.confidence) return Math.round(resultData.confidence * 100);
-    if (j.status === 'completed') return 92;
-    if (j.job_tier === 'very_heavy') return 78;
+    if (j.status === "completed") return 92;
+    if (j.job_tier === "very_heavy") return 78;
     return 85;
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const isFreshCompute = (j: GpuJob): boolean => {
-    return j.worker_id !== null && j.job_tier !== 'very_heavy';
+    return j.worker_id !== null && j.job_tier !== "very_heavy";
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getEstimatedAccuracy = (j: GpuJob): number => {
-    if (j.job_tier === 'very_heavy') return 82;
-    if (j.job_tier === 'light') return 99;
-    if (j.status === 'completed') return 96;
+    if (j.job_tier === "very_heavy") return 82;
+    if (j.job_tier === "light") return 99;
+    if (j.status === "completed") return 96;
     return 94;
   };
 
@@ -185,7 +183,7 @@ export default function JobDetailPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate('/dashboard/jobs')}>
+          <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard/jobs")}>
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
@@ -198,12 +196,12 @@ export default function JobDetailPage() {
             {job.status}
           </Badge>
           {isQueued && (
-            <Button 
-              variant="destructive" 
-              onClick={handleCancel}
-              disabled={cancelling}
-            >
-              {cancelling ? <Loader2 className="h-4 w-4 animate-spin" /> : <XCircle className="h-4 w-4 mr-2" />}
+            <Button variant="destructive" onClick={handleCancel} disabled={cancelling}>
+              {cancelling ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <XCircle className="h-4 w-4 mr-2" />
+              )}
               Cancel
             </Button>
           )}
@@ -211,19 +209,21 @@ export default function JobDetailPage() {
       </div>
 
       {/* Status Banner */}
-      <Card className={`
-        ${isRunning ? 'border-blue-500/50 bg-blue-500/5' : ''}
-        ${isComplete ? 'border-green-500/50 bg-green-500/5' : ''}
-        ${isFailed ? 'border-destructive/50 bg-destructive/5' : ''}
-        ${isQueued ? 'border-yellow-500/50 bg-yellow-500/5' : ''}
-      `}>
+      <Card
+        className={`
+        ${isRunning ? "border-blue-500/50 bg-blue-500/5" : ""}
+        ${isComplete ? "border-green-500/50 bg-green-500/5" : ""}
+        ${isFailed ? "border-destructive/50 bg-destructive/5" : ""}
+        ${isQueued ? "border-yellow-500/50 bg-yellow-500/5" : ""}
+      `}
+      >
         <CardContent className="py-6">
           <div className="flex items-center gap-4">
             {isRunning && <Loader2 className="h-8 w-8 animate-spin text-blue-500" />}
             {isComplete && <CheckCircle2 className="h-8 w-8 text-green-500" />}
             {isFailed && <AlertTriangle className="h-8 w-8 text-destructive" />}
             {isQueued && <Clock className="h-8 w-8 text-yellow-500" />}
-            
+
             <div className="flex-1">
               <p className="text-lg font-medium">
                 {getStatusMessage(job.status, queuePosition ?? undefined)}
@@ -250,94 +250,101 @@ export default function JobDetailPage() {
       </Card>
 
       <div className="grid gap-6 lg:grid-cols-3">
-          {/* Details */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Job Status Card */}
-            <Card className="border-primary/30 bg-primary/5">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Shield className="h-5 w-5 text-primary" />
-                  Job Status
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  <div className="text-center p-3 bg-background/50 rounded-lg">
-                    <Sparkles className="h-5 w-5 mx-auto mb-2 text-primary" />
-                    <p className="text-xs text-muted-foreground mb-1">Status</p>
-                    <Badge variant="outline" className="text-xs">
-                      {isComplete ? 'Complete' : isRunning ? 'Processing' : isQueued ? 'Scheduled' : 'Pending'}
-                    </Badge>
-                  </div>
-                  <div className="text-center p-3 bg-background/50 rounded-lg">
-                    <Gauge className="h-5 w-5 mx-auto mb-2 text-primary" />
-                    <p className="text-xs text-muted-foreground mb-1">Quality</p>
-                    <p className="font-bold text-lg">{getConfidenceScore(job)}%</p>
-                  </div>
-                  <div className="text-center p-3 bg-background/50 rounded-lg">
-                    <Clock className="h-5 w-5 mx-auto mb-2 text-primary" />
-                    <p className="text-xs text-muted-foreground mb-1">Resumable</p>
-                    <Badge variant={job.checkpoint_data ? 'default' : 'secondary'}>
-                      {job.checkpoint_data ? 'Yes' : 'No'}
-                    </Badge>
-                  </div>
+        {/* Details */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Job Status Card */}
+          <Card className="border-primary/30 bg-primary/5">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Shield className="h-5 w-5 text-primary" />
+                Job Status
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div className="text-center p-3 bg-background/50 rounded-lg">
+                  <Sparkles className="h-5 w-5 mx-auto mb-2 text-primary" />
+                  <p className="text-xs text-muted-foreground mb-1">Status</p>
+                  <Badge variant="outline" className="text-xs">
+                    {isComplete
+                      ? "Complete"
+                      : isRunning
+                        ? "Processing"
+                        : isQueued
+                          ? "Scheduled"
+                          : "Pending"}
+                  </Badge>
                 </div>
-              </CardContent>
-            </Card>
+                <div className="text-center p-3 bg-background/50 rounded-lg">
+                  <Gauge className="h-5 w-5 mx-auto mb-2 text-primary" />
+                  <p className="text-xs text-muted-foreground mb-1">Quality</p>
+                  <p className="font-bold text-lg">{getConfidenceScore(job)}%</p>
+                </div>
+                <div className="text-center p-3 bg-background/50 rounded-lg">
+                  <Clock className="h-5 w-5 mx-auto mb-2 text-primary" />
+                  <p className="text-xs text-muted-foreground mb-1">Resumable</p>
+                  <Badge variant={job.checkpoint_data ? "default" : "secondary"}>
+                    {job.checkpoint_data ? "Yes" : "No"}
+                  </Badge>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
-            {/* Job Info */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Job Information</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm text-muted-foreground">Type</p>
-                    <p className="font-medium">{job.job_type}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Tier</p>
-                    <Badge variant="outline">{job.job_tier || 'heavy'}</Badge>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Priority</p>
-                    <p className="font-medium">{job.priority} / 10</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Memory Required</p>
-                    <p className="font-medium">
-                      {job.memory_required_mb ? `${(job.memory_required_mb / 1024).toFixed(1)} GB` : 'N/A'}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Estimated Duration</p>
-                    <p className="font-medium">
-                      {job.estimated_duration_sec 
-                        ? `${Math.floor(job.estimated_duration_sec / 60)}m ${job.estimated_duration_sec % 60}s`
-                        : 'N/A'
-                      }
-                    </p>
-                  </div>
+          {/* Job Info */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Job Information</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-sm text-muted-foreground">Type</p>
+                  <p className="font-medium">{job.job_type}</p>
                 </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Tier</p>
+                  <Badge variant="outline">{job.job_tier || "heavy"}</Badge>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Priority</p>
+                  <p className="font-medium">{job.priority} / 10</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Memory Required</p>
+                  <p className="font-medium">
+                    {job.memory_required_mb
+                      ? `${(job.memory_required_mb / 1024).toFixed(1)} GB`
+                      : "N/A"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Estimated Duration</p>
+                  <p className="font-medium">
+                    {job.estimated_duration_sec
+                      ? `${Math.floor(job.estimated_duration_sec / 60)}m ${job.estimated_duration_sec % 60}s`
+                      : "N/A"}
+                  </p>
+                </div>
+              </div>
 
               <Separator />
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm text-muted-foreground">Created</p>
-                  <p className="font-medium">{format(new Date(job.created_at), 'PPpp')}</p>
+                  <p className="font-medium">{format(new Date(job.created_at), "PPpp")}</p>
                 </div>
                 {job.started_at && (
                   <div>
                     <p className="text-sm text-muted-foreground">Started</p>
-                    <p className="font-medium">{format(new Date(job.started_at), 'PPpp')}</p>
+                    <p className="font-medium">{format(new Date(job.started_at), "PPpp")}</p>
                   </div>
                 )}
                 {job.completed_at && (
                   <div>
                     <p className="text-sm text-muted-foreground">Completed</p>
-                    <p className="font-medium">{format(new Date(job.completed_at), 'PPpp')}</p>
+                    <p className="font-medium">{format(new Date(job.completed_at), "PPpp")}</p>
                   </div>
                 )}
               </div>
@@ -348,7 +355,8 @@ export default function JobDetailPage() {
                   <div className="flex items-center gap-2">
                     <Server className="h-4 w-4 text-muted-foreground" />
                     <span className="text-sm">
-                      Processing on worker: <code className="bg-muted px-1 rounded">{job.worker_id}</code>
+                      Processing on worker:{" "}
+                      <code className="bg-muted px-1 rounded">{job.worker_id}</code>
                     </span>
                   </div>
                 </>
@@ -409,13 +417,16 @@ export default function JobDetailPage() {
                   <p className="text-center text-muted-foreground py-8">No logs yet</p>
                 ) : (
                   <div className="divide-y divide-border">
-                    {logs.map(log => (
+                    {logs.map((log) => (
                       <div key={log.id} className="p-3 text-sm">
                         <div className="flex items-center gap-2 mb-1">
-                          <Badge 
+                          <Badge
                             variant={
-                              log.level === 'error' ? 'destructive' :
-                              log.level === 'warn' ? 'secondary' : 'outline'
+                              log.level === "error"
+                                ? "destructive"
+                                : log.level === "warn"
+                                  ? "secondary"
+                                  : "outline"
                             }
                             className="text-xs"
                           >

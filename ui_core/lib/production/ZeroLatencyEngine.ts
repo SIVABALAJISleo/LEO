@@ -7,9 +7,9 @@ interface OptimisticUpdate {
   payload: unknown;
   predictedResult: unknown;
   timestamp: Date;
-  status: 'pending' | 'confirmed' | 'failed' | 'compensated';
+  status: "pending" | "confirmed" | "failed" | "compensated";
   serverResult?: unknown;
-  conflictResolution?: 'client-wins' | 'server-wins' | 'merge';
+  conflictResolution?: "client-wins" | "server-wins" | "merge";
 }
 
 interface SyncQueueItem {
@@ -43,9 +43,9 @@ interface ZeroLatencyStats {
 }
 
 const STORAGE_KEYS = {
-  SYNC_QUEUE: 'hyper_sync_queue',
-  PREFETCH_CACHE: 'hyper_prefetch_cache',
-  OPTIMISTIC_STATE: 'hyper_optimistic_state',
+  SYNC_QUEUE: "hyper_sync_queue",
+  PREFETCH_CACHE: "hyper_prefetch_cache",
+  OPTIMISTIC_STATE: "hyper_optimistic_state",
 };
 
 class ZeroLatencyEngine {
@@ -53,10 +53,10 @@ class ZeroLatencyEngine {
   private optimisticUpdates: Map<string, OptimisticUpdate> = new Map();
   private syncQueue: Map<string, SyncQueueItem> = new Map();
   private prefetchCache: Map<string, PrefetchEntry> = new Map();
-  private isOnline: boolean = typeof navigator !== 'undefined' ? navigator.onLine : true;
+  private isOnline: boolean = typeof navigator !== "undefined" ? navigator.onLine : true;
   private isSyncing: boolean = false;
   private listeners: Set<(stats: ZeroLatencyStats) => void> = new Set();
-  
+
   private stats: ZeroLatencyStats = {
     optimisticUpdates: 0,
     confirmedUpdates: 0,
@@ -84,7 +84,7 @@ class ZeroLatencyEngine {
   }
 
   // ===== OPTIMISTIC UPDATES =====
-  
+
   /**
    * Apply an optimistic update immediately
    * Returns predicted result, queues for server sync
@@ -105,7 +105,7 @@ class ZeroLatencyEngine {
       payload: params.payload,
       predictedResult,
       timestamp: new Date(),
-      status: 'pending',
+      status: "pending",
     };
 
     this.optimisticUpdates.set(updateId, update);
@@ -133,7 +133,7 @@ class ZeroLatencyEngine {
   private async executeAndReconcile<T>(
     updateId: string,
     execute: (payload: unknown) => Promise<T>,
-    onConflict?: (predicted: T, actual: T) => T
+    onConflict?: (predicted: T, actual: T) => T,
   ): Promise<void> {
     const update = this.optimisticUpdates.get(updateId);
     if (!update) return;
@@ -145,7 +145,7 @@ class ZeroLatencyEngine {
       const confirmationTime = Date.now() - startTime;
       this.confirmationTimes.push(confirmationTime);
       if (this.confirmationTimes.length > 100) this.confirmationTimes.shift();
-      this.stats.avgConfirmationTimeMs = 
+      this.stats.avgConfirmationTimeMs =
         this.confirmationTimes.reduce((a, b) => a + b, 0) / this.confirmationTimes.length;
 
       // Check for conflicts
@@ -155,19 +155,18 @@ class ZeroLatencyEngine {
       if (hasConflict && onConflict) {
         const resolved = onConflict(predicted, serverResult);
         update.serverResult = resolved;
-        update.conflictResolution = 'merge';
-        update.status = 'confirmed';
+        update.conflictResolution = "merge";
+        update.status = "confirmed";
         this.stats.compensations++;
       } else {
         update.serverResult = serverResult;
-        update.status = 'confirmed';
+        update.status = "confirmed";
       }
 
       this.stats.confirmedUpdates++;
       this.syncQueue.delete(updateId);
-
     } catch (error) {
-      update.status = 'failed';
+      update.status = "failed";
       this.stats.failedUpdates++;
       console.error(`[ZeroLatency] Update ${updateId} failed:`, error);
     }
@@ -191,7 +190,7 @@ class ZeroLatencyEngine {
       };
       localStorage.setItem(`hyper_local_${key}`, JSON.stringify(entry));
     } catch (e) {
-      console.warn('[ZeroLatency] Failed to store locally:', e);
+      console.warn("[ZeroLatency] Failed to store locally:", e);
     }
   }
 
@@ -202,7 +201,7 @@ class ZeroLatencyEngine {
         return JSON.parse(stored).data as T;
       }
     } catch (e) {
-      console.warn('[ZeroLatency] Failed to get local data:', e);
+      console.warn("[ZeroLatency] Failed to get local data:", e);
     }
     return null;
   }
@@ -212,7 +211,7 @@ class ZeroLatencyEngine {
   private queueForSync(item: SyncQueueItem): void {
     this.syncQueue.set(item.id, item);
     this.stats.syncQueueSize = this.syncQueue.size;
-    
+
     if (this.isOnline && !this.isSyncing) {
       this.processQueue();
     }
@@ -223,7 +222,7 @@ class ZeroLatencyEngine {
     this.isSyncing = true;
 
     const items = Array.from(this.syncQueue.values())
-      .filter(item => item.retries < item.maxRetries)
+      .filter((item) => item.retries < item.maxRetries)
       .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
 
     for (const item of items) {
@@ -234,7 +233,7 @@ class ZeroLatencyEngine {
       } catch (error) {
         item.retries++;
         item.error = (error as Error).message;
-        
+
         if (item.retries >= item.maxRetries) {
           console.error(`[ZeroLatency] Sync failed permanently for ${item.id}`);
           this.syncQueue.delete(item.id);
@@ -267,18 +266,20 @@ class ZeroLatencyEngine {
     }
 
     // Fetch in background
-    fetch().then(data => {
-      this.prefetchCache.set(key, {
-        key,
-        data,
-        fetchedAt: new Date(),
-        expiresAt: new Date(Date.now() + ttlMs),
-        confidence,
+    fetch()
+      .then((data) => {
+        this.prefetchCache.set(key, {
+          key,
+          data,
+          fetchedAt: new Date(),
+          expiresAt: new Date(Date.now() + ttlMs),
+          confidence,
+        });
+        this.saveToStorage();
+      })
+      .catch((error) => {
+        console.warn(`[ZeroLatency] Prefetch failed for ${key}:`, error);
       });
-      this.saveToStorage();
-    }).catch(error => {
-      console.warn(`[ZeroLatency] Prefetch failed for ${key}:`, error);
-    });
   }
 
   getPrefetched<T>(key: string): T | null {
@@ -342,7 +343,7 @@ class ZeroLatencyEngine {
 
     // Simple delta compression: store first item as base, rest as deltas
     const base = items[0];
-    const deltas = items.slice(1).map(item => {
+    const deltas = items.slice(1).map((item) => {
       // In production, this would compute actual deltas
       return item;
     });
@@ -355,20 +356,20 @@ class ZeroLatencyEngine {
   resolveConflict<T>(
     clientValue: T,
     serverValue: T,
-    strategy: 'client-wins' | 'server-wins' | 'last-write-wins' | 'merge'
+    strategy: "client-wins" | "server-wins" | "last-write-wins" | "merge",
   ): T {
     switch (strategy) {
-      case 'client-wins':
+      case "client-wins":
         return clientValue;
-      case 'server-wins':
+      case "server-wins":
         return serverValue;
-      case 'last-write-wins':
+      case "last-write-wins":
         // Would compare timestamps in production
         return clientValue;
-      case 'merge':
+      case "merge":
         // Simple merge for objects
-        if (typeof clientValue === 'object' && typeof serverValue === 'object') {
-          return { ...serverValue as object, ...clientValue as object } as T;
+        if (typeof clientValue === "object" && typeof serverValue === "object") {
+          return { ...(serverValue as object), ...(clientValue as object) } as T;
         }
         return clientValue;
       default:
@@ -379,20 +380,20 @@ class ZeroLatencyEngine {
   // ===== NETWORK & LIFECYCLE =====
 
   private setupNetworkListeners(): void {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
 
-    window.addEventListener('online', () => {
+    window.addEventListener("online", () => {
       this.isOnline = true;
-      console.log('[ZeroLatency] Back online - processing sync queue');
+      console.log("[ZeroLatency] Back online - processing sync queue");
       this.processQueue();
     });
 
-    window.addEventListener('offline', () => {
+    window.addEventListener("offline", () => {
       this.isOnline = false;
-      console.log('[ZeroLatency] Offline - queuing updates locally');
+      console.log("[ZeroLatency] Offline - queuing updates locally");
     });
 
-    window.addEventListener('beforeunload', () => {
+    window.addEventListener("beforeunload", () => {
       this.saveToStorage();
     });
   }
@@ -420,14 +421,16 @@ class ZeroLatencyEngine {
 
   private saveToStorage(): void {
     try {
-      localStorage.setItem(STORAGE_KEYS.SYNC_QUEUE, JSON.stringify(
-        Array.from(this.syncQueue.entries())
-      ));
-      localStorage.setItem(STORAGE_KEYS.PREFETCH_CACHE, JSON.stringify(
-        Array.from(this.prefetchCache.entries())
-      ));
+      localStorage.setItem(
+        STORAGE_KEYS.SYNC_QUEUE,
+        JSON.stringify(Array.from(this.syncQueue.entries())),
+      );
+      localStorage.setItem(
+        STORAGE_KEYS.PREFETCH_CACHE,
+        JSON.stringify(Array.from(this.prefetchCache.entries())),
+      );
     } catch (e) {
-      console.warn('[ZeroLatency] Failed to save to storage:', e);
+      console.warn("[ZeroLatency] Failed to save to storage:", e);
     }
   }
 
@@ -436,23 +439,31 @@ class ZeroLatencyEngine {
       const queueData = localStorage.getItem(STORAGE_KEYS.SYNC_QUEUE);
       if (queueData) {
         const entries = JSON.parse(queueData);
-        this.syncQueue = new Map(entries.map(([k, v]: [string, SyncQueueItem]) => [
-          k,
-          { ...v, createdAt: new Date(v.createdAt), lastAttempt: v.lastAttempt ? new Date(v.lastAttempt) : undefined }
-        ]));
+        this.syncQueue = new Map(
+          entries.map(([k, v]: [string, SyncQueueItem]) => [
+            k,
+            {
+              ...v,
+              createdAt: new Date(v.createdAt),
+              lastAttempt: v.lastAttempt ? new Date(v.lastAttempt) : undefined,
+            },
+          ]),
+        );
         this.stats.syncQueueSize = this.syncQueue.size;
       }
 
       const cacheData = localStorage.getItem(STORAGE_KEYS.PREFETCH_CACHE);
       if (cacheData) {
         const entries = JSON.parse(cacheData);
-        this.prefetchCache = new Map(entries.map(([k, v]: [string, PrefetchEntry]) => [
-          k,
-          { ...v, fetchedAt: new Date(v.fetchedAt), expiresAt: new Date(v.expiresAt) }
-        ]));
+        this.prefetchCache = new Map(
+          entries.map(([k, v]: [string, PrefetchEntry]) => [
+            k,
+            { ...v, fetchedAt: new Date(v.fetchedAt), expiresAt: new Date(v.expiresAt) },
+          ]),
+        );
       }
     } catch (e) {
-      console.warn('[ZeroLatency] Failed to load from storage:', e);
+      console.warn("[ZeroLatency] Failed to load from storage:", e);
     }
   }
 
@@ -477,7 +488,7 @@ class ZeroLatencyEngine {
 
   private notifyListeners(): void {
     const stats = this.getStats();
-    this.listeners.forEach(l => l(stats));
+    this.listeners.forEach((l) => l(stats));
   }
 }
 

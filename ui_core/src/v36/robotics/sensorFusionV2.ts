@@ -12,12 +12,12 @@ export class SensorFusionV2 {
   public fuseTelemetry(
     readings: SensorReadings,
     gpsConfidence: number,
-    cameraConfidence: number
+    cameraConfidence: number,
   ): { fusedConfidence: number; calculatedObstacle: boolean } {
-    const fusedConfidence = parseFloat(((gpsConfidence * 0.4) + (cameraConfidence * 0.6)).toFixed(3));
+    const fusedConfidence = parseFloat((gpsConfidence * 0.4 + cameraConfidence * 0.6).toFixed(3));
     return {
       fusedConfidence,
-      calculatedObstacle: readings.cameraObstacleFound && cameraConfidence > 0.5
+      calculatedObstacle: readings.cameraObstacleFound && cameraConfidence > 0.5,
     };
   }
 }

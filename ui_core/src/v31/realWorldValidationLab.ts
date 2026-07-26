@@ -16,13 +16,12 @@ export class RealWorldValidationLab {
   private runs: ValidationMetrics[] = [];
 
   recordTestRun(
-    latencyMs: number, 
-    memoryMb: number, 
-    energyJoules: number, 
-    cacheHitRate: number, 
-    userOutcomeScore: number
+    latencyMs: number,
+    memoryMb: number,
+    energyJoules: number,
+    cacheHitRate: number,
+    userOutcomeScore: number,
   ): ValidationMetrics {
-    
     // Safety boundaries check
     let status: "FAIL" | "PASS" | "OPTIMAL" = "PASS";
     if (latencyMs > 5000 || memoryMb > 32768) {
@@ -38,7 +37,7 @@ export class RealWorldValidationLab {
       actualEnergyJoules: energyJoules,
       actualCacheHitRate: cacheHitRate,
       userOutcomeScore,
-      status
+      status,
     };
 
     this.runs.push(run);
@@ -58,15 +57,27 @@ export class RealWorldValidationLab {
   } {
     const total = this.runs.length;
     if (total === 0) {
-      return { avgLatencyMs: 0, avgMemoryMb: 0, avgEnergyJoules: 0, avgCacheHitRate: 0, avgUserOutcomeScore: 0 };
+      return {
+        avgLatencyMs: 0,
+        avgMemoryMb: 0,
+        avgEnergyJoules: 0,
+        avgCacheHitRate: 0,
+        avgUserOutcomeScore: 0,
+      };
     }
 
     return {
       avgLatencyMs: Math.round(this.runs.reduce((acc, r) => acc + r.actualLatencyMs, 0) / total),
       avgMemoryMb: Math.round(this.runs.reduce((acc, r) => acc + r.actualMemoryMb, 0) / total),
-      avgEnergyJoules: parseFloat((this.runs.reduce((acc, r) => acc + r.actualEnergyJoules, 0) / total).toFixed(2)),
-      avgCacheHitRate: parseFloat((this.runs.reduce((acc, r) => acc + r.actualCacheHitRate, 0) / total).toFixed(2)),
-      avgUserOutcomeScore: parseFloat((this.runs.reduce((acc, r) => acc + r.userOutcomeScore, 0) / total).toFixed(1))
+      avgEnergyJoules: parseFloat(
+        (this.runs.reduce((acc, r) => acc + r.actualEnergyJoules, 0) / total).toFixed(2),
+      ),
+      avgCacheHitRate: parseFloat(
+        (this.runs.reduce((acc, r) => acc + r.actualCacheHitRate, 0) / total).toFixed(2),
+      ),
+      avgUserOutcomeScore: parseFloat(
+        (this.runs.reduce((acc, r) => acc + r.userOutcomeScore, 0) / total).toFixed(1),
+      ),
     };
   }
 }

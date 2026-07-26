@@ -21,6 +21,6 @@ export const runAgentSwarmValidation = async (): Promise<AgentSwarmValidationRes
     expertSelection: parseFloat(expert.toFixed(2)),
     delegationQuality: parseFloat(delegation.toFixed(2)),
     verificationQuality: parseFloat(verification.toFixed(2)),
-    overallAgentScore: parseFloat(overall.toFixed(2))
+    overallAgentScore: parseFloat(overall.toFixed(2)),
   };
 };

@@ -1,67 +1,70 @@
 // Authority Required Badge - Shows when authority approval is needed
 // Displays: label, reason, what software prepared, next steps
 
-import { Shield, AlertTriangle, Lock, HelpCircle } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { 
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
-import { 
-  authorityBoundaryEngine, 
+import { Shield, AlertTriangle, Lock, HelpCircle } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  authorityBoundaryEngine,
   type AuthorityBoundaryCheck,
-  type AuthorityBoundaryType 
-} from '@/lib/safeCompute/AuthorityBoundaryEngine';
+  type AuthorityBoundaryType,
+} from "@/lib/safeCompute/AuthorityBoundaryEngine";
 
 interface AuthorityBadgeProps {
   check: AuthorityBoundaryCheck;
   showDetails?: boolean;
-  size?: 'sm' | 'md' | 'lg';
+  size?: "sm" | "md" | "lg";
 }
 
-const BOUNDARY_CONFIG: Record<AuthorityBoundaryType, {
-  icon: typeof Shield;
-  label: string;
-  color: string;
-}> = {
-  'SAFETY_CRITICAL': {
+const BOUNDARY_CONFIG: Record<
+  AuthorityBoundaryType,
+  {
+    icon: typeof Shield;
+    label: string;
+    color: string;
+  }
+> = {
+  SAFETY_CRITICAL: {
     icon: AlertTriangle,
-    label: 'Safety Critical',
-    color: 'bg-red-100 text-red-800 border-red-300',
+    label: "Safety Critical",
+    color: "bg-red-100 text-red-800 border-red-300",
   },
-  'LEGAL_FINALITY': {
+  LEGAL_FINALITY: {
     icon: Lock,
-    label: 'Legal Authority',
-    color: 'bg-amber-100 text-amber-800 border-amber-300',
+    label: "Legal Authority",
+    color: "bg-amber-100 text-amber-800 border-amber-300",
   },
-  'REALTIME_AUTHORITY': {
+  REALTIME_AUTHORITY: {
     icon: Shield,
-    label: 'Realtime Authority',
-    color: 'bg-orange-100 text-orange-800 border-orange-300',
+    label: "Realtime Authority",
+    color: "bg-orange-100 text-orange-800 border-orange-300",
   },
-  'NEVER_SEEN_PHYSICS': {
+  NEVER_SEEN_PHYSICS: {
     icon: HelpCircle,
-    label: 'Novel Physics',
-    color: 'bg-purple-100 text-purple-800 border-purple-300',
+    label: "Novel Physics",
+    color: "bg-purple-100 text-purple-800 border-purple-300",
   },
-  'PHYSICS_OK': {
+  PHYSICS_OK: {
     icon: Shield,
-    label: 'Software OK',
-    color: 'bg-green-100 text-green-800 border-green-300',
+    label: "Software OK",
+    color: "bg-green-100 text-green-800 border-green-300",
   },
 };
 
-export const AuthorityBadge = ({ check, showDetails = false, size = 'md' }: AuthorityBadgeProps) => {
+export const AuthorityBadge = ({
+  check,
+  showDetails = false,
+  size = "md",
+}: AuthorityBadgeProps) => {
   const config = BOUNDARY_CONFIG[check.classification.boundaryType];
   const Icon = config.icon;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const uiDisplay = authorityBoundaryEngine.getUIDisplay(check);
 
   const sizeClasses = {
-    sm: 'text-xs px-2 py-0.5',
-    md: 'text-sm px-2.5 py-1',
-    lg: 'text-base px-3 py-1.5',
+    sm: "text-xs px-2 py-0.5",
+    md: "text-sm px-2.5 py-1",
+    lg: "text-base px-3 py-1.5",
   };
 
   if (!check.authorityRequired) {
@@ -76,10 +79,7 @@ export const AuthorityBadge = ({ check, showDetails = false, size = 'md' }: Auth
   return (
     <Tooltip>
       <TooltipTrigger>
-        <Badge 
-          variant="outline" 
-          className={`${config.color} ${sizeClasses[size]} cursor-help`}
-        >
+        <Badge variant="outline" className={`${config.color} ${sizeClasses[size]} cursor-help`}>
           <Icon className="w-3 h-3 mr-1" />
           Authority Required
         </Badge>
@@ -87,10 +87,8 @@ export const AuthorityBadge = ({ check, showDetails = false, size = 'md' }: Auth
       <TooltipContent className="max-w-sm">
         <div className="space-y-2">
           <p className="font-medium">{config.label}</p>
-          <p className="text-sm text-muted-foreground">
-            {check.classification.reason}
-          </p>
-          
+          <p className="text-sm text-muted-foreground">{check.classification.reason}</p>
+
           {showDetails && (
             <>
               <div>
@@ -101,7 +99,7 @@ export const AuthorityBadge = ({ check, showDetails = false, size = 'md' }: Auth
                   ))}
                 </ul>
               </div>
-              
+
               {check.handoffTarget && (
                 <p className="text-xs">
                   <span className="font-medium">Handoff to:</span> {check.handoffTarget}
@@ -122,7 +120,7 @@ interface AuthorityNoticeProps {
 }
 
 export const AuthorityNotice = ({ boundaryType, compact = false }: AuthorityNoticeProps) => {
-  if (boundaryType === 'PHYSICS_OK') {
+  if (boundaryType === "PHYSICS_OK") {
     return null;
   }
 
@@ -145,8 +143,8 @@ export const AuthorityNotice = ({ boundaryType, compact = false }: AuthorityNoti
         <div>
           <p className="font-medium">{config.label} - Authority Required</p>
           <p className="text-sm mt-1">
-            Software has prepared all available data but cannot be the final authority.
-            Human or certified system approval is required.
+            Software has prepared all available data but cannot be the final authority. Human or
+            certified system approval is required.
           </p>
         </div>
       </div>

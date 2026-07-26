@@ -15,7 +15,7 @@ export class EnergyEfficiencyEngine {
    */
   public evaluateEnergyStrategy(
     powerMode: "BatterySaver" | "Balanced" | "HighPerformance",
-    activeTokens: number
+    activeTokens: number,
   ): EnergyDirectives {
     let activePrecision: EnergyDirectives["activePrecision"] = "FP16";
     let activeExpertsCount = 8;
@@ -32,7 +32,7 @@ export class EnergyEfficiencyEngine {
     } else if (powerMode === "Balanced") {
       activePrecision = "INT4";
       activeExpertsCount = 2; // Route to 2 experts max
-      speculativeAcceptRate = 0.90;
+      speculativeAcceptRate = 0.9;
       wattageEstimate = 12.5;
       efficiencyGain = 8.5;
     } else {
@@ -53,7 +53,7 @@ export class EnergyEfficiencyEngine {
       activeExpertsCount,
       speculativeAcceptRate,
       wattageEstimate: parseFloat(wattageEstimate.toFixed(1)),
-      efficiencyGain
+      efficiencyGain,
     };
   }
 }

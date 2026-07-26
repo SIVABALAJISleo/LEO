@@ -2,7 +2,14 @@
 // Simulates test suites across 7 key operational domains and tracks release history for trend graphs
 
 export interface BenchmarkDomainV24 {
-  name: "Reasoning" | "Coding" | "Research" | "Search" | "Enterprise" | "Cybersecurity" | "Multilingual";
+  name:
+    | "Reasoning"
+    | "Coding"
+    | "Research"
+    | "Search"
+    | "Enterprise"
+    | "Cybersecurity"
+    | "Multilingual";
   accuracy: number;
   latencyMs: number;
   totalRunsCount: number;
@@ -27,7 +34,7 @@ export class ContinuousBenchmarkSystem {
     { releaseTag: "v20.2.1", timestamp: Date.now() - 3600000 * 24 * 30, overallScore: 0.925 },
     { releaseTag: "v21.0.0", timestamp: Date.now() - 3600000 * 24 * 20, overallScore: 0.938 },
     { releaseTag: "v22.1.2", timestamp: Date.now() - 3600000 * 24 * 10, overallScore: 0.954 },
-    { releaseTag: "v23.0.4", timestamp: Date.now() - 3600000 * 24 * 2, overallScore: 0.968 }
+    { releaseTag: "v23.0.4", timestamp: Date.now() - 3600000 * 24 * 2, overallScore: 0.968 },
   ];
 
   runSuite(releaseTag: string): BenchmarkReportV24 {
@@ -40,21 +47,22 @@ export class ContinuousBenchmarkSystem {
       { name: "Search", accuracy: 0.992, latencyMs: 95, totalRunsCount: 18000 },
       { name: "Enterprise", accuracy: 0.994, latencyMs: 110, totalRunsCount: 14000 },
       { name: "Cybersecurity", accuracy: 0.993, latencyMs: 120, totalRunsCount: 9000 },
-      { name: "Multilingual", accuracy: 0.968, latencyMs: 155, totalRunsCount: 11000 }
+      { name: "Multilingual", accuracy: 0.968, latencyMs: 155, totalRunsCount: 11000 },
     ];
 
     const totalTests = domains.reduce((sum, d) => sum + d.totalRunsCount, 0);
-    const weightedAcc = domains.reduce((sum, d) => sum + (d.totalRunsCount * d.accuracy), 0) / totalTests;
+    const weightedAcc =
+      domains.reduce((sum, d) => sum + d.totalRunsCount * d.accuracy, 0) / totalTests;
 
     const currentScore = parseFloat(weightedAcc.toFixed(4));
 
     // Append to history if it's a new release
-    const existing = this.history.find(h => h.releaseTag === releaseTag);
+    const existing = this.history.find((h) => h.releaseTag === releaseTag);
     if (!existing) {
       this.history.push({
         releaseTag,
         timestamp: Date.now(),
-        overallScore: currentScore
+        overallScore: currentScore,
       });
     }
 
@@ -62,7 +70,7 @@ export class ContinuousBenchmarkSystem {
       releaseTag,
       timestamp: Date.now(),
       domains,
-      history: this.history.sort((a, b) => a.timestamp - b.timestamp)
+      history: this.history.sort((a, b) => a.timestamp - b.timestamp),
     };
   }
 

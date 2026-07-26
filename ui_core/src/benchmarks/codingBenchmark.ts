@@ -23,6 +23,6 @@ export const runCodingBenchmark = async (): Promise<CodingBenchmarkResult> => {
     unitTestPassRate: parseFloat(unitTest.toFixed(2)),
     bugFixAccuracy: parseFloat(bugFix.toFixed(2)),
     refactorQuality: parseFloat(refactor.toFixed(2)),
-    overallCodingScore: parseFloat(overall.toFixed(2))
+    overallCodingScore: parseFloat(overall.toFixed(2)),
   };
 };

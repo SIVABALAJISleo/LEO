@@ -27,7 +27,7 @@ export class PeerCoordinator {
       pingMs,
       packetLossRate: loss,
       connectionStatus,
-      failoverBackupNodeId: connectionStatus !== "stable" ? "node-desktop-intel" : undefined
+      failoverBackupNodeId: connectionStatus !== "stable" ? "node-desktop-intel" : undefined,
     };
   }
 }

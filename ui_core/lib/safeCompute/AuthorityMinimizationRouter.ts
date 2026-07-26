@@ -2,20 +2,20 @@
 // Core intelligence layer that scores and routes every task
 // Maximizes software-handled coverage while preserving all boundaries
 
-import { digitalTwinVerifier, type DigitalTwinResult } from './DigitalTwinVerifier';
-import { cryptographicProofPipeline, type ExecutionProof } from './CryptographicProofPipeline';
-import { predictiveCausalityBuffer, type CausalPrediction } from './PredictiveCausalityBuffer';
-import { physicsSurrogateEngine, type SurrogatePrediction } from './PhysicsSurrogateEngine';
-import { authorityBoundaryEngine, type AuthorityBoundaryCheck } from './AuthorityBoundaryEngine';
+import { digitalTwinVerifier, type DigitalTwinResult } from "./DigitalTwinVerifier";
+import { cryptographicProofPipeline, type ExecutionProof } from "./CryptographicProofPipeline";
+import { predictiveCausalityBuffer, type CausalPrediction } from "./PredictiveCausalityBuffer";
+import { physicsSurrogateEngine, type SurrogatePrediction } from "./PhysicsSurrogateEngine";
+import { authorityBoundaryEngine, type AuthorityBoundaryCheck } from "./AuthorityBoundaryEngine";
 
-export type AuthorityDecision = 'SOFTWARE_ONLY' | 'SOFTWARE_ASSISTED' | 'AUTHORITY_REQUIRED';
+export type AuthorityDecision = "SOFTWARE_ONLY" | "SOFTWARE_ASSISTED" | "AUTHORITY_REQUIRED";
 
 export interface TaskScore {
-  safetyScore: number;      // 0-1: Higher = more safety-critical
-  legalityScore: number;    // 0-1: Higher = more legally binding
-  timingScore: number;      // 0-1: Higher = more time-sensitive
-  noveltyScore: number;     // 0-1: Higher = more novel/uncertain
-  overallRisk: number;      // 0-1: Composite risk score
+  safetyScore: number; // 0-1: Higher = more safety-critical
+  legalityScore: number; // 0-1: Higher = more legally binding
+  timingScore: number; // 0-1: Higher = more time-sensitive
+  noveltyScore: number; // 0-1: Higher = more novel/uncertain
+  overallRisk: number; // 0-1: Composite risk score
 }
 
 export interface AuthorityRoutingResult {
@@ -54,8 +54,8 @@ export interface AuthorityMinimizationMetrics {
 }
 
 // Decision thresholds
-const SOFTWARE_ONLY_THRESHOLD = 0.20;
-const SOFTWARE_ASSISTED_THRESHOLD = 0.60;
+const SOFTWARE_ONLY_THRESHOLD = 0.2;
+const SOFTWARE_ASSISTED_THRESHOLD = 0.6;
 
 class AuthorityMinimizationRouter {
   private static instance: AuthorityMinimizationRouter;
@@ -112,15 +112,16 @@ class AuthorityMinimizationRouter {
 
     // Step 4: Apply authority-minimization techniques based on initial classification
     if (boundaryCheck.authorityRequired || scores.overallRisk > SOFTWARE_ONLY_THRESHOLD) {
-      
       // Try Digital Twin + Formal Verification to reduce escalation
       twinResult = await digitalTwinVerifier.simulateAction({
         actionId: params.taskId,
         actionType: params.taskType,
         context: params.context,
       });
-      evidencePrepared.push('Digital twin simulation completed');
-      evidencePrepared.push(`Formal verification: ${twinResult.constraintCheckPassed ? 'PASSED' : 'FAILED'}`);
+      evidencePrepared.push("Digital twin simulation completed");
+      evidencePrepared.push(
+        `Formal verification: ${twinResult.constraintCheckPassed ? "PASSED" : "FAILED"}`,
+      );
 
       // If twin recommends auto-approval, we may reduce authority requirement
       if (twinResult.autoApprovalRecommended && !boundaryCheck.authorityRequired) {
@@ -132,9 +133,12 @@ class AuthorityMinimizationRouter {
     // Step 5: Generate cryptographic proof for audit trail
     // eslint-disable-next-line prefer-const
     proof = await cryptographicProofPipeline.generateProof({
-      type: 'decision',
+      type: "decision",
       input: { taskId: params.taskId, type: params.taskType, scores },
-      output: { boundaryCheck: boundaryCheck.classification, twinResult: twinResult?.overallConfidence },
+      output: {
+        boundaryCheck: boundaryCheck.classification,
+        twinResult: twinResult?.overallConfidence,
+      },
       executionContext: params.context,
     });
     evidencePrepared.push(`Cryptographic proof generated: ${proof.proofId}`);
@@ -151,8 +155,11 @@ class AuthorityMinimizationRouter {
     }
 
     // Step 7: Use physics surrogate if applicable
-    if (params.domain && params.inputParameters && 
-        physicsSurrogateEngine.getAvailableSurrogates().includes(params.domain)) {
+    if (
+      params.domain &&
+      params.inputParameters &&
+      physicsSurrogateEngine.getAvailableSurrogates().includes(params.domain)
+    ) {
       surrogateResult = physicsSurrogateEngine.predict({
         domain: params.domain,
         inputParameters: params.inputParameters,
@@ -166,24 +173,27 @@ class AuthorityMinimizationRouter {
 
     if (boundaryCheck.authorityRequired) {
       // Hard boundary - must escalate
-      decision = 'AUTHORITY_REQUIRED';
+      decision = "AUTHORITY_REQUIRED";
       escalationReason = boundaryCheck.classification.reason;
-    } else if (twinResult?.autoApprovalRecommended && scores.overallRisk <= SOFTWARE_ONLY_THRESHOLD) {
+    } else if (
+      twinResult?.autoApprovalRecommended &&
+      scores.overallRisk <= SOFTWARE_ONLY_THRESHOLD
+    ) {
       // Twin approved and low risk - software only
-      decision = 'SOFTWARE_ONLY';
+      decision = "SOFTWARE_ONLY";
       this.stats.decisionsAccelerated++;
     } else if (scores.overallRisk <= SOFTWARE_ONLY_THRESHOLD) {
       // Low risk - software only
-      decision = 'SOFTWARE_ONLY';
+      decision = "SOFTWARE_ONLY";
     } else if (scores.overallRisk <= SOFTWARE_ASSISTED_THRESHOLD) {
       // Medium risk - software assisted
-      decision = 'SOFTWARE_ASSISTED';
+      decision = "SOFTWARE_ASSISTED";
       if (twinResult && !twinResult.escalationRequired) {
         this.stats.escalationsAvoided++;
       }
     } else {
       // High risk - authority required
-      decision = 'AUTHORITY_REQUIRED';
+      decision = "AUTHORITY_REQUIRED";
       escalationReason = `Risk score ${(scores.overallRisk * 100).toFixed(1)}% exceeds threshold`;
       if (twinResult?.escalationRequired) {
         escalationReason = twinResult.escalationReason || escalationReason;
@@ -208,20 +218,19 @@ class AuthorityMinimizationRouter {
     // Update stats
     this.stats.totalRoutings++;
     switch (decision) {
-      case 'SOFTWARE_ONLY':
+      case "SOFTWARE_ONLY":
         this.stats.softwareOnlyCount++;
         break;
-      case 'SOFTWARE_ASSISTED':
+      case "SOFTWARE_ASSISTED":
         this.stats.softwareAssistedCount++;
         break;
-      case 'AUTHORITY_REQUIRED':
+      case "AUTHORITY_REQUIRED":
         this.stats.authorityRequiredCount++;
         break;
     }
-    this.stats.avgProcessingTimeMs = (
+    this.stats.avgProcessingTimeMs =
       (this.stats.avgProcessingTimeMs * (this.stats.totalRoutings - 1) + result.processingTimeMs) /
-      this.stats.totalRoutings
-    );
+      this.stats.totalRoutings;
 
     // Store in history
     this.routingHistory.push(result);
@@ -229,60 +238,58 @@ class AuthorityMinimizationRouter {
       this.routingHistory = this.routingHistory.slice(-500);
     }
 
-    console.log(`[AuthorityRouter] ${params.taskId}: ${decision}, risk: ${(scores.overallRisk * 100).toFixed(1)}%`);
+    console.log(
+      `[AuthorityRouter] ${params.taskId}: ${decision}, risk: ${(scores.overallRisk * 100).toFixed(1)}%`,
+    );
     return result;
   }
 
   private scoreTask(
     taskType: string,
     description: string,
-    context: Record<string, unknown>
+    context: Record<string, unknown>,
   ): TaskScore {
     const searchText = `${taskType} ${description}`.toLowerCase();
 
     // Safety scoring
-    let safetyScore = 0.10; // Base safety score
-    const safetyKeywords = ['medical', 'health', 'safety', 'critical', 'emergency', 'life'];
-    if (safetyKeywords.some(k => searchText.includes(k))) {
-      safetyScore = 0.90;
+    let safetyScore = 0.1; // Base safety score
+    const safetyKeywords = ["medical", "health", "safety", "critical", "emergency", "life"];
+    if (safetyKeywords.some((k) => searchText.includes(k))) {
+      safetyScore = 0.9;
     } else if (context.affectsUsers || context.production) {
-      safetyScore = 0.40;
+      safetyScore = 0.4;
     }
 
     // Legality scoring
-    let legalityScore = 0.10;
-    const legalKeywords = ['payment', 'contract', 'settlement', 'legal', 'compliance', 'audit'];
-    if (legalKeywords.some(k => searchText.includes(k))) {
+    let legalityScore = 0.1;
+    const legalKeywords = ["payment", "contract", "settlement", "legal", "compliance", "audit"];
+    if (legalKeywords.some((k) => searchText.includes(k))) {
       legalityScore = 0.85;
     } else if (context.involvesFinance || context.requiresCompliance) {
-      legalityScore = 0.50;
+      legalityScore = 0.5;
     }
 
     // Timing scoring
-    let timingScore = 0.10;
-    const timingKeywords = ['realtime', 'instant', 'immediate', 'urgent', 'microsecond'];
-    if (timingKeywords.some(k => searchText.includes(k))) {
-      timingScore = 0.80;
+    let timingScore = 0.1;
+    const timingKeywords = ["realtime", "instant", "immediate", "urgent", "microsecond"];
+    if (timingKeywords.some((k) => searchText.includes(k))) {
+      timingScore = 0.8;
     } else if (context.timeConstraintMs && (context.timeConstraintMs as number) < 100) {
-      timingScore = 0.60;
+      timingScore = 0.6;
     }
 
     // Novelty scoring
-    let noveltyScore = 0.10;
-    const noveltyKeywords = ['experimental', 'novel', 'untested', 'frontier', 'unknown'];
-    if (noveltyKeywords.some(k => searchText.includes(k))) {
-      noveltyScore = 0.70;
+    let noveltyScore = 0.1;
+    const noveltyKeywords = ["experimental", "novel", "untested", "frontier", "unknown"];
+    if (noveltyKeywords.some((k) => searchText.includes(k))) {
+      noveltyScore = 0.7;
     } else if (context.isExperimental || context.noPrecedent) {
-      noveltyScore = 0.50;
+      noveltyScore = 0.5;
     }
 
     // Composite risk score (weighted average)
-    const overallRisk = (
-      safetyScore * 0.35 +
-      legalityScore * 0.30 +
-      timingScore * 0.15 +
-      noveltyScore * 0.20
-    );
+    const overallRisk =
+      safetyScore * 0.35 + legalityScore * 0.3 + timingScore * 0.15 + noveltyScore * 0.2;
 
     return {
       safetyScore,
@@ -295,16 +302,16 @@ class AuthorityMinimizationRouter {
 
   // Quick route for simple tasks
   quickRoute(taskType: string): AuthorityDecision {
-    const lowRiskTypes = ['read', 'list', 'search', 'query', 'validate', 'preview'];
-    const highRiskTypes = ['delete', 'payment', 'transfer', 'admin', 'medical', 'legal'];
+    const lowRiskTypes = ["read", "list", "search", "query", "validate", "preview"];
+    const highRiskTypes = ["delete", "payment", "transfer", "admin", "medical", "legal"];
 
-    if (lowRiskTypes.some(t => taskType.toLowerCase().includes(t))) {
-      return 'SOFTWARE_ONLY';
+    if (lowRiskTypes.some((t) => taskType.toLowerCase().includes(t))) {
+      return "SOFTWARE_ONLY";
     }
-    if (highRiskTypes.some(t => taskType.toLowerCase().includes(t))) {
-      return 'AUTHORITY_REQUIRED';
+    if (highRiskTypes.some((t) => taskType.toLowerCase().includes(t))) {
+      return "AUTHORITY_REQUIRED";
     }
-    return 'SOFTWARE_ASSISTED';
+    return "SOFTWARE_ASSISTED";
   }
 
   // Get statistics
@@ -316,7 +323,7 @@ class AuthorityMinimizationRouter {
   getMetrics(): AuthorityMinimizationMetrics {
     const total = this.stats.totalRoutings || 1;
     const softwareHandled = this.stats.softwareOnlyCount + this.stats.softwareAssistedCount;
-    
+
     return {
       softwareHandledPercent: (softwareHandled / total) * 100,
       authorityRequiredPercent: (this.stats.authorityRequiredCount / total) * 100,
@@ -337,13 +344,13 @@ class AuthorityMinimizationRouter {
     const targetAuthority = 0.3;
 
     return {
-      target: { 
-        softwareHandled: `${targetSoftware}%`, 
-        authorityRequired: `${targetAuthority}%` 
+      target: {
+        softwareHandled: `${targetSoftware}%`,
+        authorityRequired: `${targetAuthority}%`,
       },
-      actual: { 
-        softwareHandled: `${metrics.softwareHandledPercent.toFixed(2)}%`, 
-        authorityRequired: `${metrics.authorityRequiredPercent.toFixed(2)}%` 
+      actual: {
+        softwareHandled: `${metrics.softwareHandledPercent.toFixed(2)}%`,
+        authorityRequired: `${metrics.authorityRequiredPercent.toFixed(2)}%`,
       },
       onTarget: metrics.softwareHandledPercent >= targetSoftware - 0.5,
     };
@@ -356,7 +363,7 @@ class AuthorityMinimizationRouter {
 
   // Get routing by task ID
   getRouting(taskId: string): AuthorityRoutingResult | undefined {
-    return this.routingHistory.find(r => r.taskId === taskId);
+    return this.routingHistory.find((r) => r.taskId === taskId);
   }
 
   // Get aggregate report for dashboard
@@ -389,12 +396,14 @@ class AuthorityMinimizationRouter {
   // Get truth statement
   getTruthStatement(): string {
     const metrics = this.getMetrics();
-    return `Authority-Minimization Router: ${this.stats.totalRoutings} tasks routed. ` +
-           `Software-handled: ${metrics.softwareHandledPercent.toFixed(2)}%, ` +
-           `Authority-required: ${metrics.authorityRequiredPercent.toFixed(2)}% (explicit). ` +
-           `Escalations avoided: ${this.stats.escalationsAvoided}, ` +
-           `Decisions accelerated: ${this.stats.decisionsAccelerated}. ` +
-           `All boundaries preserved with cryptographic proof.`;
+    return (
+      `Authority-Minimization Router: ${this.stats.totalRoutings} tasks routed. ` +
+      `Software-handled: ${metrics.softwareHandledPercent.toFixed(2)}%, ` +
+      `Authority-required: ${metrics.authorityRequiredPercent.toFixed(2)}% (explicit). ` +
+      `Escalations avoided: ${this.stats.escalationsAvoided}, ` +
+      `Decisions accelerated: ${this.stats.decisionsAccelerated}. ` +
+      `All boundaries preserved with cryptographic proof.`
+    );
   }
 }
 

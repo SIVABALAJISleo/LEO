@@ -13,7 +13,7 @@ export class ComputeReductionCalculator {
   calculateSavings(
     selectedPrecision: string,
     modelSizeGB: number,
-    baseWattage: number
+    baseWattage: number,
   ): ComputeReductionStats {
     let memorySavedMB = 0;
     let wattageSavingsPct = 0;
@@ -37,7 +37,7 @@ export class ComputeReductionCalculator {
         break;
       case "Ternary":
       case "Binary":
-        memorySavedMB = baseBytesMB * 0.90;
+        memorySavedMB = baseBytesMB * 0.9;
         wattageSavingsPct = 88.5;
         computeCostReductionPct = 92.0;
         bitNetReadinessScore = 94;
@@ -54,7 +54,7 @@ export class ComputeReductionCalculator {
       memorySavedMB: Math.round(memorySavedMB),
       wattageSavingsPct,
       computeCostReductionPct,
-      bitNetReadinessScore
+      bitNetReadinessScore,
     };
   }
 }

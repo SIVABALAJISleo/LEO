@@ -26,12 +26,12 @@ export class GraphRagEngine {
   private entities: GraphEntity[] = [
     { id: "e1", name: "1-bit Quantization", category: "Concept", lastUpdated: Date.now() },
     { id: "e2", name: "RAM Overhead Limit", category: "Metric", lastUpdated: Date.now() },
-    { id: "e3", name: "Local Thread Swarm", category: "Entity", lastUpdated: Date.now() }
+    { id: "e3", name: "Local Thread Swarm", category: "Entity", lastUpdated: Date.now() },
   ];
 
   private relations: GraphRelation[] = [
     { sourceId: "e1", targetId: "e2", predicate: "constrains", timestampAdded: Date.now() },
-    { sourceId: "e3", targetId: "e1", predicate: "implies", timestampAdded: Date.now() }
+    { sourceId: "e3", targetId: "e1", predicate: "implies", timestampAdded: Date.now() },
   ];
 
   /**
@@ -43,18 +43,20 @@ export class GraphRagEngine {
     const citationPaths: string[] = [];
 
     // Filter relevant nodes
-    const matches = this.entities.filter(ent => ent.name.toLowerCase().includes(sLower) || sLower.includes(ent.name.toLowerCase()));
-    
-    matches.forEach(m => {
+    const matches = this.entities.filter(
+      (ent) => ent.name.toLowerCase().includes(sLower) || sLower.includes(ent.name.toLowerCase()),
+    );
+
+    matches.forEach((m) => {
       retrieved.push(m.name);
-      
+
       // Look for one-hop relations
-      const edges = this.relations.filter(r => r.sourceId === m.id || r.targetId === m.id);
-      edges.forEach(edge => {
-        const source = this.entities.find(e => e.id === edge.sourceId)?.name || "Unknown";
-        const target = this.entities.find(e => e.id === edge.targetId)?.name || "Unknown";
+      const edges = this.relations.filter((r) => r.sourceId === m.id || r.targetId === m.id);
+      edges.forEach((edge) => {
+        const source = this.entities.find((e) => e.id === edge.sourceId)?.name || "Unknown";
+        const target = this.entities.find((e) => e.id === edge.targetId)?.name || "Unknown";
         citationPaths.push(`${source} -> [${edge.predicate}] -> ${target}`);
-        
+
         if (!retrieved.includes(source)) retrieved.push(source);
         if (!retrieved.includes(target)) retrieved.push(target);
       });
@@ -70,7 +72,7 @@ export class GraphRagEngine {
       retrievedNodeNames: retrieved,
       hopsResolved: retrieved.length > 2 ? 2 : 1,
       citationPaths,
-      compressionRate: parseFloat((1 / Math.max(1, retrieved.length)).toFixed(2))
+      compressionRate: parseFloat((1 / Math.max(1, retrieved.length)).toFixed(2)),
     };
   }
 

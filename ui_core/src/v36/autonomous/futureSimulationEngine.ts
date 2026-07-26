@@ -8,17 +8,14 @@ export interface TrajectoryPath {
 }
 
 export class FutureSimulationEngine {
-  public generateSimulatedFutures(
-    startState: string,
-    pathsCount: number = 1000
-  ): TrajectoryPath[] {
+  public generateSimulatedFutures(startState: string, pathsCount: number = 1000): TrajectoryPath[] {
     const paths: TrajectoryPath[] = [];
 
     for (let i = 0; i < pathsCount; i++) {
       paths.push({
         pathId: `path-${i}`,
         stepSequence: [startState, `transition-${i}`, "terminate"],
-        crashRiskScore: parseFloat((Math.random() * 0.15).toFixed(4)) // Keep risk low in simulated standard conditions
+        crashRiskScore: parseFloat((Math.random() * 0.15).toFixed(4)), // Keep risk low in simulated standard conditions
       });
     }
 

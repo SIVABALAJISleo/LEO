@@ -3,9 +3,16 @@
 
 import { ReproducibilityEngine, ReproducibilityConfig } from "./reproducibilityEngine";
 import { DatasetRegistry, RegisteredDataset } from "./datasetRegistry";
-import { BenchmarkEvidenceEngine, EvidenceRecord, EvidencePackage } from "./benchmarkEvidenceEngine";
+import {
+  BenchmarkEvidenceEngine,
+  EvidenceRecord,
+  EvidencePackage,
+} from "./benchmarkEvidenceEngine";
 import { ReasoningValidationLab, ReasoningLabReport } from "../labs/reasoningValidationLab";
-import { HallucinationValidationLab, HallucinationLabReport } from "../labs/hallucinationValidationLab";
+import {
+  HallucinationValidationLab,
+  HallucinationLabReport,
+} from "../labs/hallucinationValidationLab";
 import { MemoryValidationLab, MemoryLabReport } from "../labs/memoryValidationLab";
 import { SearchRagValidationLab, SearchRagLabReport } from "../labs/searchRagValidationLab";
 import { EnterpriseReliabilityLab, EnterpriseLabReport } from "../labs/enterpriseReliabilityLab";
@@ -41,7 +48,7 @@ export class ScientificCertificationBoard {
   readonly reproducibility = new ReproducibilityEngine();
   readonly datasetRegistry = new DatasetRegistry();
   readonly evidenceEngine = new BenchmarkEvidenceEngine();
-  
+
   readonly reasoningLab = new ReasoningValidationLab();
   readonly hallucinationLab = new HallucinationValidationLab();
   readonly memoryLab = new MemoryValidationLab();
@@ -71,13 +78,34 @@ export class ScientificCertificationBoard {
     const securityReport = this.redTeamLab.runSuite(seed);
 
     // 3. Perform statistical validations
-    const reasoning = this.statEngine.verify(reasoningReport.overallAccuracy, reasoningReport.sampleVariance, 100000, 96.0);
-    const memory = this.statEngine.verify(memoryReport.overallMemoryConsistency, 0.00012, 25000, 98.0);
+    const reasoning = this.statEngine.verify(
+      reasoningReport.overallAccuracy,
+      reasoningReport.sampleVariance,
+      100000,
+      96.0,
+    );
+    const memory = this.statEngine.verify(
+      memoryReport.overallMemoryConsistency,
+      0.00012,
+      25000,
+      98.0,
+    );
     const search = this.statEngine.verify(searchRagReport.searchAccuracy, 0.00008, 15000, 99.0);
     const rag = this.statEngine.verify(searchRagReport.ragAccuracy, 0.00006, 15000, 99.0);
     const agent = this.statEngine.verify(enterpriseReport.agentSuccessRate, 0.00015, 12000, 98.0);
-    const enterprise = this.statEngine.verify(enterpriseReport.slaComplianceRate, 0.00004, 525600, 99.0);
-    const hallucination = this.statEngine.verify(hallucinationReport.overallHallucinationRate, 0.00005, 50000, 1.0, "<=");
+    const enterprise = this.statEngine.verify(
+      enterpriseReport.slaComplianceRate,
+      0.00004,
+      525600,
+      99.0,
+    );
+    const hallucination = this.statEngine.verify(
+      hallucinationReport.overallHallucinationRate,
+      0.00005,
+      50000,
+      1.0,
+      "<=",
+    );
 
     // 4. Log simulated RAG precision evidence packages
     const simulatedEvidenceRecords: EvidenceRecord[] = [
@@ -87,7 +115,7 @@ export class ScientificCertificationBoard {
         expected: "Correct execution order path generated",
         observed: "Correct execution order path generated",
         matches: true,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       },
       {
         testCaseId: "TC-V28-R02",
@@ -95,22 +123,27 @@ export class ScientificCertificationBoard {
         expected: "SAT boundaries matched correctly",
         observed: "SAT boundaries matched correctly",
         matches: true,
-        timestamp: Date.now()
-      }
+        timestamp: Date.now(),
+      },
     ];
-    this.evidenceEngine.generateEvidencePackage(`RUN-V28-${this.runCount}`, "Antigravity-Real-Reasoning-Workloads", "1.2.0", simulatedEvidenceRecords);
+    this.evidenceEngine.generateEvidencePackage(
+      `RUN-V28-${this.runCount}`,
+      "Antigravity-Real-Reasoning-Workloads",
+      "1.2.0",
+      simulatedEvidenceRecords,
+    );
 
     // 5. Calculate overall score
     const overallCertifiedProductScore = parseFloat(
       (
-        (reasoningReport.overallAccuracy * 0.15) +
-        (memoryReport.overallMemoryConsistency * 0.15) +
-        (searchRagReport.searchAccuracy * 0.10) +
-        (searchRagReport.ragAccuracy * 0.15) +
-        (enterpriseReport.agentSuccessRate * 0.15) +
-        (enterpriseReport.slaComplianceRate * 0.15) +
-        ((100 - hallucinationReport.overallHallucinationRate) * 0.15)
-      ).toFixed(2)
+        reasoningReport.overallAccuracy * 0.15 +
+        memoryReport.overallMemoryConsistency * 0.15 +
+        searchRagReport.searchAccuracy * 0.1 +
+        searchRagReport.ragAccuracy * 0.15 +
+        enterpriseReport.agentSuccessRate * 0.15 +
+        enterpriseReport.slaComplianceRate * 0.15 +
+        (100 - hallucinationReport.overallHallucinationRate) * 0.15
+      ).toFixed(2),
     );
 
     // Platform is certified ONLY if all statistical validation sweeps pass
@@ -131,9 +164,13 @@ export class ScientificCertificationBoard {
       overallMemoryConsistency: memoryReport.overallMemoryConsistency,
       overallHallucinationRate: hallucinationReport.overallHallucinationRate,
       securityContainmentRate: securityReport.overallContainmentRate,
-      uptimePercentage: enterpriseReport.uptimePercentage
+      uptimePercentage: enterpriseReport.uptimePercentage,
     };
-    const auditBundle = this.auditorPackage.compileBundle(config, datasets, verificationReportSummary);
+    const auditBundle = this.auditorPackage.compileBundle(
+      config,
+      datasets,
+      verificationReportSummary,
+    );
 
     return {
       timestamp: Date.now(),
@@ -152,11 +189,11 @@ export class ScientificCertificationBoard {
         rag,
         agent,
         enterprise,
-        hallucination
+        hallucination,
       },
       overallCertifiedProductScore: Math.min(99.0, Math.max(95.0, overallCertifiedProductScore)),
       overallStatus,
-      auditBundle
+      auditBundle,
     };
   }
 }

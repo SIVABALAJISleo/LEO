@@ -22,7 +22,7 @@ class ResilienceManager {
   private checkpoints: Map<string, JobCheckpoint> = new Map();
   private listeners: Set<CheckpointListener> = new Set();
   private recoveredCount = 0;
-  private storageKey = 'hyper_job_checkpoints';
+  private storageKey = "hyper_job_checkpoints";
 
   constructor() {
     this.loadFromStorage();
@@ -30,13 +30,9 @@ class ResilienceManager {
   }
 
   // Create or update checkpoint for a job
-  checkpoint(
-    jobId: string,
-    progress: number,
-    state: unknown
-  ): JobCheckpoint {
+  checkpoint(jobId: string, progress: number, state: unknown): JobCheckpoint {
     const existing = this.checkpoints.get(jobId);
-    
+
     const checkpoint: JobCheckpoint = {
       jobId,
       progress,
@@ -68,7 +64,7 @@ class ResilienceManager {
   getResumePoint(jobId: string): { progress: number; state: unknown } | null {
     const checkpoint = this.checkpoints.get(jobId);
     if (!checkpoint || !checkpoint.resumable) return null;
-    
+
     return {
       progress: checkpoint.progress,
       state: checkpoint.state,
@@ -94,18 +90,18 @@ class ResilienceManager {
 
   // Get all resumable jobs
   getResumableJobs(): JobCheckpoint[] {
-    return Array.from(this.checkpoints.values())
-      .filter(c => c.resumable);
+    return Array.from(this.checkpoints.values()).filter((c) => c.resumable);
   }
 
   // Get resilience status
   getStatus(): ResilienceStatus {
     const checkpointsArray = Array.from(this.checkpoints.values());
-    const lastCheckpoint = checkpointsArray
-      .sort((a, b) => b.checkpointedAt.getTime() - a.checkpointedAt.getTime())[0];
+    const lastCheckpoint = checkpointsArray.sort(
+      (a, b) => b.checkpointedAt.getTime() - a.checkpointedAt.getTime(),
+    )[0];
 
     return {
-      activeCheckpoints: checkpointsArray.filter(c => c.resumable).length,
+      activeCheckpoints: checkpointsArray.filter((c) => c.resumable).length,
       totalRecovered: this.recoveredCount,
       lastCheckpointAt: lastCheckpoint?.checkpointedAt ?? null,
     };
@@ -135,17 +131,20 @@ class ResilienceManager {
     try {
       const stored = localStorage.getItem(this.storageKey);
       if (stored) {
-        const data = JSON.parse(stored) as { checkpoints: Array<[string, JobCheckpoint]>; recovered: number };
+        const data = JSON.parse(stored) as {
+          checkpoints: Array<[string, JobCheckpoint]>;
+          recovered: number;
+        };
         this.checkpoints = new Map(
           data.checkpoints.map(([id, cp]) => [
             id,
-            { ...cp, checkpointedAt: new Date(cp.checkpointedAt) }
-          ])
+            { ...cp, checkpointedAt: new Date(cp.checkpointedAt) },
+          ]),
         );
         this.recoveredCount = data.recovered || 0;
       }
     } catch (e) {
-      console.warn('Failed to load checkpoints from storage:', e);
+      console.warn("Failed to load checkpoints from storage:", e);
     }
   }
 
@@ -157,20 +156,20 @@ class ResilienceManager {
       };
       localStorage.setItem(this.storageKey, JSON.stringify(data));
     } catch (e) {
-      console.warn('Failed to save checkpoints to storage:', e);
+      console.warn("Failed to save checkpoints to storage:", e);
     }
   }
 
   private setupUnloadHandler(): void {
-    if (typeof window !== 'undefined') {
-      window.addEventListener('beforeunload', () => {
+    if (typeof window !== "undefined") {
+      window.addEventListener("beforeunload", () => {
         this.forceSave();
       });
     }
   }
 
   private notifyListeners(checkpoint: JobCheckpoint): void {
-    this.listeners.forEach(l => l(checkpoint));
+    this.listeners.forEach((l) => l(checkpoint));
   }
 }
 

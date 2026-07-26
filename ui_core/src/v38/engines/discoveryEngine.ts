@@ -22,7 +22,7 @@ export class DiscoveryEngine {
   public analyzeResearchFields(field: string): DiscoveryReport {
     const detectedKnowledgeGaps: string[] = [
       `Causal alignment between 1-bit quantization registers and NPU compute threads in "${field}".`,
-      "Thermal-aware speculative verification rates on heterogenous cores."
+      "Thermal-aware speculative verification rates on heterogenous cores.",
     ];
 
     const hypothesisRankings: ResearchHypothesis[] = [
@@ -30,14 +30,14 @@ export class DiscoveryEngine {
         hypothesisText: "Sparse MoE routing scales linearly on local thread affinities.",
         supportingEvidenceCount: 3,
         noveltyScore: 0.95,
-        opportunityScore: 0.97
+        opportunityScore: 0.97,
       },
       {
         hypothesisText: "Ternary clamping minimizes memory latency by 12x compared to FP16.",
         supportingEvidenceCount: 7,
         noveltyScore: 0.88,
-        opportunityScore: 0.92
-      }
+        opportunityScore: 0.92,
+      },
     ];
 
     const suggestedExperiment = `Benchmark 1-bit Ternary registers using randomized thread workloads on device.`;
@@ -47,7 +47,7 @@ export class DiscoveryEngine {
       hypothesisRankings,
       detectedKnowledgeGaps,
       suggestedExperiment,
-      opportunityIndex
+      opportunityIndex,
     };
   }
 }

@@ -5,25 +5,26 @@ interface RequestLog {
   id: string;
   timestamp: Date;
   requestType: string;
-  
+
   // Decision path
-  chosenPath: 'cache' | 'prediction' | 'lookup' | 'compute' | 'delegate' | 'reject';
+  chosenPath: "cache" | "prediction" | "lookup" | "compute" | "delegate" | "reject";
   pathReason: string;
   confidence: number;
-  
+
   // Compute tracking
   computeAvoided: boolean;
-  computeAvoidanceMethod?: 'cached' | 'predicted' | 'approximated' | 'delegated' | 'short-circuited';
+  computeAvoidanceMethod?:
+    "cached" | "predicted" | "approximated" | "delegated" | "short-circuited";
   gpuSavingsMs?: number;
-  
+
   // Authority tracking
   authorityRequired: boolean;
-  authorityType?: 'human' | 'legal' | 'hardware' | 'none';
-  authorityStatus?: 'pending' | 'approved' | 'rejected' | 'n/a';
-  
+  authorityType?: "human" | "legal" | "hardware" | "none";
+  authorityStatus?: "pending" | "approved" | "rejected" | "n/a";
+
   // Performance
   latencyMs: number;
-  
+
   // Metadata
   userId?: string;
   moduleName?: string;
@@ -32,25 +33,25 @@ interface RequestLog {
 
 interface AggregatedStats {
   totalRequests: number;
-  
+
   // Path distribution
   pathDistribution: Record<string, number>;
-  
+
   // Compute avoidance
   computeAvoided: number;
   computeAvoidanceRate: number;
   totalGpuSavingsMs: number;
-  
+
   // Confidence
   avgConfidence: number;
   highConfidenceRequests: number;
   lowConfidenceRequests: number;
-  
+
   // Authority
   authorityRequired: number;
   authorityApproved: number;
   authorityRejected: number;
-  
+
   // Performance
   avgLatencyMs: number;
   p95LatencyMs: number;
@@ -64,7 +65,7 @@ interface RealTimeMetrics {
   activeAuthority: number;
 }
 
-const STORAGE_KEY = 'hyper_self_awareness';
+const STORAGE_KEY = "hyper_self_awareness";
 const MAX_LOGS = 10000;
 
 class SelfAwarenessLogger {
@@ -92,22 +93,22 @@ class SelfAwarenessLogger {
    */
   logRequest(params: {
     requestType: string;
-    chosenPath: RequestLog['chosenPath'];
+    chosenPath: RequestLog["chosenPath"];
     pathReason: string;
     confidence: number;
     computeAvoided: boolean;
-    computeAvoidanceMethod?: RequestLog['computeAvoidanceMethod'];
+    computeAvoidanceMethod?: RequestLog["computeAvoidanceMethod"];
     gpuSavingsMs?: number;
     authorityRequired?: boolean;
-    authorityType?: RequestLog['authorityType'];
-    authorityStatus?: RequestLog['authorityStatus'];
+    authorityType?: RequestLog["authorityType"];
+    authorityStatus?: RequestLog["authorityStatus"];
     latencyMs: number;
     userId?: string;
     moduleName?: string;
     metadata?: Record<string, unknown>;
   }): string {
     const id = `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
+
     const log: RequestLog = {
       id,
       timestamp: new Date(),
@@ -137,7 +138,7 @@ class SelfAwarenessLogger {
 
     // Keep only last 5 minutes in recent logs
     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
-    this.recentLogs = this.recentLogs.filter(l => l.timestamp > fiveMinutesAgo);
+    this.recentLogs = this.recentLogs.filter((l) => l.timestamp > fiveMinutesAgo);
 
     this.notifyListeners();
     this.saveToStorage();
@@ -148,28 +149,38 @@ class SelfAwarenessLogger {
   /**
    * Quick logging helper for common patterns
    */
-  logCacheHit(requestType: string, latencyMs: number, gpuSavingsMs: number, userId?: string): string {
+  logCacheHit(
+    requestType: string,
+    latencyMs: number,
+    gpuSavingsMs: number,
+    userId?: string,
+  ): string {
     return this.logRequest({
       requestType,
-      chosenPath: 'cache',
-      pathReason: 'Result found in cache',
+      chosenPath: "cache",
+      pathReason: "Result found in cache",
       confidence: 1.0,
       computeAvoided: true,
-      computeAvoidanceMethod: 'cached',
+      computeAvoidanceMethod: "cached",
       gpuSavingsMs,
       latencyMs,
       userId,
     });
   }
 
-  logPrediction(requestType: string, confidence: number, latencyMs: number, userId?: string): string {
+  logPrediction(
+    requestType: string,
+    confidence: number,
+    latencyMs: number,
+    userId?: string,
+  ): string {
     return this.logRequest({
       requestType,
-      chosenPath: 'prediction',
-      pathReason: 'Result predicted based on patterns',
+      chosenPath: "prediction",
+      pathReason: "Result predicted based on patterns",
       confidence,
       computeAvoided: true,
-      computeAvoidanceMethod: 'predicted',
+      computeAvoidanceMethod: "predicted",
       latencyMs,
       userId,
     });
@@ -178,8 +189,8 @@ class SelfAwarenessLogger {
   logCompute(requestType: string, latencyMs: number, userId?: string): string {
     return this.logRequest({
       requestType,
-      chosenPath: 'compute',
-      pathReason: 'Full compute required - no shortcuts available',
+      chosenPath: "compute",
+      pathReason: "Full compute required - no shortcuts available",
       confidence: 1.0,
       computeAvoided: false,
       latencyMs,
@@ -187,29 +198,38 @@ class SelfAwarenessLogger {
     });
   }
 
-  logDelegation(requestType: string, delegateTo: string, latencyMs: number, userId?: string): string {
+  logDelegation(
+    requestType: string,
+    delegateTo: string,
+    latencyMs: number,
+    userId?: string,
+  ): string {
     return this.logRequest({
       requestType,
-      chosenPath: 'delegate',
+      chosenPath: "delegate",
       pathReason: `Delegated to ${delegateTo}`,
       confidence: 0.95,
       computeAvoided: true,
-      computeAvoidanceMethod: 'delegated',
+      computeAvoidanceMethod: "delegated",
       latencyMs,
       userId,
     });
   }
 
-  logAuthorityRequired(requestType: string, authorityType: RequestLog['authorityType'], userId?: string): string {
+  logAuthorityRequired(
+    requestType: string,
+    authorityType: RequestLog["authorityType"],
+    userId?: string,
+  ): string {
     return this.logRequest({
       requestType,
-      chosenPath: 'delegate',
+      chosenPath: "delegate",
       pathReason: `Authority required: ${authorityType}`,
       confidence: 1.0,
       computeAvoided: true,
       authorityRequired: true,
       authorityType,
-      authorityStatus: 'pending',
+      authorityStatus: "pending",
       latencyMs: 0,
       userId,
     });
@@ -251,8 +271,8 @@ class SelfAwarenessLogger {
       // Authority
       if (log.authorityRequired) {
         authorityRequired++;
-        if (log.authorityStatus === 'approved') authorityApproved++;
-        if (log.authorityStatus === 'rejected') authorityRejected++;
+        if (log.authorityStatus === "approved") authorityApproved++;
+        if (log.authorityStatus === "rejected") authorityRejected++;
       }
 
       // Latency
@@ -306,22 +326,22 @@ class SelfAwarenessLogger {
     const oneMinuteAgo = new Date(now - 60 * 1000);
     const fiveMinutesAgo = new Date(now - 5 * 60 * 1000);
 
-    const lastMinute = this.recentLogs.filter(l => l.timestamp > oneMinuteAgo);
-    const lastFiveMinutes = this.recentLogs.filter(l => l.timestamp > fiveMinutesAgo);
+    const lastMinute = this.recentLogs.filter((l) => l.timestamp > oneMinuteAgo);
+    const lastFiveMinutes = this.recentLogs.filter((l) => l.timestamp > fiveMinutesAgo);
 
-    const computeAvoidedLast5 = lastFiveMinutes.filter(l => l.computeAvoided).length;
-    const avgLatencyLast5 = lastFiveMinutes.length > 0
-      ? lastFiveMinutes.reduce((sum, l) => sum + l.latencyMs, 0) / lastFiveMinutes.length
-      : 0;
-    const activeAuthority = lastFiveMinutes.filter(l => 
-      l.authorityRequired && l.authorityStatus === 'pending'
+    const computeAvoidedLast5 = lastFiveMinutes.filter((l) => l.computeAvoided).length;
+    const avgLatencyLast5 =
+      lastFiveMinutes.length > 0
+        ? lastFiveMinutes.reduce((sum, l) => sum + l.latencyMs, 0) / lastFiveMinutes.length
+        : 0;
+    const activeAuthority = lastFiveMinutes.filter(
+      (l) => l.authorityRequired && l.authorityStatus === "pending",
     ).length;
 
     return {
       requestsPerMinute: lastMinute.length,
-      computeAvoidanceRateLast5Min: lastFiveMinutes.length > 0 
-        ? computeAvoidedLast5 / lastFiveMinutes.length 
-        : 0,
+      computeAvoidanceRateLast5Min:
+        lastFiveMinutes.length > 0 ? computeAvoidedLast5 / lastFiveMinutes.length : 0,
       avgLatencyLast5Min: avgLatencyLast5,
       activeAuthority,
     };
@@ -332,20 +352,20 @@ class SelfAwarenessLogger {
   getLogs(params?: {
     limit?: number;
     offset?: number;
-    chosenPath?: RequestLog['chosenPath'];
+    chosenPath?: RequestLog["chosenPath"];
     userId?: string;
     since?: Date;
   }): RequestLog[] {
     let filtered = [...this.logs];
 
     if (params?.chosenPath) {
-      filtered = filtered.filter(l => l.chosenPath === params.chosenPath);
+      filtered = filtered.filter((l) => l.chosenPath === params.chosenPath);
     }
     if (params?.userId) {
-      filtered = filtered.filter(l => l.userId === params.userId);
+      filtered = filtered.filter((l) => l.userId === params.userId);
     }
     if (params?.since) {
-      filtered = filtered.filter(l => l.timestamp > params.since);
+      filtered = filtered.filter((l) => l.timestamp > params.since);
     }
 
     const offset = params?.offset || 0;
@@ -355,7 +375,7 @@ class SelfAwarenessLogger {
   }
 
   getLog(id: string): RequestLog | undefined {
-    return this.logs.find(l => l.id === id);
+    return this.logs.find((l) => l.id === id);
   }
 
   // ===== SUBSCRIPTIONS =====
@@ -367,7 +387,7 @@ class SelfAwarenessLogger {
 
   private notifyListeners(): void {
     const stats = this.getAggregatedStats();
-    this.listeners.forEach(l => l(stats));
+    this.listeners.forEach((l) => l(stats));
   }
 
   // ===== PERSISTENCE =====
@@ -375,12 +395,15 @@ class SelfAwarenessLogger {
   private saveToStorage(): void {
     try {
       // Only save last 1000 logs to storage
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        logs: this.logs.slice(0, 1000),
-      }));
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({
+          logs: this.logs.slice(0, 1000),
+        }),
+      );
     } catch (e) {
       // Storage might be full
-      console.warn('[SelfAwareness] Failed to save logs:', e);
+      console.warn("[SelfAwareness] Failed to save logs:", e);
     }
   }
 
@@ -397,7 +420,7 @@ class SelfAwarenessLogger {
         }
       }
     } catch (e) {
-      console.warn('[SelfAwareness] Failed to load logs:', e);
+      console.warn("[SelfAwareness] Failed to load logs:", e);
     }
   }
 
@@ -405,31 +428,55 @@ class SelfAwarenessLogger {
     setInterval(() => {
       // Keep only last 24 hours in memory
       const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-      this.logs = this.logs.filter(l => l.timestamp > oneDayAgo);
+      this.logs = this.logs.filter((l) => l.timestamp > oneDayAgo);
 
       // Keep only last 5 minutes in recent logs
       const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
-      this.recentLogs = this.recentLogs.filter(l => l.timestamp > fiveMinutesAgo);
+      this.recentLogs = this.recentLogs.filter((l) => l.timestamp > fiveMinutesAgo);
     }, 60000); // Every minute
   }
 
   // ===== EXPORT =====
 
-  exportLogs(format: 'json' | 'csv' = 'json'): string {
-    if (format === 'csv') {
+  exportLogs(format: "json" | "csv" = "json"): string {
+    if (format === "csv") {
       const headers = [
-        'id', 'timestamp', 'requestType', 'chosenPath', 'pathReason',
-        'confidence', 'computeAvoided', 'computeAvoidanceMethod',
-        'gpuSavingsMs', 'authorityRequired', 'authorityType',
-        'authorityStatus', 'latencyMs', 'userId', 'moduleName'
+        "id",
+        "timestamp",
+        "requestType",
+        "chosenPath",
+        "pathReason",
+        "confidence",
+        "computeAvoided",
+        "computeAvoidanceMethod",
+        "gpuSavingsMs",
+        "authorityRequired",
+        "authorityType",
+        "authorityStatus",
+        "latencyMs",
+        "userId",
+        "moduleName",
       ];
-      const rows = this.logs.map(l => [
-        l.id, l.timestamp.toISOString(), l.requestType, l.chosenPath, l.pathReason,
-        l.confidence, l.computeAvoided, l.computeAvoidanceMethod || '',
-        l.gpuSavingsMs || '', l.authorityRequired, l.authorityType || '',
-        l.authorityStatus || '', l.latencyMs, l.userId || '', l.moduleName || ''
-      ].join(','));
-      return [headers.join(','), ...rows].join('\n');
+      const rows = this.logs.map((l) =>
+        [
+          l.id,
+          l.timestamp.toISOString(),
+          l.requestType,
+          l.chosenPath,
+          l.pathReason,
+          l.confidence,
+          l.computeAvoided,
+          l.computeAvoidanceMethod || "",
+          l.gpuSavingsMs || "",
+          l.authorityRequired,
+          l.authorityType || "",
+          l.authorityStatus || "",
+          l.latencyMs,
+          l.userId || "",
+          l.moduleName || "",
+        ].join(","),
+      );
+      return [headers.join(","), ...rows].join("\n");
     }
     return JSON.stringify(this.logs, null, 2);
   }

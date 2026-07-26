@@ -1,7 +1,13 @@
-import { Search, Filter, ArrowUpDown } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Button } from '@/components/ui/button';
+import { Search, Filter, ArrowUpDown } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 
 interface ModuleFiltersProps {
   searchQuery: string;
@@ -10,7 +16,7 @@ interface ModuleFiltersProps {
   onStatusFilterChange: (value: string) => void;
   sortBy: string;
   onSortByChange: (value: string) => void;
-  sortOrder: 'asc' | 'desc';
+  sortOrder: "asc" | "desc";
   onSortOrderToggle: () => void;
 }
 
@@ -22,7 +28,7 @@ export function ModuleFilters({
   sortBy,
   onSortByChange,
   sortOrder,
-  onSortOrderToggle
+  onSortOrderToggle,
 }: ModuleFiltersProps) {
   return (
     <div className="flex flex-col sm:flex-row gap-4 p-4 bg-card rounded-lg border border-border">
@@ -67,13 +73,10 @@ export function ModuleFilters({
             <SelectItem value="compression">Compression</SelectItem>
           </SelectContent>
         </Select>
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={onSortOrderToggle}
-          className="shrink-0"
-        >
-          <ArrowUpDown className={`h-4 w-4 transition-transform ${sortOrder === 'desc' ? 'rotate-180' : ''}`} />
+        <Button variant="outline" size="icon" onClick={onSortOrderToggle} className="shrink-0">
+          <ArrowUpDown
+            className={`h-4 w-4 transition-transform ${sortOrder === "desc" ? "rotate-180" : ""}`}
+          />
         </Button>
       </div>
     </div>

@@ -1,23 +1,37 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { 
-  Activity, Eye, Shield, Cpu, Brain, RefreshCw, 
-  ArrowRight, AlertTriangle, CheckCircle2, Zap,
-  TrendingUp, Clock, Database
+import {
+  Activity,
+  Eye,
+  Shield,
+  Cpu,
+  Brain,
+  RefreshCw,
+  ArrowRight,
+  AlertTriangle,
+  CheckCircle2,
+  Zap,
+  TrendingUp,
+  Clock,
+  Database,
 } from "lucide-react";
-import { 
-  realityMinimizationEngine, 
+import {
+  realityMinimizationEngine,
   realityReconciliationLayer,
-  truthWeightScorer 
+  truthWeightScorer,
 } from "@/lib/safeCompute";
 
 export function RealityAuditMetrics({ className }: { className?: string }) {
   const [stats, setStats] = useState(realityMinimizationEngine.getStats());
-  const [reconciliationStats, setReconciliationStats] = useState(realityReconciliationLayer.getStats());
+  const [reconciliationStats, setReconciliationStats] = useState(
+    realityReconciliationLayer.getStats(),
+  );
   const [scorerStats, setScorerStats] = useState(truthWeightScorer.getStats());
-  const [recentCorrections, setRecentCorrections] = useState(realityReconciliationLayer.getRecentCorrections(5));
+  const [recentCorrections, setRecentCorrections] = useState(
+    realityReconciliationLayer.getRecentCorrections(5),
+  );
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -52,37 +66,37 @@ export function RealityAuditMetrics({ className }: { className?: string }) {
       <CardContent className="space-y-6">
         {/* Execution Path Distribution */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-          <MetricBox 
+          <MetricBox
             icon={<Zap className="h-4 w-4 text-purple-500" />}
             label="Inferred"
             value={stats.tasksInferred}
             color="text-purple-500"
           />
-          <MetricBox 
+          <MetricBox
             icon={<RefreshCw className="h-4 w-4 text-green-500" />}
             label="Reused"
             value={stats.tasksReused}
             color="text-green-500"
           />
-          <MetricBox 
+          <MetricBox
             icon={<Brain className="h-4 w-4 text-blue-500" />}
             label="Predicted"
             value={stats.tasksPredicted}
             color="text-blue-500"
           />
-          <MetricBox 
+          <MetricBox
             icon={<ArrowRight className="h-4 w-4 text-orange-500" />}
             label="Delegated"
             value={stats.tasksDelegated}
             color="text-orange-500"
           />
-          <MetricBox 
+          <MetricBox
             icon={<Cpu className="h-4 w-4 text-red-500" />}
             label="Exact Compute"
             value={stats.tasksExactCompute}
             color="text-red-500"
           />
-          <MetricBox 
+          <MetricBox
             icon={<Shield className="h-4 w-4 text-yellow-500" />}
             label="Authority Locked"
             value={stats.tasksAuthorityLocked}
@@ -102,8 +116,8 @@ export function RealityAuditMetrics({ className }: { className?: string }) {
                 {stats.gpuComputeAvoided}/{stats.totalTasks} tasks
               </span>
             </div>
-            <Progress 
-              value={stats.totalTasks > 0 ? (stats.gpuComputeAvoided / stats.totalTasks) * 100 : 0} 
+            <Progress
+              value={stats.totalTasks > 0 ? (stats.gpuComputeAvoided / stats.totalTasks) * 100 : 0}
               className="h-2"
             />
           </div>
@@ -117,10 +131,7 @@ export function RealityAuditMetrics({ className }: { className?: string }) {
                 {(reconciliationStats.successRate * 100).toFixed(1)}%
               </span>
             </div>
-            <Progress 
-              value={reconciliationStats.successRate * 100} 
-              className="h-2"
-            />
+            <Progress value={reconciliationStats.successRate * 100} className="h-2" />
           </div>
         </div>
 
@@ -142,23 +153,23 @@ export function RealityAuditMetrics({ className }: { className?: string }) {
 
         {/* Reconciliation Details */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <StatBadge 
-            label="Elastic Corrections" 
+          <StatBadge
+            label="Elastic Corrections"
             value={reconciliationStats.elasticCorrections}
             variant="default"
           />
-          <StatBadge 
-            label="Temporal Smoothings" 
+          <StatBadge
+            label="Temporal Smoothings"
             value={reconciliationStats.temporalSmoothings}
             variant="secondary"
           />
-          <StatBadge 
-            label="Safe Rollbacks" 
+          <StatBadge
+            label="Safe Rollbacks"
             value={reconciliationStats.safeRollbacks}
             variant="outline"
           />
-          <StatBadge 
-            label="Execution Halts" 
+          <StatBadge
+            label="Execution Halts"
             value={reconciliationStats.executionHalts}
             variant="destructive"
           />
@@ -173,16 +184,16 @@ export function RealityAuditMetrics({ className }: { className?: string }) {
             </h4>
             <div className="space-y-1 max-h-32 overflow-y-auto">
               {recentCorrections.map((correction, i) => (
-                <div 
+                <div
                   key={i}
                   className="flex items-center justify-between text-xs p-2 bg-muted/20 rounded"
                 >
                   <span className="truncate max-w-[200px]">{correction.taskId}</span>
                   <Badge variant="outline" className="text-[10px]">
-                    {correction.strategy.replace('_', ' ')}
+                    {correction.strategy.replace("_", " ")}
                   </Badge>
                   <span className="text-muted-foreground">
-                    Δ{(correction.deltaPercent).toFixed(1)}%
+                    Δ{correction.deltaPercent.toFixed(1)}%
                   </span>
                 </div>
               ))}
@@ -226,15 +237,15 @@ export function RealityAuditMetrics({ className }: { className?: string }) {
   );
 }
 
-function MetricBox({ 
-  icon, 
-  label, 
-  value, 
-  color 
-}: { 
-  icon: React.ReactNode; 
-  label: string; 
-  value: number; 
+function MetricBox({
+  icon,
+  label,
+  value,
+  color,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: number;
   color: string;
 }) {
   return (
@@ -246,19 +257,21 @@ function MetricBox({
   );
 }
 
-function StatBadge({ 
-  label, 
-  value, 
-  variant 
-}: { 
-  label: string; 
-  value: number; 
+function StatBadge({
+  label,
+  value,
+  variant,
+}: {
+  label: string;
+  value: number;
   variant: "default" | "secondary" | "outline" | "destructive";
 }) {
   return (
     <div className="flex items-center justify-between p-2 border rounded">
       <span className="text-xs text-muted-foreground">{label}</span>
-      <Badge variant={variant} className="text-xs">{value}</Badge>
+      <Badge variant={variant} className="text-xs">
+        {value}
+      </Badge>
     </div>
   );
 }

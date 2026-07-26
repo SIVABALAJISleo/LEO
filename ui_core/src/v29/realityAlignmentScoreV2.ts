@@ -25,7 +25,7 @@ export class RealityAlignmentScoreV2 {
         predictedValue: 0.945,
         observedValue: 0.952,
         difference: 0.007,
-        correctionRate: 0.005
+        correctionRate: 0.005,
       },
       {
         id: "AL-2902",
@@ -33,8 +33,8 @@ export class RealityAlignmentScoreV2 {
         predictedValue: 0.994,
         observedValue: 0.991,
         difference: -0.003,
-        correctionRate: -0.002
-      }
+        correctionRate: -0.002,
+      },
     ];
   }
 
@@ -48,7 +48,7 @@ export class RealityAlignmentScoreV2 {
       predictedValue: predicted,
       observedValue: observed,
       difference,
-      correctionRate
+      correctionRate,
     };
 
     this.events.push(newEvent);
@@ -59,7 +59,7 @@ export class RealityAlignmentScoreV2 {
     if (this.events.length === 0) return 0.982;
     const sumDiff = this.events.reduce((sum, e) => sum + Math.abs(e.difference), 0);
     const avgDiff = sumDiff / this.events.length;
-    return parseFloat(Math.min(0.999, Math.max(0.90, 1.0 - avgDiff)).toFixed(4));
+    return parseFloat(Math.min(0.999, Math.max(0.9, 1.0 - avgDiff)).toFixed(4));
   }
 
   getEvents(): FeedbackEventV29[] {

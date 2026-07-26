@@ -28,7 +28,7 @@ export class MultiWorldReasoner {
         expectedTimeSec: 4.2,
         energyConsumedJoules: 8500,
         obstacleDetected: true,
-        status: "Hazardous_Rejected"
+        status: "Hazardous_Rejected",
       },
       {
         worldId: "future-safe",
@@ -37,7 +37,7 @@ export class MultiWorldReasoner {
         expectedTimeSec: 8.5,
         energyConsumedJoules: 5100,
         obstacleDetected: false,
-        status: "Safe"
+        status: "Safe",
       },
       {
         worldId: "future-alternative",
@@ -46,18 +46,21 @@ export class MultiWorldReasoner {
         expectedTimeSec: 11.2,
         energyConsumedJoules: 6200,
         obstacleDetected: false,
-        status: "Safe"
-      }
+        status: "Safe",
+      },
     ];
 
     // Filter out Hazardous_Rejected and select lowest risk
-    const allowed = futures.filter(f => f.status !== "Hazardous_Rejected");
-    const recommended = allowed.reduce((best, curr) => curr.collisionRiskPct < best.collisionRiskPct ? curr : best, allowed[0]);
+    const allowed = futures.filter((f) => f.status !== "Hazardous_Rejected");
+    const recommended = allowed.reduce(
+      (best, curr) => (curr.collisionRiskPct < best.collisionRiskPct ? curr : best),
+      allowed[0],
+    );
 
     return {
       activeWorlds: futures,
       recommendedWorldId: recommended.worldId,
-      actionCommand: `Route active gantry actuators via trajectory ${recommended.name} (coordinates: ${currentCoordinates.join(",")})`
+      actionCommand: `Route active gantry actuators via trajectory ${recommended.name} (coordinates: ${currentCoordinates.join(",")})`,
     };
   }
 }

@@ -18,7 +18,7 @@ export class AnomalyCatalog {
       observedMetric: metric,
       expectedValue: expected,
       actualValue: actual,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
     this.anomalies.push(anomaly);
     return anomaly;

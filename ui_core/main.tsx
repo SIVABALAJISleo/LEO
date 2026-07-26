@@ -5,14 +5,14 @@ import "./index.css";
 
 // Start the production-grade SaaS engine (non-blocking)
 try {
-    initializeEngine();
+  initializeEngine();
 } catch (e) {
-    console.error("[Engine] Failed to initialize engine layer:", e);
+  console.error("[Engine] Failed to initialize engine layer:", e);
 }
 
 const rootElement = document.getElementById("root");
 if (rootElement) {
-    createRoot(rootElement).render(<App />);
+  createRoot(rootElement).render(<App />);
 } else {
-    console.error("Root element not found!");
+  console.error("Root element not found!");
 }

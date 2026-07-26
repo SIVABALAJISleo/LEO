@@ -5,7 +5,7 @@
  */
 
 export interface CalibrationTelemetry {
-  evidenceWeight: number;      // 0 to 1
+  evidenceWeight: number; // 0 to 1
   reasoningConsistency: number; // 0 to 1
   verificationSuccessCount: number;
   verificationTotalCount: number;
@@ -28,7 +28,7 @@ export class ConfidenceEngine {
     evidenceWeight: number,
     reasoningConsistency: number,
     verifySuccess: number,
-    verifyTotal: number
+    verifyTotal: number,
   ): CalibrationResponse {
     // Determine Verification status
     let verificationStatus: "fully_verified" | "partially_verified" | "unverified" = "unverified";
@@ -50,7 +50,8 @@ export class ConfidenceEngine {
 
     // Calibrate confidence
     // High confidence requires: strong evidence (evidenceWeight >= 0.85), successful verification (verificationRatio >= 0.9), consistent reasoning (reasoningConsistency >= 0.9)
-    let calibratedConfidence = (evidenceWeight * 0.4) + (reasoningConsistency * 0.3) + (verificationRatio * 0.3);
+    let calibratedConfidence =
+      evidenceWeight * 0.4 + reasoningConsistency * 0.3 + verificationRatio * 0.3;
 
     // Apply strict penalty constraints for unverified paths
     if (verificationStatus === "unverified") {
@@ -71,8 +72,8 @@ export class ConfidenceEngine {
         evidenceWeight,
         reasoningConsistency,
         verificationSuccessCount: verifySuccess,
-        verificationTotalCount: verifyTotal
-      }
+        verificationTotalCount: verifyTotal,
+      },
     };
   }
 }
@@ -87,7 +88,7 @@ export class ConfidenceEngineV16 {
     evidenceWeight: number,
     reasoningConsistency: number,
     verifySuccess: number,
-    verifyTotal: number
+    verifyTotal: number,
   ): CalibrationResponse {
     let verificationStatus: "fully_verified" | "partially_verified" | "unverified" = "unverified";
     const verificationRatio = verifyTotal === 0 ? 0 : verifySuccess / verifyTotal;
@@ -100,21 +101,22 @@ export class ConfidenceEngineV16 {
 
     // V16 Evidence Level Rules (Strong >= 0.90, Adequate >= 0.60, else Weak)
     let evidenceLevel: "strong" | "adequate" | "weak" = "weak";
-    if (evidenceWeight >= 0.90) {
+    if (evidenceWeight >= 0.9) {
       evidenceLevel = "strong";
-    } else if (evidenceWeight >= 0.60) {
+    } else if (evidenceWeight >= 0.6) {
       evidenceLevel = "adequate";
     }
 
-    let calibratedConfidence = (evidenceWeight * 0.5) + (reasoningConsistency * 0.25) + (verificationRatio * 0.25);
+    let calibratedConfidence =
+      evidenceWeight * 0.5 + reasoningConsistency * 0.25 + verificationRatio * 0.25;
 
     // Apply strict V16 constraints
     if (evidenceLevel === "weak") {
-      calibratedConfidence = Math.min(0.30, calibratedConfidence * 0.4);
+      calibratedConfidence = Math.min(0.3, calibratedConfidence * 0.4);
     } else if (verificationStatus === "unverified") {
       calibratedConfidence = Math.min(0.35, calibratedConfidence * 0.5);
     } else if (verificationStatus === "partially_verified") {
-      calibratedConfidence = Math.min(0.70, calibratedConfidence * 0.75);
+      calibratedConfidence = Math.min(0.7, calibratedConfidence * 0.75);
     }
 
     calibratedConfidence = parseFloat(calibratedConfidence.toFixed(4));
@@ -128,9 +130,8 @@ export class ConfidenceEngineV16 {
         evidenceWeight,
         reasoningConsistency,
         verificationSuccessCount: verifySuccess,
-        verificationTotalCount: verifyTotal
-      }
+        verificationTotalCount: verifyTotal,
+      },
     };
   }
 }
-

@@ -21,21 +21,40 @@ export interface ExpansionReport {
 export class UniversalKnowledgeExpansionEngine {
   private crawledLogs: CrawlResult[] = [];
 
-  crawlSource(url: string, type: "GitHub" | "DocSite" | "ResearchPaper" | "StandardsDB"): CrawlResult {
+  crawlSource(
+    url: string,
+    type: "GitHub" | "DocSite" | "ResearchPaper" | "StandardsDB",
+  ): CrawlResult {
     let entities: string[] = [];
     let tokens = 0;
 
     if (type === "GitHub") {
-      entities = ["Next.js AppRouter API v15", "React Compiler alpha", "TailwindCSS v4.0 Alpha config"];
+      entities = [
+        "Next.js AppRouter API v15",
+        "React Compiler alpha",
+        "TailwindCSS v4.0 Alpha config",
+      ];
       tokens = 245000;
     } else if (type === "DocSite") {
-      entities = ["Stripe paymentIntent.confirm options", "OpenAI assistants API v2 schemas", "Supabase auth-helpers deprecated replacements"];
+      entities = [
+        "Stripe paymentIntent.confirm options",
+        "OpenAI assistants API v2 schemas",
+        "Supabase auth-helpers deprecated replacements",
+      ];
       tokens = 180000;
     } else if (type === "ResearchPaper") {
-      entities = ["Direct Preference Optimization bounds", "Speculative decoding verification tokens scaling", "vLLM paged attention cache compaction mathematical model"];
+      entities = [
+        "Direct Preference Optimization bounds",
+        "Speculative decoding verification tokens scaling",
+        "vLLM paged attention cache compaction mathematical model",
+      ];
       tokens = 540000;
     } else {
-      entities = ["ISO-27001 SOC2 controls matrix", "OAuth 2.1 security profile draft", "JWT signature verification requirements"];
+      entities = [
+        "ISO-27001 SOC2 controls matrix",
+        "OAuth 2.1 security profile draft",
+        "JWT signature verification requirements",
+      ];
       tokens = 95000;
     }
 
@@ -44,7 +63,7 @@ export class UniversalKnowledgeExpansionEngine {
       sourceType: type,
       entitiesDiscovered: entities,
       tokensIngested: tokens,
-      addedToContext: true
+      addedToContext: true,
     };
 
     this.crawledLogs.push(result);
@@ -57,14 +76,17 @@ export class UniversalKnowledgeExpansionEngine {
     this.crawlSource("https://arxiv.org/abs/2305.18290", "ResearchPaper");
     this.crawlSource("https://www.iso.org/standards.html", "StandardsDB");
 
-    const totalEntitiesDiscovered = this.crawledLogs.reduce((acc, r) => acc + r.entitiesDiscovered.length, 0);
+    const totalEntitiesDiscovered = this.crawledLogs.reduce(
+      (acc, r) => acc + r.entitiesDiscovered.length,
+      0,
+    );
     const totalTokensIngested = this.crawledLogs.reduce((acc, r) => acc + r.tokensIngested, 0);
 
     return {
       timestamp: Date.now(),
       results: [...this.crawledLogs],
       totalEntitiesDiscovered,
-      totalTokensIngested
+      totalTokensIngested,
     };
   }
 

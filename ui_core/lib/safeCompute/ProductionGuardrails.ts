@@ -5,20 +5,20 @@ export interface GuardrailConfig {
   // Rate limiting
   maxRequestsPerMinute: number;
   maxRequestsPerHour: number;
-  
+
   // Job quotas
   maxConcurrentJobs: number;
   maxJobsPerDay: number;
   maxJobDurationMs: number;
-  
+
   // Cost ceilings
   maxDailyCostUsd: number;
   maxMonthlyCostUsd: number;
-  
+
   // Resource limits
   maxMemoryMb: number;
   maxCpuPercent: number;
-  
+
   // Circuit breaker
   failureThreshold: number;
   recoveryTimeMs: number;
@@ -42,11 +42,11 @@ export interface GuardrailState {
 export interface GuardrailViolation {
   id: string;
   timestamp: string;
-  type: 'rate_limit' | 'job_quota' | 'cost_ceiling' | 'resource_limit' | 'circuit_breaker';
+  type: "rate_limit" | "job_quota" | "cost_ceiling" | "resource_limit" | "circuit_breaker";
   metric: string;
   currentValue: number;
   limitValue: number;
-  action: 'blocked' | 'throttled' | 'warned';
+  action: "blocked" | "throttled" | "warned";
   message: string;
 }
 
@@ -100,51 +100,58 @@ class ProductionGuardrails {
 
   // Check if request is allowed
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  checkRequest(userId?: string): { allowed: boolean; reason?: string; violation?: GuardrailViolation } {
+  checkRequest(userId?: string): {
+    allowed: boolean;
+    reason?: string;
+    violation?: GuardrailViolation;
+  } {
     const now = Date.now();
 
     // Check circuit breaker
     if (this.state.circuitBreakerOpen) {
-      if (this.circuitBreakerOpenedAt && now - this.circuitBreakerOpenedAt > this.config.recoveryTimeMs) {
+      if (
+        this.circuitBreakerOpenedAt &&
+        now - this.circuitBreakerOpenedAt > this.config.recoveryTimeMs
+      ) {
         this.closeCircuitBreaker();
       } else {
-        const violation = this.createViolation('circuit_breaker', 'circuit_state', 1, 0, 'blocked');
-        return { allowed: false, reason: 'Circuit breaker open', violation };
+        const violation = this.createViolation("circuit_breaker", "circuit_state", 1, 0, "blocked");
+        return { allowed: false, reason: "Circuit breaker open", violation };
       }
     }
 
     // Clean old timestamps
     const oneMinuteAgo = now - 60000;
     const oneHourAgo = now - 3600000;
-    this.requestTimestamps = this.requestTimestamps.filter(t => t > oneHourAgo);
+    this.requestTimestamps = this.requestTimestamps.filter((t) => t > oneHourAgo);
 
     // Count recent requests
-    const requestsThisMinute = this.requestTimestamps.filter(t => t > oneMinuteAgo).length;
+    const requestsThisMinute = this.requestTimestamps.filter((t) => t > oneMinuteAgo).length;
     const requestsThisHour = this.requestTimestamps.length;
 
     // Rate limit check
     if (requestsThisMinute >= this.config.maxRequestsPerMinute) {
       const violation = this.createViolation(
-        'rate_limit', 
-        'requests_per_minute', 
-        requestsThisMinute, 
-        this.config.maxRequestsPerMinute, 
-        'blocked'
+        "rate_limit",
+        "requests_per_minute",
+        requestsThisMinute,
+        this.config.maxRequestsPerMinute,
+        "blocked",
       );
       this.violations.push(violation);
-      return { allowed: false, reason: 'Rate limit exceeded (per minute)', violation };
+      return { allowed: false, reason: "Rate limit exceeded (per minute)", violation };
     }
 
     if (requestsThisHour >= this.config.maxRequestsPerHour) {
       const violation = this.createViolation(
-        'rate_limit', 
-        'requests_per_hour', 
-        requestsThisHour, 
-        this.config.maxRequestsPerHour, 
-        'blocked'
+        "rate_limit",
+        "requests_per_hour",
+        requestsThisHour,
+        this.config.maxRequestsPerHour,
+        "blocked",
       );
       this.violations.push(violation);
-      return { allowed: false, reason: 'Rate limit exceeded (per hour)', violation };
+      return { allowed: false, reason: "Rate limit exceeded (per hour)", violation };
     }
 
     // Record request
@@ -159,26 +166,26 @@ class ProductionGuardrails {
   checkJobStart(): { allowed: boolean; reason?: string; violation?: GuardrailViolation } {
     if (this.state.currentLimits.concurrentJobs >= this.config.maxConcurrentJobs) {
       const violation = this.createViolation(
-        'job_quota',
-        'concurrent_jobs',
+        "job_quota",
+        "concurrent_jobs",
         this.state.currentLimits.concurrentJobs,
         this.config.maxConcurrentJobs,
-        'blocked'
+        "blocked",
       );
       this.violations.push(violation);
-      return { allowed: false, reason: 'Max concurrent jobs reached', violation };
+      return { allowed: false, reason: "Max concurrent jobs reached", violation };
     }
 
     if (this.state.currentLimits.jobsToday >= this.config.maxJobsPerDay) {
       const violation = this.createViolation(
-        'job_quota',
-        'jobs_per_day',
+        "job_quota",
+        "jobs_per_day",
         this.state.currentLimits.jobsToday,
         this.config.maxJobsPerDay,
-        'blocked'
+        "blocked",
       );
       this.violations.push(violation);
-      return { allowed: false, reason: 'Daily job limit reached', violation };
+      return { allowed: false, reason: "Daily job limit reached", violation };
     }
 
     this.state.currentLimits.concurrentJobs++;
@@ -188,36 +195,43 @@ class ProductionGuardrails {
 
   // Record job completion
   recordJobComplete(): void {
-    this.state.currentLimits.concurrentJobs = Math.max(0, this.state.currentLimits.concurrentJobs - 1);
+    this.state.currentLimits.concurrentJobs = Math.max(
+      0,
+      this.state.currentLimits.concurrentJobs - 1,
+    );
   }
 
   // Check cost ceiling
-  checkCost(additionalCostUsd: number): { allowed: boolean; reason?: string; violation?: GuardrailViolation } {
+  checkCost(additionalCostUsd: number): {
+    allowed: boolean;
+    reason?: string;
+    violation?: GuardrailViolation;
+  } {
     const projectedDaily = this.state.currentLimits.dailyCostUsd + additionalCostUsd;
     const projectedMonthly = this.state.currentLimits.monthlyCostUsd + additionalCostUsd;
 
     if (projectedDaily > this.config.maxDailyCostUsd) {
       const violation = this.createViolation(
-        'cost_ceiling',
-        'daily_cost_usd',
+        "cost_ceiling",
+        "daily_cost_usd",
         projectedDaily,
         this.config.maxDailyCostUsd,
-        'blocked'
+        "blocked",
       );
       this.violations.push(violation);
-      return { allowed: false, reason: 'Daily cost ceiling reached', violation };
+      return { allowed: false, reason: "Daily cost ceiling reached", violation };
     }
 
     if (projectedMonthly > this.config.maxMonthlyCostUsd) {
       const violation = this.createViolation(
-        'cost_ceiling',
-        'monthly_cost_usd',
+        "cost_ceiling",
+        "monthly_cost_usd",
         projectedMonthly,
         this.config.maxMonthlyCostUsd,
-        'blocked'
+        "blocked",
       );
       this.violations.push(violation);
-      return { allowed: false, reason: 'Monthly cost ceiling reached', violation };
+      return { allowed: false, reason: "Monthly cost ceiling reached", violation };
     }
 
     return { allowed: true };
@@ -247,11 +261,11 @@ class ProductionGuardrails {
     this.state.isHealthy = false;
     this.circuitBreakerOpenedAt = Date.now();
     const violation = this.createViolation(
-      'circuit_breaker',
-      'failure_count',
+      "circuit_breaker",
+      "failure_count",
       this.failureCount,
       this.config.failureThreshold,
-      'blocked'
+      "blocked",
     );
     this.violations.push(violation);
   }
@@ -264,11 +278,11 @@ class ProductionGuardrails {
   }
 
   private createViolation(
-    type: GuardrailViolation['type'],
+    type: GuardrailViolation["type"],
     metric: string,
     currentValue: number,
     limitValue: number,
-    action: GuardrailViolation['action']
+    action: GuardrailViolation["action"],
   ): GuardrailViolation {
     return {
       id: crypto.randomUUID(),
@@ -315,7 +329,7 @@ class ProductionGuardrails {
   // Get violations for reporting
   getViolations(since?: Date): GuardrailViolation[] {
     if (since) {
-      return this.violations.filter(v => new Date(v.timestamp) > since);
+      return this.violations.filter((v) => new Date(v.timestamp) > since);
     }
     return [...this.violations];
   }

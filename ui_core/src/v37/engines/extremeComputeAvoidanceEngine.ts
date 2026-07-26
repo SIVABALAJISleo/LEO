@@ -26,15 +26,15 @@ export class ExtremeComputeAvoidanceEngine {
       value: "Set OMP_NUM_THREADS matching physical cores and enable FP16 GGUF weights.",
       level: "L3_SemanticGraph",
       similarity: 0.95,
-      tokensSaved: 42
+      tokensSaved: 42,
     },
     {
       key: "calculate robotics trajectory safety distance",
       value: "Braking distance is computed using s = v^2 / (2 * g * f) + reaction latency.",
       level: "L2_LocalStore",
       similarity: 0.98,
-      tokensSaved: 120
-    }
+      tokensSaved: 120,
+    },
   ];
 
   /**
@@ -42,7 +42,7 @@ export class ExtremeComputeAvoidanceEngine {
    */
   public query(prompt: string): AvoidanceReport {
     const sLower = prompt.toLowerCase();
-    
+
     // Find best match in the cache store
     let bestMatch: CacheEntry | null = null;
     let maxSim = 0;
@@ -64,7 +64,7 @@ export class ExtremeComputeAvoidanceEngine {
         similarityScore: maxSim,
         computePruned: true,
         flopsSaved: bestMatch.tokensSaved * 12e6, // Estimate: 12M FLOPS saved per token
-        reason: `Retrieval-First Match found at ${bestMatch.level} with ${Math.round(maxSim * 100)}% similarity.`
+        reason: `Retrieval-First Match found at ${bestMatch.level} with ${Math.round(maxSim * 100)}% similarity.`,
       };
     }
 
@@ -77,7 +77,7 @@ export class ExtremeComputeAvoidanceEngine {
         similarityScore: 1.0,
         computePruned: true,
         flopsSaved: 5e6,
-        reason: "Pruned trivial input."
+        reason: "Pruned trivial input.",
       };
     }
 
@@ -87,7 +87,7 @@ export class ExtremeComputeAvoidanceEngine {
       similarityScore: maxSim,
       computePruned: false,
       flopsSaved: 0,
-      reason: "No matching cache slot or logic found. Routing to model inference."
+      reason: "No matching cache slot or logic found. Routing to model inference.",
     };
   }
 
@@ -97,7 +97,7 @@ export class ExtremeComputeAvoidanceEngine {
   private calculateSimilarity(str1: string, str2: string): number {
     const words1 = str1.split(/\s+/);
     const words2 = str2.split(/\s+/);
-    const intersection = words1.filter(w => words2.includes(w));
+    const intersection = words1.filter((w) => words2.includes(w));
     return intersection.length / Math.max(words1.length, words2.length);
   }
 

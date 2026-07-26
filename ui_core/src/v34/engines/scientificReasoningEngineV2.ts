@@ -22,8 +22,10 @@ export class ScientificReasoningEngineV2 {
    * Generates hypotheses and formulas from experimental datasets/queries.
    */
   public analyzeScientificData(datasetSummary: string): ScienceReport {
-    const isThermal = datasetSummary.toLowerCase().includes("thermal") || datasetSummary.toLowerCase().includes("heat");
-    
+    const isThermal =
+      datasetSummary.toLowerCase().includes("thermal") ||
+      datasetSummary.toLowerCase().includes("heat");
+
     // Simulate Symbolic Regression
     const symbolicFormula = isThermal
       ? "T_cpu(t) = P_core * R_thermal * (1 - e^(-t / tau)) + T_ambient"
@@ -35,19 +37,23 @@ export class ScientificReasoningEngineV2 {
       generatedHypotheses.push({
         id: "hyp-01",
         statement: "Ternary execution reduces CPU thermal decay cycles.",
-        explanation: "Since integer operations bypass multiplication hardware blocks, dynamic power consumption scales down, lowering thermal resistance changes.",
-        suggestedExperiment: "Compare average core temperatures of 3B parameters FP16 model vs Ternary simulated weight structures over 10,000 steps.",
+        explanation:
+          "Since integer operations bypass multiplication hardware blocks, dynamic power consumption scales down, lowering thermal resistance changes.",
+        suggestedExperiment:
+          "Compare average core temperatures of 3B parameters FP16 model vs Ternary simulated weight structures over 10,000 steps.",
         consistencyScore: 0.94,
-        plausibilityScore: 0.96
+        plausibilityScore: 0.96,
       });
     } else {
       generatedHypotheses.push({
         id: "hyp-02",
         statement: "AVX-VNNI register alignment prevents L2 cache evictions.",
-        explanation: "Quantized weights packed into contiguous arrays are fetched in single-cycle SIMD steps, eliminating memory latency gaps.",
-        suggestedExperiment: "Run cache latency traces on Intel 12th Gen using VTune Profiler during model parameter loading loops.",
+        explanation:
+          "Quantized weights packed into contiguous arrays are fetched in single-cycle SIMD steps, eliminating memory latency gaps.",
+        suggestedExperiment:
+          "Run cache latency traces on Intel 12th Gen using VTune Profiler during model parameter loading loops.",
         consistencyScore: 0.92,
-        plausibilityScore: 0.89
+        plausibilityScore: 0.89,
       });
     }
 
@@ -55,13 +61,19 @@ export class ScientificReasoningEngineV2 {
       ? "Found contradiction: Thread pinning limits throughput if other operating system processes hijack the active core affinity masks."
       : "No semantic contradictions found in data sources. Hypotheses correlate with theoretical low-bit limits.";
 
-    const causalGraphNodes = ["WeightState", "SIMDLoad", "RegisterPacking", "ThermalOutput", "FLOPAvoidance"];
+    const causalGraphNodes = [
+      "WeightState",
+      "SIMDLoad",
+      "RegisterPacking",
+      "ThermalOutput",
+      "FLOPAvoidance",
+    ];
 
     return {
       symbolicFormula,
       generatedHypotheses,
       contradictionAnalysis,
-      causalGraphNodes
+      causalGraphNodes,
     };
   }
 }

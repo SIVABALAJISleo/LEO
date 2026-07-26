@@ -1,6 +1,6 @@
 // HYPER System Boundary - Domain and scope limits
 
-type WorkloadOrigin = 'hyper-app' | 'hyper-api' | 'partner-pipeline' | 'external' | 'unknown';
+type WorkloadOrigin = "hyper-app" | "hyper-api" | "partner-pipeline" | "external" | "unknown";
 
 interface BoundaryCheck {
   allowed: boolean;
@@ -13,16 +13,16 @@ const SCOPE_RULES = {
   // HYPER does NOT own global users
   // HYPER reduces global GPU work indirectly
   // "Serve" ≠ "Compute" ≠ "Replace hardware"
-  
-  allowedOrigins: ['hyper-app', 'hyper-api', 'partner-pipeline'] as WorkloadOrigin[],
-  
+
+  allowedOrigins: ["hyper-app", "hyper-api", "partner-pipeline"] as WorkloadOrigin[],
+
   // Never optimize these (outside HYPER domain)
   blockedDomains: [
-    'os-gpu',           // OS-level GPU usage
-    'gaming',           // Games
-    'video-streaming',  // Video streaming platforms
-    'system-ui',        // System UI
-    'background-process', // Background processes
+    "os-gpu", // OS-level GPU usage
+    "gaming", // Games
+    "video-streaming", // Video streaming platforms
+    "system-ui", // System UI
+    "background-process", // Background processes
   ],
 };
 
@@ -46,7 +46,7 @@ class SystemBoundaryEngine {
       return {
         allowed: false,
         origin,
-        reason: 'Outside HYPER optimization scope',
+        reason: "Outside HYPER optimization scope",
       };
     }
 
@@ -55,7 +55,7 @@ class SystemBoundaryEngine {
       return {
         allowed: false,
         origin,
-        reason: 'Domain outside optimization scope',
+        reason: "Domain outside optimization scope",
       };
     }
 
@@ -76,36 +76,40 @@ class SystemBoundaryEngine {
   }
 
   // Determine origin from request context
-  determineOrigin(context: { source?: string; apiKey?: string; partnerId?: string }): WorkloadOrigin {
+  determineOrigin(context: {
+    source?: string;
+    apiKey?: string;
+    partnerId?: string;
+  }): WorkloadOrigin {
     if (context.partnerId && this.isPartner(context.partnerId)) {
-      return 'partner-pipeline';
+      return "partner-pipeline";
     }
     if (context.apiKey) {
-      return 'hyper-api';
+      return "hyper-api";
     }
-    if (context.source === 'app') {
-      return 'hyper-app';
+    if (context.source === "app") {
+      return "hyper-app";
     }
-    return 'unknown';
+    return "unknown";
   }
 
   // Get allowed claims for public messaging (firewall)
   getAllowedClaims(): string[] {
     return [
-      'HYPER reduces redundant GPU computation through software.',
-      'Intelligent workload optimization.',
-      'Efficient compute resource management.',
+      "HYPER reduces redundant GPU computation through software.",
+      "Intelligent workload optimization.",
+      "Efficient compute resource management.",
     ];
   }
 
   // Get forbidden claims (never use these)
   getForbiddenClaims(): string[] {
     return [
-      'Serving billions of users',
-      'Replacing global GPUs',
-      'Cloud-scale compute on a laptop',
-      'Infinite scale',
-      'Zero-wait heavy compute',
+      "Serving billions of users",
+      "Replacing global GPUs",
+      "Cloud-scale compute on a laptop",
+      "Infinite scale",
+      "Zero-wait heavy compute",
     ];
   }
 }

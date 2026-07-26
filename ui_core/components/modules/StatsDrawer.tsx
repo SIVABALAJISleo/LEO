@@ -1,20 +1,22 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { X, TrendingUp, AlertTriangle, Clock, CheckCircle, XCircle } from 'lucide-react';
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { Badge } from '@/components/ui/badge';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Progress } from '@/components/ui/progress';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
-import { ModuleData, ModuleStats, useModulesData } from '@/hooks/useModulesData';
+import { X, TrendingUp, AlertTriangle, Clock, CheckCircle, XCircle } from "lucide-react";
 import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from '@/components/ui/chart';
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Legend } from 'recharts';
-import { cn } from '@/lib/utils';
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { Badge } from "@/components/ui/badge";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { Progress } from "@/components/ui/progress";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { ModuleData, ModuleStats, useModulesData } from "@/hooks/useModulesData";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Legend } from "recharts";
+import { cn } from "@/lib/utils";
 
 interface StatsDrawerProps {
   module: ModuleData | null;
@@ -35,27 +37,31 @@ export function StatsDrawer({ module, open, onOpenChange }: StatsDrawerProps) {
         setLoading(false);
       });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [module, open]);
 
   if (!module) return null;
 
-  const chartData = stats?.performanceHistory.slice(0, 30).reverse().map((item, idx) => ({
-    index: idx,
-    speedup: item.speedup,
-    compression: item.compression,
-    date: new Date(item.recorded_at).toLocaleDateString()
-  })) || [];
+  const chartData =
+    stats?.performanceHistory
+      .slice(0, 30)
+      .reverse()
+      .map((item, idx) => ({
+        index: idx,
+        speedup: item.speedup,
+        compression: item.compression,
+        date: new Date(item.recorded_at).toLocaleDateString(),
+      })) || [];
 
   const getSeverityColor = (severity: string) => {
     switch (severity.toLowerCase()) {
-      case 'critical':
-      case 'error':
-        return 'bg-red-500/20 text-red-400 border-red-500/30';
-      case 'warning':
-        return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+      case "critical":
+      case "error":
+        return "bg-red-500/20 text-red-400 border-red-500/30";
+      case "warning":
+        return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
       default:
-        return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+        return "bg-blue-500/20 text-blue-400 border-blue-500/30";
     }
   };
 
@@ -67,9 +73,7 @@ export function StatsDrawer({ module, open, onOpenChange }: StatsDrawerProps) {
             <TrendingUp className="h-5 w-5" />
             {module.name} Statistics
           </SheetTitle>
-          <SheetDescription>
-            Detailed performance metrics and history
-          </SheetDescription>
+          <SheetDescription>Detailed performance metrics and history</SheetDescription>
         </SheetHeader>
 
         <ScrollArea className="h-[calc(100vh-120px)] mt-6 pr-4">
@@ -82,11 +86,15 @@ export function StatsDrawer({ module, open, onOpenChange }: StatsDrawerProps) {
               {/* Summary Stats */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="p-4 bg-card rounded-lg border border-border">
-                  <p className="text-xs text-muted-foreground uppercase tracking-wide">Total Runs</p>
+                  <p className="text-xs text-muted-foreground uppercase tracking-wide">
+                    Total Runs
+                  </p>
                   <p className="text-2xl font-bold text-foreground">{stats?.totalRuns || 0}</p>
                 </div>
                 <div className="p-4 bg-card rounded-lg border border-border">
-                  <p className="text-xs text-muted-foreground uppercase tracking-wide">Success Rate</p>
+                  <p className="text-xs text-muted-foreground uppercase tracking-wide">
+                    Success Rate
+                  </p>
                   <div className="flex items-center gap-2">
                     <p className="text-2xl font-bold text-foreground">
                       {(stats?.successRate || 0).toFixed(1)}%
@@ -101,7 +109,9 @@ export function StatsDrawer({ module, open, onOpenChange }: StatsDrawerProps) {
                   </div>
                 </div>
                 <div className="p-4 bg-card rounded-lg border border-border col-span-2">
-                  <p className="text-xs text-muted-foreground uppercase tracking-wide">Avg Latency Impact</p>
+                  <p className="text-xs text-muted-foreground uppercase tracking-wide">
+                    Avg Latency Impact
+                  </p>
                   <div className="flex items-center gap-2">
                     <Clock className="h-4 w-4 text-muted-foreground" />
                     <p className="text-2xl font-bold text-foreground">
@@ -120,13 +130,13 @@ export function StatsDrawer({ module, open, onOpenChange }: StatsDrawerProps) {
                   <ChartContainer
                     config={{
                       speedup: {
-                        label: 'Speedup',
-                        color: 'hsl(var(--primary))'
+                        label: "Speedup",
+                        color: "hsl(var(--primary))",
                       },
                       compression: {
-                        label: 'Compression',
-                        color: 'hsl(var(--chart-2))'
-                      }
+                        label: "Compression",
+                        color: "hsl(var(--chart-2))",
+                      },
                     }}
                     className="h-48"
                   >
@@ -177,7 +187,7 @@ export function StatsDrawer({ module, open, onOpenChange }: StatsDrawerProps) {
                         key={error.id}
                         className={cn(
                           "p-3 rounded-lg border",
-                          error.resolved ? "bg-muted/30 border-border" : "bg-card border-border"
+                          error.resolved ? "bg-muted/30 border-border" : "bg-card border-border",
                         )}
                       >
                         <div className="flex items-start justify-between gap-2">
@@ -190,7 +200,10 @@ export function StatsDrawer({ module, open, onOpenChange }: StatsDrawerProps) {
                                 {error.severity}
                               </Badge>
                               {error.resolved && (
-                                <Badge variant="outline" className="text-xs bg-green-500/20 text-green-400 border-green-500/30">
+                                <Badge
+                                  variant="outline"
+                                  className="text-xs bg-green-500/20 text-green-400 border-green-500/30"
+                                >
                                   Resolved
                                 </Badge>
                               )}

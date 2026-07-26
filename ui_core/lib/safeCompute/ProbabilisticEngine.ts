@@ -3,13 +3,13 @@
 // If confidence ≥ 0.85 → deliver immediately
 // If < 0.85 → offer optional refinement (queued)
 
-type ProcessingMethod = 
-  | 'cached' 
-  | 'blended' 
-  | 'client' 
-  | 'fresh_gpu' 
-  | 'approximated'  // Renamed from 'simulated' - honest terminology
-  | 'interpolated';
+type ProcessingMethod =
+  | "cached"
+  | "blended"
+  | "client"
+  | "fresh_gpu"
+  | "approximated" // Renamed from 'simulated' - honest terminology
+  | "interpolated";
 
 interface ConfidenceResult {
   result: unknown;
@@ -31,7 +31,7 @@ interface RefinementRequest {
   originalSignature: string;
   requestedAt: Date;
   priority: number;
-  status: 'queued' | 'processing' | 'completed';
+  status: "queued" | "processing" | "completed";
 }
 
 class ProbabilisticEngine {
@@ -48,19 +48,19 @@ class ProbabilisticEngine {
       cacheHits?: number;
       batchSize?: number;
       computeTimeMs?: number;
-    }
+    },
   ): ConfidenceResult {
     const confidence = this.calculateConfidence(signature, result, source);
     const estimatedAccuracy = this.estimateAccuracy(source.method, confidence);
-    
+
     // Track confidence history
     if (!this.confidenceHistory.has(signature)) {
       this.confidenceHistory.set(signature, []);
     }
     this.confidenceHistory.get(signature)!.push(confidence);
-    
+
     const canRefine = confidence < this.CONFIDENCE_THRESHOLD;
-    
+
     return {
       result,
       confidence,
@@ -79,50 +79,50 @@ class ProbabilisticEngine {
 
   // Calculate confidence based on processing method and source
   private calculateConfidence(
-    signature: string, 
-    result: unknown, 
-    source: { method: ProcessingMethod; cacheHits?: number; batchSize?: number }
+    signature: string,
+    result: unknown,
+    source: { method: ProcessingMethod; cacheHits?: number; batchSize?: number },
   ): number {
     let baseConfidence: number;
-    
+
     switch (source.method) {
-      case 'fresh_gpu':
+      case "fresh_gpu":
         baseConfidence = 0.98;
         break;
-      case 'cached':
+      case "cached":
         // More cache hits = higher confidence
         // eslint-disable-next-line no-case-declarations
         const hits = source.cacheHits || 1;
-        baseConfidence = Math.min(0.95, 0.85 + (hits * 0.02));
+        baseConfidence = Math.min(0.95, 0.85 + hits * 0.02);
         break;
-      case 'blended':
+      case "blended":
         baseConfidence = 0.88;
         break;
-      case 'client':
-        baseConfidence = 0.90;
+      case "client":
+        baseConfidence = 0.9;
         break;
-      case 'interpolated':
+      case "interpolated":
         baseConfidence = 0.82;
         break;
-      case 'approximated':
+      case "approximated":
         baseConfidence = 0.75; // Honest: approximations have bounded accuracy
         break;
       default:
         baseConfidence = 0.75;
     }
-    
+
     // Adjust based on result validity
     if (result === null || result === undefined) {
       baseConfidence *= 0.5;
     }
-    
+
     // Historical adjustment
     const history = this.confidenceHistory.get(signature) || [];
     if (history.length > 0) {
       const avgHistorical = history.reduce((a, b) => a + b, 0) / history.length;
       baseConfidence = baseConfidence * 0.7 + avgHistorical * 0.3;
     }
-    
+
     return Math.min(0.99, Math.max(0.1, baseConfidence));
   }
 
@@ -134,9 +134,9 @@ class ProbabilisticEngine {
       client: 0.95,
       blended: 0.92,
       interpolated: 0.85,
-      approximated: 0.80, // Honest: approximations have bounded accuracy
+      approximated: 0.8, // Honest: approximations have bounded accuracy
     };
-    
+
     return confidence * (methodMultipliers[method] || 0.8);
   }
 
@@ -147,25 +147,25 @@ class ProbabilisticEngine {
       originalSignature: signature,
       requestedAt: new Date(),
       priority,
-      status: 'queued',
+      status: "queued",
     };
-    
+
     this.refinementQueue.push(request);
     this.refinementQueue.sort((a, b) => b.priority - a.priority);
-    
+
     return request;
   }
 
   // Get next refinement to process
   getNextRefinement(): RefinementRequest | null {
-    return this.refinementQueue.find(r => r.status === 'queued') || null;
+    return this.refinementQueue.find((r) => r.status === "queued") || null;
   }
 
   // Complete a refinement
   completeRefinement(id: string): void {
-    const request = this.refinementQueue.find(r => r.id === id);
+    const request = this.refinementQueue.find((r) => r.id === id);
     if (request) {
-      request.status = 'completed';
+      request.status = "completed";
     }
   }
 
@@ -176,9 +176,9 @@ class ProbabilisticEngine {
     completed: number;
   } {
     return {
-      queueLength: this.refinementQueue.filter(r => r.status === 'queued').length,
-      processing: this.refinementQueue.filter(r => r.status === 'processing').length,
-      completed: this.refinementQueue.filter(r => r.status === 'completed').length,
+      queueLength: this.refinementQueue.filter((r) => r.status === "queued").length,
+      processing: this.refinementQueue.filter((r) => r.status === "processing").length,
+      completed: this.refinementQueue.filter((r) => r.status === "completed").length,
     };
   }
 
@@ -190,27 +190,27 @@ class ProbabilisticEngine {
   // Get friendly status label
   getStatusLabel(method: ProcessingMethod): string {
     const labels: Record<ProcessingMethod, string> = {
-      cached: 'Instant (Cached)',
-      blended: 'Blended Results',
-      client: 'Client-Computed',
-      fresh_gpu: 'Fresh GPU Compute',
-      approximated: 'Approximated',
-      interpolated: 'Interpolated',
+      cached: "Instant (Cached)",
+      blended: "Blended Results",
+      client: "Client-Computed",
+      fresh_gpu: "Fresh GPU Compute",
+      approximated: "Approximated",
+      interpolated: "Interpolated",
     };
-    return labels[method] || 'Unknown';
+    return labels[method] || "Unknown";
   }
 
   // Get processing method icon name
   getMethodIcon(method: ProcessingMethod): string {
     const icons: Record<ProcessingMethod, string> = {
-      cached: 'zap',
-      blended: 'layers',
-      client: 'monitor',
-      fresh_gpu: 'cpu',
-      approximated: 'target',
-      interpolated: 'git-merge',
+      cached: "zap",
+      blended: "layers",
+      client: "monitor",
+      fresh_gpu: "cpu",
+      approximated: "target",
+      interpolated: "git-merge",
     };
-    return icons[method] || 'help-circle';
+    return icons[method] || "help-circle";
   }
 
   // Cleanup old history
@@ -221,11 +221,11 @@ class ProbabilisticEngine {
         this.confidenceHistory.set(sig, history.slice(-100));
       }
     }
-    
+
     // Remove completed refinements older than 1 hour
     const oneHourAgo = Date.now() - 60 * 60 * 1000;
-    this.refinementQueue = this.refinementQueue.filter(r => 
-      r.status !== 'completed' || r.requestedAt.getTime() > oneHourAgo
+    this.refinementQueue = this.refinementQueue.filter(
+      (r) => r.status !== "completed" || r.requestedAt.getTime() > oneHourAgo,
     );
   }
 }

@@ -24,7 +24,8 @@ export class AnalogicalReasoningEngine {
       similarityScore = 0.942;
     } else if (isGPU) {
       sourceAnalogy = "CPU local cache pre-resolutions scheduler.";
-      transferredPattern = "Deploy dynamic sub-thread scheduling blocks to minimize offload stress.";
+      transferredPattern =
+        "Deploy dynamic sub-thread scheduling blocks to minimize offload stress.";
       similarityScore = 0.915;
     }
 
@@ -33,7 +34,7 @@ export class AnalogicalReasoningEngine {
       sourceAnalogy,
       transferredPattern,
       similarityScore,
-      verificationOutcome: similarityScore > 0.80 ? "VALIDATED" : "CALIBRATING"
+      verificationOutcome: similarityScore > 0.8 ? "VALIDATED" : "CALIBRATING",
     };
   }
 }

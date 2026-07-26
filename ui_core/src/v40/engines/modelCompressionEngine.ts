@@ -45,7 +45,7 @@ export class ModelCompressionEngine {
     const res = await fetch("http://localhost:8000/api/v1/v40/engines/compression", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ramLimitGb, bitnetConfig: this.config })
+      body: JSON.stringify({ ramLimitGb, bitnetConfig: this.config }),
     });
     return res.json();
   }

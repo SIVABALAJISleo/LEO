@@ -14,22 +14,23 @@ export interface GovernorResolution {
 export class RetrievalGovernor {
   evaluateRetrieval(query: string, chunks: RetrievalChunk[]): GovernorResolution {
     const topChunk = chunks[0];
-    
+
     // If we have a highly relevant chunk (>0.85 similarity), we bypass neural reasoning completely
     const hasBypassedReasoning = topChunk ? topChunk.relevanceScore > 0.85 : false;
     const confidenceScore = topChunk ? topChunk.relevanceScore : 0.0;
-    const selectedChunkIds = chunks.map(c => c.chunkId);
-    
-    const resolvedAnswer = hasBypassedReasoning && topChunk
-      ? `[RETRIEVED ANSWER] Resolved via External RAG Index: ${topChunk.content}`
-      : `[NEURAL FALLBACK] Insufficient retrieval confidence. Escalated to reasoning core.`;
+    const selectedChunkIds = chunks.map((c) => c.chunkId);
+
+    const resolvedAnswer =
+      hasBypassedReasoning && topChunk
+        ? `[RETRIEVED ANSWER] Resolved via External RAG Index: ${topChunk.content}`
+        : `[NEURAL FALLBACK] Insufficient retrieval confidence. Escalated to reasoning core.`;
 
     return {
       query,
       hasBypassedReasoning,
       confidenceScore,
       selectedChunkIds,
-      resolvedAnswer
+      resolvedAnswer,
     };
   }
 }

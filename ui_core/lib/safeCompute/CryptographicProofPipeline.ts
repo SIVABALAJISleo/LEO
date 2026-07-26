@@ -4,8 +4,8 @@ import CryptoJS from "crypto-js";
 // Research-based legal/financial approval accelerator
 // Generates deterministic execution hashes and verifiable computation proofs
 
-export type ProofType = 'execution' | 'decision' | 'audit' | 'settlement' | 'compliance';
-export type ProofStatus = 'valid' | 'invalid' | 'pending' | 'expired';
+export type ProofType = "execution" | "decision" | "audit" | "settlement" | "compliance";
+export type ProofStatus = "valid" | "invalid" | "pending" | "expired";
 
 export interface ExecutionProof {
   proofId: string;
@@ -61,11 +61,11 @@ class CryptographicProofPipeline {
   private stats: ProofPipelineStats = {
     totalProofsGenerated: 0,
     proofsByType: {
-      'execution': 0,
-      'decision': 0,
-      'audit': 0,
-      'settlement': 0,
-      'compliance': 0,
+      execution: 0,
+      decision: 0,
+      audit: 0,
+      settlement: 0,
+      compliance: 0,
     },
     verificationsPerformed: 0,
     validVerifications: 0,
@@ -86,18 +86,21 @@ class CryptographicProofPipeline {
   }
 
   private async initializeGenesisBlock(): Promise<void> {
-    const genesisHash = await this.generateHash({ genesis: true, timestamp: '2024-01-01T00:00:00Z' });
+    const genesisHash = await this.generateHash({
+      genesis: true,
+      timestamp: "2024-01-01T00:00:00Z",
+    });
     this.auditChain.push({
-      entryId: 'genesis',
+      entryId: "genesis",
       sequenceNumber: 0,
-      previousHash: '0'.repeat(64),
+      previousHash: "0".repeat(64),
       currentHash: genesisHash,
-      action: 'GENESIS',
-      actor: 'system',
-      resource: 'audit_chain',
-      result: 'initialized',
+      action: "GENESIS",
+      actor: "system",
+      resource: "audit_chain",
+      result: "initialized",
       timestamp: new Date().toISOString(),
-      metadata: { version: '1.0.0' },
+      metadata: { version: "1.0.0" },
     });
     this.stats.chainLength = 1;
   }
@@ -107,12 +110,12 @@ class CryptographicProofPipeline {
     const str = JSON.stringify(data, Object.keys(data as object).sort());
 
     // Fallback for environments where crypto.subtle is not available (e.g. non-secure http context)
-    if (typeof crypto !== 'undefined' && crypto.subtle) {
+    if (typeof crypto !== "undefined" && crypto.subtle) {
       const encoder = new TextEncoder();
       const dataBuffer = encoder.encode(str);
-      const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuffer);
+      const hashBuffer = await crypto.subtle.digest("SHA-256", dataBuffer);
       const hashArray = Array.from(new Uint8Array(hashBuffer));
-      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
     } else {
       // Use crypto-js as fallback
       return CryptoJS.SHA256(str).toString(CryptoJS.enc.Hex);
@@ -142,7 +145,7 @@ class CryptographicProofPipeline {
     // Build verification chain
     const lastEntry = this.auditChain[this.auditChain.length - 1];
     const verificationChain = [
-      lastEntry?.currentHash || '0'.repeat(64),
+      lastEntry?.currentHash || "0".repeat(64),
       inputHash.substring(0, 16),
       outputHash.substring(0, 16),
       executionHash.substring(0, 16),
@@ -180,10 +183,10 @@ class CryptographicProofPipeline {
 
     // Add to audit chain
     await this.addToAuditChain({
-      action: 'PROOF_GENERATED',
-      actor: 'proof_pipeline',
+      action: "PROOF_GENERATED",
+      actor: "proof_pipeline",
       resource: proof.proofId,
-      result: 'success',
+      result: "success",
       metadata: { type: params.type, executionHash: executionHash.substring(0, 16) },
     });
 
@@ -192,19 +195,23 @@ class CryptographicProofPipeline {
   }
 
   // Verify an existing proof
-  async verifyProof(proofId: string, originalInput?: unknown, originalOutput?: unknown): Promise<VerificationResult> {
+  async verifyProof(
+    proofId: string,
+    originalInput?: unknown,
+    originalOutput?: unknown,
+  ): Promise<VerificationResult> {
     const startTime = Date.now();
     const proof = this.proofCache.get(proofId);
 
     if (!proof) {
       return {
         proofId,
-        status: 'invalid',
+        status: "invalid",
         verified: false,
         verifiedAt: new Date().toISOString(),
-        verifierHash: await this.generateHash({ proofId, error: 'not_found' }),
+        verifierHash: await this.generateHash({ proofId, error: "not_found" }),
         chainIntegrity: false,
-        discrepancies: ['Proof not found in cache'],
+        discrepancies: ["Proof not found in cache"],
       };
     }
 
@@ -212,33 +219,33 @@ class CryptographicProofPipeline {
 
     // Check expiration
     if (proof.expiresAt && new Date(proof.expiresAt) < new Date()) {
-      discrepancies.push('Proof has expired');
+      discrepancies.push("Proof has expired");
     }
 
     // Verify input/output if provided
     if (originalInput) {
       const inputHash = await this.generateHash(originalInput);
       if (inputHash !== proof.inputHash) {
-        discrepancies.push('Input hash mismatch');
+        discrepancies.push("Input hash mismatch");
       }
     }
 
     if (originalOutput) {
       const outputHash = await this.generateHash(originalOutput);
       if (outputHash !== proof.outputHash) {
-        discrepancies.push('Output hash mismatch');
+        discrepancies.push("Output hash mismatch");
       }
     }
 
     // Verify chain integrity
     const chainIntegrity = this.verifyChainIntegrity(proof.verificationChain);
     if (!chainIntegrity) {
-      discrepancies.push('Chain integrity compromised');
+      discrepancies.push("Chain integrity compromised");
     }
 
     const result: VerificationResult = {
       proofId,
-      status: discrepancies.length === 0 ? 'valid' : 'invalid',
+      status: discrepancies.length === 0 ? "valid" : "invalid",
       verified: discrepancies.length === 0,
       verifiedAt: new Date().toISOString(),
       verifierHash: await this.generateHash({ proofId, timestamp: startTime }),
@@ -251,10 +258,10 @@ class CryptographicProofPipeline {
     if (result.verified) {
       this.stats.validVerifications++;
     }
-    this.stats.avgVerificationTimeMs = (
+    this.stats.avgVerificationTimeMs =
       (this.stats.avgVerificationTimeMs * (this.stats.verificationsPerformed - 1) +
-        (Date.now() - startTime)) / this.stats.verificationsPerformed
-    );
+        (Date.now() - startTime)) /
+      this.stats.verificationsPerformed;
 
     this.verificationHistory.push(result);
     if (this.verificationHistory.length > 1000) {
@@ -270,7 +277,7 @@ class CryptographicProofPipeline {
 
     // Check if first link exists in audit chain
     const chainHead = chain[0];
-    const auditMatch = this.auditChain.find(e => e.currentHash === chainHead);
+    const auditMatch = this.auditChain.find((e) => e.currentHash === chainHead);
 
     return !!auditMatch;
   }
@@ -284,7 +291,7 @@ class CryptographicProofPipeline {
     metadata?: Record<string, unknown>;
   }): Promise<ImmutableAuditEntry> {
     const lastEntry = this.auditChain[this.auditChain.length - 1];
-    const previousHash = lastEntry?.currentHash || '0'.repeat(64);
+    const previousHash = lastEntry?.currentHash || "0".repeat(64);
 
     const entryData = {
       sequenceNumber: this.auditChain.length,
@@ -320,7 +327,10 @@ class CryptographicProofPipeline {
   }
 
   // Export audit trail for legal/compliance
-  async exportAuditTrail(startSequence?: number, endSequence?: number): Promise<{
+  async exportAuditTrail(
+    startSequence?: number,
+    endSequence?: number,
+  ): Promise<{
     entries: ImmutableAuditEntry[];
     integrityHash: string;
     exportedAt: string;
@@ -330,7 +340,7 @@ class CryptographicProofPipeline {
     const end = endSequence || this.auditChain.length;
 
     const entries = this.auditChain.filter(
-      e => e.sequenceNumber >= start && e.sequenceNumber < end
+      (e) => e.sequenceNumber >= start && e.sequenceNumber < end,
     );
 
     // Verify chain integrity during export
@@ -343,7 +353,7 @@ class CryptographicProofPipeline {
     }
 
     const integrityHash = await this.generateHash({
-      entries: entries.map(e => e.currentHash),
+      entries: entries.map((e) => e.currentHash),
       exportedAt: Date.now(),
     });
 
@@ -395,18 +405,20 @@ class CryptographicProofPipeline {
     return {
       valid: brokenLinks.length === 0,
       length: this.auditChain.length,
-      headHash: this.auditChain[0]?.currentHash || 'none',
-      tailHash: this.auditChain[this.auditChain.length - 1]?.currentHash || 'none',
+      headHash: this.auditChain[0]?.currentHash || "none",
+      tailHash: this.auditChain[this.auditChain.length - 1]?.currentHash || "none",
       brokenLinks,
     };
   }
 
   // Get truth statement
   getTruthStatement(): string {
-    return `Cryptographic Proof Pipeline: ${this.stats.totalProofsGenerated} proofs generated, ` +
+    return (
+      `Cryptographic Proof Pipeline: ${this.stats.totalProofsGenerated} proofs generated, ` +
       `${(this.getVerificationSuccessRate() * 100).toFixed(1)}% verification success rate, ` +
       `${this.stats.chainLength} immutable audit entries. ` +
-      `All proofs are deterministic, reproducible, and court/audit ready.`;
+      `All proofs are deterministic, reproducible, and court/audit ready.`
+    );
   }
 }
 

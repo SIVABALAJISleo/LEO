@@ -1,13 +1,13 @@
-import { runArchitectureValidation } from '../validation/architectureValidation';
-import { runReasoningEvaluation } from '../reasoningTesting/reasoningEvaluator';
-import { runNoisyLanguageBenchmark } from '../evaluations/noisyLanguageBenchmark';
-import { runMemoryValidation } from '../memoryTesting/memoryValidation';
-import { runAgentSwarmValidation } from '../benchmarks/agentSwarmValidation';
-import { runGraphRagValidation } from '../benchmarks/graphRagValidation';
-import { runSecurityTesting } from '../securityTesting/securityTester';
-import { runRealityFeedbackTesting } from '../realityTesting/realityTester';
-import { runEnterpriseBenchmark } from '../enterpriseTesting/enterpriseBenchmark';
-import { runNvidiaComparison } from '../benchmarks/nvidiaComparison';
+import { runArchitectureValidation } from "../validation/architectureValidation";
+import { runReasoningEvaluation } from "../reasoningTesting/reasoningEvaluator";
+import { runNoisyLanguageBenchmark } from "../evaluations/noisyLanguageBenchmark";
+import { runMemoryValidation } from "../memoryTesting/memoryValidation";
+import { runAgentSwarmValidation } from "../benchmarks/agentSwarmValidation";
+import { runGraphRagValidation } from "../benchmarks/graphRagValidation";
+import { runSecurityTesting } from "../securityTesting/securityTester";
+import { runRealityFeedbackTesting } from "../realityTesting/realityTester";
+import { runEnterpriseBenchmark } from "../enterpriseTesting/enterpriseBenchmark";
+import { runNvidiaComparison } from "../benchmarks/nvidiaComparison";
 
 export interface FinalScores {
   architectureScore: number;
@@ -21,7 +21,7 @@ export interface FinalScores {
   securityScore: number;
   realityScore: number;
   businessScore: number;
-  
+
   // High level
   overallProductScore: number;
   practicalAiScore: number;
@@ -45,10 +45,20 @@ export const generateFinalScores = async (): Promise<FinalScores> => {
   const ent = await runEnterpriseBenchmark();
   const nv = await runNvidiaComparison();
 
-  const researchScore = 98.4; 
+  const researchScore = 98.4;
   const infrastructureScore = 99.2;
 
-  const overallProduct = (arch.overallArchitectureScore + reasoning.overallReasoningScore + lang.overallAccuracy + mem.overallMemoryScore + agent.overallAgentScore + rag.overallRagScore + sec.overallSecurityScore + reality.overallRealityScore + ent.overallEnterpriseScore) / 9;
+  const overallProduct =
+    (arch.overallArchitectureScore +
+      reasoning.overallReasoningScore +
+      lang.overallAccuracy +
+      mem.overallMemoryScore +
+      agent.overallAgentScore +
+      rag.overallRagScore +
+      sec.overallSecurityScore +
+      reality.overallRealityScore +
+      ent.overallEnterpriseScore) /
+    9;
 
   return {
     architectureScore: arch.overallArchitectureScore,
@@ -68,6 +78,6 @@ export const generateFinalScores = async (): Promise<FinalScores> => {
     enterpriseAiScore: ent.overallEnterpriseScore,
     nvidiaRelevanceReductionScore: nv.overallRelevanceReductionScore,
     n1xFunctionalCompetitivenessScore: nv.n1xFunctionalCompetitivenessScore,
-    globalAcceleratorReductionScore: nv.globalAcceleratorReductionScore
+    globalAcceleratorReductionScore: nv.globalAcceleratorReductionScore,
   };
 };

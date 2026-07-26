@@ -15,9 +15,30 @@ export interface V14MemoryBlock {
 
 export class MemoryGovernor {
   private memories: V14MemoryBlock[] = [
-    { id: "M14-001", fact: "Stripe signature check passes using hmac sha256 verifying on main.py.", source: "Telemetry-Gateway", confidence: 0.99, timestamp: Date.now() - 30000, decayWeight: 1.0 },
-    { id: "M14-002", fact: "Stripe signature check is failing with bad webhook tokens.", source: "APM-Alerts", confidence: 0.82, timestamp: Date.now() - 90000, decayWeight: 1.0 },
-    { id: "M14-003", fact: "Stripe signature check passes using hmac sha256 verifying on main.py.", source: "Telemetry-Gateway", confidence: 0.99, timestamp: Date.now() - 15000, decayWeight: 1.0 }, // duplicate
+    {
+      id: "M14-001",
+      fact: "Stripe signature check passes using hmac sha256 verifying on main.py.",
+      source: "Telemetry-Gateway",
+      confidence: 0.99,
+      timestamp: Date.now() - 30000,
+      decayWeight: 1.0,
+    },
+    {
+      id: "M14-002",
+      fact: "Stripe signature check is failing with bad webhook tokens.",
+      source: "APM-Alerts",
+      confidence: 0.82,
+      timestamp: Date.now() - 90000,
+      decayWeight: 1.0,
+    },
+    {
+      id: "M14-003",
+      fact: "Stripe signature check passes using hmac sha256 verifying on main.py.",
+      source: "Telemetry-Gateway",
+      confidence: 0.99,
+      timestamp: Date.now() - 15000,
+      decayWeight: 1.0,
+    }, // duplicate
   ];
 
   public auditMemory(): V14MemoryBlock[] {
@@ -49,11 +70,16 @@ export class MemoryGovernor {
       const conflict = resolved.find((r) => {
         const text1 = r.fact.toLowerCase();
         const text2 = m.fact.toLowerCase();
-        return (text1.includes("passes") && text2.includes("failing")) || (text1.includes("failing") && text2.includes("passes"));
+        return (
+          (text1.includes("passes") && text2.includes("failing")) ||
+          (text1.includes("failing") && text2.includes("passes"))
+        );
       });
 
       if (conflict) {
-        console.log(`[MEMORY GOVERNOR V14] Contradiction detected between ${conflict.id} and ${m.id}.`);
+        console.log(
+          `[MEMORY GOVERNOR V14] Contradiction detected between ${conflict.id} and ${m.id}.`,
+        );
         // Keep the one with the higher decayWeight
         if (m.decayWeight > conflict.decayWeight) {
           const index = resolved.indexOf(conflict);
@@ -76,7 +102,7 @@ export class MemoryGovernor {
     return this.memories;
   }
 
-  public insertMemory(fact: string, source: string, confidence: number = 0.90): V14MemoryBlock {
+  public insertMemory(fact: string, source: string, confidence: number = 0.9): V14MemoryBlock {
     const newBlock: V14MemoryBlock = {
       id: `M14-${String(this.memories.length + 1).padStart(3, "0")}`,
       fact,

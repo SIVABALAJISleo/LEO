@@ -3,33 +3,33 @@
  * Professional-grade activity stream component
  */
 
-import { useState, useEffect, useCallback } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
-import { Button } from '@/components/ui/button';
-import { 
-  Activity, 
-  Zap, 
-  CheckCircle2, 
-  XCircle, 
+import { useState, useEffect, useCallback } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import {
+  Activity,
+  Zap,
+  CheckCircle2,
+  XCircle,
   AlertTriangle,
   Clock,
   Server,
   Cpu,
   RefreshCw,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  Filter
-} from 'lucide-react';
-import { firebaseClient as supabase } from '@/integrations/firebase/client';
-import { useAuth } from '@/contexts/AuthContext';
-import { formatDistanceToNow } from 'date-fns';
-import { cn } from '@/lib/utils';
+  Filter,
+} from "lucide-react";
+import { firebaseClient as supabase } from "@/integrations/firebase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { formatDistanceToNow } from "date-fns";
+import { cn } from "@/lib/utils";
 
 interface ActivityItem {
   id: string;
-  type: 'job_created' | 'job_started' | 'job_completed' | 'job_failed' | 'alert' | 'system';
+  type: "job_created" | "job_started" | "job_completed" | "job_failed" | "alert" | "system";
   title: string;
   description: string;
   timestamp: string;
@@ -42,7 +42,7 @@ interface LiveActivityFeedProps {
   maxItems?: number;
 }
 
-const ACTIVITY_ICONS: Record<ActivityItem['type'], typeof Zap> = {
+const ACTIVITY_ICONS: Record<ActivityItem["type"], typeof Zap> = {
   job_created: Zap,
   job_started: Cpu,
   job_completed: CheckCircle2,
@@ -51,20 +51,20 @@ const ACTIVITY_ICONS: Record<ActivityItem['type'], typeof Zap> = {
   system: Server,
 };
 
-const ACTIVITY_COLORS: Record<ActivityItem['type'], string> = {
-  job_created: 'text-blue-500 bg-blue-500/10',
-  job_started: 'text-purple-500 bg-purple-500/10',
-  job_completed: 'text-green-500 bg-green-500/10',
-  job_failed: 'text-red-500 bg-red-500/10',
-  alert: 'text-yellow-500 bg-yellow-500/10',
-  system: 'text-cyan-500 bg-cyan-500/10',
+const ACTIVITY_COLORS: Record<ActivityItem["type"], string> = {
+  job_created: "text-blue-500 bg-blue-500/10",
+  job_started: "text-purple-500 bg-purple-500/10",
+  job_completed: "text-green-500 bg-green-500/10",
+  job_failed: "text-red-500 bg-red-500/10",
+  alert: "text-yellow-500 bg-yellow-500/10",
+  system: "text-cyan-500 bg-cyan-500/10",
 };
 
 export const LiveActivityFeed = ({ className, maxItems = 20 }: LiveActivityFeedProps) => {
   const { user } = useAuth();
   const [activities, setActivities] = useState<ActivityItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<'all' | 'jobs' | 'alerts'>('all');
+  const [filter, setFilter] = useState<"all" | "jobs" | "alerts">("all");
 
   const fetchRecentActivity = useCallback(async () => {
     if (!user) return;
@@ -74,34 +74,38 @@ export const LiveActivityFeed = ({ className, maxItems = 20 }: LiveActivityFeedP
 
       // Fetch recent jobs
       const { data: jobs } = await supabase
-        .from('inference_jobs')
-        .select('id, status, created_at, updated_at, model_id')
-        .eq('user_id', user.id)
-        .order('updated_at', { ascending: false })
+        .from("inference_jobs")
+        .select("id, status, created_at, updated_at, model_id")
+        .eq("user_id", user.id)
+        .order("updated_at", { ascending: false })
         .limit(10);
 
       // Fetch recent alerts
       const { data: alerts } = await supabase
-        .from('alerts')
-        .select('id, title, message, severity, created_at')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
+        .from("alerts")
+        .select("id, title, message, severity, created_at")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
         .limit(10);
 
-      const jobActivities: ActivityItem[] = (jobs || []).map(job => ({
+      const jobActivities: ActivityItem[] = (jobs || []).map((job) => ({
         id: `job-${job.id}`,
-        type: job.status === 'completed' ? 'job_completed' 
-            : job.status === 'failed' ? 'job_failed'
-            : job.status === 'running' ? 'job_started'
-            : 'job_created',
+        type:
+          job.status === "completed"
+            ? "job_completed"
+            : job.status === "failed"
+              ? "job_failed"
+              : job.status === "running"
+                ? "job_started"
+                : "job_created",
         title: `Job ${job.id.substring(0, 8)}`,
         description: `Status: ${job.status}`,
         timestamp: job.updated_at || job.created_at,
       }));
 
-      const alertActivities: ActivityItem[] = (alerts || []).map(alert => ({
+      const alertActivities: ActivityItem[] = (alerts || []).map((alert) => ({
         id: `alert-${alert.id}`,
-        type: 'alert',
+        type: "alert",
         title: alert.title,
         description: alert.message,
         timestamp: alert.created_at,
@@ -115,7 +119,7 @@ export const LiveActivityFeed = ({ className, maxItems = 20 }: LiveActivityFeedP
 
       setActivities(combined);
     } catch (error) {
-      console.error('Error fetching activity:', error);
+      console.error("Error fetching activity:", error);
     } finally {
       setLoading(false);
     }
@@ -130,16 +134,16 @@ export const LiveActivityFeed = ({ className, maxItems = 20 }: LiveActivityFeedP
     if (!user) return;
 
     const channel = supabase
-      .channel('activity-feed')
+      .channel("activity-feed")
       .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'inference_jobs', filter: `user_id=eq.${user.id}` },
-        () => fetchRecentActivity()
+        "postgres_changes",
+        { event: "*", schema: "public", table: "inference_jobs", filter: `user_id=eq.${user.id}` },
+        () => fetchRecentActivity(),
       )
       .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'alerts', filter: `user_id=eq.${user.id}` },
-        () => fetchRecentActivity()
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "alerts", filter: `user_id=eq.${user.id}` },
+        () => fetchRecentActivity(),
       )
       .subscribe();
 
@@ -148,15 +152,15 @@ export const LiveActivityFeed = ({ className, maxItems = 20 }: LiveActivityFeedP
     };
   }, [user, fetchRecentActivity]);
 
-  const filteredActivities = activities.filter(a => {
-    if (filter === 'all') return true;
-    if (filter === 'jobs') return a.type.startsWith('job_');
-    if (filter === 'alerts') return a.type === 'alert';
+  const filteredActivities = activities.filter((a) => {
+    if (filter === "all") return true;
+    if (filter === "jobs") return a.type.startsWith("job_");
+    if (filter === "alerts") return a.type === "alert";
     return true;
   });
 
   return (
-    <Card className={cn('bg-card border-border', className)}>
+    <Card className={cn("bg-card border-border", className)}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2 text-lg">
@@ -167,22 +171,17 @@ export const LiveActivityFeed = ({ className, maxItems = 20 }: LiveActivityFeedP
             </Badge>
           </CardTitle>
           <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={fetchRecentActivity}
-              disabled={loading}
-            >
-              <RefreshCw className={cn('h-4 w-4', loading && 'animate-spin')} />
+            <Button variant="ghost" size="icon" onClick={fetchRecentActivity} disabled={loading}>
+              <RefreshCw className={cn("h-4 w-4", loading && "animate-spin")} />
             </Button>
           </div>
         </div>
         <div className="flex gap-1 mt-2">
-          {(['all', 'jobs', 'alerts'] as const).map(f => (
+          {(["all", "jobs", "alerts"] as const).map((f) => (
             <Button
               key={f}
               size="sm"
-              variant={filter === f ? 'default' : 'ghost'}
+              variant={filter === f ? "default" : "ghost"}
               onClick={() => setFilter(f)}
               className="h-7 text-xs"
             >
@@ -208,11 +207,11 @@ export const LiveActivityFeed = ({ className, maxItems = 20 }: LiveActivityFeedP
               {filteredActivities.map((activity, idx) => {
                 const Icon = ACTIVITY_ICONS[activity.type];
                 const colorClass = ACTIVITY_COLORS[activity.type];
-                
+
                 return (
                   <div key={activity.id}>
                     <div className="flex items-start gap-3">
-                      <div className={cn('p-2 rounded-lg', colorClass)}>
+                      <div className={cn("p-2 rounded-lg", colorClass)}>
                         <Icon className="h-4 w-4" />
                       </div>
                       <div className="flex-1 min-w-0">
@@ -228,9 +227,7 @@ export const LiveActivityFeed = ({ className, maxItems = 20 }: LiveActivityFeedP
                         </p>
                       </div>
                     </div>
-                    {idx < filteredActivities.length - 1 && (
-                      <Separator className="my-3" />
-                    )}
+                    {idx < filteredActivities.length - 1 && <Separator className="my-3" />}
                   </div>
                 );
               })}

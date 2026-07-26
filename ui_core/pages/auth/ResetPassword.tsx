@@ -1,31 +1,33 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { z } from 'zod';
-import { useAuth } from '@/contexts/AuthContext';
-import { AuthLayout } from '@/components/auth/AuthLayout';
-import { PasswordStrengthIndicator } from '@/components/auth/PasswordStrengthIndicator';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { useToast } from '@/hooks/use-toast';
-import { Lock, Loader2, AlertCircle } from 'lucide-react';
-import { firebaseClient as supabase } from '@/integrations/firebase/client';
+import { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { z } from "zod";
+import { useAuth } from "@/contexts/AuthContext";
+import { AuthLayout } from "@/components/auth/AuthLayout";
+import { PasswordStrengthIndicator } from "@/components/auth/PasswordStrengthIndicator";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
+import { Lock, Loader2, AlertCircle } from "lucide-react";
+import { firebaseClient as supabase } from "@/integrations/firebase/client";
 
-const passwordSchema = z.object({
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-  confirmPassword: z.string(),
-}).refine(data => data.password === data.confirmPassword, {
-  message: 'Passwords do not match',
-  path: ['confirmPassword'],
-});
+const passwordSchema = z
+  .object({
+    password: z.string().min(8, "Password must be at least 8 characters"),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 const ResetPassword = () => {
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [validToken, setValidToken] = useState<boolean | null>(null);
   const [errors, setErrors] = useState<{ password?: string; confirmPassword?: string }>({});
-  
+
   const navigate = useNavigate();
   const { updatePassword } = useAuth();
   const { toast } = useToast();
@@ -33,18 +35,20 @@ const ResetPassword = () => {
   useEffect(() => {
     // Check if we have a valid recovery session
     const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       // If there's a session and the URL contains recovery type, it's valid
       const hashParams = new URLSearchParams(window.location.hash.substring(1));
-      const type = hashParams.get('type');
-      
-      if (session || type === 'recovery') {
+      const type = hashParams.get("type");
+
+      if (session || type === "recovery") {
         setValidToken(true);
       } else {
         setValidToken(false);
       }
     };
-    
+
     checkSession();
   }, []);
 
@@ -57,8 +61,8 @@ const ResetPassword = () => {
       if (error instanceof z.ZodError) {
         const fieldErrors: { password?: string; confirmPassword?: string } = {};
         error.errors.forEach((err) => {
-          if (err.path[0] === 'password') fieldErrors.password = err.message;
-          if (err.path[0] === 'confirmPassword') fieldErrors.confirmPassword = err.message;
+          if (err.path[0] === "password") fieldErrors.password = err.message;
+          if (err.path[0] === "confirmPassword") fieldErrors.confirmPassword = err.message;
         });
         setErrors(fieldErrors);
       }
@@ -68,9 +72,9 @@ const ResetPassword = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
-    
+
     setLoading(true);
 
     try {
@@ -78,25 +82,25 @@ const ResetPassword = () => {
 
       if (error) {
         toast({
-          title: 'Error',
+          title: "Error",
           description: error.message,
-          variant: 'destructive',
+          variant: "destructive",
         });
         return;
       }
 
       toast({
-        title: 'Password Updated',
-        description: 'Your password has been successfully reset.',
+        title: "Password Updated",
+        description: "Your password has been successfully reset.",
       });
-      
-      navigate('/auth/login');
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+      navigate("/auth/login");
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error: unknown) {
       toast({
-        title: 'Error',
-        description: 'An unexpected error occurred. Please try again.',
-        variant: 'destructive',
+        title: "Error",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
       });
     } finally {
       setLoading(false);
@@ -124,9 +128,7 @@ const ResetPassword = () => {
             This password reset link has expired or is invalid. Please request a new one.
           </p>
           <Link to="/auth/forgot-password">
-            <Button className="bg-gradient-primary shadow-glow">
-              Request New Link
-            </Button>
+            <Button className="bg-gradient-primary shadow-glow">Request New Link</Button>
           </Link>
         </div>
       </AuthLayout>
@@ -134,10 +136,7 @@ const ResetPassword = () => {
   }
 
   return (
-    <AuthLayout
-      title="Set New Password"
-      description="Enter your new password below"
-    >
+    <AuthLayout title="Set New Password" description="Enter your new password below">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="password">New Password</Label>
@@ -149,7 +148,7 @@ const ResetPassword = () => {
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className={`pl-10 ${errors.password ? 'border-destructive' : ''}`}
+              className={`pl-10 ${errors.password ? "border-destructive" : ""}`}
               disabled={loading}
             />
           </div>
@@ -167,25 +166,23 @@ const ResetPassword = () => {
               placeholder="••••••••"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className={`pl-10 ${errors.confirmPassword ? 'border-destructive' : ''}`}
+              className={`pl-10 ${errors.confirmPassword ? "border-destructive" : ""}`}
               disabled={loading}
             />
           </div>
-          {errors.confirmPassword && <p className="text-sm text-destructive">{errors.confirmPassword}</p>}
+          {errors.confirmPassword && (
+            <p className="text-sm text-destructive">{errors.confirmPassword}</p>
+          )}
         </div>
 
-        <Button
-          type="submit"
-          className="w-full bg-gradient-primary shadow-glow"
-          disabled={loading}
-        >
+        <Button type="submit" className="w-full bg-gradient-primary shadow-glow" disabled={loading}>
           {loading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               Updating...
             </>
           ) : (
-            'Update Password'
+            "Update Password"
           )}
         </Button>
       </form>

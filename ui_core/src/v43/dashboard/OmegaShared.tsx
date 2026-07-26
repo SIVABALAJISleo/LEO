@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
 import { Alert, AlertTitle, AlertDescription } from "../../../components/ui/alert";
 
@@ -9,8 +9,12 @@ export const MetricCard = ({ label, value, comparison, status }: any) => (
       <p className="text-2xl font-bold text-white mt-1">{value}</p>
     </div>
     <div className="mt-4 flex items-center justify-between">
-      <span className="text-xs text-slate-500 truncate mr-2" title={comparison}>{comparison}</span>
-      <span className="text-xs font-bold px-2 py-1 rounded bg-slate-800 text-green-400">{status}</span>
+      <span className="text-xs text-slate-500 truncate mr-2" title={comparison}>
+        {comparison}
+      </span>
+      <span className="text-xs font-bold px-2 py-1 rounded bg-slate-800 text-green-400">
+        {status}
+      </span>
     </div>
   </div>
 );

@@ -1,12 +1,12 @@
-import { Clock, Loader2, CheckCircle, XCircle, Pause } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { useSafeCompute } from '@/hooks/useSafeCompute';
-import { cn } from '@/lib/utils';
+import { Clock, Loader2, CheckCircle, XCircle, Pause } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { useSafeCompute } from "@/hooks/useSafeCompute";
+import { cn } from "@/lib/utils";
 
 export const JobQueueDisplay = () => {
   const { queueStats, jobs } = useSafeCompute();
-  
+
   const formatTime = (seconds: number): string => {
     if (seconds < 60) return `${Math.round(seconds)}s`;
     if (seconds < 3600) return `${Math.round(seconds / 60)}m`;
@@ -15,20 +15,20 @@ export const JobQueueDisplay = () => {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'processing':
+      case "processing":
         return <Loader2 className="h-4 w-4 animate-spin text-primary" />;
-      case 'completed':
+      case "completed":
         return <CheckCircle className="h-4 w-4 text-primary" />;
-      case 'failed':
+      case "failed":
         return <XCircle className="h-4 w-4 text-destructive" />;
-      case 'paused':
+      case "paused":
         return <Pause className="h-4 w-4 text-yellow-500" />;
       default:
         return <Clock className="h-4 w-4 text-muted-foreground" />;
     }
   };
 
-  const activeJobs = jobs.filter(j => j.status === 'queued' || j.status === 'processing');
+  const activeJobs = jobs.filter((j) => j.status === "queued" || j.status === "processing");
 
   return (
     <Card className="bg-card border-border">
@@ -37,8 +37,7 @@ export const JobQueueDisplay = () => {
           <span>Job Queue</span>
           <div className="flex items-center gap-3 text-sm font-normal">
             <span className="flex items-center gap-1 text-muted-foreground">
-              <Clock className="h-4 w-4" />
-              ~{formatTime(queueStats.averageWaitTime)} avg
+              <Clock className="h-4 w-4" />~{formatTime(queueStats.averageWaitTime)} avg
             </span>
           </div>
         </CardTitle>
@@ -81,24 +80,23 @@ export const JobQueueDisplay = () => {
           <div className="space-y-2">
             <h4 className="text-sm font-medium text-muted-foreground">Active Jobs</h4>
             {activeJobs.slice(0, 3).map((job) => (
-              <div 
-                key={job.id}
-                className="flex items-center gap-3 p-2 rounded-md bg-muted/30"
-              >
+              <div key={job.id} className="flex items-center gap-3 p-2 rounded-md bg-muted/30">
                 {getStatusIcon(job.status)}
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium truncate">
-                    Job {job.id.slice(0, 8)}
-                  </div>
-                  {job.status === 'processing' && (
+                  <div className="text-sm font-medium truncate">Job {job.id.slice(0, 8)}</div>
+                  {job.status === "processing" && (
                     <Progress value={job.progress} className="h-1 mt-1" />
                   )}
                 </div>
-                <div className={cn(
-                  'text-xs px-2 py-0.5 rounded-full',
-                  job.status === 'processing' ? 'bg-primary/20 text-primary' : 'bg-yellow-500/20 text-yellow-500'
-                )}>
-                  {job.status === 'processing' ? `${job.progress}%` : 'Queued'}
+                <div
+                  className={cn(
+                    "text-xs px-2 py-0.5 rounded-full",
+                    job.status === "processing"
+                      ? "bg-primary/20 text-primary"
+                      : "bg-yellow-500/20 text-yellow-500",
+                  )}
+                >
+                  {job.status === "processing" ? `${job.progress}%` : "Queued"}
                 </div>
               </div>
             ))}

@@ -19,8 +19,8 @@ export class HallucinationValidationLab {
     const hallucinationRateByTest = {
       adversarialPrompts: parseFloat(Math.max(0.1, 0.75 + noise).toFixed(2)),
       fabricatedFacts: parseFloat(Math.max(0.1, 0.82 - noise).toFixed(2)),
-      contradictoryInfo: parseFloat(Math.max(0.1, 0.70 + noise * 0.5).toFixed(2)),
-      incompleteEvidence: parseFloat(Math.max(0.1, 0.93 - noise * 0.5).toFixed(2))
+      contradictoryInfo: parseFloat(Math.max(0.1, 0.7 + noise * 0.5).toFixed(2)),
+      incompleteEvidence: parseFloat(Math.max(0.1, 0.93 - noise * 0.5).toFixed(2)),
     };
 
     const overallHallucinationRate = parseFloat(
@@ -30,13 +30,13 @@ export class HallucinationValidationLab {
           hallucinationRateByTest.contradictoryInfo +
           hallucinationRateByTest.incompleteEvidence) /
         4
-      ).toFixed(2)
+      ).toFixed(2),
     );
 
     return {
       totalScenariosRun: 50000,
       hallucinationRateByTest,
-      overallHallucinationRate
+      overallHallucinationRate,
     };
   }
 }

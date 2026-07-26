@@ -4,5 +4,7 @@ import { IntelliGPUHome } from "../components/IntelliGPUHome";
 
 export default function Home() {
   const navigate = useNavigate();
-  return <IntelliGPUHome onNavigate={(view: any) => navigate(view === "home" ? "/" : `/${view}`)} />;
+  return (
+    <IntelliGPUHome onNavigate={(view: any) => navigate(view === "home" ? "/" : `/${view}`)} />
+  );
 }

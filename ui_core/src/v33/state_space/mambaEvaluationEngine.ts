@@ -11,11 +11,13 @@ export interface ScalingBenchmark {
 }
 
 export class MambaEvaluationEngine {
-  runScalingBenchmark(lengths: number[] = [1024, 2048, 4096, 8192, 16384, 32768, 65536]): ScalingBenchmark[] {
+  runScalingBenchmark(
+    lengths: number[] = [1024, 2048, 4096, 8192, 16384, 32768, 65536],
+  ): ScalingBenchmark[] {
     const hiddenSize = 2048;
     const numLayers = 24;
 
-    return lengths.map(len => {
+    return lengths.map((len) => {
       // Transformer Attention: 2 * seq_len^2 * hidden_size * num_layers FLOPS for attention matrix
       // Plus feed-forward and projection blocks.
       const transformerAttentionFlops = 2 * len * len * hiddenSize * numLayers;

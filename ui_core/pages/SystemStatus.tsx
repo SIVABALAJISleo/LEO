@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { firebaseClient as supabase } from '@/integrations/firebase/client';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { firebaseClient as supabase } from "@/integrations/firebase/client";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   Activity,
   ArrowLeft,
@@ -18,10 +18,15 @@ import {
   Thermometer,
   Wifi,
   WifiOff,
-  Zap
-} from 'lucide-react';
-import { GpuSystemStatus, GPU_THERMAL_WARNING, GPU_THERMAL_CRITICAL, GPU_MEMORY_LIMIT_MB } from '@/lib/gpuJobTypes';
-import { hyperClient, BackendStatus } from '@/lib/api';
+  Zap,
+} from "lucide-react";
+import {
+  GpuSystemStatus,
+  GPU_THERMAL_WARNING,
+  GPU_THERMAL_CRITICAL,
+  GPU_MEMORY_LIMIT_MB,
+} from "@/lib/gpuJobTypes";
+import { hyperClient, BackendStatus } from "@/lib/api";
 
 export default function SystemStatus() {
   const [systemStatus, setSystemStatus] = useState<GpuSystemStatus | null>(null);
@@ -33,39 +38,39 @@ export default function SystemStatus() {
   const fetchStatus = async () => {
     try {
       const { data: status } = await supabase
-        .from('gpu_system_status')
-        .select('*')
-        .order('last_heartbeat_at', { ascending: false })
+        .from("gpu_system_status")
+        .select("*")
+        .order("last_heartbeat_at", { ascending: false })
         .limit(1)
         .single();
 
       // Get job counts
       const { count: pendingCount } = await supabase
-        .from('gpu_jobs')
-        .select('*', { count: 'exact', head: true })
-        .in('status', ['pending', 'queued']);
+        .from("gpu_jobs")
+        .select("*", { count: "exact", head: true })
+        .in("status", ["pending", "queued"]);
 
       const { count: runningCount } = await supabase
-        .from('gpu_jobs')
-        .select('*', { count: 'exact', head: true })
-        .eq('status', 'running');
+        .from("gpu_jobs")
+        .select("*", { count: "exact", head: true })
+        .eq("status", "running");
 
       setSystemStatus(status as unknown as GpuSystemStatus);
       setJobCounts({
         pending: pendingCount || 0,
-        running: runningCount || 0
+        running: runningCount || 0,
       });
 
       // Fetch Real-time Backend Orchestration Status
       try {
         const bStatus = await hyperClient.getStatus();
         setBackendStatus(bStatus);
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (err) {
-        console.warn('Backend server not reachable on port 8005. Falling back to mock data.');
+        console.warn("Backend server not reachable on port 8005. Falling back to mock data.");
       }
     } catch (err) {
-      console.error('Error fetching system status:', err);
+      console.error("Error fetching system status:", err);
     } finally {
       setLoading(false);
     }
@@ -76,17 +81,17 @@ export default function SystemStatus() {
 
     // Subscribe to realtime updates
     const channel = supabase
-      .channel('system-status-public')
+      .channel("system-status-public")
       .on(
-        'postgres_changes',
+        "postgres_changes",
         {
-          event: '*',
-          schema: 'public',
-          table: 'gpu_system_status'
+          event: "*",
+          schema: "public",
+          table: "gpu_system_status",
         },
         () => {
           fetchStatus();
-        }
+        },
       )
       .subscribe();
 
@@ -119,9 +124,9 @@ export default function SystemStatus() {
   const isTempCritical = gpuTemp >= GPU_THERMAL_CRITICAL || cpuTemp >= GPU_THERMAL_CRITICAL;
 
   const getTempColor = (temp: number) => {
-    if (temp >= GPU_THERMAL_CRITICAL) return 'text-destructive';
-    if (temp >= GPU_THERMAL_WARNING) return 'text-orange-500';
-    return 'text-primary';
+    if (temp >= GPU_THERMAL_CRITICAL) return "text-destructive";
+    if (temp >= GPU_THERMAL_WARNING) return "text-orange-500";
+    return "text-primary";
   };
 
   if (loading) {
@@ -134,7 +139,6 @@ export default function SystemStatus() {
 
   return (
     <>
-
       <div className="min-h-screen bg-background">
         {/* Header */}
         <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
@@ -152,17 +156,12 @@ export default function SystemStatus() {
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <Badge variant={isOnline ? 'default' : 'destructive'} className="gap-1">
+              <Badge variant={isOnline ? "default" : "destructive"} className="gap-1">
                 {isOnline ? <Wifi className="h-3 w-3" /> : <WifiOff className="h-3 w-3" />}
-                {isOnline ? 'Online' : 'Offline'}
+                {isOnline ? "Online" : "Offline"}
               </Badge>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleRefresh}
-                disabled={refreshing}
-              >
-                <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
+              <Button variant="outline" size="sm" onClick={handleRefresh} disabled={refreshing}>
+                <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? "animate-spin" : ""}`} />
                 Refresh
               </Button>
             </div>
@@ -238,11 +237,9 @@ export default function SystemStatus() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className={`text-2xl font-bold ${getTempColor(gpuTemp)}`}>
-                  {gpuTemp}°C
-                </div>
+                <div className={`text-2xl font-bold ${getTempColor(gpuTemp)}`}>{gpuTemp}°C</div>
                 <p className="text-xs text-muted-foreground">
-                  {isTempCritical ? 'Critical' : isTempWarning ? 'Elevated' : 'Normal'}
+                  {isTempCritical ? "Critical" : isTempWarning ? "Elevated" : "Normal"}
                 </p>
               </CardContent>
             </Card>
@@ -255,9 +252,7 @@ export default function SystemStatus() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">
-                  {(gpuMemUsed / 1024).toFixed(1)}GB
-                </div>
+                <div className="text-2xl font-bold">{(gpuMemUsed / 1024).toFixed(1)}GB</div>
                 <p className="text-xs text-muted-foreground">
                   of {(gpuMemTotal / 1024).toFixed(0)}GB used
                 </p>
@@ -271,11 +266,11 @@ export default function SystemStatus() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">
-                  {backendStatus?.version || "1.0.0-cpu"}
-                </div>
+                <div className="text-2xl font-bold">{backendStatus?.version || "1.0.0-cpu"}</div>
                 <p className="text-xs text-muted-foreground">
-                  {backendStatus ? `${backendStatus.metrics.requests} requests handled` : "Connecting to engine..."}
+                  {backendStatus
+                    ? `${backendStatus.metrics.requests} requests handled`
+                    : "Connecting to engine..."}
                 </p>
               </CardContent>
             </Card>
@@ -303,7 +298,9 @@ export default function SystemStatus() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Memory Usage</span>
-                    <span>{(gpuMemUsed / 1024).toFixed(1)}GB / {(gpuMemTotal / 1024).toFixed(0)}GB</span>
+                    <span>
+                      {(gpuMemUsed / 1024).toFixed(1)}GB / {(gpuMemTotal / 1024).toFixed(0)}GB
+                    </span>
                   </div>
                   <Progress value={(gpuMemUsed / gpuMemTotal) * 100} className="h-3" />
                 </div>
@@ -351,10 +348,16 @@ export default function SystemStatus() {
 
                 <div className="pt-4 border-t border-border">
                   <p className="text-sm text-muted-foreground">
-                    Jobs completed today: <span className="font-medium text-foreground">{systemStatus?.jobs_completed_today || 0}</span>
+                    Jobs completed today:{" "}
+                    <span className="font-medium text-foreground">
+                      {systemStatus?.jobs_completed_today || 0}
+                    </span>
                   </p>
                   <p className="text-sm text-muted-foreground mt-1">
-                    Jobs failed today: <span className="font-medium text-destructive">{systemStatus?.jobs_failed_today || 0}</span>
+                    Jobs failed today:{" "}
+                    <span className="font-medium text-destructive">
+                      {systemStatus?.jobs_failed_today || 0}
+                    </span>
                   </p>
                 </div>
               </CardContent>

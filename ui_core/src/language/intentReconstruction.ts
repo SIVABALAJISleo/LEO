@@ -22,22 +22,22 @@ export interface IntentReconstructionReport {
 export class IntentReconstructionEngine {
   private dictionary: Record<string, string> = {
     "wat do": "what should I do",
-    "epdi": "how to",
-    "eppadi": "how to",
-    "panradhu": "to perform",
-    "panradu": "to perform",
-    "wat": "what",
+    epdi: "how to",
+    eppadi: "how to",
+    panradhu: "to perform",
+    panradu: "to perform",
+    wat: "what",
     "wat is": "what is",
-    "bro": "friend",
-    "ai": "artificial intelligence",
-    "gpu": "graphics processing unit",
-    "VRAM": "video random access memory",
-    "fail": "failure",
+    bro: "friend",
+    ai: "artificial intelligence",
+    gpu: "graphics processing unit",
+    VRAM: "video random access memory",
+    fail: "failure",
     "wat do fail": "what to do in case of failure",
     "sig check": "signature check validation",
-    "rollbac": "rollback",
+    rollbac: "rollback",
     "roll back": "rollback",
-    "stripe": "stripe checkout payment portal"
+    stripe: "stripe checkout payment portal",
   };
 
   /**
@@ -54,11 +54,16 @@ export class IntentReconstructionEngine {
       isSlang: false,
       isAbbreviated: false,
       isSpeechError: false,
-      isAmbiguous: false
+      isAmbiguous: false,
     };
 
     // Features heuristics
-    if (queryLower.includes("eppadi") || queryLower.includes("epdi") || queryLower.includes("panradhu") || queryLower.includes("panradu")) {
+    if (
+      queryLower.includes("eppadi") ||
+      queryLower.includes("epdi") ||
+      queryLower.includes("panradhu") ||
+      queryLower.includes("panradu")
+    ) {
       featuresDetected.isTamilEnglish = true;
       appliedTransforms.push("Translate Tamil-English phonetic terms to canonical terms.");
     }
@@ -70,7 +75,7 @@ export class IntentReconstructionEngine {
       featuresDetected.isAbbreviated = true;
       appliedTransforms.push("Expand abbreviations to full terms.");
     }
-    if (words.some(w => w.endsWith("llbac") || w.startsWith("wat"))) {
+    if (words.some((w) => w.endsWith("llbac") || w.startsWith("wat"))) {
       featuresDetected.isSpeechError = true;
       appliedTransforms.push("Repair phonetic or speech-to-text spelling errors.");
     }
@@ -80,7 +85,7 @@ export class IntentReconstructionEngine {
     }
 
     // Process substitutions
-    const reconstructedWords = words.map(w => {
+    const reconstructedWords = words.map((w) => {
       if (this.dictionary[w]) {
         return this.dictionary[w];
       }
@@ -97,21 +102,33 @@ export class IntentReconstructionEngine {
     } else if (queryLower.includes("help startup eppadi panradhu")) {
       reconstructedQuery = "How to launch and manage a SaaS startup?";
     } else if (queryLower.includes("stripe sig check fail")) {
-      reconstructedQuery = "Stripe signature check verification failed on checkout completed webhook portal.";
+      reconstructedQuery =
+        "Stripe signature check verification failed on checkout completed webhook portal.";
     }
 
     let recoveredIntent = "General Query";
     if (reconstructedQuery.toLowerCase().includes("startup")) {
       recoveredIntent = "Business Startup Consultation Plan";
-    } else if (reconstructedQuery.toLowerCase().includes("train") || reconstructedQuery.toLowerCase().includes("model")) {
+    } else if (
+      reconstructedQuery.toLowerCase().includes("train") ||
+      reconstructedQuery.toLowerCase().includes("model")
+    ) {
       recoveredIntent = "AI Model Training Guidelines";
-    } else if (reconstructedQuery.toLowerCase().includes("stripe") || reconstructedQuery.toLowerCase().includes("webhook")) {
+    } else if (
+      reconstructedQuery.toLowerCase().includes("stripe") ||
+      reconstructedQuery.toLowerCase().includes("webhook")
+    ) {
       recoveredIntent = "Billing Portal Webhook Configuration";
-    } else if (reconstructedQuery.toLowerCase().includes("vram") || reconstructedQuery.toLowerCase().includes("gpu")) {
+    } else if (
+      reconstructedQuery.toLowerCase().includes("vram") ||
+      reconstructedQuery.toLowerCase().includes("gpu")
+    ) {
       recoveredIntent = "iGPU Accelerator Offload Diagnostic";
     }
 
-    const confidenceScore = parseFloat((0.96 + (appliedTransforms.length > 0 ? 0.02 : 0)).toFixed(2));
+    const confidenceScore = parseFloat(
+      (0.96 + (appliedTransforms.length > 0 ? 0.02 : 0)).toFixed(2),
+    );
 
     return {
       rawQuery: queryTrimmed,
@@ -119,7 +136,7 @@ export class IntentReconstructionEngine {
       recoveredIntent,
       confidenceScore,
       featuresDetected,
-      appliedTransforms
+      appliedTransforms,
     };
   }
 }

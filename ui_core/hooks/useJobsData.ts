@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
-import { hyperClient } from '@/lib/api';
-import { useToast } from '@/hooks/use-toast';
+import { useState, useEffect, useCallback } from "react";
+import { hyperClient } from "@/lib/api";
+import { useToast } from "@/hooks/use-toast";
 
 export interface InferenceJob {
   id: string;
@@ -63,7 +63,7 @@ export function useJobsData() {
       // In a real local setup without persistent DB for jobs, we show the current orchestration session
       // or fetch from the backend if it has a jobs endpoint.
       // For demonstration, we use the jobs created in this session.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -75,13 +75,23 @@ export function useJobsData() {
     try {
       // Production available models
       setModels([
-        { id: 'logic-expert', name: 'HYPER Logic Expert', model_type: 'LLM', status: 'active' },
-        { id: 'vision-boundary', name: 'Vision Boundary Manager', model_type: 'Vision', status: 'active' },
-        { id: 'rag-engine', name: 'Knowledge Retrieval Engine', model_type: 'RAG', status: 'active' }
+        { id: "logic-expert", name: "HYPER Logic Expert", model_type: "LLM", status: "active" },
+        {
+          id: "vision-boundary",
+          name: "Vision Boundary Manager",
+          model_type: "Vision",
+          status: "active",
+        },
+        {
+          id: "rag-engine",
+          name: "Knowledge Retrieval Engine",
+          model_type: "RAG",
+          status: "active",
+        },
       ]);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      console.error('Error fetching models:', err);
+      console.error("Error fetching models:", err);
     }
   }, []);
 
@@ -94,13 +104,15 @@ export function useJobsData() {
     try {
       setLoading(true);
       // Call the actual production orchestrator with specific action
-      const result = await hyperClient.orchestrate('ai_inference', { query: input.input_data.text || 'Process Task' });
+      const result = await hyperClient.orchestrate("ai_inference", {
+        query: input.input_data.text || "Process Task",
+      });
 
       const newJob: InferenceJob = {
         id: Math.random().toString(36).substr(2, 9),
-        user_id: 'prod-user',
+        user_id: "prod-user",
         model_id: input.model_id,
-        status: 'completed',
+        status: "completed",
         priority: input.priority,
         progress: 100,
         input_data: input.input_data,
@@ -115,23 +127,23 @@ export function useJobsData() {
         updated_at: new Date().toISOString(),
         started_at: new Date().toISOString(),
         completed_at: new Date().toISOString(),
-        model: models.find(m => m.id === input.model_id)
+        model: models.find((m) => m.id === input.model_id),
       };
 
-      setJobs(prev => [newJob, ...prev]);
+      setJobs((prev) => [newJob, ...prev]);
 
       toast({
-        title: 'Task Executed',
-        description: 'Orchestration job completed successfully on local CPU.'
+        title: "Task Executed",
+        description: "Orchestration job completed successfully on local CPU.",
       });
 
       return newJob.id;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast({
-        title: 'Error',
-        description: 'Failed to reach production engine: ' + err.message,
-        variant: 'destructive'
+        title: "Error",
+        description: "Failed to reach production engine: " + err.message,
+        variant: "destructive",
       });
       return null;
     } finally {
@@ -140,23 +152,24 @@ export function useJobsData() {
   };
 
   const cancelJob = async (jobId: string) => {
-    setJobs(prev => prev.filter(j => j.id !== jobId));
-    toast({ title: 'Job Cancelled', description: 'Task removed from current session.' });
+    setJobs((prev) => prev.filter((j) => j.id !== jobId));
+    toast({ title: "Job Cancelled", description: "Task removed from current session." });
   };
 
   const retryJob = async (jobId: string) => {
-    const job = jobs.find(j => j.id === jobId);
-    if (job) createJob({
-      model_id: job.model_id,
-      priority: job.priority,
-      input_data: job.input_data,
-      enabled_modules: job.enabled_modules,
-      optimization_options: job.optimization_options
-    });
+    const job = jobs.find((j) => j.id === jobId);
+    if (job)
+      createJob({
+        model_id: job.model_id,
+        priority: job.priority,
+        input_data: job.input_data,
+        enabled_modules: job.enabled_modules,
+        optimization_options: job.optimization_options,
+      });
   };
 
   const getJobById = (jobId: string): InferenceJob | undefined => {
-    return jobs.find(j => j.id === jobId);
+    return jobs.find((j) => j.id === jobId);
   };
 
   return {
@@ -168,6 +181,6 @@ export function useJobsData() {
     createJob,
     cancelJob,
     retryJob,
-    getJobById
+    getJobById,
   };
 }

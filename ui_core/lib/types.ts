@@ -47,7 +47,7 @@ export interface Model {
   storage_path: string | null;
   file_path: string | null;
   size_mb: number | null;
-  status: 'active' | 'inactive' | 'archived';
+  status: "active" | "inactive" | "archived";
   created_at: string;
   updated_at: string;
 }
@@ -64,7 +64,7 @@ export interface CreateModelInput {
 }
 
 // Inference Job Types
-export type JobStatus = 'queued' | 'running' | 'completed' | 'failed' | 'cancelled';
+export type JobStatus = "queued" | "running" | "completed" | "failed" | "cancelled";
 
 export interface InferenceJob {
   id: string;
@@ -144,7 +144,7 @@ export interface PerformanceMetricsFilter {
 }
 
 // System Metrics Types
-export type SystemStatus = 'healthy' | 'warning' | 'critical';
+export type SystemStatus = "healthy" | "warning" | "critical";
 
 export interface SystemMetrics {
   id: string;
@@ -164,7 +164,7 @@ export interface SystemMetrics {
 }
 
 // Alert Types
-export type AlertSeverity = 'info' | 'warning' | 'error' | 'critical';
+export type AlertSeverity = "info" | "warning" | "error" | "critical";
 
 export interface Alert {
   id: string;
@@ -189,7 +189,15 @@ export interface AlertsFilter {
 }
 
 // Module Status Types
-export type ModuleStatusType = 'idle' | 'running' | 'error' | 'warming_up' | 'cooling_down' | 'operational' | 'degraded' | 'offline';
+export type ModuleStatusType =
+  | "idle"
+  | "running"
+  | "error"
+  | "warming_up"
+  | "cooling_down"
+  | "operational"
+  | "degraded"
+  | "offline";
 
 export interface ModuleStatus {
   id: string;
@@ -213,7 +221,7 @@ export interface ApiError {
 
 // Real-time Subscription Types
 export type RealtimePayload<T> = {
-  eventType: 'INSERT' | 'UPDATE' | 'DELETE';
+  eventType: "INSERT" | "UPDATE" | "DELETE";
   new: T;
   old: T | null;
 };

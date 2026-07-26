@@ -1,4 +1,4 @@
-import { runCpuJob } from './cpuEngine';
+import { runCpuJob } from "./cpuEngine";
 
 export interface TextJobPayload {
   prompt: string;
@@ -20,7 +20,6 @@ export async function runTextJob(jobId: string, payload: TextJobPayload): Promis
     jobId,
     output: payload.prompt,
     durationMs: cpuRes.durationMs,
-    note: 'Text engine placeholder. Replace with local model or retrieval system.',
+    note: "Text engine placeholder. Replace with local model or retrieval system.",
   };
 }
-

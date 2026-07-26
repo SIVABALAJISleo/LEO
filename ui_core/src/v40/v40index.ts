@@ -43,7 +43,11 @@ export type { SpeculativeDecodingReport } from "./engines/speculativeDecodingEng
 
 // 11. Self-Improvement Engine
 export { SelfImprovementEngine } from "./engines/selfImprovementEngine";
-export type { ExceptionLog, OptimizationPatch, SelfImprovementReport } from "./engines/selfImprovementEngine";
+export type {
+  ExceptionLog,
+  OptimizationPatch,
+  SelfImprovementReport,
+} from "./engines/selfImprovementEngine";
 
 // 12. Autonomous Research System
 export { AutonomousResearchSystem } from "./engines/autonomousResearchSystem";

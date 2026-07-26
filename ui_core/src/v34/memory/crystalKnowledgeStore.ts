@@ -17,7 +17,7 @@ export class CrystalKnowledgeStore {
       conceptId,
       label,
       assertions,
-      lastAccessedTime: Date.now()
+      lastAccessedTime: Date.now(),
     };
     this.store.set(conceptId, concept);
     return concept;

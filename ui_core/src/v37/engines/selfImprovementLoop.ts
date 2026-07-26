@@ -16,10 +16,7 @@ export class SelfImprovementLoop {
   /**
    * Dispatches a loop iteration to observe runtime defects, analyze, propose, and deploy.
    */
-  public executeLoopIteration(
-    moduleName: string,
-    defectDescription: string
-  ): ImprovementPatch {
+  public executeLoopIteration(moduleName: string, defectDescription: string): ImprovementPatch {
     // 1. Observe & Analyze
     const patchId = `patch-${(Math.random() * 10000).toFixed(0)}`;
     const proposedFix = `Inject heuristic rules: prune tokens starting with '${defectDescription.slice(0, 4)}' parameters.`;
@@ -30,7 +27,7 @@ export class SelfImprovementLoop {
       observedDefect: defectDescription,
       proposedFix,
       validationScore: 0.0,
-      status: "Observed"
+      status: "Observed",
     };
 
     this.activePatches.push(newPatch);
@@ -47,7 +44,7 @@ export class SelfImprovementLoop {
   }
 
   public getDeployedPatches(): ImprovementPatch[] {
-    return this.activePatches.filter(p => p.status === "Deployed");
+    return this.activePatches.filter((p) => p.status === "Deployed");
   }
 
   public getAllPatches(): ImprovementPatch[] {

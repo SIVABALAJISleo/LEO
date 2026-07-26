@@ -12,7 +12,7 @@ export class ExpertPredictor {
     { id: "exp-code", name: "LEO Compiler & Code Synthesizer" },
     { id: "exp-math", name: "LEO Symbolic Algebra Specialist" },
     { id: "exp-logic", name: "LEO Tree-of-Thought Logical Core" },
-    { id: "exp-default", name: "LEO General Semantic Coordinator" }
+    { id: "exp-default", name: "LEO General Semantic Coordinator" },
   ];
 
   predictExpert(query: string): RouterPrediction {
@@ -30,7 +30,7 @@ export class ExpertPredictor {
     return {
       predictedExpertId: selected.id,
       expertName: selected.name,
-      confidenceScore: parseFloat((0.85 + Math.random() * 0.14).toFixed(3))
+      confidenceScore: parseFloat((0.85 + Math.random() * 0.14).toFixed(3)),
     };
   }
 }

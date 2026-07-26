@@ -13,15 +13,16 @@ export class KnowledgeExternalizationEngine {
   calculateEfficiency(
     retrievedTokensCount: number,
     queryTotalCount: number,
-    bypassedReasoningCount: number
+    bypassedReasoningCount: number,
   ): KnowledgeEfficiencyTelemetry {
     // Neural weights saved: each fact externalized avoids training parameters
     // Estimate 25MB of weights saved per externalized fact block
     const neuralWeightsSavedMB = bypassedReasoningCount * 25;
 
-    const externalRatioPct = queryTotalCount > 0 
-      ? parseFloat(((bypassedReasoningCount / queryTotalCount) * 100).toFixed(1))
-      : 80.0;
+    const externalRatioPct =
+      queryTotalCount > 0
+        ? parseFloat(((bypassedReasoningCount / queryTotalCount) * 100).toFixed(1))
+        : 80.0;
 
     // Knowledge Efficiency Score scales with external ratio and tokens density
     const baseScore = externalRatioPct * 0.8 + (retrievedTokensCount > 0 ? 15 : 0);
@@ -32,7 +33,7 @@ export class KnowledgeExternalizationEngine {
       totalTokensInjected: retrievedTokensCount,
       neuralWeightsSavedMB,
       knowledgeEfficiencyScore,
-      externalRatioPct
+      externalRatioPct,
     };
   }
 }

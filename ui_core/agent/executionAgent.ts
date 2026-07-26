@@ -1,7 +1,7 @@
 // High‑level “agentic” orchestrator for choosing how to run heavy jobs locally.
 // This does NOT break hardware limits; it simply uses the device as efficiently as possible.
 
-export type EngineType = 'cpu' | 'gpu' | 'hybrid';
+export type EngineType = "cpu" | "gpu" | "hybrid";
 
 export interface DeviceProfile {
   hasWebGPU: boolean;
@@ -9,7 +9,7 @@ export interface DeviceProfile {
   userAgent: string;
 }
 
-export type JobKind = 'demo-heavy-compute' | 'text' | 'image' | 'simulation';
+export type JobKind = "demo-heavy-compute" | "text" | "image" | "simulation";
 
 export interface JobSpec {
   id: string;
@@ -23,19 +23,18 @@ export interface ExecutionPlan {
 }
 
 export async function detectDeviceProfile(): Promise<DeviceProfile> {
-  if (typeof navigator === 'undefined') {
+  if (typeof navigator === "undefined") {
     // Server-side / non-browser environment
     return {
       hasWebGPU: false,
       logicalCores: 1,
-      userAgent: 'server',
+      userAgent: "server",
     };
   }
 
-  const hasWebGPU = typeof (navigator as any).gpu !== 'undefined';
-  const logicalCores = typeof navigator.hardwareConcurrency === 'number'
-    ? navigator.hardwareConcurrency
-    : 2;
+  const hasWebGPU = typeof (navigator as any).gpu !== "undefined";
+  const logicalCores =
+    typeof navigator.hardwareConcurrency === "number" ? navigator.hardwareConcurrency : 2;
 
   return {
     hasWebGPU,
@@ -56,13 +55,12 @@ export async function createExecutionPlan(job: JobSpec): Promise<ExecutionPlan> 
   // - If WebGPU is available but few cores, prefer GPU.
   // - Otherwise, CPU only.
   if (profile.hasWebGPU && profile.logicalCores >= 4) {
-    return { engine: 'hybrid', profile };
+    return { engine: "hybrid", profile };
   }
 
   if (profile.hasWebGPU) {
-    return { engine: 'gpu', profile };
+    return { engine: "gpu", profile };
   }
 
-  return { engine: 'cpu', profile };
+  return { engine: "cpu", profile };
 }
-

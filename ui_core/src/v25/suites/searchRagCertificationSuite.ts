@@ -27,22 +27,22 @@ export class SearchRagCertificationSuite {
         precision: 0.995,
         recall: 0.992,
         citationScore: 0.998,
-        freshnessScore: 0.99
+        freshnessScore: 0.99,
       },
       {
         queryId: "Q-RAG-2",
         precision: 0.992,
         recall: 0.995,
         citationScore: 0.992,
-        freshnessScore: 0.985
+        freshnessScore: 0.985,
       },
       {
         queryId: "Q-RAG-3",
-        precision: 0.990,
-        recall: 0.990,
+        precision: 0.99,
+        recall: 0.99,
         citationScore: 0.995,
-        freshnessScore: 0.99
-      }
+        freshnessScore: 0.99,
+      },
     ];
 
     const sumPrecision = queriesTested.reduce((sum, q) => sum + q.precision, 0);
@@ -65,7 +65,7 @@ export class SearchRagCertificationSuite {
       averageCitationAccuracy: parseFloat(averageCitationAccuracy.toFixed(4)),
       indexCoverageRate,
       passed,
-      queriesTested
+      queriesTested,
     };
   }
 }

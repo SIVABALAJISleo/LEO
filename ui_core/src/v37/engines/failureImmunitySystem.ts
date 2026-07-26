@@ -28,8 +28,8 @@ export class FailureImmunitySystem {
     {
       assertCode: "expect(agentGovernanceEngine.arbitrate(votes)).toBeDefined()",
       targetTestFile: "agentGovernance.test.ts",
-      status: "active"
-    }
+      status: "active",
+    },
   ];
 
   /**
@@ -38,7 +38,7 @@ export class FailureImmunitySystem {
   public logAndVaccinate(
     errorMessage: string,
     moduleSource: string,
-    severity: FailureIncident["severity"]
+    severity: FailureIncident["severity"],
   ): ImmunityReport {
     const id = `fail-${(Math.random() * 10000).toFixed(0)}`;
     this.incidents.push({
@@ -46,7 +46,7 @@ export class FailureImmunitySystem {
       errorMessage,
       moduleSource,
       severity,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
 
     // Create vaccine assertion code
@@ -56,14 +56,18 @@ export class FailureImmunitySystem {
     this.vaccines.push({
       assertCode,
       targetTestFile: `${cleanSource.toLowerCase()}.test.ts`,
-      status: "validated"
+      status: "validated",
     });
 
     return {
       incidentsLogged: this.incidents.length,
       activeVaccinesCount: this.vaccines.length,
-      coverageRatio: parseFloat((this.vaccines.filter(v => v.status === "validated").length / this.vaccines.length).toFixed(2)),
-      vaccines: this.vaccines
+      coverageRatio: parseFloat(
+        (
+          this.vaccines.filter((v) => v.status === "validated").length / this.vaccines.length
+        ).toFixed(2),
+      ),
+      vaccines: this.vaccines,
     };
   }
 

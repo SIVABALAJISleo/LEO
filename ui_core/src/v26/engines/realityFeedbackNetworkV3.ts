@@ -25,7 +25,7 @@ export class RealityFeedbackNetworkV3 {
         predictedValue: 0.992,
         observedValue: 0.985,
         difference: 0.007,
-        correctionSignal: -0.005
+        correctionSignal: -0.005,
       },
       {
         id: "F-2602",
@@ -33,8 +33,8 @@ export class RealityFeedbackNetworkV3 {
         predictedValue: 0.985,
         observedValue: 0.962,
         difference: 0.023,
-        correctionSignal: -0.015
-      }
+        correctionSignal: -0.015,
+      },
     ];
   }
 
@@ -49,7 +49,7 @@ export class RealityFeedbackNetworkV3 {
       predictedValue: predicted,
       observedValue: observed,
       difference,
-      correctionSignal
+      correctionSignal,
     };
 
     this.history.push(newEvent);
@@ -59,7 +59,7 @@ export class RealityFeedbackNetworkV3 {
   getAlignmentScore(): number {
     if (this.history.length === 0) return 0.95;
     const avgDiff = this.history.reduce((sum, h) => sum + h.difference, 0) / this.history.length;
-    return parseFloat(Math.min(0.999, Math.max(0.90, 1.0 - avgDiff)).toFixed(4));
+    return parseFloat(Math.min(0.999, Math.max(0.9, 1.0 - avgDiff)).toFixed(4));
   }
 
   getHistory(): FeedbackEventV26[] {

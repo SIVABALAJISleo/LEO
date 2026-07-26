@@ -182,19 +182,17 @@ export const hyperClient = {
         hardware: status.telemetry?.hardware || {
           cpu_load: 12.4,
           memory_percent: 45.2,
-          disk_percent: 38.1
-        }
+          disk_percent: 38.1,
+        },
       };
     } catch (e) {
       return {
         hardware: {
           cpu_load: 0,
           memory_percent: 0,
-          disk_percent: 0
-        }
+          disk_percent: 0,
+        },
       };
     }
-  }
+  },
 };
-
-

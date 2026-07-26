@@ -14,52 +14,52 @@ interface SanitizedResult {
 }
 
 class SecureResultGateway {
-  private readonly VERSION = '1.0.0';
+  private readonly VERSION = "1.0.0";
   private blockedFields = [
-    'systemPath',
-    'internalId',
-    'gpuAddress',
-    'memoryPointer',
-    'processId',
-    'kernelInfo',
-    '__proto__',
-    'constructor',
+    "systemPath",
+    "internalId",
+    "gpuAddress",
+    "memoryPointer",
+    "processId",
+    "kernelInfo",
+    "__proto__",
+    "constructor",
   ];
 
   // Sanitize input before processing
   sanitizeInput(input: unknown): unknown {
-    if (typeof input === 'string') {
+    if (typeof input === "string") {
       // Remove potential injection patterns
       return input
-        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-        .replace(/javascript:/gi, '')
-        .replace(/on\w+\s*=/gi, '')
+        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+        .replace(/javascript:/gi, "")
+        .replace(/on\w+\s*=/gi, "")
         .trim();
     }
-    
+
     if (Array.isArray(input)) {
-      return input.map(item => this.sanitizeInput(item));
+      return input.map((item) => this.sanitizeInput(item));
     }
-    
-    if (input && typeof input === 'object') {
+
+    if (input && typeof input === "object") {
       const sanitized: Record<string, unknown> = {};
       for (const [key, value] of Object.entries(input)) {
         // Skip blocked fields
         if (this.blockedFields.includes(key)) continue;
         // Skip prototype pollution attempts
-        if (key.startsWith('__')) continue;
+        if (key.startsWith("__")) continue;
         sanitized[key] = this.sanitizeInput(value);
       }
       return sanitized;
     }
-    
+
     return input;
   }
 
   // Sanitize output before returning to user
   sanitizeOutput(result: unknown): SanitizedResult {
     const sanitized = this.sanitizeInput(result);
-    
+
     return {
       success: true,
       data: sanitized,
@@ -74,7 +74,7 @@ class SecureResultGateway {
   // Validate that no system internals are exposed
   validateResultSafety(result: unknown): boolean {
     const json = JSON.stringify(result);
-    
+
     // Check for any blocked patterns
     const dangerousPatterns = [
       /\/proc\//i,
@@ -84,8 +84,8 @@ class SecureResultGateway {
       /secret/i,
       /private_key/i,
     ];
-    
-    return !dangerousPatterns.some(pattern => pattern.test(json));
+
+    return !dangerousPatterns.some((pattern) => pattern.test(json));
   }
 
   // Create a safe result envelope
@@ -93,7 +93,7 @@ class SecureResultGateway {
     if (!this.validateResultSafety(result)) {
       return {
         success: false,
-        data: { error: 'Result contains restricted information' },
+        data: { error: "Result contains restricted information" },
         metadata: {
           processedAt: new Date().toISOString(),
           sanitized: true,
@@ -101,20 +101,13 @@ class SecureResultGateway {
         },
       };
     }
-    
+
     return this.sanitizeOutput(result);
   }
 
   // Get allowed result fields for public API
   getPublicResultFields(): string[] {
-    return [
-      'id',
-      'status',
-      'progress',
-      'result',
-      'completedAt',
-      'error',
-    ];
+    return ["id", "status", "progress", "result", "completedAt", "error"];
   }
 }
 

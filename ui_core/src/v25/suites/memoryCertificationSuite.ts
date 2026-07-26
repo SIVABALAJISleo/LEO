@@ -29,7 +29,7 @@ export class MemoryCertificationSuite {
         driftRatePct: 0.2,
         temporalOffsetMs: 12,
         hasContradiction: false,
-        consistencyScore: 0.995
+        consistencyScore: 0.995,
       },
       {
         nodeId: "M-CERT-2",
@@ -37,7 +37,7 @@ export class MemoryCertificationSuite {
         driftRatePct: 0.4,
         temporalOffsetMs: 5,
         hasContradiction: false,
-        consistencyScore: 0.99
+        consistencyScore: 0.99,
       },
       {
         nodeId: "M-CERT-3",
@@ -45,7 +45,7 @@ export class MemoryCertificationSuite {
         driftRatePct: 0.9,
         temporalOffsetMs: 25,
         hasContradiction: false,
-        consistencyScore: 0.985
+        consistencyScore: 0.985,
       },
       {
         nodeId: "M-CERT-4",
@@ -53,13 +53,13 @@ export class MemoryCertificationSuite {
         driftRatePct: 0.1,
         temporalOffsetMs: 2,
         hasContradiction: false,
-        consistencyScore: 0.998
-      }
+        consistencyScore: 0.998,
+      },
     ];
 
-    const recallCount = nodes.filter(n => n.recalled).length;
+    const recallCount = nodes.filter((n) => n.recalled).length;
     const recallRate = recallCount / nodes.length;
-    
+
     const sumConsistency = nodes.reduce((sum, n) => sum + n.consistencyScore, 0);
     const overallConsistency = sumConsistency / nodes.length;
 
@@ -75,7 +75,7 @@ export class MemoryCertificationSuite {
       recallRate: parseFloat(recallRate.toFixed(4)),
       averageDriftPct: parseFloat(averageDriftPct.toFixed(3)),
       passed,
-      nodes
+      nodes,
     };
   }
 }

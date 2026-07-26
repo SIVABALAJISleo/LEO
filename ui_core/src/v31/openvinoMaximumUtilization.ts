@@ -35,15 +35,15 @@ export class OpenvinoMaximumUtilization {
     if (deviceUsed === "CPU") {
       // CPU features multi-threaded AVX-512 optimization
       loadPct = parseFloat((15 + (queryLength % 40)).toFixed(1));
-      tempCelsius = parseFloat((42 + (loadPct * 0.2)).toFixed(1));
-      powerDrawWatts = parseFloat((12 + (loadPct * 0.15)).toFixed(1)); // CPUs draw 12-25W for inference
-      performanceFps = parseFloat((15 + (loadPct * 0.25)).toFixed(1)); // CPU throughput is moderate
+      tempCelsius = parseFloat((42 + loadPct * 0.2).toFixed(1));
+      powerDrawWatts = parseFloat((12 + loadPct * 0.15).toFixed(1)); // CPUs draw 12-25W for inference
+      performanceFps = parseFloat((15 + loadPct * 0.25).toFixed(1)); // CPU throughput is moderate
     } else {
       // iGPU features INT8 GPU matrix engine offload
       loadPct = parseFloat((25 + (queryLength % 55)).toFixed(1));
-      tempCelsius = parseFloat((55 + (loadPct * 0.18)).toFixed(1));
-      powerDrawWatts = parseFloat((4.5 + (loadPct * 0.08)).toFixed(1)); // iGPU is highly efficient, 4.5-12W
-      performanceFps = parseFloat((45 + (loadPct * 0.45)).toFixed(1)); // iGPU is fast
+      tempCelsius = parseFloat((55 + loadPct * 0.18).toFixed(1));
+      powerDrawWatts = parseFloat((4.5 + loadPct * 0.08).toFixed(1)); // iGPU is highly efficient, 4.5-12W
+      performanceFps = parseFloat((45 + loadPct * 0.45).toFixed(1)); // iGPU is fast
     }
 
     const intelligencePerWatt = parseFloat((performanceFps / powerDrawWatts).toFixed(2));
@@ -54,7 +54,7 @@ export class OpenvinoMaximumUtilization {
       tempCelsius,
       powerDrawWatts,
       performanceFps,
-      intelligencePerWatt
+      intelligencePerWatt,
     };
   }
 }

@@ -1,26 +1,26 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { SidebarProvider } from '@/components/ui/sidebar';
-import { DashboardSidebar } from '@/components/dashboard/DashboardSidebar';
-import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
-import { useBackendInitialization } from '@/hooks/useBackendInitialization';
-import DashboardHome from '@/pages/dashboard/DashboardHome';
-import ModulesPage from '@/pages/dashboard/ModulesPage';
-import JobsPage from '@/pages/dashboard/JobsPage';
-import MonitoringPage from '@/pages/dashboard/MonitoringPage';
-import InferencePage from '@/pages/dashboard/InferencePage';
-import ResultsPage from '@/pages/dashboard/ResultsPage';
-import SettingsPage from '@/pages/dashboard/SettingsPage';
-import OrchestrationExplorer from '@/pages/OrchestrationExplorer';
-import LeoOrchestrationMaster from '@/pages/LeoOrchestrationMaster';
-import SystemDashboard from '@/pages/SystemDashboard';
-import GpuBypassDemo from '@/pages/GpuBypassDemo';
-import VisionPage from '@/pages/dashboard/VisionPage';
-import JepaPage from '@/pages/dashboard/JepaPage';
-import SotaPage from '@/pages/dashboard/SotaPage';
+import { Routes, Route, Navigate } from "react-router-dom";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
+import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
+import { useBackendInitialization } from "@/hooks/useBackendInitialization";
+import DashboardHome from "@/pages/dashboard/DashboardHome";
+import ModulesPage from "@/pages/dashboard/ModulesPage";
+import JobsPage from "@/pages/dashboard/JobsPage";
+import MonitoringPage from "@/pages/dashboard/MonitoringPage";
+import InferencePage from "@/pages/dashboard/InferencePage";
+import ResultsPage from "@/pages/dashboard/ResultsPage";
+import SettingsPage from "@/pages/dashboard/SettingsPage";
+import OrchestrationExplorer from "@/pages/OrchestrationExplorer";
+import LeoOrchestrationMaster from "@/pages/LeoOrchestrationMaster";
+import SystemDashboard from "@/pages/SystemDashboard";
+import GpuBypassDemo from "@/pages/GpuBypassDemo";
+import VisionPage from "@/pages/dashboard/VisionPage";
+import JepaPage from "@/pages/dashboard/JepaPage";
+import SotaPage from "@/pages/dashboard/SotaPage";
 
-import SecurityPage from '@/pages/advanced/SecurityPage';
-import CostAnalyticsPage from '@/pages/advanced/CostAnalyticsPage';
-import DisasterRecoveryPage from '@/pages/advanced/DisasterRecoveryPage';
+import SecurityPage from "@/pages/advanced/SecurityPage";
+import CostAnalyticsPage from "@/pages/advanced/CostAnalyticsPage";
+import DisasterRecoveryPage from "@/pages/advanced/DisasterRecoveryPage";
 
 const Dashboard = () => {
   // Initialize backend on dashboard mount - seeds data and starts automation

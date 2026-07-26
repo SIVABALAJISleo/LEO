@@ -1,11 +1,11 @@
-import { Link } from 'react-router-dom';
-import { ArrowLeft, Mail, MessageSquare, Clock } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Footer } from '@/components/Footer';
-import { Navbar } from '@/components/Navbar';
+import { Link } from "react-router-dom";
+import { ArrowLeft, Mail, MessageSquare, Clock } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Footer } from "@/components/Footer";
+import { Navbar } from "@/components/Navbar";
 
-const CONTACT_VERSION = '1.0.0';
+const CONTACT_VERSION = "1.0.0";
 
 const Contact = () => {
   return (
@@ -21,9 +21,7 @@ const Contact = () => {
 
         <article className="prose prose-slate dark:prose-invert max-w-none">
           <h1>Contact Us</h1>
-          <p className="text-muted-foreground">
-            Version {CONTACT_VERSION}
-          </p>
+          <p className="text-muted-foreground">Version {CONTACT_VERSION}</p>
 
           <div className="grid gap-6 md:grid-cols-2 not-prose mt-8">
             <Card>
@@ -32,13 +30,11 @@ const Contact = () => {
                   <Mail className="h-5 w-5 text-primary" />
                   General Inquiries
                 </CardTitle>
-                <CardDescription>
-                  For general questions and information
-                </CardDescription>
+                <CardDescription>For general questions and information</CardDescription>
               </CardHeader>
               <CardContent>
-                <a 
-                  href="mailto:hello@hyper.app" 
+                <a
+                  href="mailto:hello@hyper.app"
                   className="text-primary hover:underline font-medium"
                 >
                   hello@hyper.app
@@ -52,13 +48,11 @@ const Contact = () => {
                   <MessageSquare className="h-5 w-5 text-primary" />
                   Technical Support
                 </CardTitle>
-                <CardDescription>
-                  For technical issues and bug reports
-                </CardDescription>
+                <CardDescription>For technical issues and bug reports</CardDescription>
               </CardHeader>
               <CardContent>
-                <a 
-                  href="mailto:support@hyper.app" 
+                <a
+                  href="mailto:support@hyper.app"
                   className="text-primary hover:underline font-medium"
                 >
                   support@hyper.app
@@ -72,13 +66,11 @@ const Contact = () => {
                   <Mail className="h-5 w-5 text-primary" />
                   Billing Questions
                 </CardTitle>
-                <CardDescription>
-                  For payment and subscription inquiries
-                </CardDescription>
+                <CardDescription>For payment and subscription inquiries</CardDescription>
               </CardHeader>
               <CardContent>
-                <a 
-                  href="mailto:billing@hyper.app" 
+                <a
+                  href="mailto:billing@hyper.app"
                   className="text-primary hover:underline font-medium"
                 >
                   billing@hyper.app
@@ -92,9 +84,7 @@ const Contact = () => {
                   <Clock className="h-5 w-5 text-primary" />
                   Response Time
                 </CardTitle>
-                <CardDescription>
-                  Expected response times
-                </CardDescription>
+                <CardDescription>Expected response times</CardDescription>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground">
@@ -106,7 +96,7 @@ const Contact = () => {
 
           <h2 className="mt-12">Legal Notices</h2>
           <p>
-            For legal inquiries, please contact{' '}
+            For legal inquiries, please contact{" "}
             <a href="mailto:legal@hyper.app" className="text-primary hover:underline">
               legal@hyper.app
             </a>

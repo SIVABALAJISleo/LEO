@@ -1,20 +1,47 @@
-import { useState } from 'react';
-import { useResultsData } from '@/hooks/useResultsData';
-import { InferenceJob } from '@/hooks/useJobsData';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useState } from "react";
+import { useResultsData } from "@/hooks/useResultsData";
+import { InferenceJob } from "@/hooks/useJobsData";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { PieChart, Pie, Cell, BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { Search, Download, Eye, GitCompare, CheckCircle, XCircle, Filter } from 'lucide-react';
-import { format } from 'date-fns';
+import {
+  PieChart,
+  Pie,
+  Cell,
+  BarChart,
+  Bar,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+} from "recharts";
+import { Search, Download, Eye, GitCompare, CheckCircle, XCircle, Filter } from "lucide-react";
+import { format } from "date-fns";
 
 const ResultsPage = () => {
   const {
@@ -25,18 +52,19 @@ const ResultsPage = () => {
     clearSelection,
     getSelectedJobsData,
     exportToJson,
-    exportToCsv
+    exportToCsv,
   } = useResultsData();
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   const [detailJob, setDetailJob] = useState<InferenceJob | null>(null);
   const [showComparison, setShowComparison] = useState(false);
 
-  const filteredJobs = completedJobs.filter(job => {
-    const matchesSearch = job.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  const filteredJobs = completedJobs.filter((job) => {
+    const matchesSearch =
+      job.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
       job.model?.name?.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || job.status === statusFilter;
+    const matchesStatus = statusFilter === "all" || job.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
@@ -49,19 +77,19 @@ const ResultsPage = () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       moduleDistribution: modules.map((m: any) => ({ name: m, value: 1 })),
       metrics: [
-        { name: 'Latency', value: job.latency_ms || 0 },
-        { name: 'Speedup', value: (job.speedup || 1) * 100 },
-        { name: 'Compression', value: (job.compression_ratio || 1) * 100 },
-      ]
+        { name: "Latency", value: job.latency_ms || 0 },
+        { name: "Speedup", value: (job.speedup || 1) * 100 },
+        { name: "Compression", value: (job.compression_ratio || 1) * 100 },
+      ],
     };
   };
 
   const CHART_COLORS = [
-    'hsl(var(--primary))',
-    'hsl(88 72% 60%)',
-    'hsl(200 80% 50%)',
-    'hsl(280 70% 50%)',
-    'hsl(30 80% 50%)',
+    "hsl(var(--primary))",
+    "hsl(88 72% 60%)",
+    "hsl(200 80% 50%)",
+    "hsl(280 70% 50%)",
+    "hsl(30 80% 50%)",
   ];
 
   if (loading) {
@@ -105,7 +133,7 @@ const ResultsPage = () => {
               <Input
                 placeholder="Search by job ID or model..."
                 value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10"
               />
             </div>
@@ -157,7 +185,7 @@ const ResultsPage = () => {
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredJobs.map(job => (
+                filteredJobs.map((job) => (
                   <TableRow key={job.id} className="border-border">
                     <TableCell>
                       <Checkbox
@@ -166,29 +194,30 @@ const ResultsPage = () => {
                       />
                     </TableCell>
                     <TableCell className="font-mono text-sm">{job.id.slice(0, 8)}...</TableCell>
-                    <TableCell>{job.model?.name || 'Unknown'}</TableCell>
+                    <TableCell>{job.model?.name || "Unknown"}</TableCell>
                     <TableCell>
-                      <Badge variant={job.status === 'completed' ? 'default' : 'destructive'}>
+                      <Badge variant={job.status === "completed" ? "default" : "destructive"}>
                         <span className="flex items-center gap-1">
-                          {job.status === 'completed' ?
-                            <CheckCircle className="h-3 w-3" /> :
+                          {job.status === "completed" ? (
+                            <CheckCircle className="h-3 w-3" />
+                          ) : (
                             <XCircle className="h-3 w-3" />
-                          }
+                          )}
                           {job.status}
                         </span>
                       </Badge>
                     </TableCell>
                     <TableCell className="text-primary">
-                      {job.latency_ms ? `${job.latency_ms}ms` : '-'}
+                      {job.latency_ms ? `${job.latency_ms}ms` : "-"}
                     </TableCell>
                     <TableCell className="text-primary">
-                      {job.speedup ? `${job.speedup.toFixed(2)}x` : '-'}
+                      {job.speedup ? `${job.speedup.toFixed(2)}x` : "-"}
                     </TableCell>
                     <TableCell>
-                      {job.compression_ratio ? `${job.compression_ratio.toFixed(2)}x` : '-'}
+                      {job.compression_ratio ? `${job.compression_ratio.toFixed(2)}x` : "-"}
                     </TableCell>
                     <TableCell className="text-muted-foreground text-sm">
-                      {job.completed_at ? format(new Date(job.completed_at), 'MMM d, HH:mm') : '-'}
+                      {job.completed_at ? format(new Date(job.completed_at), "MMM d, HH:mm") : "-"}
                     </TableCell>
                     <TableCell>
                       <Button variant="ghost" size="sm" onClick={() => setDetailJob(job)}>
@@ -236,26 +265,34 @@ const ResultsPage = () => {
                   <Card className="bg-muted/50">
                     <CardContent className="p-4 text-center">
                       <p className="text-sm text-muted-foreground">Latency</p>
-                      <p className="text-2xl font-bold text-primary">{detailJob.latency_ms || 0}ms</p>
+                      <p className="text-2xl font-bold text-primary">
+                        {detailJob.latency_ms || 0}ms
+                      </p>
                     </CardContent>
                   </Card>
                   <Card className="bg-muted/50">
                     <CardContent className="p-4 text-center">
                       <p className="text-sm text-muted-foreground">Speedup</p>
-                      <p className="text-2xl font-bold text-primary">{detailJob.speedup?.toFixed(2) || 1}x</p>
+                      <p className="text-2xl font-bold text-primary">
+                        {detailJob.speedup?.toFixed(2) || 1}x
+                      </p>
                     </CardContent>
                   </Card>
                   <Card className="bg-muted/50">
                     <CardContent className="p-4 text-center">
                       <p className="text-sm text-muted-foreground">Compression</p>
-                      <p className="text-2xl font-bold text-primary">{detailJob.compression_ratio?.toFixed(2) || 1}x</p>
+                      <p className="text-2xl font-bold text-primary">
+                        {detailJob.compression_ratio?.toFixed(2) || 1}x
+                      </p>
                     </CardContent>
                   </Card>
                   <Card className="bg-muted/50">
                     <CardContent className="p-4 text-center">
                       <p className="text-sm text-muted-foreground">Modules Used</p>
                       <p className="text-2xl font-bold text-primary">
-                        {Array.isArray(detailJob.enabled_modules) ? detailJob.enabled_modules.length : 0}
+                        {Array.isArray(detailJob.enabled_modules)
+                          ? detailJob.enabled_modules.length
+                          : 0}
                       </p>
                     </CardContent>
                   </Card>
@@ -264,9 +301,12 @@ const ResultsPage = () => {
                 <div>
                   <h3 className="font-medium mb-2">Enabled Modules</h3>
                   <div className="flex flex-wrap gap-2">
-                    {Array.isArray(detailJob.enabled_modules) && detailJob.enabled_modules.map((m: string) => (
-                      <Badge key={m} variant="outline">{m}</Badge>
-                    ))}
+                    {Array.isArray(detailJob.enabled_modules) &&
+                      detailJob.enabled_modules.map((m: string) => (
+                        <Badge key={m} variant="outline">
+                          {m}
+                        </Badge>
+                      ))}
                   </div>
                 </div>
               </TabsContent>
@@ -307,12 +347,16 @@ const ResultsPage = () => {
                         <ResponsiveContainer width="100%" height="100%">
                           <BarChart data={getJobStats(detailJob).metrics}>
                             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                            <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} />
+                            <XAxis
+                              dataKey="name"
+                              stroke="hsl(var(--muted-foreground))"
+                              fontSize={12}
+                            />
                             <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
                             <Tooltip
                               contentStyle={{
-                                backgroundColor: 'hsl(var(--card))',
-                                border: '1px solid hsl(var(--border))'
+                                backgroundColor: "hsl(var(--card))",
+                                border: "1px solid hsl(var(--border))",
                               }}
                             />
                             <Bar dataKey="value" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
@@ -341,7 +385,10 @@ const ResultsPage = () => {
                               labelLine={false}
                             >
                               {getJobStats(detailJob).moduleDistribution.map((_, index) => (
-                                <Cell key={index} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+                                <Cell
+                                  key={index}
+                                  fill={CHART_COLORS[index % CHART_COLORS.length]}
+                                />
                               ))}
                             </Pie>
                             <Tooltip />
@@ -369,7 +416,7 @@ const ResultsPage = () => {
                 <TableHeader>
                   <TableRow className="border-border">
                     <TableHead>Metric</TableHead>
-                    {comparisonJobs.map(job => (
+                    {comparisonJobs.map((job) => (
                       <TableHead key={job.id}>{job.id.slice(0, 8)}...</TableHead>
                     ))}
                   </TableRow>
@@ -377,31 +424,35 @@ const ResultsPage = () => {
                 <TableBody>
                   <TableRow className="border-border">
                     <TableCell className="font-medium">Model</TableCell>
-                    {comparisonJobs.map(job => (
-                      <TableCell key={job.id}>{job.model?.name || 'Unknown'}</TableCell>
+                    {comparisonJobs.map((job) => (
+                      <TableCell key={job.id}>{job.model?.name || "Unknown"}</TableCell>
                     ))}
                   </TableRow>
                   <TableRow className="border-border">
                     <TableCell className="font-medium">Latency</TableCell>
-                    {comparisonJobs.map(job => (
-                      <TableCell key={job.id} className="text-primary">{job.latency_ms || 0}ms</TableCell>
+                    {comparisonJobs.map((job) => (
+                      <TableCell key={job.id} className="text-primary">
+                        {job.latency_ms || 0}ms
+                      </TableCell>
                     ))}
                   </TableRow>
                   <TableRow className="border-border">
                     <TableCell className="font-medium">Speedup</TableCell>
-                    {comparisonJobs.map(job => (
-                      <TableCell key={job.id} className="text-primary">{job.speedup?.toFixed(2) || 1}x</TableCell>
+                    {comparisonJobs.map((job) => (
+                      <TableCell key={job.id} className="text-primary">
+                        {job.speedup?.toFixed(2) || 1}x
+                      </TableCell>
                     ))}
                   </TableRow>
                   <TableRow className="border-border">
                     <TableCell className="font-medium">Compression</TableCell>
-                    {comparisonJobs.map(job => (
+                    {comparisonJobs.map((job) => (
                       <TableCell key={job.id}>{job.compression_ratio?.toFixed(2) || 1}x</TableCell>
                     ))}
                   </TableRow>
                   <TableRow className="border-border">
                     <TableCell className="font-medium">Modules</TableCell>
-                    {comparisonJobs.map(job => (
+                    {comparisonJobs.map((job) => (
                       <TableCell key={job.id}>
                         {Array.isArray(job.enabled_modules) ? job.enabled_modules.length : 0}
                       </TableCell>
@@ -417,15 +468,22 @@ const ResultsPage = () => {
                 <CardContent>
                   <div className="h-[250px]">
                     <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={comparisonJobs.map(j => ({
-                        name: j.id.slice(0, 8),
-                        latency: j.latency_ms || 0,
-                        speedup: (j.speedup || 1) * 100
-                      }))}>
+                      <BarChart
+                        data={comparisonJobs.map((j) => ({
+                          name: j.id.slice(0, 8),
+                          latency: j.latency_ms || 0,
+                          speedup: (j.speedup || 1) * 100,
+                        }))}
+                      >
                         <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                         <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} />
                         <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                        <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))' }} />
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: "hsl(var(--card))",
+                            border: "1px solid hsl(var(--border))",
+                          }}
+                        />
                         <Legend />
                         <Bar dataKey="latency" name="Latency (ms)" fill="hsl(var(--primary))" />
                         <Bar dataKey="speedup" name="Speedup %" fill="hsl(88 72% 60%)" />

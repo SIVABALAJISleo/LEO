@@ -27,7 +27,8 @@ export class VectorInstructionPlanner {
       chosenVectorSet = "Scalar";
       registerUtilizationPct = parseFloat(((dataSizeElements / 8) * 100).toFixed(1));
       simdEfficiencyScore = 20;
-      instructionsSummary = "Micro-size vector data; scalar operations selected to avoid vector packing overhead.";
+      instructionsSummary =
+        "Micro-size vector data; scalar operations selected to avoid vector packing overhead.";
     } else if (isQuantized) {
       chosenVectorSet = "VNNI";
       const vnniReport = this.vnniEngine.runVnniKernel(dataSizeElements, "INT8");
@@ -45,7 +46,8 @@ export class VectorInstructionPlanner {
       const avxReport = this.avxEngine.detectVectorCapability("AVX2");
       registerUtilizationPct = 85.0;
       simdEfficiencyScore = 78.0;
-      instructionsSummary = "AVX2 alignment chosen. Processing 8 parallel float32 elements per register.";
+      instructionsSummary =
+        "AVX2 alignment chosen. Processing 8 parallel float32 elements per register.";
     }
 
     return {
@@ -54,7 +56,7 @@ export class VectorInstructionPlanner {
       chosenVectorSet,
       registerUtilizationPct,
       simdEfficiencyScore: parseFloat(simdEfficiencyScore.toFixed(1)),
-      instructionsSummary
+      instructionsSummary,
     };
   }
 }

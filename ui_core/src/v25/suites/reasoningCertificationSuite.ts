@@ -2,7 +2,14 @@
 // Simulates 1,000,000+ logical reasoning, mathematics, planning, and causal tasks
 
 export interface ReasoningDomainMetrics {
-  name: "Logical Reasoning" | "Mathematics" | "Planning" | "Causal Reasoning" | "Research" | "Cybersecurity" | "Business Workflows";
+  name:
+    | "Logical Reasoning"
+    | "Mathematics"
+    | "Planning"
+    | "Causal Reasoning"
+    | "Research"
+    | "Cybersecurity"
+    | "Business Workflows";
   testCount: number;
   accuracy: number; // target: 95%+
   consistency: number; // 0 to 1
@@ -26,16 +33,16 @@ export class ReasoningCertificationSuite {
         testCount: 200000,
         accuracy: 0.965,
         consistency: 0.975,
-        verificationRate: 0.980,
-        confidenceCalibration: 0.968
+        verificationRate: 0.98,
+        confidenceCalibration: 0.968,
       },
       {
         name: "Mathematics",
         testCount: 150000,
         accuracy: 0.952, // target: 95%+
-        consistency: 0.960,
+        consistency: 0.96,
         verificationRate: 0.972,
-        confidenceCalibration: 0.954
+        confidenceCalibration: 0.954,
       },
       {
         name: "Planning",
@@ -43,23 +50,23 @@ export class ReasoningCertificationSuite {
         accuracy: 0.971,
         consistency: 0.978,
         verificationRate: 0.985,
-        confidenceCalibration: 0.972
+        confidenceCalibration: 0.972,
       },
       {
         name: "Causal Reasoning",
         testCount: 150000,
         accuracy: 0.958,
         consistency: 0.962,
-        verificationRate: 0.970,
-        confidenceCalibration: 0.958
+        verificationRate: 0.97,
+        confidenceCalibration: 0.958,
       },
       {
         name: "Research",
         testCount: 150000,
         accuracy: 0.982,
         consistency: 0.985,
-        verificationRate: 0.990,
-        confidenceCalibration: 0.980
+        verificationRate: 0.99,
+        confidenceCalibration: 0.98,
       },
       {
         name: "Cybersecurity",
@@ -67,7 +74,7 @@ export class ReasoningCertificationSuite {
         accuracy: 0.991,
         consistency: 0.994,
         verificationRate: 0.995,
-        confidenceCalibration: 0.992
+        confidenceCalibration: 0.992,
       },
       {
         name: "Business Workflows",
@@ -75,22 +82,22 @@ export class ReasoningCertificationSuite {
         accuracy: 0.985,
         consistency: 0.988,
         verificationRate: 0.992,
-        confidenceCalibration: 0.986
-      }
+        confidenceCalibration: 0.986,
+      },
     ];
 
     const totalTaskCount = domainMetrics.reduce((sum, d) => sum + d.testCount, 0);
-    const sumAccuracy = domainMetrics.reduce((sum, d) => sum + (d.testCount * d.accuracy), 0);
+    const sumAccuracy = domainMetrics.reduce((sum, d) => sum + d.testCount * d.accuracy, 0);
     const compositeReasoningScore = sumAccuracy / totalTaskCount;
 
-    const passedVerification = domainMetrics.every(d => d.accuracy >= 0.95);
+    const passedVerification = domainMetrics.every((d) => d.accuracy >= 0.95);
 
     return {
       timestamp: Date.now(),
       totalTaskCount,
       passedVerification,
       domainMetrics,
-      compositeReasoningScore: parseFloat(compositeReasoningScore.toFixed(4))
+      compositeReasoningScore: parseFloat(compositeReasoningScore.toFixed(4)),
     };
   }
 }

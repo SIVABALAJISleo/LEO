@@ -1,7 +1,7 @@
 // IncidentStateMachine - Automated incident classification and response
 // System auto-classifies and responds without human intervention
 
-export type IncidentState = 'NORMAL' | 'DEGRADED' | 'LIMITED' | 'LOCKDOWN';
+export type IncidentState = "NORMAL" | "DEGRADED" | "LIMITED" | "LOCKDOWN";
 
 export interface IncidentContext {
   state: IncidentState;
@@ -39,7 +39,7 @@ export interface IncidentTransition {
   fromState: IncidentState;
   toState: IncidentState;
   reason: string;
-  triggeredBy: 'auto' | 'manual';
+  triggeredBy: "auto" | "manual";
   metadata: Record<string, unknown>;
 }
 
@@ -52,7 +52,7 @@ class IncidentStateMachine {
 
   private constructor() {
     this.context = {
-      state: 'NORMAL',
+      state: "NORMAL",
       triggeredAt: null,
       triggeredBy: null,
       autoDisabledFeatures: [],
@@ -83,9 +83,15 @@ class IncidentStateMachine {
 
     // Features to auto-disable at each state
     this.featureFlagsToDisable = new Map([
-      ['DEGRADED', ['non_critical_jobs', 'batch_processing']],
-      ['LIMITED', ['non_critical_jobs', 'batch_processing', 'new_registrations', 'heavy_inference']],
-      ['LOCKDOWN', ['all_jobs', 'new_registrations', 'api_access', 'heavy_inference', 'batch_processing']],
+      ["DEGRADED", ["non_critical_jobs", "batch_processing"]],
+      [
+        "LIMITED",
+        ["non_critical_jobs", "batch_processing", "new_registrations", "heavy_inference"],
+      ],
+      [
+        "LOCKDOWN",
+        ["all_jobs", "new_registrations", "api_access", "heavy_inference", "batch_processing"],
+      ],
     ]);
   }
 
@@ -109,28 +115,34 @@ class IncidentStateMachine {
     this.context.failedJobs24h = metrics.failedJobs24h;
     this.context.activeAlerts = metrics.activeAlerts;
 
-    const failedJobsPercent = metrics.totalJobs24h > 0 
-      ? (metrics.failedJobs24h / metrics.totalJobs24h) * 100 
-      : 0;
+    const failedJobsPercent =
+      metrics.totalJobs24h > 0 ? (metrics.failedJobs24h / metrics.totalJobs24h) * 100 : 0;
 
     // Evaluate state based on thresholds
     const newState = this.evaluateState(metrics.errorRate, metrics.latencyP99Ms, failedJobsPercent);
-    
+
     if (newState !== this.context.state) {
-      this.transitionTo(newState, `Auto-triggered: errorRate=${metrics.errorRate}%, latency=${metrics.latencyP99Ms}ms, failedJobs=${failedJobsPercent.toFixed(1)}%`);
+      this.transitionTo(
+        newState,
+        `Auto-triggered: errorRate=${metrics.errorRate}%, latency=${metrics.latencyP99Ms}ms, failedJobs=${failedJobsPercent.toFixed(1)}%`,
+      );
     }
 
     return this.context.state;
   }
 
-  private evaluateState(errorRate: number, latencyP99Ms: number, failedJobsPercent: number): IncidentState {
+  private evaluateState(
+    errorRate: number,
+    latencyP99Ms: number,
+    failedJobsPercent: number,
+  ): IncidentState {
     // Check LOCKDOWN first (most severe)
     if (
       errorRate >= this.thresholds.lockdown.errorRatePercent ||
       latencyP99Ms >= this.thresholds.lockdown.latencyP99Ms ||
       failedJobsPercent >= this.thresholds.lockdown.failedJobsPercent
     ) {
-      return 'LOCKDOWN';
+      return "LOCKDOWN";
     }
 
     // Check LIMITED
@@ -139,7 +151,7 @@ class IncidentStateMachine {
       latencyP99Ms >= this.thresholds.limited.latencyP99Ms ||
       failedJobsPercent >= this.thresholds.limited.failedJobsPercent
     ) {
-      return 'LIMITED';
+      return "LIMITED";
     }
 
     // Check DEGRADED
@@ -148,10 +160,10 @@ class IncidentStateMachine {
       latencyP99Ms >= this.thresholds.degraded.latencyP99Ms ||
       failedJobsPercent >= this.thresholds.degraded.failedJobsPercent
     ) {
-      return 'DEGRADED';
+      return "DEGRADED";
     }
 
-    return 'NORMAL';
+    return "NORMAL";
   }
 
   private transitionTo(newState: IncidentState, reason: string): void {
@@ -161,7 +173,7 @@ class IncidentStateMachine {
       fromState: this.context.state,
       toState: newState,
       reason,
-      triggeredBy: 'auto',
+      triggeredBy: "auto",
       metadata: {
         errorRate: this.context.errorRate,
         latencyP99Ms: this.context.latencyP99Ms,
@@ -170,7 +182,7 @@ class IncidentStateMachine {
     };
 
     this.transitions.push(transition);
-    
+
     // Update context
     this.context.state = newState;
     this.context.lastStateChange = transition.timestamp;
@@ -180,7 +192,9 @@ class IncidentStateMachine {
     // Auto-disable features
     this.context.autoDisabledFeatures = this.featureFlagsToDisable.get(newState) || [];
 
-    console.log(`[IncidentStateMachine] State transition: ${transition.fromState} → ${transition.toState}. Reason: ${reason}`);
+    console.log(
+      `[IncidentStateMachine] State transition: ${transition.fromState} → ${transition.toState}. Reason: ${reason}`,
+    );
   }
 
   // Manual state override (admin only)
@@ -191,7 +205,7 @@ class IncidentStateMachine {
       fromState: this.context.state,
       toState: newState,
       reason: `Manual: ${reason}`,
-      triggeredBy: 'manual',
+      triggeredBy: "manual",
       metadata: {},
     };
 
@@ -207,27 +221,28 @@ class IncidentStateMachine {
   }
 
   // Get human-readable status for UI banner
-  getStatusBanner(): { visible: boolean; severity: 'info' | 'warning' | 'error'; message: string } {
+  getStatusBanner(): { visible: boolean; severity: "info" | "warning" | "error"; message: string } {
     switch (this.context.state) {
-      case 'NORMAL':
-        return { visible: false, severity: 'info', message: '' };
-      case 'DEGRADED':
+      case "NORMAL":
+        return { visible: false, severity: "info", message: "" };
+      case "DEGRADED":
         return {
           visible: true,
-          severity: 'warning',
-          message: 'System experiencing degraded performance. Some features may be slower than usual.',
+          severity: "warning",
+          message:
+            "System experiencing degraded performance. Some features may be slower than usual.",
         };
-      case 'LIMITED':
+      case "LIMITED":
         return {
           visible: true,
-          severity: 'warning',
-          message: 'System operating in limited mode. Non-critical features temporarily disabled.',
+          severity: "warning",
+          message: "System operating in limited mode. Non-critical features temporarily disabled.",
         };
-      case 'LOCKDOWN':
+      case "LOCKDOWN":
         return {
           visible: true,
-          severity: 'error',
-          message: 'System in emergency lockdown. Only essential operations available.',
+          severity: "error",
+          message: "System in emergency lockdown. Only essential operations available.",
         };
     }
   }

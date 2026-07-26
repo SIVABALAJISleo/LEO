@@ -25,7 +25,10 @@ export class InspectionGovernor {
   /**
    * Evaluates camera feeds by applying motion filtering, ROI selection, and defect scans.
    */
-  public runVisualInspection(cameraSource: string, inputFrameBlob?: string): InspectionPipelineReport {
+  public runVisualInspection(
+    cameraSource: string,
+    inputFrameBlob?: string,
+  ): InspectionPipelineReport {
     const start = Date.now();
     const defectsDetected: DefectItem[] = [];
 
@@ -36,13 +39,14 @@ export class InspectionGovernor {
     const roiExtracted = true;
 
     // Defect detection simulation: inject anomaly if camera source points to test issues
-    const isFaulty = cameraSource.toLowerCase().includes("faulty") || cameraSource.toLowerCase().includes("leak");
+    const isFaulty =
+      cameraSource.toLowerCase().includes("faulty") || cameraSource.toLowerCase().includes("leak");
     if (isFaulty) {
       defectsDetected.push({
         defectId: "def-0912",
         type: "crack",
         confidence: 0.965,
-        coordinates: { x: 142, y: 310, width: 45, height: 120 }
+        coordinates: { x: 142, y: 310, width: 45, height: 120 },
       });
     }
 
@@ -55,7 +59,7 @@ export class InspectionGovernor {
       runtimeEngine: "YOLOv8",
       defectsDetected,
       inspectionPassed,
-      telemetryLatencyMs: Date.now() - start + 2
+      telemetryLatencyMs: Date.now() - start + 2,
     };
   }
 }

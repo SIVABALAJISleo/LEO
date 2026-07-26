@@ -23,22 +23,25 @@ export class CausalReasoningEngine {
         effect: "Latency Reduction",
         correlationCoeff: 0.94,
         causalDirectionVerified: true,
-        interventionOutcome: "Setting INT8 to active decreases iGPU compilation latency by exactly 65ms."
+        interventionOutcome:
+          "Setting INT8 to active decreases iGPU compilation latency by exactly 65ms.",
       },
       {
         cause: "iGPU Dynamic Offload",
         effect: "Power Efficiency Increase",
         correlationCoeff: 0.88,
         causalDirectionVerified: true,
-        interventionOutcome: "Applying iGPU offload routes workload to shared VRAM, preserving CPU cores and lowering watts."
+        interventionOutcome:
+          "Applying iGPU offload routes workload to shared VRAM, preserving CPU cores and lowering watts.",
       },
       {
         cause: "Lean Logic Verification Fail",
         effect: "Escalation Routing Triggered",
         correlationCoeff: 0.99,
         causalDirectionVerified: true,
-        interventionOutcome: "Forcing proof failure immediately routes queries from Small Model (7B) to Large Model (70B)."
-      }
+        interventionOutcome:
+          "Forcing proof failure immediately routes queries from Small Model (7B) to Large Model (70B).",
+      },
     ];
   }
 
@@ -48,8 +51,9 @@ export class CausalReasoningEngine {
 
   analyzeIntervention(doVariable: string, targetOutcome: string): string {
     const matchedLink = this.relations.find(
-      r => r.cause.toLowerCase().includes(doVariable.toLowerCase()) && 
-           r.effect.toLowerCase().includes(targetOutcome.toLowerCase())
+      (r) =>
+        r.cause.toLowerCase().includes(doVariable.toLowerCase()) &&
+        r.effect.toLowerCase().includes(targetOutcome.toLowerCase()),
     );
 
     if (matchedLink) {

@@ -22,7 +22,7 @@ export class RealityAdaptationEngine {
     let weightedSum = 0;
     let weightTotal = 0;
 
-    signals.forEach(sig => {
+    signals.forEach((sig) => {
       // Weight is inversely proportional to variance (Kalman filter style)
       const weight = sig.variance > 0 ? 1 / sig.variance : 0.1;
       weightedSum += sig.value * weight;
@@ -32,7 +32,7 @@ export class RealityAdaptationEngine {
     const fusedValue = weightTotal > 0 ? weightedSum / weightTotal : 0.0;
 
     // Detect drift: check if variance exceeds critical threshold
-    const hasHighVariance = signals.some(s => s.variance > 0.40);
+    const hasHighVariance = signals.some((s) => s.variance > 0.4);
     const confidenceScore = hasHighVariance ? 0.65 : 0.98;
     const replanRequired = hasHighVariance;
 
@@ -44,7 +44,7 @@ export class RealityAdaptationEngine {
       fusedValue: parseFloat(fusedValue.toFixed(4)),
       confidenceScore,
       replanRequired,
-      prescribedAdjustment
+      prescribedAdjustment,
     };
   }
 }

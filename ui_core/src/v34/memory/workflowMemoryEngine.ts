@@ -17,7 +17,7 @@ export class WorkflowMemoryEngine {
       macroId,
       triggerContext: context,
       actionSequence: actions,
-      successCount: 1
+      successCount: 1,
     };
     this.macroRegistry.set(context.toLowerCase(), macro);
     return macro;

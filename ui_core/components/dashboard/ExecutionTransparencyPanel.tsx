@@ -1,14 +1,19 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { 
+import {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  Shield, Cpu, Brain, RefreshCw, ArrowRight, 
+  Shield,
+  Cpu,
+  Brain,
+  RefreshCw,
+  ArrowRight,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  AlertTriangle, CheckCircle2, Zap 
+  AlertTriangle,
+  CheckCircle2,
+  Zap,
 } from "lucide-react";
 import { realityMinimizationEngine } from "@/lib/safeCompute";
-
 
 export function ExecutionTransparencyPanel({ className }: { className?: string }) {
   const stats = realityMinimizationEngine.getStats();
@@ -53,8 +58,8 @@ export function ExecutionTransparencyPanel({ className }: { className?: string }
             <span className="text-muted-foreground">GPU Compute Avoided</span>
             <span className="font-medium">{stats.gpuComputeAvoided} tasks</span>
           </div>
-          <Progress 
-            value={stats.totalTasks > 0 ? (stats.gpuComputeAvoided / stats.totalTasks) * 100 : 0} 
+          <Progress
+            value={stats.totalTasks > 0 ? (stats.gpuComputeAvoided / stats.totalTasks) * 100 : 0}
             className="h-2"
           />
         </div>

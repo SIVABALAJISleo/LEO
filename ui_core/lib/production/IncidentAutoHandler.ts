@@ -1,22 +1,23 @@
 // IncidentAutoHandler - Automated incident classification and response
 // System protects itself before humans intervene
 
-import { firebaseClient as supabase } from '@/integrations/firebase/client';
+import { firebaseClient as supabase } from "@/integrations/firebase/client";
 
-export type IncidentType = 
-  | 'auth_failure'
-  | 'permission_violation'
-  | 'payment_webhook_failure'
-  | 'rate_limit_breach'
-  | 'internal_exception'
-  | 'circuit_breaker'
-  | 'backup_failure'
-  | 'health_check_failure'
-  | 'deploy_failure';
+export type IncidentType =
+  | "auth_failure"
+  | "permission_violation"
+  | "payment_webhook_failure"
+  | "rate_limit_breach"
+  | "internal_exception"
+  | "circuit_breaker"
+  | "backup_failure"
+  | "health_check_failure"
+  | "deploy_failure";
 
-export type IncidentSeverity = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+export type IncidentSeverity = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
 
-export type AutoAction = 'retry' | 'circuit_break' | 'temporary_block' | 'module_shutdown' | 'alert_only';
+export type AutoAction =
+  "retry" | "circuit_break" | "temporary_block" | "module_shutdown" | "alert_only";
 
 export interface Incident {
   id: string;
@@ -53,108 +54,108 @@ class IncidentAutoHandler {
     this.autoResponseRules = [
       // Auth failures - temporary block after repeated failures
       {
-        incidentType: 'auth_failure',
-        severity: ['LOW', 'MEDIUM'],
-        action: 'alert_only',
+        incidentType: "auth_failure",
+        severity: ["LOW", "MEDIUM"],
+        action: "alert_only",
         maxRetries: 5,
         cooldownMs: 60000,
-        escalateTo: 'HIGH',
+        escalateTo: "HIGH",
       },
       {
-        incidentType: 'auth_failure',
-        severity: ['HIGH', 'CRITICAL'],
-        action: 'temporary_block',
+        incidentType: "auth_failure",
+        severity: ["HIGH", "CRITICAL"],
+        action: "temporary_block",
         maxRetries: 0,
         cooldownMs: 300000,
         escalateTo: null,
       },
       // Permission violations - log and alert
       {
-        incidentType: 'permission_violation',
-        severity: ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'],
-        action: 'alert_only',
+        incidentType: "permission_violation",
+        severity: ["LOW", "MEDIUM", "HIGH", "CRITICAL"],
+        action: "alert_only",
         maxRetries: 0,
         cooldownMs: 0,
         escalateTo: null,
       },
       // Payment webhook failures - retry then circuit break
       {
-        incidentType: 'payment_webhook_failure',
-        severity: ['LOW', 'MEDIUM'],
-        action: 'retry',
+        incidentType: "payment_webhook_failure",
+        severity: ["LOW", "MEDIUM"],
+        action: "retry",
         maxRetries: 3,
         cooldownMs: 5000,
-        escalateTo: 'HIGH',
+        escalateTo: "HIGH",
       },
       {
-        incidentType: 'payment_webhook_failure',
-        severity: ['HIGH', 'CRITICAL'],
-        action: 'circuit_break',
+        incidentType: "payment_webhook_failure",
+        severity: ["HIGH", "CRITICAL"],
+        action: "circuit_break",
         maxRetries: 0,
         cooldownMs: 60000,
         escalateTo: null,
       },
       // Rate limit breach - temporary block
       {
-        incidentType: 'rate_limit_breach',
-        severity: ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'],
-        action: 'temporary_block',
+        incidentType: "rate_limit_breach",
+        severity: ["LOW", "MEDIUM", "HIGH", "CRITICAL"],
+        action: "temporary_block",
         maxRetries: 0,
         cooldownMs: 60000,
         escalateTo: null,
       },
       // Internal exceptions - circuit break on high severity
       {
-        incidentType: 'internal_exception',
-        severity: ['LOW', 'MEDIUM'],
-        action: 'retry',
+        incidentType: "internal_exception",
+        severity: ["LOW", "MEDIUM"],
+        action: "retry",
         maxRetries: 2,
         cooldownMs: 1000,
-        escalateTo: 'HIGH',
+        escalateTo: "HIGH",
       },
       {
-        incidentType: 'internal_exception',
-        severity: ['HIGH', 'CRITICAL'],
-        action: 'circuit_break',
+        incidentType: "internal_exception",
+        severity: ["HIGH", "CRITICAL"],
+        action: "circuit_break",
         maxRetries: 0,
         cooldownMs: 30000,
         escalateTo: null,
       },
       // Circuit breaker - module shutdown on critical
       {
-        incidentType: 'circuit_breaker',
-        severity: ['CRITICAL'],
-        action: 'module_shutdown',
+        incidentType: "circuit_breaker",
+        severity: ["CRITICAL"],
+        action: "module_shutdown",
         maxRetries: 0,
         cooldownMs: 300000,
         escalateTo: null,
       },
       // Backup failure - alert immediately
       {
-        incidentType: 'backup_failure',
-        severity: ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'],
-        action: 'alert_only',
+        incidentType: "backup_failure",
+        severity: ["LOW", "MEDIUM", "HIGH", "CRITICAL"],
+        action: "alert_only",
         maxRetries: 0,
         cooldownMs: 0,
-        escalateTo: 'CRITICAL',
+        escalateTo: "CRITICAL",
       },
       // Health check failure - circuit break
       {
-        incidentType: 'health_check_failure',
-        severity: ['HIGH', 'CRITICAL'],
-        action: 'circuit_break',
+        incidentType: "health_check_failure",
+        severity: ["HIGH", "CRITICAL"],
+        action: "circuit_break",
         maxRetries: 0,
         cooldownMs: 60000,
         escalateTo: null,
       },
       // Deploy failure - rollback
       {
-        incidentType: 'deploy_failure',
-        severity: ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'],
-        action: 'alert_only', // Rollback is handled by ReleaseRollback service
+        incidentType: "deploy_failure",
+        severity: ["LOW", "MEDIUM", "HIGH", "CRITICAL"],
+        action: "alert_only", // Rollback is handled by ReleaseRollback service
         maxRetries: 0,
         cooldownMs: 0,
-        escalateTo: 'CRITICAL',
+        escalateTo: "CRITICAL",
       },
     ];
   }
@@ -181,13 +182,13 @@ class IncidentAutoHandler {
   }> {
     // Find applicable rule
     const rule = this.findRule(params.incidentType, params.severity);
-    const action = rule?.action || 'alert_only';
+    const action = rule?.action || "alert_only";
 
     // Track incident frequency for escalation
-    const incidentKey = `${params.incidentType}:${params.userId || 'system'}`;
+    const incidentKey = `${params.incidentType}:${params.userId || "system"}`;
     const tracking = this.recentIncidents.get(incidentKey) || { count: 0, lastSeen: 0 };
     const now = Date.now();
-    
+
     // Reset count if cooldown has passed
     if (rule && now - tracking.lastSeen > rule.cooldownMs) {
       tracking.count = 0;
@@ -200,7 +201,9 @@ class IncidentAutoHandler {
     let effectiveSeverity = params.severity;
     if (rule?.escalateTo && tracking.count > rule.maxRetries) {
       effectiveSeverity = rule.escalateTo;
-      console.warn(`[IncidentAutoHandler] Escalating ${params.incidentType} from ${params.severity} to ${effectiveSeverity}`);
+      console.warn(
+        `[IncidentAutoHandler] Escalating ${params.incidentType} from ${params.severity} to ${effectiveSeverity}`,
+      );
     }
 
     // Execute auto-action
@@ -208,7 +211,7 @@ class IncidentAutoHandler {
 
     // Log incident to database
     const { data, error } = await supabase
-      .from('incident_log')
+      .from("incident_log")
       .insert({
         incident_type: params.incidentType,
         severity: effectiveSeverity,
@@ -223,17 +226,19 @@ class IncidentAutoHandler {
           escalated: effectiveSeverity !== params.severity,
         },
       })
-      .select('id')
+      .select("id")
       .single();
 
     if (error) {
-      console.error('[IncidentAutoHandler] Failed to log incident:', error);
+      console.error("[IncidentAutoHandler] Failed to log incident:", error);
     }
 
-    console.log(`[IncidentAutoHandler] Incident logged: ${params.incidentType} (${effectiveSeverity}) - Action: ${action}`);
+    console.log(
+      `[IncidentAutoHandler] Incident logged: ${params.incidentType} (${effectiveSeverity}) - Action: ${action}`,
+    );
 
     return {
-      incidentId: data?.id || 'unknown',
+      incidentId: data?.id || "unknown",
       actionTaken: action,
       actionResult,
     };
@@ -247,27 +252,27 @@ class IncidentAutoHandler {
     unresolved?: boolean;
   }): Promise<Incident[]> {
     let query = supabase
-      .from('incident_log')
-      .select('*')
-      .order('created_at', { ascending: false })
+      .from("incident_log")
+      .select("*")
+      .order("created_at", { ascending: false })
       .limit(options?.limit || 50);
 
     if (options?.severity?.length) {
-      query = query.in('severity', options.severity);
+      query = query.in("severity", options.severity);
     }
 
     if (options?.incidentType?.length) {
-      query = query.in('incident_type', options.incidentType);
+      query = query.in("incident_type", options.incidentType);
     }
 
     if (options?.unresolved) {
-      query = query.eq('resolved', false);
+      query = query.eq("resolved", false);
     }
 
     const { data, error } = await query;
 
     if (error) {
-      console.error('[IncidentAutoHandler] Failed to fetch incidents:', error);
+      console.error("[IncidentAutoHandler] Failed to fetch incidents:", error);
       return [];
     }
 
@@ -284,11 +289,11 @@ class IncidentAutoHandler {
     autoResolved: number;
   }> {
     let query = supabase
-      .from('incident_log')
-      .select('severity, incident_type, auto_action, resolved');
+      .from("incident_log")
+      .select("severity, incident_type, auto_action, resolved");
 
     if (since) {
-      query = query.gte('created_at', since.toISOString());
+      query = query.gte("created_at", since.toISOString());
     }
 
     const { data: incidents } = await query;
@@ -304,21 +309,27 @@ class IncidentAutoHandler {
       };
     }
 
-    const bySeverity: Record<IncidentSeverity, number> = { LOW: 0, MEDIUM: 0, HIGH: 0, CRITICAL: 0 };
+    const bySeverity: Record<IncidentSeverity, number> = {
+      LOW: 0,
+      MEDIUM: 0,
+      HIGH: 0,
+      CRITICAL: 0,
+    };
     const byType: Record<string, number> = {};
     const byAction: Record<string, number> = {};
     let unresolved = 0;
     let autoResolved = 0;
 
-    incidents.forEach(inc => {
-      bySeverity[inc.severity as IncidentSeverity] = (bySeverity[inc.severity as IncidentSeverity] || 0) + 1;
+    incidents.forEach((inc) => {
+      bySeverity[inc.severity as IncidentSeverity] =
+        (bySeverity[inc.severity as IncidentSeverity] || 0) + 1;
       byType[inc.incident_type] = (byType[inc.incident_type] || 0) + 1;
       if (inc.auto_action) {
         byAction[inc.auto_action] = (byAction[inc.auto_action] || 0) + 1;
       }
       if (!inc.resolved) {
         unresolved++;
-      } else if (inc.auto_action && inc.auto_action !== 'alert_only') {
+      } else if (inc.auto_action && inc.auto_action !== "alert_only") {
         autoResolved++;
       }
     });
@@ -339,41 +350,51 @@ class IncidentAutoHandler {
   }
 
   // Update a rule (admin only)
-  updateRule(incidentType: IncidentType, severity: IncidentSeverity, updates: Partial<AutoResponseRule>): void {
+  updateRule(
+    incidentType: IncidentType,
+    severity: IncidentSeverity,
+    updates: Partial<AutoResponseRule>,
+  ): void {
     const ruleIndex = this.autoResponseRules.findIndex(
-      r => r.incidentType === incidentType && r.severity.includes(severity)
+      (r) => r.incidentType === incidentType && r.severity.includes(severity),
     );
     if (ruleIndex >= 0) {
       this.autoResponseRules[ruleIndex] = { ...this.autoResponseRules[ruleIndex], ...updates };
     }
   }
 
-  private findRule(incidentType: IncidentType, severity: IncidentSeverity): AutoResponseRule | undefined {
+  private findRule(
+    incidentType: IncidentType,
+    severity: IncidentSeverity,
+  ): AutoResponseRule | undefined {
     return this.autoResponseRules.find(
-      rule => rule.incidentType === incidentType && rule.severity.includes(severity)
+      (rule) => rule.incidentType === incidentType && rule.severity.includes(severity),
     );
   }
 
-  private async executeAction(action: AutoAction, params: {
-    incidentType: IncidentType;
-    reason: string;
-    userId?: string;
-  }): Promise<string> {
+  private async executeAction(
+    action: AutoAction,
+    params: {
+      incidentType: IncidentType;
+      reason: string;
+      userId?: string;
+    },
+  ): Promise<string> {
     switch (action) {
-      case 'retry':
-        return 'Scheduled for automatic retry';
-      case 'circuit_break':
+      case "retry":
+        return "Scheduled for automatic retry";
+      case "circuit_break":
         return `Circuit breaker activated for ${params.incidentType}`;
-      case 'temporary_block':
-        return params.userId 
+      case "temporary_block":
+        return params.userId
           ? `User ${params.userId} temporarily blocked`
-          : 'Resource temporarily blocked';
-      case 'module_shutdown':
+          : "Resource temporarily blocked";
+      case "module_shutdown":
         return `Module shutdown initiated due to ${params.incidentType}`;
-      case 'alert_only':
-        return 'Alert sent to monitoring system';
+      case "alert_only":
+        return "Alert sent to monitoring system";
       default:
-        return 'No action taken';
+        return "No action taken";
     }
   }
 

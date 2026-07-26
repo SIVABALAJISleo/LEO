@@ -25,7 +25,7 @@ export class ProductionResilienceEngine {
       latencySpikeActive: this.activeFallback,
       resourceExhaustionPct: this.activeFallback ? 18.5 : 42.1,
       apiFailureRatePct: 0.0002,
-      dbActiveConnections: this.activeFallback ? 12 : 45
+      dbActiveConnections: this.activeFallback ? 12 : 45,
     };
 
     const activeMitigations: string[] = [];
@@ -40,7 +40,7 @@ export class ProductionResilienceEngine {
       timestamp: Date.now(),
       telemetry,
       activeMitigations,
-      systemStatus: this.activeFallback ? "DEGRADED_FALLBACK" : "OPTIMAL"
+      systemStatus: this.activeFallback ? "DEGRADED_FALLBACK" : "OPTIMAL",
     };
   }
 

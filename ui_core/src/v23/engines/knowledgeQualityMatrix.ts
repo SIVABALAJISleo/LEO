@@ -31,18 +31,18 @@ export class KnowledgeQualityMatrix {
         verificationLevel: "Fully-Crystallized",
         usageCount: 450,
         outcomeSuccessRate: 0.99,
-        strength: 0.97
+        strength: 0.97,
       },
       {
         key: "K-SEC-042",
         topic: "Stripe Webhook Signature Verification Secret Key rules",
         trustScore: 0.99,
-        freshnessScore: 0.90,
+        freshnessScore: 0.9,
         evidenceCount: 8,
         verificationLevel: "Fully-Crystallized",
         usageCount: 120,
         outcomeSuccessRate: 0.98,
-        strength: 0.96
+        strength: 0.96,
       },
       {
         key: "K-TAM-081",
@@ -53,19 +53,19 @@ export class KnowledgeQualityMatrix {
         verificationLevel: "Partial",
         usageCount: 78,
         outcomeSuccessRate: 0.93,
-        strength: 0.91
+        strength: 0.91,
       },
       {
         key: "K-BAD-009",
         topic: "Unverified API Key mock fallbacks (from old 0763f03 commit)",
-        trustScore: 0.40,
-        freshnessScore: 0.20,
+        trustScore: 0.4,
+        freshnessScore: 0.2,
         evidenceCount: 0,
         verificationLevel: "Unverified",
         usageCount: 2,
         outcomeSuccessRate: 0.25,
-        strength: 0.28
-      }
+        strength: 0.28,
+      },
     ];
   }
 
@@ -73,7 +73,7 @@ export class KnowledgeQualityMatrix {
     let evictedCount = 0;
 
     // Apply governance formula: compute strength & apply decay
-    this.matrix = this.matrix.map(item => {
+    this.matrix = this.matrix.map((item) => {
       // Freshness decays by 2% on every governance tick if usage is low
       if (item.usageCount < 50) {
         item.freshnessScore = parseFloat(Math.max(0.1, item.freshnessScore - 0.02).toFixed(3));
@@ -81,13 +81,17 @@ export class KnowledgeQualityMatrix {
 
       // Compute Strength metric: weight trust (30%), freshness (20%), evidence count scaled (20%), outcome success (30%)
       const scaledEvidence = Math.min(1.0, item.evidenceCount / 10);
-      const computedStrength = (item.trustScore * 0.3) + (item.freshnessScore * 0.2) + (scaledEvidence * 0.2) + (item.outcomeSuccessRate * 0.3);
+      const computedStrength =
+        item.trustScore * 0.3 +
+        item.freshnessScore * 0.2 +
+        scaledEvidence * 0.2 +
+        item.outcomeSuccessRate * 0.3;
       item.strength = parseFloat(Math.min(1.0, computedStrength).toFixed(3));
 
       // Crystallization status
       if (item.strength > 0.95 && item.evidenceCount >= 8) {
         item.verificationLevel = "Fully-Crystallized";
-      } else if (item.strength < 0.60) {
+      } else if (item.strength < 0.6) {
         item.verificationLevel = "Unverified";
       }
 
@@ -96,8 +100,8 @@ export class KnowledgeQualityMatrix {
 
     // Evict items below 0.30 strength
     const initialCount = this.matrix.length;
-    this.matrix = this.matrix.filter(item => {
-      if (item.strength < 0.30) {
+    this.matrix = this.matrix.filter((item) => {
+      if (item.strength < 0.3) {
         evictedCount++;
         return false;
       }
@@ -110,7 +114,7 @@ export class KnowledgeQualityMatrix {
     return {
       items: this.matrix,
       averageMatrixQuality: parseFloat(averageMatrixQuality.toFixed(3)),
-      evictedCount
+      evictedCount,
     };
   }
 
@@ -129,7 +133,7 @@ export class KnowledgeQualityMatrix {
       verificationLevel: "Partial",
       usageCount: 1,
       outcomeSuccessRate,
-      strength: 0.85
+      strength: 0.85,
     });
   }
 }

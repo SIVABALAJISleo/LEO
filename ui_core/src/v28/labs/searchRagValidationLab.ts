@@ -18,7 +18,7 @@ export class SearchRagValidationLab {
     const precision = parseFloat((99.25 + noise * 10).toFixed(2));
     const recall = parseFloat((99.42 - noise * 10).toFixed(2));
     const freshnessIndex = parseFloat((98.95 + noise * 5).toFixed(2));
-    const citationCorrectness = parseFloat((99.50 + noise * 5).toFixed(2));
+    const citationCorrectness = parseFloat((99.5 + noise * 5).toFixed(2));
 
     return {
       totalQueriesEvaluated: 15000,
@@ -27,7 +27,7 @@ export class SearchRagValidationLab {
       freshnessIndex,
       citationCorrectness,
       searchAccuracy: precision,
-      ragAccuracy: recall
+      ragAccuracy: recall,
     };
   }
 }

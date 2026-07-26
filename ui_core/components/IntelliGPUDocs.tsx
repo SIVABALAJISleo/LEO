@@ -18,32 +18,32 @@ export const IntelliGPUDocs = () => {
 
         <Tabs defaultValue="overview" className="space-y-8">
           <TabsList className="bg-[#030c1b] border border-slate-800 p-1 rounded-lg">
-            <TabsTrigger 
-              value="overview" 
+            <TabsTrigger
+              value="overview"
               className="data-[state=active]:bg-[#76B900] data-[state=active]:text-black text-slate-400 font-bold text-xs uppercase px-4 py-2"
             >
               Overview
             </TabsTrigger>
-            <TabsTrigger 
-              value="architecture" 
+            <TabsTrigger
+              value="architecture"
               className="data-[state=active]:bg-[#76B900] data-[state=active]:text-black text-slate-400 font-bold text-xs uppercase px-4 py-2"
             >
               Architecture
             </TabsTrigger>
-            <TabsTrigger 
-              value="modules" 
+            <TabsTrigger
+              value="modules"
               className="data-[state=active]:bg-[#76B900] data-[state=active]:text-black text-slate-400 font-bold text-xs uppercase px-4 py-2"
             >
               Modules
             </TabsTrigger>
-            <TabsTrigger 
-              value="api" 
+            <TabsTrigger
+              value="api"
               className="data-[state=active]:bg-[#76B900] data-[state=active]:text-black text-slate-400 font-bold text-xs uppercase px-4 py-2"
             >
               API Reference
             </TabsTrigger>
-            <TabsTrigger 
-              value="examples" 
+            <TabsTrigger
+              value="examples"
               className="data-[state=active]:bg-[#76B900] data-[state=active]:text-black text-slate-400 font-bold text-xs uppercase px-4 py-2"
             >
               Examples
@@ -61,7 +61,9 @@ export const IntelliGPUDocs = () => {
 
                 <div className="space-y-6 text-slate-300 text-sm">
                   <p className="text-base leading-relaxed">
-                    IntelliGPU is a revolutionary software-only compute system that achieves 100% high-end GPU performance parity through intelligent algorithms and zero hardware requirements.
+                    IntelliGPU is a revolutionary software-only compute system that achieves 100%
+                    high-end GPU performance parity through intelligent algorithms and zero hardware
+                    requirements.
                   </p>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
@@ -98,12 +100,18 @@ export const IntelliGPUDocs = () => {
                 <h2 className="text-xl font-bold text-white mb-4">Quick Start</h2>
                 <pre className="bg-[#020813] p-5 rounded-lg border border-slate-800 font-mono text-xs text-slate-300 overflow-x-auto whitespace-pre">
                   <code>
-                    <span className="text-slate-500"># Install the SDK</span>{"\n"}
-                    <span className="text-[#76B900]">pip install intelligpu</span>{"\n\n"}
-                    <span className="text-slate-500"># Initialize the system</span>{"\n"}
-                    <span className="text-blue-400">from</span> intelligpu <span className="text-blue-400">import</span> GPUEngine{"\n"}
-                    <span>engine = GPUEngine()</span>{"\n\n"}
-                    <span className="text-slate-500"># Run AI inference</span>{"\n"}
+                    <span className="text-slate-500"># Install the SDK</span>
+                    {"\n"}
+                    <span className="text-[#76B900]">pip install intelligpu</span>
+                    {"\n\n"}
+                    <span className="text-slate-500"># Initialize the system</span>
+                    {"\n"}
+                    <span className="text-blue-400">from</span> intelligpu{" "}
+                    <span className="text-blue-400">import</span> GPUEngine{"\n"}
+                    <span>engine = GPUEngine()</span>
+                    {"\n\n"}
+                    <span className="text-slate-500"># Run AI inference</span>
+                    {"\n"}
                     <span>result = engine.infer(model, input_data)</span>
                   </code>
                 </pre>
@@ -123,7 +131,9 @@ export const IntelliGPUDocs = () => {
                 <div className="space-y-8 text-sm">
                   {/* Layer 1 */}
                   <div>
-                    <h3 className="text-base font-bold mb-1 text-[#76B900]">Layer 1: Core Emulation (Modules 1-31)</h3>
+                    <h3 className="text-base font-bold mb-1 text-[#76B900]">
+                      Layer 1: Core Emulation (Modules 1-31)
+                    </h3>
                     <p className="text-slate-400 mb-4 text-xs leading-relaxed">
                       Foundation layer that emulates GPU hardware using CPU and software tricks.
                     </p>
@@ -133,7 +143,10 @@ export const IntelliGPUDocs = () => {
                         { name: "Compression", desc: "4/8-bit quantization" },
                         { name: "Kernel Emulator", desc: "Virtual CUDA kernels" },
                       ].map((item, idx) => (
-                        <div key={idx} className="p-4 bg-[#0b1329]/50 rounded border border-slate-800/80 text-xs">
+                        <div
+                          key={idx}
+                          className="p-4 bg-[#0b1329]/50 rounded border border-slate-800/80 text-xs"
+                        >
                           <div className="font-bold text-slate-100 mb-1">{item.name}</div>
                           <div className="text-slate-400">{item.desc}</div>
                         </div>
@@ -143,7 +156,9 @@ export const IntelliGPUDocs = () => {
 
                   {/* Layer 2 */}
                   <div>
-                    <h3 className="text-base font-bold mb-1 text-[#76B900]">Layer 2: Breakthrough (Modules 32-43)</h3>
+                    <h3 className="text-base font-bold mb-1 text-[#76B900]">
+                      Layer 2: Breakthrough (Modules 32-43)
+                    </h3>
                     <p className="text-slate-400 mb-4 text-xs leading-relaxed">
                       Advanced optimization modules that push performance beyond physical limits.
                     </p>
@@ -153,7 +168,10 @@ export const IntelliGPUDocs = () => {
                         { name: "Predictive Rendering", desc: "+5-7% speedup" },
                         { name: "Neural Ray Tracing", desc: "+8-10% improvement" },
                       ].map((item, idx) => (
-                        <div key={idx} className="p-4 bg-[#0b1329]/50 rounded border border-slate-800/80 text-xs">
+                        <div
+                          key={idx}
+                          className="p-4 bg-[#0b1329]/50 rounded border border-slate-800/80 text-xs"
+                        >
                           <div className="font-bold text-slate-100 mb-1">{item.name}</div>
                           <div className="text-slate-400">{item.desc}</div>
                         </div>
@@ -163,7 +181,9 @@ export const IntelliGPUDocs = () => {
 
                   {/* Layer 3 */}
                   <div>
-                    <h3 className="text-base font-bold mb-1 text-[#76B900]">Layer 3: Limitation Breakers (Modules 44-49)</h3>
+                    <h3 className="text-base font-bold mb-1 text-[#76B900]">
+                      Layer 3: Limitation Breakers (Modules 44-49)
+                    </h3>
                     <p className="text-slate-400 mb-4 text-xs leading-relaxed">
                       Modules that solve the "impossible" challenges.
                     </p>
@@ -174,7 +194,10 @@ export const IntelliGPUDocs = () => {
                         { name: "Ray Tracing", desc: "98-100% visual quality" },
                         { name: "70B Training", desc: "95% efficiency" },
                       ].map((item, idx) => (
-                        <div key={idx} className="p-4 bg-[#0b1329]/50 rounded border border-slate-800/80 text-xs">
+                        <div
+                          key={idx}
+                          className="p-4 bg-[#0b1329]/50 rounded border border-slate-800/80 text-xs"
+                        >
                           <div className="font-bold text-slate-100 mb-1">{item.name}</div>
                           <div className="text-slate-400">{item.desc}</div>
                         </div>
@@ -184,7 +207,9 @@ export const IntelliGPUDocs = () => {
 
                   {/* Layer 4 */}
                   <div>
-                    <h3 className="text-base font-bold mb-1 text-[#76B900]">Layer 4: Scaling (Modules 50-52)</h3>
+                    <h3 className="text-base font-bold mb-1 text-[#76B900]">
+                      Layer 4: Scaling (Modules 50-52)
+                    </h3>
                     <p className="text-slate-400 mb-4 text-xs leading-relaxed">
                       Cloud scaling modules for handling thousands of concurrent users.
                     </p>
@@ -194,7 +219,10 @@ export const IntelliGPUDocs = () => {
                         { name: "Response Caching", desc: "85% cache hit rate" },
                         { name: "Model Streaming", desc: "Train 280GB on 16GB" },
                       ].map((item, idx) => (
-                        <div key={idx} className="p-4 bg-[#0b1329]/50 rounded border border-slate-800/80 text-xs">
+                        <div
+                          key={idx}
+                          className="p-4 bg-[#0b1329]/50 rounded border border-slate-800/80 text-xs"
+                        >
                           <div className="font-bold text-slate-100 mb-1">{item.name}</div>
                           <div className="text-slate-400">{item.desc}</div>
                         </div>
@@ -222,18 +250,55 @@ export const IntelliGPUDocs = () => {
                         <th className="py-3 px-4 font-bold uppercase tracking-wider">Module</th>
                         <th className="py-3 px-4 font-bold uppercase tracking-wider">Name</th>
                         <th className="py-3 px-4 font-bold uppercase tracking-wider">Purpose</th>
-                        <th className="py-3 px-4 font-bold uppercase tracking-wider text-[#76B900]">Impact</th>
+                        <th className="py-3 px-4 font-bold uppercase tracking-wider text-[#76B900]">
+                          Impact
+                        </th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-800/40">
                       {[
-                        { num: "1", name: "Deployment", purpose: "System Initialization", impact: "Core" },
-                        { num: "2", name: "Neural Compression", purpose: "4/8-bit quantization", impact: "4-8x speedup" },
-                        { num: "48", name: "CUDA Accelerator", purpose: "Matrix throughput", impact: "640x speedup" },
-                        { num: "49", name: "Distributed Trainer", purpose: "Big model training", impact: "95% efficiency" },
-                        { num: "50", name: "Job Queue", purpose: "Request queuing", impact: "1000s users" },
-                        { num: "51", name: "Response Cache", purpose: "Prediction & caching", impact: "85% hit rate" },
-                        { num: "52", name: "Model Streaming", purpose: "Layer-by-layer loading", impact: "280GB on 16GB" },
+                        {
+                          num: "1",
+                          name: "Deployment",
+                          purpose: "System Initialization",
+                          impact: "Core",
+                        },
+                        {
+                          num: "2",
+                          name: "Neural Compression",
+                          purpose: "4/8-bit quantization",
+                          impact: "4-8x speedup",
+                        },
+                        {
+                          num: "48",
+                          name: "CUDA Accelerator",
+                          purpose: "Matrix throughput",
+                          impact: "640x speedup",
+                        },
+                        {
+                          num: "49",
+                          name: "Distributed Trainer",
+                          purpose: "Big model training",
+                          impact: "95% efficiency",
+                        },
+                        {
+                          num: "50",
+                          name: "Job Queue",
+                          purpose: "Request queuing",
+                          impact: "1000s users",
+                        },
+                        {
+                          num: "51",
+                          name: "Response Cache",
+                          purpose: "Prediction & caching",
+                          impact: "85% hit rate",
+                        },
+                        {
+                          num: "52",
+                          name: "Model Streaming",
+                          purpose: "Layer-by-layer loading",
+                          impact: "280GB on 16GB",
+                        },
                       ].map((row, idx) => (
                         <tr key={idx} className="hover:bg-slate-800/10 transition-colors">
                           <td className="py-3.5 px-4 font-bold text-[#76B900]">{row.num}</td>
@@ -247,7 +312,9 @@ export const IntelliGPUDocs = () => {
                 </div>
 
                 <div className="p-4 bg-[#112415] border border-[#17431e] rounded-lg text-emerald-400 text-xs leading-relaxed font-medium">
-                  <strong>Note:</strong> This table shows a subset of the 52 modules. Complete module documentation includes detailed implementation guides, code examples, and performance benchmarks for each module.
+                  <strong>Note:</strong> This table shows a subset of the 52 modules. Complete
+                  module documentation includes detailed implementation guides, code examples, and
+                  performance benchmarks for each module.
                 </div>
               </CardContent>
             </Card>
@@ -269,18 +336,24 @@ export const IntelliGPUDocs = () => {
                       Authentication
                     </h3>
                     <div className="bg-[#020813] border border-slate-800 p-4 rounded-lg font-mono text-xs text-slate-300">
-                      <span className="text-slate-500"># Add your API key to headers</span>{"\n"}
-                      <span className="text-slate-200">Authorization: Bearer igpu_your_api_key_here</span>
+                      <span className="text-slate-500"># Add your API key to headers</span>
+                      {"\n"}
+                      <span className="text-slate-200">
+                        Authorization: Bearer igpu_your_api_key_here
+                      </span>
                     </div>
                   </div>
 
                   {/* Endpoints Section */}
                   <div className="space-y-6">
                     <div>
-                      <h4 className="text-sm font-bold text-[#76B900] mb-2">AI Inference Endpoint</h4>
+                      <h4 className="text-sm font-bold text-[#76B900] mb-2">
+                        AI Inference Endpoint
+                      </h4>
                       <div className="bg-[#020813] border border-slate-800 p-4 rounded-lg font-mono text-xs text-slate-300 space-y-3">
                         <div>
-                          <span className="text-[#76B900] font-bold">POST</span> <span className="text-slate-100">/api/v1/infer</span>
+                          <span className="text-[#76B900] font-bold">POST</span>{" "}
+                          <span className="text-slate-100">/api/v1/infer</span>
                         </div>
                         <pre className="text-slate-400 overflow-x-auto">
                           {`{
@@ -296,7 +369,8 @@ export const IntelliGPUDocs = () => {
                       <h4 className="text-sm font-bold text-[#76B900] mb-2">Rendering Endpoint</h4>
                       <div className="bg-[#020813] border border-slate-800 p-4 rounded-lg font-mono text-xs text-slate-300 space-y-3">
                         <div>
-                          <span className="text-[#76B900] font-bold">POST</span> <span className="text-slate-100">/api/v1/render</span>
+                          <span className="text-[#76B900] font-bold">POST</span>{" "}
+                          <span className="text-slate-100">/api/v1/render</span>
                         </div>
                         <pre className="text-slate-400 overflow-x-auto">
                           {`{
@@ -313,7 +387,8 @@ export const IntelliGPUDocs = () => {
                       <h4 className="text-sm font-bold text-[#76B900] mb-2">Training Endpoint</h4>
                       <div className="bg-[#020813] border border-slate-800 p-4 rounded-lg font-mono text-xs text-slate-300 space-y-3">
                         <div>
-                          <span className="text-[#76B900] font-bold">POST</span> <span className="text-slate-100">/api/v1/train</span>
+                          <span className="text-[#76B900] font-bold">POST</span>{" "}
+                          <span className="text-slate-100">/api/v1/train</span>
                         </div>
                         <pre className="text-slate-400 overflow-x-auto">
                           {`{
@@ -346,7 +421,7 @@ export const IntelliGPUDocs = () => {
                     <h3 className="text-base font-bold text-[#76B900] mb-2">Python Example</h3>
                     <div className="bg-[#020813] border border-slate-800 p-4 rounded-lg font-mono text-xs text-slate-300">
                       <pre className="overflow-x-auto text-slate-300">
-{`# AI Inference Example
+                        {`# AI Inference Example
 import requests
 
 api_key = "igpu_your_key"
@@ -367,7 +442,7 @@ print(response.json())`}
                     <h3 className="text-base font-bold text-[#76B900] mb-2">JavaScript Example</h3>
                     <div className="bg-[#020813] border border-slate-800 p-4 rounded-lg font-mono text-xs text-slate-300">
                       <pre className="overflow-x-auto text-slate-300">
-{`// Rendering Example
+                        {`// Rendering Example
 const response = await fetch('https://api.intelligpu.com/v1/render', {
   method: 'POST',
   headers: {

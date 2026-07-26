@@ -19,17 +19,17 @@ export interface OptimizedCycleResult {
   cycleId: string;
   normalizedQuery: string;
   detectedLanguageMode: string;
-  selectedReasoningPath: ReturnType<ReasoningConsensusV3['generatePaths']>[0];
-  allReasoningPaths: ReturnType<ReasoningConsensusV3['generatePaths']>;
-  verificationReport: ReturnType<VerificationGovernor['verifyClaim']>;
-  hallucinationReport: ReturnType<HallucinationZeroEngine['auditOutput']>;
-  memoryReport: ReturnType<MemoryPerfectionEngine['perfectMemory']>;
-  agentReport: ReturnType<AgentEvolutionV2['evolve']>;
-  knowledgeReport: ReturnType<KnowledgeQualityMatrix['govern']>;
-  enterpriseAnswer: ReturnType<EnterpriseTrustFramework['wrap']>;
-  evalReport: ReturnType<ContinuousEvaluationLoop['runEvaluation']>;
-  perfReport: ReturnType<PerformanceIntelligenceGovernor['govern']>;
-  improvementStep: ReturnType<QualityImprovementLoop['runCycle']>;
+  selectedReasoningPath: ReturnType<ReasoningConsensusV3["generatePaths"]>[0];
+  allReasoningPaths: ReturnType<ReasoningConsensusV3["generatePaths"]>;
+  verificationReport: ReturnType<VerificationGovernor["verifyClaim"]>;
+  hallucinationReport: ReturnType<HallucinationZeroEngine["auditOutput"]>;
+  memoryReport: ReturnType<MemoryPerfectionEngine["perfectMemory"]>;
+  agentReport: ReturnType<AgentEvolutionV2["evolve"]>;
+  knowledgeReport: ReturnType<KnowledgeQualityMatrix["govern"]>;
+  enterpriseAnswer: ReturnType<EnterpriseTrustFramework["wrap"]>;
+  evalReport: ReturnType<ContinuousEvaluationLoop["runEvaluation"]>;
+  perfReport: ReturnType<PerformanceIntelligenceGovernor["govern"]>;
+  improvementStep: ReturnType<QualityImprovementLoop["runCycle"]>;
   productScores: ProductMetrics;
 }
 
@@ -80,25 +80,39 @@ export class V23Orchestrator {
     const verifyReport = this.verification.verifyClaim(consensus.selectedPath.conclusion);
 
     // 4. Hallucination Zero Auditing & Calibrations (Phase 4)
-    const halluReport = this.hallucination.auditOutput(verifyReport.repairedClaim || consensus.selectedPath.conclusion);
+    const halluReport = this.hallucination.auditOutput(
+      verifyReport.repairedClaim || consensus.selectedPath.conclusion,
+    );
 
     // 5. Memory perfection sweep (Phase 5)
-    this.memory.addMemory(halluReport.cleanOutput, "User-Session", halluReport.calibratedConfidence);
+    this.memory.addMemory(
+      halluReport.cleanOutput,
+      "User-Session",
+      halluReport.calibratedConfidence,
+    );
     const memoryReport = this.memory.perfectMemory();
 
     // 6. Agent evolution updates (Phase 6)
     const agentReport = this.agents.evolve();
-    this.agents.getAgents().forEach(agent => {
+    this.agents.getAgents().forEach((agent) => {
       // Simulate performance outcome registry
       this.agents.registerAgentResult(agent.name, verifyReport.passed, 100 + Math.random() * 50);
     });
 
     // 7. Knowledge governance (Phase 7)
-    this.knowledge.insertItem(norm.primaryTopic, halluReport.calibratedConfidence, verifyReport.passed ? 1.0 : 0.8);
+    this.knowledge.insertItem(
+      norm.primaryTopic,
+      halluReport.calibratedConfidence,
+      verifyReport.passed ? 1.0 : 0.8,
+    );
     const knowledgeReport = this.knowledge.govern();
 
     // 8. Enterprise trust wrapping (Phase 9)
-    const enterpriseAnswer = this.enterprise.wrap(norm.normalizedQuery, halluReport.cleanOutput, consensus.consensusScore);
+    const enterpriseAnswer = this.enterprise.wrap(
+      norm.normalizedQuery,
+      halluReport.cleanOutput,
+      consensus.consensusScore,
+    );
 
     // 9. Continuous evaluation gate checks (Phase 10)
     const evalReport = this.evaluation.runEvaluation(`v23.${this.cycleCount}`);
@@ -116,7 +130,7 @@ export class V23Orchestrator {
       norm.intentConfidence,
       agentReport.agents[0]?.successRate ?? 0.98,
       halluReport.hallucinationRate,
-      verifyReport.overallVerificationScore
+      verifyReport.overallVerificationScore,
     );
 
     return {
@@ -134,7 +148,7 @@ export class V23Orchestrator {
       evalReport,
       perfReport,
       improvementStep,
-      productScores
+      productScores,
     };
   }
 }

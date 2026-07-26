@@ -6,11 +6,11 @@ import { TrajectoryPath } from "./futureSimulationEngine";
 export class RiskAnalyzer {
   public auditRisks(paths: TrajectoryPath[]): { averageRisk: number; failedPathsCount: number } {
     if (paths.length === 0) return { averageRisk: 0, failedPathsCount: 0 };
-    
+
     let sumRisk = 0;
     let failedPathsCount = 0;
 
-    paths.forEach(p => {
+    paths.forEach((p) => {
       sumRisk += p.crashRiskScore;
       if (p.crashRiskScore > 0.85) {
         failedPathsCount++;
@@ -19,7 +19,7 @@ export class RiskAnalyzer {
 
     return {
       averageRisk: parseFloat((sumRisk / paths.length).toFixed(4)),
-      failedPathsCount
+      failedPathsCount,
     };
   }
 }

@@ -26,36 +26,36 @@ export class RedTeamValidationLab {
         payloadCount: 1000,
         blockedCount: 1000,
         containmentRate: 100.0,
-        severity: "CRITICAL"
+        severity: "CRITICAL",
       },
       {
         vector: "Memory Poisoning",
         payloadCount: 1000,
         blockedCount: 998,
         containmentRate: 99.8,
-        severity: "HIGH"
+        severity: "HIGH",
       },
       {
         vector: "Retrieval Poisoning",
         payloadCount: 1000,
         blockedCount: 999,
         containmentRate: 99.9,
-        severity: "HIGH"
+        severity: "HIGH",
       },
       {
         vector: "Ambiguity Attacks",
         payloadCount: 1000,
         blockedCount: 1000,
         containmentRate: 100.0,
-        severity: "MEDIUM"
+        severity: "MEDIUM",
       },
       {
         vector: "Adversarial Queries",
         payloadCount: 1000,
         blockedCount: 1000,
         containmentRate: 100.0,
-        severity: "MEDIUM"
-      }
+        severity: "MEDIUM",
+      },
     ];
 
     const totalBlocked = vectors.reduce((sum, v) => sum + v.blockedCount, 0);
@@ -65,7 +65,7 @@ export class RedTeamValidationLab {
       totalAttacksBlocked: totalBlocked,
       vectors,
       overallContainmentRate: overallRate,
-      status: overallRate >= 99.5 ? "SECURE" : "VULNERABLE"
+      status: overallRate >= 99.5 ? "SECURE" : "VULNERABLE",
     };
   }
 }

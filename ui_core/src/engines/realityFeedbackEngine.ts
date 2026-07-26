@@ -18,14 +18,19 @@ export class RealityFeedbackEngine {
   private history: FeedbackEntry[] = [];
   private weights: Record<string, number> = {
     intentAccuracyWeight: 0.95,
-    reasoningConfidence: 0.90,
+    reasoningConfidence: 0.9,
     verificationRigour: 0.96,
   };
 
-  public logFeedback(predictionId: string, metric: string, predicted: number, observed: number): FeedbackEntry {
+  public logFeedback(
+    predictionId: string,
+    metric: string,
+    predicted: number,
+    observed: number,
+  ): FeedbackEntry {
     const error = Math.abs(predicted - observed);
     const errorPct = predicted > 0 ? (error / predicted) * 100 : 0;
-    
+
     // Learning adjustments
     const learningRate = 0.04;
     const signal = (predicted - observed) / Math.max(predicted, 1);

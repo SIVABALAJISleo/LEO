@@ -17,7 +17,7 @@ export class RuntimeProfiler {
       cacheMissRatio: parseFloat((Math.random() * 0.04 + 0.02).toFixed(3)), // low cache miss (2-6%) due to residency optimizer
       ramBandwidthUsageGbSec: parseFloat((Math.random() * 6.5 + 4.2).toFixed(1)), // low bandwidth
       igpuUsagePct: parseFloat((Math.random() * 15 + 5).toFixed(1)),
-      latencyMs: parseFloat((Math.random() * 3.5 + 1.2).toFixed(2))
+      latencyMs: parseFloat((Math.random() * 3.5 + 1.2).toFixed(2)),
     };
   }
 }

@@ -6,9 +6,9 @@ import { PredictionRecord } from "./realityFeedbackEngine";
 export class PredictionAuditSystem {
   public auditPredictions(records: PredictionRecord[]): number {
     if (records.length === 0) return 0.05; // Default low base error
-    
+
     let totalError = 0;
-    records.forEach(r => {
+    records.forEach((r) => {
       if (r.errorMeasured !== undefined) {
         totalError += r.errorMeasured;
       } else {

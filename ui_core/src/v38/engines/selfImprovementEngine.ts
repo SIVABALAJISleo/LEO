@@ -28,8 +28,8 @@ export class SelfImprovementEngine {
       id: "f-301",
       sourceModule: "GraphRag",
       errorMessage: "Entity lookup returned null on empty query",
-      timestamp: Date.now() - 3600000
-    }
+      timestamp: Date.now() - 3600000,
+    },
   ];
 
   private improvementPlans: ImprovementPlan[] = [];
@@ -43,24 +43,24 @@ export class SelfImprovementEngine {
       id: newId,
       sourceModule: module,
       errorMessage: message,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
 
     const patch: ImprovementPlan = {
       defectId: newId,
       actionPatch: `Add fallback default return array in ${module}Engine interface.`,
       validationScore: 0.98,
-      deployed: true
+      deployed: true,
     };
     this.improvementPlans.push(patch);
 
-    const detectedWeaknesses = Array.from(new Set(this.failureDb.map(f => f.sourceModule)));
+    const detectedWeaknesses = Array.from(new Set(this.failureDb.map((f) => f.sourceModule)));
 
     return {
       failuresLoggedCount: this.failureDb.length,
       detectedWeaknesses,
       generatedBenchmarksCount: this.failureDb.length * 3, // Generate 3 assertions per error
-      activeImprovements: this.improvementPlans
+      activeImprovements: this.improvementPlans,
     };
   }
 

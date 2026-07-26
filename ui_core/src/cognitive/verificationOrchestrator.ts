@@ -5,7 +5,8 @@
  */
 
 export interface VerificationCheck {
-  toolName: "Calculator" | "SandboxExecutor" | "SQL-Verifier" | "GraphRAG-Matcher" | "Memory-Checker";
+  toolName:
+    "Calculator" | "SandboxExecutor" | "SQL-Verifier" | "GraphRAG-Matcher" | "Memory-Checker";
   status: "passed" | "failed" | "neutral";
   details: string;
 }
@@ -25,7 +26,13 @@ export class VerificationOrchestrator {
     const answerLower = rawAnswer.toLowerCase();
 
     // 1. Calculator Check (for arithmetic claims)
-    if (/\d+/.test(queryLower) && (queryLower.includes("+") || queryLower.includes("-") || queryLower.includes("*") || queryLower.includes("/"))) {
+    if (
+      /\d+/.test(queryLower) &&
+      (queryLower.includes("+") ||
+        queryLower.includes("-") ||
+        queryLower.includes("*") ||
+        queryLower.includes("/"))
+    ) {
       // Simple equation extraction
       const match = queryLower.match(/(\d+)\s*([\+\-\*\/])\s*(\d+)/);
       if (match) {
@@ -58,8 +65,14 @@ export class VerificationOrchestrator {
     }
 
     // 2. Sandbox Code Execution Check (for code snippets)
-    if (queryLower.includes("code") || queryLower.includes("function") || queryLower.includes("script") || rawAnswer.includes("```")) {
-      const passesSyntax = !rawAnswer.includes("syntax error") && !rawAnswer.includes("undefined variable");
+    if (
+      queryLower.includes("code") ||
+      queryLower.includes("function") ||
+      queryLower.includes("script") ||
+      rawAnswer.includes("```")
+    ) {
+      const passesSyntax =
+        !rawAnswer.includes("syntax error") && !rawAnswer.includes("undefined variable");
       checks.push({
         toolName: "SandboxExecutor",
         status: passesSyntax ? "passed" : "failed",
@@ -74,7 +87,11 @@ export class VerificationOrchestrator {
     }
 
     // 3. SQL Database Check
-    if (queryLower.includes("table") || queryLower.includes("select") || queryLower.includes("database")) {
+    if (
+      queryLower.includes("table") ||
+      queryLower.includes("select") ||
+      queryLower.includes("database")
+    ) {
       checks.push({
         toolName: "SQL-Verifier",
         status: "passed",
@@ -119,7 +136,9 @@ export class VerificationOrchestrator {
       isApproved,
       score,
       checks,
-      repairedAnswer: isApproved ? repairedAnswer : `[Tool-Verification Failure Repaired]: Output was refined by Sandbox & Calculator validators: ${repairedAnswer}`,
+      repairedAnswer: isApproved
+        ? repairedAnswer
+        : `[Tool-Verification Failure Repaired]: Output was refined by Sandbox & Calculator validators: ${repairedAnswer}`,
     };
   }
 }

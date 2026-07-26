@@ -17,12 +17,12 @@ export class IgpuExecutionEngine {
     vramAllocatedMB: 1024,
     tflopsAchieved: 2.1,
     averageQueueLatencyMs: 4.5,
-    thermalStatus: "nominal"
+    thermalStatus: "nominal",
   };
 
   runMatrixMultiply(matrixACols: number, matrixBCols: number): IgpuMetrics {
     const totalOps = matrixACols * matrixBCols * 2;
-    
+
     // Simulate iGPU load scaling
     let latencyMultiplier = 1.0;
     let thermalStatus: "cool" | "nominal" | "throttling" = "nominal";
@@ -39,7 +39,7 @@ export class IgpuExecutionEngine {
       ...this.baseStats,
       tflopsAchieved: parseFloat((2.1 * (1.0 / latencyMultiplier)).toFixed(2)),
       averageQueueLatencyMs: parseFloat((4.5 * latencyMultiplier).toFixed(2)),
-      thermalStatus
+      thermalStatus,
     };
   }
 
