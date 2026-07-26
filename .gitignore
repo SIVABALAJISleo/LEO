@@ -10,7 +10,15 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+.output
+.vinxi
+.tanstack/**
+.nitro
 *.local
+
+# Wrangler / Cloudflare
+.wrangler/
+.dev.vars
 
 # Editor directories and files
 .vscode/*
@@ -22,54 +30,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-venv_py311/
-.vite/
-*.db
-BAK_LOG.txt
-BAK_ERR.txt
-__pycache__/
-.pytest_cache/
-tests/__pycache__/
-backend/core/__pycache__/
-backend/intelligence/__pycache__/
-backend/performance/__pycache__/
-backend/data_efficiency/__pycache__/
-backend/observability/__pycache__/
-backend/routers/__pycache__/
-scripts/__pycache__/
-pyright_*.json
-zero_compute_errors.json
-*.jsonl
-bench_*.txt
-audit.txt
-files.txt
-venv/
-*.egg-info/
-build/
-*.pyc
-chroma_db/
-*.db-journal
-cache_index.faiss
-.hyper_cache/
 
-# Model Weights and OpenVINO XMLs
-models/
-*.pt
-*.gguf
-*.xml
-yolov8n-seg.pt
-Nvidia Clone Project.zip
-proof-artifacts.tar.gz
-
-# Test, Audit & Generated Artifacts
-test_output*.txt
-*_utf8.txt
-symbolic_*_results*.json
-all_bandit_findings.txt
-audit_pytest*.txt
-*_REPORT.md
-*_CERTIFICATION_REPORT.md
-vite.config.ts.timestamp-*.mjs
-ffmpeg-*.tar.xz
-ffmpeg-*.zip
-ffmpeg-release/
+# Playwright
+playwright-report/
+test-results/

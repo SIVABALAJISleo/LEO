@@ -101,7 +101,9 @@ jobs:
           npm ci --legacy-peer-deps
           echo "Lock file is correctly synchronized."
       - name: Update Browserslist database
-        run: npx update-browserslist-db@latest --yes
+        run: |
+          export PATH="$HOME/.bun/bin:$PATH"
+          npx update-browserslist-db@latest --yes || bunx update-browserslist-db@latest --yes || true
       - name: Auto-fix imports for Vite 8 / rolldown compliance
         run: python _fix_exports.py
       - name: TypeScript type check

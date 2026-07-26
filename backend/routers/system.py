@@ -135,7 +135,7 @@ async def trigger_crystallization():
         "message": "Successfully compiled 4 FSM rules from trace history."
     }
 
-@router.get("/health", tags=["Health"])
+@router.get("/api/v1/health", tags=["Health"])
 async def health_check():
     return {
         "status": "ok",
