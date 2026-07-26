@@ -309,7 +309,7 @@ export async function saveSession(session: ChatSession): Promise<void> {
         }
       }
     }
-    // eslint-disable-next-line no-console
+
     console.warn("[LEO chat] server sync save failed", err);
   }
 }
@@ -322,7 +322,6 @@ export async function deleteSession(id: string): Promise<void> {
       method: "DELETE",
     });
   } catch (err) {
-    // eslint-disable-next-line no-console
     console.warn("[LEO chat] server sync delete failed", err);
   }
 }
@@ -413,7 +412,6 @@ export async function pullPage(
       nextCursor,
     };
   } catch (err) {
-    // eslint-disable-next-line no-console
     console.warn("[LEO chat] server sync page pull failed", err);
     // Fall back to local slice so the panel still shows something.
     const all = listSessions();

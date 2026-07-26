@@ -231,7 +231,6 @@ export function useBackendHealth(intervalMs = 15000): HealthResult & { refresh: 
       window.removeEventListener("focus", onFocus);
       window.removeEventListener("leo:api-base-changed", onFocus as EventListener);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [intervalMs]);
 
   return { ...result, refresh: run };
