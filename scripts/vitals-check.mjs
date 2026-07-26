@@ -13,12 +13,6 @@
 // The script uses INP approximated via a synthetic click / keydown burst so
 // the metric fires even in a headless run (real INP requires user input).
 import { chromium } from "playwright";
-import { readFileSync } from "node:fs";
-import { createRequire } from "node:module";
-
-const require = createRequire(import.meta.url);
-const webVitalsPath = require.resolve("web-vitals/dist/web-vitals.iife.js");
-const webVitalsScript = readFileSync(webVitalsPath, "utf8");
 
 const BASE = process.env.VITALS_BASE_URL ?? "http://127.0.0.1:4173";
 const ROUTES = (process.env.VITALS_ROUTES ?? "/,/features,/benchmarks,/docs")
@@ -34,30 +28,79 @@ const BUDGETS = {
 /** @type {Array<{route:string, name:string, value:number, budget:number, pass:boolean}>} */
 const results = [];
 
+// Web vitals collection script using ESM imports compatible with web-vitals@5.x
+const webVitalsScript = `
+import { onLCP, onCLS, onINP } from 'https://cdn.jsdelivr.net/npm/web-vitals@5/+esm';
+
+window.__vitals = {};
+try {
+  onLCP((m) => {
+    window.__vitals.LCP = m.value;
+  });
+  onCLS((m) => {
+    window.__vitals.CLS = m.value;
+  });
+  onINP((m) => {
+    window.__vitals.INP = m.value;
+  });
+} catch (e) {
+  console.error('Error setting up web vitals:', e);
+}
+`;
+
 async function measure(page, route) {
-  await page.addInitScript(webVitalsScript);
+  // Inject web vitals measurement script
   await page.addInitScript(() => {
     window.__vitals = {};
-    const wv = /** @type {any} */ (window).webVitals;
-    if (!wv) return;
-    wv.onLCP((m) => (window.__vitals.LCP = m.value));
-    wv.onCLS((m) => (window.__vitals.CLS = m.value));
-    wv.onINP((m) => (window.__vitals.INP = m.value));
   });
+
   await page.goto(`${BASE}${route}`, { waitUntil: "networkidle", timeout: 60_000 });
-  // Trigger some real interactions so INP has samples.
+
+  // Inject web vitals library and collect metrics
+  await page.evaluate(() => {
+    return new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.type = 'module';
+      script.textContent = `
+        import { onLCP, onCLS, onINP } from 'https://cdn.jsdelivr.net/npm/web-vitals@5/+esm';
+        window.__vitals = window.__vitals || {};
+        onLCP((m) => (window.__vitals.LCP = m.value));
+        onCLS((m) => (window.__vitals.CLS = m.value));
+        onINP((m) => (window.__vitals.INP = m.value));
+        window.__vitalsReady = true;
+      `;
+      document.head.appendChild(script);
+      
+      // Wait for vitals to be ready
+      const checkReady = setInterval(() => {
+        if (window.__vitalsReady) {
+          clearInterval(checkReady);
+          resolve();
+        }
+      }, 100);
+      
+      setTimeout(() => {
+        clearInterval(checkReady);
+        resolve();
+      }, 3000);
+    });
+  });
+
+  // Trigger some real interactions so INP has samples
   await page.mouse.move(100, 100);
   await page.mouse.down();
   await page.mouse.up();
   await page.keyboard.press("Tab");
   await page.keyboard.press("Tab");
   await page.evaluate(() => new Promise((r) => setTimeout(r, 1500)));
-  // Force LCP + CLS finalization by hiding the tab.
+
+  // Force LCP + CLS finalization by hiding the tab
   await page.evaluate(() => {
     Object.defineProperty(document, "visibilityState", { value: "hidden", configurable: true });
     document.dispatchEvent(new Event("visibilitychange"));
   });
   await page.evaluate(() => new Promise((r) => setTimeout(r, 400)));
+
   return page.evaluate(() => window.__vitals ?? {});
 }
 
