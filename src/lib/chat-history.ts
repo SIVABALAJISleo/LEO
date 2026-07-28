@@ -69,6 +69,7 @@ export type ChatHistoryMessage = {
   content: string;
   meta?: ChatHistoryMeta;
   ts: number;
+  clientMessageId?: string;
 };
 
 export type ChatSession = {
@@ -209,12 +210,34 @@ export function mergeSession(
   }
 
   // Divergence — merge messages, bump version.
-  const seen = new Map<string, ChatHistoryMessage>();
+  const mergedMessages: ChatHistoryMessage[] = [];
+  const messagesEqual = (a: ChatHistoryMessage, b: ChatHistoryMessage) => {
+    if (a.clientMessageId && b.clientMessageId) {
+      return a.clientMessageId === b.clientMessageId;
+    }
+    return (
+      a.role === b.role &&
+      a.content === b.content &&
+      Math.abs(a.ts - b.ts) < 15000
+    );
+  };
+
   for (const m of [...local.messages, ...remote.messages]) {
-    const key = `${m.role}|${m.ts}|${m.content.length}`;
-    if (!seen.has(key)) seen.set(key, m);
+    const idx = mergedMessages.findIndex((existing) => messagesEqual(existing, m));
+    if (idx < 0) {
+      mergedMessages.push(m);
+    } else {
+      const existing = mergedMessages[idx];
+      const preferNew =
+        (m.meta && !existing.meta) ||
+        (m.content.length > existing.content.length);
+      if (preferNew) {
+        mergedMessages[idx] = m;
+      }
+    }
   }
-  const messages = Array.from(seen.values()).sort((a, b) => a.ts - b.ts);
+
+  const messages = mergedMessages.sort((a, b) => a.ts - b.ts);
   const nextVersion = Math.max(local.version, remote.version) + 1;
   const newer = remote.updatedAt > local.updatedAt ? remote : local;
   return {

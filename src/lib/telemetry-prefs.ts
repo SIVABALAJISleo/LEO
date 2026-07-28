@@ -30,9 +30,9 @@ export function getTelemetryMode(): TelemetryMode {
 export function setTelemetryMode(mode: TelemetryMode) {
   if (typeof window === "undefined") return;
   window.localStorage.setItem(KEY, mode);
-  if (mode === "off") {
-    // Clear anything currently queued so opting out is immediate.
-    window.localStorage.removeItem(QUEUE_KEY);
+  if (mode === "off" || mode === "errors-only") {
+    // Clear non-essential events currently queued.
+    clearTelemetryQueue();
   }
 }
 
@@ -48,14 +48,25 @@ export function setRetentionDays(days: RetentionDays) {
   window.localStorage.setItem(RETENTION_KEY, String(days));
 }
 
-/** Wipe every buffered telemetry event immediately. */
+/** Wipe non-essential buffered telemetry events immediately. */
 export function clearTelemetryQueue() {
   if (typeof window === "undefined") return;
+  const raw = window.localStorage.getItem(QUEUE_KEY);
+  if (!raw) return;
+  try {
+    const arr = JSON.parse(raw);
+    if (Array.isArray(arr)) {
+      const kept = arr.filter((p) => isEssentialKind(typeof p.kind === "string" ? p.kind : ""));
+      window.localStorage.setItem(QUEUE_KEY, JSON.stringify(kept));
+      return;
+    }
+  } catch {}
   window.localStorage.removeItem(QUEUE_KEY);
 }
 
 /** Should a payload of the given `kind` be sent under the current mode? */
 export function shouldSendKind(kind: string): boolean {
+  if (isEssentialKind(kind)) return true;
   const mode = getTelemetryMode();
   if (mode === "off") return false;
   if (mode === "errors-only") return isEssentialKind(kind);

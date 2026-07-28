@@ -20,10 +20,10 @@ test.describe("telemetry — domain events reach /api/telemetry", () => {
 
     // Force the stream request to fail so a dropped-partial banner appears
     // (but only AFTER at least one delta arrives so `receivedAny` is true).
-    let firstCall = true;
+    let callCount = 0;
     await page.route("**/v1/chat/completions", async (route) => {
-      if (firstCall) {
-        firstCall = false;
+      callCount += 1;
+      if (callCount === 1) {
         // Send one delta, then abort mid-stream.
         await route.fulfill({
           status: 200,
@@ -32,7 +32,16 @@ test.describe("telemetry — domain events reach /api/telemetry", () => {
         });
         return;
       }
-      // Second call — the manual reconnect — succeeds.
+      if (callCount >= 2 && callCount <= 4) {
+        // Fail all automatic reconnect attempts to trigger the manual reconnect banner
+        await route.fulfill({
+          status: 500,
+          contentType: "application/json",
+          body: JSON.stringify({ error: "Internal Server Error" }),
+        });
+        return;
+      }
+      // Fifth call — the manual reconnect — succeeds.
       await route.fulfill({
         status: 200,
         headers: { "content-type": "text/event-stream", "cache-control": "no-cache" },
@@ -58,11 +67,12 @@ test.describe("telemetry — domain events reach /api/telemetry", () => {
         timeout: 5_000,
       })
       .toBeGreaterThan(0);
-    const evt = telemetry.getEventsOfKind("chat-reconnect")[0] as {
+    const events = telemetry.getEventsOfKind("chat-reconnect") as {
       trigger?: string;
       session_id?: string;
-    };
-    expect(evt.trigger).toBe("manual");
+    }[];
+    const evt = events.find((e) => e.trigger === "manual");
+    expect(evt).toBeDefined();
     expect(typeof evt.session_id).toBe("string");
   });
 

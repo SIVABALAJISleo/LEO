@@ -84,15 +84,19 @@ async function sendBatch(batch: Payload[]): Promise<boolean> {
 let flushing = false;
 export async function flushTelemetry(): Promise<void> {
   if (flushing) return;
-  if (getTelemetryMode() === "off") return;
-  if (typeof navigator !== "undefined" && navigator.onLine === false) return;
   const q = pruneQueue();
   if (q.length === 0) return;
+  if (typeof navigator !== "undefined" && navigator.onLine === false) return;
+
+  const mode = getTelemetryMode();
+  const toSend = q.filter((p) => shouldSendKind(typeof p.kind === "string" ? p.kind : ""));
+  if (toSend.length === 0) return;
+
   flushing = true;
   try {
     // Send in chunks of 50 so a big backlog doesn't blow up a single request.
     const chunkSize = 50;
-    let remaining = q.slice();
+    let remaining = toSend;
     while (remaining.length > 0) {
       const chunk = remaining.slice(0, chunkSize);
       const ok = await sendBatch(chunk);

@@ -1,6 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const PORT = Number(process.env.PORT ?? 4173);
+const isSmokeTest = process.argv.some((arg) => arg.includes("smoke.spec.ts"));
+const PORT = Number(process.env.PORT ?? (isSmokeTest ? 4174 : 4173));
 const BASE_URL = process.env.E2E_BASE_URL ?? `http://127.0.0.1:${PORT}`;
 
 export default defineConfig({
@@ -19,7 +20,7 @@ export default defineConfig({
   webServer: process.env.E2E_BASE_URL
     ? undefined
     : {
-        command: `bun run preview --port ${PORT} --strictPort`,
+        command: `npx -y kill-port ${PORT} && npm run preview -- --port ${PORT} --strictPort`,
         url: BASE_URL,
         reuseExistingServer: !process.env.CI,
         timeout: 120_000,

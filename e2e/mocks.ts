@@ -62,6 +62,7 @@ export async function mockLeoBackend(page: import("@playwright/test").Page) {
         `data: [DONE]`,
         "",
       ].join("\n\n");
+      await new Promise((resolve) => setTimeout(resolve, 100));
       await route.fulfill({
         status: 200,
         headers: { "content-type": "text/event-stream", "cache-control": "no-cache" },

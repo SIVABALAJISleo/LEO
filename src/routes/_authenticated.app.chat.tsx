@@ -47,6 +47,7 @@ type Msg = {
   meta?: ChatHistoryMeta;
   streaming?: boolean;
   ts?: number;
+  clientMessageId?: string;
 };
 
 export const Route = createFileRoute("/_authenticated/app/chat")({
@@ -147,14 +148,43 @@ function ChatPage() {
       if (summary.id === sessionId) {
         const fresh = getSession(sessionId);
         if (fresh) {
-          setMessages(
-            fresh.messages.map((m) => ({
+          setMessages((prev) => {
+            const merged: Msg[] = [];
+            const messagesEqual = (a: Msg, b: Msg) => {
+              if (a.clientMessageId && b.clientMessageId) {
+                return a.clientMessageId === b.clientMessageId;
+              }
+              return (
+                a.role === b.role &&
+                a.content === b.content &&
+                Math.abs((a.ts ?? 0) - (b.ts ?? 0)) < 15000
+              );
+            };
+            const incoming = fresh.messages.map((m) => ({
               role: m.role,
               content: m.content,
               meta: m.meta,
               ts: m.ts,
-            })),
-          );
+              clientMessageId: m.clientMessageId,
+              streaming: false,
+            }));
+            for (const m of [...incoming, ...prev]) {
+              const idx = merged.findIndex((existing) => messagesEqual(existing, m));
+              if (idx < 0) {
+                merged.push(m);
+              } else {
+                const existing = merged[idx];
+                const preferNew =
+                  (!m.streaming && existing.streaming) ||
+                  (m.meta && !existing.meta) ||
+                  (m.content.length > existing.content.length);
+                if (preferNew) {
+                  merged[idx] = m;
+                }
+              }
+            }
+            return merged.sort((a, b) => (a.ts ?? 0) - (b.ts ?? 0));
+          });
           setLiveAnnouncement(
             summary.kind === "conflict-rollback"
               ? `Sync conflict resolved. ${summary.addedFromRemote} message(s) merged from another device.`
@@ -172,9 +202,29 @@ function ChatPage() {
     const now = Date.now();
     const historyMsgs: ChatHistoryMessage[] = messages
       .filter((m) => !m.streaming)
-      .map((m) => ({ role: m.role, content: m.content, meta: m.meta, ts: m.ts ?? now }));
+      .map((m) => ({
+        role: m.role,
+        content: m.content,
+        meta: m.meta,
+        ts: m.ts ?? now,
+        clientMessageId: m.clientMessageId,
+      }));
     if (historyMsgs.length === 0) return;
     const existing = sessions.find((s) => s.id === sessionId);
+    if (existing) {
+      const existingMsgs = existing.messages;
+      if (
+        existingMsgs.length === historyMsgs.length &&
+        existingMsgs.every(
+          (m, idx) =>
+            m.role === historyMsgs[idx].role &&
+            m.content === historyMsgs[idx].content &&
+            m.clientMessageId === historyMsgs[idx].clientMessageId
+        )
+      ) {
+        return;
+      }
+    }
     const session: ChatSession = {
       id: sessionId,
       title: deriveTitle(historyMsgs),
@@ -227,6 +277,7 @@ function ChatPage() {
         content: m.content,
         meta: m.meta,
         ts: m.ts,
+        clientMessageId: m.clientMessageId,
       })),
     );
     setHistoryOpen(false);
@@ -285,10 +336,11 @@ function ChatPage() {
 
   // Core stream driver. Reusable for "send" and "reconnect".
   async function runStream(history: ChatMessage[], seedAssistantAppend = false) {
+    const assistantMsgId = `msg-assistant-${Date.now()}-${Math.random()}`;
     if (!seedAssistantAppend) {
       setMessages((m) => [
         ...m,
-        { role: "assistant", content: "", streaming: true, ts: Date.now() },
+        { role: "assistant", content: "", streaming: true, ts: Date.now(), clientMessageId: assistantMsgId },
       ]);
     } else {
       setMessages((m) => {
@@ -377,12 +429,14 @@ function ChatPage() {
             const meta = data?.x_leo_metadata;
             setMessages((m) => {
               const next = [...m];
+              const last = next[next.length - 1];
               next[next.length - 1] = {
                 role: "assistant",
                 content,
                 meta,
                 streaming: false,
                 ts: Date.now(),
+                clientMessageId: last?.clientMessageId,
               };
               return next;
             });
@@ -410,7 +464,8 @@ function ChatPage() {
   async function send() {
     if (!input.trim() || status !== "idle") return;
     const now = Date.now();
-    const userMsg: Msg = { role: "user", content: input.trim(), ts: now };
+    const clientMessageId = `msg-user-${now}-${Math.random()}`;
+    const userMsg: Msg = { role: "user", content: input.trim(), ts: now, clientMessageId };
     const history = [...messages, userMsg];
     setMessages(history);
     setInput("");
@@ -539,11 +594,21 @@ function ChatPage() {
       >
         {liveAnnouncement}
       </div>
+     <div className="relative flex h-[calc(100vh-57px)] w-full overflow-hidden bg-background">
+      {/* Mobile overlay */}
+      {historyOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/50 md:hidden"
+          onClick={() => setHistoryOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+      
       {/* History panel */}
       <aside
         className={`${
           historyOpen ? "flex" : "hidden"
-        } w-80 shrink-0 flex-col border-r border-border bg-surface md:flex`}
+        } absolute inset-y-0 left-0 z-50 w-80 shrink-0 flex-col border-r border-border bg-surface md:static`}
         aria-label="Chat history"
       >
         <div className="flex items-center justify-between border-b border-border px-4 py-3">
@@ -725,7 +790,7 @@ function ChatPage() {
             <Plus className="h-3.5 w-3.5" /> New chat
           </button>
         </div>
-        <div ref={scrollRef} className="flex-1 overflow-y-auto">
+        <div ref={scrollRef} className="flex-1 overflow-y-auto" data-testid="chat-messages">
           <div className="mx-auto max-w-3xl px-8 py-8">
             {messages.length === 0 ? (
               <div className="py-20 text-center">
@@ -898,6 +963,7 @@ function ChatPage() {
 
       {showShortcuts && <ShortcutsDialog onClose={() => setShowShortcuts(false)} />}
     </div>
+    </div>
   );
 }
 
@@ -955,7 +1021,7 @@ function ShortcutsDialog({ onClose }: { onClose: () => void }) {
 function MessageRow({ msg }: { msg: Msg }) {
   if (msg.role === "user") {
     return (
-      <div className="my-6 flex justify-end">
+      <div className="my-6 flex justify-end" data-testid="chat-user">
         <div className="max-w-[80%] bg-leo px-4 py-3 text-sm text-leo-foreground">
           {msg.content}
         </div>

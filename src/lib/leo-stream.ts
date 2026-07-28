@@ -7,9 +7,9 @@ export type ChatMessage = { role: "user" | "assistant" | "system"; content: stri
 export type StreamHandlers = {
   onDelta: (text: string) => void;
   onMeta?: (meta: Record<string, unknown>) => void;
-  onDone?: () => void;
-  onError?: (err: Error) => void;
-  onReconnect?: (attempt: number, delayMs: number) => void;
+  onDone?: () => void | Promise<void>;
+  onError?: (err: Error) => void | Promise<void>;
+  onReconnect?: (attempt: number, delayMs: number) => void | Promise<void>;
   signal?: AbortSignal;
 };
 
@@ -107,19 +107,26 @@ export async function streamChat(
       if (isTransientNetworkError(err) && attempt < maxReconnects) {
         attempt += 1;
         const delay = baseMs * 2 ** (attempt - 1);
-        handlers.onReconnect?.(attempt, delay);
+        await handlers.onReconnect?.(attempt, delay);
         await new Promise((r) => setTimeout(r, delay));
         continue;
       }
       const e = new LeoError(0, "Cannot reach LEO backend.", err);
-      handlers.onError?.(e);
+      await handlers.onError?.(e);
       throw e;
     }
 
     if (!res.ok || !res.body) {
+      if (res.status >= 500 && attempt < maxReconnects) {
+        attempt += 1;
+        const delay = baseMs * 2 ** (attempt - 1);
+        await handlers.onReconnect?.(attempt, delay);
+        await new Promise((r) => setTimeout(r, delay));
+        continue;
+      }
       const text = await res.text().catch(() => "");
       const e = new LeoError(res.status, text || `HTTP ${res.status}`);
-      handlers.onError?.(e);
+      await handlers.onError?.(e);
       throw e;
     }
 
@@ -174,17 +181,21 @@ export async function streamChat(
     }
 
     if (sawDone) {
-      handlers.onDone?.();
+      await handlers.onDone?.();
       done = true;
     } else if (streamDroppedMidway && attempt < maxReconnects && !handlers.signal?.aborted) {
       attempt += 1;
       const delay = baseMs * 2 ** (attempt - 1);
-      handlers.onReconnect?.(attempt, delay);
+      await handlers.onReconnect?.(attempt, delay);
       await new Promise((r) => setTimeout(r, delay));
       // loop → reconnect with prior_partial
     } else {
       // give up — finalize with whatever we got
-      handlers.onDone?.();
+      if (streamDroppedMidway) {
+        await handlers.onError?.(new Error("Stream connection lost midway."));
+      } else {
+        await handlers.onDone?.();
+      }
       done = true;
     }
   }
