@@ -43,14 +43,12 @@ export function resetApiBase() {
 }
 
 export function getToken(): string | null {
-  if (typeof window === "undefined") return null;
-  return window.localStorage.getItem("leo.jwt");
+  return null; // Migrated to HttpOnly Cookies
 }
 
 export function setToken(token: string | null) {
   if (typeof window === "undefined") return;
-  if (token) window.localStorage.setItem("leo.jwt", token);
-  else window.localStorage.removeItem("leo.jwt");
+  window.localStorage.removeItem("leo.jwt"); // Ensure legacy tokens are purged
 }
 
 // -------- Debug logging (configurable in Settings) --------
@@ -164,7 +162,7 @@ export async function leoFetch(path: string, init: RequestInit = {}): Promise<Re
 
   let res: Response;
   try {
-    res = await fetch(url, { ...init, headers });
+    res = await fetch(url, { ...init, headers, credentials: "include" });
   } catch (err) {
     const msg = "Cannot reach LEO backend. Check the API base URL in Settings.";
     toast.error(msg);

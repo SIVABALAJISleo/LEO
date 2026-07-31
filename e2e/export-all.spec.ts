@@ -26,10 +26,10 @@ test.describe("chat history — export all across cursor pages", () => {
     page,
   }) => {
     await page.goto("/app/chat");
+    // Open history so we can see the first page loaded — proves sync is live.
+    await page.getByRole("button", { name: /history/i, exact: false }).click();
     const mod = process.platform === "darwin" ? "Meta" : "Control";
 
-    // Open history so we can see the first page loaded — proves sync is live.
-    await page.keyboard.press(`${mod}+K`);
     const historyPanel = page.getByLabel("Chat history");
     await expect(historyPanel.getByText("P1 session 0")).toBeVisible({
       timeout: 10_000,
@@ -39,7 +39,7 @@ test.describe("chat history — export all across cursor pages", () => {
 
     // Intercept the download triggered by exportAll.
     const downloadPromise = page.waitForEvent("download");
-    await page.keyboard.press(`${mod}+E`);
+    await page.keyboard.press(`${mod}+e`);
     const download = await downloadPromise;
 
     const stream = await download.createReadStream();

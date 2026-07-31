@@ -59,8 +59,8 @@ async function measure(page, route) {
   // Inject web vitals library and collect metrics
   await page.evaluate(() => {
     return new Promise((resolve) => {
-      const script = document.createElement('script');
-      script.type = 'module';
+      const script = document.createElement("script");
+      script.type = "module";
       script.textContent = `
         import { onLCP, onCLS, onINP } from 'https://cdn.jsdelivr.net/npm/web-vitals@5/+esm';
         window.__vitals = window.__vitals || {};
@@ -70,7 +70,7 @@ async function measure(page, route) {
         window.__vitalsReady = true;
       `;
       document.head.appendChild(script);
-      
+
       // Wait for vitals to be ready
       const checkReady = setInterval(() => {
         if (window.__vitalsReady) {
@@ -78,7 +78,7 @@ async function measure(page, route) {
           resolve();
         }
       }, 100);
-      
+
       setTimeout(() => {
         clearInterval(checkReady);
         resolve();

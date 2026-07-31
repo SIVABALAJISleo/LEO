@@ -215,11 +215,7 @@ export function mergeSession(
     if (a.clientMessageId && b.clientMessageId) {
       return a.clientMessageId === b.clientMessageId;
     }
-    return (
-      a.role === b.role &&
-      a.content === b.content &&
-      Math.abs(a.ts - b.ts) < 15000
-    );
+    return a.role === b.role && a.content === b.content && Math.abs(a.ts - b.ts) < 15000;
   };
 
   for (const m of [...local.messages, ...remote.messages]) {
@@ -228,9 +224,7 @@ export function mergeSession(
       mergedMessages.push(m);
     } else {
       const existing = mergedMessages[idx];
-      const preferNew =
-        (m.meta && !existing.meta) ||
-        (m.content.length > existing.content.length);
+      const preferNew = (m.meta && !existing.meta) || m.content.length > existing.content.length;
       if (preferNew) {
         mergedMessages[idx] = m;
       }
@@ -355,11 +349,8 @@ export function clearAllSessions(): void {
 
 // -------- Server pull, pagination + merge --------
 
-/* eslint-disable prettier/prettier */
 type ServerListResponse =
-  | { sessions?: ChatSession[]; items?: ChatSession[]; nextCursor?: string | null }
-  | ChatSession[];
-/* eslint-enable prettier/prettier */
+  { sessions?: ChatSession[]; items?: ChatSession[]; nextCursor?: string | null } | ChatSession[];
 
 function normalizeListResponse(res: ServerListResponse): {
   sessions: ChatSession[];

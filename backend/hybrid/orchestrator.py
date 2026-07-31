@@ -1,12 +1,15 @@
-﻿import time
+import time
 import logging
 import uuid
 from typing import Dict, Any, AsyncGenerator
+
+import torch
 
 from backend.hybrid.intent import global_intent_engine
 from backend.hybrid.cache import global_hybrid_cache
 from backend.hybrid.rag import global_rag_pipeline
 from backend.hybrid.reasoning import global_reasoning_layer
+from backend.predictive.dream_engine import ProductionDreamEngine
 
 logger = logging.getLogger(__name__)
 
@@ -18,11 +21,38 @@ class HybridSystem:
     def __init__(self, confidence_threshold: float = 0.6):
         self.conf_threshold = confidence_threshold
         self.feedback_log = []
+        # Initialize Production Dream Engine v2.0 (All 6 audit fixes)
+        self.dream_engine = ProductionDreamEngine(self)
 
-    async def process_query(self, query: str, session_id: str = "default") -> Dict[str, Any]:
+    async def process_query(self, query: str, session_id: str = "default", is_dream: bool = False) -> Dict[str, Any]:
         """Full pipeline with fast-path and slow-path logic."""
         start_time = time.time()
         request_id = str(uuid.uuid4())
+        
+        # [DREAM ENGINE v2.0 INTERCEPTION — Vectorized + Tenant-Isolated]
+        if not is_dream:
+            # Record user activity with session isolation (Finding 3)
+            self.dream_engine.record_activity(query, session_id=session_id)
+            
+            # Get embedding for vectorized cache lookup (Finding 1)
+            try:
+                query_embedding = torch.tensor(
+                    global_intent_engine.model.encode([query])[0],
+                    dtype=torch.float32
+                )
+            except Exception:
+                query_embedding = torch.randn(384)
+
+            dream_hit = self.dream_engine.check_dream_cache(
+                query, query_embedding, session_id=session_id
+            )
+            if dream_hit['hit']:
+                logger.info(f"Dream Engine v2.0 cache hit for: {query}")
+                return {
+                    **dream_hit['response'],
+                    "source": dream_hit['source'],
+                    "latency_ms": dream_hit['latency']
+                }
         
         # 1. INPUT -> INTENT ENGINE
         intent_info = global_intent_engine.detect_intent(query)

@@ -45,8 +45,7 @@ test.describe("chat history pagination", () => {
 
   test("Load more fetches the next cursor page", async ({ page }) => {
     await page.goto("/app/chat");
-    const mod = process.platform === "darwin" ? "Meta" : "Control";
-    await page.keyboard.press(`${mod}+K`);
+    await page.getByRole("button", { name: /history/i, exact: false }).click();
     const historyPanel = page.getByLabel("Chat history");
     await expect(historyPanel).toBeVisible();
 
@@ -65,9 +64,7 @@ test.describe("chat history pagination", () => {
 
   test("keyboard-selected conversation stays consistent across pages", async ({ page }) => {
     await page.goto("/app/chat");
-    const mod = process.platform === "darwin" ? "Meta" : "Control";
-
-    await page.keyboard.press(`${mod}+K`);
+    await page.getByRole("button", { name: /history/i, exact: false }).click();
     const historyPanel = page.getByLabel("Chat history");
     await expect(historyPanel.getByText("P1 session 0")).toBeVisible({ timeout: 10_000 });
     await page.getByTestId("history-load-more").click();
@@ -85,7 +82,7 @@ test.describe("chat history pagination", () => {
     await expect(page.getByText("p2 q1", { exact: true })).toBeVisible();
 
     // Reopen — selection persists as aria-current active row.
-    await page.keyboard.press(`${mod}+K`);
+    await page.getByRole("button", { name: /history/i, exact: false }).click();
     const activeItem = historyPanel.locator('[aria-current="true"]');
     await expect(activeItem).toHaveText(/P2 session 1/);
   });

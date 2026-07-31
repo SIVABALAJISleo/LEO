@@ -13,7 +13,7 @@ LEO AI makes NVIDIA data center GPUs category-irrelevant for everyday users and 
 
 ### 📊 Verified Performance Scorecard (Real-World Measured)
 
-_Target Hardware: Lenovo IdeaPad Slim 3 (Intel Core i5-12450H, 16GB RAM, Intel UHD 48EU iGPU)_
+#### Target Hardware: Lenovo IdeaPad Slim 3 (Intel Core i5-12450H, 16GB RAM, Intel UHD 48EU iGPU)
 
 | Metric                      | LEO AI (Local Hardware)     | NVIDIA H100 (Data Center) | LEO Advantage              |
 | :-------------------------- | :-------------------------- | :------------------------ | :------------------------- |
@@ -66,12 +66,12 @@ Beyond raw speed, LEO is a comprehensive enterprise intelligence platform featur
 
 LEO AI is organized into a multi-layer intelligence substrate:
 
-1.  **Knowledge Crystallization Layer:** Converts repeated reasoning into reusable intelligence.
-2.  **GraphRAG Retrieval:** Retrieval-first reasoning and evidence discovery.
-3.  **Memory System:** Long-term structured memory management.
-4.  **Agent Swarm:** Specialized multi-agent collaboration.
-5.  **Reality Feedback Network:** Prediction → Outcome → Learning loops.
-6.  **Optimization Framework:** Autonomous quality and performance improvement.
+1. **Knowledge Crystallization Layer:** Converts repeated reasoning into reusable intelligence.
+2. **GraphRAG Retrieval:** Retrieval-first reasoning and evidence discovery.
+3. **Memory System:** Long-term structured memory management.
+4. **Agent Swarm:** Specialized multi-agent collaboration.
+5. **Reality Feedback Network:** Prediction → Outcome → Learning loops.
+6. **Optimization Framework:** Autonomous quality and performance improvement.
 
 ---
 
@@ -178,14 +178,27 @@ This will output a `competitiveness_proof.json` file and display a checklist ver
 
 LEO AI is an ongoing research project pushing the boundaries of software-only AI optimization. Contributions are welcome! Please read `CONTRIBUTING.md` for guidelines on how to submit pull requests, report issues, or suggest new optimization kernels.
 
+## 📜 Third-Party Model License Notice
+
+This project integrates **Kimi K3** from Moonshot AI under the [Kimi K3 License](kimi-k3/LICENSE).
+
+| Condition | Status |
+| :--- | :--- |
+| ✅ Non-commercial & internal use | **Free** |
+| ✅ Commercial use under $20M/year revenue | **Free** |
+| ⚠️ Commercial use above $20M/year revenue | **Separate agreement required** |
+| ⚠️ Products with >100M MAU | **Must display "Kimi K3" attribution** |
+| 📧 Licensing enquiries | [license@moonshot.ai](mailto:license@moonshot.ai) |
+
+For unrestricted commercial deployment, consider Apache 2.0 alternatives such as **Llama 3** or **Mistral**.
+
+---
+
 ## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-<div align="center">
-  <b>LEO AI — Bypassing the hardware. Tuning into the universe.</b><br>
-  Built with 💡 by SIVABALAJISleo
-</div>
-```
+**LEO AI — Bypassing the hardware. Tuning into the universe.**
+Built with 💡 by SIVABALAJISleo

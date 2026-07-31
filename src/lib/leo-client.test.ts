@@ -34,12 +34,11 @@ describe("leo-client", () => {
     expect(getApiBase()).toBe("https://api.example.com");
   });
 
-  it("attaches bearer token", async () => {
-    setToken("tk_test");
+  it("includes credentials for HttpOnly cookie authentication", async () => {
     const fetchSpy = mockFetch({ body: { ok: true } });
     await leoJson("/api/v1/leo/metrics");
-    const headers = (fetchSpy.mock.calls[0][1] as RequestInit).headers as Headers;
-    expect(headers.get("Authorization")).toBe("Bearer tk_test");
+    const options = fetchSpy.mock.calls[0][1] as RequestInit;
+    expect(options.credentials).toBe("include");
   });
 
   it("POSTs auth login to the correct route", async () => {

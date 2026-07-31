@@ -1,1 +1,1 @@
-project_id = "gmpelborkpeypbgyrjgi"
+project_id = "${SUPABASE_PROJECT_ID}"

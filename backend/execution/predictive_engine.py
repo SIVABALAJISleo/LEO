@@ -13,14 +13,14 @@ class PredictiveExecutionEngine:
     """
     def __init__(self, idle_threshold_sec: float = 5.0):
         self.idle_threshold = idle_threshold_sec
-        self.last_activity_time = time.time()
+        self.last_activity_time = time.monotonic()
         self.running = False
         self.thread = None
         self.task_queue = []
         
     def record_activity(self):
         """Called by the orchestrator whenever a user request comes in."""
-        self.last_activity_time = time.time()
+        self.last_activity_time = time.monotonic()
         
     def enqueue_background_task(self, task_name: str, task_func: callable, *args):
         """Adds a heavy indexing/embedding task to the idle queue."""
@@ -43,7 +43,7 @@ class PredictiveExecutionEngine:
             time.sleep(1.0)
             
             # Check if system has been idle for the threshold
-            if time.time() - self.last_activity_time > self.idle_threshold:
+            if time.monotonic() - self.last_activity_time > self.idle_threshold:
                 if self.task_queue:
                     # Pop the next background task
                     task_name, func, args = self.task_queue.pop(0)

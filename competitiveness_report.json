@@ -50,12 +50,7 @@
     "accelerators_4of4": {
       "score": 100.0,
       "status": "passed",
-      "active": [
-        "CPU",
-        "iGPU",
-        "QuickSync",
-        "GNA 3.0"
-      ]
+      "active": ["CPU", "iGPU", "QuickSync", "GNA 3.0"]
     },
     "eagle3_speculation": {
       "score": 100.0,

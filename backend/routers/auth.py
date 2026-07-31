@@ -2,7 +2,7 @@ import os
 import time
 import jwt
 import uuid
-from fastapi import APIRouter, HTTPException, Depends, Response
+from fastapi import APIRouter, HTTPException, Depends, Response, Request
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
@@ -115,3 +115,30 @@ async def login(req: AuthRequest, response: Response, db: Session = Depends(get_
             "permissions": ["orchestrate"]
         }
     }
+
+@router.get("/me")
+async def get_me(request: Request, db: Session = Depends(get_db)):
+    token = request.cookies.get("leo.jwt")
+    if not token:
+        auth_header = request.headers.get("Authorization")
+        if auth_header and auth_header.startswith("Bearer "):
+            token = auth_header.split(" ")[1]
+            
+    if not token:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+        
+    jwt_secret = os.getenv("JWT_SECRET", "super_secret_hyper_jwt_key_2026")
+    try:
+        payload = jwt.decode(token, jwt_secret, algorithms=["HS256"])
+        user = db.query(User).filter(User.uid == payload.get("uid")).first()
+        if not user:
+            raise HTTPException(status_code=401, detail="User not found")
+        return {
+            "id": user.uid,
+            "email": user.email,
+            "role": user.tier,
+            "permissions": ["orchestrate"]
+        }
+    except Exception:
+        raise HTTPException(status_code=401, detail="Invalid session")
+

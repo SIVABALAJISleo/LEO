@@ -60,7 +60,9 @@ export function clearTelemetryQueue() {
       window.localStorage.setItem(QUEUE_KEY, JSON.stringify(kept));
       return;
     }
-  } catch {}
+  } catch {
+    /* ignore parsing errors */
+  }
   window.localStorage.removeItem(QUEUE_KEY);
 }
 

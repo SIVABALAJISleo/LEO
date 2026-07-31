@@ -22,16 +22,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const t = getToken();
-    if (t) {
-      setTokenState(t);
-      try {
-        const stored = window.localStorage.getItem("leo.user");
-        if (stored) setUser(JSON.parse(stored));
-      } catch {
-        /* ignore */
-      }
-    }
+    // Attempt to hydrate session via HttpOnly cookie
+    leoJson<User>("/api/v1/auth/me")
+      .then((userData) => {
+        setUser(userData);
+        setTokenState("cookie-session-active");
+      })
+      .catch(() => {
+        // No valid session cookie found
+        setUser(null);
+        setTokenState(null);
+        if (typeof window !== "undefined") window.localStorage.removeItem("leo.user");
+      });
   }, []);
 
   useEffect(() => {
@@ -62,21 +64,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       },
       async login(email, password) {
-        const res = await leoJson<{ access_token?: string; token?: string; user?: User }>(
-          "/api/v1/auth/login",
-          { method: "POST", body: JSON.stringify({ email, password }) },
-        );
-        const tk = res.access_token ?? res.token;
-        if (!tk) throw new Error("No token returned");
-        this.setSession(tk, res.user ?? { email });
+        const res = await leoJson<{ user?: User }>("/api/v1/auth/login", {
+          method: "POST",
+          body: JSON.stringify({ email, password }),
+        });
+        this.setSession("cookie-session-active", res.user ?? { email });
       },
       async signup(email, password) {
-        const res = await leoJson<{ access_token?: string; token?: string; user?: User }>(
-          "/api/v1/auth/signup",
-          { method: "POST", body: JSON.stringify({ email, password }) },
-        );
-        const tk = res.access_token ?? res.token;
-        if (tk) this.setSession(tk, res.user ?? { email });
+        const res = await leoJson<{ user?: User }>("/api/v1/auth/signup", {
+          method: "POST",
+          body: JSON.stringify({ email, password }),
+        });
+        this.setSession("cookie-session-active", res.user ?? { email });
       },
       logout() {
         setToken(null);

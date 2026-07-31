@@ -20,7 +20,7 @@ test.describe("chat sync — repeated 409s + server timeout stay recoverable", (
   test("three back-to-back 409s de-duplicate the shared user message", async ({ page }) => {
     const telemetry = await mockTelemetry(page);
     const conflict = await mockChatSyncRepeatedConflict(page, {
-      conflictCount: 3,
+      conflictCount: 5,
     });
 
     await page.goto("/app/chat");
@@ -30,10 +30,16 @@ test.describe("chat sync — repeated 409s + server timeout stay recoverable", (
     for (let i = 0; i < 3; i += 1) {
       await page.getByTestId("chat-input").fill(`echo ${i}`);
       await page.getByTestId("chat-send").click();
-      await expect(page.getByTestId("chat-assistant").last()).toContainText("Hello from LEO.", {
+      await expect(
+        page.getByTestId("chat-messages").getByText("Hello from LEO.").nth(i),
+      ).toBeVisible({
         timeout: 10_000,
       });
       await expect(page.getByTestId("chat-send")).toBeVisible({ timeout: 5_000 });
+
+      // Wait for the background sync to finish and hit the 409 conflict
+      await expect(page.getByTestId("chat-merge-banner")).toBeVisible({ timeout: 10_000 });
+      await page.getByRole("button", { name: /dismiss merge notification/i }).click();
     }
 
     // The merge banner must have surfaced at least once for the conflict
@@ -52,14 +58,20 @@ test.describe("chat sync — repeated 409s + server timeout stay recoverable", (
     // Every user echo should render exactly once — no double-render from the
     // 3 rounds of merges.
     for (let i = 0; i < 3; i += 1) {
-      await expect(page.getByText(`echo ${i}`, { exact: true })).toHaveCount(1);
+      await expect(
+        page.getByTestId("chat-messages").getByText(`echo ${i}`, { exact: true }),
+      ).toHaveCount(1);
     }
 
     // At least one remote-only assistant reply from the merges shows up.
     await expect(page.getByText(/remote-attempt-\d+/).first()).toBeVisible();
 
     // Rollback telemetry fired at least three times (one per conflict).
-    expect(telemetry.getEventsOfKind("chat-optimistic-rollback").length).toBeGreaterThanOrEqual(3);
+    await expect
+      .poll(() => telemetry.getEventsOfKind("chat-optimistic-rollback").length, {
+        timeout: 10_000,
+      })
+      .toBeGreaterThanOrEqual(3);
     expect(conflict.getPostCount()).toBeGreaterThanOrEqual(3);
   });
 
@@ -85,7 +97,9 @@ test.describe("chat sync — repeated 409s + server timeout stay recoverable", (
 
     // The optimistic user bubble is still on screen and NOT duplicated
     // while the sync POST is still in flight.
-    await expect(page.getByText("timeout me", { exact: true })).toHaveCount(1);
+    await expect(
+      page.getByTestId("chat-messages").getByText("timeout me", { exact: true }),
+    ).toHaveCount(1);
 
     // Input + send are re-enabled — the UI is not stuck in a submitting state.
     await expect(page.getByTestId("chat-send")).toBeVisible({ timeout: 5_000 });

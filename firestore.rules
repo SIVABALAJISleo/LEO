@@ -1,15 +1,23 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow public read access to usernames to check for uniqueness during signup
+
+    // Users collection: only the authenticated user can read/write their own document
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Usernames collection: restricted to authenticated users only (Convergence 8)
+    // Previously: allow read: if true; — This exposed all usernames publicly (SECURITY RISK)
     match /usernames/{username} {
-      allow read: if true;
+      allow read: if request.auth != null;
       allow write: if request.auth != null;
     }
 
-    // Allow users to read and write their own profile data
-    match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+    // Workspaces collection: tenant isolation
+    match /workspaces/{workspaceId} {
+      allow read, write: if request.auth != null
+        && resource.data.tenant_id == request.auth.token.tenant_id;
     }
   }
 }

@@ -1,0 +1,84 @@
+{
+  "info": {
+    "name": "LEO / HYPER Automated REST API Collection",
+    "description": "Comprehensive Postman collection testing Auth, Orchestration, Memory, Systems, Policy, and Observability.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "User Signup",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"email\": \"admin@leo.ai\", \"password\": \"AdminPass2026!\"}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/auth/signup", "host": ["{{baseUrl}}"], "path": ["api", "v1", "auth", "signup"] }
+          }
+        },
+        {
+          "name": "User Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"email\": \"admin@leo.ai\", \"password\": \"AdminPass2026!\"}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "v1", "auth", "login"] }
+          }
+        },
+        {
+          "name": "Session Hydration (/me)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/auth/me", "host": ["{{baseUrl}}"], "path": ["api", "v1", "auth", "me"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orchestration & Metrics",
+      "item": [
+        {
+          "name": "AI Orchestrate",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"query\": \"Run QA verification matrix\"}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/leo/orchestrate", "host": ["{{baseUrl}}"], "path": ["api", "v1", "leo", "orchestrate"] }
+          }
+        },
+        {
+          "name": "Observability Metrics",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/leo/metrics", "host": ["{{baseUrl}}"], "path": ["api", "v1", "leo", "metrics"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Memory & Systems",
+      "item": [
+        {
+          "name": "Query Memory",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"query\": \"security compliance policy\"}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/v40/memory/query", "host": ["{{baseUrl}}"], "path": ["api", "v1", "v40", "memory", "query"] }
+          }
+        },
+        {
+          "name": "Store Memory",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"key\": \"qa_suite_status\", \"value\": \"initialized\"}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/systems/memory/store", "host": ["{{baseUrl}}"], "path": ["api", "v1", "systems", "memory", "store"] }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [{ "key": "baseUrl", "value": "http://localhost:8000" }]
+}

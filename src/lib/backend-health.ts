@@ -12,16 +12,8 @@ export interface SchemaIssue {
   message: string;
 }
 
-/* eslint-disable prettier/prettier */
 export type FailureKind =
-  | "cors"
-  | "network"
-  | "timeout"
-  | "mixed-content"
-  | "dns"
-  | "http"
-  | "schema";
-/* eslint-enable prettier/prettier */
+  "cors" | "network" | "timeout" | "mixed-content" | "dns" | "http" | "schema";
 
 export interface HealthResult {
   status: HealthStatus;

@@ -177,7 +177,7 @@ function ChatPage() {
                 const preferNew =
                   (!m.streaming && existing.streaming) ||
                   (m.meta && !existing.meta) ||
-                  (m.content.length > existing.content.length);
+                  m.content.length > existing.content.length;
                 if (preferNew) {
                   merged[idx] = m;
                 }
@@ -219,7 +219,7 @@ function ChatPage() {
           (m, idx) =>
             m.role === historyMsgs[idx].role &&
             m.content === historyMsgs[idx].content &&
-            m.clientMessageId === historyMsgs[idx].clientMessageId
+            m.clientMessageId === historyMsgs[idx].clientMessageId,
         )
       ) {
         return;
@@ -340,7 +340,13 @@ function ChatPage() {
     if (!seedAssistantAppend) {
       setMessages((m) => [
         ...m,
-        { role: "assistant", content: "", streaming: true, ts: Date.now(), clientMessageId: assistantMsgId },
+        {
+          role: "assistant",
+          content: "",
+          streaming: true,
+          ts: Date.now(),
+          clientMessageId: assistantMsgId,
+        },
       ]);
     } else {
       setMessages((m) => {
@@ -594,375 +600,378 @@ function ChatPage() {
       >
         {liveAnnouncement}
       </div>
-     <div className="relative flex h-[calc(100vh-57px)] w-full overflow-hidden bg-background">
-      {/* Mobile overlay */}
-      {historyOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/50 md:hidden"
-          onClick={() => setHistoryOpen(false)}
-          aria-hidden="true"
-        />
-      )}
-      
-      {/* History panel */}
-      <aside
-        className={`${
-          historyOpen ? "flex" : "hidden"
-        } absolute inset-y-0 left-0 z-50 w-80 shrink-0 flex-col border-r border-border bg-surface md:static`}
-        aria-label="Chat history"
-      >
-        <div className="flex items-center justify-between border-b border-border px-4 py-3">
-          <div className="flex items-center gap-2">
-            <History className="h-4 w-4 text-leo" aria-hidden />
-            <span className="font-display text-sm font-semibold">History</span>
-            {isSyncEnabled() && (
-              <span
-                className="ml-1 rounded-sm bg-leo/10 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-leo"
-                title="Server sync enabled"
+      <div className="relative flex h-[calc(100vh-57px)] w-full overflow-hidden bg-background">
+        {/* Mobile overlay */}
+        {historyOpen && (
+          <div
+            className="fixed inset-0 z-40 bg-black/50 md:hidden"
+            onClick={() => setHistoryOpen(false)}
+            aria-hidden="true"
+          />
+        )}
+
+        {/* History panel */}
+        <aside
+          className={`${
+            historyOpen ? "flex" : "hidden"
+          } absolute inset-y-0 left-0 z-50 w-80 shrink-0 flex-col border-r border-border bg-surface md:static`}
+          aria-label="Chat history"
+        >
+          <div className="flex items-center justify-between border-b border-border px-4 py-3">
+            <div className="flex items-center gap-2">
+              <History className="h-4 w-4 text-leo" aria-hidden />
+              <span className="font-display text-sm font-semibold">History</span>
+              {isSyncEnabled() && (
+                <span
+                  className="ml-1 rounded-sm bg-leo/10 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-leo"
+                  title="Server sync enabled"
+                >
+                  synced
+                </span>
+              )}
+            </div>
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={newChat}
+                className="p-1.5 text-muted-foreground hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
+                aria-label={`New chat (${modKeyLabel}+Shift+N)`}
+                title={`New chat (${modKeyLabel}+Shift+N)`}
               >
-                synced
-              </span>
+                <Plus className="h-4 w-4" />
+              </button>
+              <button
+                type="button"
+                onClick={exportAll}
+                className="p-1.5 text-muted-foreground hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
+                aria-label={`Export all conversations as JSON (${modKeyLabel}+E)`}
+                title={`Export all as JSON (${modKeyLabel}+E)`}
+                data-testid="chat-export-json"
+              >
+                <Download className="h-4 w-4" />
+              </button>
+              <button
+                type="button"
+                onClick={exportAllCsv}
+                className="p-1.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
+                aria-label="Export all conversations as CSV"
+                title="Export all as CSV"
+                data-testid="chat-export-csv"
+              >
+                CSV
+              </button>
+              <button
+                type="button"
+                onClick={() => setHistoryOpen(false)}
+                className="p-1.5 text-muted-foreground hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-leo md:hidden"
+                aria-label="Close history panel"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+          <div className="border-b border-border px-3 py-2">
+            <div className="relative">
+              <Search
+                className="pointer-events-none absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground"
+                aria-hidden
+              />
+              <input
+                ref={searchRef}
+                type="search"
+                value={historyQuery}
+                onChange={(e) => setHistoryQuery(e.target.value)}
+                placeholder={`Search conversations…  (${modKeyLabel}+K)`}
+                aria-label="Search conversations"
+                className="w-full bg-input py-1.5 pl-7 pr-2 text-xs outline-none focus:ring-1 focus:ring-leo"
+              />
+            </div>
+          </div>
+          <div className="flex-1 overflow-y-auto" data-history-list>
+            {filteredSessions.length === 0 ? (
+              <p className="px-4 py-6 text-center text-xs text-muted-foreground">
+                {historyQuery ? "No matches." : "No saved conversations yet."}
+              </p>
+            ) : (
+              filteredSessions.map((s, i) => {
+                const active = s.id === sessionId;
+                const highlighted = i === selectedIdx;
+                return (
+                  <div
+                    key={s.id}
+                    className={`group flex items-start gap-1 border-b border-border/60 ${
+                      active
+                        ? "bg-background"
+                        : highlighted
+                          ? "bg-background/60"
+                          : "hover:bg-background/50"
+                    }`}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => loadSession(s)}
+                      className={`flex-1 px-3 py-2.5 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-leo focus-visible:ring-inset ${
+                        highlighted && !active ? "border-l-2 border-leo" : ""
+                      }`}
+                      aria-current={active ? "true" : undefined}
+                    >
+                      <div className="truncate text-xs font-medium">{s.title}</div>
+                      <div className="mt-0.5 font-mono text-[10px] text-muted-foreground">
+                        {new Date(s.updatedAt).toLocaleString()} · {s.messages.length} msg
+                      </div>
+                    </button>
+                    <div className="flex flex-col opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
+                      <button
+                        type="button"
+                        onClick={() => exportOne(s)}
+                        className="p-1.5 text-muted-foreground hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
+                        aria-label={`Export "${s.title}" as JSON`}
+                        title="Export JSON"
+                      >
+                        <Download className="h-3.5 w-3.5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => removeSession(s.id)}
+                        className="p-1.5 text-muted-foreground hover:text-destructive focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
+                        aria-label={`Delete "${s.title}"`}
+                        title="Delete"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })
+            )}
+            {!historyQuery.trim() && nextCursor && (
+              <div className="p-3">
+                <button
+                  ref={loadMoreRef}
+                  type="button"
+                  onClick={loadMore}
+                  disabled={loadingMore}
+                  className="w-full border border-border px-3 py-2 text-xs font-semibold hover:border-leo hover:text-leo disabled:opacity-40 focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
+                  data-testid="history-load-more"
+                  aria-label="Load more conversations"
+                >
+                  {loadingMore ? "Loading…" : "Load more"}
+                </button>
+              </div>
             )}
           </div>
-          <div className="flex items-center gap-1">
+        </aside>
+
+        {/* Main chat column */}
+        <div className="flex min-w-0 flex-1 flex-col">
+          <div className="flex items-center gap-3 border-b border-border px-8 py-4">
+            <button
+              type="button"
+              onClick={() => setHistoryOpen((v) => !v)}
+              className="p-2 text-muted-foreground hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
+              aria-label={historyOpen ? "Hide history" : `Show history (${modKeyLabel}+K)`}
+              aria-expanded={historyOpen}
+              title={`Toggle history (${modKeyLabel}+K)`}
+            >
+              <History className="h-4 w-4" />
+            </button>
+            <div className="flex-1">
+              <p className="eyebrow">Console</p>
+              <h1 className="mt-1 font-display text-2xl font-bold">Chat</h1>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowShortcuts((v) => !v)}
+              className="p-2 text-muted-foreground hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
+              aria-label="Keyboard shortcuts (?)"
+              title="Keyboard shortcuts (?)"
+            >
+              <Keyboard className="h-4 w-4" />
+            </button>
             <button
               type="button"
               onClick={newChat}
-              className="p-1.5 text-muted-foreground hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
-              aria-label={`New chat (${modKeyLabel}+Shift+N)`}
-              title={`New chat (${modKeyLabel}+Shift+N)`}
+              className="inline-flex items-center gap-1.5 border border-border px-3 py-1.5 text-xs font-semibold hover:border-leo hover:text-leo focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
             >
-              <Plus className="h-4 w-4" />
-            </button>
-            <button
-              type="button"
-              onClick={exportAll}
-              className="p-1.5 text-muted-foreground hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
-              aria-label={`Export all conversations as JSON (${modKeyLabel}+E)`}
-              title={`Export all as JSON (${modKeyLabel}+E)`}
-              data-testid="chat-export-json"
-            >
-              <Download className="h-4 w-4" />
-            </button>
-            <button
-              type="button"
-              onClick={exportAllCsv}
-              className="p-1.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
-              aria-label="Export all conversations as CSV"
-              title="Export all as CSV"
-              data-testid="chat-export-csv"
-            >
-              CSV
-            </button>
-            <button
-              type="button"
-              onClick={() => setHistoryOpen(false)}
-              className="p-1.5 text-muted-foreground hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-leo md:hidden"
-              aria-label="Close history panel"
-            >
-              <X className="h-4 w-4" />
+              <Plus className="h-3.5 w-3.5" /> New chat
             </button>
           </div>
-        </div>
-        <div className="border-b border-border px-3 py-2">
-          <div className="relative">
-            <Search
-              className="pointer-events-none absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground"
-              aria-hidden
-            />
-            <input
-              ref={searchRef}
-              type="search"
-              value={historyQuery}
-              onChange={(e) => setHistoryQuery(e.target.value)}
-              placeholder={`Search conversations…  (${modKeyLabel}+K)`}
-              aria-label="Search conversations"
-              className="w-full bg-input py-1.5 pl-7 pr-2 text-xs outline-none focus:ring-1 focus:ring-leo"
-            />
-          </div>
-        </div>
-        <div className="flex-1 overflow-y-auto" data-history-list>
-          {filteredSessions.length === 0 ? (
-            <p className="px-4 py-6 text-center text-xs text-muted-foreground">
-              {historyQuery ? "No matches." : "No saved conversations yet."}
-            </p>
-          ) : (
-            filteredSessions.map((s, i) => {
-              const active = s.id === sessionId;
-              const highlighted = i === selectedIdx;
-              return (
+          <div ref={scrollRef} className="flex-1 overflow-y-auto" data-testid="chat-messages">
+            <div className="mx-auto max-w-3xl px-8 py-8">
+              {messages.length === 0 ? (
+                <div className="py-20 text-center">
+                  <div className="mx-auto grid h-16 w-16 place-items-center border border-leo">
+                    <span className="font-display text-2xl font-bold text-leo">L</span>
+                  </div>
+                  <h2 className="mt-6 font-display text-2xl font-bold">Start a conversation</h2>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Talk to LEO — every reply shows how the router resolved it.
+                  </p>
+                  <p className="mt-4 font-mono text-[11px] text-muted-foreground">
+                    Press <kbd className="border border-border px-1">?</kbd> for keyboard shortcuts.
+                  </p>
+                </div>
+              ) : (
+                messages.map((m, i) => <MessageRow key={i} msg={m} />)
+              )}
+              {mergeBanner && (
                 <div
-                  key={s.id}
-                  className={`group flex items-start gap-1 border-b border-border/60 ${
-                    active
-                      ? "bg-background"
-                      : highlighted
-                        ? "bg-background/60"
-                        : "hover:bg-background/50"
-                  }`}
+                  className="my-6 flex items-start justify-between gap-3 border border-leo/50 bg-leo/10 px-4 py-3 text-sm"
+                  role="status"
+                  aria-live="polite"
+                  data-testid="chat-merge-banner"
                 >
+                  <div className="text-foreground">
+                    <div className="font-semibold text-leo">
+                      {mergeBanner.kind === "conflict-rollback"
+                        ? "Sync conflict resolved"
+                        : "Conversation updated from another device"}
+                    </div>
+                    <div className="mt-1 text-xs text-muted-foreground">
+                      &quot;{mergeBanner.title}&quot; — merged{" "}
+                      <span className="font-mono text-foreground">
+                        {mergeBanner.addedFromRemote}
+                      </span>{" "}
+                      remote message{mergeBanner.addedFromRemote === 1 ? "" : "s"}
+                      {mergeBanner.removedFromLocal > 0 && (
+                        <>
+                          , dropped{" "}
+                          <span className="font-mono text-foreground">
+                            {mergeBanner.removedFromLocal}
+                          </span>{" "}
+                          local duplicate{mergeBanner.removedFromLocal === 1 ? "" : "s"}
+                        </>
+                      )}
+                      . New version: <span className="font-mono">v{mergeBanner.mergedVersion}</span>
+                      .
+                    </div>
+                  </div>
                   <button
                     type="button"
-                    onClick={() => loadSession(s)}
-                    className={`flex-1 px-3 py-2.5 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-leo focus-visible:ring-inset ${
-                      highlighted && !active ? "border-l-2 border-leo" : ""
-                    }`}
-                    aria-current={active ? "true" : undefined}
+                    onClick={() => setMergeBanner(null)}
+                    className="p-1 text-muted-foreground hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
+                    aria-label="Dismiss merge notification"
                   >
-                    <div className="truncate text-xs font-medium">{s.title}</div>
-                    <div className="mt-0.5 font-mono text-[10px] text-muted-foreground">
-                      {new Date(s.updatedAt).toLocaleString()} · {s.messages.length} msg
-                    </div>
+                    <X className="h-4 w-4" />
                   </button>
-                  <div className="flex flex-col opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
-                    <button
-                      type="button"
-                      onClick={() => exportOne(s)}
-                      className="p-1.5 text-muted-foreground hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
-                      aria-label={`Export "${s.title}" as JSON`}
-                      title="Export JSON"
-                    >
-                      <Download className="h-3.5 w-3.5" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => removeSession(s.id)}
-                      className="p-1.5 text-muted-foreground hover:text-destructive focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
-                      aria-label={`Delete "${s.title}"`}
-                      title="Delete"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </button>
-                  </div>
                 </div>
-              );
-            })
-          )}
-          {!historyQuery.trim() && nextCursor && (
-            <div className="p-3">
-              <button
-                ref={loadMoreRef}
-                type="button"
-                onClick={loadMore}
-                disabled={loadingMore}
-                className="w-full border border-border px-3 py-2 text-xs font-semibold hover:border-leo hover:text-leo disabled:opacity-40 focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
-                data-testid="history-load-more"
-                aria-label="Load more conversations"
-              >
-                {loadingMore ? "Loading…" : "Load more"}
-              </button>
-            </div>
-          )}
-        </div>
-      </aside>
-
-      {/* Main chat column */}
-      <div className="flex min-w-0 flex-1 flex-col">
-        <div className="flex items-center gap-3 border-b border-border px-8 py-4">
-          <button
-            type="button"
-            onClick={() => setHistoryOpen((v) => !v)}
-            className="p-2 text-muted-foreground hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
-            aria-label={historyOpen ? "Hide history" : `Show history (${modKeyLabel}+K)`}
-            aria-expanded={historyOpen}
-            title={`Toggle history (${modKeyLabel}+K)`}
-          >
-            <History className="h-4 w-4" />
-          </button>
-          <div className="flex-1">
-            <p className="eyebrow">Console</p>
-            <h1 className="mt-1 font-display text-2xl font-bold">Chat</h1>
-          </div>
-          <button
-            type="button"
-            onClick={() => setShowShortcuts((v) => !v)}
-            className="p-2 text-muted-foreground hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
-            aria-label="Keyboard shortcuts (?)"
-            title="Keyboard shortcuts (?)"
-          >
-            <Keyboard className="h-4 w-4" />
-          </button>
-          <button
-            type="button"
-            onClick={newChat}
-            className="inline-flex items-center gap-1.5 border border-border px-3 py-1.5 text-xs font-semibold hover:border-leo hover:text-leo focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
-          >
-            <Plus className="h-3.5 w-3.5" /> New chat
-          </button>
-        </div>
-        <div ref={scrollRef} className="flex-1 overflow-y-auto" data-testid="chat-messages">
-          <div className="mx-auto max-w-3xl px-8 py-8">
-            {messages.length === 0 ? (
-              <div className="py-20 text-center">
-                <div className="mx-auto grid h-16 w-16 place-items-center border border-leo">
-                  <span className="font-display text-2xl font-bold text-leo">L</span>
-                </div>
-                <h2 className="mt-6 font-display text-2xl font-bold">Start a conversation</h2>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Talk to LEO — every reply shows how the router resolved it.
-                </p>
-                <p className="mt-4 font-mono text-[11px] text-muted-foreground">
-                  Press <kbd className="border border-border px-1">?</kbd> for keyboard shortcuts.
-                </p>
-              </div>
-            ) : (
-              messages.map((m, i) => <MessageRow key={i} msg={m} />)
-            )}
-            {mergeBanner && (
-              <div
-                className="my-6 flex items-start justify-between gap-3 border border-leo/50 bg-leo/10 px-4 py-3 text-sm"
-                role="status"
-                aria-live="polite"
-                data-testid="chat-merge-banner"
-              >
-                <div className="text-foreground">
-                  <div className="font-semibold text-leo">
-                    {mergeBanner.kind === "conflict-rollback"
-                      ? "Sync conflict resolved"
-                      : "Conversation updated from another device"}
-                  </div>
-                  <div className="mt-1 text-xs text-muted-foreground">
-                    &quot;{mergeBanner.title}&quot; — merged{" "}
-                    <span className="font-mono text-foreground">{mergeBanner.addedFromRemote}</span>{" "}
-                    remote message{mergeBanner.addedFromRemote === 1 ? "" : "s"}
-                    {mergeBanner.removedFromLocal > 0 && (
-                      <>
-                        , dropped{" "}
-                        <span className="font-mono text-foreground">
-                          {mergeBanner.removedFromLocal}
-                        </span>{" "}
-                        local duplicate{mergeBanner.removedFromLocal === 1 ? "" : "s"}
-                      </>
-                    )}
-                    . New version: <span className="font-mono">v{mergeBanner.mergedVersion}</span>.
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setMergeBanner(null)}
-                  className="p-1 text-muted-foreground hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
-                  aria-label="Dismiss merge notification"
+              )}
+              {status === "submitted" && !reconnecting && (
+                <div
+                  className="my-6 flex items-center gap-2 text-sm text-muted-foreground"
+                  aria-live="polite"
                 >
-                  <X className="h-4 w-4" />
-                </button>
-              </div>
-            )}
-            {status === "submitted" && !reconnecting && (
-              <div
-                className="my-6 flex items-center gap-2 text-sm text-muted-foreground"
-                aria-live="polite"
-              >
-                <Loader2 className="h-4 w-4 animate-spin text-leo" aria-hidden="true" />
-                Contacting LEO…
-              </div>
-            )}
-            {reconnecting && (
-              <div
-                className="my-6 flex items-center justify-between gap-3 border border-yellow-500/40 bg-yellow-500/10 px-4 py-3 text-sm text-yellow-500"
-                role="status"
-                aria-live="assertive"
-                aria-atomic="true"
-                data-testid="chat-reconnecting"
-              >
-                <div className="flex items-center gap-2">
-                  <RefreshCw className="h-4 w-4 animate-spin" aria-hidden="true" />
-                  <span>
-                    Stream dropped — auto-reconnecting (attempt {reconnecting.attempt}, retry in{" "}
-                    {Math.max(1, Math.round(reconnecting.inMs / 1000))}s)…
-                  </span>
+                  <Loader2 className="h-4 w-4 animate-spin text-leo" aria-hidden="true" />
+                  Contacting LEO…
                 </div>
-                <button
-                  type="button"
-                  onClick={reconnectNow}
-                  className="inline-flex items-center gap-1 border border-yellow-500/60 px-2 py-1 text-xs font-semibold hover:bg-yellow-500/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
-                  aria-label="Reconnect to LEO now instead of waiting for the automatic retry"
+              )}
+              {reconnecting && (
+                <div
+                  className="my-6 flex items-center justify-between gap-3 border border-yellow-500/40 bg-yellow-500/10 px-4 py-3 text-sm text-yellow-500"
+                  role="status"
+                  aria-live="assertive"
+                  aria-atomic="true"
+                  data-testid="chat-reconnecting"
                 >
-                  <RotateCcw className="h-3 w-3" aria-hidden="true" /> Reconnect now
-                </button>
-              </div>
-            )}
-            {droppedPartial && !isBusy && (
-              <div
-                className="my-6 flex items-center justify-between gap-3 border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm"
-                role="alert"
-                aria-live="assertive"
-                aria-atomic="true"
-                data-testid="chat-reconnect-manual"
-              >
-                <span className="text-destructive">
-                  Connection lost. Resume from where LEO left off?
-                </span>
-                <div className="flex gap-2">
+                  <div className="flex items-center gap-2">
+                    <RefreshCw className="h-4 w-4 animate-spin" aria-hidden="true" />
+                    <span>
+                      Stream dropped — auto-reconnecting (attempt {reconnecting.attempt}, retry in{" "}
+                      {Math.max(1, Math.round(reconnecting.inMs / 1000))}s)…
+                    </span>
+                  </div>
                   <button
                     type="button"
                     onClick={reconnectNow}
-                    className="inline-flex items-center gap-1 bg-leo px-3 py-1.5 text-xs font-semibold text-leo-foreground hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
+                    className="inline-flex items-center gap-1 border border-yellow-500/60 px-2 py-1 text-xs font-semibold hover:bg-yellow-500/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
+                    aria-label="Reconnect to LEO now instead of waiting for the automatic retry"
                   >
-                    <RotateCcw className="h-3 w-3" /> Reconnect
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setDroppedPartial(null)}
-                    className="border border-border px-3 py-1.5 text-xs hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
-                  >
-                    Dismiss
+                    <RotateCcw className="h-3 w-3" aria-hidden="true" /> Reconnect now
                   </button>
                 </div>
-              </div>
-            )}
+              )}
+              {droppedPartial && !isBusy && (
+                <div
+                  className="my-6 flex items-center justify-between gap-3 border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm"
+                  role="alert"
+                  aria-live="assertive"
+                  aria-atomic="true"
+                  data-testid="chat-reconnect-manual"
+                >
+                  <span className="text-destructive">
+                    Connection lost. Resume from where LEO left off?
+                  </span>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={reconnectNow}
+                      className="inline-flex items-center gap-1 bg-leo px-3 py-1.5 text-xs font-semibold text-leo-foreground hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
+                    >
+                      <RotateCcw className="h-3 w-3" /> Reconnect
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDroppedPartial(null)}
+                      className="border border-border px-3 py-1.5 text-xs hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
+                    >
+                      Dismiss
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="border-t border-border p-4">
+            <div className="mx-auto flex max-w-3xl gap-2">
+              <label htmlFor="chat-input" className="sr-only">
+                Message LEO
+              </label>
+              <textarea
+                id="chat-input"
+                ref={textareaRef}
+                data-testid="chat-input"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    send();
+                  }
+                }}
+                placeholder="Ask LEO anything…"
+                rows={2}
+                aria-label="Chat message"
+                className="flex-1 resize-none bg-input px-4 py-3 text-sm outline-none focus:ring-1 focus:ring-leo"
+              />
+              {isBusy ? (
+                <button
+                  type="button"
+                  onClick={stop}
+                  aria-label={`Stop generating (${modKeyLabel}+.)`}
+                  data-testid="chat-stop"
+                  title={`Stop (${modKeyLabel}+.)`}
+                  className="bg-destructive px-5 text-destructive-foreground hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
+                >
+                  <Square className="h-4 w-4" aria-hidden="true" />
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={send}
+                  disabled={!input.trim()}
+                  aria-label="Send message"
+                  data-testid="chat-send"
+                  className="bg-leo px-5 text-leo-foreground hover:brightness-110 disabled:opacity-40 focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
+                >
+                  <Send className="h-4 w-4" aria-hidden="true" />
+                </button>
+              )}
+            </div>
           </div>
         </div>
-        <div className="border-t border-border p-4">
-          <div className="mx-auto flex max-w-3xl gap-2">
-            <label htmlFor="chat-input" className="sr-only">
-              Message LEO
-            </label>
-            <textarea
-              id="chat-input"
-              ref={textareaRef}
-              data-testid="chat-input"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  send();
-                }
-              }}
-              placeholder="Ask LEO anything…"
-              rows={2}
-              aria-label="Chat message"
-              className="flex-1 resize-none bg-input px-4 py-3 text-sm outline-none focus:ring-1 focus:ring-leo"
-            />
-            {isBusy ? (
-              <button
-                type="button"
-                onClick={stop}
-                aria-label={`Stop generating (${modKeyLabel}+.)`}
-                data-testid="chat-stop"
-                title={`Stop (${modKeyLabel}+.)`}
-                className="bg-destructive px-5 text-destructive-foreground hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
-              >
-                <Square className="h-4 w-4" aria-hidden="true" />
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={send}
-                disabled={!input.trim()}
-                aria-label="Send message"
-                data-testid="chat-send"
-                className="bg-leo px-5 text-leo-foreground hover:brightness-110 disabled:opacity-40 focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
-              >
-                <Send className="h-4 w-4" aria-hidden="true" />
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
 
-      {showShortcuts && <ShortcutsDialog onClose={() => setShowShortcuts(false)} />}
-    </div>
+        {showShortcuts && <ShortcutsDialog onClose={() => setShowShortcuts(false)} />}
+      </div>
     </div>
   );
 }

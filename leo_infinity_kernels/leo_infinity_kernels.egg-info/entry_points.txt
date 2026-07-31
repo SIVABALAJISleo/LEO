@@ -1,0 +1,2 @@
+[console_scripts]
+leo-bench-kernels = leo_infinity_kernels.benchmarks.bench_kernels:main

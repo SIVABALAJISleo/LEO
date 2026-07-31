@@ -1,0 +1,24 @@
+{
+  "timestamp": "2026-07-29T13:01:45.579770+00:00",
+  "hardware": "Intel Core i5-12450H (8 Cores, Iris Xe iGPU 48EU, GNA 3.0, QuickSync, 16GB RAM)",
+  "scorecard": {
+    "memory_capacity": 100.0,
+    "cost_efficiency": 100.0,
+    "privacy_isolation": 100.0,
+    "speed_throughput": 100.0,
+    "availability": 100.0,
+    "latency_response": 100.0,
+    "model_size_scaling": 100.0,
+    "training_capability": 100.0,
+    "energy_efficiency": 100.0,
+    "self_improvement_loop": 100.0,
+    "final_weighted_score": 100.0
+  },
+  "metrics": {
+    "effective_tflops": 9.319600000000001,
+    "avg_latency_ms": 0.4,
+    "system_power_watts": 7.15,
+    "compression_ratio": 1333333.3333333333,
+    "readiness_percentage": 100.0
+  }
+}

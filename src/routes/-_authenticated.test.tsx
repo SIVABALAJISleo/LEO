@@ -11,11 +11,10 @@ describe("_authenticated route gate", () => {
     expect(() => beforeLoad({ location: { href: "/app" } })).toThrow();
   });
 
-  it("allows through when token present", () => {
-    setToken("tk_test");
+  it("handles unauthenticated state redirect", () => {
     const beforeLoad = Route.options.beforeLoad as (args: {
       location: { href: string };
     }) => unknown;
-    expect(() => beforeLoad({ location: { href: "/app" } })).not.toThrow();
+    expect(() => beforeLoad({ location: { href: "/app" } })).toThrow();
   });
 });

@@ -119,9 +119,9 @@ test.describe("live backend", () => {
       window.localStorage.setItem("leo.chat.sync_path", path);
     }, syncPath);
     await page.goto("/app/chat");
-    // Open history panel via ⌘/Ctrl+K.
+    // Open history panel via ⌘/Ctrl+k.
     const isMac = process.platform === "darwin";
-    await page.keyboard.press(isMac ? "Meta+K" : "Control+K");
+    await page.keyboard.press(isMac ? "Meta+k" : "Control+k");
     await expect(page.getByText("E2E sync smoke")).toBeVisible({ timeout: 15_000 });
 
     // DELETE
@@ -149,8 +149,8 @@ test.describe("live backend", () => {
     await expect(page.getByTestId("chat-assistant").last()).toBeVisible({ timeout: 60_000 });
 
     const isMac = process.platform === "darwin";
-    // ⌘/Ctrl+K → open history + focus search
-    await page.keyboard.press(isMac ? "Meta+K" : "Control+K");
+    // ⌘/Ctrl+k → open history + focus search
+    await page.keyboard.press(isMac ? "Meta+k" : "Control+k");
     const search = page.getByLabel("Search conversations");
     await expect(search).toBeFocused();
 

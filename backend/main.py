@@ -106,3 +106,5 @@ app.include_router(ira_router)
 from backend.routers.ollama_chat import router as ollama_router
 app.include_router(ollama_router)
 
+from backend.routers.dream import router as dream_router
+app.include_router(dream_router)

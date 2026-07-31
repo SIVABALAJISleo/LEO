@@ -51,7 +51,9 @@ test.describe("chat 409 conflict — optimistic rollback + de-dupe", () => {
 
     // De-dupe: the original user message still appears exactly once — the
     // 409 merge must not double-render the message that was in both copies.
-    await expect(page.getByText("Hello LEO", { exact: true })).toHaveCount(1);
+    await expect(
+      page.getByTestId("chat-messages").getByText("Hello LEO", { exact: true }),
+    ).toHaveCount(1);
 
     // Telemetry: an optimistic-rollback event fires and reports how many
     // messages were reconciled from the remote copy.
