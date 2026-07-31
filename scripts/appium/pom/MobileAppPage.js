@@ -4,12 +4,24 @@ class MobileAppPage {
   }
 
   // Selectors
-  get emailInput() { return this.driver.$('input[name="email"], input[type="email"]'); }
-  get passwordInput() { return this.driver.$('input[name="password"], input[type="password"]'); }
-  get loginButton() { return this.driver.$('button[type="submit"], button:has-text("Sign in")'); }
-  get chatInput() { return this.driver.$('textarea, input[placeholder*="Ask"]'); }
-  get sendButton() { return this.driver.$('button[aria-label*="Send"], button:has-text("Send")'); }
-  get drawerToggle() { return this.driver.$('button[aria-label*="menu"], button[aria-label*="Sidebar"]'); }
+  get emailInput() {
+    return this.driver.$('input[name="email"], input[type="email"]');
+  }
+  get passwordInput() {
+    return this.driver.$('input[name="password"], input[type="password"]');
+  }
+  get loginButton() {
+    return this.driver.$('button[type="submit"], button:has-text("Sign in")');
+  }
+  get chatInput() {
+    return this.driver.$('textarea, input[placeholder*="Ask"]');
+  }
+  get sendButton() {
+    return this.driver.$('button[aria-label*="Send"], button:has-text("Send")');
+  }
+  get drawerToggle() {
+    return this.driver.$('button[aria-label*="menu"], button[aria-label*="Sidebar"]');
+  }
 
   async navigateTo(baseUrl) {
     await this.driver.url(baseUrl);

@@ -1,7 +1,7 @@
-const { remote } = require('webdriverio');
-const config = require('./appium.config');
-const fs = require('fs');
-const path = require('path');
+const { remote } = require("webdriverio");
+const config = require("./appium.config");
+const fs = require("fs");
+const path = require("path");
 
 class DriverManager {
   constructor() {

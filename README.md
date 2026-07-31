@@ -182,13 +182,13 @@ LEO AI is an ongoing research project pushing the boundaries of software-only AI
 
 This project integrates **Kimi K3** from Moonshot AI under the [Kimi K3 License](kimi-k3/LICENSE).
 
-| Condition | Status |
-| :--- | :--- |
-| ✅ Non-commercial & internal use | **Free** |
-| ✅ Commercial use under $20M/year revenue | **Free** |
-| ⚠️ Commercial use above $20M/year revenue | **Separate agreement required** |
-| ⚠️ Products with >100M MAU | **Must display "Kimi K3" attribution** |
-| 📧 Licensing enquiries | [license@moonshot.ai](mailto:license@moonshot.ai) |
+| Condition                                 | Status                                            |
+| :---------------------------------------- | :------------------------------------------------ |
+| ✅ Non-commercial & internal use          | **Free**                                          |
+| ✅ Commercial use under $20M/year revenue | **Free**                                          |
+| ⚠️ Commercial use above $20M/year revenue | **Separate agreement required**                   |
+| ⚠️ Products with >100M MAU                | **Must display "Kimi K3" attribution**            |
+| 📧 Licensing enquiries                    | [license@moonshot.ai](mailto:license@moonshot.ai) |
 
 For unrestricted commercial deployment, consider Apache 2.0 alternatives such as **Llama 3** or **Mistral**.
 

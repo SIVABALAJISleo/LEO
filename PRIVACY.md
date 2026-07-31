@@ -47,10 +47,10 @@ LEO AI ("we", "our", or "the Service") is committed to protecting your privacy. 
 
 ## 4. Data Sharing & Third Parties
 
-| Third Party | Purpose | Privacy Policy |
-| :--- | :--- | :--- |
-| **Supabase** | Authentication & database (if configured) | [supabase.com/privacy](https://supabase.com/privacy) |
-| **Railway / Render** | Hosting (if configured) | Per hosting provider |
+| Third Party          | Purpose                                   | Privacy Policy                                       |
+| :------------------- | :---------------------------------------- | :--------------------------------------------------- |
+| **Supabase**         | Authentication & database (if configured) | [supabase.com/privacy](https://supabase.com/privacy) |
+| **Railway / Render** | Hosting (if configured)                   | Per hosting provider                                 |
 
 **We do NOT:**
 

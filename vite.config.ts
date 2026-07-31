@@ -17,15 +17,18 @@ export default defineConfig({
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     server: { entry: "server" },
   },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ["react", "react-dom", "@tanstack/react-router"],
-          charts: ["recharts"],
-          forms: ["zod", "react-hook-form"],
-          motion: ["framer-motion"],
-        },
+  vite: {
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            vendor: ["react", "react-dom", "@tanstack/react-router"],
+            charts: ["recharts"],
+            forms: ["zod", "react-hook-form"],
+            motion: ["framer-motion"],
+          },
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } as any,
       },
     },
   },
