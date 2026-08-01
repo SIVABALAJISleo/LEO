@@ -18,6 +18,9 @@ export default defineConfig({
     server: { entry: "server" },
   },
   vite: {
+    resolve: {
+      tsconfigPaths: true,
+    },
     build: {
       rollupOptions: {
         output: {

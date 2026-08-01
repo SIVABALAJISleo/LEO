@@ -7,11 +7,24 @@ const DEFAULT_BASE = "http://localhost:8000";
 export type ApiBaseSource = "settings" | "env" | "default";
 
 export function getApiBase(): string {
+  let base: string | undefined;
   if (typeof window !== "undefined") {
     const stored = window.localStorage.getItem("leo.api_base");
-    if (stored) return stored;
+    if (stored) base = stored;
   }
-  return (import.meta.env.VITE_LEO_API_BASE_URL as string | undefined) ?? DEFAULT_BASE;
+  if (!base) {
+    base = (import.meta.env.VITE_LEO_API_BASE_URL as string | undefined) ?? DEFAULT_BASE;
+  }
+  
+  // Strip trailing slash if present
+  base = base.replace(/\/$/, "");
+  
+  // Strip trailing /api/v1 since paths like /api/v1/auth/me are hardcoded in the frontend
+  if (base.endsWith("/api/v1")) {
+    base = base.slice(0, -7);
+  }
+  
+  return base;
 }
 
 export function getApiBaseSource(): ApiBaseSource {
