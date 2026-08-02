@@ -7,7 +7,7 @@ const DEFAULT_BASE = "http://localhost:8000";
 export type ApiBaseSource = "settings" | "env" | "default";
 
 export function getApiBase(): string {
-  let base = "http://127.0.0.1:8005";
+  let base = "http://localhost:8005";
   
   // Strip trailing slash if present
   base = base.replace(/\/$/, "");
