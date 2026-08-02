@@ -36,7 +36,7 @@ openvino-genai>=2026.2.1.0
 py-cpuinfo>=9.0.0
 
 # ── Cloud & Storage ───────────────────────────────────────── #
-boto3==1.38.38
+boto3>=1.42.97
 
 # ── Computer Vision ───────────────────────────────────────── #
 Pillow>=11.3.0
@@ -50,8 +50,8 @@ aiohttp>=3.11.0
 networkx>=3.4
 
 # ── Observability & Monitoring ───────────────────────────── #
-structlog==24.4.0
-psutil==6.1.1
+structlog>=25.5.0
+psutil>=7.2.2
 prometheus-client==0.21.1
 sentry-sdk==2.27.0
 
