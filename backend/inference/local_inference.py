@@ -70,7 +70,7 @@ class LocalInferenceRunner:
                 logger.info("Target model loaded successfully with hybrid CPU+iGPU Vulkan backend.")
                 
         except Exception as e:
-            logger.warning(f"Native llama-cpp initialization failed. Falling back to high-performance emulation: {e}")
+            logger.error(f"DEGRADED MODE: Native llama-cpp initialization failed. Serving emulated/fake results: {e}")
 
     def run_speculative_decoding(self, prompt: str, system_prompt: str = "") -> Dict[str, Any]:
         """

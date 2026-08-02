@@ -32,9 +32,13 @@ from typing import Optional
 
 security = HTTPBearer(auto_error=False)
 
+# Module-level guard against missing JWT secret
+if os.getenv("APP_ENV", "production") == "production" and not os.getenv("JWT_SECRET"):
+    raise RuntimeError("CRITICAL SECURITY ERROR: JWT_SECRET environment variable is missing in production. Refusing to boot.")
+
 async def verify_firebase_token(request: Request, auth_creds: Optional[HTTPAuthorizationCredentials] = Security(security)):
     """Verifies the Firebase ID Token or local JWT. Fails back to mock only in DEV."""
-    app_env = os.getenv("APP_ENV", "development")
+    app_env = os.getenv("APP_ENV", "production")
     
     token_str = None
     if auth_creds and auth_creds.credentials:
@@ -55,7 +59,7 @@ async def verify_firebase_token(request: Request, auth_creds: Optional[HTTPAutho
     is_test_token = token_str.startswith("token-")
     
     # 1. Dev Mode Bypass Check (strictly restricted to APP_ENV == "development")
-    if is_dev and (is_audit_token or is_test_token or not FIREBASE_AVAILABLE or os.getenv("LEO_OFFLINE") == "1"):
+    if is_dev and os.getenv("LEO_ALLOW_DEV_AUTH_BYPASS") == "1" and (is_audit_token or is_test_token or not FIREBASE_AVAILABLE or os.getenv("LEO_OFFLINE") == "1"):
         uid = token_str.replace("token-", "") if is_test_token else "dev_user"
         decoded = {
             "uid": uid, 
@@ -68,7 +72,9 @@ async def verify_firebase_token(request: Request, auth_creds: Optional[HTTPAutho
         return decoded
     
     # 2. Local JWT Signature Validation (for backend-issued custom JWTs)
-    jwt_secret = os.getenv("JWT_SECRET", "super_secret_hyper_jwt_key_2026")
+    jwt_secret = os.getenv("JWT_SECRET")
+    if not jwt_secret:
+        raise HTTPException(status_code=500, detail="JWT_SECRET is not configured on the server.")
     try:
         decoded = jwt.decode(token_str, jwt_secret, algorithms=["HS256"])
         if decoded.get("exp") and decoded["exp"] < time.time():

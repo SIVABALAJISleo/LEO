@@ -1,0 +1,7 @@
+{
+  "build": {
+    "env": {
+      "UV_INDEX_STRATEGY": "unsafe-best-match"
+    }
+  }
+}

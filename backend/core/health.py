@@ -1,7 +1,9 @@
 from fastapi import APIRouter
 import time
+import logging
 
 router = APIRouter(tags=["health"])
+logger = logging.getLogger(__name__)
 
 START_TIME = time.time()
 REQUEST_COUNT = 0
@@ -15,25 +17,44 @@ def increment_hits():
     global CACHE_HITS
     CACHE_HITS += 1
 
+def _check_inference_degraded() -> bool:
+    """Returns True if inference backends failed to load and are serving emulated results."""
+    try:
+        from backend.inference.local_inference import LocalInferenceRunner
+        runner = LocalInferenceRunner.__new__(LocalInferenceRunner)
+        # If no target_model is loaded, we're in degraded/emulated mode
+        return not getattr(runner, 'target_model', None)
+    except Exception:
+        return True
+
 @router.get("/health")
 @router.get("/health/status")
 async def health_check():
-    """Basic liveness probe."""
-    return {
-        "status": "ok",
+    """Basic liveness probe with degraded mode detection."""
+    degraded = _check_inference_degraded()
+    status = "degraded" if degraded else "ok"
+    response = {
+        "status": status,
+        "degraded": degraded,
         "timestamp": time.time(),
         "uptime": f"{time.time() - START_TIME:.2f}s"
     }
+    if degraded:
+        response["warning"] = "Inference backend not loaded — serving emulated/simulated results"
+        logger.warning("Health check: inference backend is in DEGRADED mode")
+    return response
 
 @router.get("/ready")
 async def readiness_probe():
     """Readiness probe checking dependencies (VectorDB, Cache)."""
-    # In a real app, check DB/Redis connections here
+    degraded = _check_inference_degraded()
     return {
-        "status": "ready",
+        "status": "degraded" if degraded else "ready",
+        "degraded": degraded,
         "dependencies": {
             "vector_db": "connected",
-            "cache": "connected"
+            "cache": "connected",
+            "inference_backend": "emulated" if degraded else "loaded"
         },
         "metrics": {
             "total_requests": REQUEST_COUNT,
@@ -46,3 +67,4 @@ async def readiness_probe():
 async def liveness_probe():
     """Liveness probe for orchestration health."""
     return {"status": "alive"}
+

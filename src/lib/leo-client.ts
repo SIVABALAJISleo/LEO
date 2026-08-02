@@ -7,14 +7,7 @@ const DEFAULT_BASE = "http://localhost:8000";
 export type ApiBaseSource = "settings" | "env" | "default";
 
 export function getApiBase(): string {
-  let base: string | undefined;
-  if (typeof window !== "undefined") {
-    const stored = window.localStorage.getItem("leo.api_base");
-    if (stored) base = stored;
-  }
-  if (!base) {
-    base = (import.meta.env.VITE_LEO_API_BASE_URL as string | undefined) ?? DEFAULT_BASE;
-  }
+  let base = "http://127.0.0.1:8005";
   
   // Strip trailing slash if present
   base = base.replace(/\/$/, "");

@@ -80,7 +80,7 @@ class TernaryEngine:
 
         if not self.is_available:
             # Emulated Ternary fallback math for CI/dev environments
-            logger.debug("BitNet.cpp binary not found on PATH. Falling back to CPU emulation.")
+            logger.error("DEGRADED MODE: BitNet.cpp binary not found. Serving simulated ternary responses.")
             words = ["This ", "is ", "a ", "rapid ", "1.58-bit ", "ternary ", "response ", "from ", "emulated ", "BitNet.cpp."]
             for word in words:
                 yield word

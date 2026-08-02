@@ -60,6 +60,8 @@ Kimi-K2.5-master/
 *.zip
 *.gguf
 *.pt
+*.exe
+*.tar.xz
 
 # Local ffmpeg binaries
 ffmpeg-8.1.2.tar.xz
