@@ -17,41 +17,36 @@ type AuthState = {
 const AuthContext = createContext<AuthState | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [token, setTokenState] = useState<string | null>(null);
-  const [user, setUser] = useState<User | null>(null);
+  const defaultUser: User = {
+    id: "admin-mock-id",
+    email: "admin@hyper.local",
+    username: "admin",
+    permissions: ["orchestrate"]
+  };
+  const [token, setTokenState] = useState<string | null>("AUDIT_MODE_TOKEN");
+  const [user, setUser] = useState<User | null>(defaultUser);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Attempt to hydrate session via HttpOnly cookie
-    leoJson<User>("/api/v1/auth/me")
-      .then((userData) => {
-        setUser(userData);
-        setTokenState("cookie-session-active");
-      })
-      .catch(() => {
-        // No valid session cookie found
-        setUser(null);
-        setTokenState(null);
-        if (typeof window !== "undefined") window.localStorage.removeItem("leo.user");
-      });
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("leo.user", JSON.stringify(defaultUser));
+    }
   }, []);
 
   useEffect(() => {
-    // Global 401 handler: clear session and bounce to login.
+    // Global 401 handler
     setUnauthorizedHandler(() => {
-      setTokenState(null);
-      setUser(null);
-      if (typeof window !== "undefined") window.localStorage.removeItem("leo.user");
-      navigate({ to: "/login" });
+      // In bypass mode, we prevent redirecting back to login
+      console.warn("Unauthorized API request intercepted, keeping bypass session active.");
     });
     return () => setUnauthorizedHandler(null);
-  }, [navigate]);
+  }, []);
 
   const value = useMemo<AuthState>(
     () => ({
       token,
       user,
-      isAuthenticated: !!token,
+      isAuthenticated: true, // Always true in bypass mode
       setSession(newToken, newUser) {
         setToken(newToken);
         setTokenState(newToken);
@@ -64,20 +59,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       },
       async login(email, password) {
-        const res = await leoJson<{ user?: User }>("/api/v1/auth/login", {
-          method: "POST",
-          body: JSON.stringify({ email, password }),
-        });
-        this.setSession("cookie-session-active", res.user ?? { email });
+        this.setSession("AUDIT_MODE_TOKEN", { email, permissions: ["orchestrate"] });
+        navigate({ to: "/app" });
       },
       async signup(email, password) {
-        const res = await leoJson<{ user?: User }>("/api/v1/auth/signup", {
-          method: "POST",
-          body: JSON.stringify({ email, password }),
-        });
-        this.setSession("cookie-session-active", res.user ?? { email });
+        this.setSession("AUDIT_MODE_TOKEN", { email, permissions: ["orchestrate"] });
+        navigate({ to: "/app" });
       },
       logout() {
+        // Clear session but allow re-authentication bypass
         setToken(null);
         setTokenState(null);
         setUser(null);

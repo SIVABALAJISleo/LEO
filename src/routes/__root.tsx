@@ -10,7 +10,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { AuthProvider } from "@/lib/auth-context";
+import { AuthProvider } from "../lib/auth-context";
 import { SiteNav } from "../components/marketing/SiteNav";
 import { SiteFooter } from "../components/marketing/SiteFooter";
 import { SetupErrorBanner } from "../components/app/SetupErrorBanner";

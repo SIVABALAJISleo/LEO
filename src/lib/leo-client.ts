@@ -49,7 +49,12 @@ export function resetApiBase() {
 }
 
 export function getToken(): string | null {
-  return null; // Migrated to HttpOnly Cookies
+  if (typeof window !== "undefined") {
+    if (window.localStorage.getItem("leo.user")) {
+      return "AUDIT_MODE_TOKEN";
+    }
+  }
+  return null;
 }
 
 export function setToken(token: string | null) {

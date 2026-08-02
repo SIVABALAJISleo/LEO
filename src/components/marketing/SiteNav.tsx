@@ -1,6 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useState } from "react";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "../../lib/auth-context";
 import { Menu, X } from "lucide-react";
 
 const links = [

@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "../lib/auth-context";
 
 export const Route = createFileRoute("/_authenticated/app/security")({
   head: () => ({ meta: [{ title: "Security — LEO AI" }] }),

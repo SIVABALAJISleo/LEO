@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { useState } from "react";
-import { useAuth } from "@/lib/auth-context";
+import { useState, useEffect } from "react";
+import { useAuth } from "../lib/auth-context";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/login")({
@@ -20,6 +20,12 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [manualToken, setManualToken] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (auth.isAuthenticated) {
+      navigate({ to: "/app" });
+    }
+  }, [auth.isAuthenticated, navigate]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
