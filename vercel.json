@@ -2,7 +2,16 @@
   "build": {
     "env": {
       "UV_INDEX_STRATEGY": "unsafe-best-match",
-      "UV_PYTHON": "3.12"
+      "UV_PYTHON": "3.12",
+      "UV_PYTHON_PREFERENCE": "managed"
+    }
+  },
+  "functions": {
+    "api/**/*.py": {
+      "runtime": "python3.12"
+    },
+    "api.py": {
+      "runtime": "python3.12"
     }
   }
 }
