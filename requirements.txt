@@ -16,7 +16,7 @@ sqlalchemy==2.0.41
 
 # ── Inference & ML ────────────────────────────────────────── #
 --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
-llama-cpp-python==0.3.30
+llama-cpp-python==0.3.30; python_version < "3.13"
 onnxruntime==1.24.4
 onnx>=1.21.0
 chromadb==0.5.23
@@ -24,16 +24,16 @@ chromadb==0.5.23
 --extra-index-url https://download.pytorch.org/whl/cpu
 torch>=2.12.1
 sentence-transformers==5.1.2
-faiss-cpu==1.13.0
-numba==0.61.2
+faiss-cpu==1.13.0; python_version < "3.13"
+numba==0.61.2; python_version < "3.13"
 numpy==2.2.6
 peft>=0.10
 transformers>=4.40
 accelerate>=0.21.0
-pyopencl>=2024.1
+pyopencl>=2024.1; python_version < "3.13"
 huggingface_hub>=0.20.0
-openvino==2024.4
-openvino-genai==2024.4
+openvino==2024.4; python_version < "3.13"
+openvino-genai==2024.4; python_version < "3.13"
 py-cpuinfo>=9.0.0
 
 # ── Cloud & Storage ───────────────────────────────────────── #
@@ -41,7 +41,7 @@ boto3>=1.42.97
 
 # ── Computer Vision ───────────────────────────────────────── #
 Pillow>=11.3.0
-opencv-python-headless==4.10.0.84
+opencv-python-headless==4.10.0.84; python_version < "3.13"
 
 # ── HTTP & Networking ─────────────────────────────────────── #
 requests>=2.32.0,<3

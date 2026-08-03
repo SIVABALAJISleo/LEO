@@ -1,7 +1,8 @@
 {
   "build": {
     "env": {
-      "UV_INDEX_STRATEGY": "unsafe-best-match"
+      "UV_INDEX_STRATEGY": "unsafe-best-match",
+      "UV_PYTHON": "3.12"
     }
   }
 }
