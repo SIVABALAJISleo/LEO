@@ -24,15 +24,24 @@ export default defineConfig({
     build: {
       rollupOptions: {
         output: {
-          manualChunks: {
-            vendor: ["react", "react-dom", "@tanstack/react-router"],
-            charts: ["recharts"],
-            forms: ["zod", "react-hook-form"],
-            motion: ["framer-motion"],
-          },
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } as any,
-      },
-    },
-  },
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              if (id.includes('react') || id.includes('react-dom') || id.includes('@tanstack/react-router')) {
+                return 'vendor';
+              }
+              if (id.includes('recharts')) {
+                return 'charts';
+              }
+              if (id.includes('zod') || id.includes('react-hook-form')) {
+                return 'forms';
+              }
+              if (id.includes('framer-motion')) {
+                return 'motion';
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 });
