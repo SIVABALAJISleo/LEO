@@ -215,7 +215,8 @@ export function validateSchema(text: string, name: string): SchemaReport {
       rowCount = arr.length;
 
       const first = arr.find((x) => x && typeof x === "object") as
-        Record<string, unknown> | undefined;
+        | Record<string, unknown>
+        | undefined;
 
       detected = first ? Object.keys(first) : [];
       if (!first) {
