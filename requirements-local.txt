@@ -25,7 +25,7 @@ scikit-fuzzy>=0.4.2
 python-magic>=0.4.27
 
 # ── Dev & Test ────────────────────────────────────────────── #
-pytest>=8.0.0
+pytest>=9.0.3
 pytest-asyncio>=0.23.0
 hypothesis>=6.0.0
 mutmut>=2.5.0
