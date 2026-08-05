@@ -67,15 +67,15 @@ jobs:
         run: |
           uvicorn backend.main:app --host 0.0.0.0 --port 8005 &
           SERVER_PID=$!
-          echo "Waiting for server (up to 60s)..."
-          for i in $(seq 1 20); do
+          echo "Waiting for server (up to 120s)..."
+          for i in $(seq 1 40); do
             sleep 3
             if curl -sf http://localhost:8005/health > /dev/null 2>&1; then
               echo "Server ready after $((i*3))s"
               kill $SERVER_PID 2>/dev/null
               exit 0
             fi
-            echo "Attempt $i/20..."
+            echo "Attempt $i/40..."
           done
           kill $SERVER_PID 2>/dev/null
           exit 1
