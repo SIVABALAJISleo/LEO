@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Upload, Image as ImageIcon, Zap, Maximize, AlertTriangle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { SIE_API_BASE_URL } from "../../../lib/api";
 
 export default function VisionPage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -51,7 +52,7 @@ export default function VisionPage() {
     formData.append("file", selectedFile);
 
     try {
-      const response = await fetch(`http://localhost:8000/api/v1/vision/${endpoint}`, {
+      const response = await fetch(`${SIE_API_BASE_URL}/vision/${endpoint}`, {
         method: "POST",
         // Note: fetch automatically sets the multi-part boundary when body is FormData
         body: formData,

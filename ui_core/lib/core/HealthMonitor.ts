@@ -1,5 +1,6 @@
 import { PerformanceController } from "./PerformanceController";
 import { ReliabilityOrchestrator } from "./ReliabilityOrchestrator";
+import { SIE_API_BASE_URL } from "../api";
 
 export type HealthStatus = "healthy" | "degraded" | "unhealthy";
 
@@ -34,7 +35,7 @@ export class HealthMonitor {
 
   async getSystemHealth(): Promise<SystemHealth> {
     try {
-      const response = await fetch("http://localhost:8000/health");
+      const response = await fetch(`${SIE_API_BASE_URL.replace("/api/v1", "")}/health`);
       if (!response.ok) throw new Error("Status endpoint unreachable");
       const data = await response.json();
 

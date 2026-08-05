@@ -2,13 +2,15 @@
  * src/services/realtime/QuantumWebSocket.ts
  * Real-Time Telemetry & Event Broadcaster
  */
+import { WS_BASE_URL } from "../../lib/api";
+
 export class QuantumWebSocket {
   private ws: WebSocket | null = null;
   private url: string;
   private reconnectAttempts = 0;
   private maxReconnectAttempts = 5;
 
-  constructor(url: string = "ws://localhost:8005/ws/telemetry") {
+  constructor(url: string = `${WS_BASE_URL.replace("/api/v1", "")}/ws/telemetry`) {
     this.url = url;
   }
 

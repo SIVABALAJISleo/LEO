@@ -3,6 +3,7 @@
  * Typed API Client for LEO Quantum Backend APIs
  */
 import axios, { AxiosInstance } from "axios";
+import { API_BASE_URL } from "../../lib/api";
 
 export interface KGQueryResult {
   entities: Array<{ id: string; label: string; type: string }>;
@@ -28,7 +29,7 @@ export interface CascadeQueryResponse {
 export class LEOApiClient {
   private client: AxiosInstance;
 
-  constructor(baseURL: string = "http://localhost:8005") {
+  constructor(baseURL: string = API_BASE_URL.replace("/api/v1", "")) {
     this.client = axios.create({
       baseURL,
       timeout: 30000,

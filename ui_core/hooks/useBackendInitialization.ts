@@ -12,11 +12,13 @@ import {
   runQuickHealthCheck,
   generateRealtimeMetrics,
 } from "@/lib/backendService";
+import { API_BASE_URL } from "../lib/api";
+
 export const api = {
   get: async (endpoint: string) => {
     const token = localStorage.getItem("auth_token");
     const res = await fetch(
-      `${import.meta.env.VITE_API_URL || "http://localhost:8005"}${endpoint}`,
+      `${API_BASE_URL.replace("/api/v1", "")}${endpoint}`,
       { headers: { Authorization: token ? `Bearer ${token}` : "" } },
     );
     if (!res.ok) throw new Error(`API error: ${res.status}`);
@@ -25,7 +27,7 @@ export const api = {
   post: async (endpoint: string, body: unknown) => {
     const token = localStorage.getItem("auth_token");
     const res = await fetch(
-      `${import.meta.env.VITE_API_URL || "http://localhost:8005"}${endpoint}`,
+      `${API_BASE_URL.replace("/api/v1", "")}${endpoint}`,
       {
         method: "POST",
         headers: {

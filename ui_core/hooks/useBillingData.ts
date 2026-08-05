@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { firebaseClient as supabase } from "@/integrations/firebase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { SIE_API_BASE_URL } from "../lib/api";
 
 export const PRICING_CONFIG = {
   inference: { rate: 0.001, per: 10000, unit: "tokens" },
@@ -237,7 +238,7 @@ export function useBillingData() {
     try {
       // For paid plans, initiate PayPal Checkout via Backend
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL || "http://localhost:8000"}/api/v1/paypal/checkout`,
+        `${SIE_API_BASE_URL}/paypal/checkout`,
         {
           method: "POST",
           headers: {

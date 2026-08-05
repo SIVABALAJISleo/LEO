@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { BarChart2, Play, RefreshCw, AlertCircle } from "lucide-react";
 
+import { API_BASE_URL } from "../../lib/api";
+
 export const BenchmarkLeaderboard: React.FC = () => {
   const [results, setResults] = useState<any>(null);
   const [loading, setLoading] = useState(false);
@@ -8,7 +10,7 @@ export const BenchmarkLeaderboard: React.FC = () => {
 
   const fetchResults = async () => {
     try {
-      const response = await fetch("http://localhost:8000/api/v1/leo/benchmark/results");
+      const response = await fetch(`${API_BASE_URL}/leo/benchmark/results`);
       const data = await response.json();
       setResults(data);
       if (data.status === "running") setRunning(true);
@@ -29,7 +31,7 @@ export const BenchmarkLeaderboard: React.FC = () => {
   const startBenchmark = async () => {
     try {
       setLoading(true);
-      await fetch("http://localhost:8000/api/v1/leo/benchmark/run", {
+      await fetch(`${API_BASE_URL}/leo/benchmark/run`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ num_queries: 10 }),

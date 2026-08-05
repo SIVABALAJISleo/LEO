@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Upload, Image as ImageIcon, Sparkles, AlertTriangle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { SIE_API_BASE_URL } from "../../../lib/api";
 
 export default function JepaPage() {
   const [contextFile, setContextFile] = useState<File | null>(null);
@@ -55,7 +56,7 @@ export default function JepaPage() {
     formData.append("target_file", targetFile);
 
     try {
-      const response = await fetch(`http://localhost:8000/api/v1/jepa/compare`, {
+      const response = await fetch(`${SIE_API_BASE_URL}/jepa/compare`, {
         method: "POST",
         body: formData,
       });

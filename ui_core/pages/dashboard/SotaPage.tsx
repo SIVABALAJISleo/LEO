@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Upload, Image as ImageIcon, Sparkles, Wand2, MessageSquare } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { SIE_API_BASE_URL } from "../../../lib/api";
 
 export default function SotaPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -43,7 +44,7 @@ export default function SotaPage() {
     formData.append("file", file);
 
     try {
-      const response = await fetch(`http://localhost:8000/api/v1/vision/segment`, {
+      const response = await fetch(`${SIE_API_BASE_URL}/vision/segment`, {
         method: "POST",
         body: formData,
       });
@@ -78,7 +79,7 @@ export default function SotaPage() {
     formData.append("file", file);
 
     try {
-      const response = await fetch(`http://localhost:8000/api/v1/vision/caption`, {
+      const response = await fetch(`${SIE_API_BASE_URL}/vision/caption`, {
         method: "POST",
         body: formData,
       });

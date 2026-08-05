@@ -51,7 +51,7 @@ interface CrystallizedRule {
   created_at: number;
 }
 
-const LEO_BASE = "http://localhost:8005";
+import { API_BASE_URL } from "../lib/api";
 
 export default function LeoUnifiedDashboard() {
   const { toast } = useToast();
@@ -79,21 +79,21 @@ export default function LeoUnifiedDashboard() {
   const loadSystemDiagnostics = async () => {
     try {
       // 1. Fetch telemetry
-      const telRes = await fetch(`${LEO_BASE}/api/v1/leo/status`);
+      const telRes = await fetch(`${API_BASE_URL}/leo/status`);
       if (telRes.ok) {
         const status = await telRes.json();
         setTelemetry(status.telemetry);
       }
 
       // 2. Fetch crystallized rules
-      const rulesRes = await fetch(`${LEO_BASE}/api/v1/leo/crystallization`);
+      const rulesRes = await fetch(`${API_BASE_URL}/leo/crystallization`);
       if (rulesRes.ok) {
         const rList = await rulesRes.json();
         setRules(rList);
       }
 
       // 3. Fetch hardware profile
-      const hwRes = await fetch(`${LEO_BASE}/api/v1/leo/hardware`);
+      const hwRes = await fetch(`${API_BASE_URL}/leo/hardware`);
       if (hwRes.ok) {
         const hw = await hwRes.json();
         setHwProfile(hw);
@@ -152,7 +152,7 @@ export default function LeoUnifiedDashboard() {
     setActiveLayer(null);
 
     try {
-      const res = await fetch(`${LEO_BASE}/api/v1/leo/orchestrate`, {
+      const res = await fetch(`${API_BASE_URL}/leo/orchestrate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query: queryInput, workspace_id: "default" }),
@@ -211,7 +211,7 @@ export default function LeoUnifiedDashboard() {
   const triggerCrystallization = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${LEO_BASE}/api/v1/leo/crystallization/compile`, {
+      const res = await fetch(`${API_BASE_URL}/leo/crystallization/compile`, {
         method: "POST",
       });
       if (res.ok) {

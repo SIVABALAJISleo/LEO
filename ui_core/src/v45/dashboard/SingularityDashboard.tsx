@@ -20,6 +20,7 @@ import {
   Brain,
   Sliders,
 } from "lucide-react";
+import { API_BASE_URL } from "../../../lib/api";
 
 interface ChatMessage {
   sender: "user" | "assistant";
@@ -83,7 +84,7 @@ export const SingularityDashboard = () => {
   const checkOllamaHealth = async () => {
     setOllamaStatus("CHECKING");
     try {
-      const res = await fetch("http://localhost:8005/api/v1/ollama/capabilities");
+      const res = await fetch(`${API_BASE_URL}/ollama/capabilities`);
       if (res.ok) {
         const data: SystemCapabilities = await res.json();
         setCapabilities(data);
@@ -117,7 +118,7 @@ export const SingularityDashboard = () => {
     setChatHistory((prev) => [...prev, { sender: "assistant", text: "" }]);
 
     try {
-      const response = await fetch("http://localhost:8005/api/v1/ollama/chat", {
+      const response = await fetch(`${API_BASE_URL}/ollama/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
