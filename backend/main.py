@@ -17,6 +17,7 @@ init_db()
 
 # Import OpenAI drop-in gateway and Telemetry instrumentor
 from backend.gateway.openai_gateway import router as openai_router
+from backend.routers.memory import router as memory_router
 from backend.observability.telemetry import TelemetryInstrumentor
 from backend.api_v2_bypass import router as bypass_router
 
@@ -64,6 +65,7 @@ app.include_router(bypass_router)
 
 # Register drop-in OpenAI-compatible router and Prometheus telemetry instrumentation
 app.include_router(openai_router)
+app.include_router(memory_router)
 TelemetryInstrumentor.instrument_app(app)
 
 from backend.core.health import router as health_router

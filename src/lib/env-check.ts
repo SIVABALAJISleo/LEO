@@ -14,7 +14,8 @@ export function validateEnv(): EnvIssue[] {
   const issues: EnvIssue[] = [];
   const base =
     (typeof window !== "undefined" && window.localStorage.getItem("leo.api_base")) ||
-    (import.meta.env.VITE_LEO_API_BASE_URL as string | undefined);
+    (import.meta.env.VITE_LEO_API_BASE_URL as string | undefined) ||
+    "http://localhost:8005/api/v1";
 
   if (!base || !base.trim()) {
     issues.push({

@@ -12,15 +12,23 @@ from memory.knowledge import resolve_entity
 
 from core_ai.hyperdimensional.resonance_cache import ResonanceCache
 from core_ai.hyperdimensional.crystallizer import StateCrystallizer
+from backend.hardware.gna_guardrail import GNASecurityGuardrail
 import time
 
 # Initialize HDC singletons
 hdc_cache = ResonanceCache(threshold=0.3)
 hdc_crystallizer = StateCrystallizer()
+gna_guardrail = GNASecurityGuardrail()
 
 def run_system(user_query: str):
     print(f"--- HYPER AI SYSTEM START ---")
     t0 = time.perf_counter()
+    
+    # [GNA HARDWARE GUARDRAIL INTERCEPTION]
+    if not gna_guardrail.check_prompt(user_query):
+        print("[GNA Guardrail] Malicious prompt detected! Halting execution at silicon level.")
+        print(f"--- SYSTEM SHUTDOWN ---")
+        return "ERROR: Malicious prompt rejected by GNA Hardware Guardrail."
     
     # [HDC INTERCEPTION]
     is_hit, response = hdc_cache.check_resonance(user_query)

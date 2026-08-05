@@ -21,7 +21,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     id: "admin-mock-id",
     email: "admin@hyper.local",
     username: "admin",
-    permissions: ["orchestrate"]
+    permissions: ["orchestrate"],
   };
   const [token, setTokenState] = useState<string | null>("AUDIT_MODE_TOKEN");
   const [user, setUser] = useState<User | null>(defaultUser);

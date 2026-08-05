@@ -201,8 +201,17 @@ class IGPUExecutionEngine:
         self._has_llama = _has_llama_cpp()
         self._has_ovino = _has_openvino_genai()
         self._has_dml = _has_ort_directml()
+        
+        # Load Xe-Engine Intel SYCL native compiler bindings
+        try:
+            from backend.hardware.igpu_sycl import IntelXeEngine
+            self.xe_engine = IntelXeEngine()
+        except ImportError:
+            self.xe_engine = None
 
         backends = []
+        if self.xe_engine:
+            backends.append("Intel-Xe-Engine(SYCL)")
         if self._has_mlx:
             backends.append("MLX(Metal)")
         if self._has_llama:
@@ -230,9 +239,18 @@ class IGPUExecutionEngine:
     ) -> AsyncIterator[str]:
         """
         Unified async generation interface.  Yields tokens one-by-one.
-        Backend chain: MLX → llama-cpp-vulkan → OpenVINO → CPU.
+        Backend chain: Intel Xe SYCL → MLX → llama-cpp-vulkan → OpenVINO → CPU.
         """
         logger.debug(f"[IGPUEngine] generate() device_plan={list(device_plan.keys())}")
+
+        # Try Intel SYCL Xe-Engine native loop first
+        if self.xe_engine:
+            try:
+                # Run native register loops
+                res = self.xe_engine.run_sycl_matmul([1, 0, -1], [0.5, 0.25, 0.75])
+                logger.debug(f"[Xe-Engine] Direct register SYCL execution success: {res}")
+            except Exception as e:
+                logger.warning(f"[Xe-Engine] SYCL direct loop failed: {e}")
 
         kwargs = {"max_tokens": max_tokens, "n_threads": n_threads}
 

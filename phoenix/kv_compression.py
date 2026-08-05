@@ -144,3 +144,57 @@ class SnapKVCompressor:
         logger.debug(f"[SnapKV] Compressed {seq_len} → {compressed_k.size(0)} tokens "
                      f"({compressed_k.size(0)/seq_len*100:.1f}% retained).")
         return compressed_k, compressed_v
+
+
+class KiviZipCacheCompressor:
+    """
+    KIVI & ZipCache Asymmetric 2-bit Key/Value Cache Quantizer.
+    Reduces memory footprints by 4x for massive context windows (up to 256K).
+    """
+    def __init__(self, group_size: int = 32):
+        self.group_size = group_size
+
+    def quantize_asymmetric_2bit(self, tensor: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        """
+        Quantizes key or value tensors to 2-bit representation asymmetric values.
+        Returns: (quantized_2bit_packed, scale, zero_point)
+        """
+        # Determine group min/max dimensions
+        shape = tensor.shape
+        # Quantize along token sequence dimension
+        flat_tensor = tensor.reshape(-1, self.group_size)
+        
+        t_min = flat_tensor.min(dim=-1, keepdim=True)[0]
+        t_max = flat_tensor.max(dim=-1, keepdim=True)[0]
+        
+        # 2-bit quantization level scale: 2^2 - 1 = 3 levels
+        scale = (t_max - t_min) / 3.0
+        scale = torch.clamp(scale, min=1e-5)
+        
+        zero_point = torch.round(-t_min / scale)
+        
+        # Map values to [0, 3] integers
+        quantized = torch.clamp(torch.round(flat_tensor / scale + zero_point), 0, 3).to(torch.uint8)
+        
+        # Pack 4 2-bit values into a single uint8 byte
+        packed_shape = (quantized.shape[0], quantized.shape[1] // 4)
+        packed = torch.zeros(packed_shape, dtype=torch.uint8)
+        for i in range(4):
+            packed |= (quantized[:, i::4] & 0x03) << (2 * i)
+            
+        return packed, scale, zero_point
+
+
+
+    def dequantize_asymmetric_2bit(self, packed: torch.Tensor, scale: torch.Tensor, zero_point: torch.Tensor, original_shape: Tuple) -> torch.Tensor:
+        """
+        Dequantizes 2-bit packed representation back to full tensors.
+        """
+        num_tokens, packed_dim = packed.shape
+        quantized = torch.zeros((num_tokens, packed_dim * 4), dtype=torch.uint8, device=packed.device)
+        
+        for i in range(4):
+            quantized[:, i::4] = (packed >> (2 * i)) & 0x03
+            
+        flat_tensor = (quantized.to(torch.float32) - zero_point) * scale
+        return flat_tensor.reshape(original_shape)
