@@ -34,7 +34,7 @@ accelerate>=0.21.0
 pyopencl>=2024.1
 huggingface_hub>=0.20.0
 openvino==2026.3.0
-openvino-genai==2026.3.0
+openvino-genai==2026.3.0.0
 py-cpuinfo>=9.0.0
 
 # ── Cloud & Storage ───────────────────────────────────────── #
