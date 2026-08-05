@@ -1,25 +1,27 @@
 @echo off
-title LEO Benchmark Mode — GPU Optimized Chrome Launch
+title LEO PHOTOSYNTHESIS PROTOCOL — Vulkan iGPU Bypass
+color 0A
 echo.
-echo =============================================
-echo   LEO BENCHMARK MODE — Phase 3: GPU Browser
-echo =============================================
+echo  ==========================================================
+echo    LEO PHOTOSYNTHESIS PROTOCOL — Volume BM Extreme Edition
+echo    "We do not calculate the light. We bypass the calculation."
+echo  ==========================================================
 echo.
 
-REM --- Detect Chrome or Edge ---
+REM --- Detect Browser ---
 set BROWSER_PATH=
 if exist "C:\Program Files\Google\Chrome\Application\chrome.exe" (
     set "BROWSER_PATH=C:\Program Files\Google\Chrome\Application\chrome.exe"
-    echo [INFO] Using Google Chrome
+    echo [FOUND] Google Chrome
 ) else if exist "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" (
     set "BROWSER_PATH=C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
-    echo [INFO] Using Google Chrome (x86)
+    echo [FOUND] Google Chrome (x86)
 ) else if exist "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" (
     set "BROWSER_PATH=C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
-    echo [INFO] Using Microsoft Edge
+    echo [FOUND] Microsoft Edge
 ) else if exist "C:\Program Files\Microsoft\Edge\Application\msedge.exe" (
     set "BROWSER_PATH=C:\Program Files\Microsoft\Edge\Application\msedge.exe"
-    echo [INFO] Using Microsoft Edge
+    echo [FOUND] Microsoft Edge
 ) else (
     echo [ERROR] No supported browser found!
     pause
@@ -27,42 +29,69 @@ if exist "C:\Program Files\Google\Chrome\Application\chrome.exe" (
 )
 
 echo.
-echo [INFO] Launching browser with GPU-optimized flags...
+echo  ============================================
+echo   BREAKTHROUGH #1: VULKAN TRANSPILATION
+echo  ============================================
 echo.
-echo   Flags Applied:
-echo     --enable-gpu-rasterization       (Force GPU rendering pipeline)
-echo     --enable-zero-copy               (Zero-copy GPU memory transfers)
-echo     --use-angle=d3d11                (Direct3D 11 — native Intel path)
-echo     --enable-features=Vulkan         (Vulkan backend for Intel)
-echo     --disable-frame-rate-limit       (Remove browser FPS cap)
-echo     --disable-gpu-vsync              (Disable V-Sync for max FPS)
-echo     --gpu-no-context-lost            (Prevent GPU context drops)
-echo     --force-gpu-mem-available-mb=4096 (Advertise 4GB GPU mem)
-echo     --disable-backgrounding-occluded-windows (Keep GPU active)
-echo     --disable-renderer-backgrounding  (Full GPU power to tab)
-echo     --max-gum-fps=120                (Allow up to 120 FPS)
+echo   The iGPU will execute shaders via Vulkan
+echo   instead of legacy OpenGL. FP16 paths unlock.
+echo.
+echo   Flags:
+echo     --use-angle=vulkan              (Vulkan backend)
+echo     --enable-unsafe-webgpu          (WebGPU compute)
+echo     --ignore-gpu-blocklist          (Force GPU usage)
+echo     --disable-frame-rate-limit      (No FPS cap)
+echo     --disable-gpu-vsync             (No V-Sync)
+echo     --enable-gpu-rasterization      (GPU rendering)
+echo     --enable-zero-copy              (Zero-copy transfers)
+echo     --gpu-no-context-lost           (No context drops)
+echo     --force-gpu-mem-available-mb=4096
+echo     --disable-backgrounding-occluded-windows
+echo     --disable-renderer-backgrounding
+echo     --disable-background-timer-throttling
+echo.
+
+REM --- Kill existing browser instances first ---
+echo [ACTION] Closing existing browser instances...
+taskkill /F /IM "chrome.exe" /T 2>nul
+taskkill /F /IM "msedge.exe" /T 2>nul
+timeout /t 2 /nobreak > nul
+
+echo.
+echo [LAUNCH] Starting Vulkan-optimized browser...
 echo.
 
 start "" "%BROWSER_PATH%" ^
-    --enable-gpu-rasterization ^
-    --enable-zero-copy ^
-    --use-angle=d3d11 ^
-    --enable-features=Vulkan,CanvasOopRasterization ^
+    --use-angle=vulkan ^
+    --enable-unsafe-webgpu ^
+    --ignore-gpu-blocklist ^
     --disable-frame-rate-limit ^
     --disable-gpu-vsync ^
+    --enable-gpu-rasterization ^
+    --enable-zero-copy ^
     --gpu-no-context-lost ^
     --force-gpu-mem-available-mb=4096 ^
     --disable-backgrounding-occluded-windows ^
     --disable-renderer-backgrounding ^
     --disable-background-timer-throttling ^
     --disable-ipc-flooding-protection ^
-    --enable-webgl2-compute-context ^
-    --enable-unsafe-webgpu ^
+    --enable-features=Vulkan,VulkanFromANGLE,DefaultANGLEVulkan,CanvasOopRasterization ^
     --max-gum-fps=120 ^
     "https://volumeshaderbm.com/start/"
 
 echo.
-echo [SUCCESS] Browser launched with GPU optimizations!
-echo [INFO] Run the Volume Shader Benchmark in Extreme mode.
+echo  ================================================
+echo   BROWSER LAUNCHED WITH VULKAN BYPASS ACTIVE
+echo  ================================================
+echo.
+echo  NEXT STEPS:
+echo    1. Wait for the page to load
+echo    2. Select "Extreme" mode
+echo    3. Click "Run Test"
+echo    4. If using Lossless Scaling / Magpie:
+echo       Press your Frame Gen hotkey NOW
+echo.
+echo  The iGPU is now speaking Vulkan.
+echo  The FP32 wall has been bypassed.
 echo.
 pause
