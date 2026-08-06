@@ -22,6 +22,7 @@ export default defineConfig({
       tsconfigPaths: true,
     },
     build: {
+      chunkSizeWarningLimit: 1000,
       rollupOptions: {
         output: {
           manualChunks(id) {
