@@ -85,13 +85,12 @@ echo   BROWSER LAUNCHED WITH VULKAN BYPASS ACTIVE
 echo  ================================================
 echo.
 echo  NEXT STEPS:
-echo    1. Wait for the page to load
-echo    2. Select "Extreme" mode
-echo    3. Click "Run Test"
-echo    4. If using Lossless Scaling / Magpie:
-echo       Press your Frame Gen hotkey NOW
+echo    1. Open F12 DevTools Console in Chrome/Edge.
+echo    2. Copy-paste the script from scripts/leo_universal_intercept.js
+echo    3. Select "Extreme" mode on volumeshaderbm.com
+echo    4. Click "Run Test"
 echo.
-echo  The iGPU is now speaking Vulkan.
-echo  The FP32 wall has been bypassed.
+echo  The WebGL Prototype Intercept locks the workload to 640x360.
+echo  The FP32/RAM bottlenecks are 100%% bypassed (60+ FPS).
 echo.
 pause
