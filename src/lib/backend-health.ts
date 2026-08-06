@@ -13,13 +13,7 @@ export interface SchemaIssue {
 }
 
 export type FailureKind =
-  | "cors"
-  | "network"
-  | "timeout"
-  | "mixed-content"
-  | "dns"
-  | "http"
-  | "schema";
+  "cors" | "network" | "timeout" | "mixed-content" | "dns" | "http" | "schema";
 
 export interface HealthResult {
   status: HealthStatus;

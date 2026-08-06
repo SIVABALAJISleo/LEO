@@ -16,13 +16,14 @@ type AuthState = {
 
 const AuthContext = createContext<AuthState | null>(null);
 
+const defaultUser: User = {
+  id: "admin-mock-id",
+  email: "admin@hyper.local",
+  username: "admin",
+  permissions: ["orchestrate"],
+};
+
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const defaultUser: User = {
-    id: "admin-mock-id",
-    email: "admin@hyper.local",
-    username: "admin",
-    permissions: ["orchestrate"],
-  };
   const [token, setTokenState] = useState<string | null>("AUDIT_MODE_TOKEN");
   const [user, setUser] = useState<User | null>(defaultUser);
   const navigate = useNavigate();
@@ -74,7 +75,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (typeof window !== "undefined") window.localStorage.removeItem("leo.user");
       },
     }),
-    [token, user],
+    [token, user, navigate],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

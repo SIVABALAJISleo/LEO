@@ -350,8 +350,7 @@ export function clearAllSessions(): void {
 // -------- Server pull, pagination + merge --------
 
 type ServerListResponse =
-  | { sessions?: ChatSession[]; items?: ChatSession[]; nextCursor?: string | null }
-  | ChatSession[];
+  { sessions?: ChatSession[]; items?: ChatSession[]; nextCursor?: string | null } | ChatSession[];
 
 function normalizeListResponse(res: ServerListResponse): {
   sessions: ChatSession[];

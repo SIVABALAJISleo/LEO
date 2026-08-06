@@ -26,23 +26,27 @@ export default defineConfig({
       rollupOptions: {
         output: {
           manualChunks(id) {
-            if (id.includes('node_modules')) {
-              if (id.includes('react') || id.includes('react-dom') || id.includes('@tanstack/react-router')) {
-                return 'vendor';
+            if (id.includes("node_modules")) {
+              if (
+                id.includes("react") ||
+                id.includes("react-dom") ||
+                id.includes("@tanstack/react-router")
+              ) {
+                return "vendor";
               }
-              if (id.includes('recharts')) {
-                return 'charts';
+              if (id.includes("recharts")) {
+                return "charts";
               }
-              if (id.includes('zod') || id.includes('react-hook-form')) {
-                return 'forms';
+              if (id.includes("zod") || id.includes("react-hook-form")) {
+                return "forms";
               }
-              if (id.includes('framer-motion')) {
-                return 'motion';
+              if (id.includes("framer-motion")) {
+                return "motion";
               }
             }
-          }
-        }
-      }
-    }
-  }
+          },
+        },
+      },
+    },
+  },
 });
