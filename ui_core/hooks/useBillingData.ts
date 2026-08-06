@@ -237,17 +237,14 @@ export function useBillingData() {
 
     try {
       // For paid plans, initiate PayPal Checkout via Backend
-      const response = await fetch(
-        `${SIE_API_BASE_URL}/paypal/checkout`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${sessionStorage.getItem("firebase_token") || ""}`,
-          },
-          body: JSON.stringify({ plan_id: plan }),
+      const response = await fetch(`${SIE_API_BASE_URL}/paypal/checkout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("firebase_token") || ""}`,
         },
-      );
+        body: JSON.stringify({ plan_id: plan }),
+      });
 
       if (!response.ok) {
         throw new Error(await response.text());

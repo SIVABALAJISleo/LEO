@@ -17,26 +17,22 @@ import { API_BASE_URL } from "../lib/api";
 export const api = {
   get: async (endpoint: string) => {
     const token = localStorage.getItem("auth_token");
-    const res = await fetch(
-      `${API_BASE_URL.replace("/api/v1", "")}${endpoint}`,
-      { headers: { Authorization: token ? `Bearer ${token}` : "" } },
-    );
+    const res = await fetch(`${API_BASE_URL.replace("/api/v1", "")}${endpoint}`, {
+      headers: { Authorization: token ? `Bearer ${token}` : "" },
+    });
     if (!res.ok) throw new Error(`API error: ${res.status}`);
     return res.json();
   },
   post: async (endpoint: string, body: unknown) => {
     const token = localStorage.getItem("auth_token");
-    const res = await fetch(
-      `${API_BASE_URL.replace("/api/v1", "")}${endpoint}`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: token ? `Bearer ${token}` : "",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
+    const res = await fetch(`${API_BASE_URL.replace("/api/v1", "")}${endpoint}`, {
+      method: "POST",
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify(body),
+    });
     if (!res.ok) throw new Error(`API error: ${res.status}`);
     return res.json();
   },

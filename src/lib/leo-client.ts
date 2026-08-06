@@ -8,8 +8,8 @@ export type ApiBaseSource = "settings" | "env" | "default";
 
 export function getApiBase(): string {
   let base =
-    (typeof window !== "undefined" && window.localStorage.getItem("leo.api_base")) ||
     (import.meta.env.VITE_LEO_API_BASE_URL as string | undefined) ||
+    (typeof window !== "undefined" && window.localStorage.getItem("leo.api_base")) ||
     "http://localhost:8005/api/v1";
 
   // Strip trailing slash if present
