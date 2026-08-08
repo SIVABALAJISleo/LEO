@@ -9,56 +9,35 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SignupRouteImport } from './routes/signup'
-import { Route as PlatformRouteImport } from './routes/platform'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as FeaturesRouteImport } from './routes/features'
-import { Route as DocsRouteImport } from './routes/docs'
-import { Route as BenchmarksRouteImport } from './routes/benchmarks'
-import { Route as AboutRouteImport } from './routes/about'
-import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as BenchmarksRouteImport } from './routes/benchmarks'
+import { Route as DocsRouteImport } from './routes/docs'
+import { Route as FeaturesRouteImport } from './routes/features'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as PlatformRouteImport } from './routes/platform'
+import { Route as SignupRouteImport } from './routes/signup'
 import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated.app'
 import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated.app.index'
-import { Route as AuthenticatedAppSettingsRouteImport } from './routes/_authenticated.app.settings'
-import { Route as AuthenticatedAppSecurityRouteImport } from './routes/_authenticated.app.security'
-import { Route as AuthenticatedAppOrchestrateRouteImport } from './routes/_authenticated.app.orchestrate'
-import { Route as AuthenticatedAppMemoryRouteImport } from './routes/_authenticated.app.memory'
-import { Route as AuthenticatedAppKnowledgeGraphRouteImport } from './routes/_authenticated.app.knowledge-graph'
-import { Route as AuthenticatedAppEmbeddingsRouteImport } from './routes/_authenticated.app.embeddings'
-import { Route as AuthenticatedAppChatRouteImport } from './routes/_authenticated.app.chat'
 import { Route as AuthenticatedAppBenchmarksRouteImport } from './routes/_authenticated.app.benchmarks'
+import { Route as AuthenticatedAppChatRouteImport } from './routes/_authenticated.app.chat'
+import { Route as AuthenticatedAppEmbeddingsRouteImport } from './routes/_authenticated.app.embeddings'
+import { Route as AuthenticatedAppKnowledgeGraphRouteImport } from './routes/_authenticated.app.knowledge-graph'
+import { Route as AuthenticatedAppMemoryRouteImport } from './routes/_authenticated.app.memory'
+import { Route as AuthenticatedAppOrchestrateRouteImport } from './routes/_authenticated.app.orchestrate'
+import { Route as AuthenticatedAppSecurityRouteImport } from './routes/_authenticated.app.security'
+import { Route as AuthenticatedAppSettingsRouteImport } from './routes/_authenticated.app.settings'
 import { Route as ApiV1LeoMetricsRouteImport } from './routes/api/v1/leo/metrics'
 import { Route as ApiV1LeoMetricsStreamRouteImport } from './routes/api/v1/leo/metrics.stream'
 
-const SignupRoute = SignupRouteImport.update({
-  id: '/signup',
-  path: '/signup',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PlatformRoute = PlatformRouteImport.update({
-  id: '/platform',
-  path: '/platform',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FeaturesRoute = FeaturesRouteImport.update({
-  id: '/features',
-  path: '/features',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DocsRoute = DocsRouteImport.update({
-  id: '/docs',
-  path: '/docs',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BenchmarksRoute = BenchmarksRouteImport.update({
-  id: '/benchmarks',
-  path: '/benchmarks',
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -66,13 +45,34 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedRoute = AuthenticatedRouteImport.update({
-  id: '/_authenticated',
+const BenchmarksRoute = BenchmarksRouteImport.update({
+  id: '/benchmarks',
+  path: '/benchmarks',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const DocsRoute = DocsRouteImport.update({
+  id: '/docs',
+  path: '/docs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FeaturesRoute = FeaturesRouteImport.update({
+  id: '/features',
+  path: '/features',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlatformRoute = PlatformRouteImport.update({
+  id: '/platform',
+  path: '/platform',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAppRoute = AuthenticatedAppRouteImport.update({
@@ -85,10 +85,38 @@ const AuthenticatedAppIndexRoute = AuthenticatedAppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAppRoute,
 } as any)
-const AuthenticatedAppSettingsRoute =
-  AuthenticatedAppSettingsRouteImport.update({
-    id: '/settings',
-    path: '/settings',
+const AuthenticatedAppBenchmarksRoute =
+  AuthenticatedAppBenchmarksRouteImport.update({
+    id: '/benchmarks',
+    path: '/benchmarks',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
+const AuthenticatedAppChatRoute = AuthenticatedAppChatRouteImport.update({
+  id: '/chat',
+  path: '/chat',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
+const AuthenticatedAppEmbeddingsRoute =
+  AuthenticatedAppEmbeddingsRouteImport.update({
+    id: '/embeddings',
+    path: '/embeddings',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
+const AuthenticatedAppKnowledgeGraphRoute =
+  AuthenticatedAppKnowledgeGraphRouteImport.update({
+    id: '/knowledge-graph',
+    path: '/knowledge-graph',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
+const AuthenticatedAppMemoryRoute = AuthenticatedAppMemoryRouteImport.update({
+  id: '/memory',
+  path: '/memory',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
+const AuthenticatedAppOrchestrateRoute =
+  AuthenticatedAppOrchestrateRouteImport.update({
+    id: '/orchestrate',
+    path: '/orchestrate',
     getParentRoute: () => AuthenticatedAppRoute,
   } as any)
 const AuthenticatedAppSecurityRoute =
@@ -97,38 +125,10 @@ const AuthenticatedAppSecurityRoute =
     path: '/security',
     getParentRoute: () => AuthenticatedAppRoute,
   } as any)
-const AuthenticatedAppOrchestrateRoute =
-  AuthenticatedAppOrchestrateRouteImport.update({
-    id: '/orchestrate',
-    path: '/orchestrate',
-    getParentRoute: () => AuthenticatedAppRoute,
-  } as any)
-const AuthenticatedAppMemoryRoute = AuthenticatedAppMemoryRouteImport.update({
-  id: '/memory',
-  path: '/memory',
-  getParentRoute: () => AuthenticatedAppRoute,
-} as any)
-const AuthenticatedAppKnowledgeGraphRoute =
-  AuthenticatedAppKnowledgeGraphRouteImport.update({
-    id: '/knowledge-graph',
-    path: '/knowledge-graph',
-    getParentRoute: () => AuthenticatedAppRoute,
-  } as any)
-const AuthenticatedAppEmbeddingsRoute =
-  AuthenticatedAppEmbeddingsRouteImport.update({
-    id: '/embeddings',
-    path: '/embeddings',
-    getParentRoute: () => AuthenticatedAppRoute,
-  } as any)
-const AuthenticatedAppChatRoute = AuthenticatedAppChatRouteImport.update({
-  id: '/chat',
-  path: '/chat',
-  getParentRoute: () => AuthenticatedAppRoute,
-} as any)
-const AuthenticatedAppBenchmarksRoute =
-  AuthenticatedAppBenchmarksRouteImport.update({
-    id: '/benchmarks',
-    path: '/benchmarks',
+const AuthenticatedAppSettingsRoute =
+  AuthenticatedAppSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
     getParentRoute: () => AuthenticatedAppRoute,
   } as any)
 const ApiV1LeoMetricsRoute = ApiV1LeoMetricsRouteImport.update({
@@ -293,53 +293,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/signup': {
-      id: '/signup'
-      path: '/signup'
-      fullPath: '/signup'
-      preLoaderRoute: typeof SignupRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/platform': {
-      id: '/platform'
-      path: '/platform'
-      fullPath: '/platform'
-      preLoaderRoute: typeof PlatformRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/features': {
-      id: '/features'
-      path: '/features'
-      fullPath: '/features'
-      preLoaderRoute: typeof FeaturesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/docs': {
-      id: '/docs'
-      path: '/docs'
-      fullPath: '/docs'
-      preLoaderRoute: typeof DocsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/benchmarks': {
-      id: '/benchmarks'
-      path: '/benchmarks'
-      fullPath: '/benchmarks'
-      preLoaderRoute: typeof BenchmarksRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -349,11 +307,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/benchmarks': {
+      id: '/benchmarks'
+      path: '/benchmarks'
+      fullPath: '/benchmarks'
+      preLoaderRoute: typeof BenchmarksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/docs': {
+      id: '/docs'
+      path: '/docs'
+      fullPath: '/docs'
+      preLoaderRoute: typeof DocsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/features': {
+      id: '/features'
+      path: '/features'
+      fullPath: '/features'
+      preLoaderRoute: typeof FeaturesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/platform': {
+      id: '/platform'
+      path: '/platform'
+      fullPath: '/platform'
+      preLoaderRoute: typeof PlatformRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/app': {
@@ -370,46 +370,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppIndexRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
-    '/_authenticated/app/settings': {
-      id: '/_authenticated/app/settings'
-      path: '/settings'
-      fullPath: '/app/settings'
-      preLoaderRoute: typeof AuthenticatedAppSettingsRouteImport
-      parentRoute: typeof AuthenticatedAppRoute
-    }
-    '/_authenticated/app/security': {
-      id: '/_authenticated/app/security'
-      path: '/security'
-      fullPath: '/app/security'
-      preLoaderRoute: typeof AuthenticatedAppSecurityRouteImport
-      parentRoute: typeof AuthenticatedAppRoute
-    }
-    '/_authenticated/app/orchestrate': {
-      id: '/_authenticated/app/orchestrate'
-      path: '/orchestrate'
-      fullPath: '/app/orchestrate'
-      preLoaderRoute: typeof AuthenticatedAppOrchestrateRouteImport
-      parentRoute: typeof AuthenticatedAppRoute
-    }
-    '/_authenticated/app/memory': {
-      id: '/_authenticated/app/memory'
-      path: '/memory'
-      fullPath: '/app/memory'
-      preLoaderRoute: typeof AuthenticatedAppMemoryRouteImport
-      parentRoute: typeof AuthenticatedAppRoute
-    }
-    '/_authenticated/app/knowledge-graph': {
-      id: '/_authenticated/app/knowledge-graph'
-      path: '/knowledge-graph'
-      fullPath: '/app/knowledge-graph'
-      preLoaderRoute: typeof AuthenticatedAppKnowledgeGraphRouteImport
-      parentRoute: typeof AuthenticatedAppRoute
-    }
-    '/_authenticated/app/embeddings': {
-      id: '/_authenticated/app/embeddings'
-      path: '/embeddings'
-      fullPath: '/app/embeddings'
-      preLoaderRoute: typeof AuthenticatedAppEmbeddingsRouteImport
+    '/_authenticated/app/benchmarks': {
+      id: '/_authenticated/app/benchmarks'
+      path: '/benchmarks'
+      fullPath: '/app/benchmarks'
+      preLoaderRoute: typeof AuthenticatedAppBenchmarksRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
     '/_authenticated/app/chat': {
@@ -419,11 +384,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppChatRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
-    '/_authenticated/app/benchmarks': {
-      id: '/_authenticated/app/benchmarks'
-      path: '/benchmarks'
-      fullPath: '/app/benchmarks'
-      preLoaderRoute: typeof AuthenticatedAppBenchmarksRouteImport
+    '/_authenticated/app/embeddings': {
+      id: '/_authenticated/app/embeddings'
+      path: '/embeddings'
+      fullPath: '/app/embeddings'
+      preLoaderRoute: typeof AuthenticatedAppEmbeddingsRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/knowledge-graph': {
+      id: '/_authenticated/app/knowledge-graph'
+      path: '/knowledge-graph'
+      fullPath: '/app/knowledge-graph'
+      preLoaderRoute: typeof AuthenticatedAppKnowledgeGraphRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/memory': {
+      id: '/_authenticated/app/memory'
+      path: '/memory'
+      fullPath: '/app/memory'
+      preLoaderRoute: typeof AuthenticatedAppMemoryRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/orchestrate': {
+      id: '/_authenticated/app/orchestrate'
+      path: '/orchestrate'
+      fullPath: '/app/orchestrate'
+      preLoaderRoute: typeof AuthenticatedAppOrchestrateRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/security': {
+      id: '/_authenticated/app/security'
+      path: '/security'
+      fullPath: '/app/security'
+      preLoaderRoute: typeof AuthenticatedAppSecurityRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/settings': {
+      id: '/_authenticated/app/settings'
+      path: '/settings'
+      fullPath: '/app/settings'
+      preLoaderRoute: typeof AuthenticatedAppSettingsRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
     '/api/v1/leo/metrics': {
