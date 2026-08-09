@@ -9,7 +9,7 @@ aiofiles==23.2.1
 passlib[bcrypt]==1.7.4
 bcrypt==4.2.1
 PyJWT==2.13.0
-cryptography==49.0.0
+cryptography>=49.0.0
 
 # ── Database ──────────────────────────────────────────────── #
 sqlalchemy==2.0.41
@@ -90,7 +90,7 @@ scikit-fuzzy>=0.4.2
 langchain-core>=0.3.0
 
 # ── Dev & Test ────────────────────────────────────────────── #
-pytest==8.4.1
+pytest>=9.0.3
 pytest-asyncio==0.23.8
 hypothesis==6.135.25
 mutmut==2.5.1

@@ -3,6 +3,10 @@
   "private": true,
   "sideEffects": false,
   "type": "module",
+  "overrides": {
+    "postcss": "^8.5.25",
+    "brace-expansion": "^2.0.1"
+  },
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
