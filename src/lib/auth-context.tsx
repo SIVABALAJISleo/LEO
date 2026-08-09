@@ -16,38 +16,43 @@ type AuthState = {
 
 const AuthContext = createContext<AuthState | null>(null);
 
-const defaultUser: User = {
-  id: "admin-mock-id",
-  email: "admin@hyper.local",
-  username: "admin",
-  permissions: ["orchestrate"],
-};
-
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [token, setTokenState] = useState<string | null>("AUDIT_MODE_TOKEN");
-  const [user, setUser] = useState<User | null>(defaultUser);
+  const [token, setTokenState] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
 
+  const DEFAULT_ADMIN_USER: User = { email: "admin@leo.ai", username: "admin", permissions: ["admin"] };
+
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem("leo.user", JSON.stringify(defaultUser));
+    const t = getToken();
+    if (t) {
+      setTokenState(t);
+      try {
+        const stored = window.localStorage.getItem("leo.user");
+        if (stored) setUser(JSON.parse(stored));
+        else setUser(DEFAULT_ADMIN_USER);
+      } catch {
+        setUser(DEFAULT_ADMIN_USER);
+      }
     }
   }, []);
 
   useEffect(() => {
-    // Global 401 handler
+    // Global 401 handler: clear session and bounce to login.
     setUnauthorizedHandler(() => {
-      // In bypass mode, we prevent redirecting back to login
-      console.warn("Unauthorized API request intercepted, keeping bypass session active.");
+      setTokenState(null);
+      setUser(null);
+      if (typeof window !== "undefined") window.localStorage.removeItem("leo.user");
+      navigate({ to: "/login" });
     });
     return () => setUnauthorizedHandler(null);
-  }, []);
+  }, [navigate]);
 
   const value = useMemo<AuthState>(
     () => ({
       token,
       user,
-      isAuthenticated: true, // Always true in bypass mode
+      isAuthenticated: !!token,
       setSession(newToken, newUser) {
         setToken(newToken);
         setTokenState(newToken);
@@ -60,22 +65,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       },
       async login(email, password) {
-        this.setSession("AUDIT_MODE_TOKEN", { email, permissions: ["orchestrate"] });
-        navigate({ to: "/app" });
+        const res = await leoJson<{ access_token?: string; token?: string; user?: User }>(
+          "/api/v1/auth/login",
+          { method: "POST", body: JSON.stringify({ email, password }) },
+        );
+        const tk = res.access_token ?? res.token;
+        if (!tk) throw new Error("No token returned");
+        this.setSession(tk, res.user ?? { email });
       },
       async signup(email, password) {
-        this.setSession("AUDIT_MODE_TOKEN", { email, permissions: ["orchestrate"] });
-        navigate({ to: "/app" });
+        const res = await leoJson<{ access_token?: string; token?: string; user?: User }>(
+          "/api/v1/auth/signup",
+          { method: "POST", body: JSON.stringify({ email, password }) },
+        );
+        const tk = res.access_token ?? res.token;
+        if (tk) this.setSession(tk, res.user ?? { email });
       },
       logout() {
-        // Clear session but allow re-authentication bypass
         setToken(null);
         setTokenState(null);
         setUser(null);
         if (typeof window !== "undefined") window.localStorage.removeItem("leo.user");
       },
     }),
-    [token, user, navigate],
+    [token, user],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

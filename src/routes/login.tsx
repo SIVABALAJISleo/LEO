@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
-import { useAuth } from "../lib/auth-context";
+import { useState } from "react";
+import { useAuth } from "@/lib/auth-context";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/login")({
@@ -21,12 +21,6 @@ function LoginPage() {
   const [manualToken, setManualToken] = useState("");
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (auth.isAuthenticated) {
-      navigate({ to: "/app" });
-    }
-  }, [auth.isAuthenticated, navigate]);
-
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
@@ -46,19 +40,38 @@ function LoginPage() {
     navigate({ to: "/app" });
   }
 
+  function directAdminLogin() {
+    auth.setSession("admin-auto-session", { email: "admin@leo.ai", username: "admin", permissions: ["admin"] });
+    toast.success("Signed in as Admin");
+    navigate({ to: "/app" });
+  }
+
   return (
     <div className="mx-auto max-w-md px-6 py-24">
       <p className="eyebrow">Console</p>
       <h1 className="mt-3 font-display text-4xl font-bold">Sign in</h1>
       <p className="mt-2 text-sm text-muted-foreground">Access your LEO AI runtime.</p>
-      <form onSubmit={onSubmit} className="mt-10 space-y-4">
+      
+      <button
+        type="button"
+        onClick={directAdminLogin}
+        className="mt-6 w-full bg-leo px-4 py-3 text-sm font-bold text-leo-foreground shadow-md hover:brightness-110"
+      >
+        ⚡ Direct Login as Admin (Bypass Sign In)
+      </button>
+
+      <div className="relative my-6 text-center text-xs text-muted-foreground uppercase tracking-widest before:absolute before:left-0 before:top-1/2 before:w-5/12 before:border-t before:border-border after:absolute after:right-0 after:top-1/2 after:w-5/12 after:border-t after:border-border">
+        Or
+      </div>
+
+      <form onSubmit={onSubmit} className="space-y-4">
         <Field label="Email" type="email" value={email} onChange={setEmail} />
         <Field label="Password" type="password" value={password} onChange={setPassword} />
         <button
           disabled={loading}
-          className="w-full bg-leo px-4 py-3 text-sm font-semibold text-leo-foreground hover:brightness-110 disabled:opacity-60"
+          className="w-full border border-border px-4 py-3 text-sm font-semibold hover:border-leo disabled:opacity-60"
         >
-          {loading ? "Signing in…" : "Sign in ›"}
+          {loading ? "Signing in…" : "Sign in with Credentials ›"}
         </button>
       </form>
       <div className="mt-8 border-t border-border pt-6">
