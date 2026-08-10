@@ -33,6 +33,15 @@ except ImportError:
 
 # Mock class definitions if OpenVINO is not installed
 if not OPENVINO_AVAILABLE:
+    class MockOp:
+        def __init__(self, name):
+            self.name = name
+            self.rt_info = {}
+        def get_type_name(self):
+            return self.name
+        def get_rt_info(self):
+            return self.rt_info
+
     class Core:
         def __init__(self):
             self.available_devices = ["CPU"]
@@ -71,14 +80,6 @@ class AVX2VNNIOrchestratorKernel:
             output = np.zeros((1, 1024), dtype=np.float32)
         return {"output": output}
 
-    class MockOp:
-        def __init__(self, name):
-            self.name = name
-            self.rt_info = {}
-        def get_type_name(self):
-            return self.name
-        def get_rt_info(self):
-            return self.rt_info
 
 class HeterogeneousOrchestrator:
     """
