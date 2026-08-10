@@ -168,15 +168,30 @@ class ConfidenceGatedCache:
         """
         Pillar 7: Proceduralization. Bypasses model entirely for symbolic logic/math.
         """
-        clean_q = query.lower().replace(" ", "").replace("?", "")
-        # Basic arithmetic detection
-        if all(c in "0123456789+-*/()." for c in clean_q) and len(clean_q) > 2:
+        clean_q = query.lower().strip()
+        
+        # 1. Math evaluation
+        math_q = clean_q.replace(" ", "").replace("?", "")
+        if all(c in "0123456789+-*/()." for c in math_q) and len(math_q) > 2:
             try:
-                # Safe eval constraint check
-                val = eval(clean_q, {"__builtins__": None}, {})
+                val = eval(math_q, {"__builtins__": None}, {})
                 return f"[Procedural Bypass] Calculated value: {val} (computed locally in 0ms)."
             except Exception:
                 pass
+                
+        # 2. Datetime bypass
+        if "current time" in clean_q or "date today" in clean_q or clean_q == "date":
+            return f"[Procedural Bypass] Current System Time: {time.strftime('%Y-%m-%d %H:%M:%S')} (computed locally in 0ms)."
+
+        # 3. String reversal bypass
+        if clean_q.startswith("reverse "):
+            target_str = query[8:]
+            return f"[Procedural Bypass] Reversed text: '{target_str[::-1]}' (computed locally in 0ms)."
+
+        # 4. Coding template bypass
+        if "python hello world" in clean_q:
+            return "[Procedural Bypass] python\nprint('Hello, World!')\n (computed locally in 0ms)."
+
         return None
 
     def query_similarity(self, q1: str, q2: str) -> float:
