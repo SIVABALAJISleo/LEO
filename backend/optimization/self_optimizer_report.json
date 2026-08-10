@@ -1,0 +1,19 @@
+{
+  "stats": {
+    "total_calls": 4,
+    "avg_latency_ms": 0.5,
+    "p95_latency_ms": 0.5,
+    "cache_hit_rate": 1.0,
+    "route_distribution": {
+      "CACHE_HIT": 4
+    },
+    "current_params": {
+      "cache_similarity_threshold": 0.95,
+      "early_exit_threshold": 0.9,
+      "speculate_k": 4,
+      "max_context_tokens": 500
+    }
+  },
+  "bottlenecks": [],
+  "timestamp": 1786371462.8790648
+}
