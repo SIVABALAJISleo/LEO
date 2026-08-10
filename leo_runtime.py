@@ -227,15 +227,18 @@ class PhoenixRuntime:
         answer       = leo_response.get("answer", "")
 
         # Continuous Speculative Learning from rejections
-        num_accepted, verified_toks = self.eagle3.verify_draft(draft_toks, np.random.randn(4, 32000))
-        if num_accepted < len(draft_toks):
-            self.centurion.spec_trainer.record_rejection(init_h, draft_toks[num_accepted], verified_toks[num_accepted])
-            batch = self.centurion.spec_trainer.get_training_batch(batch_size=8)
-            if batch:
-                fake_grad = {"feat": np.random.randn(768, 768).astype(np.float32)}
-                self.centurion.galore.step(fake_grad)
-        else:
-            self.centurion.spec_trainer.record_acceptance()
+        try:
+            num_accepted, verified_toks = self.eagle3.verify_draft(draft_toks, np.random.randn(4, 32000))
+            if num_accepted < len(draft_toks) and num_accepted < len(verified_toks):
+                self.centurion.spec_trainer.record_rejection(init_h, draft_toks[num_accepted], verified_toks[num_accepted])
+                batch = self.centurion.spec_trainer.get_training_batch(batch_size=8)
+                if batch:
+                    fake_grad = {"feat": np.random.randn(768, 768).astype(np.float32)}
+                    self.centurion.galore.step(fake_grad)
+            else:
+                self.centurion.spec_trainer.record_acceptance()
+        except Exception as e:
+            logger.warning(f"Failed to record speculative rejection for continuous learning: {e}")
 
         # Enqueue background dreamer prefetch
         self.predictive_engine.enqueue_prefetch(query)
