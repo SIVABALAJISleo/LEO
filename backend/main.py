@@ -84,6 +84,28 @@ app.include_router(benchmark_router)
 from backend.routers.systems import router as systems_router
 app.include_router(systems_router)
 
+# Compatibility router for TestMemoryAPI endpoints in tests
+from fastapi import APIRouter
+compat_router = APIRouter(prefix="/api/v1/systems", tags=["Systems Compat"])
+
+@compat_router.post("/memory/store")
+async def compat_memory_store(req: dict):
+    from backend.core.memory_system import global_memory_system
+    content = f"{req.get('key')}: {req.get('value')}"
+    memory_id, was_new = global_memory_system.store(
+        content=content,
+        memory_type="semantic",
+        confidence=0.9
+    )
+    return {"memory_id": memory_id, "was_new": was_new}
+
+@compat_router.get("/memory/summary")
+async def compat_memory_summary():
+    from backend.core.memory_system import global_memory_system
+    return global_memory_system.get_summary()
+
+app.include_router(compat_router)
+
 from backend.routers.orchestrate import router as orchestrate_router
 app.include_router(orchestrate_router)
 
