@@ -183,44 +183,15 @@ class KiviZipCacheCompressor:
             packed |= (quantized[:, i::4] & 0x03) << (2 * i)
             
         return packed, scale, zero_point
-
-
-
-class KiviZipCacheCompressor:
-    """
-    KIVI & ZipCache Asymmetric 2-bit Key/Value Cache Quantizer.
-    Reduces memory footprints by 4x for massive context windows (up to 256K).
-    """
-    def __init__(self, group_size: int = 32):
-        self.group_size = group_size
-
-    def quantize_asymmetric_2bit(self, tensor: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+    def dequantize_asymmetric_2bit(self, packed: torch.Tensor, scale: torch.Tensor, zero_point: torch.Tensor, original_shape: Tuple[int, ...]) -> torch.Tensor:
         """
-        Quantizes key or value tensors to 2-bit representation asymmetric values.
-        Returns: (quantized_2bit_packed, scale, zero_point)
+        Dequantizes 2-bit packed representation back to original floating-point values.
         """
-        # Determine group min/max dimensions
-        shape = tensor.shape
-        # Quantize along token sequence dimension
-        flat_tensor = tensor.reshape(-1, self.group_size)
-        
-        t_min = flat_tensor.min(dim=-1, keepdim=True)[0]
-        t_max = flat_tensor.max(dim=-1, keepdim=True)[0]
-        
-        # 2-bit quantization level scale: 2^2 - 1 = 3 levels
-        scale = (t_max - t_min) / 3.0
-        scale = torch.clamp(scale, min=1e-5)
-        
-        zero_point = torch.round(-t_min / scale)
-        
-        # Map values to [0, 3] integers
-        quantized = torch.clamp(torch.round(flat_tensor / scale + zero_point), 0, 3).to(torch.uint8)
-        
-        # Pack 4 2-bit values into a single uint8 byte
-        packed_shape = (quantized.shape[0], quantized.shape[1] // 4)
-        packed = torch.zeros(packed_shape, dtype=torch.uint8)
+        # Unpack 4 2-bit values from uint8
+        unpacked = torch.zeros(packed.shape[0], self.group_size, dtype=torch.float32)
         for i in range(4):
-            packed |= (quantized[:, i::4] & 0x03) << (2 * i)
+            unpacked[:, i::4] = ((packed >> (2 * i)) & 0x03).to(torch.float32)
             
-        return packed, scale, zero_point
+        dequantized = (unpacked - zero_point) * scale
+        return dequantized.reshape(original_shape)
 

@@ -9,6 +9,7 @@ import logging
 import time
 import os
 import sys
+import numpy as np
 from typing import Dict, Any, Optional
 
 # ── Logging ────────────────────────────────────────────────────────────────────
@@ -216,6 +217,7 @@ class PhoenixRuntime:
 
         # ── 6. EAGLE-3 + Medusa Speculative Feature Drafting ─────────────────
         init_h = np.random.randn(1, 768).astype(np.float32)
+        init_emb = np.random.randn(1, 768).astype(np.float32)
         import torch
         draft_feats, draft_toks = self.eagle3.speculatively_draft(init_h, init_emb, k=4)
         medusa_tree = self.medusa.generate_draft(torch.from_numpy(init_h).unsqueeze(1))

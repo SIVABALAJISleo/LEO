@@ -16,7 +16,6 @@ BLOCK_SIZE = 16   # tokens per physical block
 
 class KVBlock:
     """A fixed-size physical KV cache block."""
-    __slots__ = ("block_id", "keys", "values", "ref_count", "num_filled")
 
     def __init__(self, block_id: int, num_heads: int, head_dim: int, dtype=torch.float16):
         self.block_id = block_id
