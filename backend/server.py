@@ -9,7 +9,12 @@ from layer5_local_infer.native_engine import LEONativeOrchestrator
 from layer5_local_infer.bitnet_tmac_engine import BitNetTMacEngine
 from layer4_igpu.openvino_igpu_engine import OpenVINOiGPUEngine
 
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from core_ai.cache_manager import CacheManager
+
 app = FastAPI(title="LEO AI Engine Backend")
+cache_manager = CacheManager()
 
 # Enable CORS for local dev frontend
 app.add_middleware(
@@ -84,6 +89,20 @@ async def orchestrate(req: Request):
     body = await req.json()
     prompt = body.get("prompt") or body.get("query") or "Hello"
     start = time.time()
+    
+    # Check Semantic Cache / Procedural Bypass
+    cached_res, similarity, route = cache_manager.semantic_cache.lookup(prompt)
+    if cached_res:
+        elapsed_ms = round((time.time() - start) * 1000, 2)
+        metrics_data["requests_total"] += 1
+        return {
+            "route": route,
+            "confidence": similarity,
+            "response": cached_res,
+            "latency_ms": elapsed_ms,
+            "used_memory": True,
+        }
+
     response_text = orchestrator.generate(prompt, max_tokens=128)
     elapsed_ms = round((time.time() - start) * 1000, 2)
     metrics_data["requests_total"] += 1

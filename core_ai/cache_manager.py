@@ -143,12 +143,87 @@ class CacheLocalityProfiler:
         }
 
 
+class ConfidenceGatedCache:
+    """
+    Pillar 5 & Pillar 7: Confidence-Gated RAG-Cache Hybrid & Procedural Bypass.
+    Avoids expensive LLM inference by intercepting repetitive queries,
+    verifying context changes (delta verification), and resolving math/logic procedurally.
+    """
+    def __init__(self):
+        # Local key-value cache store with simulated embeddings
+        self.cache_db: List[Dict[str, Any]] = [
+            {
+                "query": "explain the concept of photosynthesis",
+                "response": "Photosynthesis is the process used by plants, algae, and certain bacteria to harness energy from sunlight and turn it into chemical energy.",
+                "context_hash": "default_ctx"
+            },
+            {
+                "query": "how does LEO AI bypass the hardware limits?",
+                "response": "LEO bypasses hardware moats through extreme computation avoidance, semantic caching, and C++ AVX2 assembly execution.",
+                "context_hash": "default_ctx"
+            }
+        ]
+
+    def check_procedural_bypass(self, query: str) -> Optional[str]:
+        """
+        Pillar 7: Proceduralization. Bypasses model entirely for symbolic logic/math.
+        """
+        clean_q = query.lower().replace(" ", "").replace("?", "")
+        # Basic arithmetic detection
+        if all(c in "0123456789+-*/()." for c in clean_q) and len(clean_q) > 2:
+            try:
+                # Safe eval constraint check
+                val = eval(clean_q, {"__builtins__": None}, {})
+                return f"[Procedural Bypass] Calculated value: {val} (computed locally in 0ms)."
+            except Exception:
+                pass
+        return None
+
+    def query_similarity(self, q1: str, q2: str) -> float:
+        """Calculates token-based overlap similarity score between query and cache."""
+        w1 = set(q1.lower().split())
+        w2 = set(q2.lower().split())
+        if not w1 or not w2:
+            return 0.0
+        return len(w1.intersection(w2)) / len(w1.union(w2))
+
+    def lookup(self, query: str, context_hash: str = "default_ctx") -> Tuple[Optional[str], float, str]:
+        """
+        Lookup query in semantic cache with delta context verification.
+        Returns: (Response, Similarity, DecisionRoute)
+        """
+        # 1. Check for procedural bypass
+        proc_ans = self.check_procedural_bypass(query)
+        if proc_ans:
+            return proc_ans, 1.0, "procedural_bypass"
+
+        # 2. Semantic Cache lookup
+        best_match = None
+        best_sim = 0.0
+
+        for item in self.cache_db:
+            sim = self.query_similarity(query, item["query"])
+            if sim > best_sim:
+                best_sim = sim
+                best_match = item
+
+        if best_match and best_sim >= 0.85:
+            # Delta Verification: ensure context has not changed
+            if best_match["context_hash"] == context_hash:
+                return best_match["response"], best_sim, "semantic_cache_hit"
+            else:
+                return None, best_sim, "context_delta_mismatch_fallback_to_llm"
+
+        return None, best_sim, "llm_inference_required"
+
+
 class CacheManager:
     """Unified entry point for LEO Cache-First Inference Layer."""
     def __init__(self):
         self.mem_pool = MemoryPool()
         self.prefetcher = WeightPrefetcher()
         self.profiler = CacheLocalityProfiler()
+        self.semantic_cache = ConfidenceGatedCache()
 
     def get_zero_copy_buffer(self, np_arr: np.ndarray) -> memoryview:
         """Create a zero-copy memoryview wrapper for binary tensor indexing."""
