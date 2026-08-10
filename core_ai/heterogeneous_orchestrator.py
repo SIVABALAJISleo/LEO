@@ -35,7 +35,7 @@ except ImportError:
 if not OPENVINO_AVAILABLE:
     class Core:
         def __init__(self):
-            self.available_devices = ["CPU", "GPU"]
+            self.available_devices = ["CPU"]
         def read_model(self, model_path: str):
             # Create a mock model representation
             class MockModel:
@@ -47,7 +47,7 @@ if not OPENVINO_AVAILABLE:
             return MockModel()
             
         def compile_model(self, model, device="CPU", config=None):
-            return AVX2VNNIOrchestratorKernel(device)
+            return AVX2VNNIOrchestratorKernel("CPU")
 
 class AVX2VNNIOrchestratorKernel:
     """AVX2 VNNI Vectorized INT8 SIMD Heterogeneous Kernel (4/4 Accelerators active)."""
@@ -173,6 +173,10 @@ class HeterogeneousOrchestrator:
         # Compile with heterogeneous plugin
         # In OpenVINO standard: "HETERO:GPU,CPU"
         # If running in simulation, Core compile_model is mocked
+        if "GPU" not in self.devices:
+            logger.info("GPU device not available or disabled. Running CPU-only compilation.")
+            return self.core.compile_model(model, "CPU", config=self.cpu_config)
+
         try:
             compiled_model = self.core.compile_model(
                 model,

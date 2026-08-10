@@ -112,7 +112,21 @@ class OpenVINOLLMPipeline:
                 f"  To convert: optimum-cli export openvino --model Qwen/Qwen2.5-1.5B-Instruct "
                 f"--weight-format int4 {self.model_path}"
             )
+            self._available = False
             return
+
+        if self.device == "GPU":
+            try:
+                from openvino.runtime import Core
+                core = Core()
+                if "GPU" not in core.available_devices:
+                    logger.warning("[OpenVINO] GPU device requested but not available on this hardware. Disabling GPU path.")
+                    self._available = False
+                    return
+            except Exception as e:
+                logger.warning(f"[OpenVINO] Failed checking GPU availability: {e}")
+                self._available = False
+                return
 
         try:
             import openvino_genai as ov_genai
