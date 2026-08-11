@@ -4,8 +4,7 @@
   "sideEffects": false,
   "type": "module",
   "overrides": {
-    "postcss": "^8.5.25",
-    "brace-expansion": "^2.0.1"
+    "postcss": "^8.5.25"
   },
   "scripts": {
     "dev": "vite dev",
