@@ -1,0 +1,1 @@
+import{Q as e,Y as t}from"./index-CxnKmVb_.js";var n=e(),r=()=>(0,n.jsx)(t,{});export{r as component};
