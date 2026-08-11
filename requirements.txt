@@ -91,7 +91,7 @@ langchain-core>=0.3.0
 
 # ── Dev & Test ────────────────────────────────────────────── #
 pytest>=9.0.3
-pytest-asyncio==0.23.8
+pytest-asyncio>=0.24.0
 hypothesis==6.135.25
 mutmut==2.5.1
 mypy==1.13.0
