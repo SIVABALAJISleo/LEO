@@ -4,7 +4,7 @@ echo   LEO AI - 3D Photosynthesis Protocol Startup
 echo ===================================================
 
 echo [1/2] Starting LEO Backend (Uvicorn API on port 8005)...
-start "LEO Backend API" cmd /c "python -m uvicorn backend.main:app --port 8005 --host 0.0.0.0"
+start "LEO Backend API" cmd /c "set APP_ENV=development && python -m uvicorn backend.main:app --port 8005 --host 0.0.0.0 --reload"
 
 echo [2/2] Starting LEO Frontend (Vite Dev Server)...
 start "LEO Frontend" cmd /c "npm run dev"
