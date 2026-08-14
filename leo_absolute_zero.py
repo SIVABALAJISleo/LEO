@@ -67,19 +67,41 @@ def run_thermodynamic_bypass():
     with sync_playwright() as p:
         # CRITICAL: Force Hardware Acceleration and disable software rasterizer
         # This forces Chrome to use the Intel UHD, not the CPU.
-        print("[LEO] Launching Playwright Chromium Browser...")
-        browser = p.chromium.launch(
-            headless=False, 
-            args=[
-                '--enable-gpu',
-                '--ignore-gpu-blocklist',
-                '--use-angle=d3d11',
-                '--enable-unsafe-webgpu',
-                '--disable-software-rasterizer', # Prevents CPU from melting
-                '--disable-frame-rate-limit',
-                '--disable-gpu-sandbox'
-            ]
-        )
+        launch_args = [
+            '--enable-gpu',
+            '--ignore-gpu-blocklist',
+            '--enable-unsafe-webgpu',
+            '--disable-software-rasterizer', # Prevents CPU from melting
+            '--disable-frame-rate-limit',
+            '--disable-gpu-sandbox'
+        ]
+        
+        print("[LEO] Launching Playwright Browser...")
+        browser = None
+        # Try system Google Chrome first (best GPU driver integration)
+        try:
+            browser = p.chromium.launch(
+                headless=False, 
+                channel="chrome",
+                args=launch_args
+            )
+            print("[LEO] Launched Google Chrome successfully with GPU enabled.")
+        except Exception:
+            # Fallback to system Microsoft Edge (pre-installed on Windows)
+            try:
+                browser = p.chromium.launch(
+                    headless=False, 
+                    channel="msedge",
+                    args=launch_args
+                )
+                print("[LEO] Launched Microsoft Edge successfully with GPU enabled.")
+            except Exception:
+                # Fallback to bundled Chromium
+                browser = p.chromium.launch(
+                    headless=False,
+                    args=launch_args
+                )
+                print("[LEO] Launched bundled Chromium.")
         page = browser.new_page()
         
         # Inject the LEO payload BEFORE the website loads
