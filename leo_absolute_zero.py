@@ -3,22 +3,58 @@ import sys
 import time
 from playwright.sync_api import sync_playwright
 
+# Configure stdout to use UTF-8 to prevent UnicodeEncodeError on Windows terminal
+if hasattr(sys.stdout, 'reconfigure'):
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+    except Exception:
+        pass
+
 # THE ABSOLUTE LEAF PAYLOAD
 # This payload uses fast string splitting (no regex hangs) and hard-locks the canvas.
 LEO_ABSOLUTE_ZERO_JS = """
 console.log("🌌 [LEO] Initializing Absolute Zero Bypass Protocol...");
 
-// 1. SHADER CHEMISTRY REWRITE (Fast String Replace - No Regex Hangs)
+// 1. SHADER CHEMISTRY REWRITE & COMPILE LOGGER
 const hookShader = (proto) => {
-    if (!proto || !proto.shaderSource) return;
-    const original = proto.shaderSource;
-    proto.shaderSource = function(shader, src) {
-        // Instantly cut 128 loops to 16, and 100 loops to 16
-        if (src.includes('128')) src = src.split('128').join('16');
-        if (src.includes('100')) src = src.split('100').join('16');
-        if (src.includes('highp')) src = src.split('highp').join('mediump');
-        return original.call(this, shader, src);
-    };
+    if (!proto) return;
+    if (proto.shaderSource) {
+        const original = proto.shaderSource;
+        proto.shaderSource = function(shader, src) {
+            let optimized = src;
+            // Safely replace standalone integers 128 and 100 with 16
+            // Skips "#version 100" and float literals like "100.0" or "128.0"
+            optimized = optimized.replace(/\\b(?:128|100)\\b/g, (match, offset, string) => {
+                const before = string.slice(Math.max(0, offset - 10), offset);
+                if (before.includes("#version")) return match;
+                const after = string.slice(offset + match.length, offset + match.length + 2);
+                if (after.startsWith('.') || after.startsWith('.0')) return match;
+                return '16';
+            });
+            if (optimized.includes('highp')) {
+                optimized = optimized.replace(/\\bhighp\\b/g, 'mediump');
+            }
+            return original.call(this, shader, optimized);
+        };
+    }
+    if (proto.compileShader) {
+        const origCompile = proto.compileShader;
+        proto.compileShader = function(shader) {
+            origCompile.call(this, shader);
+            if (!this.getShaderParameter(shader, this.COMPILE_STATUS)) {
+                console.error("Shader compilation failed: " + this.getShaderInfoLog(shader));
+            }
+        };
+    }
+    if (proto.linkProgram) {
+        const origLink = proto.linkProgram;
+        proto.linkProgram = function(program) {
+            origLink.call(this, program);
+            if (!this.getProgramParameter(program, this.LINK_STATUS)) {
+                console.error("Program linking failed: " + this.getProgramInfoLog(program));
+            }
+        };
+    }
 };
 hookShader(WebGLRenderingContext.prototype);
 if (window.WebGL2RenderingContext) hookShader(WebGL2RenderingContext.prototype);
@@ -103,6 +139,7 @@ def run_thermodynamic_bypass():
                 )
                 print("[LEO] Launched bundled Chromium.")
         page = browser.new_page()
+        page.on("console", lambda msg: print(f"[Browser Console] {msg.type.upper()}: {msg.text}"))
         
         # Inject the LEO payload BEFORE the website loads
         page.add_init_script(LEO_ABSOLUTE_ZERO_JS)

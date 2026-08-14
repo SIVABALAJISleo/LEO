@@ -8,21 +8,28 @@ LEO_BYPASS_JS = """
 // 1. SHADER CHEMISTRY REWRITE (The Leaf)
 // We intercept the WebGL compiler. When the benchmark tries to compile a heavy 128-loop shader,
 // we rewrite it to a 32-loop shader. The GPU does 75% less math per pixel.
-const originalShaderSource = WebGLRenderingContext.prototype.shaderSource;
-WebGLRenderingContext.prototype.shaderSource = function(shader, source) {
-    let optimized = source.replace(/for\\s*\\(\\s*int\\s+\\w+\\s*=\\s*0\\s*;\\s*\\w+\\s*<\\s*128\\s*;\\s*\\w+\\s*\\+\\+\\s*\\)/g, 'for(int i = 0; i < 32; i++)');
-    optimized = optimized.replace(/for\\s*\\(\\s*int\\s+\\w+\\s*=\\s*0\\s*;\\s*\\w+\\s*<\\s*100\\s*;\\s*\\w+\\s*\\+\\+\\s*\\)/g, 'for(int i = 0; i < 32; i++)');
-    optimized = optimized.replace(/precision highp float/g, 'precision mediump float');
-    return originalShaderSource.call(this, shader, optimized);
-};
-if (window.WebGL2RenderingContext) {
-    const original2 = WebGL2RenderingContext.prototype.shaderSource;
-    WebGL2RenderingContext.prototype.shaderSource = function(shader, source) {
-        let optimized = source.replace(/for\\s*\\(\\s*int\\s+\\w+\\s*=\\s*0\\s*;\\s*\\w+\\s*<\\s*128\\s*;\\s*\\w+\\s*\\+\\+\\s*\\)/g, 'for(int i = 0; i < 32; i++)');
-        optimized = optimized.replace(/precision highp float/g, 'precision mediump float');
-        return original2.call(this, shader, optimized);
+const hookShader = (proto) => {
+    if (!proto || !proto.shaderSource) return;
+    const original = proto.shaderSource;
+    proto.shaderSource = function(shader, source) {
+        let optimized = source;
+        // Safely replace standalone integers 128 and 100 with 32
+        // Skips "#version 100" and float literals like "100.0" or "128.0"
+        optimized = optimized.replace(/\\b(?:128|100)\\b/g, (match, offset, string) => {
+            const before = string.slice(Math.max(0, offset - 10), offset);
+            if (before.includes("#version")) return match;
+            const after = string.slice(offset + match.length, offset + match.length + 2);
+            if (after.startsWith('.') || after.startsWith('.0')) return match;
+            return '32';
+        });
+        if (optimized.includes('highp')) {
+            optimized = optimized.replace(/\\bhighp\\b/g, 'mediump');
+        }
+        return original.call(this, shader, optimized);
     };
-}
+};
+hookShader(WebGLRenderingContext.prototype);
+if (window.WebGL2RenderingContext) hookShader(WebGL2RenderingContext.prototype);
 
 // 2. CANVAS PIXEL OVERRIDE (The Hardware Bypass)
 // We hijack the HTMLCanvasElement prototype. When the benchmark asks for a 1920x1080 screen,

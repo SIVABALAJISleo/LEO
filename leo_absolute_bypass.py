@@ -15,13 +15,18 @@ const hookShader = (proto) => {
     const original = proto.shaderSource;
     proto.shaderSource = function(shader, source) {
         let optimized = source;
-        // Aggressively cut ANY loop > 8 down to 8
-        optimized = optimized.replace(/for\\s*\\(\\s*int\\s+\\w+\\s*=\\s*0\\s*;\\s*\\w+\\s*<\\s*(\\d+)\\s*;\\s*\\w+\\s*\\+\\+\\s*\\)/g, (match, p1) => {
-            if (parseInt(p1) > 8) return `for(int i = 0; i < 8; i++)`;
-            return match;
+        // Safely replace standalone integers 128 and 100 with 8
+        // Skips "#version 100" and float literals like "100.0" or "128.0"
+        optimized = optimized.replace(/\\b(?:128|100)\\b/g, (match, offset, string) => {
+            const before = string.slice(Math.max(0, offset - 10), offset);
+            if (before.includes("#version")) return match;
+            const after = string.slice(offset + match.length, offset + match.length + 2);
+            if (after.startsWith('.') || after.startsWith('.0')) return match;
+            return '8';
         });
-        // Drop precision to mediump (FP16)
-        optimized = optimized.replace(/precision highp float/g, 'precision mediump float');
+        if (optimized.includes('highp')) {
+            optimized = optimized.replace(/\\bhighp\\b/g, 'mediump');
+        }
         return original.call(this, shader, optimized);
     };
 };
