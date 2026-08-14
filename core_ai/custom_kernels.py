@@ -1,274 +1,45 @@
-"""
-core_ai/custom_kernels.py
-Production-grade CPU SIMD Kernels (AVX2 and AVX-512) for BitNet operations.
-Optimizes ternary weight operations, custom quantized linear projection layers, and cache blocking.
-"""
+# core_ai/custom_kernels.py
+# THE REAL PHOTOSYNTHESIS: Let C++ do the math, Python just orchestrates.
+from llama_cpp import Llama
+import os
 
-import logging
-import platform
-import numpy as np
-import psutil
-from typing import Tuple, Dict, Optional
+class RealNativeEngine:
+    _instance = None
 
-logger = logging.getLogger(__name__)
-
-try:
-    from numba import njit, prange
-    NUMBA_AVAILABLE = True
-except ImportError:
-    NUMBA_AVAILABLE = False
-    logger.warning("Numba not available. Using standard NumPy fallback for BitNet kernels.")
-
-
-# ── Numba JIT SIMD Kernels ───────────────────────────────────────────────────
-
-if NUMBA_AVAILABLE:
-    @njit(parallel=True, fastmath=True)
-    def _ternary_matmul_avx2_numba(input_arr: np.ndarray, weights_arr: np.ndarray, scale: float) -> np.ndarray:
-        """
-        AVX2-optimized JIT kernel.
-        Utilizes cache-blocking and loop unrolling for maximum cache hit rates.
-        """
-        batch_size, input_dim = input_arr.shape
-        output_dim = weights_arr.shape[0]
-        output = np.zeros((batch_size, output_dim), dtype=np.float32)
-        
-        # Cache blocking parameters
-        block_size_i = 64
-        block_size_o = 64
-
-        for b in prange(batch_size):
-            # Outer block loops
-            for o_block in range(0, output_dim, block_size_o):
-                o_end = min(o_block + block_size_o, output_dim)
-                for i_block in range(0, input_dim, block_size_i):
-                    i_end = min(i_block + block_size_i, input_dim)
-                    
-                    # Compute block indices
-                    for o in range(o_block, o_end):
-                        acc = 0.0
-                        # Loop unrolling factor = 4
-                        i = i_block
-                        while i < i_end - 3:
-                            w0 = weights_arr[o, i]
-                            w1 = weights_arr[o, i+1]
-                            w2 = weights_arr[o, i+2]
-                            w3 = weights_arr[o, i+3]
-                            
-                            # Bypass float multiplication using addition/subtraction
-                            if w0 == 1: acc += input_arr[b, i]
-                            elif w0 == -1: acc -= input_arr[b, i]
-                            
-                            if w1 == 1: acc += input_arr[b, i+1]
-                            elif w1 == -1: acc -= input_arr[b, i+1]
-                            
-                            if w2 == 1: acc += input_arr[b, i+2]
-                            elif w2 == -1: acc -= input_arr[b, i+2]
-                            
-                            if w3 == 1: acc += input_arr[b, i+3]
-                            elif w3 == -1: acc -= input_arr[b, i+3]
-                            
-                            i += 4
-                            
-                        # Remainder loop
-                        while i < i_end:
-                            w = weights_arr[o, i]
-                            if w == 1: acc += input_arr[b, i]
-                            elif w == -1: acc -= input_arr[b, i]
-                            i += 1
-                            
-                        output[b, o] += acc * scale
-        return output
-
-    @njit(parallel=True, fastmath=True)
-    def _ternary_matmul_avx512_numba(input_arr: np.ndarray, weights_arr: np.ndarray, scale: float) -> np.ndarray:
-        """
-        AVX-512-optimized JIT kernel utilizing 512-bit registers (64 float/int elements).
-        Maximizes register allocation and parallel loops.
-        """
-        batch_size, input_dim = input_arr.shape
-        output_dim = weights_arr.shape[0]
-        output = np.zeros((batch_size, output_dim), dtype=np.float32)
-        
-        # AVX-512 register size blocks (64 float32s / 64 int8s)
-        block_size_i = 128
-        block_size_o = 128
-
-        for b in prange(batch_size):
-            for o_block in range(0, output_dim, block_size_o):
-                o_end = min(o_block + block_size_o, output_dim)
-                for i_block in range(0, input_dim, block_size_i):
-                    i_end = min(i_block + block_size_i, input_dim)
-                    
-                    for o in range(o_block, o_end):
-                        acc = 0.0
-                        # Loop unrolling factor = 8 (for 512-bit width loading)
-                        i = i_block
-                        while i < i_end - 7:
-                            # Direct additions/subtractions
-                            for offset in range(8):
-                                w = weights_arr[o, i + offset]
-                                if w == 1:
-                                    acc += input_arr[b, i + offset]
-                                elif w == -1:
-                                    acc -= input_arr[b, i + offset]
-                            i += 8
-                            
-                        # Remainder
-                        while i < i_end:
-                            w = weights_arr[o, i]
-                            if w == 1: acc += input_arr[b, i]
-                            elif w == -1: acc -= input_arr[b, i]
-                            i += 1
-                            
-                        output[b, o] += acc * scale
-        return output
-else:
-    def _ternary_matmul_avx2_numba(input_arr: np.ndarray, weights_arr: np.ndarray, scale: float) -> np.ndarray:
-        mask_pos = (weights_arr == 1).astype(np.float32)
-        mask_neg = (weights_arr == -1).astype(np.float32)
-        return (input_arr @ (mask_pos - mask_neg).T) * scale
-
-    def _ternary_matmul_avx512_numba(input_arr: np.ndarray, weights_arr: np.ndarray, scale: float) -> np.ndarray:
-        return _ternary_matmul_avx2_numba(input_arr, weights_arr, scale)
-
-
-class TritonJITCompiler:
-    """
-    Automated Triton JIT Kernel Compiler.
-    Monitors CPU thermal states and swaps between AVX-512, AVX2, and low-power modes dynamically.
-    """
     def __init__(self):
-        self.thermal_limit_celsius = 85.0
-        
-    def get_optimal_execution_mode(self) -> str:
-        """
-        Returns 'avx512', 'avx2', or 'low_power' based on thermal conditions.
-        """
-        if not hasattr(psutil, "sensors_temperatures"):
-            return "optimal"
+        if RealNativeEngine._instance is None:
+            print("[LEO] Initializing Real C++ Engine (llama.cpp)...")
+            # Default to the BitNet model path
+            model_path = os.environ.get("LEO_MODEL_PATH", "models/bitnet-b1.58-2b.gguf")
             
-        try:
-            temps = psutil.sensors_temperatures()
-            if not temps:
-                return "optimal"
-                
-            # Get max temperature across all cores
-            max_temp = 0.0
-            for name, entries in temps.items():
-                for entry in entries:
-                    if entry.current > max_temp:
-                        max_temp = entry.current
-                        
-            if max_temp >= self.thermal_limit_celsius:
-                logger.warning(f"Thermal throttling detected! Temp={max_temp}°C. Switching to low-power register-blocked kernel.")
-                return "low_power"
-                
-        except Exception as e:
-            logger.debug(f"Failed to read thermals: {e}")
+            # Fallback to pre-existing Qwen model if the BitNet model is not downloaded
+            if not os.path.exists(model_path):
+                fallback_path = "models/qwen2.5-0.5b-instruct-q4_k_m.gguf"
+                if os.path.exists(fallback_path):
+                    print(f"[LEO] Warning: '{model_path}' not found. Falling back to existing Qwen model at '{fallback_path}'.")
+                    model_path = fallback_path
             
-        return "optimal"
-
-
-class BitNetKernels:
-    """
-    Custom CPU kernels for BitNet b1.58 operations
-    Optimized for AVX2 and AVX-512 instructions
-    """
-    def __init__(self):
-        self.cpu_features = self._detect_cpu_features()
-        self.jit_compiler = TritonJITCompiler()
-        
-    def _detect_cpu_features(self) -> Dict[str, bool]:
-        """Detect available CPU instruction sets"""
-        features = {
-            'avx2': True,
-            'fma': True,
-            'avx512': False,
-            'sse4_2': True
-        }
-        
-        # Probe using py-cpuinfo if installed
-        try:
-            import cpuinfo
-            info = cpuinfo.get_cpu_info()
-            flags = info.get('flags', [])
-            for flag in features.keys():
-                features[flag] = flag in flags or flag.upper() in flags
-        except Exception:
-            # Fallback based on typical processor architecture (Intel Core i5-12450H supports AVX2/FMA)
-            pass
-            
-        logger.info(f"[BitNetKernels] Detected CPU features: {features}")
-        return features
-
-    def ternary_matmul_avx2(self, input: np.ndarray, weights: np.ndarray, scale: float = 1.0) -> np.ndarray:
-        """Matrix multiplication with ternary weights using AVX2."""
-        if input.ndim == 1:
-            input = input.reshape(1, -1)
-        if weights.ndim == 1:
-            weights = weights.reshape(1, -1)
-            
-        return _ternary_matmul_avx2_numba(input.astype(np.float32), weights.astype(np.int8), scale)
-
-    def ternary_matmul_avx512(self, input: np.ndarray, weights: np.ndarray, scale: float = 1.0) -> np.ndarray:
-        """Matrix multiplication with ternary weights using AVX-512."""
-        if input.ndim == 1:
-            input = input.reshape(1, -1)
-        if weights.ndim == 1:
-            weights = weights.reshape(1, -1)
-            
-        return _ternary_matmul_avx512_numba(input.astype(np.float32), weights.astype(np.int8), scale)
-
-    def quantize_activations_int8(self, activations: np.ndarray) -> Tuple[np.ndarray, float]:
-        """
-        Quantize activations to 8-bit integers with optimal scaling.
-        Performs per-token absmax quantization.
-        """
-        # Calculate per-token scale
-        max_val = np.max(np.abs(activations), axis=-1, keepdims=True)
-        max_val = np.clip(max_val, 1e-5, None)
-        scale = max_val / 127.0
-        
-        # Quantize to int8
-        quantized = np.round(activations / scale).astype(np.int8)
-        return quantized, scale
-
-    def dequantize_activations(self, quantized: np.ndarray, scale: float) -> np.ndarray:
-        """Dequantize int8 activations back to float32."""
-        return quantized.astype(np.float32) * scale
-
-    def fused_bitnet_linear(
-        self,
-        input: np.ndarray,
-        weights: np.ndarray,
-        bias: Optional[np.ndarray] = None,
-        scale: float = 1.0,
-        force_avx512: bool = False
-    ) -> np.ndarray:
-        """
-        Fused linear operation for BitNet:
-        output = input @ weights.T + bias
-        Uses AVX2 or AVX-512 depending on system capability.
-        """
-        # Quantize input to int8
-        input_q, input_scale = self.quantize_activations_int8(input)
-        
-        # Select kernel execution
-        mode = self.jit_compiler.get_optimal_execution_mode()
-        
-        if force_avx512 or (mode != "low_power" and self.cpu_features.get('avx512', False)):
-            output = self.ternary_matmul_avx512(input_q.astype(np.float32), weights, scale)
-        elif mode == "low_power":
-            # Simulate a heavily unrolled, low-power loop execution path to keep tokens/sec flat
-            output = self.ternary_matmul_avx2(input_q.astype(np.float32), weights, scale)
+            print(f"[LEO] Loading model from: {model_path}")
+            self.llm = Llama(
+                model_path=model_path,
+                n_ctx=2048,
+                n_threads=8,          # Use all i5 physical/performance cores
+                n_gpu_layers=0,       # CPU only for stability on laptop
+                use_mlock=True        # Lock memory to prevent swapping
+            )
+            RealNativeEngine._instance = self
         else:
-            output = self.ternary_matmul_avx2(input_q.astype(np.float32), weights, scale)
-        
-        # Dequantize and apply scale
-        output = output * input_scale
-        
-        # Apply bias
-        if bias is not None:
-            output += bias
-        return output
+            self.llm = RealNativeEngine._instance.llm
+
+    def generate(self, prompt, max_tokens=128):
+        # This runs real AVX2 C++ assembly, not slow Python Numba loops
+        response = self.llm(
+            prompt,
+            max_tokens=max_tokens,
+            temperature=0.7,
+            stop=["</s>"]
+        )
+        return response["choices"][0]["text"]
+
+# Remove the fake Numba ternary matmul completely. 
+# llama.cpp handles BitNet quantization natively in C++.
