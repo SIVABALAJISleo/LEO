@@ -4,7 +4,9 @@
   "sideEffects": false,
   "type": "module",
   "overrides": {
-    "postcss": "^8.5.25"
+    "postcss": "^8.5.25",
+    "js-yaml": "^4.3.1",
+    "dompurify": "^3.4.13"
   },
   "scripts": {
     "dev": "vite dev",
