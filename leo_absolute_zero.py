@@ -107,8 +107,12 @@ def run_thermodynamic_bypass():
         # Inject the LEO payload BEFORE the website loads
         page.add_init_script(LEO_ABSOLUTE_ZERO_JS)
         
-        print("Navigating to Volume Shader BM...")
-        page.goto("https://volumeshaderbm.com/start/", wait_until="commit")
+        print("Navigating to Volume Shader BM (with 90s timeout)...")
+        try:
+            page.goto("https://volumeshaderbm.com/start/", wait_until="commit", timeout=90000)
+        except Exception as e:
+            print(f"[LEO] Warning: Fast navigation attempt failed ({e}). Retrying with relaxed constraints...")
+            page.goto("https://volumeshaderbm.com/start/", timeout=90000)
         
         # Wait for the buttons to appear
         print("Selecting 'Extreme' mode...")
