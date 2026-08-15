@@ -39,8 +39,25 @@ class LEODeepScanAutopilot:
         print("🌌 Initializing LEO Deep Scan Autopilot (Photosynthesis Mode)...")
         print("Scanning system drives for 3D engines...")
         self.blender_path = self._deep_search("blender.exe")
+        if not self.blender_path:
+            self.blender_path = self._find_blender_appx()
         self.unity_path = self._deep_search("Unity.exe")
         self.unreal_path = self._deep_search("UnrealEditor.exe")
+
+    def _find_blender_appx(self):
+        print("   -> Querying Windows AppX database for Microsoft Store Blender...")
+        try:
+            cmd = ["powershell", "-Command", "Get-AppxPackage -Name '*blender*' | Select-Object -ExpandProperty InstallLocation"]
+            res = subprocess.run(cmd, capture_output=True, text=True, check=True)
+            install_dir = res.stdout.strip()
+            if install_dir and os.path.exists(install_dir):
+                candidate = os.path.join(install_dir, "Blender", "blender.exe")
+                if os.path.exists(candidate):
+                    print(f"      [FOUND via AppX] blender.exe -> {candidate}")
+                    return candidate
+        except Exception:
+            pass
+        return None
 
     def _deep_search(self, filename):
         # Search common locations deeply (specific subdirectories first to optimize speed)
