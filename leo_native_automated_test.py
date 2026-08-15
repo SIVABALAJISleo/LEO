@@ -52,6 +52,20 @@ class LEOAutopilot:
             if os.path.exists(path): return path
         except FileNotFoundError:
             pass
+        
+        # Scan Program Files for Blender Foundation subdirectories
+        base_dir = r"C:\Program Files\Blender Foundation"
+        if os.path.exists(base_dir):
+            try:
+                for folder in os.listdir(base_dir):
+                    full_folder = os.path.join(base_dir, folder)
+                    if os.path.isdir(full_folder):
+                        candidate = os.path.join(full_folder, "blender.exe")
+                        if os.path.exists(candidate):
+                            return candidate
+            except Exception:
+                pass
+
         # Fallback common paths
         common_paths = [r"C:\Program Files\Blender Foundation\Blender\blender.exe", r"C:\Program Files (x86)\Blender Foundation\Blender\blender.exe"]
         for p in common_paths:
@@ -70,11 +84,48 @@ class LEOAutopilot:
             if os.path.exists(unity_exe): return unity_exe
         except Exception:
             pass
+            
+        # Scan Program Files for Unity Hub installed Editors
+        base_dir = r"C:\Program Files\Unity\Hub\Editor"
+        if os.path.exists(base_dir):
+            try:
+                for folder in os.listdir(base_dir):
+                    full_folder = os.path.join(base_dir, folder)
+                    if os.path.isdir(full_folder):
+                        candidate = os.path.join(full_folder, "Editor", "Unity.exe")
+                        if os.path.exists(candidate):
+                            return candidate
+            except Exception:
+                pass
+                
+        # Check standard Unity install path
+        std_path = r"C:\Program Files\Unity\Editor\Unity.exe"
+        if os.path.exists(std_path):
+            return std_path
+            
         return None
 
     def _find_unreal(self):
-        # Unreal doesn't use registry the same way, check common directories
-        common_paths = [r"C:\Program Files\Epic Games\UE_5.3\Engine\Binaries\Win64\UnrealEditor.exe", r"C:\Program Files\Epic Games\UE_5.4\Engine\Binaries\Win64\UnrealEditor.exe"]
+        # Epic Games UE directory scan
+        base_dir = r"C:\Program Files\Epic Games"
+        if os.path.exists(base_dir):
+            try:
+                for folder in os.listdir(base_dir):
+                    if folder.startswith("UE_"):
+                        full_folder = os.path.join(base_dir, folder)
+                        if os.path.isdir(full_folder):
+                            candidate = os.path.join(full_folder, "Engine", "Binaries", "Win64", "UnrealEditor.exe")
+                            if os.path.exists(candidate):
+                                return candidate
+            except Exception:
+                pass
+
+        # Fallback common paths
+        common_paths = [
+            r"C:\Program Files\Epic Games\UE_5.3\Engine\Binaries\Win64\UnrealEditor.exe", 
+            r"C:\Program Files\Epic Games\UE_5.4\Engine\Binaries\Win64\UnrealEditor.exe",
+            r"C:\Program Files\Epic Games\UE_5.5\Engine\Binaries\Win64\UnrealEditor.exe"
+        ]
         for p in common_paths:
             if os.path.exists(p): return p
         return None
