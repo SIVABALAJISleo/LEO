@@ -34,118 +34,62 @@ try:
 except ImportError:
     pass
 
-import winreg
-
-class LEOAutopilot:
+class LEODeepScanAutopilot:
     def __init__(self):
-        print("🌌 Initializing LEO Autopilot (Photosynthesis Mode)...")
-        print("Scanning system registry for 3D engines...")
-        self.blender_path = self._find_blender()
-        self.unity_path = self._find_unity()
-        self.unreal_path = self._find_unreal()
+        print("🌌 Initializing LEO Deep Scan Autopilot (Photosynthesis Mode)...")
+        print("Scanning system drives for 3D engines...")
+        self.blender_path = self._deep_search("blender.exe")
+        self.unity_path = self._deep_search("Unity.exe")
+        self.unreal_path = self._deep_search("UnrealEditor.exe")
 
-    def _find_blender(self):
-        try:
-            key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\blender.exe")
-            path, _ = winreg.QueryValueEx(key, "")
-            winreg.CloseKey(key)
-            if os.path.exists(path): return path
-        except FileNotFoundError:
-            pass
-        
-        # Scan Program Files for Blender Foundation subdirectories
-        base_dir = r"C:\Program Files\Blender Foundation"
-        if os.path.exists(base_dir):
-            try:
-                for folder in os.listdir(base_dir):
-                    full_folder = os.path.join(base_dir, folder)
-                    if os.path.isdir(full_folder):
-                        candidate = os.path.join(full_folder, "blender.exe")
-                        if os.path.exists(candidate):
-                            return candidate
-            except Exception:
-                pass
-
-        # Fallback common paths
-        common_paths = [r"C:\Program Files\Blender Foundation\Blender\blender.exe", r"C:\Program Files (x86)\Blender Foundation\Blender\blender.exe"]
-        for p in common_paths:
-            if os.path.exists(p): return p
-        return None
-
-    def _find_unity(self):
-        try:
-            key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r"Software\Unity Technologies\Installer")
-            subkey_name = winreg.EnumKey(key, 0)
-            subkey = winreg.OpenKey(key, subkey_name)
-            path, _ = winreg.QueryValueEx(subkey, "Location x64")
-            winreg.CloseKey(subkey)
-            winreg.CloseKey(key)
-            unity_exe = os.path.join(path, "Editor", "Unity.exe")
-            if os.path.exists(unity_exe): return unity_exe
-        except Exception:
-            pass
-            
-        # Scan Program Files for Unity Hub installed Editors
-        base_dir = r"C:\Program Files\Unity\Hub\Editor"
-        if os.path.exists(base_dir):
-            try:
-                for folder in os.listdir(base_dir):
-                    full_folder = os.path.join(base_dir, folder)
-                    if os.path.isdir(full_folder):
-                        candidate = os.path.join(full_folder, "Editor", "Unity.exe")
-                        if os.path.exists(candidate):
-                            return candidate
-            except Exception:
-                pass
-                
-        # Check standard Unity install path
-        std_path = r"C:\Program Files\Unity\Editor\Unity.exe"
-        if os.path.exists(std_path):
-            return std_path
-            
-        return None
-
-    def _find_unreal(self):
-        # Epic Games UE directory scan
-        base_dir = r"C:\Program Files\Epic Games"
-        if os.path.exists(base_dir):
-            try:
-                for folder in os.listdir(base_dir):
-                    if folder.startswith("UE_"):
-                        full_folder = os.path.join(base_dir, folder)
-                        if os.path.isdir(full_folder):
-                            candidate = os.path.join(full_folder, "Engine", "Binaries", "Win64", "UnrealEditor.exe")
-                            if os.path.exists(candidate):
-                                return candidate
-            except Exception:
-                pass
-
-        # Fallback common paths
-        common_paths = [
-            r"C:\Program Files\Epic Games\UE_5.3\Engine\Binaries\Win64\UnrealEditor.exe", 
-            r"C:\Program Files\Epic Games\UE_5.4\Engine\Binaries\Win64\UnrealEditor.exe",
-            r"C:\Program Files\Epic Games\UE_5.5\Engine\Binaries\Win64\UnrealEditor.exe"
+    def _deep_search(self, filename):
+        # Search common locations deeply (specific subdirectories first to optimize speed)
+        search_roots = [
+            r"C:\Program Files\Blender Foundation",
+            r"C:\Program Files\Unity\Hub\Editor",
+            r"C:\Program Files\Unity",
+            r"C:\Program Files\Epic Games",
+            r"C:\Program Files",
+            r"C:\Program Files (x86)",
+            os.path.join(os.path.expanduser("~"), "Desktop"),
+            os.path.join(os.path.expanduser("~"), "Downloads")
         ]
-        for p in common_paths:
-            if os.path.exists(p): return p
+        
+        for root_dir in search_roots:
+            if not os.path.exists(root_dir): continue
+            print(f"   -> Scanning {root_dir}...")
+            for root, dirs, files in os.walk(root_dir):
+                # Limit depth to prevent scanning for hours
+                norm_root = os.path.normpath(root)
+                norm_root_dir = os.path.normpath(root_dir)
+                depth = norm_root.count(os.sep) - norm_root_dir.count(os.sep)
+                if depth > 6:
+                    dirs[:] = [] # Don't go deeper than 6 folders
+                    continue
+                    
+                if filename.lower() in [f.lower() for f in files]:
+                    found_path = os.path.join(root, filename)
+                    print(f"      [FOUND] {filename} -> {found_path}")
+                    return found_path
         return None
 
     def run_blender_test(self):
         if not self.blender_path:
-            print("❌ Blender not found on system. Skipping.")
+            print("❌ Blender not found. Please download it from blender.org and install it.")
             return
 
         print(f"\n✅ Blender Found: {self.blender_path}")
         print("Launching Blender with LEO Bypass (25% Render, Solid Viewport)...")
         
-        # Python script to inject into Blender
+        # Python script to inject into Blender to lower resolution and stop heat
         leo_script = "import bpy; bpy.context.scene.render.resolution_percentage = 25; bpy.context.scene.eevee.taa_render_samples = 16;"
         
         proc = subprocess.Popen([self.blender_path, "--python-expr", leo_script])
-        time.sleep(10) # Wait for it to load
+        time.sleep(10) # Wait for Blender to load
         
         print("Forcing Viewport to Solid Mode (Zero Heat)...")
         try:
+            # Simulate pressing 'Z' and selecting Solid
             pyautogui.hotkey('z')
             time.sleep(1)
             pyautogui.press('down', presses=2)
@@ -160,33 +104,30 @@ class LEOAutopilot:
 
     def run_unity_test(self):
         if not self.unity_path:
-            print("❌ Unity Editor not found on system. Skipping.")
+            print("❌ Unity Editor not found. Skipping.")
             return
             
         print(f"\n✅ Unity Found: {self.unity_path}")
         print("Launching Unity Editor...")
         subprocess.Popen([self.unity_path])
         print("✅ UNITY TEST RUNNING: Editor is launching.")
-        print("LEO has disabled VSync globally for Unity. Check your GPU temperature (it will stay cool).")
-        # In a full script, we would find the project and modify QualitySettings.asset
         time.sleep(15)
 
     def run_unreal_test(self):
         if not self.unreal_path:
-            print("❌ Unreal Editor not found in default paths. Skipping.")
+            print("❌ Unreal Editor not found. Skipping.")
             return
             
         print(f"\n✅ Unreal Found: {self.unreal_path}")
         print("Launching Unreal Editor...")
         subprocess.Popen([self.unreal_path])
         print("✅ UNREAL TEST RUNNING: Editor is launching.")
-        print("LEO will force 20% Screen Percentage once the project loads.")
         time.sleep(15)
 
 if __name__ == "__main__":
-    leo = LEOAutopilot()
+    leo = LEODeepScanAutopilot()
     print("==================================================")
-    print("LEO AUTOPILOT TEST PROTOCOL INITIATED")
+    print("LEO DEEP SCAN AUTOPILOT TEST PROTOCOL INITIATED")
     print("==================================================")
     
     # Handle non-interactive console runners gracefully
@@ -198,4 +139,3 @@ if __name__ == "__main__":
         leo.run_unreal_test()
     
     print("\n🌌 LEO AUTOPILOT TEST COMPLETE.")
-    print("If the engines launched smoothly without overheating, the 100% breakthrough is proven.")
