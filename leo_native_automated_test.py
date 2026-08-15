@@ -53,8 +53,15 @@ class LEODeepScanAutopilot:
             if install_dir and os.path.exists(install_dir):
                 candidate = os.path.join(install_dir, "Blender", "blender.exe")
                 if os.path.exists(candidate):
-                    print(f"      [FOUND via AppX] blender.exe -> {candidate}")
-                    return candidate
+                    # Direct execution in WindowsApps is blocked (WinError 5 Access is denied).
+                    # Map it to the local user AppExecutionAlias blender-launcher.exe which has execute permissions!
+                    alias_path = os.path.join(os.environ.get("LOCALAPPDATA", ""), "Microsoft", "WindowsApps", "blender-launcher.exe")
+                    if os.path.exists(alias_path):
+                        print(f"      [FOUND via AppX Alias] -> {alias_path}")
+                        return alias_path
+                    else:
+                        print(f"      [FOUND via AppX] blender.exe -> {candidate}")
+                        return candidate
         except Exception:
             pass
         return None
