@@ -141,33 +141,35 @@ if __name__ == "__main__":
     
     # Handle non-interactive console runners gracefully
     if not sys.stdin.isatty():
-        print("[LEO] Non-interactive environment detected. Skipping interactive path prompting and exiting.")
+        print("[LEO] Non-interactive environment detected. Skipping test execution.")
         BLENDER_EXE = ""
         BLEND_FILE = ""
         UNITY_PROJECT = ""
         UNREAL_PROJECT = ""
     else:
-        # --- CONFIGURE YOUR PATHS HERE ---
+        # --- EDIT THESE PATHS TO MATCH YOUR SYSTEM ---
         # Example: r"C:\Program Files\Blender Foundation\Blender\blender.exe"
-        BLENDER_EXE = input("Enter full path to blender.exe: ")
-        # Example: r"C:\Users\Name\Documents\MyProject.uproject" (Leave blank if none)
-        BLEND_FILE = input("Enter path to .blend file (or leave blank): ") 
+        BLENDER_EXE = r"C:\Program Files\Blender Foundation\Blender\blender.exe"
         
-        # Example: r"C:\Users\Name\Documents\MyUnityProject"
-        UNITY_PROJECT = input("Enter full path to Unity Project folder: ")
+        # Leave empty (r"") if you just want to open Blender without a file
+        BLEND_FILE = r"" 
         
-        # Example: r"C:\Users\Name\Documents\MyUnrealProject"
-        UNREAL_PROJECT = input("Enter full path to Unreal Project folder: ")
+        # Example: r"C:\Users\YourName\Documents\MyUnityProject"
+        UNITY_PROJECT = r"C:\Users\LEO\Documents\MyUnityProject"
+        
+        # Example: r"C:\Users\YourName\Documents\MyUnrealProject"
+        UNREAL_PROJECT = r"C:\Users\LEO\Documents\MyUnrealProject"
+        
     print("==================================================\n")
 
     # Run Tests
-    if BLENDER_EXE:
-        leo.test_blender(BLENDER_EXE, BLEND_FILE if BLEND_FILE else None)
+    if BLENDER_EXE and BLENDER_EXE != r"":
+        leo.test_blender(BLENDER_EXE, BLEND_FILE if BLEND_FILE != r"" else None)
         
-    if UNITY_PROJECT:
+    if UNITY_PROJECT and UNITY_PROJECT != r"":
         leo.test_unity(UNITY_PROJECT)
         
-    if UNREAL_PROJECT:
+    if UNREAL_PROJECT and UNREAL_PROJECT != r"":
         leo.test_unreal_engine(UNREAL_PROJECT)
 
     print("\n🌌 LEO AUTOMATED TEST COMPLETE.")
