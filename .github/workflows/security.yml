@@ -1,0 +1,41 @@
+name: Security Scan
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Python security static analysis & dependencies
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run Bandit (SAST)
+        run: |
+          pip install bandit
+          bandit -r backend/ -c bandit.toml || true
+
+      - name: Run Safety Check
+        run: |
+          pip install safety
+          safety check --json || true
+
+      # JavaScript / TypeScript security audit & test
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run npm audit
+        run: |
+          npm audit --audit-level=high || true
+
+      - name: Run Frontend Security Tests
+        run: |
+          npm test -- --run

@@ -3,6 +3,10 @@ import { Route } from "./_authenticated";
 import { setToken } from "@/lib/leo-client";
 
 describe("_authenticated route gate", () => {
+  beforeEach(() => {
+    setToken(null);
+  });
+
   it("redirects to /login when no token", () => {
     setToken(null);
     const beforeLoad = Route.options.beforeLoad as (args: {

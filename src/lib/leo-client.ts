@@ -47,24 +47,17 @@ const DEFAULT_ADMIN_TOKEN = "admin-auto-session";
 
 export function getToken(): string | null {
   if (typeof window === "undefined") return null;
-  const token = window.localStorage.getItem("leo.jwt");
-  if (!token) {
-    window.localStorage.setItem("leo.jwt", DEFAULT_ADMIN_TOKEN);
-    if (!window.localStorage.getItem("leo.user")) {
-      window.localStorage.setItem(
-        "leo.user",
-        JSON.stringify({ email: "admin@leo.ai", username: "admin", permissions: ["admin"] }),
-      );
-    }
-    return DEFAULT_ADMIN_TOKEN;
-  }
-  return token;
+  return window.localStorage.getItem("leo.jwt");
 }
 
 export function setToken(token: string | null) {
   if (typeof window === "undefined") return;
-  if (token) window.localStorage.setItem("leo.jwt", token);
-  else window.localStorage.removeItem("leo.jwt");
+  if (token) {
+    window.localStorage.setItem("leo.jwt", token);
+  } else {
+    window.localStorage.removeItem("leo.jwt");
+    window.localStorage.removeItem("leo.user");
+  }
 }
 
 // -------- Debug logging (configurable in Settings) --------
@@ -345,7 +338,7 @@ export async function leoFetch(path: string, init: RequestInit = {}): Promise<Re
 
   let res: Response;
   try {
-    res = await fetch(url, { ...init, headers });
+    res = await fetch(url, { credentials: "include", ...init, headers });
     if (!res.ok && res.status >= 500) {
       res = getMockResponse(path, init);
     }
