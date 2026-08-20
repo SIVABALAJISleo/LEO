@@ -1,0 +1,35 @@
+{
+  "protocol_version": "2.0.0-FALSIFICATION-GAUNTLET",
+  "freeze_timestamp": "2026-08-20T21:16:00Z",
+  "evaluation_rules": {
+    "correctness": {
+      "numerical_epsilon": 1e-4,
+      "strict_integer_matching": true,
+      "image_ssim_floor": 0.90,
+      "text_quality_floor": 0.95
+    },
+    "performance": {
+      "performance_floor_percentage_of_dgpu": 100.0,
+      "interactive_latency_ceiling_ms": 16.0,
+      "ai_ttft_ceiling_ms": 250.0,
+      "ai_p95_latency_ceiling_ms": 500.0
+    },
+    "stability": {
+      "endurance_duration_seconds": 3600,
+      "maximum_memory_leak_mb": 256.0,
+      "max_thermal_throttling_drop_pct": 15.0
+    },
+    "falsification_rule": "If HYPER fails any material workload category on physical hardware relative to a dedicated GPU, the Universal Replacement claim is strictly FALSIFIED, and the Validated Scope must be bounded."
+  },
+  "verdict_categories": [
+    "RAW_COMPUTE_REPLACEMENT",
+    "AI_INFERENCE_REPLACEMENT",
+    "GRAPHICS_REPLACEMENT",
+    "RAY_TRACING_REPLACEMENT",
+    "MEDIA_REPLACEMENT",
+    "SCIENTIFIC_COMPUTE_REPLACEMENT",
+    "REAL_APPLICATION_REPLACEMENT",
+    "SYSTEM_LEVEL_REPLACEMENT",
+    "SUSTAINED_REPLACEMENT"
+  ]
+}

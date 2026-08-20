@@ -1,0 +1,59 @@
+{
+  "timestamp": "2026-08-20T21:15:30Z",
+  "system": {
+    "os": "Windows 11",
+    "os_version": "10.0.26100",
+    "architecture": "AMD64"
+  },
+  "cpu": {
+    "model": "13th Gen Intel(R) Core(TM) i5-13420H",
+    "physical_cores": 8,
+    "logical_processors": 12,
+    "architecture": "x86_64",
+    "supported_extensions": ["AVX", "AVX2", "FMA", "SSE4.1", "SSE4.2", "VNNI"]
+  },
+  "memory": {
+    "total_ram_gb": 15.70,
+    "type": "DDR4",
+    "measured_bandwidth_gb_s": 38.4
+  },
+  "integrated_gpu": {
+    "present": true,
+    "model": "Intel(R) UHD Graphics",
+    "execution_units": 48,
+    "driver_version": "32.0.101.7076",
+    "status": "OK",
+    "vram_type": "Shared System RAM",
+    "allocated_vram_gb": 2.0
+  },
+  "dedicated_gpu": {
+    "present": false,
+    "model": null,
+    "status": "NOT PHYSICALLY INSTALLED",
+    "cuda_available": false,
+    "rocm_available": false
+  },
+  "runtimes": {
+    "pytorch_version": "2.10.0+cpu",
+    "openvino_available": true,
+    "openvino_devices": ["CPU", "GPU"],
+    "directml_available": true,
+    "webgpu_webgl_supported": true
+  },
+  "reference_baselines": {
+    "rtx_3060_laptop": {
+      "type": "REFERENCE HARDWARE (NOT LOCAL)",
+      "fp32_tflops": 12.72,
+      "vram_gb": 6.0,
+      "vram_type": "GDDR6",
+      "bandwidth_gb_s": 336.0
+    },
+    "rtx_4090_desktop": {
+      "type": "REFERENCE HARDWARE (NOT LOCAL)",
+      "fp32_tflops": 81.80,
+      "vram_gb": 24.0,
+      "vram_type": "GDDR6X",
+      "bandwidth_gb_s": 1008.0
+    }
+  }
+}
