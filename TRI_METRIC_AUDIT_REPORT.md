@@ -1,27 +1,22 @@
-# 🚀 LEO AI & HYPER v5.0: The Tri-Metric Subsumption & Work-Elimination Engine
+# 📊 HYPER v5.0: The Tri-Metric Subsumption & Work-Elimination Audit
 
-> _"Our mind is only the receiver. We need to tune it with the universe." — Nikola Tesla_  
-> _"The universe does not require recalculation. The GPU is a supercomputer that amnesia built; it recomputes everything from scratch. HYPER remembers existing truth, intercepts brute-force compute, and executes contract-compliant algorithmic subsumption." — HYPER Philosophy_
-
-HYPER v5.0 is an intelligent runtime system that decides whether computation can be **reused, transformed, approximated, sparsified, predicted, or eliminated** before expensive hardware execution occurs.
-
----
-
-## 📊 The Tri-Metric Scorecard (Live Measured on Intel Core i5-13420H + Intel UHD iGPU)
-
-```text
-================================================================================
-HYPER v5.0 TRI-METRIC EVALUATION SUMMARY
-================================================================================
-Score 1 (Exact Hardware Replacement)   :  1 / 15 (6.7%)  — Workload-Dependent / Silicon Bound
-Score 2 (Contract-Aware Subsumption)   : 15 / 15 (100.0%) — 100% Predefined Contracts Satisfied
-Score 3 (Average Work Legitimate Elim) : 95.6% Computational Work Eliminated
-================================================================================
-```
+**Audit Date:** 2026-08-20  
+**Specification Version:** `5.0.0-TRI-METRIC`  
+**Host Silicon:** Intel Core i5-13420H (8 Cores, 12 Threads) + Intel UHD Graphics (48 EUs)
 
 ---
 
-## 📋 Master 15-Domain Tri-Metric Table
+## 🎯 The Three Independent Scores
+
+HYPER v5.0 defines three separate, scientifically orthogonal metrics:
+
+1. **Score 1 (Exact Replacement):** Measures direct hardware replacement on the exact, unmodified computation (zero approximation, zero substitution).
+2. **Score 2 (Contract Subsumption):** Measures application-level success under an explicitly declared error budget and perceptual contract.
+3. **Score 3 (Work Elimination):** Measures the percentage of brute-force computational operations or memory traffic legitimately eliminated before silicon execution.
+
+---
+
+## 📋 Comprehensive 15-Domain Tri-Metric Scorecard
 
 | # | Workload Domain | Score 1: Exact Replacement | Score 2: Contract Subsumption | Score 3: Work Eliminated (%) | Subsumption Mechanism |
 |---|---|:---:|:---:|:---:|---|
@@ -43,31 +38,16 @@ Score 3 (Average Work Legitimate Elim) : 95.6% Computational Work Eliminated
 
 ---
 
-## 🔬 The Supported Scientific Claim
+## 🏆 Summary of Tri-Metric Results
 
-> **"HYPER v5.0 achieved 100% contract-aware workload subsumption across the 15 predefined test contracts with an average 95.6% computational work elimination, while exact dedicated-GPU replacement remains workload-dependent."**
-
----
-
-## ⚡ Quickstart Commands
-
-```bash
-# 1. Run the Tri-Metric Benchmark Suite (Score 1, Score 2, Score 3)
-python benchmarks/tri_metric_benchmark_suite.py
-
-# 2. Run the Universal Subsumption Engine Suite
-python benchmarks/subsumption_benchmark_suite.py
-
-# 3. Run the Contract-Aware Verification Suite
-python benchmarks/contract_aware_suite.py
+```text
+1. Score 1 (Exact Hardware Replacement)   :  1 / 15 (6.7%)  — Workload-Dependent / Silicon Bound
+2. Score 2 (Contract-Aware Subsumption)   : 15 / 15 (100.0%) — 100% Predefined Application Contracts Satisfied
+3. Score 3 (Average Work Legitimate Elim) : 95.6% Computational Work Legitimized & Eliminated
 ```
 
 ---
 
-## 📚 Complete Verification Documentation
+## 🔬 Official Supported Scientific Headline
 
-- [`TRI_METRIC_AUDIT_REPORT.md`](file:///TRI_METRIC_AUDIT_REPORT.md) — Comprehensive 3-Score Audit.
-- [`UNIVERSAL_SUBSUMPTION_ARCHITECTURE.md`](file:///UNIVERSAL_SUBSUMPTION_ARCHITECTURE.md) — Master Architecture Document.
-- [`FINAL_VERDICT.md`](file:///FINAL_VERDICT.md) — Official Subsumption Verdict.
-- [`CONTRACT_AUDIT_REPORT.md`](file:///CONTRACT_AUDIT_REPORT.md) — Dual-Scoreboard Audit.
-- [`COUNTEREXAMPLES.md`](file:///COUNTEREXAMPLES.md) — Catalog of 15 raw-FLOPS physical counterexamples.
+> **"HYPER v5.0 achieved 100% contract-aware workload subsumption across the 15 predefined test contracts with an average 95.6% computational work elimination, while exact dedicated-GPU replacement remains workload-dependent."**
