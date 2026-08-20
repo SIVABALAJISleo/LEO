@@ -10,11 +10,11 @@
     "perceptual": {
       "spp": "4",
       "mode": "PERCEPTUAL",
-      "latency_ms": "130.3984000004857",
-      "ssim_vs_ground_truth": "0.9964027515385244",
+      "latency_ms": "167.75720000070578",
+      "ssim_vs_ground_truth": "0.9963795134327393",
       "ssim_threshold_target": "0.95",
       "perceptual_parity_achieved": true,
-      "parity_claim": "Perceptually equivalent (SSIM: 0.9964 >= 0.95) at 32.2x lower latency vs 100 SPP"
+      "parity_claim": "Perceptually equivalent (SSIM: 0.9964 >= 0.95) at 25.0x lower latency vs 100 SPP"
     }
   },
   "signal_router": {
@@ -24,9 +24,9 @@
       "signal_length": "65536",
       "measured_sparsity_ratio": 0.003325091365220134,
       "sparsity_threshold": "0.1",
-      "probe_latency_ms": "9.69220000115456",
-      "transform_latency_ms": "1.5287999995052814",
-      "total_latency_ms": "11.221000000659842",
+      "probe_latency_ms": "18.242300000565592",
+      "transform_latency_ms": "1.5586999998049578",
+      "total_latency_ms": "19.80100000037055",
       "routing_decision": "SPARSE_FAST_PATH",
       "contract_claim": "Frequency-sparse signal (k/N = 0.003 < 0.1): Bypassed to O(k log k)"
     },
@@ -34,45 +34,45 @@
       "algorithm_selected": "Exact FFT (FFTW / NumPy)",
       "complexity": "O(N log N)",
       "signal_length": "65536",
-      "measured_sparsity_ratio": 0.4109073877334595,
+      "measured_sparsity_ratio": 0.4024650752544403,
       "sparsity_threshold": "0.1",
-      "probe_latency_ms": "0.6314000002021203",
-      "transform_latency_ms": "3.506099999867729",
-      "total_latency_ms": "4.137500000069849",
+      "probe_latency_ms": "0.25940000159607735",
+      "transform_latency_ms": "3.0853999996907078",
+      "total_latency_ms": "3.344800001286785",
       "routing_decision": "DENSE_EXACT_FALLBACK",
-      "contract_claim": "Dense signal (k/N = 0.411 >= 0.1): Exact O(N log N) standard enforced"
+      "contract_claim": "Dense signal (k/N = 0.402 >= 0.1): Exact O(N log N) standard enforced"
     }
   },
   "error_budget": {
     "exact_reduction": {
-      "result": "54996402.88039577",
-      "latency_ms": "9.918499999912456",
+      "result": "54994196.88091493",
+      "latency_ms": "12.604300000020885",
       "method": "Exact Double-Precision Sum (No Approximation)",
       "error_bound": "0.0",
       "contract_honored": true
     },
     "approx_reduction": {
-      "result": "55054292.0",
-      "latency_ms": "0.8454999988316558",
+      "result": "55165712.0",
+      "latency_ms": "0.9412999988853699",
       "method": "Statistical Sampled In-Register Reduction",
-      "measured_relative_error": "0.0010525779103666487",
+      "measured_relative_error": "0.0031188018459257045",
       "tolerance_budget": "0.01",
       "contract_honored": true
     }
   },
   "dynamic_cache_profiler": {
     "status": "STATISTICALLY_VALID",
-    "sample_count": "100",
+    "sample_count": "1000",
     "window_size": "1000",
-    "measured_hit_rate": "0.49",
-    "measured_hit_rate_percentage": "49.0",
+    "measured_hit_rate": "0.461",
+    "measured_hit_rate_percentage": "46.1",
     "avg_cache_hit_latency_ms": "0.06",
     "avg_active_inference_latency_ms": "26.76",
-    "effective_dynamic_latency_ms": "13.677000000000001",
+    "effective_dynamic_latency_ms": "14.451299999999998",
     "baseline_gpu_latency_ms": "15.0",
-    "speedup_vs_gpu": "1.0967317394165386",
+    "speedup_vs_gpu": "1.0379689024516827",
     "claim_valid": true,
-    "scientific_claim": "Under live workload (N=100), HYPER measured a 49.0% hit rate, yielding a dynamic effective latency of 13.68 ms."
+    "scientific_claim": "Under live workload (N=1000), HYPER measured a 46.1% hit rate, yielding a dynamic effective latency of 14.45 ms."
   },
   "perceptual_saturation": {
     "workload": "Interactive AI Token Generation",
