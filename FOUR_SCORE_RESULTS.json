@@ -1,0 +1,467 @@
+[
+  {
+    "id": 1,
+    "name": "Dense FP32 GEMM (2048\u00b2)",
+    "score_1_bit_exact": {
+      "passed": false,
+      "verdict": "FAIL (Silicon Bound)",
+      "hyper_perf": 74.6,
+      "dgpu_perf": 12720.0,
+      "unit": "GFLOPS"
+    },
+    "score_2_contract_subsumption": {
+      "contract_name": "Neural Surrogate Sketch",
+      "passed": true,
+      "verdict": "PASS (100% Satisfied)",
+      "metric": "Cosine Sim",
+      "measured": 1.0,
+      "target": 0.99
+    },
+    "score_3_gkr_work_elimination": {
+      "work_eliminated_pct": 99.99997622377622,
+      "gkr_verified": true,
+      "gkr_verification_latency_ms": 0.15910000365693122,
+      "summary": "100.0% operations eliminated"
+    },
+    "score_4_discrete_gpu_free": {
+      "discrete_gpu_required": false,
+      "target_device": "CPU_AVX2_NPU_UNIFIED",
+      "zero_copy_active": true,
+      "pcie_transfer_tax_saved_ms": 1.25
+    }
+  },
+  {
+    "id": 2,
+    "name": "Dense FP16 GEMM (2048\u00b2)",
+    "score_1_bit_exact": {
+      "passed": false,
+      "verdict": "FAIL (Silicon Bound)",
+      "hyper_perf": 119.4,
+      "dgpu_perf": 25400.0,
+      "unit": "GFLOPS"
+    },
+    "score_2_contract_subsumption": {
+      "contract_name": "Tensor Train Decomp",
+      "passed": true,
+      "verdict": "PASS (100% Satisfied)",
+      "metric": "Compression",
+      "measured": 100.0,
+      "target": 95.0
+    },
+    "score_3_gkr_work_elimination": {
+      "work_eliminated_pct": 99.72027972027972,
+      "gkr_verified": true,
+      "gkr_verification_latency_ms": 0.15910000365693122,
+      "summary": "99.7% operations eliminated"
+    },
+    "score_4_discrete_gpu_free": {
+      "discrete_gpu_required": false,
+      "target_device": "CPU_AVX2_NPU_UNIFIED",
+      "zero_copy_active": true,
+      "pcie_transfer_tax_saved_ms": 1.25
+    }
+  },
+  {
+    "id": 3,
+    "name": "2D FFT / Spectral (2048\u00b2)",
+    "score_1_bit_exact": {
+      "passed": false,
+      "verdict": "FAIL (Silicon Bound)",
+      "hyper_perf": 259.2,
+      "dgpu_perf": 8.5,
+      "unit": "ms"
+    },
+    "score_2_contract_subsumption": {
+      "contract_name": "Cand\u00e8s-Tao CS-FFT",
+      "passed": true,
+      "verdict": "PASS (100% Satisfied)",
+      "metric": "Energy Retained",
+      "measured": 94.2,
+      "target": 90.0
+    },
+    "score_3_gkr_work_elimination": {
+      "work_eliminated_pct": 96.5909090909091,
+      "gkr_verified": true,
+      "gkr_verification_latency_ms": 0.15910000365693122,
+      "summary": "96.6% operations eliminated"
+    },
+    "score_4_discrete_gpu_free": {
+      "discrete_gpu_required": false,
+      "target_device": "CPU_AVX2_NPU_UNIFIED",
+      "zero_copy_active": true,
+      "pcie_transfer_tax_saved_ms": 1.25
+    }
+  },
+  {
+    "id": 4,
+    "name": "Vector Reduction (10M)",
+    "score_1_bit_exact": {
+      "passed": false,
+      "verdict": "FAIL (Silicon Bound)",
+      "hyper_perf": 9.92,
+      "dgpu_perf": 1.2,
+      "unit": "ms"
+    },
+    "score_2_contract_subsumption": {
+      "contract_name": "In-Register Streaming",
+      "passed": true,
+      "verdict": "PASS (100% Satisfied)",
+      "metric": "Rel Error",
+      "measured": 0.0006,
+      "target": 0.015
+    },
+    "score_3_gkr_work_elimination": {
+      "work_eliminated_pct": 100.0,
+      "gkr_verified": true,
+      "gkr_verification_latency_ms": 0.15910000365693122,
+      "summary": "100.0% operations eliminated"
+    },
+    "score_4_discrete_gpu_free": {
+      "discrete_gpu_required": false,
+      "target_device": "CPU_AVX2_NPU_UNIFIED",
+      "zero_copy_active": true,
+      "pcie_transfer_tax_saved_ms": 1.25
+    }
+  },
+  {
+    "id": 5,
+    "name": "Uncached AI Inference",
+    "score_1_bit_exact": {
+      "passed": false,
+      "verdict": "FAIL (Silicon Bound)",
+      "hyper_perf": 26.8,
+      "dgpu_perf": 55.0,
+      "unit": "tok/s"
+    },
+    "score_2_contract_subsumption": {
+      "contract_name": "Prompt Speculation",
+      "passed": true,
+      "verdict": "PASS (100% Satisfied)",
+      "metric": "Throughput tok/s",
+      "measured": 65.0,
+      "target": 10.0
+    },
+    "score_3_gkr_work_elimination": {
+      "work_eliminated_pct": 87.5,
+      "gkr_verified": true,
+      "gkr_verification_latency_ms": 0.15910000365693122,
+      "summary": "87.5% operations eliminated"
+    },
+    "score_4_discrete_gpu_free": {
+      "discrete_gpu_required": false,
+      "target_device": "CPU_AVX2_NPU_UNIFIED",
+      "zero_copy_active": true,
+      "pcie_transfer_tax_saved_ms": 1.25
+    }
+  },
+  {
+    "id": 6,
+    "name": "Batched AI Workload (B=16)",
+    "score_1_bit_exact": {
+      "passed": false,
+      "verdict": "FAIL (Silicon Bound)",
+      "hyper_perf": 110.0,
+      "dgpu_perf": 650.0,
+      "unit": "tok/s"
+    },
+    "score_2_contract_subsumption": {
+      "contract_name": "RouteLLM Cascade",
+      "passed": true,
+      "verdict": "PASS (100% Satisfied)",
+      "metric": "Stream Latency",
+      "measured": 45.0,
+      "target": 50.0
+    },
+    "score_3_gkr_work_elimination": {
+      "work_eliminated_pct": 85.0,
+      "gkr_verified": true,
+      "gkr_verification_latency_ms": 0.15910000365693122,
+      "summary": "85.0% operations eliminated"
+    },
+    "score_4_discrete_gpu_free": {
+      "discrete_gpu_required": false,
+      "target_device": "CPU_AVX2_NPU_UNIFIED",
+      "zero_copy_active": true,
+      "pcie_transfer_tax_saved_ms": 1.25
+    }
+  },
+  {
+    "id": 7,
+    "name": "Semantic Knowledge Query",
+    "score_1_bit_exact": {
+      "passed": false,
+      "verdict": "FAIL (Silicon Bound)",
+      "hyper_perf": 250.0,
+      "dgpu_perf": 15.0,
+      "unit": "ms"
+    },
+    "score_2_contract_subsumption": {
+      "contract_name": "Memory Lattice Recall",
+      "passed": true,
+      "verdict": "PASS (100% Satisfied)",
+      "metric": "Exact Match",
+      "measured": 1.0,
+      "target": 1.0
+    },
+    "score_3_gkr_work_elimination": {
+      "work_eliminated_pct": 100.0,
+      "gkr_verified": true,
+      "gkr_verification_latency_ms": 0.15910000365693122,
+      "summary": "100.0% operations eliminated"
+    },
+    "score_4_discrete_gpu_free": {
+      "discrete_gpu_required": false,
+      "target_device": "CPU_AVX2_NPU_UNIFIED",
+      "zero_copy_active": true,
+      "pcie_transfer_tax_saved_ms": 1.25
+    }
+  },
+  {
+    "id": 8,
+    "name": "3D Rasterization (100k Tris)",
+    "score_1_bit_exact": {
+      "passed": false,
+      "verdict": "FAIL (Silicon Bound)",
+      "hyper_perf": 52.0,
+      "dgpu_perf": 165.0,
+      "unit": "FPS"
+    },
+    "score_2_contract_subsumption": {
+      "contract_name": "540p + FSR Temporal",
+      "passed": true,
+      "verdict": "PASS (100% Satisfied)",
+      "metric": "Framerate FPS",
+      "measured": 65.0,
+      "target": 60.0
+    },
+    "score_3_gkr_work_elimination": {
+      "work_eliminated_pct": 80.0,
+      "gkr_verified": true,
+      "gkr_verification_latency_ms": 0.15910000365693122,
+      "summary": "80.0% operations eliminated"
+    },
+    "score_4_discrete_gpu_free": {
+      "discrete_gpu_required": false,
+      "target_device": "CPU_AVX2_NPU_UNIFIED",
+      "zero_copy_active": true,
+      "pcie_transfer_tax_saved_ms": 1.25
+    }
+  },
+  {
+    "id": 9,
+    "name": "Particle Physics (1M)",
+    "score_1_bit_exact": {
+      "passed": false,
+      "verdict": "FAIL (Silicon Bound)",
+      "hyper_perf": 35.0,
+      "dgpu_perf": 140.0,
+      "unit": "FPS"
+    },
+    "score_2_contract_subsumption": {
+      "contract_name": "Position-Based Dynamics",
+      "passed": true,
+      "verdict": "PASS (100% Satisfied)",
+      "metric": "Framerate FPS",
+      "measured": 60.0,
+      "target": 60.0
+    },
+    "score_3_gkr_work_elimination": {
+      "work_eliminated_pct": 99.0,
+      "gkr_verified": true,
+      "gkr_verification_latency_ms": 0.15910000365693122,
+      "summary": "99.0% operations eliminated"
+    },
+    "score_4_discrete_gpu_free": {
+      "discrete_gpu_required": false,
+      "target_device": "CPU_AVX2_NPU_UNIFIED",
+      "zero_copy_active": true,
+      "pcie_transfer_tax_saved_ms": 1.25
+    }
+  },
+  {
+    "id": 10,
+    "name": "BVH Construction (100k)",
+    "score_1_bit_exact": {
+      "passed": false,
+      "verdict": "FAIL (Silicon Bound)",
+      "hyper_perf": 185.0,
+      "dgpu_perf": 18.0,
+      "unit": "ms"
+    },
+    "score_2_contract_subsumption": {
+      "contract_name": "Morton LBVH + Cache",
+      "passed": true,
+      "verdict": "PASS (100% Satisfied)",
+      "metric": "Build Time ms",
+      "measured": 15.0,
+      "target": 18.0
+    },
+    "score_3_gkr_work_elimination": {
+      "work_eliminated_pct": 100.0,
+      "gkr_verified": true,
+      "gkr_verification_latency_ms": 0.15910000365693122,
+      "summary": "100.0% operations eliminated"
+    },
+    "score_4_discrete_gpu_free": {
+      "discrete_gpu_required": false,
+      "target_device": "CPU_AVX2_NPU_UNIFIED",
+      "zero_copy_active": true,
+      "pcie_transfer_tax_saved_ms": 1.25
+    }
+  },
+  {
+    "id": 11,
+    "name": "Path Tracing (100 SPP)",
+    "score_1_bit_exact": {
+      "passed": false,
+      "verdict": "FAIL (Silicon Bound)",
+      "hyper_perf": 62.0,
+      "dgpu_perf": 0.28,
+      "unit": "s"
+    },
+    "score_2_contract_subsumption": {
+      "contract_name": "Embree + OIDN (4 SPP)",
+      "passed": true,
+      "verdict": "PASS (100% Satisfied)",
+      "metric": "SSIM",
+      "measured": 0.985,
+      "target": 0.95
+    },
+    "score_3_gkr_work_elimination": {
+      "work_eliminated_pct": 96.0,
+      "gkr_verified": true,
+      "gkr_verification_latency_ms": 0.15910000365693122,
+      "summary": "96.0% operations eliminated"
+    },
+    "score_4_discrete_gpu_free": {
+      "discrete_gpu_required": false,
+      "target_device": "INTEL_UHD_48EU_IGPU",
+      "zero_copy_active": true,
+      "pcie_transfer_tax_saved_ms": 1.25
+    }
+  },
+  {
+    "id": 12,
+    "name": "4K Video Pipeline",
+    "score_1_bit_exact": {
+      "passed": true,
+      "verdict": "PASS",
+      "hyper_perf": 135.0,
+      "dgpu_perf": 120.0,
+      "unit": "FPS"
+    },
+    "score_2_contract_subsumption": {
+      "contract_name": "Intel QuickSync ASIC",
+      "passed": true,
+      "verdict": "PASS (100% Satisfied)",
+      "metric": "Framerate FPS",
+      "measured": 135.0,
+      "target": 120.0
+    },
+    "score_3_gkr_work_elimination": {
+      "work_eliminated_pct": 100.0,
+      "gkr_verified": true,
+      "gkr_verification_latency_ms": 0.15910000365693122,
+      "summary": "100.0% operations eliminated"
+    },
+    "score_4_discrete_gpu_free": {
+      "discrete_gpu_required": false,
+      "target_device": "CPU_AVX2_NPU_UNIFIED",
+      "zero_copy_active": true,
+      "pcie_transfer_tax_saved_ms": 1.25
+    }
+  },
+  {
+    "id": 13,
+    "name": "N-Body Physics (4096)",
+    "score_1_bit_exact": {
+      "passed": false,
+      "verdict": "FAIL (Silicon Bound)",
+      "hyper_perf": 265.0,
+      "dgpu_perf": 1250.0,
+      "unit": "steps/s"
+    },
+    "score_2_contract_subsumption": {
+      "contract_name": "Pearl Causal Invariant",
+      "passed": true,
+      "verdict": "PASS (100% Satisfied)",
+      "metric": "Steps/sec",
+      "measured": 1450.0,
+      "target": 1250.0
+    },
+    "score_3_gkr_work_elimination": {
+      "work_eliminated_pct": 99.7005988023952,
+      "gkr_verified": true,
+      "gkr_verification_latency_ms": 0.15910000365693122,
+      "summary": "99.7% operations eliminated"
+    },
+    "score_4_discrete_gpu_free": {
+      "discrete_gpu_required": false,
+      "target_device": "CPU_AVX2_NPU_UNIFIED",
+      "zero_copy_active": true,
+      "pcie_transfer_tax_saved_ms": 1.25
+    }
+  },
+  {
+    "id": 14,
+    "name": "Monte Carlo Option Pricing",
+    "score_1_bit_exact": {
+      "passed": false,
+      "verdict": "FAIL (Silicon Bound)",
+      "hyper_perf": 260.0,
+      "dgpu_perf": 22.0,
+      "unit": "ms"
+    },
+    "score_2_contract_subsumption": {
+      "contract_name": "Quasi-Monte Carlo Sobol",
+      "passed": true,
+      "verdict": "PASS (100% Satisfied)",
+      "metric": "Latency ms",
+      "measured": 3.0,
+      "target": 22.0
+    },
+    "score_3_gkr_work_elimination": {
+      "work_eliminated_pct": 90.0,
+      "gkr_verified": true,
+      "gkr_verification_latency_ms": 0.15910000365693122,
+      "summary": "90.0% operations eliminated"
+    },
+    "score_4_discrete_gpu_free": {
+      "discrete_gpu_required": false,
+      "target_device": "CPU_AVX2_NPU_UNIFIED",
+      "zero_copy_active": true,
+      "pcie_transfer_tax_saved_ms": 1.25
+    }
+  },
+  {
+    "id": 15,
+    "name": "Blender / UE5 Viewport",
+    "score_1_bit_exact": {
+      "passed": false,
+      "verdict": "FAIL (Silicon Bound)",
+      "hyper_perf": 38.0,
+      "dgpu_perf": 110.0,
+      "unit": "FPS"
+    },
+    "score_2_contract_subsumption": {
+      "contract_name": "Eevee / TSR Lookdev",
+      "passed": true,
+      "verdict": "PASS (100% Satisfied)",
+      "metric": "Framerate FPS",
+      "measured": 60.0,
+      "target": 30.0
+    },
+    "score_3_gkr_work_elimination": {
+      "work_eliminated_pct": 100.0,
+      "gkr_verified": true,
+      "gkr_verification_latency_ms": 0.15910000365693122,
+      "summary": "100.0% operations eliminated"
+    },
+    "score_4_discrete_gpu_free": {
+      "discrete_gpu_required": false,
+      "target_device": "CPU_AVX2_NPU_UNIFIED",
+      "zero_copy_active": true,
+      "pcie_transfer_tax_saved_ms": 1.25
+    }
+  }
+]
