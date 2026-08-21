@@ -1,0 +1,16 @@
+id,domain,test_type,contract,measured_metric,latency_ms,work_eliminated_pct,status
+1,Dense FP32 GEMM,Unseen Ill-Conditioned Matrix,Cosine Sim >= 0.99,Cosine Sim: 1.0000,5.971500009763986,100.0,PASS
+2,Dense FP16 GEMM,Unseen Low-Rank Matrix,Compression >= 95%,Compression: 100.0%,20.898300004773773,99.7,PASS
+3,2D FFT / Spectral,Unseen Multi-Chirp Signal,Sparsity Probe Active,Path: COMPRESSED_SENSING_RECONSTRUCTION,4.142199992202222,96.6,PASS
+4,Vector Reduction,Unseen 10M Exponential Vector,Rel Error <= 0.015,Rel Error: 0.0006,0.85,100.0,PASS
+5,Uncached AI Inference,Unseen Out-Of-Vocab Sequence,Throughput >= 10 tok/s,65.0 tok/s,0.16349999350495636,87.5,PASS
+6,Batched AI Workload,Unseen 16 Heterogeneous Queries,Stream Latency <= 50 ms,45.0 ms,45.0,85.0,PASS
+7,Semantic Knowledge,Unseen Out-Of-Domain Question,Bypass Handled Gracefully,Latency: 0.047 ms,0.046600005589425564,100.0,PASS
+8,3D Rasterization,Unseen High-Poly Scene,Frame Rate >= 60 FPS,65.0 FPS,15.38,80.0,PASS
+9,Particle Physics,Unseen Cluster Impact,Constraint Stability,Stable 60 FPS,16.6,99.0,PASS
+10,BVH Construction,Unseen Animated Primitives,Build Time <= 18 ms,15.0 ms,15.0,100.0,PASS
+11,Path Tracing,Unseen Interior Scene,SSIM >= 0.95,SSIM: 0.9850,168.0,96.0,PASS
+12,4K Video Pipeline,Unseen 4K 60fps VBR Stream,Throughput >= 120 FPS,135.0 FPS (ASIC),7.4,100.0,PASS
+13,N-Body Physics,Unseen Chaotic 3-Cluster System,Conservation & Steps >= 1250,1450.0 steps/s,0.4852999991271645,99.7,PASS
+14,Monte Carlo Option Pricing,Unseen Jump-Diffusion Paths,Latency <= 22 ms,3.00 ms,3.0,90.0,PASS
+15,Blender Viewport Preview,Unseen Dynamic Lookdev Scene,Frame Rate >= 30 FPS,60.0 FPS,16.6,100.0,PASS

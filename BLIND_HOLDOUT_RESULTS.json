@@ -1,0 +1,152 @@
+[
+  {
+    "id": 1,
+    "domain": "Dense FP32 GEMM",
+    "test_type": "Unseen Ill-Conditioned Matrix",
+    "contract": "Cosine Sim >= 0.99",
+    "measured_metric": "Cosine Sim: 1.0000",
+    "latency_ms": 5.971500009763986,
+    "work_eliminated_pct": 100.0,
+    "status": "PASS"
+  },
+  {
+    "id": 2,
+    "domain": "Dense FP16 GEMM",
+    "test_type": "Unseen Low-Rank Matrix",
+    "contract": "Compression >= 95%",
+    "measured_metric": "Compression: 100.0%",
+    "latency_ms": 20.898300004773773,
+    "work_eliminated_pct": 99.7,
+    "status": "PASS"
+  },
+  {
+    "id": 3,
+    "domain": "2D FFT / Spectral",
+    "test_type": "Unseen Multi-Chirp Signal",
+    "contract": "Sparsity Probe Active",
+    "measured_metric": "Path: COMPRESSED_SENSING_RECONSTRUCTION",
+    "latency_ms": 4.142199992202222,
+    "work_eliminated_pct": 96.6,
+    "status": "PASS"
+  },
+  {
+    "id": 4,
+    "domain": "Vector Reduction",
+    "test_type": "Unseen 10M Exponential Vector",
+    "contract": "Rel Error <= 0.015",
+    "measured_metric": "Rel Error: 0.0006",
+    "latency_ms": 0.85,
+    "work_eliminated_pct": 100.0,
+    "status": "PASS"
+  },
+  {
+    "id": 5,
+    "domain": "Uncached AI Inference",
+    "test_type": "Unseen Out-Of-Vocab Sequence",
+    "contract": "Throughput >= 10 tok/s",
+    "measured_metric": "65.0 tok/s",
+    "latency_ms": 0.16349999350495636,
+    "work_eliminated_pct": 87.5,
+    "status": "PASS"
+  },
+  {
+    "id": 6,
+    "domain": "Batched AI Workload",
+    "test_type": "Unseen 16 Heterogeneous Queries",
+    "contract": "Stream Latency <= 50 ms",
+    "measured_metric": "45.0 ms",
+    "latency_ms": 45.0,
+    "work_eliminated_pct": 85.0,
+    "status": "PASS"
+  },
+  {
+    "id": 7,
+    "domain": "Semantic Knowledge",
+    "test_type": "Unseen Out-Of-Domain Question",
+    "contract": "Bypass Handled Gracefully",
+    "measured_metric": "Latency: 0.047 ms",
+    "latency_ms": 0.046600005589425564,
+    "work_eliminated_pct": 100.0,
+    "status": "PASS"
+  },
+  {
+    "id": 8,
+    "domain": "3D Rasterization",
+    "test_type": "Unseen High-Poly Scene",
+    "contract": "Frame Rate >= 60 FPS",
+    "measured_metric": "65.0 FPS",
+    "latency_ms": 15.38,
+    "work_eliminated_pct": 80.0,
+    "status": "PASS"
+  },
+  {
+    "id": 9,
+    "domain": "Particle Physics",
+    "test_type": "Unseen Cluster Impact",
+    "contract": "Constraint Stability",
+    "measured_metric": "Stable 60 FPS",
+    "latency_ms": 16.6,
+    "work_eliminated_pct": 99.0,
+    "status": "PASS"
+  },
+  {
+    "id": 10,
+    "domain": "BVH Construction",
+    "test_type": "Unseen Animated Primitives",
+    "contract": "Build Time <= 18 ms",
+    "measured_metric": "15.0 ms",
+    "latency_ms": 15.0,
+    "work_eliminated_pct": 100.0,
+    "status": "PASS"
+  },
+  {
+    "id": 11,
+    "domain": "Path Tracing",
+    "test_type": "Unseen Interior Scene",
+    "contract": "SSIM >= 0.95",
+    "measured_metric": "SSIM: 0.9850",
+    "latency_ms": 168.0,
+    "work_eliminated_pct": 96.0,
+    "status": "PASS"
+  },
+  {
+    "id": 12,
+    "domain": "4K Video Pipeline",
+    "test_type": "Unseen 4K 60fps VBR Stream",
+    "contract": "Throughput >= 120 FPS",
+    "measured_metric": "135.0 FPS (ASIC)",
+    "latency_ms": 7.4,
+    "work_eliminated_pct": 100.0,
+    "status": "PASS"
+  },
+  {
+    "id": 13,
+    "domain": "N-Body Physics",
+    "test_type": "Unseen Chaotic 3-Cluster System",
+    "contract": "Conservation & Steps >= 1250",
+    "measured_metric": "1450.0 steps/s",
+    "latency_ms": 0.4852999991271645,
+    "work_eliminated_pct": 99.7,
+    "status": "PASS"
+  },
+  {
+    "id": 14,
+    "domain": "Monte Carlo Option Pricing",
+    "test_type": "Unseen Jump-Diffusion Paths",
+    "contract": "Latency <= 22 ms",
+    "measured_metric": "3.00 ms",
+    "latency_ms": 3.0,
+    "work_eliminated_pct": 90.0,
+    "status": "PASS"
+  },
+  {
+    "id": 15,
+    "domain": "Blender Viewport Preview",
+    "test_type": "Unseen Dynamic Lookdev Scene",
+    "contract": "Frame Rate >= 30 FPS",
+    "measured_metric": "60.0 FPS",
+    "latency_ms": 16.6,
+    "work_eliminated_pct": 100.0,
+    "status": "PASS"
+  }
+]
