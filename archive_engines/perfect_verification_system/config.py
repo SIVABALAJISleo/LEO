@@ -1,8 +1,11 @@
 from pydantic_settings import BaseSettings
+from pydantic import ConfigDict
 import os
 
 class Settings(BaseSettings):
     APP_NAME: str = "PerfectVerificationSystem"
+    
+    model_config = ConfigDict(env_file=".env")
     
     # Thresholds
     MIN_COVERAGE: float = 0.85

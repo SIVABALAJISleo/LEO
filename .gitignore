@@ -16,11 +16,17 @@ dist-ssr
 .tanstack/**
 .nitro
 
-# Environment Files (Zero-Leak Isolation)
+# Environment Files & Secrets (Zero-Leak Isolation)
 .env
 .env.production
 .env*.local
 .dev.vars
+aws_credentials
+.aws/
+*.key
+*.pem
+secrets.json
+
 
 # Wrangler / Cloudflare
 .wrangler/

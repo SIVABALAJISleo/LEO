@@ -1,7 +1,10 @@
 from pydantic_settings import BaseSettings
+from pydantic import ConfigDict
 import os
 
 class Settings(BaseSettings):
+    model_config = ConfigDict(env_file=".env")
+    
     APP_NAME: str = "ClosedLoopSynthesis"
     
     # Synthesis Loop

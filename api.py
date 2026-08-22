@@ -51,29 +51,6 @@ def run_system(user_query: str):
     print(f"--- SYSTEM SHUTDOWN ---")
     return response
 
-    # 1. Route Compute
-    node = get_compute_node(0.1)
-    print(f"Routing to: {node}")
-    
-    # 2. Resolve Entity
-    entity_type = resolve_entity("NVIDIA")
-    print(f"Entity Resolved: {entity_type}")
-    
-    # 3. Parse Input
-    parsed = parse_input(user_query)
-    print(f"Input Parsed: {parsed}")
-    
-    # 4. Execute Reasoning Loop
-    results = start_loop(user_query, steps=2)
-    print(f"Reasoning Complete: {results}")
-    
-    # 5. Verify Results
-    final_result = results[-1]["result"]
-    is_valid = validate_output(final_result)
-    print(f"Verification: {'PASS' if is_valid else 'FAIL'}")
-    
-    print(f"--- SYSTEM SHUTDOWN ---")
-
 if __name__ == "__main__":
     query = "Optimize compute for NVIDIA"
     run_system(query)
