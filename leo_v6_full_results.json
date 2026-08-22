@@ -1,0 +1,61 @@
+{
+  "gemm_experiment": [
+    {
+      "size": 64,
+      "numpy_fp32_ms": 0.017,
+      "numpy_int32_ms": 0.174,
+      "trie_int8_ms": 1.968,
+      "blas_speedup": 113.1
+    },
+    {
+      "size": 128,
+      "numpy_fp32_ms": 0.302,
+      "numpy_int32_ms": 2.095,
+      "trie_int8_ms": 12.899,
+      "blas_speedup": 42.7
+    },
+    {
+      "size": 256,
+      "numpy_fp32_ms": 0.593,
+      "numpy_int32_ms": 18.585,
+      "trie_int8_ms": 92.56,
+      "blas_speedup": 156.2
+    },
+    {
+      "size": 512,
+      "numpy_fp32_ms": 2.288,
+      "numpy_int32_ms": 153.133,
+      "trie_int8_ms": "skipped",
+      "blas_speedup": "N/A"
+    }
+  ],
+  "three_mode_verification": [
+    {
+      "mode": "EXACT",
+      "passed": true,
+      "max_error": 8.804917256117341e-16,
+      "mean_error": 1.2596931185825692e-16,
+      "latency_ms": 0.973,
+      "work_avoided_pct": 0.0,
+      "samples_checked": 819
+    },
+    {
+      "mode": "BOUNDED",
+      "passed": true,
+      "max_error": 0.0419876484674375,
+      "mean_error": 0.009198588493888549,
+      "latency_ms": 4.62,
+      "work_avoided_pct": 0.0,
+      "samples_checked": 819
+    },
+    {
+      "mode": "APPROX",
+      "passed": true,
+      "max_error": 2.862182468960238,
+      "mean_error": 0.7039427821395892,
+      "latency_ms": 5.103,
+      "work_avoided_pct": 99.8,
+      "samples_checked": 819
+    }
+  ]
+}
