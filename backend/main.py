@@ -36,33 +36,26 @@ app = FastAPI(
 )
 
 
-_raw_origins = os.getenv("ALLOWED_ORIGINS", "")
-# In development, accept all origins so Cloudflare/ngrok tunnel URLs work.
-# In production, set ALLOWED_ORIGINS to a comma-separated list of allowed domains.
-if _raw_origins.strip():
-    _allowed_origins = [o.strip() for o in _raw_origins.split(",") if o.strip()]
-else:
-    # Default: allow local dev hosts and any HTTPS tunnel (wildcard for *.trycloudflare.com, *.ngrok-free.app, etc.)
-    _allowed_origins = ["*"]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=_allowed_origins,
-    allow_credentials=_allowed_origins != ["*"],  # credentials not compatible with wildcard
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-
 limiter = Limiter(key_func=get_remote_address)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 from backend.security.middlewares import SecurityHeadersMiddleware, PayloadSizeLimitMiddleware, GlobalRateLimitMiddleware
-# Note: Middlewares are executed in reverse order of addition
-app.add_middleware(SecurityHeadersMiddleware)
+# Middlewares execute in reverse order of addition; CORSMiddleware must be added LAST to be outermost
 app.add_middleware(PayloadSizeLimitMiddleware, max_upload_size=5 * 1024 * 1024)
 app.add_middleware(GlobalRateLimitMiddleware, max_requests=600, window_seconds=60)
+app.add_middleware(SecurityHeadersMiddleware)
+
+# Outermost CORS layer allows all localhost and tunnel origins with credentials
+app.add_middleware(
+    CORSMiddleware,
+    allow_origin_regex=r"^https?://.*",
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["*"],
+)
+
 
 app.include_router(bypass_router)
 
@@ -135,3 +128,15 @@ app.include_router(ollama_router)
 
 from backend.routers.dream import router as dream_router
 app.include_router(dream_router)
+
+from backend.routers.hardware_boost import router as hardware_boost_router
+app.include_router(hardware_boost_router)
+
+from backend.routers.governor import router as governor_router
+app.include_router(governor_router)
+
+from backend.routers.contract_subsumption import router as contract_subsumption_router
+app.include_router(contract_subsumption_router)
+
+
+

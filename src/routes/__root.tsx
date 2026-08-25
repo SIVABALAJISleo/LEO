@@ -127,7 +127,9 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   useEffect(() => {
     void import("../lib/web-vitals").then((m) => m.initWebVitals());
+    void import("../lib/webgl-volume-boost").then((m) => m.initLaptopBoost());
   }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>

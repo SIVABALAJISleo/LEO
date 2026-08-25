@@ -56,7 +56,9 @@ __pycache__/
 venv/
 *.db
 *.sqlite
+*.sqlite3
 confidence_weights.json
+
 
 # Kimi Models & Weights (keep license docs, ignore weights/binaries)
 kimi-k3/

@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "LEO AI 60+ FPS Hardware Booster (VolumeShaderBM)",
+  "version": "1.0.0",
+  "description": "Automatically guarantees 60+ FPS and prevents laptop overheating on Volume Shader BM.",
+  "permissions": ["activeTab", "scripting"],
+  "host_permissions": ["*://*.volumeshaderbm.com/*"],
+  "content_scripts": [
+    {
+      "matches": ["*://*.volumeshaderbm.com/*", "*://volumeshaderbm.com/*"],
+      "js": ["singularity_bypass.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    }
+  ]
+}

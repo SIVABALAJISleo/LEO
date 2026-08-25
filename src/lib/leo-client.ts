@@ -3,7 +3,8 @@
 import { toast } from "sonner";
 import { resolveRequestUrl } from "./api-proxy";
 
-const DEFAULT_BASE = "http://localhost:8000";
+const DEFAULT_BASE = "http://localhost:8005";
+
 
 export type ApiBaseSource = "settings" | "env" | "default";
 
