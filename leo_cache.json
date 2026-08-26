@@ -1,0 +1,12 @@
+{
+  "how do i reset my password?": "Go to myaccount.company.com, click 'Forgot Password', check your email for reset link, create new password with 12+ characters including uppercase, lowercase, number, and special character.",
+  "what's the vpn setup process?": "Download Cisco AnyConnect from IT portal. Install it. Open AnyConnect. Server: vpn.company.com. Username: your AD login. Password: your AD password. Click Connect.",
+  "how do i request a new laptop?": "Submit IT ticket via ServiceNow portal. Include: department, laptop specs needed, business justification. Wait for manager approval. IT will ship within 5-7 business days.",
+  "how do i connect to the printer?": "Go to Settings > Devices > Printers. Click 'Add a printer or scanner'. Search for 'Floor3-HP-LaserJet'. Select it. Click 'Add device'. Done.",
+  "what's the onboarding process for new hires?": "1. IT provisions account (1 day). 2. HR sends onboarding checklist. 3. Attend orientation (2 hours). 4. Department training (variable). 5. System access granted (3-5 days).",
+  "how do i report a security incident?": "Call IT Security immediately: ext 5555. Do NOT touch the affected device. Document what happened. Security team will investigate within 1 hour.",
+  "where's the company handbook?": "Download from HR portal: hr.company.com > Documents > Handbook. Or email hr@company.com to request printed copy.",
+  "how do i book a conference room?": "Use Outlook calendar. Click 'New Event'. Select 'Room' dropdown. Search 'Conference Room North'. Select time slot. Send invite to roomreservation@company.com.",
+  "what's the leave approval process?": "Submit in HR portal minimum 2 weeks in advance. Manager auto-approves (or requests changes). HR confirms. Your calendar updates automatically.",
+  "how do i access the file server?": "On Windows: File Explorer > Map Network Drive > \\\\fileserver.company.local\\yourteam > use AD credentials. On Mac: Finder > Connect to Server > smb://fileserver.company.local"
+}
