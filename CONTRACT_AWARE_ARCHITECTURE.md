@@ -1,7 +1,7 @@
 # 📜 HYPER Protocol v2.0: The Contract-Aware Bypass Architecture
 
 **Specification Version:** `2.0.0-CONTRACT-AWARE`  
-**Core Principle:** *"The system must not lie to itself. It explicitly negotiates the boundary between mathematical truth and human perception."*
+**Core Principle:** _"The system must not lie to itself. It explicitly negotiates the boundary between mathematical truth and human perception."_
 
 ---
 
@@ -32,6 +32,7 @@ class RenderingContract:
 ## 2. The Signal Router: Sparsity-Probed FFT
 
 Before any FFT operation, HYPER executes an $O(N)$ energy-concentration probe to estimate the frequency sparsity ratio ($k/N$):
+
 - **If $k/N < 0.1$:** Routes to MIT Sublinear Sparse FFT ($O(k \log k)$).
 - **If $k/N \ge 0.1$:** Strictly falls back to Exact FFT ($O(N \log N)$).
 
@@ -46,11 +47,11 @@ Before any FFT operation, HYPER executes an $O(N)$ energy-concentration probe to
 
 No silent approximations. Every workload inherits an `ErrorBudget`. If the application requires `EXACT`, HYPER is forbidden from using approximate kernels.
 
-| Budget Tier | Permitted Tolerance | Mechanism | Use Case |
-|---|:---:|---|---|
-| `EXACT` | $0.0$ (Bitwise) | Double-precision native compute | Scientific / Financial exactness |
-| `FLOAT_TOLERANCE` | $10^{-6}$ | FP32 standard SIMD | Machine Learning weights |
-| `PERCEPTUAL_TOLERANCE` | $\text{SSIM} \ge 0.95$ | OIDN Neural Denoising / FSR Upscaling | Viewport rendering & games |
+| Budget Tier             |     Permitted Tolerance     | Mechanism                                  | Use Case                          |
+| ----------------------- | :-------------------------: | ------------------------------------------ | --------------------------------- |
+| `EXACT`                 |       $0.0$ (Bitwise)       | Double-precision native compute            | Scientific / Financial exactness  |
+| `FLOAT_TOLERANCE`       |          $10^{-6}$          | FP32 standard SIMD                         | Machine Learning weights          |
+| `PERCEPTUAL_TOLERANCE`  |   $\text{SSIM} \ge 0.95$    | OIDN Neural Denoising / FSR Upscaling      | Viewport rendering & games        |
 | `APPLICATION_TOLERANCE` | $\text{Rel Error} \le 0.01$ | In-register sampled reduction / Barnes-Hut | Particle physics & fluid dynamics |
 
 ---
@@ -79,4 +80,5 @@ $$ \text{Parity}(W) = \begin{cases} \text{TRUE} & \text{if } Latency(HYPER) \le 
 ```bash
 python benchmarks/contract_aware_suite.py
 ```
+
 Outputs telemetry to `CONTRACT_AWARE_RESULTS.json`.

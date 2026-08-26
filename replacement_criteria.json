@@ -5,7 +5,7 @@
     "correctness": {
       "numerical_epsilon": 1e-4,
       "strict_integer_matching": true,
-      "image_ssim_floor": 0.90,
+      "image_ssim_floor": 0.9,
       "text_quality_floor": 0.95
     },
     "performance": {

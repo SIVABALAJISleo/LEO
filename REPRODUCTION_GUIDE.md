@@ -5,6 +5,7 @@ To independently reproduce the empirical findings of this Full-Stack GPU Replace
 ---
 
 ## 1. Prerequisites
+
 - Python 3.10+
 - PyTorch (`pip install torch`)
 - OpenVINO (`pip install openvino`)
@@ -21,6 +22,7 @@ python full_stack_falsification_suite.py
 ```
 
 This will:
+
 1. Probe local physical hardware (CPU cores, iGPU EUs, RAM bandwidth).
 2. Execute real physical computations across all 8 domains (Compute, AI, Graphics, Ray Tracing, Media, Scientific, Applications).
 3. Validate numerical isomorphism and output error deltas.
@@ -32,11 +34,13 @@ This will:
 ## 3. Individual Component Benchmarks
 
 To run the real physical FP32 GEMM negative control:
+
 ```bash
 python real_hardware_benchmark.py
 ```
 
 To run the real cognitive interactive AI benchmark (50 prompts):
+
 ```bash
 python real_cognitive_benchmark.py
 ```

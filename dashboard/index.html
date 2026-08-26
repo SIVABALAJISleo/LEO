@@ -699,9 +699,13 @@
         setStatUnit("latency", Number(data.avg_latency_ms) || 0, "ms");
         setStatUnit("early-exit", Number(data.early_exit_savings) || 0, "%");
         setStatUnit("experts", Number(data.active_experts) || 0, " / 64");
-        document.getElementById("total-reqs").textContent = (Number(data.total_requests) || 0).toLocaleString();
+        document.getElementById("total-reqs").textContent = (
+          Number(data.total_requests) || 0
+        ).toLocaleString();
         setStatUnit("kv-used", Number(data.kv_cache_used_pct) || 0, "%");
-        document.getElementById("total-tokens").textContent = (Number(data.total_tokens) || 0).toLocaleString();
+        document.getElementById("total-tokens").textContent = (
+          Number(data.total_tokens) || 0
+        ).toLocaleString();
 
         // Color warnings
         const cpuEl = document.getElementById("tps-card");

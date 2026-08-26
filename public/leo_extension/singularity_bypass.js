@@ -5,8 +5,14 @@
  * Reduces hardware math by 64% - 85% to guarantee 60+ FPS on Simple, Standard, Advanced & Extreme!
  */
 (function () {
-  console.log("%c🌌 [LEO] SPATIAL SUBSUMPTION ENGINE ACTIVATED", "color: #00ff00; font-size: 14px; font-weight: bold;");
-  console.log("%c⚡ 60+ FPS Lock Active across Simple, Standard, Advanced & Extreme!", "color: #00ffff;");
+  console.log(
+    "%c🌌 [LEO] SPATIAL SUBSUMPTION ENGINE ACTIVATED",
+    "color: #00ff00; font-size: 14px; font-weight: bold;",
+  );
+  console.log(
+    "%c⚡ 60+ FPS Lock Active across Simple, Standard, Advanced & Extreme!",
+    "color: #00ffff;",
+  );
 
   const RENDER_SCALE = 0.55; // 55% internal resolution = 70% math reduction
 
@@ -82,5 +88,8 @@
     document.documentElement.appendChild(style);
   }
 
-  console.log("%c✓ [LEO] Hardware math reduced by >70%. 60+ FPS Locked on all modes.", "color: #00ff00;");
+  console.log(
+    "%c✓ [LEO] Hardware math reduced by >70%. 60+ FPS Locked on all modes.",
+    "color: #00ff00;",
+  );
 })();

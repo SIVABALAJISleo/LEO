@@ -1,138 +1,171 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>HYPER GPU-Replacement Falsification Suite</title>
-  <style>
-    :root {
-      --bg: #0d1117;
-      --surface: #161b22;
-      --border: #30363d;
-      --text: #c9d1d9;
-      --text-muted: #8b949e;
-      --primary: #58a6ff;
-      --danger: #f85149;
-      --success: #3fb950;
-      --warning: #d29922;
-    }
-    body {
-      margin: 0; padding: 2rem;
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-    }
-    .header {
-      text-align: center; margin-bottom: 2rem;
-    }
-    .header h1 { color: var(--danger); }
-    
-    .panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-    }
-    
-    .btn {
-      background: var(--danger);
-      color: white;
-      border: none;
-      padding: 1rem 2rem;
-      font-size: 1.2rem;
-      font-weight: bold;
-      border-radius: 6px;
-      cursor: pointer;
-      display: block;
-      margin: 0 auto 2rem auto;
-      transition: opacity 0.2s;
-    }
-    .btn:hover { opacity: 0.8; }
-    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HYPER GPU-Replacement Falsification Suite</title>
+    <style>
+      :root {
+        --bg: #0d1117;
+        --surface: #161b22;
+        --border: #30363d;
+        --text: #c9d1d9;
+        --text-muted: #8b949e;
+        --primary: #58a6ff;
+        --danger: #f85149;
+        --success: #3fb950;
+        --warning: #d29922;
+      }
+      body {
+        margin: 0;
+        padding: 2rem;
+        background: var(--bg);
+        color: var(--text);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+      .header h1 {
+        color: var(--danger);
+      }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-    th, td {
-      padding: 1rem;
-      text-align: left;
-      border-bottom: 1px solid var(--border);
-    }
-    th { color: var(--text-muted); font-weight: 600; }
-    
-    .pass { color: var(--success); font-weight: bold; }
-    .fail { color: var(--danger); font-weight: bold; }
-    .pending { color: var(--warning); }
-    
-    .thresholds {
-      display: flex;
-      justify-content: space-around;
-      background: #111;
-      padding: 1rem;
-      border-radius: 6px;
-      margin-bottom: 1rem;
-    }
-    .threshold-item span { font-weight: bold; color: var(--primary); }
-  </style>
-</head>
-<body>
+      .panel {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+      }
 
-  <div class="header">
-    <h1>🚨 HYPER Falsification Suite</h1>
-    <p>3-Way Blind Hostile Workload Testing (CPU vs Dedicated GPU vs HYPER)</p>
-  </div>
+      .btn {
+        background: var(--danger);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        font-size: 1.2rem;
+        font-weight: bold;
+        border-radius: 6px;
+        cursor: pointer;
+        display: block;
+        margin: 0 auto 2rem auto;
+        transition: opacity 0.2s;
+      }
+      .btn:hover {
+        opacity: 0.8;
+      }
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
 
-  <div class="panel">
-    <h3>Pass Thresholds (Strict Enforcement)</h3>
-    <div class="thresholds">
-      <div class="threshold-item">Correctness: <span>100% (1e-4 Epsilon)</span></div>
-      <div class="threshold-item">Performance Floor: <span>100% of GPU</span></div>
-      <div class="threshold-item">Latency Ceiling: <span>16ms (60 FPS)</span></div>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+      }
+      th,
+      td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+      }
+      th {
+        color: var(--text-muted);
+        font-weight: 600;
+      }
+
+      .pass {
+        color: var(--success);
+        font-weight: bold;
+      }
+      .fail {
+        color: var(--danger);
+        font-weight: bold;
+      }
+      .pending {
+        color: var(--warning);
+      }
+
+      .thresholds {
+        display: flex;
+        justify-content: space-around;
+        background: #111;
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+      }
+      .threshold-item span {
+        font-weight: bold;
+        color: var(--primary);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>🚨 HYPER Falsification Suite</h1>
+      <p>3-Way Blind Hostile Workload Testing (CPU vs Dedicated GPU vs HYPER)</p>
     </div>
-  </div>
 
-  <button id="runTestsBtn" class="btn">🔥 RUN HOSTILE FALSIFICATION SUITE</button>
+    <div class="panel">
+      <h3>Pass Thresholds (Strict Enforcement)</h3>
+      <div class="thresholds">
+        <div class="threshold-item">Correctness: <span>100% (1e-4 Epsilon)</span></div>
+        <div class="threshold-item">Performance Floor: <span>100% of GPU</span></div>
+        <div class="threshold-item">Latency Ceiling: <span>16ms (60 FPS)</span></div>
+      </div>
+    </div>
 
-  <div class="panel">
-    <h3>Live Test Results</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Domain</th>
-          <th>Task</th>
-          <th>CPU (Baseline)</th>
-          <th>Dedicated GPU</th>
-          <th>HYPER</th>
-          <th>Correctness</th>
-          <th>Verdict</th>
-        </tr>
-      </thead>
-      <tbody id="resultsBody">
-        <!-- Dynamic Content -->
-      </tbody>
-    </table>
-  </div>
+    <button id="runTestsBtn" class="btn">🔥 RUN HOSTILE FALSIFICATION SUITE</button>
 
-  <script>
-    const workloads = [
-      { id: "dense", icon: "🧮", name: "Dense Compute", task: "Massive FP32 Matrix Multiplication" },
-      { id: "ai", icon: "🤖", name: "AI/ML", task: "Transformer Inference (Attention)" },
-      { id: "graphics", icon: "🎮", name: "Graphics", task: "Compute Shader Particles (10^7)" },
-      { id: "rtx", icon: "🧊", name: "Ray Tracing", task: "BVH Construction & Traversal" },
-      { id: "media", icon: "🎬", name: "Media", task: "Real-time 4K Image Convolution" },
-      { id: "science", icon: "🌌", name: "Scientific", task: "N-Body Simulation (10^6 bodies)" },
-      { id: "massive", icon: "🔥", name: "Massive Parallelism", task: "10^9 Independent Integer Ops" }
-    ];
+    <div class="panel">
+      <h3>Live Test Results</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Domain</th>
+            <th>Task</th>
+            <th>CPU (Baseline)</th>
+            <th>Dedicated GPU</th>
+            <th>HYPER</th>
+            <th>Correctness</th>
+            <th>Verdict</th>
+          </tr>
+        </thead>
+        <tbody id="resultsBody">
+          <!-- Dynamic Content -->
+        </tbody>
+      </table>
+    </div>
 
-    const tbody = document.getElementById("resultsBody");
-    
-    workloads.forEach(w => {
-      const tr = document.createElement("tr");
-      tr.id = `row-${w.id}`;
-      tr.innerHTML = `
+    <script>
+      const workloads = [
+        {
+          id: "dense",
+          icon: "🧮",
+          name: "Dense Compute",
+          task: "Massive FP32 Matrix Multiplication",
+        },
+        { id: "ai", icon: "🤖", name: "AI/ML", task: "Transformer Inference (Attention)" },
+        { id: "graphics", icon: "🎮", name: "Graphics", task: "Compute Shader Particles (10^7)" },
+        { id: "rtx", icon: "🧊", name: "Ray Tracing", task: "BVH Construction & Traversal" },
+        { id: "media", icon: "🎬", name: "Media", task: "Real-time 4K Image Convolution" },
+        { id: "science", icon: "🌌", name: "Scientific", task: "N-Body Simulation (10^6 bodies)" },
+        {
+          id: "massive",
+          icon: "🔥",
+          name: "Massive Parallelism",
+          task: "10^9 Independent Integer Ops",
+        },
+      ];
+
+      const tbody = document.getElementById("resultsBody");
+
+      workloads.forEach((w) => {
+        const tr = document.createElement("tr");
+        tr.id = `row-${w.id}`;
+        tr.innerHTML = `
         <td>${w.icon} ${w.name}</td>
         <td>${w.task}</td>
         <td id="${w.id}-cpu" class="pending">-</td>
@@ -141,78 +174,98 @@
         <td id="${w.id}-checksum" class="pending">-</td>
         <td id="${w.id}-verdict" class="pending">PENDING</td>
       `;
-      tbody.appendChild(tr);
-    });
-
-    function runHostileWorker(workerFile, targetTask, mode) {
-      return new Promise((resolve) => {
-        const worker = new Worker(workerFile);
-        worker.onmessage = (e) => {
-          resolve(e.data);
-          worker.terminate();
-        };
-        worker.onerror = (err) => {
-          console.error(err);
-          resolve({ metric: 0, checksum: 0, latency: 9999 });
-          worker.terminate();
-        };
-        worker.postMessage({ task: targetTask, mode: mode });
+        tbody.appendChild(tr);
       });
-    }
 
-    document.getElementById("runTestsBtn").addEventListener("click", async function() {
-      this.disabled = true;
-      this.innerText = "⏳ Executing Blind Falsification...";
-
-      for (const w of workloads) {
-        document.getElementById(`row-${w.id}`).style.background = "#21262d";
-        
-        // Mode 0: CPU, Mode 1: GPU, Mode 2: HYPER
-        const cpuRes = await runHostileWorker('./benchmark_workers/falsification_worker.js', w.id, 0);
-        document.getElementById(`${w.id}-cpu`).innerText = `${cpuRes.metric.toFixed(1)} op/s (${cpuRes.latency.toFixed(1)}ms)`;
-
-        const gpuRes = await runHostileWorker('./benchmark_workers/falsification_worker.js', w.id, 1);
-        document.getElementById(`${w.id}-gpu`).innerText = `${gpuRes.metric.toFixed(1)} op/s (${gpuRes.latency.toFixed(1)}ms)`;
-
-        const hyperRes = await runHostileWorker('./benchmark_workers/falsification_worker.js', w.id, 2);
-        document.getElementById(`${w.id}-hyper`).innerText = `${hyperRes.metric.toFixed(1)} op/s (${hyperRes.latency.toFixed(1)}ms)`;
-
-        // Correctness Check (1e-4 Epsilon)
-        const cpuCheck = cpuRes.checksum;
-        const gpuCheck = gpuRes.checksum;
-        const hyperCheck = hyperRes.checksum;
-
-        const isMathIsomorphic = (Math.abs(cpuCheck - gpuCheck) < 1e-4) && (Math.abs(gpuCheck - hyperCheck) < 1e-4);
-        
-        document.getElementById(`${w.id}-checksum`).innerText = isMathIsomorphic ? "✅ PASS" : "❌ FAIL (Divergence)";
-        document.getElementById(`${w.id}-checksum`).className = isMathIsomorphic ? "pass" : "fail";
-
-        // Performance Check (100% of GPU & < 16ms Latency)
-        const perfFloor = gpuRes.metric * 1.0; 
-        const isPerfPass = hyperRes.metric >= perfFloor;
-        const isLatencyPass = hyperRes.latency <= 16.0;
-
-        const verdictEl = document.getElementById(`${w.id}-verdict`);
-        if (!isMathIsomorphic) {
-            verdictEl.innerText = "FAILED: CHEATING";
-            verdictEl.className = "fail";
-        } else if (!isPerfPass) {
-            verdictEl.innerText = "FAILED: TOO SLOW";
-            verdictEl.className = "fail";
-        } else if (!isLatencyPass) {
-            verdictEl.innerText = "FAILED: HIGH LATENCY";
-            verdictEl.className = "fail";
-        } else {
-            verdictEl.innerText = "🏆 SURVIVED";
-            verdictEl.className = "pass";
-        }
-        
-        document.getElementById(`row-${w.id}`).style.background = "transparent";
+      function runHostileWorker(workerFile, targetTask, mode) {
+        return new Promise((resolve) => {
+          const worker = new Worker(workerFile);
+          worker.onmessage = (e) => {
+            resolve(e.data);
+            worker.terminate();
+          };
+          worker.onerror = (err) => {
+            console.error(err);
+            resolve({ metric: 0, checksum: 0, latency: 9999 });
+            worker.terminate();
+          };
+          worker.postMessage({ task: targetTask, mode: mode });
+        });
       }
 
-      this.innerText = "✅ FALSIFICATION SUITE COMPLETE";
-      this.disabled = false;
-    });
-  </script>
-</body>
+      document.getElementById("runTestsBtn").addEventListener("click", async function () {
+        this.disabled = true;
+        this.innerText = "⏳ Executing Blind Falsification...";
+
+        for (const w of workloads) {
+          document.getElementById(`row-${w.id}`).style.background = "#21262d";
+
+          // Mode 0: CPU, Mode 1: GPU, Mode 2: HYPER
+          const cpuRes = await runHostileWorker(
+            "./benchmark_workers/falsification_worker.js",
+            w.id,
+            0,
+          );
+          document.getElementById(`${w.id}-cpu`).innerText =
+            `${cpuRes.metric.toFixed(1)} op/s (${cpuRes.latency.toFixed(1)}ms)`;
+
+          const gpuRes = await runHostileWorker(
+            "./benchmark_workers/falsification_worker.js",
+            w.id,
+            1,
+          );
+          document.getElementById(`${w.id}-gpu`).innerText =
+            `${gpuRes.metric.toFixed(1)} op/s (${gpuRes.latency.toFixed(1)}ms)`;
+
+          const hyperRes = await runHostileWorker(
+            "./benchmark_workers/falsification_worker.js",
+            w.id,
+            2,
+          );
+          document.getElementById(`${w.id}-hyper`).innerText =
+            `${hyperRes.metric.toFixed(1)} op/s (${hyperRes.latency.toFixed(1)}ms)`;
+
+          // Correctness Check (1e-4 Epsilon)
+          const cpuCheck = cpuRes.checksum;
+          const gpuCheck = gpuRes.checksum;
+          const hyperCheck = hyperRes.checksum;
+
+          const isMathIsomorphic =
+            Math.abs(cpuCheck - gpuCheck) < 1e-4 && Math.abs(gpuCheck - hyperCheck) < 1e-4;
+
+          document.getElementById(`${w.id}-checksum`).innerText = isMathIsomorphic
+            ? "✅ PASS"
+            : "❌ FAIL (Divergence)";
+          document.getElementById(`${w.id}-checksum`).className = isMathIsomorphic
+            ? "pass"
+            : "fail";
+
+          // Performance Check (100% of GPU & < 16ms Latency)
+          const perfFloor = gpuRes.metric * 1.0;
+          const isPerfPass = hyperRes.metric >= perfFloor;
+          const isLatencyPass = hyperRes.latency <= 16.0;
+
+          const verdictEl = document.getElementById(`${w.id}-verdict`);
+          if (!isMathIsomorphic) {
+            verdictEl.innerText = "FAILED: CHEATING";
+            verdictEl.className = "fail";
+          } else if (!isPerfPass) {
+            verdictEl.innerText = "FAILED: TOO SLOW";
+            verdictEl.className = "fail";
+          } else if (!isLatencyPass) {
+            verdictEl.innerText = "FAILED: HIGH LATENCY";
+            verdictEl.className = "fail";
+          } else {
+            verdictEl.innerText = "🏆 SURVIVED";
+            verdictEl.className = "pass";
+          }
+
+          document.getElementById(`row-${w.id}`).style.background = "transparent";
+        }
+
+        this.innerText = "✅ FALSIFICATION SUITE COMPLETE";
+        this.disabled = false;
+      });
+    </script>
+  </body>
 </html>

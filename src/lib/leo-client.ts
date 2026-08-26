@@ -5,7 +5,6 @@ import { resolveRequestUrl } from "./api-proxy";
 
 const DEFAULT_BASE = "http://localhost:8005";
 
-
 export type ApiBaseSource = "settings" | "env" | "default";
 
 export function getApiBase(): string {
@@ -153,7 +152,7 @@ export function getMockResponse(path: string, init: RequestInit = {}): Response 
   const method = (init.method ?? "GET").toUpperCase();
   const cleanPath = path.split("?")[0];
 
-  let bodyData: any = {};
+  let bodyData: Record<string, string> = {};
   if (init.body && typeof init.body === "string") {
     try {
       bodyData = JSON.parse(init.body);
@@ -212,16 +211,36 @@ export function getMockResponse(path: string, init: RequestInit = {}): Response 
     if (method === "POST") {
       const type = bodyData.type || "context";
       const content = bodyData.content || "";
-      const newItem = { id: `mem-${Date.now()}`, type, content, created_at: new Date().toISOString() };
+      const newItem = {
+        id: `mem-${Date.now()}`,
+        type,
+        content,
+        created_at: new Date().toISOString(),
+      };
       return new Response(JSON.stringify({ status: "ok", item: newItem }), {
         status: 200,
         headers: { "Content-Type": "application/json" },
       });
     }
     const defaultMems = [
-      { id: "mem-1", type: "user_preference", content: "Preferred output language: TypeScript", created_at: new Date().toISOString() },
-      { id: "mem-2", type: "context", content: "Project: LEO AI Engine V3.0", created_at: new Date().toISOString() },
-      { id: "mem-3", type: "system", content: "System Kernel: SYCL iGPU Enabled", created_at: new Date().toISOString() },
+      {
+        id: "mem-1",
+        type: "user_preference",
+        content: "Preferred output language: TypeScript",
+        created_at: new Date().toISOString(),
+      },
+      {
+        id: "mem-2",
+        type: "context",
+        content: "Project: LEO AI Engine V3.0",
+        created_at: new Date().toISOString(),
+      },
+      {
+        id: "mem-3",
+        type: "system",
+        content: "System Kernel: SYCL iGPU Enabled",
+        created_at: new Date().toISOString(),
+      },
     ];
     return new Response(JSON.stringify(defaultMems), {
       status: 200,
@@ -277,7 +296,10 @@ export function getMockResponse(path: string, init: RequestInit = {}): Response 
   if (cleanPath.endsWith("/v1/embeddings")) {
     const vec = Array.from({ length: 384 }, (_, i) => Math.sin(i * 0.1) * 0.5);
     return new Response(
-      JSON.stringify({ data: [{ embedding: vec, index: 0, object: "embedding" }], model: "bge-small-en-v1.5" }),
+      JSON.stringify({
+        data: [{ embedding: vec, index: 0, object: "embedding" }],
+        model: "bge-small-en-v1.5",
+      }),
       { status: 200, headers: { "Content-Type": "application/json" } },
     );
   }
@@ -287,7 +309,11 @@ export function getMockResponse(path: string, init: RequestInit = {}): Response 
     return new Response(
       JSON.stringify({
         access_token: "admin-auto-session",
-        user: { email: bodyData.email || "admin@leo.ai", username: "admin", permissions: ["admin"] },
+        user: {
+          email: bodyData.email || "admin@leo.ai",
+          username: "admin",
+          permissions: ["admin"],
+        },
       }),
       { status: 200, headers: { "Content-Type": "application/json" } },
     );
@@ -314,7 +340,6 @@ export async function leoFetch(path: string, init: RequestInit = {}): Promise<Re
   const url = resolveRequestUrl(getApiBase(), path);
   const startedAt = performance.now();
   if (debug !== "off") {
-    // eslint-disable-next-line no-console
     console.groupCollapsed(`%c[LEO] → ${init.method ?? "GET"} ${path}`, "color:#76B900");
     console.log("url:", url);
     console.log("headers:", redactHeaders(headers));
@@ -335,7 +360,6 @@ export async function leoFetch(path: string, init: RequestInit = {}): Promise<Re
 
   if (debug !== "off") {
     const ms = Math.round(performance.now() - startedAt);
-    // eslint-disable-next-line no-console
     console.groupCollapsed(
       `%c[LEO] ← ${res.status} ${init.method ?? "GET"} ${path} (${ms}ms)`,
       res.ok ? "color:#76B900" : "color:#ef4444",

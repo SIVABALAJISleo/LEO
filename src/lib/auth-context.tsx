@@ -14,14 +14,18 @@ type AuthState = {
   setSession: (token: string, user?: User | null) => void;
 };
 
+const DEFAULT_ADMIN_USER: User = {
+  email: "admin@leo.ai",
+  username: "admin",
+  permissions: ["admin"],
+};
+
 const AuthContext = createContext<AuthState | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setTokenState] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
-
-  const DEFAULT_ADMIN_USER: User = { email: "admin@leo.ai", username: "admin", permissions: ["admin"] };
 
   useEffect(() => {
     const t = getToken();

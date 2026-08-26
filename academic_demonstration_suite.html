@@ -236,7 +236,8 @@
         border-collapse: collapse;
         font-size: 0.92rem;
       }
-      .data-table th, .data-table td {
+      .data-table th,
+      .data-table td {
         padding: 0.85rem 1rem;
         border-bottom: 1px solid var(--border);
         text-align: left;
@@ -295,7 +296,8 @@
         <span class="badge">Academic Proof & Verification Engine</span>
         <h1>Scientific Demonstration Benchmark Suite</h1>
         <p class="tagline">
-          Controlled, repeatable benchmark comparing standard laptop baseline against LEO 7-layer optimization across 12 distinct computational stress domains on Intel Core i5-12450H.
+          Controlled, repeatable benchmark comparing standard laptop baseline against LEO 7-layer
+          optimization across 12 distinct computational stress domains on Intel Core i5-12450H.
         </p>
       </header>
 
@@ -306,15 +308,21 @@
             <span>Target: <strong>Intel Core i5-12450H (8C/12T)</strong></span>
           </div>
           <div class="status-pill">
-            <span class="dot" style="background-color: var(--accent); box-shadow: 0 0 8px var(--accent);"></span>
+            <span
+              class="dot"
+              style="background-color: var(--accent); box-shadow: 0 0 8px var(--accent)"
+            ></span>
             <span>Graphics: <strong>Intel UHD 48-EU iGPU</strong></span>
           </div>
           <div class="status-pill">
-            <span class="dot" style="background-color: var(--primary); box-shadow: 0 0 8px var(--primary);"></span>
+            <span
+              class="dot"
+              style="background-color: var(--primary); box-shadow: 0 0 8px var(--primary)"
+            ></span>
             <span>Power State: <strong>Balanced (28W TDP)</strong></span>
           </div>
         </div>
-        <div style="display: flex; gap: 0.75rem;">
+        <div style="display: flex; gap: 0.75rem">
           <button class="btn" id="runAllBtn" onclick="runBenchmarkSweep()">
             <span>⚡ Run 3-Iteration Sweep</span>
           </button>
@@ -325,22 +333,22 @@
       </div>
 
       <!-- Live Summary Banner -->
-      <div class="summary-banner" style="margin-bottom: 2.5rem;">
+      <div class="summary-banner" style="margin-bottom: 2.5rem">
         <div>
           <div class="summary-stat-label">Average Compute Speedup</div>
-          <div class="summary-stat-val" style="color: var(--success);">2.41×</div>
+          <div class="summary-stat-val" style="color: var(--success)">2.41×</div>
         </div>
         <div>
           <div class="summary-stat-label">Cache-Hit Latency</div>
-          <div class="summary-stat-val" style="color: var(--accent);">0.05 ms</div>
+          <div class="summary-stat-val" style="color: var(--accent)">0.05 ms</div>
         </div>
         <div>
           <div class="summary-stat-label">Peak Temperature Delta</div>
-          <div class="summary-stat-val" style="color: #38bdf8;">-14.5 °C</div>
+          <div class="summary-stat-val" style="color: #38bdf8">-14.5 °C</div>
         </div>
         <div>
           <div class="summary-stat-label">Perceived Parity Metric</div>
-          <div class="summary-stat-val" style="color: #a78bfa;">100.0%</div>
+          <div class="summary-stat-val" style="color: #a78bfa">100.0%</div>
         </div>
       </div>
 
@@ -353,10 +361,11 @@
       <div class="scientific-table-section">
         <h2 class="section-title">Academic Proof Matrix (N=3 Median Trials)</h2>
         <p class="section-desc">
-          Formal evaluation holding browser, resolution (1080p), power mode, and test duration identical.
+          Formal evaluation holding browser, resolution (1080p), power mode, and test duration
+          identical.
         </p>
 
-        <div style="overflow-x: auto;">
+        <div style="overflow-x: auto">
           <table class="data-table">
             <thead>
               <tr>
@@ -380,37 +389,47 @@
       </div>
 
       <!-- Correctness Verification Panel -->
-      <div class="scientific-table-section" style="margin-top: 2rem;">
+      <div class="scientific-table-section" style="margin-top: 2rem">
         <h2 class="section-title">Anti-Cheating Verification (Mathematical Isomorphism)</h2>
         <p class="section-desc">
-          Cryptographic and numerical validation ensuring HYPER optimizations compute the exact same mathematical result as the Baseline.
+          Cryptographic and numerical validation ensuring HYPER optimizations compute the exact same
+          mathematical result as the Baseline.
         </p>
 
-        <div style="overflow-x: auto;">
+        <div style="overflow-x: auto">
           <table class="data-table">
             <thead>
               <tr>
                 <th>Workload Domain</th>
-                <th class="text-right" style="font-family: monospace;">Baseline Checksum</th>
-                <th class="text-right" style="font-family: monospace;">HYPER Checksum</th>
+                <th class="text-right" style="font-family: monospace">Baseline Checksum</th>
+                <th class="text-right" style="font-family: monospace">HYPER Checksum</th>
                 <th class="text-right">Absolute Error</th>
                 <th class="text-right">Validation</th>
               </tr>
             </thead>
             <tbody id="correctnessTableBody">
               <tr>
-                <td colspan="5" class="text-center" style="color: var(--text-muted); padding: 1.5rem;">Run 3-Iteration Sweep to populate correctness checks.</td>
+                <td
+                  colspan="5"
+                  class="text-center"
+                  style="color: var(--text-muted); padding: 1.5rem"
+                >
+                  Run 3-Iteration Sweep to populate correctness checks.
+                </td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
-      
+
       <!-- Hidden canvas for actual WebGL benchmarks -->
-      <canvas id="benchmarkCanvas" width="1024" height="1024" style="display:none;"></canvas>
+      <canvas id="benchmarkCanvas" width="1024" height="1024" style="display: none"></canvas>
 
       <footer>
-        <p>LEO Software-First Compute Architecture · Peer-Review Demonstration Suite · Intel i5-12450H Native</p>
+        <p>
+          LEO Software-First Compute Architecture · Peer-Review Demonstration Suite · Intel
+          i5-12450H Native
+        </p>
       </footer>
     </div>
 
@@ -420,9 +439,9 @@
         const mid = Math.floor(arr.length / 2), nums = [...arr].sort((a, b) => a - b);
         return arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
       };
-      
+
       const mean = arr => arr.reduce((a, b) => a + b) / arr.length;
-      
+
       const stdDev = arr => {
         const m = mean(arr);
         return Math.sqrt(arr.reduce((sq, n) => sq + Math.pow(n - m, 2), 0) / (arr.length - 1));
@@ -449,7 +468,7 @@
       const benchmarkData = rawBenchmarkData.map(item => {
         const baseMedian = median(item.baseline_trials);
         const hyperMedian = median(item.hyper_trials);
-        
+
         let deltaStr = "";
         if (item.isInverse) {
            const multiplier = (baseMedian / hyperMedian).toFixed(1);
@@ -458,7 +477,7 @@
            const percent = (((hyperMedian - baseMedian) / baseMedian) * 100).toFixed(1);
            deltaStr = `+${percent}%`;
         }
-        
+
         const hyperStdDev = stdDev(item.hyper_trials).toFixed(1);
 
         return {
@@ -514,8 +533,8 @@
 
           // Render Table Row (Academic Matrix)
           const row = document.createElement("tr");
-          const badgeHtml = item.measured 
-            ? \`<span style="font-size:0.7rem; font-weight:700; color:var(--success); background:rgba(16,185,129,0.1); padding:2px 6px; border-radius:4px; border:1px solid rgba(16,185,129,0.3)">LIVE MEASURED</span>\` 
+          const badgeHtml = item.measured
+            ? \`<span style="font-size:0.7rem; font-weight:700; color:var(--success); background:rgba(16,185,129,0.1); padding:2px 6px; border-radius:4px; border:1px solid rgba(16,185,129,0.3)">LIVE MEASURED</span>\`
             : \`<span style="font-size:0.7rem; font-weight:700; color:var(--warning); background:rgba(245,158,11,0.1); padding:2px 6px; border-radius:4px; border:1px solid rgba(245,158,11,0.3)">SIMULATED - NOT YET MEASURED</span>\`;
 
           row.innerHTML = `
@@ -536,10 +555,10 @@
             const cRow = document.createElement("tr");
             const baseSum = item.checksum_base !== undefined ? item.checksum_base : "N/A";
             const hyperSum = item.checksum_hyper !== undefined ? item.checksum_hyper : "N/A";
-            
+
             let absError = "N/A";
             let passFail = "<span style='color:var(--text-muted)'>N/A</span>";
-            
+
             if (baseSum !== "N/A" && hyperSum !== "N/A") {
               const diff = Math.abs(Number(baseSum) - Number(hyperSum));
               absError = diff === 0 ? "0" : diff.toExponential(2);
@@ -549,7 +568,7 @@
                 passFail = \`<span style="color:var(--danger); font-weight:bold;">FAIL</span>\`;
               }
             }
-            
+
             cRow.innerHTML = `
               <td><strong>${item.domain}</strong></td>
               <td class="text-right" style="font-family: monospace;">${baseSum}</td>
@@ -584,11 +603,11 @@
         vec3 w = p;
         float m = dot(w, w);
         float dz = 1.0;
-        
+
         // HYPER PATH: Emulates early spatial bound culling & software optimizations
         // Baseline executes a naive dense loop.
         int maxIters = (uHyperOptimized == 1) ? 2 : 6;
-        
+
         for(int i = 0; i < maxIters; i++) {
           if(m > 256.0) break;
           float r = length(w);
@@ -632,7 +651,7 @@
           const posAttr = gl.getAttribLocation(program, "aVertexPosition");
           const timeLoc = gl.getUniformLocation(program, "uTime");
           const hyperLoc = gl.getUniformLocation(program, "uHyperOptimized");
-          
+
           gl.uniform1i(hyperLoc, isHyper ? 1 : 0);
 
           const buffer = gl.createBuffer();
@@ -643,14 +662,14 @@
 
           let frameCount = 0;
           let startTime = performance.now();
-          
+
           function render(now) {
             gl.uniform1f(timeLoc, now * 0.001);
             gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
             // Read one pixel to force pipeline synchronization (empirical measurement)
             const pixels = new Uint8Array(4);
             gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
-            
+
             frameCount++;
             if (now - startTime < durationMs) {
               requestAnimationFrame(render);
@@ -753,7 +772,7 @@
         }
 
         // --- BATCH 2 WEB WORKER INTEGRATION ---
-        
+
         const mlData = rawBenchmarkData.find(d => d.id === 13); // Machine Learning
         mlData.measured = true;
         mlData.baseline_trials = []; mlData.hyper_trials = [];

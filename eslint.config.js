@@ -28,6 +28,8 @@ export default tseslint.config(
       "backend/**",
       "hyper_holographic_poc/**",
       "scripts/**",
+      "benchmark_workers/**",
+      "test_falsification_runner.js",
       "autofixer.js",
       "dump.js",
       "*.timestamp-*.mjs",

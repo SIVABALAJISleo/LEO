@@ -41,7 +41,11 @@ function LoginPage() {
   }
 
   function directAdminLogin() {
-    auth.setSession("admin-auto-session", { email: "admin@leo.ai", username: "admin", permissions: ["admin"] });
+    auth.setSession("admin-auto-session", {
+      email: "admin@leo.ai",
+      username: "admin",
+      permissions: ["admin"],
+    });
     toast.success("Signed in as Admin");
     navigate({ to: "/app" });
   }
@@ -51,7 +55,7 @@ function LoginPage() {
       <p className="eyebrow">Console</p>
       <h1 className="mt-3 font-display text-4xl font-bold">Sign in</h1>
       <p className="mt-2 text-sm text-muted-foreground">Access your LEO AI runtime.</p>
-      
+
       <button
         type="button"
         onClick={directAdminLogin}

@@ -7,7 +7,7 @@ export function resolveRequestUrl(base: string, path: string): string {
   if (path.startsWith("http://") || path.startsWith("https://")) {
     return path;
   }
-  
+
   const cleanBase = base.replace(/\/+$/, "");
   const cleanPath = path.replace(/^\/+/, "");
   return `${cleanBase}/${cleanPath}`;

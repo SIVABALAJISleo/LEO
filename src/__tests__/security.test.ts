@@ -11,7 +11,8 @@ describe("XSS Prevention & HTML Sanitization", () => {
   });
 
   it("should strip inline event handlers (onerror, onload, onclick)", () => {
-    const dirty = '<img src="invalid-image" onerror="alert(1)" /><span onclick="stealData()">Click</span>';
+    const dirty =
+      '<img src="invalid-image" onerror="alert(1)" /><span onclick="stealData()">Click</span>';
     const clean = sanitizeHTML(dirty);
     expect(clean).not.toContain("onerror");
     expect(clean).not.toContain("onclick");
@@ -20,7 +21,8 @@ describe("XSS Prevention & HTML Sanitization", () => {
   });
 
   it("should allow safe links and formatting tags", () => {
-    const dirty = '<p>Check <a href="https://example.com" target="_blank">our docs</a> for <strong>details</strong>.</p>';
+    const dirty =
+      '<p>Check <a href="https://example.com" target="_blank">our docs</a> for <strong>details</strong>.</p>';
     const clean = sanitizeHTML(dirty);
     expect(clean).toContain('<a href="https://example.com" target="_blank">our docs</a>');
     expect(clean).toContain("<strong>details</strong>");

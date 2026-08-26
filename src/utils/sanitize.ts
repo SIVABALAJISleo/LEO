@@ -9,7 +9,21 @@ export const sanitizeHTML = (dirtyHTML: string): string => {
     return "";
   }
   return DOMPurify.sanitize(dirtyHTML, {
-    ALLOWED_TAGS: ["b", "i", "em", "strong", "a", "p", "span", "ul", "ol", "li", "code", "pre", "blockquote"],
+    ALLOWED_TAGS: [
+      "b",
+      "i",
+      "em",
+      "strong",
+      "a",
+      "p",
+      "span",
+      "ul",
+      "ol",
+      "li",
+      "code",
+      "pre",
+      "blockquote",
+    ],
     ALLOWED_ATTR: ["href", "title", "target", "rel", "class"],
     KEEP_CONTENT: true,
   });

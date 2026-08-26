@@ -13,7 +13,7 @@
     "supported_extensions": ["AVX", "AVX2", "FMA", "SSE4.1", "SSE4.2", "VNNI"]
   },
   "memory": {
-    "total_ram_gb": 15.70,
+    "total_ram_gb": 15.7,
     "type": "DDR4",
     "measured_bandwidth_gb_s": 38.4
   },
@@ -50,7 +50,7 @@
     },
     "rtx_4090_desktop": {
       "type": "REFERENCE HARDWARE (NOT LOCAL)",
-      "fp32_tflops": 81.80,
+      "fp32_tflops": 81.8,
       "vram_gb": 24.0,
       "vram_type": "GDDR6X",
       "bandwidth_gb_s": 1008.0

@@ -1,55 +1,55 @@
 {
-    "timestamp": 1786452208.9952068,
-    "hardware": {
-        "cpu": "Intel Core i5-12450H",
-        "gpu": "Intel UHD Graphics 48EU",
-        "ram": "16GB DDR4-3200"
+  "timestamp": 1786452208.9952068,
+  "hardware": {
+    "cpu": "Intel Core i5-12450H",
+    "gpu": "Intel UHD Graphics 48EU",
+    "ram": "16GB DDR4-3200"
+  },
+  "metrics": {
+    "throughput": 324.5,
+    "latency": 0.0042,
+    "memory": 0.1953125,
+    "energy": 0.00092,
+    "accuracy": 0.965,
+    "cost": 700.0
+  },
+  "comparison": {
+    "throughput": {
+      "leo_value": 324.5,
+      "h100_value": 300.0,
+      "ratio": 1.0816666666666668,
+      "competitive": true
     },
-    "metrics": {
-        "throughput": 324.5,
-        "latency": 0.0042,
-        "memory": 0.1953125,
-        "energy": 0.00092,
-        "accuracy": 0.965,
-        "cost": 700.0
+    "latency": {
+      "leo_value": 0.0042,
+      "h100_value": 0.005,
+      "ratio": 1.1904761904761905,
+      "competitive": true
     },
-    "comparison": {
-        "throughput": {
-            "leo_value": 324.5,
-            "h100_value": 300.0,
-            "ratio": 1.0816666666666668,
-            "competitive": true
-        },
-        "latency": {
-            "leo_value": 0.0042,
-            "h100_value": 0.005,
-            "ratio": 1.1904761904761905,
-            "competitive": true
-        },
-        "memory": {
-            "leo_value": 0.1953125,
-            "h100_value": 80.0,
-            "ratio": 409.6,
-            "competitive": true
-        },
-        "energy": {
-            "leo_value": 0.00092,
-            "h100_value": 0.001,
-            "ratio": 1.0869565217391304,
-            "competitive": true
-        },
-        "accuracy": {
-            "leo_value": 0.965,
-            "h100_value": 0.95,
-            "ratio": 1.0157894736842106,
-            "competitive": true
-        },
-        "cost": {
-            "leo_value": 700.0,
-            "h100_value": 30000.0,
-            "ratio": 42.857142857142854,
-            "competitive": true
-        }
+    "memory": {
+      "leo_value": 0.1953125,
+      "h100_value": 80.0,
+      "ratio": 409.6,
+      "competitive": true
     },
-    "overall_score": 76.13867195161818
+    "energy": {
+      "leo_value": 0.00092,
+      "h100_value": 0.001,
+      "ratio": 1.0869565217391304,
+      "competitive": true
+    },
+    "accuracy": {
+      "leo_value": 0.965,
+      "h100_value": 0.95,
+      "ratio": 1.0157894736842106,
+      "competitive": true
+    },
+    "cost": {
+      "leo_value": 700.0,
+      "h100_value": 30000.0,
+      "ratio": 42.857142857142854,
+      "competitive": true
+    }
+  },
+  "overall_score": 76.13867195161818
 }
