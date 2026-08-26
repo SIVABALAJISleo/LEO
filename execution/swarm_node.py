@@ -11,8 +11,9 @@ class SwarmNodeHandler:
     """
     def __init__(self, port: int = 59843):
         self.port = port
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.socket.bind(('', self.port))
+        import os
+        host = os.environ.get("SWARM_NODE_HOST", "127.0.0.1")
+        self.socket.bind((host, self.port))
         
     def compress_activations(self, tensor):
         """Simulates 1.58-bit ternary compression for activations before transit."""

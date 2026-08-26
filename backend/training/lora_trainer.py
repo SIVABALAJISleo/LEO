@@ -49,6 +49,8 @@ class LoRATrainer:
               epochs: int = 8, lr: float = 5e-4, max_len: int = 64) -> Dict[str, Any]:
         """Fine-tune LoRA adapters on (prompt, response) pairs. Returns measured metrics."""
         import torch
+        # Canonicalize output directory to prevent path traversal
+        output_dir = os.path.abspath(os.path.normpath(output_dir))
         t_start = time.time()
         
         offline = (
@@ -161,6 +163,7 @@ class LoRATrainer:
         tok = AutoTokenizer.from_pretrained(self.base_model)  # nosec B615
         model = AutoModelForCausalLM.from_pretrained(self.base_model)  # nosec B615
         if adapter_dir:
+            adapter_dir = os.path.abspath(os.path.normpath(adapter_dir))
             from peft import PeftModel  # type: ignore
             model = PeftModel.from_pretrained(model, adapter_dir)
         model = model.to(self.device).eval()

@@ -28,8 +28,8 @@ class IntelLogicEngine:
         try:
             validated = IntelQuerySchema(**raw_input)
             return True, validated
-        except Exception as e:
-            return False, {"error": "Invalid Input", "details": str(e)}
+        except Exception:
+            return False, {"error": "Invalid Input", "details": "Input schema validation failed."}
 
     def check_rules(self, query: str) -> Optional[str]:
         q = query.lower().strip()

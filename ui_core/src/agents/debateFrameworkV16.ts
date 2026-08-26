@@ -38,8 +38,11 @@ export class DebateFrameworkV16 {
    * Run the constitutional debate cycle over all 8 agents.
    */
   public executeDebateCycle(query: string): DebateV16Report {
-    const queryLower = query.toLowerCase();
-    const sessionId = "v16-debate-" + Math.floor(Math.random() * 1000);
+    const sessionId =
+      "v16-debate-" +
+      (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+        ? crypto.randomUUID().slice(0, 8)
+        : Date.now().toString(36));
     const phases: DebatePhaseV16[] = [];
 
     // Phase 1: Independent Analysis

@@ -30,9 +30,9 @@ async def process_query(request: QueryRequest):
         except (ValueError, IndexError):
             return {"content": "".join(results), "confidence": 0.8} # Fallback for streaming results
             
-    except Exception as e:
+    except Exception:
         # 7. SAFETY RULES: No silent failure
-        return {"error": str(e), "status": "FAILED", "path": "Check logs for correction path."}
+        return {"error": "Internal processing error", "status": "FAILED", "path": "Check server logs for details."}
 
 @app.get("/stream")
 async def stream_query(text: str, is_high_risk: bool = False):

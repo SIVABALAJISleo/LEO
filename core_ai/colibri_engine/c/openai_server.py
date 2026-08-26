@@ -686,7 +686,8 @@ class APIHandler(BaseHTTPRequestHandler):
         self.wfile.write(data)
 
     def send_cors_headers(self):
-        origin = self.headers.get("Origin")
+        raw_origin = self.headers.get("Origin", "")
+        origin = "".join(c for c in raw_origin if c.isprintable() and c not in "\r\n").strip()
         if not origin or ("*" not in self.server.cors_origins and origin not in self.server.cors_origins):
             return
         self.send_header("Access-Control-Allow-Origin", "*" if "*" in self.server.cors_origins else origin)

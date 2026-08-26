@@ -474,7 +474,10 @@ export async function fetchAllSessions(
 // -------- Utilities --------
 
 export function newSessionId(): string {
-  return `s_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return `s_${Date.now().toString(36)}_${crypto.randomUUID().slice(0, 8)}`;
+  }
+  return `s_${Date.now().toString(36)}_${Date.now().toString(36).slice(-6)}`;
 }
 
 export function deriveTitle(messages: ChatHistoryMessage[]): string {

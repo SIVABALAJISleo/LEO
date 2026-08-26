@@ -71,7 +71,8 @@ class DistributedMesh:
         # Bind socket with reuse capabilities
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         try:
-            sock.bind(("", self.udp_port))
+            bind_addr = os.environ.get("MESH_BIND_ADDR", "127.0.0.1")
+            sock.bind((bind_addr, self.udp_port))
         except Exception as e:
             logger.error(f"[DistributedMesh] Failed binding UDP listener: {e}")
             sock.close()

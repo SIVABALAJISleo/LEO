@@ -29,11 +29,14 @@ class SecureResultGateway {
   // Sanitize input before processing
   sanitizeInput(input: unknown): unknown {
     if (typeof input === "string") {
-      // Remove potential injection patterns
+      // Escape HTML entities to prevent XSS and script injection securely
       return input
-        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
-        .replace(/javascript:/gi, "")
-        .replace(/on\w+\s*=/gi, "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#x27;")
+        .replace(/\//g, "&#x2F;")
         .trim();
     }
 

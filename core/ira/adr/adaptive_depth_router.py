@@ -27,7 +27,7 @@ class AdaptiveDepthRouter:
         self.adjustments_file = "data/ira/patterns/adr_adjustments.json"
         
         # Regex compile for fast matching
-        self.rx_trivial_math = re.compile(r'\d+\s*[+\-*/^%]\s*\d+')
+        self.rx_trivial_math = re.compile(r'\b\d+(?:\.\d+)?\s*[+\-*/^%]\s*\d+(?:\.\d+)?\b')
         self.rx_fact_prefix = re.compile(
             r'^(?:what is|who is|when was|where is|define|meaning of|full form of)\b', 
             re.IGNORECASE

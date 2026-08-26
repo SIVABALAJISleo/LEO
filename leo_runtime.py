@@ -300,7 +300,8 @@ async def handle_index(request):
             html = f.read()
         return web.Response(text=html, content_type='text/html')
     except Exception as e:
-        return web.Response(text=f"Error loading UI: {e}", status=500)
+        logger.error(f"Error loading UI: {e}")
+        return web.Response(text="Error loading UI. Please check server logs.", status=500)
 
 async def handle_chat(request):
     runtime = request.app['runtime']
@@ -314,7 +315,7 @@ async def handle_chat(request):
         return web.json_response(response)
     except Exception as e:
         logger.error(f"Chat API Error: {e}")
-        return web.json_response({"error": str(e)}, status=500)
+        return web.json_response({"error": "Internal server error during chat processing"}, status=500)
 
 async def start_web_server(runtime):
     app = web.Application()

@@ -6,11 +6,16 @@ on:
   pull_request:
     branches: ["**"]
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Typecheck · Lint · Test · Build
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    permissions:
+      contents: read
 
     env:
       VITE_LEO_API_BASE_URL: ${{ vars.VITE_LEO_API_BASE_URL || 'http://localhost:8000' }}

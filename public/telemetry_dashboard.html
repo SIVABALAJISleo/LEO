@@ -661,12 +661,12 @@
           }
         } catch (err) {
           // Return high-fidelity sandbox offline prediction demo in case API server isn't running yet during dashboard test
-          outBox.innerHTML =
-            "Offline simulation execution:<br>Query: " +
+          outBox.textContent =
+            "Offline simulation execution:\nQuery: " +
             query +
-            "<br><br>" +
-            "Calculations performed locally inside frontend sandboxed environment.<br>" +
-            "Resolved: Yes<br>Cache Hit: Yes";
+            "\n\n" +
+            "Calculations performed locally inside frontend sandboxed environment.\n" +
+            "Resolved: Yes\nCache Hit: Yes";
         }
       }
     </script>

@@ -603,27 +603,59 @@
             max: 100,
           },
         ];
-        document.getElementById("gauges").innerHTML = gauges
-          .map(
-            (g) => `
-      <div class="gauge-row">
-        <span class="gauge-label">${g.label}</span>
-        <div class="gauge-wrap">
-          <div class="gauge-fill" style="width:${Math.min(g.val, 100)}%;background:${g.color}"></div>
-        </div>
-        <span class="gauge-val" style="color:${g.color}">${g.val}${g.unit}</span>
-      </div>`,
-          )
-          .join("");
+        const gaugesContainer = document.getElementById("gauges");
+        if (gaugesContainer) {
+          gaugesContainer.textContent = "";
+          for (const g of gauges) {
+            const row = document.createElement("div");
+            row.className = "gauge-row";
+
+            const label = document.createElement("span");
+            label.className = "gauge-label";
+            label.textContent = String(g.label || "");
+
+            const wrap = document.createElement("div");
+            wrap.className = "gauge-wrap";
+
+            const fill = document.createElement("div");
+            fill.className = "gauge-fill";
+            const valNum = Math.max(0, Math.min(Number(g.val) || 0, 100));
+            fill.style.width = valNum + "%";
+            fill.style.background = String(g.color || "");
+            wrap.appendChild(fill);
+
+            const valSpan = document.createElement("span");
+            valSpan.className = "gauge-val";
+            valSpan.style.color = String(g.color || "");
+            valSpan.textContent = `${Number(g.val) || 0}${g.unit || ""}`;
+
+            row.appendChild(label);
+            row.appendChild(wrap);
+            row.appendChild(valSpan);
+            gaugesContainer.appendChild(row);
+          }
+        }
+      }
+
+      function setStatUnit(id, val, unit) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.textContent = "";
+        const txt = document.createTextNode(String(val));
+        const span = document.createElement("span");
+        span.className = "stat-unit";
+        span.textContent = unit;
+        el.appendChild(txt);
+        el.appendChild(span);
       }
 
       // ── Log entries ────────────────────────────────────────────────────────────
       const LOG_TEMPLATES = [
         (d) => `<span class="ok">[CACHE HIT]</span> L1 exact match — 0.3ms`,
         (d) => `<span class="ok">[SYMBOLIC]</span> Rule engine resolved in 0.8ms`,
-        (d) => `[ROUTE] TINY_MODEL selected — ${d.avg_latency_ms}ms`,
+        (d) => `[ROUTE] TINY_MODEL selected — ${Number(d.avg_latency_ms) || 0}ms`,
         (d) => `<span class="warn">[OPTIMIZER]</span> Cache threshold auto-tuned → 0.93`,
-        (d) => `[KV] StreamingKV evicted 12 tokens — cache at ${d.kv_cache_used_pct}%`,
+        (d) => `[KV] StreamingKV evicted 12 tokens — cache at ${Number(d.kv_cache_used_pct) || 0}%`,
         (d) => `[PABEE] Early exit at layer 3/12 — 75% compute saved`,
         (d) => `[MOE] Loaded experts [4, 17] — evicted [2, 31] to CPU RAM`,
         (d) => `<span class="ok">[VERIFY]</span> Self-verification PASSED (conf: 0.89)`,
@@ -662,19 +694,14 @@
         if (history.tps.length > MAX_HISTORY) history.tps.shift();
         drawChart();
 
-        // Cards
-        document.getElementById("cache-rate").innerHTML =
-          `${data.cache_hit_rate_pct}<span class="stat-unit">%</span>`;
-        document.getElementById("latency").innerHTML =
-          `${data.avg_latency_ms}<span class="stat-unit">ms</span>`;
-        document.getElementById("early-exit").innerHTML =
-          `${data.early_exit_savings}<span class="stat-unit">%</span>`;
-        document.getElementById("experts").innerHTML =
-          `${data.active_experts}<span class="stat-unit"> / 64</span>`;
-        document.getElementById("total-reqs").textContent = data.total_requests.toLocaleString();
-        document.getElementById("kv-used").innerHTML =
-          `${data.kv_cache_used_pct}<span class="stat-unit">%</span>`;
-        document.getElementById("total-tokens").textContent = data.total_tokens.toLocaleString();
+        // Cards (Safe DOM Updates)
+        setStatUnit("cache-rate", Number(data.cache_hit_rate_pct) || 0, "%");
+        setStatUnit("latency", Number(data.avg_latency_ms) || 0, "ms");
+        setStatUnit("early-exit", Number(data.early_exit_savings) || 0, "%");
+        setStatUnit("experts", Number(data.active_experts) || 0, " / 64");
+        document.getElementById("total-reqs").textContent = (Number(data.total_requests) || 0).toLocaleString();
+        setStatUnit("kv-used", Number(data.kv_cache_used_pct) || 0, "%");
+        document.getElementById("total-tokens").textContent = (Number(data.total_tokens) || 0).toLocaleString();
 
         // Color warnings
         const cpuEl = document.getElementById("tps-card");

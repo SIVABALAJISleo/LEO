@@ -10,26 +10,36 @@ export interface SourceRank {
 
 export class SourceRanker {
   rankUrl(url: string): SourceRank {
-    const lower = url.toLowerCase();
     let credibilityWeight = 0.5; // base trust
     let isTrustedPartner = false;
     let sourceDomain = "unknown-domain";
 
     try {
-      const parts = url.replace("https://", "").replace("http://", "").split("/");
-      sourceDomain = parts[0] || "unknown-domain";
-    } catch (e) {
-      sourceDomain = "malformed-url";
-    }
+      const parsed = new URL(url.startsWith("http") ? url : `https://${url}`);
+      const hostname = parsed.hostname.toLowerCase();
+      sourceDomain = hostname;
 
-    if (lower.includes(".gov") || lower.includes(".edu") || lower.includes("arxiv.org")) {
-      credibilityWeight = 0.95;
-      isTrustedPartner = true;
-    } else if (lower.includes("github.com") || lower.includes("intel.com")) {
-      credibilityWeight = 0.88;
-      isTrustedPartner = true;
-    } else if (lower.includes("blog") || lower.includes("wiki")) {
-      credibilityWeight = 0.65;
+      if (
+        hostname.endsWith(".gov") ||
+        hostname.endsWith(".edu") ||
+        hostname === "arxiv.org" ||
+        hostname.endsWith(".arxiv.org")
+      ) {
+        credibilityWeight = 0.95;
+        isTrustedPartner = true;
+      } else if (
+        hostname === "github.com" ||
+        hostname.endsWith(".github.com") ||
+        hostname === "intel.com" ||
+        hostname.endsWith(".intel.com")
+      ) {
+        credibilityWeight = 0.88;
+        isTrustedPartner = true;
+      } else if (hostname.includes("blog") || hostname.includes("wiki")) {
+        credibilityWeight = 0.65;
+      }
+    } catch {
+      sourceDomain = "malformed-url";
     }
 
     return {

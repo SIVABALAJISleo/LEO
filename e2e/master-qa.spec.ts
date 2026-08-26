@@ -45,7 +45,8 @@ test.describe("Master QA Playwright Automated Suite", () => {
 
     for (const route of appRoutes) {
       await page.goto(route);
-      await expect(page).toHaveURL(new RegExp(route.replace(/\//g, "\\/")));
+      const escaped = route.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      await expect(page).toHaveURL(new RegExp(escaped));
     }
   });
 

@@ -207,38 +207,23 @@ export function getMockResponse(path: string, init: RequestInit = {}): Response 
   }
 
   // 4. Memory Endpoint
+  // 4. Memory Endpoint (in-memory mock store)
   if (cleanPath.endsWith("/api/v1/memory")) {
     if (method === "POST") {
       const type = bodyData.type || "context";
       const content = bodyData.content || "";
-      let saved: any[] = [];
-      try {
-        saved = JSON.parse(window.localStorage.getItem("leo.mock_memories") || "[]");
-      } catch {
-        saved = [];
-      }
       const newItem = { id: `mem-${Date.now()}`, type, content, created_at: new Date().toISOString() };
-      saved.unshift(newItem);
-      if (typeof window !== "undefined") {
-        window.localStorage.setItem("leo.mock_memories", JSON.stringify(saved));
-      }
       return new Response(JSON.stringify({ status: "ok", item: newItem }), {
         status: 200,
         headers: { "Content-Type": "application/json" },
       });
-    }
-    let saved = null;
-    try {
-      saved = JSON.parse(window.localStorage.getItem("leo.mock_memories") || "null");
-    } catch {
-      saved = null;
     }
     const defaultMems = [
       { id: "mem-1", type: "user_preference", content: "Preferred output language: TypeScript", created_at: new Date().toISOString() },
       { id: "mem-2", type: "context", content: "Project: LEO AI Engine V3.0", created_at: new Date().toISOString() },
       { id: "mem-3", type: "system", content: "System Kernel: SYCL iGPU Enabled", created_at: new Date().toISOString() },
     ];
-    return new Response(JSON.stringify(saved || defaultMems), {
+    return new Response(JSON.stringify(defaultMems), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });

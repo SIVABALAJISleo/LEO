@@ -264,7 +264,7 @@ class NeuroSymbolicFusion:
     def _try_math_expression(self, query: str) -> Optional[FusionResult]:
         # Patterns for math:
         # e.g., "45 * 32", "what is 2 ^ 10", "calculate 100 / 7"
-        math_match = re.search(r'(\d+(?:\.\d*)?\s*[+\-*/^%]\s*\d+(?:\.\d*)?(?:\s*[+\-*/^%]\s*\d+(?:\.\d*)?)*)', query)
+        math_match = re.search(r'\b(\d+(?:\.\d+)?(?:\s*[+\-*/^%]\s*\d+(?:\.\d+)?)+)\b', query)
         if math_match:
             expr = math_match.group(1)
             # Remove whitespace and evaluate
@@ -476,7 +476,7 @@ class NeuroSymbolicFusion:
         modified_query = query
         
         # 1. Math extraction
-        math_matches = re.findall(r'(\d+(?:\.\d*)?\s*[+\-*/^%]\s*\d+(?:\.\d*)?(?:\s*[+\-*/^%]\s*\d+(?:\.\d*)?)*)', query)
+        math_matches = re.findall(r'\b(\d+(?:\.\d+)?(?:\s*[+\-*/^%]\s*\d+(?:\.\d+)?)+)\b', query)
         for m in math_matches:
             try:
                 res = self.calculator.evaluate(m)
@@ -487,7 +487,7 @@ class NeuroSymbolicFusion:
                 pass
                 
         # 2. Conversion extraction
-        conv_matches = re.findall(r'(\d+(?:\.\d+)?\s*\w+\s+to\s+\w+)', query.lower())
+        conv_matches = re.findall(r'\b(\d+(?:\.\d+)?\s+[a-zA-Z]+\s+to\s+[a-zA-Z]+)\b', query.lower())
         for c in conv_matches:
             # Try parsing
             conv_res = self._try_unit_conversion(f"convert {c}")

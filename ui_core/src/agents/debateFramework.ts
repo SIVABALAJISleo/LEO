@@ -35,8 +35,11 @@ export class DebateFramework {
    * Run the debate lifecycle across all 7 agents to produce a consensus result.
    */
   public coordinateDebate(query: string): DebateSessionReport {
-    const queryLower = query.toLowerCase();
-    const sessionId = "v15-debate-" + Math.floor(Math.random() * 1000);
+    const sessionId =
+      "v15-debate-" +
+      (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+        ? crypto.randomUUID().slice(0, 8)
+        : Date.now().toString(36));
 
     const phases: DebatePhase[] = [];
 

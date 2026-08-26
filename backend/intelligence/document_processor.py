@@ -14,14 +14,27 @@ import defusedxml.ElementTree as ET
 from html.parser import HTMLParser
 from typing import Dict, Any, List, Optional
 
-# Simple HTML Text Extractor
+# Robust HTML Text Extractor (ignores script/style/nav without regex)
 class HTMLTextExtractor(HTMLParser):
     def __init__(self):
         super().__init__()
         self.text_parts = []
+        self.ignore_tags = {'script', 'style', 'noscript', 'header', 'footer', 'nav'}
+        self.current_ignore_depth = 0
+
+    def handle_starttag(self, tag, attrs):
+        if tag.lower() in self.ignore_tags:
+            self.current_ignore_depth += 1
+
+    def handle_endtag(self, tag):
+        if tag.lower() in self.ignore_tags and self.current_ignore_depth > 0:
+            self.current_ignore_depth -= 1
 
     def handle_data(self, data):
-        self.text_parts.append(data)
+        if self.current_ignore_depth == 0:
+            clean = data.strip()
+            if clean:
+                self.text_parts.append(clean)
 
     def get_text(self) -> str:
         return " ".join(self.text_parts)
@@ -148,10 +161,6 @@ class DocumentProcessor:
     def _parse_html(self, path: str) -> str:
         with open(path, 'r', encoding='utf-8', errors='ignore') as f:
             content = f.read()
-            # Strip script and style blocks before parsing text content
-            content = re.sub(r'<script.*?>.*?</script>', '', content, flags=re.DOTALL | re.IGNORECASE)
-            content = re.sub(r'<style.*?>.*?</style>', '', content, flags=re.DOTALL | re.IGNORECASE)
-            
             parser = HTMLTextExtractor()
             parser.feed(content)
             return parser.get_text()

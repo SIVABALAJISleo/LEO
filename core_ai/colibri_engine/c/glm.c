@@ -2169,14 +2169,14 @@ static void qt_addrow(const QT *t, int row, float coef, float *acc){
 static void qt_matvec_rows(const QT *t, int r0, int n, const float *x, float *y){
     int I=t->I;
     for(int j=0;j<n;j++){ int row=r0+j; double a=0;
-        if(t->fmt==0){ const float *w=t->qf+(int64_t)row*I; for(int i=0;i<I;i++) a+=(double)w[i]*x[i]; }
-        else if(t->fmt==1){ const int8_t *w=t->q8+(int64_t)row*I; float s=t->s[row];
-            float acc=0; for(int i=0;i<I;i++) acc+=(float)w[i]*x[i]; a=acc*s; }
-        else if(t->fmt==2){ const uint8_t *w=t->q4+(int64_t)row*((I+1)/2); float s=t->s[row]; float acc=0;
+        if(t->fmt==0){ const float *w=t->qf+(int64_t)row*(int64_t)I; for(int i=0;i<I;i++) a+=(double)w[i]*(double)x[i]; }
+        else if(t->fmt==1){ const int8_t *w=t->q8+(int64_t)row*(int64_t)I; float s=t->s[row];
+            float acc=0; for(int i=0;i<I;i++) acc+=(float)w[i]*x[i]; a=(double)acc*(double)s; }
+        else if(t->fmt==2){ const uint8_t *w=t->q4+(int64_t)row*(int64_t)((I+1)/2); float s=t->s[row]; float acc=0;
             for(int i=0;i+1<I;i+=2){ uint8_t b=w[i>>1]; acc+=((int)(b&0xF)-8)*x[i]+((int)(b>>4)-8)*x[i+1]; }
-            if(I&1){ uint8_t b=w[I>>1]; acc+=((int)(b&0xF)-8)*x[I-1]; } a=acc*s; }
-        else { const uint8_t *w=t->q4+(int64_t)row*((I+3)/4); float s=t->s[row]; float acc=0;
-            for(int i=0;i<I;i++){ uint8_t b=w[i>>2]; acc+=((int)((b>>((i&3)*2))&3)-2)*x[i]; } a=acc*s; }
+            if(I&1){ uint8_t b=w[I>>1]; acc+=((int)(b&0xF)-8)*x[I-1]; } a=(double)acc*(double)s; }
+        else { const uint8_t *w=t->q4+(int64_t)row*(int64_t)((I+3)/4); float s=t->s[row]; float acc=0;
+            for(int i=0;i<I;i++){ uint8_t b=w[i>>2]; acc+=((int)((b>>((i&3)*2))&3)-2)*x[i]; } a=(double)acc*(double)s; }
         y[j]=(float)a;
     }
 }
@@ -3937,13 +3937,13 @@ static int mtp_draft(Model *m, int next_tok, int kv, int G, int *draft){
         if(getenv("MTP_SWAP")){ memcpy(cat, h, D*sizeof(float)); memcpy(cat+D, x, D*sizeof(float)); }
         else { memcpy(cat, x, D*sizeof(float)); memcpy(cat+D, h, D*sizeof(float)); }
         matmul_qt(hx, cat, &m->eh_proj, 1);
-        double n_eh=0; for(int d=0;d<D;d++) n_eh+=hx[d]*hx[d];
+        double n_eh=0; for(int d=0;d<D;d++) n_eh+=(double)hx[d]*(double)hx[d];
         int dbg = getenv("MTP_DEBUG") && atoi(getenv("MTP_DEBUG"))>=2;
         int t_pre=-1;
         if(dbg){ rmsnorm(row, hx, m->mtp_norm, D, c->eps); matmul_qt(logit, row, &m->lm_head, 1);
                  t_pre=mtp_argmax(logit, c->vocab); }
         layer_forward(m, &m->mtpL, li, hx, 1, pos, nrm, tmp);
-        double n_post=0; for(int d=0;d<D;d++) n_post+=hx[d]*hx[d];
+        double n_post=0; for(int d=0;d<D;d++) n_post+=(double)hx[d]*(double)hx[d];
         rmsnorm(row, hx, m->mtp_norm, D, c->eps);
         matmul_qt(logit, row, &m->lm_head, 1);
         int t2=mtp_argmax(logit, c->vocab);

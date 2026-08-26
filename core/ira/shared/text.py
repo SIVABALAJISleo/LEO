@@ -67,8 +67,8 @@ class TextNormalizer:
         'Calculate 45 * 32' → 'calculate [NUM] * [NUM]'
         """
         pattern = text.lower()
-        # Replace numbers
-        pattern = re.sub(r'\b\d+\.?\d*\b', '[NUM]', pattern)
+        # Replace numbers safely without catastrophic backtracking
+        pattern = re.sub(r'\b\d+(?:\.\d+)?\b', '[NUM]', pattern)
         # Replace proper nouns (capitalized words)
         pattern = re.sub(r'\b[A-Z][a-z]+\b', '[ENTITY]', pattern)
         # Replace quoted strings

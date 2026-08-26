@@ -24,7 +24,9 @@ class SwarmInferenceGrid:
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-        self.socket.bind(('', self.port))
+        import os
+        host = os.environ.get("SWARM_GRID_HOST", "127.0.0.1")
+        self.socket.bind((host, self.port))
 
     def start_discovery(self):
         self.is_active = True
