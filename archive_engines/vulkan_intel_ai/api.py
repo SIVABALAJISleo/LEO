@@ -41,39 +41,43 @@ async def handle_vulkan_query(raw_input: Dict[str, Any]):
     memory.scratchpad["goal"] = query
     
     async def run_vulkan_pipeline():
-        # 2. Perception & ACK (Layer 7)
-        yield json.dumps({"status": "ACK", "kernel": "Booting Vulkan-Accelerated Pipeline...", "t": f"{(time.time()-start_time)*1000:.1f}ms"})
+        try:
+            # 2. Perception & ACK (Layer 7)
+            yield json.dumps({"status": "ACK", "kernel": "Booting Vulkan-Accelerated Pipeline...", "t": f"{(time.time()-start_time)*1000:.1f}ms"})
 
-        # 3. Intent & Decomposition (Layer 2)
-        tasks = kernel.decompose_and_route(query)
-        yield json.dumps({"step": "ORCHESTRATION", "tasks": tasks})
+            # 3. Intent & Decomposition (Layer 2)
+            tasks = kernel.decompose_and_route(query)
+            yield json.dumps({"step": "ORCHESTRATION", "tasks": tasks})
 
-        # 4. Hybrid Execution Loop (Layer 3 & 6)
-        results = []
-        for i, task in enumerate(tasks):
-            yield json.dumps({"step": f"EXECUTING_{i+1}", "domain": task['domain']})
-            res = await kernel.execute_task(task, query)
-            results.append(res)
-            memory.scratchpad["intermediate_results"].append(res)
-            yield json.dumps({"step": f"RESULT_{i+1}", "summary": res[:100]})
+            # 4. Hybrid Execution Loop (Layer 3 & 6)
+            results = []
+            for i, task in enumerate(tasks):
+                yield json.dumps({"step": f"EXECUTING_{i+1}", "domain": task['domain']})
+                res = await kernel.execute_task(task, query)
+                results.append(res)
+                memory.scratchpad["intermediate_results"].append(res)
+                yield json.dumps({"step": f"RESULT_{i+1}", "summary": res[:100]})
 
-        # 5. Synthesis (Layer 11)
-        yield json.dumps({"step": "SYNTHESIS", "msg": "Compiling hybrid results into final response..."})
-        
-        # FINAL OUTPUT STREAMING
-        full_final = ""
-        system = f"Synthesize a final response based on these hybrid results: {results}"
-        for token in engine.generate_speculative(query, system):
-            full_final += token
-            yield json.dumps({"token": token})
+            # 5. Synthesis (Layer 11)
+            yield json.dumps({"step": "SYNTHESIS", "msg": "Compiling hybrid results into final response..."})
+            
+            # FINAL OUTPUT STREAMING
+            full_final = ""
+            system = f"Synthesize a final response based on these hybrid results: {results}"
+            for token in engine.generate_speculative(query, system):
+                full_final += token
+                yield json.dumps({"token": token})
 
-        # 6. Cache Put (Layer 8)
-        cache.put(query, full_final)
-        
-        yield json.dumps({"step": "HALT", "latency": f"{(time.time()-start_time)*1000:.1f}ms"})
+            # 6. Cache Put (Layer 8)
+            cache.put(query, full_final)
+            
+            yield json.dumps({"step": "HALT", "latency": f"{(time.time()-start_time)*1000:.1f}ms"})
+        except Exception as e:
+            logger.error("Vulkan pipeline error: %s", e)
+            yield json.dumps({"error": "Internal pipeline error during execution"})
 
     return StreamingResponse(run_vulkan_pipeline(), media_type="application/x-ndjson")
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8011)
+    uvicorn.run(app, host="127.0.0.1", port=8011)

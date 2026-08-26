@@ -18,6 +18,7 @@ import sys
 import threading
 import time
 import uuid
+import re
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
@@ -687,17 +688,26 @@ class APIHandler(BaseHTTPRequestHandler):
 
     def send_cors_headers(self):
         raw_origin = self.headers.get("Origin", "")
-        origin = "".join(c for c in raw_origin if c.isprintable() and c not in "\r\n").strip()
-        if not origin or ("*" not in self.server.cors_origins and origin not in self.server.cors_origins):
+        if not raw_origin:
             return
-        self.send_header("Access-Control-Allow-Origin", "*" if "*" in self.server.cors_origins else origin)
+        # Strip all CRLF and control characters to prevent header injection
+        origin = re.sub(r"[\r\n\x00-\x1f\x7f-\x9f]", "", raw_origin).strip()
+        if not re.match(r"^[a-zA-Z0-9\-]+://[a-zA-Z0-9.\-]+(?::\d+)?$", origin):
+            return
+        if "*" in self.server.cors_origins:
+            self.send_header("Access-Control-Allow-Origin", "*")
+        elif origin in self.server.cors_origins:
+            # Emit from server's own configured whitelist
+            matched_origin = self.server.cors_origins[self.server.cors_origins.index(origin)]
+            self.send_header("Access-Control-Allow-Origin", matched_origin)
+            self.send_header("Vary", "Origin")
+        else:
+            return
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Authorization, Content-Type")
         self.send_header("Access-Control-Expose-Headers",
                          "x-request-id, x-colibri-queue-wait-ms, Retry-After")
         self.send_header("Access-Control-Max-Age", "600")
-        if "*" not in self.server.cors_origins:
-            self.send_header("Vary", "Origin")
 
     def require_auth(self):
         if self.server.api_key:

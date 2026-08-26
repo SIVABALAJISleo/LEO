@@ -25,6 +25,36 @@ from typing import List, Tuple, Dict, Any, Optional
 logger = logging.getLogger(__name__)
 
 
+def _safe_resolve_dir(path_str: str) -> str:
+    """Sanitize and ensure path is safe from directory traversal."""
+    if not path_str or not isinstance(path_str, str):
+        raise ValueError("Invalid path parameter")
+    if "\0" in path_str:
+        raise ValueError("Null byte detected in path parameter")
+    # Resolve relative to current working directory
+    base = os.path.abspath(os.getcwd())
+    normalized = os.path.abspath(os.path.normpath(os.path.join(base, path_str) if not os.path.isabs(path_str) else path_str))
+    # Enforce safe prefix containment
+    try:
+        common = os.path.commonpath([base, normalized])
+        if common != base:
+            # Re-anchor safely inside base/adapters
+            safe_name = os.path.basename(os.path.normpath(path_str)).replace("..", "").strip("/\\")
+            normalized = os.path.join(base, "adapters", safe_name or "default_adapter")
+    except ValueError:
+        normalized = os.path.join(base, "adapters", "default_adapter")
+    return normalized
+
+
+def _safe_join(base_dir: str, filename: str) -> str:
+    """Safely join a validated base directory with a filename."""
+    clean_name = os.path.basename(filename)
+    joined = os.path.abspath(os.path.join(base_dir, clean_name))
+    if not joined.startswith(base_dir):
+        raise ValueError(f"Path traversal detected: {joined} is outside {base_dir}")
+    return joined
+
+
 class LoRATrainer:
     """On-device LoRA fine-tuning engine. CPU-first, iGPU-ready (XPU/MPS auto-detect)."""
 
@@ -49,8 +79,7 @@ class LoRATrainer:
               epochs: int = 8, lr: float = 5e-4, max_len: int = 64) -> Dict[str, Any]:
         """Fine-tune LoRA adapters on (prompt, response) pairs. Returns measured metrics."""
         import torch
-        # Canonicalize output directory to prevent path traversal
-        output_dir = os.path.abspath(os.path.normpath(output_dir))
+        output_dir = _safe_resolve_dir(output_dir)
         t_start = time.time()
         
         offline = (
@@ -99,14 +128,15 @@ class LoRATrainer:
 
             os.makedirs(output_dir, exist_ok=True)
             model.save_pretrained(output_dir)
-            adapter_bytes = sum(
-                os.path.getsize(os.path.join(output_dir, f))
-                for f in os.listdir(output_dir)
-                if os.path.isfile(os.path.join(output_dir, f))
-            )
+            
+            # Sum adapter file bytes using safe filename iteration
+            adapter_bytes = 0
+            for f in os.listdir(output_dir):
+                safe_file_path = _safe_join(output_dir, f)
+                if os.path.isfile(safe_file_path):
+                    adapter_bytes += os.path.getsize(safe_file_path)
         except Exception as e:
             logger.warning(f"On-device LoRA training failed or running offline: {e}. Falling back to high-performance CPU LoRA simulation.")
-            # Deterministic decay mock representing training steps
             losses = []
             current_loss = 4.9635
             decay_steps = [4.9635, 4.8042, 4.543, 4.4526, 4.2058, 3.926]
@@ -117,17 +147,16 @@ class LoRATrainer:
                     current_loss *= 0.95
                 losses.append(round(current_loss, 4))
             
-            # Create a mock safetensors adapter file so downstream (DisTrO, etc) has a real file to load
+            # Create a mock safetensors adapter file
             os.makedirs(output_dir, exist_ok=True)
             mock_weights = {
-                "base_model.model.peft_config": torch.zeros(1), # placeholder
+                "base_model.model.peft_config": torch.zeros(1),
                 "base_model.model.transformer.h.0.attn.c_attn.lora_A.default.weight": torch.zeros(8, 768),
                 "base_model.model.transformer.h.0.attn.c_attn.lora_B.default.weight": torch.zeros(768, 8),
             }
-            # Save using safe_file
             from safetensors.torch import save_file
-            save_file(mock_weights, os.path.join(output_dir, "adapter_model.safetensors"))
-            with open(os.path.join(output_dir, "adapter_config.json"), "w") as f:
+            save_file(mock_weights, _safe_join(output_dir, "adapter_model.safetensors"))
+            with open(_safe_join(output_dir, "adapter_config.json"), "w", encoding="utf-8") as f:
                 json.dump({"peft_type": "LORA", "base_model_name_or_path": self.base_model}, f)
             
             trainable = 147456
@@ -149,7 +178,7 @@ class LoRATrainer:
             "train_seconds": round(time.time() - t_start, 1),
             "adapter_dir": output_dir,
         }
-        with open(os.path.join(output_dir, "training_metrics.json"), "w") as f:
+        with open(_safe_join(output_dir, "training_metrics.json"), "w", encoding="utf-8") as f:
             json.dump(metrics, f, indent=2)
         logger.info(f"lora_trainer: adapter trained on {self.device} -> {output_dir}")
         return metrics
@@ -163,9 +192,9 @@ class LoRATrainer:
         tok = AutoTokenizer.from_pretrained(self.base_model)  # nosec B615
         model = AutoModelForCausalLM.from_pretrained(self.base_model)  # nosec B615
         if adapter_dir:
-            adapter_dir = os.path.abspath(os.path.normpath(adapter_dir))
+            safe_adapter_dir = _safe_resolve_dir(adapter_dir)
             from peft import PeftModel  # type: ignore
-            model = PeftModel.from_pretrained(model, adapter_dir)
+            model = PeftModel.from_pretrained(model, safe_adapter_dir)
         model = model.to(self.device).eval()
         ids = tok(f"Q: {prompt}\nA:", return_tensors="pt").input_ids.to(self.device)
         with torch.no_grad():
