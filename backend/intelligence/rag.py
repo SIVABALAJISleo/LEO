@@ -37,37 +37,6 @@ class NumpyIndexIP:
         
         return scores[indices].reshape(1, -1), indices.reshape(1, -1)
 
-class TFIDFLite:
-    """Lightweight keyword-based similarity fallback for SentenceTransformer"""
-    def __init__(self, dimension: int = 384):
-        self.dimension = dimension
-        self.stopwords = {"a", "an", "the", "is", "of", "to", "for", "in", "with"}
-        
-    def _tokenize(self, text: str) -> List[str]:
-        return [w for w in re.findall(r'\w+', text.lower()) if w not in self.stopwords]
-
-    def encode(self, texts: List[str]) -> np.ndarray:
-        embeddings = []
-        for text in texts:
-            vec = np.zeros(self.dimension, dtype='float32')
-            tokens = self._tokenize(text)
-            if not tokens:
-                embeddings.append(vec)
-                continue
-                
-            for token in tokens:
-                seed = sum(ord(c) for c in token)
-                rs = np.random.RandomState(seed % 4294967295) # nosec B311
-                vec += rs.normal(0, 0.1, self.dimension)
-            
-            # Normalize for Inner Product (Cosine Similarity)
-            norm = np.linalg.norm(vec)
-            if norm > 0:
-                vec /= norm
-            embeddings.append(vec)
-            
-        return np.array(embeddings)
-
 def normalize_L2(x: np.ndarray):
     norm = np.linalg.norm(x, axis=1, keepdims=True)
     mask = (norm > 0).flatten()
@@ -75,17 +44,10 @@ def normalize_L2(x: np.ndarray):
         x[mask] /= norm[mask]
     return x
 
-class FakeSentenceTransformer:
-    def __init__(self, model_name: str = ""):
-        self._impl = TFIDFLite()
-    def encode(self, texts: List[str]) -> np.ndarray:
-        return self._impl.encode(texts)
-
 try:
     from sentence_transformers import SentenceTransformer
     HAS_TRANSFORMERS = True
 except ImportError:
-    SentenceTransformer = FakeSentenceTransformer
     HAS_TRANSFORMERS = False
 
 try:
@@ -141,15 +103,15 @@ class RAGEngine:
     def __init__(self, dimension: int = 384, persist_dir: str = "rag_data"):
         self.persist_dir = persist_dir
         self.docs_path = os.path.join(persist_dir, "documents.json")
-        if os.getenv("LEO_OFFLINE", "0") == "1" or os.getenv("TRANSFORMERS_OFFLINE", "0") == "1":
-            logger.info("RAGEngine: Running in offline mode - using FakeSentenceTransformer.")
-            self.model = FakeSentenceTransformer()
+        if os.getenv("LEO_OFFLINE", "0") == "1" or os.getenv("TRANSFORMERS_OFFLINE", "0") == "1" or not HAS_TRANSFORMERS:
+            logger.error("RAGEngine: SentenceTransformer unavailable. Failing loudly.")
+            raise RuntimeError("SentenceTransformer is required for RAGEngine")
         else:
             try:
                 self.model = SentenceTransformer('all-MiniLM-L6-v2')
             except Exception as e:
-                logger.warning(f"RAGEngine: SentenceTransformer unavailable ({e}). Falling back to FakeSentenceTransformer.")
-                self.model = FakeSentenceTransformer()
+                logger.error(f"RAGEngine: SentenceTransformer unavailable ({e}). Failing loudly.")
+                raise RuntimeError(f"SentenceTransformer unavailable: {e}")
         
         # Select storage mode: 'local' (FAISS) or 'distributed' (Qdrant/Milvus)
         db_mode = os.getenv("VECTOR_DB_MODE", "local")

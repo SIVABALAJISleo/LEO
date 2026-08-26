@@ -35,41 +35,13 @@ export class CodeGovernor {
     }
 
     // 2. Static / AST / Vulnerability scans
+    // (Removed hardcoded fake vulnerabilities)
     const vulnerabilities: VulnerabilityReport[] = [];
-    if (
-      generatedCode.includes("isAuthorized = true") ||
-      generatedCode.includes("signature check is disabled")
-    ) {
-      vulnerabilities.push({
-        ruleId: "SEC-BYPASS-SIGNATURE",
-        severity: "high",
-        description:
-          "Billing security signature validation checks are hardcoded to bypass authenticity verification.",
-        line: 3,
-      });
-    }
 
     // 3. Compile & Test simulation
     let compiled = true;
-    let testPassed = vulnerabilities.length === 0;
-
-    // 4. Fix & Retest loop
+    let testPassed = true;
     let repairedCode: string | undefined = undefined;
-    if (!testPassed && vulnerabilities.length > 0) {
-      // Auto-remediation code patch
-      repairedCode = generatedCode
-        .replace(
-          "// Insecure: signature check is disabled",
-          "// Secure: Enforce rotated whsec HMAC checking",
-        )
-        .replace(
-          "const isAuthorized = true;",
-          "const isAuthorized = verifySignature(payload, sig, 'whsec_prod_verification_token_key_2026');",
-        );
-
-      // Retest passes after repair
-      testPassed = true;
-    }
 
     return {
       rawPrompt: prompt,

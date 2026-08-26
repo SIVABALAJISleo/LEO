@@ -79,15 +79,10 @@ class TernaryEngine:
         logger.info(f"ternary_engine: routing to 1.58-bit execution (model={model_path}, mode={self.mode})")
 
         if not self.is_available:
-            # Emulated Ternary fallback math for CI/dev environments
-            logger.error("DEGRADED MODE: BitNet.cpp binary not found. Serving simulated ternary responses.")
-            words = ["This ", "is ", "a ", "rapid ", "1.58-bit ", "ternary ", "response ", "from ", "emulated ", "BitNet.cpp."]
-            for word in words:
-                yield word
-                await asyncio.sleep(0.01)
-            yield " [mode: simulated]"
-            return
+            logger.error("DEGRADED MODE: BitNet.cpp binary not found. Failing loudly.")
+            raise RuntimeError("BitNet.cpp binary not found. Cannot run ternary engine.")
 
+        assert self.bitnet_path is not None, "bitnet_path cannot be None"
         # Real subprocess integration: call the BitNet.cpp run executable
         cmd = [
             self.bitnet_path,
@@ -107,6 +102,8 @@ class TernaryEngine:
             # Helper task to read stderr for timings
             stderr_accumulator = []
             async def read_stderr():
+                if process.stderr is None:
+                    return
                 while True:
                     line = await process.stderr.readline()
                     if not line:
@@ -117,11 +114,12 @@ class TernaryEngine:
             stderr_task = asyncio.create_task(read_stderr())
 
             # Read stdout token-by-token
-            while True:
-                line = await process.stdout.readline()
-                if not line:
-                    break
-                yield line.decode("utf-8", errors="ignore")
+            if process.stdout is not None:
+                while True:
+                    line = await process.stdout.readline()
+                    if not line:
+                        break
+                    yield line.decode("utf-8", errors="ignore")
             
             await stderr_task
             
@@ -235,7 +233,7 @@ class ELUTExtension:
         # Precompute common quantized activation outcomes
         for i in range(-128, 128):
             # Scale sigmoid/tanh thresholds
-            self.lut[i] = float(i / 128.0)
+            self.lut[i] = i / 128.0
 
     def map_activations(self, activations: np.ndarray) -> np.ndarray:
         """Vectorized index lookup mapping activation states to quantized bins."""

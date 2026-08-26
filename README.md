@@ -4,20 +4,15 @@
 
 HYPER is an **algorithmic catalyst** and heterogeneous compute scheduler designed to completely subsume discrete GPU (dGPU) workloads on standard consumer laptop hardware.
 
-By refusing to brute-force $n^2$ arbitrary calculations and instead targeting explicit downstream semantic contracts, HYPER eliminates an average of **95.6%** of computational operations.
+By aiming to target downstream semantic contracts rather than brute-forcing all calculations, HYPER attempts to reduce overall compute overhead.
 
-## The Four-Score Scientific Architecture
+## Core Principles
 
-As validated in the [Final Verdict](FINAL_VERDICT.md), HYPER v5.0 is evaluated across four rigorous dimensions:
+1. **Hardware Awareness:** Optimized for local execution on standard laptop hardware (CPU + iGPU).
+2. **Semantic Caching:** Eliminates redundant calculations for frequently encountered queries.
+3. **Graceful Fallbacks:** Utilizes smaller models or quantized variants when full precision is not required or feasible.
 
-1. **Score 1 (Bit-Exact Fallback Coverage): 6.7%**
-   - _The diagnostic baseline._ Bounded by Shannon entropy and the $\Omega(n^2)$ read limit of dense matrix multiplication.
-2. **Score 2 (Contract-Aware Subsumption): 100.0%**
-   - _The primary breakthrough._ All 15 distinct compute domains meet frozen, falsifiable equivalence predicates ($\epsilon$-tolerance, PSNR $\ge 0.95$, SSIM) on adversarial inputs.
-3. **Score 3 (Amortized Verified Work Elimination): 95.6% Average**
-   - _The mathematical proof._ Sublinear verification via the GKR (Goldwasser-Kalai-Rothblum) interactive proof protocol guarantees correctness while amortizing raw compute.
-4. **Score 4 (Discrete-GPU-Free Coverage): 100.0%**
-   - _The deployment target._ Leveraging Zero-Copy physical Unified Memory. Memory-bound ops route to CPU AVX-512/NPU; parallel ops route to the 48-EU Intel UHD Graphics iGPU. No discrete GPU required.
+*(Note: HYPER is an experimental edge-optimized AI system designed for laptops. It does not replace or rival data center-grade hardware like the B300 in raw throughput or parameter count.)*
 
 ## The 6 Breakthrough Modules
 

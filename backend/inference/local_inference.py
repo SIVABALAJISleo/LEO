@@ -46,7 +46,7 @@ class LocalInferenceRunner:
                 self.draft_model = llama_cpp.Llama(
                     model_path=self.draft_model_path,
                     n_ctx=2048,
-                    n_threads=max(2, os.cpu_count() // 4),
+                    n_threads=max(2, (os.cpu_count() or 4) // 4),
                     n_gpu_layers=99,  # Fully offload draft model to iGPU
                     logits_all=True,
                     verbose=False
@@ -60,7 +60,7 @@ class LocalInferenceRunner:
                 self.target_model = llama_cpp.Llama(
                     model_path=self.target_model_path,
                     n_ctx=4096,  # Expanded KV cache context window
-                    n_threads=max(4, os.cpu_count() // 2),
+                    n_threads=max(4, (os.cpu_count() or 8) // 2),
                     n_gpu_layers=16,  # Hybrid offloading: 16 layers to Intel iGPU, rest to CPU
                     use_mlock=True,   # Pin model in RAM to prevent swapping
                     flash_attn=True,  # Flash attention optimization
@@ -120,32 +120,7 @@ class LocalInferenceRunner:
             except Exception as e:
                 logger.error(f"Speculative decoding execution failed: {e}")
 
-        # High-performance local simulation (Zero dependency fallback)
-        simulated_tokens = [
-            "Local ", "quantized ", "speculative ", "inference ", "completed. ",
-            "Using ", "llama.cpp ", "Vulkan ", "iGPU ", "acceleration. ",
-            "Zero ", "NVIDIA ", "dependencies ", "detected. "
-        ]
-        
-        generated_text = "".join(simulated_tokens)
-        latency = (time.perf_counter() - t0) * 1000
-        
-        return {
-            "result": generated_text,
-            "engine": "Speculative-Decoder-V2 (Simulated)",
-            "draft_model": "TinyLlama-135M-GGUF",
-            "target_model": "Phi-3-Mini-3.8B-GGUF",
-            "metrics": {
-                "total_tokens": len(simulated_tokens),
-                "draft_tokens_generated": 15,
-                "draft_accepted_tokens": 12,
-                "acceptance_rate": 0.8000,
-                "kv_cache_hits": 18,
-                "tokens_per_sec": round(len(simulated_tokens) / (latency / 1000), 2) if latency > 0 else 35.5,
-                "latency_ms": round(latency, 2),
-                "power_saved_watts": 350.0
-            }
-        }
+        raise RuntimeError("Speculative decoding failed or models are not loaded. Failing loudly.")
 
     def execute_inference(self, prompt: str) -> Dict[str, Any]:
         """Runs standard low-bit local inference using the best detected backend."""
@@ -168,6 +143,7 @@ class LocalInferenceRunner:
                 }
             except Exception as e:
                 logger.error(f"Llama execution failed, falling back: {e}")
-        
         # Graceful fallback to speculative decoding simulation/engine
+        if not self.target_model:
+            raise RuntimeError("Inference execution failed: No target model loaded.")
         return self.run_speculative_decoding(prompt)

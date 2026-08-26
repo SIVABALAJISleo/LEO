@@ -31,51 +31,12 @@ class NumpyIndexL2:
         
         return distances[indices].reshape(1, -1), indices.reshape(1, -1)
 
-class TFIDFLite:
-    """Lightweight keyword-based similarity fallback for SentenceTransformer"""
-    def __init__(self, dimension: int = 384):
-        self.dimension = dimension
-        self.stopwords = {"a", "an", "the", "is", "of", "to", "for", "in", "with"}
-        
-    def _tokenize(self, text: str) -> List[str]:
-        return [w for w in re.findall(r'\w+', text.lower()) if w not in self.stopwords]
-
-    def encode(self, texts: List[str]) -> np.ndarray:
-        # Optimized Batch Projection: 
-        # Pre-allocating matrix and using vectorized normalization
-        n = len(texts)
-        embeddings = np.zeros((n, self.dimension), dtype='float32')
-        
-        for i, text in enumerate(texts):
-            tokens = self._tokenize(text)
-            if not tokens:
-                continue
-                
-            for token in tokens:
-                seed = sum(ord(c) for c in token)
-                rs = np.random.RandomState(seed % 4294967295) # nosec B311
-                # Inplace addition to leverage memory locality
-                embeddings[i] += rs.normal(0, 0.1, self.dimension)
-        
-        # Batch Normalization (L2) - SIMD-friendly loop
-        norms = np.linalg.norm(embeddings, axis=1, keepdims=True)
-        # Avoid division by zero
-        safe_norms = np.where(norms > 0, norms, 1.0)
-        embeddings /= safe_norms
-            
         return embeddings
-
-class FakeSentenceTransformer:
-    def __init__(self, model_name: str = ""):
-        self._impl = TFIDFLite()
-    def encode(self, texts: List[str]) -> np.ndarray:
-        return self._impl.encode(texts)
 
 try:
     from sentence_transformers import SentenceTransformer
     HAS_TRANSFORMERS = True
 except ImportError:
-    SentenceTransformer = FakeSentenceTransformer
     HAS_TRANSFORMERS = False
 
 try:
@@ -148,8 +109,6 @@ class SemanticCache:
         from backend.core.middleware import redis_client
         self.redis = redis_client
 
-    def _get_encoder(self):
-        """Return encoder, lazily loading on first use."""
         if self._encoder is None:
             import os
             offline = (
@@ -157,16 +116,12 @@ class SemanticCache:
                 or os.getenv("LEO_OFFLINE", "0") == "1"
             )
             if offline or not HAS_TRANSFORMERS:
-                self._encoder = TFIDFLite(self._dimension)
+                raise RuntimeError("SentenceTransformer is required for SemanticCache")
             else:
                 try:
                     self._encoder = SentenceTransformer('all-MiniLM-L6-v2')
                 except Exception as e:
-                    import logging
-                    logging.getLogger(__name__).warning(
-                        f"SemanticCache: SentenceTransformer load failed ({e}), using TFIDFLite"
-                    )
-                    self._encoder = TFIDFLite(self._dimension)
+                    raise RuntimeError(f"SemanticCache: SentenceTransformer load failed ({e})")
         return self._encoder
 
 
