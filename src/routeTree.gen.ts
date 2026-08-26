@@ -23,7 +23,6 @@ import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedAppBenchmarksRouteImport } from './routes/_authenticated.app.benchmarks'
 import { Route as AuthenticatedAppChatRouteImport } from './routes/_authenticated.app.chat'
 import { Route as AuthenticatedAppEmbeddingsRouteImport } from './routes/_authenticated.app.embeddings'
-import { Route as AuthenticatedAppHardwareBoostRouteImport } from './routes/_authenticated.app.hardware-boost'
 import { Route as AuthenticatedAppKnowledgeGraphRouteImport } from './routes/_authenticated.app.knowledge-graph'
 import { Route as AuthenticatedAppMemoryRouteImport } from './routes/_authenticated.app.memory'
 import { Route as AuthenticatedAppOrchestrateRouteImport } from './routes/_authenticated.app.orchestrate'
@@ -103,12 +102,6 @@ const AuthenticatedAppEmbeddingsRoute =
     path: '/embeddings',
     getParentRoute: () => AuthenticatedAppRoute,
   } as any)
-const AuthenticatedAppHardwareBoostRoute =
-  AuthenticatedAppHardwareBoostRouteImport.update({
-    id: '/hardware-boost',
-    path: '/hardware-boost',
-    getParentRoute: () => AuthenticatedAppRoute,
-  } as any)
 const AuthenticatedAppKnowledgeGraphRoute =
   AuthenticatedAppKnowledgeGraphRouteImport.update({
     id: '/knowledge-graph',
@@ -162,7 +155,6 @@ export interface FileRoutesByFullPath {
   '/app/benchmarks': typeof AuthenticatedAppBenchmarksRoute
   '/app/chat': typeof AuthenticatedAppChatRoute
   '/app/embeddings': typeof AuthenticatedAppEmbeddingsRoute
-  '/app/hardware-boost': typeof AuthenticatedAppHardwareBoostRoute
   '/app/knowledge-graph': typeof AuthenticatedAppKnowledgeGraphRoute
   '/app/memory': typeof AuthenticatedAppMemoryRoute
   '/app/orchestrate': typeof AuthenticatedAppOrchestrateRoute
@@ -184,7 +176,6 @@ export interface FileRoutesByTo {
   '/app/benchmarks': typeof AuthenticatedAppBenchmarksRoute
   '/app/chat': typeof AuthenticatedAppChatRoute
   '/app/embeddings': typeof AuthenticatedAppEmbeddingsRoute
-  '/app/hardware-boost': typeof AuthenticatedAppHardwareBoostRoute
   '/app/knowledge-graph': typeof AuthenticatedAppKnowledgeGraphRoute
   '/app/memory': typeof AuthenticatedAppMemoryRoute
   '/app/orchestrate': typeof AuthenticatedAppOrchestrateRoute
@@ -209,7 +200,6 @@ export interface FileRoutesById {
   '/_authenticated/app/benchmarks': typeof AuthenticatedAppBenchmarksRoute
   '/_authenticated/app/chat': typeof AuthenticatedAppChatRoute
   '/_authenticated/app/embeddings': typeof AuthenticatedAppEmbeddingsRoute
-  '/_authenticated/app/hardware-boost': typeof AuthenticatedAppHardwareBoostRoute
   '/_authenticated/app/knowledge-graph': typeof AuthenticatedAppKnowledgeGraphRoute
   '/_authenticated/app/memory': typeof AuthenticatedAppMemoryRoute
   '/_authenticated/app/orchestrate': typeof AuthenticatedAppOrchestrateRoute
@@ -234,7 +224,6 @@ export interface FileRouteTypes {
     | '/app/benchmarks'
     | '/app/chat'
     | '/app/embeddings'
-    | '/app/hardware-boost'
     | '/app/knowledge-graph'
     | '/app/memory'
     | '/app/orchestrate'
@@ -256,7 +245,6 @@ export interface FileRouteTypes {
     | '/app/benchmarks'
     | '/app/chat'
     | '/app/embeddings'
-    | '/app/hardware-boost'
     | '/app/knowledge-graph'
     | '/app/memory'
     | '/app/orchestrate'
@@ -280,7 +268,6 @@ export interface FileRouteTypes {
     | '/_authenticated/app/benchmarks'
     | '/_authenticated/app/chat'
     | '/_authenticated/app/embeddings'
-    | '/_authenticated/app/hardware-boost'
     | '/_authenticated/app/knowledge-graph'
     | '/_authenticated/app/memory'
     | '/_authenticated/app/orchestrate'
@@ -404,13 +391,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppEmbeddingsRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
-    '/_authenticated/app/hardware-boost': {
-      id: '/_authenticated/app/hardware-boost'
-      path: '/hardware-boost'
-      fullPath: '/app/hardware-boost'
-      preLoaderRoute: typeof AuthenticatedAppHardwareBoostRouteImport
-      parentRoute: typeof AuthenticatedAppRoute
-    }
     '/_authenticated/app/knowledge-graph': {
       id: '/_authenticated/app/knowledge-graph'
       path: '/knowledge-graph'
@@ -467,7 +447,6 @@ interface AuthenticatedAppRouteChildren {
   AuthenticatedAppBenchmarksRoute: typeof AuthenticatedAppBenchmarksRoute
   AuthenticatedAppChatRoute: typeof AuthenticatedAppChatRoute
   AuthenticatedAppEmbeddingsRoute: typeof AuthenticatedAppEmbeddingsRoute
-  AuthenticatedAppHardwareBoostRoute: typeof AuthenticatedAppHardwareBoostRoute
   AuthenticatedAppKnowledgeGraphRoute: typeof AuthenticatedAppKnowledgeGraphRoute
   AuthenticatedAppMemoryRoute: typeof AuthenticatedAppMemoryRoute
   AuthenticatedAppOrchestrateRoute: typeof AuthenticatedAppOrchestrateRoute
@@ -480,7 +459,6 @@ const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
   AuthenticatedAppBenchmarksRoute: AuthenticatedAppBenchmarksRoute,
   AuthenticatedAppChatRoute: AuthenticatedAppChatRoute,
   AuthenticatedAppEmbeddingsRoute: AuthenticatedAppEmbeddingsRoute,
-  AuthenticatedAppHardwareBoostRoute: AuthenticatedAppHardwareBoostRoute,
   AuthenticatedAppKnowledgeGraphRoute: AuthenticatedAppKnowledgeGraphRoute,
   AuthenticatedAppMemoryRoute: AuthenticatedAppMemoryRoute,
   AuthenticatedAppOrchestrateRoute: AuthenticatedAppOrchestrateRoute,

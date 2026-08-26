@@ -1,7 +1,6 @@
 import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useAuth } from "../../lib/auth-context";
-import { useLaptopBoost } from "../../lib/webgl-volume-boost";
 import {
   Activity,
   Brain,
@@ -15,7 +14,6 @@ import {
   Settings,
   Shield,
   Sparkles,
-  Zap,
   X,
 } from "lucide-react";
 import type { ReactNode } from "react";
@@ -29,7 +27,6 @@ const nav = [
   { to: "/app/embeddings", label: "Embeddings", icon: Sparkles },
   { to: "/app/benchmarks", label: "Benchmarks", icon: Activity },
   { to: "/app/security", label: "Security", icon: Shield },
-  { to: "/app/hardware-boost", label: "Laptop Boost (60+ FPS)", icon: Zap },
   { to: "/app/settings", label: "Settings", icon: Settings },
 ];
 
@@ -38,7 +35,6 @@ export function AppShell({ children }: { children: ReactNode }) {
   const auth = useAuth();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { active: boostActive, toggle: toggleBoost } = useLaptopBoost();
 
   function isActive(to: string, exact?: boolean) {
     return exact ? pathname === to : pathname === to || pathname.startsWith(to + "/");
@@ -85,74 +81,9 @@ export function AppShell({ children }: { children: ReactNode }) {
           })}
         </div>
 
-        {/* Section above Settings: Laptop Boost Button & Interactive Quick-Toggle */}
+        {/* Settings Navigation Link */}
         <div className="pt-3 mt-3 border-t border-border/60 px-4 space-y-2">
-          {/* 1. Dedicated Laptop Boost Link directly above Settings */}
-          {nav.slice(8, 9).map((n) => {
-            const active = isActive(n.to, n.exact);
-            return (
-              <Link
-                key={n.to}
-                to={n.to}
-                onClick={() => setMobileOpen(false)}
-                aria-current={active ? "page" : undefined}
-                className={`flex items-center justify-between border px-3 py-2 text-xs font-semibold transition-all ${
-                  active
-                    ? "border-leo bg-leo/15 text-leo shadow-sm shadow-leo/10"
-                    : boostActive
-                      ? "border-leo/40 bg-surface-2 text-foreground hover:border-leo"
-                      : "border-border text-muted-foreground hover:text-foreground hover:border-leo/50"
-                }`}
-              >
-                <div className="flex items-center gap-2">
-                  <Zap
-                    className={`h-3.5 w-3.5 ${boostActive ? "text-leo fill-leo" : "text-muted-foreground"}`}
-                  />
-                  <span>{n.label}</span>
-                </div>
-                <span
-                  className={`text-[10px] font-mono px-1 py-0.5 border ${boostActive ? "border-leo/50 text-leo bg-leo/20" : "border-border text-muted-foreground"}`}
-                >
-                  {boostActive ? "60+ FPS" : "OFF"}
-                </span>
-              </Link>
-            );
-          })}
-
-          {/* 2. Interactive 1-Click Toggle Switch directly above Settings */}
-          <div className="bg-black/50 border border-border/80 p-2.5 flex items-center justify-between gap-2">
-            <div className="min-w-0">
-              <div className="text-[11px] font-bold text-foreground truncate flex items-center gap-1.5">
-                <span
-                  className={`inline-block h-1.5 w-1.5 rounded-full ${boostActive ? "bg-leo animate-pulse" : "bg-muted-foreground"}`}
-                />
-                Laptop Backend
-              </div>
-              <div className="text-[10px] font-mono text-muted-foreground">
-                {boostActive ? "iGPU 60+ FPS Vulkan" : "Standard Mode"}
-              </div>
-            </div>
-
-            <button
-              onClick={() => toggleBoost()}
-              type="button"
-              role="switch"
-              aria-checked={boostActive}
-              title="Toggle Laptop Backend & 60+ FPS Shaders"
-              className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-leo focus:ring-offset-2 ${
-                boostActive ? "bg-leo" : "bg-muted"
-              }`}
-            >
-              <span
-                className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-black shadow-lg ring-0 transition duration-200 ease-in-out ${
-                  boostActive ? "translate-x-4" : "translate-x-0"
-                }`}
-              />
-            </button>
-          </div>
-
-          {/* 3. Settings Navigation Link */}
-          {nav.slice(9).map((n) => {
+          {nav.slice(8).map((n) => {
             const active = isActive(n.to, n.exact);
             return (
               <Link
