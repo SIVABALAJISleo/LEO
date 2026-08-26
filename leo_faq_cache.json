@@ -1,0 +1,52 @@
+{
+  "how to reset corporate vpn password": {
+    "answer": "Navigate to https://identity.corp/reset, enter your corporate email, and verify with 2FA.",
+    "keywords": [
+      "reset",
+      "vpn",
+      "password",
+      "identity",
+      "2fa"
+    ]
+  },
+  "what is the hardware bypass architecture": {
+    "answer": "LEO v7 implements a serial memory-efficient pipeline with on-demand model allocation and pre-computed semantic caching.",
+    "keywords": [
+      "hardware",
+      "bypass",
+      "architecture",
+      "leo",
+      "memory"
+    ]
+  },
+  "how to fix high ram usage and thermal throttling": {
+    "answer": "Unload idle neural network weights, avoid keeping dense models resident simultaneously, and rely on pre-indexed semantic JSON caches.",
+    "keywords": [
+      "ram",
+      "thermal",
+      "throttling",
+      "memory",
+      "overheating"
+    ]
+  },
+  "how does leo achieve sub 50ms latency": {
+    "answer": "By querying pre-indexed normalized keyword & semantic hash tables without waking heavy GPU execution units.",
+    "keywords": [
+      "leo",
+      "latency",
+      "sub",
+      "50ms",
+      "fast"
+    ]
+  },
+  "how to deploy local offline ai without cloud": {
+    "answer": "Use local quantized GGUF/8-bit models loaded strictly on demand and flushed immediately after inference.",
+    "keywords": [
+      "deploy",
+      "offline",
+      "local",
+      "cloud",
+      "private"
+    ]
+  }
+}
