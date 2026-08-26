@@ -15,6 +15,7 @@ dist-ssr
 .vinxi
 .tanstack/**
 .nitro
+.vercel
 
 # Environment Files & Secrets (Zero-Leak Isolation)
 .env
