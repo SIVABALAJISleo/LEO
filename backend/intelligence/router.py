@@ -29,9 +29,30 @@ class NumpyIndexL2:
         distances = np.linalg.norm(data - query_vec, axis=1)
         indices = np.argsort(distances)[:k]
         
-        return distances[indices].reshape(1, -1), indices.reshape(1, -1)
+class TFIDFLite:
+    """Lightweight hash-based deterministic embedding generator for offline/fast fallback."""
+    def __init__(self, dimension: int = 384):
+        self.dimension = dimension
 
-        return embeddings
+    def encode(self, texts, **kwargs) -> np.ndarray:
+        is_single = isinstance(texts, str)
+        if is_single:
+            texts = [texts]
+        
+        vectors = []
+        for text in texts:
+            vec = np.zeros(self.dimension, dtype=np.float32)
+            words = re.findall(r"\w+", str(text).lower())
+            for word in words:
+                idx = abs(hash(word)) % self.dimension
+                vec[idx] += 1.0
+            norm = np.linalg.norm(vec)
+            if norm > 1e-6:
+                vec /= norm
+            vectors.append(vec)
+            
+        res = np.array(vectors, dtype=np.float32)
+        return res[0] if is_single else res
 
 try:
     from sentence_transformers import SentenceTransformer
@@ -127,6 +148,9 @@ class SemanticCache:
                 from backend.hybrid.intent import MockEmbedder
                 self._encoder = MockEmbedder()
         return self._encoder
+
+    def _get_encoder(self):
+        return self.encoder
 
 
     def get(self, cache_key: str) -> Optional[Dict[str, Any]]:

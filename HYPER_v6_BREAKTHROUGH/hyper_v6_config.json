@@ -1,0 +1,33 @@
+{
+  "engine_version": "6.0.0-BREAKTHROUGH",
+  "db_path": "C:\\Users\\sivab\\OneDrive\\Documents\\HYPER\\HYPER_v6_BREAKTHROUGH\\hyper_v6_cache.db",
+  "vulkan_enabled": true,
+  "power_envelope_watts": 15.0,
+  "target_hardware": {
+    "cpu": "Intel Core i5-12450H (8 Cores, 12 Threads)",
+    "igpu": "Intel UHD Graphics (48 EUs) UMA"
+  },
+  "tiers": {
+    "tier_0": {
+      "name": "SQLite Exact Cache",
+      "max_latency_ms": 1.0
+    },
+    "tier_1": {
+      "name": "FAISS Semantic Cache",
+      "max_latency_ms": 10.0
+    },
+    "tier_2": {
+      "name": "Tiny Model (0.5B-1.5B) iGPU Vulkan",
+      "expected_tok_s": "10-18 tok/s"
+    },
+    "tier_3": {
+      "name": "Small Model (3B-7B) iGPU SYCL/Vulkan",
+      "expected_tok_s": "4-8 tok/s"
+    },
+    "tier_4": {
+      "name": "Kimi K3 (2.8T Parameters) Frontier Engine",
+      "expected_tok_s": "Frontier API / Offload"
+    }
+  },
+  "initialized_at": "2026-08-27 21:44:49"
+}

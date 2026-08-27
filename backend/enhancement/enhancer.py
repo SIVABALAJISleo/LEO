@@ -3,8 +3,13 @@ Enhancer Module
 The core engine that transforms raw text through a cleaning, formatting,
 and structurally adaptive expansion pipeline.
 """
-from typing import List, Optional
-from . import Formatter, ContextExpander, Templates
+from typing import List, Optional, Dict, Any
+try:
+    from . import Formatter, ContextExpander, Templates
+except ImportError:
+    from backend.enhancement.formatter import Formatter
+    from backend.enhancement.context_expander import ContextExpander
+    from backend.enhancement.templates import Templates
 
 class AnswerEnhancer:
     """

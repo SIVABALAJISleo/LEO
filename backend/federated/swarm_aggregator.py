@@ -12,7 +12,10 @@ import torch
 from typing import Dict, List, Any
 from collections import defaultdict
 
-from .fedRA_allocator import FedRAAllocator
+try:
+    from .fedRA_allocator import FedRAAllocator
+except ImportError:
+    from backend.federated.fedRA_allocator import FedRAAllocator
 
 class PBFTValidator:
     """

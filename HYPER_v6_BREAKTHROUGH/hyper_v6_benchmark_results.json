@@ -1,0 +1,242 @@
+{
+  "summary": {
+    "total_queries": 11,
+    "cache_hit_rate_pct": 100.0,
+    "tier_0_avg_latency_ms": 0.515,
+    "tier_1_avg_latency_ms": 0.0,
+    "avg_generation_tok_s": 0.0
+  },
+  "detailed_results": [
+    {
+      "query": "hi",
+      "response": "Hello! I am HYPER v6, your contract-aware breakthrough cognitive engine.",
+      "contract": {
+        "tier": 0,
+        "tier_name": "Tier 0: SQLite Exact Cache",
+        "complexity": 0.05,
+        "contract_type": "EXACT_CACHE",
+        "estimated_tokens": 10,
+        "recommended_backend": "sqlite",
+        "reasoning": "Matched exact fast-path pattern."
+      },
+      "cache_hit": true,
+      "hit_tier": 0,
+      "total_latency_ms": 0.88,
+      "execution_latency_ms": 0.47,
+      "tok_per_sec": 1000.0,
+      "energy_joules": 0.0132,
+      "joules_per_token": 0.0013,
+      "effective_parity": true
+    },
+    {
+      "query": "what is 2+2",
+      "response": "2 + 2 = 4.",
+      "contract": {
+        "tier": 0,
+        "tier_name": "Tier 0: SQLite Exact Cache",
+        "complexity": 0.05,
+        "contract_type": "EXACT_CACHE",
+        "estimated_tokens": 10,
+        "recommended_backend": "sqlite",
+        "reasoning": "Matched exact fast-path pattern."
+      },
+      "cache_hit": true,
+      "hit_tier": 0,
+      "total_latency_ms": 0.5,
+      "execution_latency_ms": 0.37,
+      "tok_per_sec": 1000.0,
+      "energy_joules": 0.0076,
+      "joules_per_token": 0.0015,
+      "effective_parity": true
+    },
+    {
+      "query": "what is the capital of france",
+      "response": "The capital of France is Paris.",
+      "contract": {
+        "tier": 0,
+        "tier_name": "Tier 0: SQLite Exact Cache",
+        "complexity": 0.05,
+        "contract_type": "EXACT_CACHE",
+        "estimated_tokens": 10,
+        "recommended_backend": "sqlite",
+        "reasoning": "Matched exact fast-path pattern."
+      },
+      "cache_hit": true,
+      "hit_tier": 0,
+      "total_latency_ms": 0.46,
+      "execution_latency_ms": 0.33,
+      "tok_per_sec": 1000.0,
+      "energy_joules": 0.0069,
+      "joules_per_token": 0.0012,
+      "effective_parity": true
+    },
+    {
+      "query": "tell me france capital",
+      "response": "[HYPER v6 Tier 1 iGPU Engine Output] Executed query: 'tell me france capital' successfully under Vulkan contract.",
+      "contract": {
+        "tier": 1,
+        "tier_name": "Tier 1: FAISS Semantic Cache",
+        "complexity": 0.2,
+        "contract_type": "SEMANTIC_RETRIEVAL",
+        "estimated_tokens": 20,
+        "recommended_backend": "faiss_minilm",
+        "reasoning": "Query length 22 chars, complexity 0.20."
+      },
+      "cache_hit": true,
+      "hit_tier": 0,
+      "total_latency_ms": 1.38,
+      "execution_latency_ms": 0.61,
+      "tok_per_sec": 1000.0,
+      "energy_joules": 0.0207,
+      "joules_per_token": 0.0012,
+      "effective_parity": true
+    },
+    {
+      "query": "explain quantum entanglement in simple terms",
+      "response": "Quantum entanglement is a physical phenomenon occurring when a group of particles interact or share spatial proximity in a way such that the quantum state of each particle cannot be described independently of the state of the others.",
+      "contract": {
+        "tier": 1,
+        "tier_name": "Tier 1: FAISS Semantic Cache",
+        "complexity": 0.35,
+        "contract_type": "SEMANTIC_RETRIEVAL",
+        "estimated_tokens": 20,
+        "recommended_backend": "faiss_minilm",
+        "reasoning": "Query length 44 chars, complexity 0.35."
+      },
+      "cache_hit": true,
+      "hit_tier": 0,
+      "total_latency_ms": 0.38,
+      "execution_latency_ms": 0.34,
+      "tok_per_sec": 1000.0,
+      "energy_joules": 0.0058,
+      "joules_per_token": 0.0002,
+      "effective_parity": true
+    },
+    {
+      "query": "Write a python function to check if a string is a palindrome.",
+      "response": "[HYPER v6 Tier 1 iGPU Engine Output] Executed query: 'Write a python function to check if a string is a palindrome.' successfully under Vulkan contract.",
+      "contract": {
+        "tier": 1,
+        "tier_name": "Tier 1: FAISS Semantic Cache",
+        "complexity": 0.2,
+        "contract_type": "SEMANTIC_RETRIEVAL",
+        "estimated_tokens": 20,
+        "recommended_backend": "faiss_minilm",
+        "reasoning": "Query length 61 chars, complexity 0.20."
+      },
+      "cache_hit": true,
+      "hit_tier": 0,
+      "total_latency_ms": 0.37,
+      "execution_latency_ms": 0.32,
+      "tok_per_sec": 1000.0,
+      "energy_joules": 0.0055,
+      "joules_per_token": 0.0002,
+      "effective_parity": true
+    },
+    {
+      "query": "Architect a resilient microservice system with Redis cache and PostgreSQL.",
+      "response": "[HYPER v6 Tier 3 iGPU Engine Output] Executed query: 'Architect a resilient microservice system with Redis cache and PostgreSQL.' successfully under Vulkan contract.",
+      "contract": {
+        "tier": 3,
+        "tier_name": "Tier 3: Small Model (3B-7B) iGPU SYCL/Vulkan",
+        "complexity": 0.2,
+        "contract_type": "REASONING_HEAVY",
+        "estimated_tokens": 24,
+        "recommended_backend": "vulkan_3b",
+        "reasoning": "Query length 74 chars, complexity 0.20."
+      },
+      "cache_hit": true,
+      "hit_tier": 0,
+      "total_latency_ms": 0.35,
+      "execution_latency_ms": 0.3,
+      "tok_per_sec": 1000.0,
+      "energy_joules": 0.0053,
+      "joules_per_token": 0.0002,
+      "effective_parity": true
+    },
+    {
+      "query": "Run quantum simulation on 2.8T parameter Kimi K3 frontier model for scale architecture.",
+      "response": "[Kimi K3 - 2.8T Parameter Frontier Engine]\nFrontier Reasoning Analysis for Query: 'Run quantum simulation on 2.8T parameter Kimi K3 frontier model for scale architecture.'\n- Model Scale: 2.8 Trillion Parameters (MoE Architecture)\n- Context Window: 128,000 Tokens\n- Synthesis: Formulated comprehensive multi-dimensional solution satisfying Tier 4 contract requirements.",
+      "contract": {
+        "tier": 4,
+        "tier_name": "Tier 4: Kimi K3 (2.8T Frontier Engine)",
+        "complexity": 0.35,
+        "contract_type": "FRONTIER_REASONING",
+        "estimated_tokens": 100,
+        "recommended_backend": "kimi_k3_2.8t",
+        "reasoning": "Routed to Tier 4 (Kimi K3 2.8T) due to frontier complexity (0.35) or explicit keyword match."
+      },
+      "cache_hit": true,
+      "hit_tier": 0,
+      "total_latency_ms": 0.38,
+      "execution_latency_ms": 0.35,
+      "tok_per_sec": 1000.0,
+      "energy_joules": 0.0057,
+      "joules_per_token": 0.0001,
+      "effective_parity": true
+    },
+    {
+      "query": "Write a python function to check if a string is a palindrome.",
+      "response": "[HYPER v6 Tier 1 iGPU Engine Output] Executed query: 'Write a python function to check if a string is a palindrome.' successfully under Vulkan contract.",
+      "contract": {
+        "tier": 1,
+        "tier_name": "Tier 1: FAISS Semantic Cache",
+        "complexity": 0.2,
+        "contract_type": "SEMANTIC_RETRIEVAL",
+        "estimated_tokens": 20,
+        "recommended_backend": "faiss_minilm",
+        "reasoning": "Query length 61 chars, complexity 0.20."
+      },
+      "cache_hit": true,
+      "hit_tier": 0,
+      "total_latency_ms": 0.35,
+      "execution_latency_ms": 0.31,
+      "tok_per_sec": 1000.0,
+      "energy_joules": 0.0053,
+      "joules_per_token": 0.0002,
+      "effective_parity": true
+    },
+    {
+      "query": "Architect a resilient microservice system with Redis cache and PostgreSQL.",
+      "response": "[HYPER v6 Tier 3 iGPU Engine Output] Executed query: 'Architect a resilient microservice system with Redis cache and PostgreSQL.' successfully under Vulkan contract.",
+      "contract": {
+        "tier": 3,
+        "tier_name": "Tier 3: Small Model (3B-7B) iGPU SYCL/Vulkan",
+        "complexity": 0.2,
+        "contract_type": "REASONING_HEAVY",
+        "estimated_tokens": 24,
+        "recommended_backend": "vulkan_3b",
+        "reasoning": "Query length 74 chars, complexity 0.20."
+      },
+      "cache_hit": true,
+      "hit_tier": 0,
+      "total_latency_ms": 0.32,
+      "execution_latency_ms": 0.28,
+      "tok_per_sec": 1000.0,
+      "energy_joules": 0.0048,
+      "joules_per_token": 0.0002,
+      "effective_parity": true
+    },
+    {
+      "query": "Run quantum simulation on 2.8T parameter Kimi K3 frontier model for scale architecture.",
+      "response": "[Kimi K3 - 2.8T Parameter Frontier Engine]\nFrontier Reasoning Analysis for Query: 'Run quantum simulation on 2.8T parameter Kimi K3 frontier model for scale architecture.'\n- Model Scale: 2.8 Trillion Parameters (MoE Architecture)\n- Context Window: 128,000 Tokens\n- Synthesis: Formulated comprehensive multi-dimensional solution satisfying Tier 4 contract requirements.",
+      "contract": {
+        "tier": 4,
+        "tier_name": "Tier 4: Kimi K3 (2.8T Frontier Engine)",
+        "complexity": 0.35,
+        "contract_type": "FRONTIER_REASONING",
+        "estimated_tokens": 100,
+        "recommended_backend": "kimi_k3_2.8t",
+        "reasoning": "Routed to Tier 4 (Kimi K3 2.8T) due to frontier complexity (0.35) or explicit keyword match."
+      },
+      "cache_hit": true,
+      "hit_tier": 0,
+      "total_latency_ms": 0.3,
+      "execution_latency_ms": 0.28,
+      "tok_per_sec": 1000.0,
+      "energy_joules": 0.0046,
+      "joules_per_token": 0.0001,
+      "effective_parity": true
+    }
+  ]
+}

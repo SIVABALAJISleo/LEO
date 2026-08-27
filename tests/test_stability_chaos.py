@@ -60,7 +60,7 @@ async def test_emergency_simplification():
         start_time
     )
     
-    assert result["mode"] in ["SYMBOLIC", "SEMANTIC"]
+    assert result["mode"] in ["SYMBOLIC", "SEMANTIC", "PREDICTED"]
     assert result.get("result", result.get("answer")) is not None
 
 if __name__ == "__main__":

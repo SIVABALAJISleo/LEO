@@ -128,6 +128,11 @@ class ProductionSemanticCache:
         except Exception as e:
             logger.warning(f"FAISS not loaded, falling back to manual similarity scans: {e}")
 
+    def _get_encoder(self):
+        if self.encoder is None:
+            self.encoder = TrigramEmbedder()
+        return self.encoder
+
     def get_count(self) -> int:
         try:
             conn = get_concurrent_db_connection(self.db_path)

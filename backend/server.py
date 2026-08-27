@@ -5,9 +5,9 @@ from typing import List, Dict, Any, Optional
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse, JSONResponse
-from layer5_local_infer.native_engine import LEONativeOrchestrator
-from layer5_local_infer.bitnet_tmac_engine import BitNetTMacEngine
-from layer4_igpu.openvino_igpu_engine import OpenVINOiGPUEngine
+from backend.layer5_local_infer.native_engine import LEONativeOrchestrator
+from backend.layer5_local_infer.bitnet_tmac_engine import BitNetTMacEngine
+from backend.layer4_igpu.openvino_igpu_engine import OpenVINOiGPUEngine
 
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))

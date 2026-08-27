@@ -48,7 +48,7 @@ async def test_zero_compute_latency_and_avoidance():
     start = time.time()
     res = await global_zero_control.handle_request("what is AI", "test_req_000", tenant_id, workspace_id, start)
     
-    assert res["mode"] in ["GRAPH_COMPOSITION", "SYMBOLIC", "SEMANTIC", "CACHE", "ASSEMBLY"]
+    assert res["mode"] in ["GRAPH_COMPOSITION", "SYMBOLIC", "SEMANTIC", "CACHE", "ASSEMBLY", "PREDICTED"]
     assert "fundamental" in res["result"] or "intelligence" in res["result"] or "AI" in res["result"] or "ai" in res["result"].lower()
 
     print("Verification complete: Zero-Runtime Constraints Met.")

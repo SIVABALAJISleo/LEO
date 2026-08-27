@@ -7,7 +7,10 @@ Orchestrates INT8 iGPU rendering, CPU Super-Resolution, and CPU Frame Interpolat
 import time
 import logging
 import numpy as np
-from .nerf_cache import HDCNeRFVoxelCache
+try:
+    from .nerf_cache import HDCNeRFVoxelCache
+except ImportError:
+    from backend.layer17_neural_renderer.nerf_cache import HDCNeRFVoxelCache
 
 logger = logging.getLogger(__name__)
 

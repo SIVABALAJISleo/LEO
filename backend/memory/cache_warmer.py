@@ -12,7 +12,10 @@ import threading
 import logging
 import psutil
 
-from .infinite_cache_engine import infinite_cache
+try:
+    from .infinite_cache_engine import infinite_cache
+except ImportError:
+    from backend.memory.infinite_cache_engine import infinite_cache
 
 logger = logging.getLogger("V42CacheWarmer")
 
