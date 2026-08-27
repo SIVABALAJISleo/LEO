@@ -109,19 +109,23 @@ class SemanticCache:
         from backend.core.middleware import redis_client
         self.redis = redis_client
 
+    @property
+    def encoder(self):
         if self._encoder is None:
             import os
             offline = (
                 os.getenv("TRANSFORMERS_OFFLINE", "0") == "1"
                 or os.getenv("LEO_OFFLINE", "0") == "1"
             )
-            if offline or not HAS_TRANSFORMERS:
-                raise RuntimeError("SentenceTransformer is required for SemanticCache")
-            else:
+            if not offline and HAS_TRANSFORMERS:
                 try:
                     self._encoder = SentenceTransformer('all-MiniLM-L6-v2')
                 except Exception as e:
-                    raise RuntimeError(f"SemanticCache: SentenceTransformer load failed ({e})")
+                    from backend.hybrid.intent import MockEmbedder
+                    self._encoder = MockEmbedder()
+            else:
+                from backend.hybrid.intent import MockEmbedder
+                self._encoder = MockEmbedder()
         return self._encoder
 
 

@@ -4,6 +4,7 @@ Production-grade P2P Distributed Execution Mesh for LEO AI v∞.
 Implements socket-based UDP broadcast peer discovery, TCP task routing, load balancing, and fault tolerance.
 """
 
+import os
 import time
 import socket
 import json

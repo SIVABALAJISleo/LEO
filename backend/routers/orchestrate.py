@@ -78,7 +78,7 @@ async def legacy_query(request: Request, body: OrchestrateRequest, token: dict =
 # --- On-device Training Endpoint (Layer 7) ---
 class TrainRequest(BaseModel):
     pairs: list[tuple[str, str]] = Field(..., description="Prompt-response pairs to train on")
-    output_dir: str = Field("models/adapters/local_node", description="Output directory for adapters")
+    output_dir: str = Field("local_node", pattern=r"^[a-zA-Z0-9_\-]+$", description="Safe alphanumeric output identifier for adapter directory")
     epochs: int = Field(8, description="Number of training epochs")
     lr: float = Field(5e-4, description="Learning rate")
 

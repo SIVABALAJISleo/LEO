@@ -103,15 +103,20 @@ class RAGEngine:
     def __init__(self, dimension: int = 384, persist_dir: str = "rag_data"):
         self.persist_dir = persist_dir
         self.docs_path = os.path.join(persist_dir, "documents.json")
-        if os.getenv("LEO_OFFLINE", "0") == "1" or os.getenv("TRANSFORMERS_OFFLINE", "0") == "1" or not HAS_TRANSFORMERS:
-            logger.error("RAGEngine: SentenceTransformer unavailable. Failing loudly.")
-            raise RuntimeError("SentenceTransformer is required for RAGEngine")
-        else:
+        offline = (
+            os.getenv("LEO_OFFLINE", "0") == "1"
+            or os.getenv("TRANSFORMERS_OFFLINE", "0") == "1"
+        )
+        if not offline and HAS_TRANSFORMERS:
             try:
                 self.model = SentenceTransformer('all-MiniLM-L6-v2')
             except Exception as e:
-                logger.error(f"RAGEngine: SentenceTransformer unavailable ({e}). Failing loudly.")
-                raise RuntimeError(f"SentenceTransformer unavailable: {e}")
+                logger.warning(f"RAGEngine: SentenceTransformer load failed ({e}). Falling back to deterministic embedder.")
+                from backend.hybrid.intent import MockEmbedder
+                self.model = MockEmbedder()
+        else:
+            from backend.hybrid.intent import MockEmbedder
+            self.model = MockEmbedder()
         
         # Select storage mode: 'local' (FAISS) or 'distributed' (Qdrant/Milvus)
         db_mode = os.getenv("VECTOR_DB_MODE", "local")

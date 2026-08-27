@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { Route } from "./_authenticated";
 import { setToken } from "@/lib/leo-client";
 

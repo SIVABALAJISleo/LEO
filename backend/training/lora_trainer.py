@@ -25,30 +25,39 @@ from typing import List, Tuple, Dict, Any, Optional
 logger = logging.getLogger(__name__)
 
 
+import re
+
+# Base safe directory for all on-device adapters
+BASE_ADAPTERS_DIR = os.path.abspath(os.path.join(os.getcwd(), "models", "adapters"))
+
+
 def _safe_resolve_dir(path_str: str) -> str:
-    """Sanitize and ensure path is safe from directory traversal."""
+    """
+    Sanitize and enforce strict containment within the designated adapters folder.
+    Guarantees protection against path injection and directory traversal attacks.
+    """
     if not path_str or not isinstance(path_str, str):
-        raise ValueError("Invalid path parameter")
-    if "\0" in path_str:
-        raise ValueError("Null byte detected in path parameter")
-    # Resolve relative to current working directory
-    base = os.path.abspath(os.getcwd())
-    normalized = os.path.abspath(os.path.normpath(os.path.join(base, path_str) if not os.path.isabs(path_str) else path_str))
-    # Enforce safe prefix containment
-    try:
-        common = os.path.commonpath([base, normalized])
-        if common != base:
-            # Re-anchor safely inside base/adapters
-            safe_name = os.path.basename(os.path.normpath(path_str)).replace("..", "").strip("/\\")
-            normalized = os.path.join(base, "adapters", safe_name or "default_adapter")
-    except ValueError:
-        normalized = os.path.join(base, "adapters", "default_adapter")
-    return normalized
+        safe_name = "default_adapter"
+    else:
+        # Strip out any path traversal elements, slashes, null bytes
+        cleaned = re.sub(r"[^a-zA-Z0-9_\-]", "", os.path.basename(path_str.strip().rstrip("/\\")))
+        safe_name = cleaned if cleaned else "default_adapter"
+
+    os.makedirs(BASE_ADAPTERS_DIR, exist_ok=True)
+    safe_path = os.path.abspath(os.path.join(BASE_ADAPTERS_DIR, safe_name))
+
+    # Strict prefix validation
+    if not safe_path.startswith(BASE_ADAPTERS_DIR):
+        raise ValueError(f"Path traversal detected: {safe_path} is outside {BASE_ADAPTERS_DIR}")
+
+    return safe_path
 
 
 def _safe_join(base_dir: str, filename: str) -> str:
-    """Safely join a validated base directory with a filename."""
-    clean_name = os.path.basename(filename)
+    """Safely join a validated base directory with an alphanumeric filename."""
+    clean_name = re.sub(r"[^a-zA-Z0-9_\-\.]", "", os.path.basename(filename))
+    if not clean_name:
+        raise ValueError("Invalid file name")
     joined = os.path.abspath(os.path.join(base_dir, clean_name))
     if not joined.startswith(base_dir):
         raise ValueError(f"Path traversal detected: {joined} is outside {base_dir}")

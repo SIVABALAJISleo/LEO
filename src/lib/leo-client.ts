@@ -152,7 +152,7 @@ export function getMockResponse(path: string, init: RequestInit = {}): Response 
   const method = (init.method ?? "GET").toUpperCase();
   const cleanPath = path.split("?")[0];
 
-  let bodyData: Record<string, string> = {};
+  let bodyData: Record<string, any> = {};
   if (init.body && typeof init.body === "string") {
     try {
       bodyData = JSON.parse(init.body);
