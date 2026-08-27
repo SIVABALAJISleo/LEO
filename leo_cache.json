@@ -8,5 +8,6 @@
   "where's the company handbook?": "Download from HR portal: hr.company.com > Documents > Handbook. Or email hr@company.com to request printed copy.",
   "how do i book a conference room?": "Use Outlook calendar. Click 'New Event'. Select 'Room' dropdown. Search 'Conference Room North'. Select time slot. Send invite to roomreservation@company.com.",
   "what's the leave approval process?": "Submit in HR portal minimum 2 weeks in advance. Manager auto-approves (or requests changes). HR confirms. Your calendar updates automatically.",
-  "how do i access the file server?": "On Windows: File Explorer > Map Network Drive > \\\\fileserver.company.local\\yourteam > use AD credentials. On Mac: Finder > Connect to Server > smb://fileserver.company.local"
+  "how do i access the file server?": "On Windows: File Explorer > Map Network Drive > \\\\fileserver.company.local\\yourteam > use AD credentials. On Mac: Finder > Connect to Server > smb://fileserver.company.local",
+  "how do i setup local dev environment on docker?": "Run `docker-compose up -d` in workspace root. Ensure Docker Desktop is active."
 }
