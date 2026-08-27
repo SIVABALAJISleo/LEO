@@ -115,7 +115,7 @@ class LEOv7_MemoryEfficient:
             print("📥 Loading embedder (all-MiniLM-L6-v2 / FastSemantic)...")
             try:
                 from sentence_transformers import SentenceTransformer
-                self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2', device='cpu', model_kwargs={'local_files_only': True})
+                self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2', device='cpu')
             except Exception:
                 self.embedding_model = FastSemanticEmbedder(dim=384)
             self.print_system_status()
