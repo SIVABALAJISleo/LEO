@@ -89,6 +89,12 @@ class LEOv7_MemoryEfficient:
         self._cached_vectors = None
         self._cache_data = {}
         
+        try:
+            from backend.reflect.leo_reflect_service import get_reflect_service
+            self.reflect_service = get_reflect_service()
+        except Exception:
+            self.reflect_service = None
+        
         print("✅ LEO v7 initialized (models not yet loaded)")
         print(f"   Cache file: {self.cache_file}")
         self.print_system_status()
@@ -183,6 +189,7 @@ class LEOv7_MemoryEfficient:
 
     def _sync_vector_index(self):
         """Precompute vector embeddings for all cached questions."""
+        self.load_cache_data()
         if not self._cache_data:
             self._cached_questions = []
             self._cached_vectors = None
@@ -248,13 +255,19 @@ class LEOv7_MemoryEfficient:
             print(f"✅ CACHE HIT (similarity: {best_score:.3f})")
             print(f"   Matched: '{best_query}'")
             
-            return {
+            result = {
                 "response": best_match,
                 "source": "CACHE",
                 "latency_ms": latency_ms,
                 "similarity": best_score,
                 "is_real": True
             }
+            if self.reflect_service is not None:
+                try:
+                    self.reflect_service.record_query_trace(query, result)
+                except Exception:
+                    pass
+            return result
         
         # Step 6: Cache miss - load LLM only if needed
         print(f"⚠️  CACHE MISS (similarity: {best_score:.3f}) - using LLM fallback")
@@ -281,13 +294,19 @@ class LEOv7_MemoryEfficient:
         
         latency_ms = (time.perf_counter() - start_time) * 1000
         
-        return {
+        result = {
             "response": response,
             "source": "LLM",
             "latency_ms": latency_ms,
             "similarity": best_score,
             "is_real": True
         }
+        if self.reflect_service is not None:
+            try:
+                self.reflect_service.record_query_trace(query, result)
+            except Exception:
+                pass
+        return result
     
     def run_benchmark(self, test_queries, description="LEO v7 Benchmark"):
         """Run a benchmark against a set of test queries."""
