@@ -49,7 +49,7 @@ class LeoReflectService:
             self.ledger = None
             
         self._init_extended_schema()
-        print(f"🧠 LEO Reflect Service initialized (Ledger: {self.db_path.name})")
+        print(f"[REFLECT] LEO Reflect Service initialized (Ledger: {self.db_path.name})")
 
     def _init_extended_schema(self):
         """Ensure extended telemetry and reflection metrics tables exist."""
@@ -134,10 +134,10 @@ class LeoReflectService:
             conn.commit()
             conn.close()
             
-            print(f"✨ [Reflect] Promoted '{query[:40]}...' to permanent semantic cache (0ms lookup)")
+            print(f"[Reflect] Promoted '{query[:40]}...' to permanent semantic cache (0ms lookup)")
             return True
         except Exception as e:
-            print(f"✗ Failed to promote to cache: {e}")
+            print(f"[ERROR] Failed to promote to cache: {e}")
             return False
 
     def get_productivity_stats(self) -> Dict[str, Any]:
