@@ -49,7 +49,9 @@ def populate_enterprise_faq():
     print("📝 Populating LEO cache with enterprise FAQ...\n")
     
     for question, answer in faq_data.items():
-        leo.add_to_cache(question, answer)
+        leo.add_to_cache(question, answer, sync_index=False)
+    
+    leo._sync_vector_index()
     
     print(f"\n✅ Cache populated with {len(faq_data)} enterprise FAQs")
     print("   These answers have been pre-computed and stored locally.")
