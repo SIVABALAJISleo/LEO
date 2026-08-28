@@ -1,10 +1,11 @@
 """
-HYPER Unified Master Hub - End-to-End Central Entry Point
+HYPER & CHIMERA Unified Master Hub - End-to-End Central Entry Point
 Connects all subsystems across the repository into a single unified interface:
-  - HYPER v6 Breakthrough Engine (Tiers 0-4)
+  - CHIMERA Engine (5 Pillars: Contract Classifier, FAISS-BM25, Procedural, Heterogeneous iGPU/CPU, Neurosymbolic)
+  - HYPER v6 Breakthrough Engine (5 Tiers: T0-T4)
   - Universal Compute Router
   - Backend Intelligence & Semantic Cache Pipeline
-  - Hardware Detection & Energy Telemetry
+  - Hardware Detection & Real-Time Energy Telemetry
 """
 
 import sys
@@ -18,26 +19,31 @@ if WORKSPACE_ROOT not in sys.path:
 
 # Connect Core Subsystems
 from HYPER_v6_BREAKTHROUGH.hyper_engine import HyperV6Engine
+from chimera.engine import ChimeraMasterEngine
 from universal_compute_router.router_logic import UniversalComputeRouter
 from backend.hardware.detector import HardwareDetector
 from backend.cache.semantic_cache import ProductionSemanticCache
 
 class HyperMasterHub:
     """
-    Unified Master Hub connecting all project components together end-to-end.
+    Unified Master Hub connecting CHIMERA and HYPER v6 Breakthrough subsystems end-to-end.
     """
     def __init__(self):
         self.hardware_profile = HardwareDetector.get_system_profile()
+        self.chimera_engine = ChimeraMasterEngine()
         self.v6_engine = HyperV6Engine()
         self.universal_router = UniversalComputeRouter()
         self.semantic_cache = ProductionSemanticCache()
 
-    def process(self, query: str) -> Dict[str, Any]:
+    def process(self, query: str, engine: str = "chimera") -> Dict[str, Any]:
         """
-        Processes query through the integrated HYPER pipeline.
+        Processes query through the integrated CHIMERA or HYPER v6 pipeline.
         """
-        # Execute via HYPER v6 Breakthrough Engine
-        result = self.v6_engine.process(query)
+        if engine.lower() == "chimera":
+            result = self.chimera_engine.process(query)
+        else:
+            result = self.v6_engine.process(query)
+
         result["hardware"] = {
             "cpu": f"{self.hardware_profile.cpu.cores}C/{self.hardware_profile.cpu.threads}T",
             "igpu": self.hardware_profile.igpu.vendor,
@@ -48,9 +54,10 @@ class HyperMasterHub:
 
     def get_status(self) -> Dict[str, Any]:
         return {
-            "engine": "HYPER v6 Breakthrough Master Hub",
+            "engine": "HYPER & CHIMERA Unified Master Hub",
             "status": "ALL_SUBSYSTEMS_CONNECTED",
-            "tiers": 5,
+            "chimera_pillars": 5,
+            "hyper_v6_tiers": 5,
             "hardware": {
                 "cpu_cores": self.hardware_profile.cpu.cores,
                 "gpu": self.hardware_profile.igpu.vendor,
@@ -62,16 +69,24 @@ class HyperMasterHub:
 if __name__ == "__main__":
     hub = HyperMasterHub()
     status = hub.get_status()
-    print("=" * 60)
-    print("HYPER MASTER HUB - ALL SUBSYSTEMS CONNECTED")
-    print("=" * 60)
+    print("=" * 70)
+    print("HYPER & CHIMERA MASTER HUB - ALL SUBSYSTEMS CONNECTED")
+    print("=" * 70)
     print(f"Status:   {status['status']}")
     print(f"Hardware: {status['hardware']['cpu_cores']} CPU Cores | {status['hardware']['gpu']} | Vulkan: {status['hardware']['vulkan']}")
     
-    test_query = "What is the capital of France?"
-    res = hub.process(test_query)
-    print(f"\nQuery:    '{test_query}'")
-    print(f"Response: {res['response']}")
-    print(f"Tier:     {res['contract']['tier_name']}")
-    print(f"Latency:  {res['total_latency_ms']} ms")
-    print("=" * 60)
+    test_queries = [
+        "What is 2 + 2 * 10?",
+        "What is the capital of France?",
+        "Write a python binary search function",
+        "How do I reset my VPN password?"
+    ]
+
+    for q in test_queries:
+        res = hub.process(q, engine="chimera")
+        print("-" * 70)
+        print(f"Query:    '{q}'")
+        print(f"Stage:    {res['stage_used']} | Contract: {res['contract']}")
+        print(f"Latency:  {res['total_latency_ms']} ms | Zero Neural Inference: {res['neural_inference_eliminated']}")
+        print(f"Response: {res['response']}")
+    print("=" * 70)
