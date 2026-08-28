@@ -59,6 +59,7 @@ venv/
 *.sqlite
 *.sqlite3
 confidence_weights.json
+.hyper_cache/
 
 
 # Kimi Models & Weights (keep license docs, ignore weights/binaries)

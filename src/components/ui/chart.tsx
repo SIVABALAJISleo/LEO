@@ -294,10 +294,11 @@ const ChartLegendContent = React.forwardRef<HTMLDivElement, ChartLegendContentPr
                 {itemConfig?.label}
               </div>
             );
-        })}
-    </div>
-  );
-});
+          })}
+      </div>
+    );
+  },
+);
 ChartLegendContent.displayName = "ChartLegend";
 
 // Helper to extract item config from a payload.
