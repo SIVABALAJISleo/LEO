@@ -1,4 +1,4 @@
-﻿import asyncio
+import asyncio
 from typing import List
 from .input_sanitizer import InputSanitizer
 from .interpretation_engine import InterpretationEngine

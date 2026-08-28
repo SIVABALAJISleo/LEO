@@ -1,4 +1,4 @@
-﻿from .complexity_engine import ComplexityEngine
+from .complexity_engine import ComplexityEngine
 from .domain_router import SmartRouter
 from .transformation_engine import TransformationEngine
 from .reasoning_engine import ReasoningEngine

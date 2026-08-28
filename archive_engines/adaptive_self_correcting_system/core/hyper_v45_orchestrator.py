@@ -1,4 +1,4 @@
-﻿from .sufficiency_engine import InputContractEngine
+from .sufficiency_engine import InputContractEngine
 from .interpretation_engine import InterpretationEngine
 from .wall_detection_engine import WallDetectionEngine
 from .adaptive_strategy_engine import AdaptiveStrategyEngine

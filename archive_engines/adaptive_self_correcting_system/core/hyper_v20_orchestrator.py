@@ -1,4 +1,4 @@
-﻿from .disambiguation_engine import DisambiguationEngine
+from .disambiguation_engine import DisambiguationEngine
 from .compute_router import ComputeRouter
 from .lazy_engine import LazyEngine
 from .verification_layer import VerificationLayer

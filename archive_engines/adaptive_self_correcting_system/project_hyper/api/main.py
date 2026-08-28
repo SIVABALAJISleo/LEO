@@ -1,4 +1,4 @@
-﻿from fastapi import FastAPI
+from fastapi import FastAPI
 from fastapi.responses import StreamingResponse
 import time
 from .schemas.contracts import QueryRequest

@@ -1,4 +1,4 @@
-﻿import asyncio
+import asyncio
 from typing import Any
 from .spec_constructor import SpecConstructor
 from .formal_verifier import FormalVerifier

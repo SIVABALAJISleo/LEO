@@ -1,4 +1,4 @@
-﻿import asyncio
+import asyncio
 from .input_sanitizer import InputSanitizer
 from .multi_view_engine import MultiViewEngine
 from .consequence_engine import ConsequenceEngine

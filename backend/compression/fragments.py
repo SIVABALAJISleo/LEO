@@ -1,4 +1,4 @@
-﻿"""
+"""
 backend/compression/fragments.py
 Fragment Compression Engine: breaks complex answers into specific intents
 (definition, steps, examples, advantages) to be reused individually.

@@ -1,4 +1,4 @@
-﻿from typing import List, Any
+from typing import List, Any
 from .intent_extractor import IntentExtractor
 from .ambiguity_resolver import AmbiguityResolver
 from .compute_router import ComputeRouter, ComputeComplexity

@@ -1,4 +1,4 @@
-﻿from fastapi import FastAPI
+from fastapi import FastAPI
 from fastapi.responses import StreamingResponse
 from .schemas.contracts import QueryRequest
 from .backend.orchestrator import orchestrator

@@ -1,4 +1,4 @@
-﻿import re
+import re
 
 with open(r"c:\Users\sivab\OneDrive\Documents\HYPER\remix-of-remix-of-remix-of-nvidia-inspired-design-main\backend\core\orchestrator.py", "r", encoding="utf-8") as f:
     code = f.read()

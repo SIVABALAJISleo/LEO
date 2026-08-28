@@ -1,4 +1,4 @@
-﻿from .ontology_engine import OntologyEngine
+from .ontology_engine import OntologyEngine
 from .event_store import EventStore
 from .solver_portfolio import SolverPortfolio # Reuse v19.0 solver concepts
 from .verification_layer import VerificationLayer

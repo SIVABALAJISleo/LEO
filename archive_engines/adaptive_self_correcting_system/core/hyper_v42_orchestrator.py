@@ -1,4 +1,4 @@
-﻿from .heavy_task_detector import HeavyTaskDetector
+from .heavy_task_detector import HeavyTaskDetector
 from .transformation_engine import TransformationEngine
 from .reasoning_engine import ReasoningEngine
 from ..cache.semantic_cache import SemanticCache

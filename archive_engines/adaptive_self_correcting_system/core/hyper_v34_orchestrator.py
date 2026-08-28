@@ -1,4 +1,4 @@
-﻿import asyncio
+import asyncio
 import time
 from .risk_engine import RiskEngine
 from .sufficiency_engine import SufficiencyEngine

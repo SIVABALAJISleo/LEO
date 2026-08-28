@@ -1,4 +1,4 @@
-﻿from fastapi import FastAPI
+from fastapi import FastAPI
 from .core.router import leo_orchestrator
 from .schemas.contracts import QueryRequest, LeoPerceivedResponse
 

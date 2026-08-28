@@ -1,4 +1,4 @@
-﻿from datetime import datetime, timedelta
+from datetime import datetime, timedelta
 from .risk_engine import RiskEngine
 from .sufficiency_engine import InputContractEngine
 from .interpretation_engine import InterpretationEngine

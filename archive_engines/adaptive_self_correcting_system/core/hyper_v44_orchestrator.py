@@ -1,4 +1,4 @@
-﻿from .redefinition_engine import RedefinitionEngine
+from .redefinition_engine import RedefinitionEngine
 from .strategy_selector import StrategySelector
 from .complexity_engine import ComplexityEngine
 from .reasoning_engine import ReasoningEngine

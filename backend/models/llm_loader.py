@@ -1,4 +1,4 @@
-﻿"""
+"""
 backend/models/llm_loader.py
 Real LLM loader: TinyLlama GGUF via llama.cpp with safe fallback.
 """

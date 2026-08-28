@@ -1,4 +1,4 @@
-﻿import asyncio
+import asyncio
 from .input_sanitizer import InputSanitizer
 from .ood_detector import OODDetector
 from .completeness_service import CompletenessService

@@ -1,4 +1,4 @@
-﻿from typing import List, Tuple
+from typing import List, Tuple
 from .domain_gater import DomainGater
 from .classifier import TaskClassifier
 from .reasoning_engine import ReasoningEngine

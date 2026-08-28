@@ -1,4 +1,4 @@
-﻿from .gate.input_validator import InputValidator
+from .gate.input_validator import InputValidator
 from .core.disambiguation_engine import DisambiguationEngine
 from .core.consequence_engine import ConsequenceEngine
 from .core.knowledge_layer import KnowledgeLayer

@@ -1,4 +1,4 @@
-﻿from .dsl_parser import DSLParser
+from .dsl_parser import DSLParser
 from .deductive_engine import DeductiveEngine
 from ..models.schemas import (
     LeoV18Response, ProvenStatus, ProofStatus

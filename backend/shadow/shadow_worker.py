@@ -1,4 +1,4 @@
-﻿"""
+"""
 backend/shadow/shadow_worker.py
 Shadow Execution Engine: Precomputes answers for predicted next queries.
 """

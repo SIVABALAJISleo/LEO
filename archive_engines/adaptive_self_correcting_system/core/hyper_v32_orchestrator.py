@@ -1,4 +1,4 @@
-﻿import asyncio
+import asyncio
 from .sufficiency_engine import SufficiencyEngine
 from .interpretation_engine import InterpretationEngine
 from .reasoning_engine import ReasoningEngine

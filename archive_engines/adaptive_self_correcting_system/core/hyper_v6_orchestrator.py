@@ -1,4 +1,4 @@
-﻿from typing import List, Any
+from typing import List, Any
 from .spec_constructor import SpecConstructor
 from .formal_verifier import FormalVerifier
 from .reasoning_engine import ReasoningEngine

@@ -1,4 +1,4 @@
-﻿from .reframing_engine import ReframingEngine
+from .reframing_engine import ReframingEngine
 from .small_model_engine import SmallModelEngine
 from .reasoning_engine import ReasoningEngine
 from .trust_engine import ConsensusEngine

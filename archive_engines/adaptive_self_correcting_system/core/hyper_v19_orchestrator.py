@@ -1,4 +1,4 @@
-﻿from .dsl_parser import DSLParser
+from .dsl_parser import DSLParser
 from .temporal_engine import TemporalEngine
 from .solver_portfolio import SolverPortfolio
 from ..models.schemas import (

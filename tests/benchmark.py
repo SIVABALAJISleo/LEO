@@ -1,4 +1,4 @@
-﻿"""
+"""
 tests/benchmark.py
 Validation script: simulates usage to measure real inference avoidance.
 """
