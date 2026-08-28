@@ -1,0 +1,9 @@
+{
+  "tokens_generated": 27,
+  "baseline_latency_ms": 3141.92,
+  "baseline_tok_s": 7.64,
+  "cel_latency_ms": 3464.32,
+  "cel_tok_s": 7.79,
+  "acceptance_rate_pct": 75.0,
+  "speedup_factor": 1.02
+}

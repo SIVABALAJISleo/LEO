@@ -1,0 +1,11 @@
+{
+  "resolution": "256x256",
+  "baseline_spp": 100,
+  "cel_spp": 4,
+  "sample_reduction_pct": 96.0,
+  "baseline_ms": 40.54,
+  "cel_ms": 5.02,
+  "ssim": 0.9927,
+  "psnr_db": 31.46,
+  "contract_passed": true
+}

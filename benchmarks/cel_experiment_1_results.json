@@ -1,0 +1,25 @@
+{
+  "matrix_dim": 1024,
+  "ref_flops": 2147483648.0,
+  "path_a_dense_ms": 10.8,
+  "path_b_cold_meta": {
+    "level": 4,
+    "pathway": "SPARSE_RESIDUAL_CORRECTION",
+    "latency_ms": 83.644,
+    "ref_flops": 2147483648.0,
+    "actual_flops": 2246832128.0,
+    "cer": 0.0,
+    "contract_verified": true,
+    "energy_joules": 1.254665
+  },
+  "path_c_warm_meta": {
+    "level": 0,
+    "pathway": "EXACT_CACHE_HIT",
+    "latency_ms": 0.19,
+    "cer": 1.0,
+    "contract_verified": true,
+    "energy_joules": 0.002849
+  },
+  "max_abs_error": 0.09619140625,
+  "rel_frobenius_error": 7.592688689328497e-06
+}
