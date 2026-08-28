@@ -1,0 +1,106 @@
+{
+  "gemm_alchemy": [
+    {
+      "matrix_size": "64x64",
+      "baseline_ms": 0.027,
+      "morton_ms": 0.054,
+      "alphatensor_ms": 21.043,
+      "effective_gflops": 19.55,
+      "arithmetic_reduction_pct": 26.56
+    },
+    {
+      "matrix_size": "128x128",
+      "baseline_ms": 0.243,
+      "morton_ms": 0.391,
+      "alphatensor_ms": 231.796,
+      "effective_gflops": 17.24,
+      "arithmetic_reduction_pct": 26.56
+    },
+    {
+      "matrix_size": "256x256",
+      "baseline_ms": 0.476,
+      "morton_ms": 4.865,
+      "alphatensor_ms": "N/A",
+      "effective_gflops": 70.55,
+      "arithmetic_reduction_pct": 26.56
+    }
+  ],
+  "tensor_train_compression": {
+    "original_shape": [
+      16,
+      16,
+      16,
+      16
+    ],
+    "original_bytes": 262144,
+    "tt_cores_bytes": 2560,
+    "compression_ratio": "102.4x",
+    "memory_reduction_pct": 99.02,
+    "decomp_latency_ms": 27.731,
+    "reconstruct_latency_ms": 0.299,
+    "max_abs_error": 4e-06
+  },
+  "kan_ffn_benchmark": {
+    "dimensions": "d_model=128, d_hidden=256, seq=32, batch=16",
+    "kan_lut_latency_ms": 204.347,
+    "kan_raw_spline_latency_ms": 695.251,
+    "lut_speedup": 3.4,
+    "parameter_efficiency": "10-100x fewer parameters vs dense FFN"
+  },
+  "winograd_convolution": {
+    "image_size": "64x64",
+    "kernel_size": "3x3",
+    "output_size": "62x62",
+    "latency_ms": 27.624,
+    "multiplication_reduction": "9 to 4 operations (2.25x theoretical arithmetic speedup)"
+  },
+  "shared_memory_buffer": {
+    "pool_size_mb": 256,
+    "allocated_mb": 8.0,
+    "latency_ms": 6.385,
+    "effective_bandwidth_gbs": 1.22,
+    "zero_copy_verified": true
+  },
+  "end_to_end_pipeline": [
+    {
+      "test_case": "Tier 0 Exact Fast-Path",
+      "query": "ping",
+      "routed_tier": "Tier 0: SQLite Exact Cache",
+      "cache_hit": false,
+      "total_latency_ms": 271.97,
+      "tok_per_sec": 97.56,
+      "joules_per_token": 0.24,
+      "effective_parity": true
+    },
+    {
+      "test_case": "Tier 1 Semantic Retrieval",
+      "query": "What is the capital of France?",
+      "routed_tier": "Tier 0: SQLite Exact Cache",
+      "cache_hit": true,
+      "total_latency_ms": 1.51,
+      "tok_per_sec": 1000.0,
+      "joules_per_token": 0.0038,
+      "effective_parity": true
+    },
+    {
+      "test_case": "Tier 3 Code Generation",
+      "query": "Write a Python binary search implementation",
+      "routed_tier": "Tier 1: FAISS Semantic Cache",
+      "cache_hit": false,
+      "total_latency_ms": 72.24,
+      "tok_per_sec": 801.57,
+      "joules_per_token": 0.0246,
+      "effective_parity": true
+    },
+    {
+      "test_case": "Tier 4 Kimi Local Frontier MoE",
+      "query": "Run quantum entanglement simulation on local Kimi K3 model",
+      "routed_tier": "Tier 4: Kimi K3 / K2 (Local Frontier Engine)",
+      "cache_hit": false,
+      "total_latency_ms": 22.39,
+      "tok_per_sec": 8190.54,
+      "joules_per_token": 0.0038,
+      "effective_parity": true
+    }
+  ]
+}
