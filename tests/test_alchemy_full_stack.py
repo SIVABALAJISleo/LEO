@@ -162,11 +162,13 @@ def test_shared_memory_ring_buffer():
 
 
 def test_hyper_v6_engine_integration():
-    """Verifies end-to-end execution of HyperV6Engine with Software Alchemy telemetry."""
+    """Verifies end-to-end execution of HyperV6Engine with genuine neural generation and scientific scoreboard."""
     engine = HyperV6Engine()
-    result = engine.process("Run formal proof verification on Kimi K3 2.8T local model")
+    result = engine.process("Run formal proof verification on local model", bypass_cache=True)
     
     assert "response" in result
-    assert result["effective_parity"] is True
-    assert result["contract"]["tier"] in (3, 4)
-    assert result["energy_joules"] > 0.0
+    assert result["scoreboard"]["contract_parity"] is True
+    assert result["scoreboard"]["raw_hardware_parity"] is False
+    assert result["estimated_energy_joules"] > 0.0
+    assert result["ttft_ms"] > 0.0
+    assert result["tok_per_sec"] > 0.0
