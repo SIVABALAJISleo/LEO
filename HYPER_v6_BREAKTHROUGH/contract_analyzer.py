@@ -1,7 +1,12 @@
 """
 HYPER v6 Breakthrough Engine - Contract Analyzer
 Analyzes query intent, complexity, and contract constraints to determine optimal compute tier.
-Supports Tier 0 (SQLite Exact), Tier 1 (FAISS Semantic), Tier 2 (0.5B-1.5B iGPU), Tier 3 (3B-7B iGPU), and Tier 4 (Kimi K3 2.8T Frontier Model).
+Supports:
+  - Tier 0: SQLite Exact Cache (<1ms)
+  - Tier 1: FAISS Semantic Cache (<10ms)
+  - Tier 2: Tiny Model (0.5B-1.5B) iGPU Vulkan
+  - Tier 3: Small Model (3B-7B) iGPU SYCL/Vulkan
+  - Tier 4: Kimi K3 / K2 Local Frontier Engine (Pure Local Execution)
 """
 
 import re
@@ -15,7 +20,7 @@ class ContractAnalyzer:
       - Tier 1 (<10ms FAISS)
       - Tier 2 (0.5B-1.5B iGPU Vulkan)
       - Tier 3 (3B-7B Small Model iGPU SYCL/Vulkan)
-      - Tier 4 (Kimi K3 2.8T Parameter Frontier Engine)
+      - Tier 4 (Kimi K3 / K2 Pure Local Frontier Engine)
     """
 
     # Common exact-match patterns or simple greetings for Tier 0 fast-path
@@ -40,7 +45,7 @@ class ContractAnalyzer:
         r"\b(python script|backend service|dockerfile|kubernetes|algorithm implementation)\b"
     ]
 
-    # Frontier / Ultra-High Complexity patterns requiring Tier 4 (Kimi K3 2.8T)
+    # Frontier / Ultra-High Complexity patterns requiring Tier 4 (Kimi Local Frontier)
     FRONTIER_PATTERNS: List[str] = [
         r"\b(kimi|2\.8t|frontier|quantum simulation|hyper-complex|formal proof|enterprise architecture|trillion)\b"
     ]
@@ -71,17 +76,17 @@ class ContractAnalyzer:
                     "reasoning": "Matched exact fast-path pattern."
                 }
 
-        # Check Tier 4 Frontier candidate (Kimi K3 2.8T Model)
+        # Check Tier 4 Frontier candidate (Kimi Local Frontier Engine)
         is_frontier_candidate = any(re.search(p, query_clean, re.IGNORECASE) for p in self.FRONTIER_PATTERNS)
         if is_frontier_candidate or complexity_score >= 0.85 or query_len > 800:
             return {
                 "tier": 4,
-                "tier_name": "Tier 4: Kimi K3 (2.8T Frontier Engine)",
+                "tier_name": "Tier 4: Kimi K3 / K2 (Local Frontier Engine)",
                 "complexity": round(complexity_score, 3),
-                "contract_type": "FRONTIER_REASONING",
+                "contract_type": "LOCAL_FRONTIER_REASONING",
                 "estimated_tokens": max(100, query_len // 2),
-                "recommended_backend": "kimi_k3_2.8t",
-                "reasoning": f"Routed to Tier 4 (Kimi K3 2.8T) due to frontier complexity ({complexity_score:.2f}) or explicit keyword match."
+                "recommended_backend": "kimi_local_engine",
+                "reasoning": f"Routed to Tier 4 (Kimi Local Frontier) due to complexity ({complexity_score:.2f}) or explicit keyword match."
             }
 
         # Check Tier 1 semantic pattern candidate
@@ -142,7 +147,7 @@ if __name__ == "__main__":
         "what is the capital of France?",
         "Define quantum entanglement.",
         "Write a full Python script to implement binary search with logging and error handling.",
-        "Run quantum simulation on 2.8T parameter Kimi K3 model for hyper-complex theorem proof."
+        "Run quantum simulation on local Kimi K3 model for hyper-complex theorem proof."
     ]
     for q in test_queries:
         res = analyzer.analyze(q)
