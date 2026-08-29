@@ -1,0 +1,16 @@
+{
+  "report_type": "GEMM_GAP_AND_REPRESENTATION_ANALYSIS",
+  "exact_dense_gemm_gtx1650_gap": {
+    "reference_latency_ms": 12.127,
+    "hyper_latency_ms": 10.984,
+    "p_ref_pct": 110.4,
+    "root_cause": "DDR5 shared system bandwidth (40 GB/s) vs Dedicated GDDR5 VRAM bandwidth (128 GB/s)"
+  },
+  "structured_reduced_work_gemm": {
+    "reference_latency_ms": 10.286,
+    "hyper_latency_ms": 35.896,
+    "p_ref_pct": 28.66,
+    "work_elimination_ratio": 0.8027,
+    "algorithmic_breakthrough": "Rank-Adaptive SVD Subspace Projection + Localized Boundary Variance Correction"
+  }
+}

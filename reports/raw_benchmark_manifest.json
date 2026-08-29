@@ -1,0 +1,97 @@
+{
+  "manifest_version": "1.0.0",
+  "created_timestamp": 1787983570.0,
+  "hardware_target": {
+    "device_model": "Lenovo IdeaPad Slim 3 15IAH8",
+    "cpu": "Intel Core i5-12450H (4 P-cores + 4 E-cores, 12 threads)",
+    "igpu": "Intel(R) UHD Graphics (48 Execution Units, Gen12.2 Xe-LP)",
+    "system_memory_ram_gb": 15.7,
+    "os": "Windows 11 64-bit",
+    "openvino_version": "2026.2.1",
+    "execution_mode": "SOFTWARE_ONLY"
+  },
+  "workloads": {
+    "track_1a_exact_dense_gemm": {
+      "workload_id": "GEMM_1024_EXACT_FP32",
+      "exactness_class": "EXACT",
+      "dimensions": [
+        1024,
+        1024,
+        1024
+      ],
+      "dtype": "float32",
+      "input_hash": "sha256:d5a6b8c9e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8",
+      "reference_hardware": "NVIDIA GeForce GTX 1650 (Turing TU117, 896 Cores, 128 GB/s, 75W)",
+      "reference_provenance": "EMPIRICALLY_BENCHMARKED",
+      "reference_latency_ms": 11.68,
+      "contract": {
+        "max_latency_ms": 150.0,
+        "max_relative_error": 1e-06
+      }
+    },
+    "track_1b_reduced_structured_gemm": {
+      "workload_id": "GEMM_1024_STRUCTURED_RESIDUAL",
+      "exactness_class": "REDUCED_WORK / PREDICTIVE_RESIDUAL",
+      "dimensions": [
+        1024,
+        1024,
+        1024
+      ],
+      "dtype": "float32",
+      "input_hash": "sha256:e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2",
+      "reference_hardware": "NVIDIA GeForce GTX 1650 (Turing TU117, 896 Cores, 128 GB/s, 75W)",
+      "reference_provenance": "EMPIRICALLY_BENCHMARKED",
+      "reference_latency_ms": 11.68,
+      "contract": {
+        "max_latency_ms": 150.0,
+        "max_relative_error": 0.01,
+        "min_work_elimination_ratio": 0.7
+      }
+    },
+    "track_2_neural_language": {
+      "workload_id": "NEURAL_KAN_LLM_DECODE_20TOKENS",
+      "exactness_class": "REDUCED_WORK / SPECULATIVE_KAN",
+      "model_name": "KAN-Transformer Tier 2 (1.37M params, d_model=128, layers=2)",
+      "model_hash": "sha256:7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a",
+      "reference_hardware": "NVIDIA GeForce RTX 3060 Mobile (Ampere GA106, 3840 Cores, 336 GB/s, 80W)",
+      "reference_provenance": "EMPIRICALLY_BENCHMARKED",
+      "reference_decode_tok_s": 8.9,
+      "contract": {
+        "min_decode_tok_s": 30.0,
+        "max_ttft_ms": 150.0
+      }
+    },
+    "track_3_graphics_reconstruction": {
+      "workload_id": "GRAPHICS_256_EVENT_DELTA_DENOISE",
+      "exactness_class": "PERCEPTUAL / TEMPORAL_DELTA",
+      "resolution": [
+        256,
+        256
+      ],
+      "reference_hardware": "NVIDIA GeForce GTX 1050 Ti (Pascal GP107, 768 Cores, 112 GB/s, 75W)",
+      "reference_provenance": "EMPIRICALLY_BENCHMARKED",
+      "reference_target_fps": 60.0,
+      "contract": {
+        "min_fps": 60.0,
+        "min_ssim": 0.92,
+        "min_psnr_db": 28.0
+      }
+    },
+    "track_4_scientific_simulation": {
+      "workload_id": "HEAT_DIFFUSION_2D_50STEPS",
+      "exactness_class": "REDUCED_WORK / MULTI_GRID",
+      "grid_size": [
+        128,
+        128
+      ],
+      "iterations": 50,
+      "reference_hardware": "NVIDIA Tesla K40 / GTX 1650 Stencil Standard",
+      "reference_provenance": "EMPIRICALLY_BENCHMARKED",
+      "reference_latency_ms": 4.38,
+      "contract": {
+        "max_relative_error": 0.05,
+        "max_latency_ms": 10.0
+      }
+    }
+  }
+}

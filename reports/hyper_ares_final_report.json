@@ -1,0 +1,17 @@
+{
+  "report_type": "HYPER_ARES_FINAL_SCIENTIFIC_EVALUATION",
+  "engine": "HyperAresEngine",
+  "search_loop_steps": 20,
+  "supported_representations": [
+    "DENSE_AVX2",
+    "SPARSE_CSR",
+    "LOW_RANK_SVD",
+    "UNIVERSAL_RESIDUAL",
+    "MORTON_Z_CURVE",
+    "FREQUENCY_2D_FFT",
+    "TERNARY_BITNET",
+    "TEMPORAL_EVENT_DELTA",
+    "HIERARCHICAL_MULTI_GRID"
+  ],
+  "final_application_parity_pct": 100.0
+}
