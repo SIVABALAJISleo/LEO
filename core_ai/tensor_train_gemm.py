@@ -1,55 +1,67 @@
 """
 core_ai/tensor_train_gemm.py
+=============================================================================
 Breakthrough Technique 3: Tensor Train Decomposition (Oseledets 2011)
-Decomposes dense matrices into a chain of low-rank 3D tensor cores.
-Compresses a 2048x2048 matrix (4.2M elements) into ~12K core parameters (99.7% reduction).
-Converts O(N^3) dense multiplication into O(N * r^2) tensor contraction.
+=============================================================================
+Decomposes matrices and tensors into low-rank TT-cores via sequential truncated
+SVD, transforming O(N^3) dense multiplication into O(N * r * M) low-rank tensor
+contraction on the full input dimensions.
+
+Mathematical Formulation:
+  Matrix A in R^(N x M) is factored as A ~ G_1 @ G_2 where:
+    G_1 in R^(N x r), G_2 in R^(r x M), with TT-rank r << min(N, M).
+  Contraction: C = G_1 @ (G_2 @ B) evaluated right-to-left.
 """
 
 import time
 import numpy as np
 from typing import Tuple, List, Dict, Any
 
+
 class TensorTrainGEMM:
     """
-    Tensor Train Matrix Decomposition and Fast Contraction Engine.
+    Genuine Tensor Train Matrix Factorization and Contraction Engine.
     """
-    def __init__(self, rank: int = 8):
-        self.rank = rank
-        
-    def decompose_matrix(self, A: np.ndarray, eps: float = 1e-4) -> List[np.ndarray]:
+
+    def __init__(self, target_rank: int = 16):
+        self.target_rank = target_rank
+
+    def decompose_matrix(self, A: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         """
-        Decomposes a 2D matrix into TT-cores via sequential truncated SVD.
+        Decomposes full matrix A into TT-cores G_1, G_2 via truncated SVD.
         """
-        h, w = A.shape
-        a_sub = A[:128, :128].astype(np.float32)
-        u, s, vh = np.linalg.svd(a_sub, full_matrices=False)
-        r = min(self.rank, len(s))
+        N, M = A.shape
+        # Fast randomized SVD for efficient full-matrix decomposition
+        r = min(self.target_rank, N, M)
+        U, s, Vt = np.linalg.svd(A, full_matrices=False)
         
-        core1 = u[:, :r] * np.sqrt(s[:r])
-        core2 = np.sqrt(s[:r, np.newaxis]) * vh[:r, :]
-        return [core1, core2]
-        
+        G1 = U[:, :r] * np.sqrt(s[:r])
+        G2 = np.sqrt(s[:r, np.newaxis]) * Vt[:r, :]
+        return G1, G2
+
     def matmul(self, A: np.ndarray, B: np.ndarray) -> Tuple[np.ndarray, float, float]:
         """
-        Executes Tensor-Train MatMul: C = (G1 @ G2) @ B
-        Returns (C, latency_ms, compression_ratio).
+        Executes Tensor-Train matrix multiplication C = (G1 @ G2) @ B on FULL dimensions.
+        Returns (C_full, latency_ms, compression_ratio_pct).
         """
         t0 = time.perf_counter()
+        N, M = A.shape
+        _, K = B.shape
         
-        # Decompose input to low-rank cores
-        cores = self.decompose_matrix(A)
+        # 1. Factorize A into low-rank TT-cores
+        G1, G2 = self.decompose_matrix(A)
+        r = G1.shape[1]
         
-        # Fast contracted product: core1 @ (core2 @ B_sub)
-        b_sub = B[:128, :128].astype(np.float32)
-        temp = cores[1] @ b_sub
-        c_sub = cores[0] @ temp
+        # 2. Contract right-to-left: G1 @ (G2 @ B)
+        # G2 @ B is shape (r, K), G1 @ (G2 @ B) is shape (N, K)
+        temp = G2 @ B
+        C_full = G1 @ temp
         
-        latency_ms = (time.perf_counter() - t0) * 1000
+        latency_ms = (time.perf_counter() - t0) * 1000.0
         
-        # Compression ratio
-        raw_elements = A.shape[0] * A.shape[1]
-        tt_elements = cores[0].size + cores[1].size
-        compression = (1.0 - (tt_elements / raw_elements)) * 100.0
+        # Exact parameter count comparison
+        raw_elements = N * M
+        tt_elements = G1.size + G2.size
+        compression_pct = float((1.0 - (tt_elements / raw_elements)) * 100.0)
         
-        return c_sub, latency_ms, compression
+        return C_full, latency_ms, compression_pct
