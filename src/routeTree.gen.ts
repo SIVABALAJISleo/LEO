@@ -21,6 +21,7 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated.app'
 import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated.app.index'
 import { Route as AuthenticatedAppBenchmarksRouteImport } from './routes/_authenticated.app.benchmarks'
+import { Route as AuthenticatedAppCaaoBreakthroughRouteImport } from './routes/_authenticated.app.caao-breakthrough'
 import { Route as AuthenticatedAppChatRouteImport } from './routes/_authenticated.app.chat'
 import { Route as AuthenticatedAppEmbeddingsRouteImport } from './routes/_authenticated.app.embeddings'
 import { Route as AuthenticatedAppKnowledgeGraphRouteImport } from './routes/_authenticated.app.knowledge-graph'
@@ -91,6 +92,12 @@ const AuthenticatedAppBenchmarksRoute =
     path: '/benchmarks',
     getParentRoute: () => AuthenticatedAppRoute,
   } as any)
+const AuthenticatedAppCaaoBreakthroughRoute =
+  AuthenticatedAppCaaoBreakthroughRouteImport.update({
+    id: '/caao-breakthrough',
+    path: '/caao-breakthrough',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
 const AuthenticatedAppChatRoute = AuthenticatedAppChatRouteImport.update({
   id: '/chat',
   path: '/chat',
@@ -153,6 +160,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/app': typeof AuthenticatedAppRouteWithChildren
   '/app/benchmarks': typeof AuthenticatedAppBenchmarksRoute
+  '/app/caao-breakthrough': typeof AuthenticatedAppCaaoBreakthroughRoute
   '/app/chat': typeof AuthenticatedAppChatRoute
   '/app/embeddings': typeof AuthenticatedAppEmbeddingsRoute
   '/app/knowledge-graph': typeof AuthenticatedAppKnowledgeGraphRoute
@@ -174,6 +182,7 @@ export interface FileRoutesByTo {
   '/platform': typeof PlatformRoute
   '/signup': typeof SignupRoute
   '/app/benchmarks': typeof AuthenticatedAppBenchmarksRoute
+  '/app/caao-breakthrough': typeof AuthenticatedAppCaaoBreakthroughRoute
   '/app/chat': typeof AuthenticatedAppChatRoute
   '/app/embeddings': typeof AuthenticatedAppEmbeddingsRoute
   '/app/knowledge-graph': typeof AuthenticatedAppKnowledgeGraphRoute
@@ -198,6 +207,7 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/_authenticated/app': typeof AuthenticatedAppRouteWithChildren
   '/_authenticated/app/benchmarks': typeof AuthenticatedAppBenchmarksRoute
+  '/_authenticated/app/caao-breakthrough': typeof AuthenticatedAppCaaoBreakthroughRoute
   '/_authenticated/app/chat': typeof AuthenticatedAppChatRoute
   '/_authenticated/app/embeddings': typeof AuthenticatedAppEmbeddingsRoute
   '/_authenticated/app/knowledge-graph': typeof AuthenticatedAppKnowledgeGraphRoute
@@ -222,6 +232,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/app'
     | '/app/benchmarks'
+    | '/app/caao-breakthrough'
     | '/app/chat'
     | '/app/embeddings'
     | '/app/knowledge-graph'
@@ -243,6 +254,7 @@ export interface FileRouteTypes {
     | '/platform'
     | '/signup'
     | '/app/benchmarks'
+    | '/app/caao-breakthrough'
     | '/app/chat'
     | '/app/embeddings'
     | '/app/knowledge-graph'
@@ -266,6 +278,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/_authenticated/app'
     | '/_authenticated/app/benchmarks'
+    | '/_authenticated/app/caao-breakthrough'
     | '/_authenticated/app/chat'
     | '/_authenticated/app/embeddings'
     | '/_authenticated/app/knowledge-graph'
@@ -377,6 +390,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppBenchmarksRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
+    '/_authenticated/app/caao-breakthrough': {
+      id: '/_authenticated/app/caao-breakthrough'
+      path: '/caao-breakthrough'
+      fullPath: '/app/caao-breakthrough'
+      preLoaderRoute: typeof AuthenticatedAppCaaoBreakthroughRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
     '/_authenticated/app/chat': {
       id: '/_authenticated/app/chat'
       path: '/chat'
@@ -445,6 +465,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAppRouteChildren {
   AuthenticatedAppBenchmarksRoute: typeof AuthenticatedAppBenchmarksRoute
+  AuthenticatedAppCaaoBreakthroughRoute: typeof AuthenticatedAppCaaoBreakthroughRoute
   AuthenticatedAppChatRoute: typeof AuthenticatedAppChatRoute
   AuthenticatedAppEmbeddingsRoute: typeof AuthenticatedAppEmbeddingsRoute
   AuthenticatedAppKnowledgeGraphRoute: typeof AuthenticatedAppKnowledgeGraphRoute
@@ -457,6 +478,7 @@ interface AuthenticatedAppRouteChildren {
 
 const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
   AuthenticatedAppBenchmarksRoute: AuthenticatedAppBenchmarksRoute,
+  AuthenticatedAppCaaoBreakthroughRoute: AuthenticatedAppCaaoBreakthroughRoute,
   AuthenticatedAppChatRoute: AuthenticatedAppChatRoute,
   AuthenticatedAppEmbeddingsRoute: AuthenticatedAppEmbeddingsRoute,
   AuthenticatedAppKnowledgeGraphRoute: AuthenticatedAppKnowledgeGraphRoute,

@@ -139,5 +139,9 @@ app.include_router(governor_router)
 from backend.routers.contract_subsumption import router as contract_subsumption_router
 app.include_router(contract_subsumption_router)
 
+from backend.routers.caao import router as caao_router
+app.include_router(caao_router)
+
+
 
 

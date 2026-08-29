@@ -14,12 +14,14 @@ import {
   Settings,
   Shield,
   Sparkles,
+  Zap,
   X,
 } from "lucide-react";
 import type { ReactNode } from "react";
 
 const nav = [
   { to: "/app", label: "Dashboard", icon: LayoutDashboard, exact: true },
+  { to: "/app/caao-breakthrough", label: "100% Parity (CAAO)", icon: Zap },
   { to: "/app/chat", label: "Chat", icon: MessageSquare },
   { to: "/app/orchestrate", label: "Orchestrate", icon: GitBranch },
   { to: "/app/memory", label: "Memory", icon: Brain },
@@ -60,7 +62,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       </Link>
       <nav className="flex-1 py-4 flex flex-col justify-between" aria-label="Console navigation">
         <div className="space-y-0.5">
-          {nav.slice(0, 8).map((n) => {
+          {nav.slice(0, 9).map((n) => {
             const active = isActive(n.to, n.exact);
             return (
               <Link
@@ -83,8 +85,9 @@ export function AppShell({ children }: { children: ReactNode }) {
 
         {/* Settings Navigation Link */}
         <div className="pt-3 mt-3 border-t border-border/60 px-4 space-y-2">
-          {nav.slice(8).map((n) => {
+          {nav.slice(9).map((n) => {
             const active = isActive(n.to, n.exact);
+
             return (
               <Link
                 key={n.to}
