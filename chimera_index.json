@@ -1,0 +1,47 @@
+[
+  {
+    "query": "what is photosynthesis",
+    "answer": "Photosynthesis is the process by which plants use sunlight, water, and carbon dioxide to create oxygen and energy in the form of sugar.",
+    "category": "biology"
+  },
+  {
+    "query": "who invented the telephone",
+    "answer": "Alexander Graham Bell is credited with inventing the telephone in 1876.",
+    "category": "history"
+  },
+  {
+    "query": "what is the capital of france",
+    "answer": "Paris is the capital of France.",
+    "category": "geography"
+  },
+  {
+    "query": "how does a computer work",
+    "answer": "A computer works by executing instructions stored in memory using a central processing unit (CPU), which performs arithmetic, logic, and input/output operations.",
+    "category": "technology"
+  },
+  {
+    "query": "what is machine learning",
+    "answer": "Machine learning is a subset of artificial intelligence that enables systems to learn and improve from experience without being explicitly programmed.",
+    "category": "technology"
+  },
+  {
+    "query": "how to reset password",
+    "answer": "To reset your password, go to the login page, click 'Forgot Password', enter your email, and follow the instructions sent to your inbox.",
+    "category": "it_support"
+  },
+  {
+    "query": "what is the speed of light",
+    "answer": "The speed of light in a vacuum is approximately 299,792,458 meters per second (about 186,282 miles per second).",
+    "category": "physics"
+  },
+  {
+    "query": "who wrote hamlet",
+    "answer": "William Shakespeare wrote Hamlet, likely between 1599 and 1601.",
+    "category": "literature"
+  },
+  {
+    "query": "what is python",
+    "answer": "Python is a high-level, interpreted programming language known for readability, versatility, and extensive scientific libraries.",
+    "category": "technology"
+  }
+]
