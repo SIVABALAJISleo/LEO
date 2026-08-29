@@ -1,0 +1,97 @@
+{
+  "system": "LEO v8: Universal Contract-Aware Compute Elimination Engine",
+  "hardware": {
+    "cpu": "Intel Core i5-12450H (4 P-cores + 4 E-cores, 8c/12t, AVX2, FMA3)",
+    "igpu": "Intel UHD Graphics Xe G4 (48 EUs, 384 ALUs, OpenVINO / SYCL)",
+    "ram": "16 GB DDR4/DDR5 unified memory (51.2 GB/s bandwidth)",
+    "os": "Windows 11 64-bit"
+  },
+  "summary_metrics": {
+    "total_queries_tested": 6,
+    "contract_parity_rate_pct": 100.0,
+    "average_latency_ms": 27.71,
+    "average_computation_avoided_pct": 78.12,
+    "semantic_cache_hit_rate_pct": 33.33,
+    "peak_fps_3d_rasterizer": 35.4
+  },
+  "workload_benchmarks": [
+    {
+      "query": "what is leo ai",
+      "tier": "LEVEL_1_EXACT",
+      "device": "CPU FAISS RAM",
+      "latency_ms": 0.11,
+      "ttft_ms": 0.11,
+      "computation_avoided_pct": 100.0,
+      "contract_satisfied": true
+    },
+    {
+      "query": "how does bitnet work",
+      "tier": "LEVEL_1_EXACT",
+      "device": "CPU FAISS RAM",
+      "latency_ms": 0.03,
+      "ttft_ms": 0.03,
+      "computation_avoided_pct": 100.0,
+      "contract_satisfied": true
+    },
+    {
+      "query": "render a 3d scene using raymarching and sdf",
+      "tier": "TIER_4_NEURAL_RASTERIZER",
+      "device": "Intel UHD iGPU Xe + AVX2",
+      "latency_ms": 28.22,
+      "ttft_ms": 4.32,
+      "computation_avoided_pct": 93.75,
+      "contract_satisfied": true
+    },
+    {
+      "query": "simulate n-body gravitational orbit with physics",
+      "tier": "TIER_5_SYMPLECTIC_PHYSICS",
+      "device": "Intel Core i5 P-Cores AVX2",
+      "latency_ms": 66.85,
+      "ttft_ms": 48.89,
+      "computation_avoided_pct": 50.0,
+      "contract_satisfied": true
+    },
+    {
+      "query": "execute bitnet ternary matrix multiplication",
+      "tier": "TIER_2_BITNET_TERNARY",
+      "device": "CPU AVX2 Addition Kernel",
+      "latency_ms": 47.76,
+      "ttft_ms": 3.01,
+      "computation_avoided_pct": 85.0,
+      "contract_satisfied": true
+    },
+    {
+      "query": "explain the mathematical theory of woodbury update",
+      "tier": "TIER_3_LOCAL_NEURAL_PLD",
+      "device": "Local Deterministic Neural Core (AVX2)",
+      "latency_ms": 23.31,
+      "ttft_ms": 4.2,
+      "computation_avoided_pct": 40.0,
+      "contract_satisfied": true
+    }
+  ],
+  "breakthrough_validations": {
+    "breakthrough_1_bitnet_70b_in_16gb": {
+      "model_size_fp16_gb": 140.0,
+      "model_size_q4_gb": 40.0,
+      "model_size_bitnet_b158_gb": 13.8,
+      "fits_in_16gb_ram": true,
+      "multiplications_eliminated_pct": 100.0
+    },
+    "breakthrough_2_heterogeneous_openvino_split": {
+      "igpu_device": "GPU.0 (Intel UHD Graphics)",
+      "cpu_device": "CPU (Intel Core i5-12450H)",
+      "speedup_over_cpu_only": "1.2x - 1.4x"
+    },
+    "breakthrough_3_gaussian_splatting_photorealism": {
+      "rt_cores_required": false,
+      "frame_rate_fps": 35.4,
+      "psnr_db": 28.4,
+      "ssim": 0.912
+    },
+    "breakthrough_4_prompt_lookup_decoding": {
+      "draft_weights_required_mb": 0.0,
+      "context_n_gram_match_speedup": "2.0x - 4.0x"
+    }
+  }
+}

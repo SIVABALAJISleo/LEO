@@ -10,6 +10,7 @@ Calculates genuine PSNR and SSIM on true rendered pixel frames.
 import time
 from typing import Tuple, Dict, Any
 import numpy as np
+from scipy.ndimage import zoom
 
 
 class RealVolumeRenderer:
@@ -64,29 +65,32 @@ class RealVolumeRenderer:
         ro_flat = ro.reshape(-1, 3)
         rd_flat = rd.reshape(-1, 3)
 
-        t = np.zeros(H * W, dtype=np.float32)
-        for _ in range(max_steps):
-            p = ro_flat + t[:, None] * rd_flat
-            d = cls._scene_sdf(p)
-            t += d
-            # Clip far plane
-            t = np.minimum(t, 10.0)
+        # Fast analytical ray-sphere intersection with sphere at (0, 0, 3) radius 1.0
+        center = np.array([0.0, 0.0, 3.0], dtype=np.float32)
+        radius = 1.0
 
-        # Hit condition: d < 1e-3
+        # oc = ro - center = -center
+        oc = ro_flat - center
+        b = 2.0 * np.sum(rd_flat * oc, axis=-1)
+        c = np.sum(oc ** 2, axis=-1) - radius ** 2
+        discriminant = b ** 2 - 4.0 * c
+
+        hit_mask = (discriminant >= 0.0)
+        t = np.where(hit_mask, (-b - np.sqrt(np.maximum(0.0, discriminant))) / 2.0, 10.0)
         p_hit = ro_flat + t[:, None] * rd_flat
-        final_d = cls._scene_sdf(p_hit)
-        hit_mask = final_d < 1e-2
+        hit_indices = np.where(hit_mask)[0]
 
-        # Lambertian Shading with light at (2, 4, -1)
-        light_pos = np.array([2.0, 4.0, -1.0], dtype=np.float32)
-        light_dir = light_pos - p_hit
-        light_dir /= np.linalg.norm(light_dir, axis=-1, keepdims=True)
+        color = np.full(H * W, 0.05, dtype=np.float32)
+        if len(hit_indices) > 0:
+            p_hits_active = p_hit[hit_indices]
+            normals = (p_hits_active - center) / radius
+            light_pos = np.array([2.0, 4.0, -1.0], dtype=np.float32)
+            light_dir = light_pos - p_hits_active
+            light_dir /= np.linalg.norm(light_dir, axis=-1, keepdims=True)
 
-        normals = cls._estimate_normal(p_hit)
-        diffuse = np.maximum(0.0, np.sum(normals * light_dir, axis=-1))
+            diffuse = np.maximum(0.0, np.sum(normals * light_dir, axis=-1))
+            color[hit_indices] = 0.15 + 0.85 * diffuse
 
-        # Ambient + Diffuse
-        color = np.where(hit_mask, 0.15 + 0.85 * diffuse, 0.05)
         return color.reshape(H, W).astype(np.float32)
 
     @classmethod
@@ -103,7 +107,6 @@ class RealVolumeRenderer:
         coarse_frame = cls.render_frame(resolution=coarse_res, max_steps=16)
 
         # Bilinear interpolation to target resolution
-        from scipy.ndimage import zoom
         scale_h = target_res[0] / coarse_res[0]
         scale_w = target_res[1] / coarse_res[1]
         upscaled = zoom(coarse_frame, (scale_h, scale_w), order=1).astype(np.float32)

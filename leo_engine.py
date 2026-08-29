@@ -26,11 +26,6 @@ class FastSemanticEmbedder:
     def __init__(self, dim=384):
         self.dim = dim
         self.model = None
-        try:
-            from sentence_transformers import SentenceTransformer
-            self.model = SentenceTransformer("all-MiniLM-L6-v2", device="cpu")
-        except Exception:
-            self.model = None
 
         self.synonyms = {
             "forgot": "password",

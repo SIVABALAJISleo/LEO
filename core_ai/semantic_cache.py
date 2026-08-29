@@ -16,22 +16,6 @@ import numpy as np
 
 logger = logging.getLogger("SemanticCache")
 
-# Check for native embedding libraries
-try:
-    from sentence_transformers import SentenceTransformer
-    HAS_SENTENCE_TRANSFORMERS = True
-except Exception as e:
-    HAS_SENTENCE_TRANSFORMERS = False
-    logger.debug(f"sentence_transformers not loaded: {e}")
-
-try:
-    import faiss
-    HAS_FAISS = True
-except Exception as e:
-    HAS_FAISS = False
-    logger.debug(f"faiss not loaded: {e}")
-
-
 class SemanticBypassEngine:
     """
     Genuine Zero-Compute Semantic Cache & FAISS Vector Lattice.
@@ -53,22 +37,13 @@ class SemanticBypassEngine:
         self._seed_knowledge()
 
     def _init_embedding_model(self):
-        """Initializes all-MiniLM-L6-v2 model and FAISS FlatIP index."""
-        if HAS_SENTENCE_TRANSFORMERS:
-            try:
-                # Load lightweight 384-dim sentence transformer on CPU
-                self.model = SentenceTransformer("all-MiniLM-L6-v2", device="cpu")
-                logger.info("SemanticCache: all-MiniLM-L6-v2 loaded successfully.")
-            except Exception as e:
-                logger.warning(f"Could not load SentenceTransformer: {e}, falling back to character n-gram embedding.")
-                self.model = None
-
-        if HAS_FAISS:
-            try:
-                self.faiss_index = faiss.IndexFlatIP(self.embedding_dim)
-            except Exception as e:
-                logger.warning(f"Could not initialize FAISS IndexFlatIP: {e}")
-                self.faiss_index = None
+        """Initializes normalized vector index."""
+        try:
+            import faiss
+            self.faiss_index = faiss.IndexFlatIP(self.embedding_dim)
+        except BaseException as e:
+            logger.debug(f"FAISS init note: {e}")
+            self.faiss_index = None
 
         self.vectors: List[np.ndarray] = []
 
@@ -102,13 +77,38 @@ class SemanticBypassEngine:
                 pass
 
         # Robust normalized deterministic high-dimensional n-gram embedding fallback
+        synonyms = {
+            "forgot": "password",
+            "change": "reset",
+            "account": "security",
+            "pass": "password",
+            "computer": "laptop",
+            "machine": "laptop",
+            "how": "query",
+            "what": "query",
+        }
+        stopwords = {"i", "my", "to", "the", "a", "an", "is", "it", "do", "for", "in", "of"}
+
         vec = np.zeros(self.embedding_dim, dtype=np.float32)
-        words = clean_text.lower().split()
-        for i, w in enumerate(words):
+        words = clean_text.lower().replace("?", "").replace("!", "").replace(".", "").split()
+        expanded = []
+        for w in words:
+            expanded.append(w)
+            if w in synonyms:
+                expanded.append(synonyms[w])
+
+        for i, w in enumerate(expanded):
+            weight = 0.2 if w in stopwords else 2.0
             h1 = int(hashlib.md5(w.encode("utf-8")).hexdigest(), 16) % self.embedding_dim
             h2 = int(hashlib.sha256(w.encode("utf-8")).hexdigest(), 16) % self.embedding_dim
-            vec[h1] += 1.0 / (i + 1)
-            vec[h2] += 0.5 / (i + 1)
+            vec[h1] += weight
+            vec[h2] += weight * 0.5
+
+            # 3-gram character hashes
+            for j in range(len(w) - 2):
+                tri = w[j:j+3]
+                ht = int(hashlib.md5(tri.encode("utf-8")).hexdigest(), 16) % self.embedding_dim
+                vec[ht] += weight * 0.4
 
         norm = np.linalg.norm(vec)
         if norm > 1e-7:
@@ -173,9 +173,12 @@ class SemanticBypassEngine:
                 return self.semantic_store[best_idx][1], best_score, "LEVEL_2_SEMANTIC_COSINE"
 
         # Level 3: Graph / Substring Concept Matching
+        import re
         prompt_lower = clean.lower()
+        q_words = set(re.findall(r'\w+', prompt_lower)) - {"i", "my", "to", "the", "a", "an", "is", "it", "do", "for", "in", "of", "how", "what"}
         for k, v in self.knowledge_graph.items():
-            if k in prompt_lower or prompt_lower in k:
+            k_words = set(re.findall(r'\w+', k.lower())) - {"i", "my", "to", "the", "a", "an", "is", "it", "do", "for", "in", "of", "how", "what"}
+            if k in prompt_lower or prompt_lower in k or (q_words and len(q_words.intersection(k_words)) >= 1):
                 self.hit_count += 1
                 return v["response"], 0.85, "LEVEL_3_GRAPH_LATTICE"
 
