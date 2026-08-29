@@ -1,5 +1,5 @@
 {
-  "timestamp": 1787979093.8901942,
+  "timestamp": 1787980939.5187,
   "hardware_telemetry": {
     "cpu": "Intel Core i5-12450H",
     "cores": 8,
@@ -60,36 +60,38 @@
     }
   },
   "heterogeneous_benchmark": {
-    "cpu_only_latency_ms": 2.17,
-    "igpu_shared_mem_latency_ms": 2.27,
-    "heterogeneous_hybrid_latency_ms": 3.64,
+    "cpu_device": "Intel Core i5-12450H (8 Cores: 4P+4E, AVX2)",
+    "igpu_device": "Intel(R) UHD Graphics (iGPU)",
+    "is_real_intel_gpu": true,
+    "cpu_only_latency_ms": 3.23,
+    "intel_uhd_gpu_latency_ms": 562.7,
+    "heterogeneous_hybrid_latency_ms": 122.96,
     "fastest_mode": "CPU_OPTIMIZED"
   },
   "adversarial_falsify_results": {
-    "total_adversarial_tests": 4,
-    "passed_tests": 4,
+    "total_adversarial_tests": 8,
+    "passed_tests": 8,
     "adversarial_pass_rate_pct": 100.0,
     "results": [
       {
         "test_name": "PATHOLOGICAL_ILL_CONDITIONED_MATRIX",
         "condition_number": 3919071232.0,
-        "relative_error": 2.2346330297295935e-07,
+        "relative_error": 2.0670346145834628e-07,
         "contract_verified": true,
-        "status": "PASS",
-        "formulation": "Universal Residual Engine (Y_hat + R)"
+        "status": "PASS"
       },
       {
         "test_name": "HIGH_FREQUENCY_GRAPHICS_NOISE",
         "noise_density": 0.25,
-        "achieved_ssim": 0.9989,
-        "achieved_fps": 617.6,
+        "achieved_ssim": 0.9988,
+        "achieved_fps": 532.1,
         "status": "PASS"
       },
       {
         "test_name": "CACHE_THRASHING_COLD_PATH",
-        "cache_hit_rate": 0.0,
-        "avg_latency_ms": 0.83,
-        "p99_latency_ms": 1.21,
+        "total_unique_queries": 100,
+        "avg_latency_ms": 0.96,
+        "p99_latency_ms": 1.59,
         "status": "PASS"
       },
       {
@@ -97,38 +99,73 @@
         "buffer_size_mb": 32,
         "data_integrity_exact": true,
         "status": "PASS"
+      },
+      {
+        "test_name": "OUT_OF_CORE_BANDWIDTH_STREAMING",
+        "streamed_mb": 64.0,
+        "bandwidth_gb_s": 2.85,
+        "status": "PASS"
+      },
+      {
+        "test_name": "SPECULATIVE_DRAFT_REJECTION_RECOVERY",
+        "tokens_generated": 15,
+        "latency_ms": 162.66,
+        "status": "PASS"
+      },
+      {
+        "test_name": "DISTRIBUTION_SHIFT_ADVERSARIAL_PROMPT",
+        "prompt_entropy": "HIGH_GIBBERISH",
+        "tokens_produced": 10,
+        "status": "PASS"
+      },
+      {
+        "test_name": "HETEROGENEOUS_DEVICE_CONCURRENCY",
+        "gpu_device": "Intel(R) UHD Graphics (iGPU)",
+        "is_real_gpu": true,
+        "relative_error": 2.7247335765423486e-07,
+        "status": "PASS"
       }
     ]
   },
   "scorecard": {
     "track_1_gemm": {
       "workload": "1024x1024 Tensor Matrix Multiplication",
-      "reference_standard": "GTX 1650 BLAS Reference",
+      "measured_reference_latency_ms": 11.68,
+      "measured_hyper_latency_ms": 57.68,
       "formulation": "Universal Residual Engine (Y_hat + R)",
-      "work_elimination_ratio": 0.0036,
-      "quality_error": 0.000207,
-      "latency_ms": 46.778,
+      "work_elimination_ratio": 0.7162,
+      "relative_error": 0.0027626,
       "application_parity_pct": 100.0,
       "contract_status": "PASS"
     },
     "track_2_llm": {
       "workload": "Autoregressive Neural Token Generation",
-      "reference_standard": "Edge Embedded LLM (30 tok/s target)",
+      "measured_reference_speed_tok_s": 8.9,
+      "measured_hyper_speed_tok_s": 107.6,
       "formulation": "Speculative KAN Spline LUT Engine",
       "work_elimination_ratio": 0.784,
-      "throughput_tok_s": 132.8,
-      "ttft_ms": 27.16,
+      "ttft_ms": 35.52,
       "application_parity_pct": 100.0,
       "contract_status": "PASS"
     },
     "track_3_graphics": {
       "workload": "Real-Time 256x256 Frame Reconstruction",
-      "reference_standard": "60.0 FPS Display Contract",
+      "reference_target_fps": 60.0,
+      "measured_hyper_fps": 342.0,
       "formulation": "Temporal Event-Driven Denoising",
-      "work_elimination_ratio": 0.9773999999999999,
-      "quality_ssim": 0.9961,
-      "quality_psnr_db": 34.45,
-      "achieved_fps": 322.0,
+      "work_elimination_ratio": 0.9773000000000001,
+      "quality_ssim": 0.9962,
+      "quality_psnr_db": 34.59,
+      "application_parity_pct": 100.0,
+      "contract_status": "PASS"
+    },
+    "track_4_simulation": {
+      "workload": "2D Heat/Wave Grid Diffusion 50-steps",
+      "measured_reference_latency_ms": 4.38,
+      "measured_hyper_latency_ms": 2.21,
+      "formulation": "Multi-Grid Coarse Stencil + Active Residual",
+      "work_elimination_ratio": 0.4948,
+      "relative_error": 0.009705922566354275,
       "application_parity_pct": 100.0,
       "contract_status": "PASS"
     }
