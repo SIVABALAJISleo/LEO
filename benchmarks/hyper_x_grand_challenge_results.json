@@ -1,0 +1,39 @@
+{
+  "overall_application_parity_pct": 100.0,
+  "target_hardware": "Intel Core i5-12450H + Intel UHD Graphics (48 EUs) Shared-Memory",
+  "results": {
+    "challenge_1_matrix": {
+      "workload": "1024x1024 GEMM",
+      "formulation": "Universal Residual Engine (Y_hat + R)",
+      "cer": 0.7162,
+      "latency_ms": 69.483,
+      "relative_error": 0.0023093675263226032,
+      "contract_verified": true,
+      "application_parity_pct": 100.0
+    },
+    "challenge_2_language": {
+      "prompt": "Synthesize an algorithm to find topological sort order in directed acyclic graphs.",
+      "tokens_generated": 20,
+      "ttft_ms": 57.53,
+      "throughput_tok_s": 93.17636841746055,
+      "application_parity_pct": 100.0
+    },
+    "challenge_3_graphics": {
+      "resolution": "256x256",
+      "target_fps": 60.0,
+      "achieved_fps": 285.7,
+      "sample_elimination_pct": 97.51,
+      "ssim": 0.9954,
+      "psnr_db": 33.49,
+      "application_parity_pct": 100.0
+    },
+    "challenge_4_simulation": {
+      "grid_size": "128x128",
+      "steps": 50,
+      "dense_ms": 3.3,
+      "hyper_x_ms": 1.95,
+      "relative_error": 0.009705922566354275,
+      "application_parity_pct": 100.0
+    }
+  }
+}
