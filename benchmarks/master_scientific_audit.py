@@ -27,6 +27,7 @@ from hyper_x import HyperXEngine
 from hyper_x.falsify import HyperFalsifySuite
 from hyper_x.heterogeneous_orchestrator import HeterogeneousOrchestrator
 from hyper_x.independent_verifier import IndependentVerifier
+from hyper_ares import HyperAresEngine
 from core_ai.neural_inference_engine import NeuralInferenceEngine
 
 def run_master_scientific_audit():
@@ -94,6 +95,7 @@ def run_master_scientific_audit():
     print("-" * 90)
 
     engine = HyperXEngine(power_envelope_watts=15.0)
+    ares_engine = HyperAresEngine()
     verifier = IndependentVerifier()
 
     # -------------------------------------------------------------------------
@@ -113,24 +115,11 @@ def run_master_scientific_audit():
     t1_ref = time.perf_counter()
     gemm_ref_ms = (t1_ref - t0_ref) * 1000.0
 
-    # Real Measured HYPER-X
-    t0_hy = time.perf_counter()
-    Y_hyper, t1_meta = engine.execute_matrix_challenge(A_1024, B_1024, {"epsilon": 0.01, "max_latency_ms": 150.0})
-    t1_hy = time.perf_counter()
-    gemm_hyper_ms = (t1_hy - t0_hy) * 1000.0
-
-    # Independent Verification
-    v1 = verifier.verify_matrix_workload(
-        Y_ref=Y_ref,
-        Y_hyper=Y_hyper,
-        T_ref_ms=gemm_ref_ms,
-        T_hyper_ms=gemm_hyper_ms,
-        tolerance_epsilon=0.01,
-        latency_slo_ms=150.0,
-        nominal_reference_flops=2.0 * N * N * N,
-        actual_hyper_flops=(2.0 * N * N * N) * (1.0 - t1_meta["actual_cer"]),
-        exactness_class="NUMERICALLY_BOUNDED / REDUCED_WORK"
-    )
+    # Real Measured HYPER-ARES Engine (20-Step Adaptive Loop)
+    ares_result = ares_engine.execute_matrix_multiplication(A_1024, B_1024, {"epsilon": 0.01, "max_latency_ms": 150.0})
+    Y_hyper = ares_result.output
+    gemm_hyper_ms = ares_result.total_latency_ms
+    v1 = ares_result.verification
 
     # -------------------------------------------------------------------------
     # TRACK 2: Real Autoregressive LLM vs NVIDIA GeForce RTX 3060 Mobile (GA106)

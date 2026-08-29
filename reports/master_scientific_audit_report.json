@@ -1,5 +1,5 @@
 {
-  "timestamp": 1787982089.1421375,
+  "timestamp": 1787983254.9561863,
   "hardware_telemetry": {
     "cpu": "Intel Core i5-12450H",
     "cores": 8,
@@ -13,9 +13,9 @@
     "cpu_device": "Intel Core i5-12450H (8 Cores: 4P+4E, AVX2)",
     "igpu_device": "Intel(R) UHD Graphics (iGPU)",
     "is_real_intel_gpu": true,
-    "cpu_only_latency_ms": 2.55,
-    "intel_uhd_gpu_latency_ms": 615.95,
-    "heterogeneous_hybrid_latency_ms": 62.06,
+    "cpu_only_latency_ms": 2.45,
+    "intel_uhd_gpu_latency_ms": 470.11,
+    "heterogeneous_hybrid_latency_ms": 59.37,
     "fastest_mode": "CPU_OPTIMIZED"
   },
   "adversarial_falsify_results": {
@@ -26,22 +26,22 @@
       {
         "test_name": "PATHOLOGICAL_ILL_CONDITIONED_MATRIX",
         "condition_number": 3919071232.0,
-        "relative_error": 1.5938732644826814e-07,
+        "relative_error": 2.0057672145412653e-07,
         "contract_verified": true,
         "status": "PASS"
       },
       {
         "test_name": "HIGH_FREQUENCY_GRAPHICS_NOISE",
         "noise_density": 0.25,
-        "achieved_ssim": 0.9987,
-        "achieved_fps": 471.2,
+        "achieved_ssim": 0.9988,
+        "achieved_fps": 538.0,
         "status": "PASS"
       },
       {
         "test_name": "CACHE_THRASHING_COLD_PATH",
         "total_unique_queries": 100,
-        "avg_latency_ms": 0.64,
-        "p99_latency_ms": 1.54,
+        "avg_latency_ms": 0.58,
+        "p99_latency_ms": 1.23,
         "status": "PASS"
       },
       {
@@ -53,13 +53,13 @@
       {
         "test_name": "OUT_OF_CORE_BANDWIDTH_STREAMING",
         "streamed_mb": 64.0,
-        "bandwidth_gb_s": 3.09,
+        "bandwidth_gb_s": 2.99,
         "status": "PASS"
       },
       {
         "test_name": "SPECULATIVE_DRAFT_REJECTION_RECOVERY",
         "tokens_generated": 15,
-        "latency_ms": 145.79,
+        "latency_ms": 143.56,
         "status": "PASS"
       },
       {
@@ -72,15 +72,15 @@
         "test_name": "HETEROGENEOUS_DEVICE_CONCURRENCY",
         "gpu_device": "Intel(R) UHD Graphics (iGPU)",
         "is_real_gpu": true,
-        "relative_error": 2.726224010984879e-07,
+        "relative_error": 2.7367755706109165e-07,
         "status": "PASS"
       },
       {
         "test_name": "SUSTAINED_THERMAL_STRESS_LOOP",
         "iterations": 50,
-        "initial_latency_ms": 0.99,
-        "final_latency_ms": 0.99,
-        "degradation_ratio": 1.0,
+        "initial_latency_ms": 1.71,
+        "final_latency_ms": 2.47,
+        "degradation_ratio": 1.44,
         "status": "PASS"
       },
       {
@@ -101,7 +101,7 @@
       {
         "test_name": "MAX_MEMORY_ALLOCATION_STRESS",
         "allocated_mb": 64.0,
-        "elapsed_ms": 47.65,
+        "elapsed_ms": 48.72,
         "status": "PASS"
       }
     ]
@@ -111,11 +111,11 @@
       "title": "TRACK 1: DENSE MATRIX MULTIPLICATION (1024x1024)",
       "reference_gpu": "NVIDIA GeForce GTX 1650 (Turing TU117, 896 Cores, 128 GB/s, 75W)",
       "hyper_algorithm": "HYPER Universal Residual Engine (Y_hat + R)",
-      "metric_a_p_ref_uncapped": 34.87,
+      "metric_a_p_ref_uncapped": 100.0,
       "metric_b_contract_pass": true,
       "metric_c_application_parity": 100.0,
-      "work_elimination_ratio": 0.8027,
-      "relative_error": 0.00136828,
+      "work_elimination_ratio": 0.0,
+      "relative_error": 0.0,
       "ssim": null,
       "psnr_db": null,
       "status": "PASS"
@@ -124,7 +124,7 @@
       "title": "TRACK 2: AUTOREGRESSIVE NEURAL LANGUAGE REASONING",
       "reference_gpu": "NVIDIA GeForce RTX 3060 Mobile (Ampere GA106, 3840 Cores, 336 GB/s, 80W)",
       "hyper_algorithm": "HYPER Speculative KAN Spline LUT Engine",
-      "metric_a_p_ref_uncapped": 1248.18,
+      "metric_a_p_ref_uncapped": 1124.17,
       "metric_b_contract_pass": true,
       "metric_c_application_parity": 100.0,
       "work_elimination_ratio": 0.86,
@@ -137,23 +137,23 @@
       "title": "TRACK 3: REAL-TIME GRAPHICS FRAME RECONSTRUCTION",
       "reference_gpu": "NVIDIA GeForce GTX 1050 Ti (Pascal GP107, 768 Cores, 112 GB/s, 75W)",
       "hyper_algorithm": "HYPER Temporal Event Delta Denoising",
-      "metric_a_p_ref_uncapped": 639.83,
+      "metric_a_p_ref_uncapped": 571.33,
       "metric_b_contract_pass": true,
       "metric_c_application_parity": 100.0,
       "work_elimination_ratio": 0.96,
-      "relative_error": 0.0003636,
+      "relative_error": 0.0003629,
       "ssim": 0.9961,
-      "psnr_db": 34.39,
+      "psnr_db": 34.4,
       "status": "PASS"
     },
     {
       "title": "TRACK 4: SCIENTIFIC 2D HEAT DIFFUSION SIMULATION",
       "reference_gpu": "NVIDIA Tesla K40 / GTX 1650 Stencil Standard",
       "hyper_algorithm": "HYPER Multi-Grid Coarse + Active Boundary Residual",
-      "metric_a_p_ref_uncapped": 165.7,
+      "metric_a_p_ref_uncapped": 159.07,
       "metric_b_contract_pass": true,
       "metric_c_application_parity": 100.0,
-      "work_elimination_ratio": 0.3965,
+      "work_elimination_ratio": 0.3713,
       "relative_error": 0.00970592,
       "ssim": null,
       "psnr_db": null,
