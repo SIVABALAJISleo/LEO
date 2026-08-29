@@ -22,9 +22,16 @@ if hasattr(sys.stdout, 'reconfigure'):
 
 
 class FastSemanticEmbedder:
-    """Zero-overhead high-precision semantic vectorizer with synonym expansion."""
+    """High-precision semantic vectorizer with SentenceTransformer and zero-overhead fallback."""
     def __init__(self, dim=384):
         self.dim = dim
+        self.model = None
+        try:
+            from sentence_transformers import SentenceTransformer
+            self.model = SentenceTransformer("all-MiniLM-L6-v2", device="cpu")
+        except Exception:
+            self.model = None
+
         self.synonyms = {
             "forgot": "password",
             "computer": "laptop",
@@ -43,6 +50,15 @@ class FastSemanticEmbedder:
     def encode(self, texts, normalize_embeddings=True):
         is_single = isinstance(texts, str)
         text_list = [texts] if is_single else texts
+
+        if self.model is not None:
+            try:
+                embs = self.model.encode(text_list, normalize_embeddings=normalize_embeddings)
+                if is_single:
+                    return embs[0]
+                return np.array(embs, dtype=np.float32)
+            except Exception:
+                pass
         
         vectors = []
         for text in text_list:
