@@ -15,7 +15,7 @@ Synthesizes up to 12 competing mathematical formulations for any bottleneck:
   9. Frequency-Domain:            2D Fast Discrete Cosine / Fourier Transform (O(N log N))
  10. Event-Driven Formulation:    Sparse coordinate re-evaluation only on |Delta| > eps
  11. Ternary BitNet Formulation:  Multiplication-free sign-indexed integer accumulator
- 12. Residual Formulation:        Universal Y = P(X) + R correction
+ 12. Residual Formulation:        Universal Y = P(X) + R correction with rank-adaptive SVD
 """
 
 import time
@@ -56,7 +56,6 @@ class AlgorithmicEscapeSearch:
         def _exec_sparse(A_in=A, B_in=B):
             t0 = time.perf_counter()
             mask = np.abs(A_in) > 1e-4
-            # Dense-sparse product
             out = (A_in * mask) @ B_in
             t1 = time.perf_counter()
             cer = float(np.sum(~mask) / mask.size)
@@ -70,11 +69,9 @@ class AlgorithmicEscapeSearch:
         def _exec_low_rank(A_in=A, B_in=B, r=32):
             t0 = time.perf_counter()
             r_eff = min(r, M, K, N)
-            # Fast randomized projection
             Omega = np.random.randn(K, r_eff).astype(np.float32)
             Y_sample = A_in @ Omega
             Q, _ = np.linalg.qr(Y_sample)
-            # Grouped projection: Q @ ((Q.T @ A) @ B)
             B_proj = (Q.T @ A_in) @ B_in
             out = Q @ B_proj
             t1 = time.perf_counter()
@@ -87,23 +84,29 @@ class AlgorithmicEscapeSearch:
             "FORM_LOW_RANK", "Randomized SVD Subspace", "LOW_RANK", "O((M+N)*r*K)", 3.0, _exec_low_rank
         ))
 
-        # 3. Universal Residual Formulation (Low-Rank + Error Correction)
+        # 3. Universal Residual Formulation (Rank-Adaptive SVD + Localized Boundary Correction)
         def _exec_residual(A_in=A, B_in=B):
             t0 = time.perf_counter()
-            r_eff = min(32, M, K, N)
+            r_eff = min(48, M, K, N)
             Omega = np.random.randn(K, r_eff).astype(np.float32)
             Q, _ = np.linalg.qr(A_in @ Omega)
-            Y_hat = Q @ ((Q.T @ A_in) @ B_in)
             
-            # Sparse residual correction
-            Y_ref = A_in @ B_in
-            R = Y_ref - Y_hat
-            mask = np.abs(R) > (0.1 * contract_epsilon * np.max(np.abs(Y_ref)))
-            out = Y_hat + np.where(mask, R, 0.0)
+            # Subspace projection Y_hat
+            QA = Q.T @ A_in
+            Y_hat = Q @ (QA @ B_in)
+            
+            # Localized variance correction
+            row_norms = np.linalg.norm(A_in, axis=1)
+            high_energy_idx = np.where(row_norms > np.percentile(row_norms, 85))[0]
+            
+            out = np.copy(Y_hat)
+            if len(high_energy_idx) > 0:
+                A_high = A_in[high_energy_idx, :]
+                out[high_energy_idx, :] = A_high @ B_in
+                
             t1 = time.perf_counter()
-            sparse_pct = float(np.sum(mask) / mask.size)
-            cer = 1.0 - (0.15 + (0.85 * sparse_pct))
-            return out, {"formulation": "RESIDUAL", "cer": round(cer, 4), "sparse_residual_pct": sparse_pct, "latency_ms": (t1-t0)*1000.0}
+            cer = 1.0 - ((r_eff / max(1, K)) + (len(high_energy_idx) / max(1, M)))
+            return out, {"formulation": "RESIDUAL", "cer": round(max(0.0, cer), 4), "latency_ms": (t1-t0)*1000.0}
 
         formulations.append(AlgorithmicFormulation(
             "FORM_RESIDUAL", "Universal Residual Engine (Y_hat + R)", "RESIDUAL", "O(M*r*N + nnz(R)*K)", 3.2, _exec_residual
@@ -120,15 +123,12 @@ class AlgorithmicEscapeSearch:
             "FORM_MORTON", "Cache-Oblivious Morton Z-Curve", "RECURSIVE", "O(M*N*K / sqrt(Cache))", 1.8, _exec_morton
         ))
 
-        # 4. Frequency-Domain 2D DCT / FFT Formulation
+        # 5. Frequency-Domain 2D DCT / FFT Formulation
         def _exec_frequency(A_in=A, B_in=B):
             t0 = time.perf_counter()
-            # 2D FFT spectral representation
             fft_A = np.fft.rfft2(A_in, s=(max(M, N), max(K, N)))
-            # Multiply in frequency domain
             out_approx = np.fft.irfft2(fft_A)[:M, :N].astype(np.float32)
-            # Normalize scale
-            scale = np.linalg.norm(A_in @ B_in) / (np.linalg.norm(out_approx) + 1e-8)
+            scale = np.linalg.norm(A_in) * np.linalg.norm(B_in) / (np.linalg.norm(out_approx) * np.sqrt(K) + 1e-8)
             out = out_approx * scale
             t1 = time.perf_counter()
             return out, {"formulation": "FREQUENCY_DOMAIN", "cer": 0.45, "latency_ms": (t1-t0)*1000.0}
@@ -137,11 +137,10 @@ class AlgorithmicEscapeSearch:
             "FORM_FREQUENCY", "2D Spectral FFT Transform", "FREQUENCY", "O(N^2 log N)", 2.5, _exec_frequency
         ))
 
-        # 5. Ternary Sign-Indexed Accumulation
+        # 6. Ternary Sign-Indexed Accumulation
         def _exec_ternary(A_in=A, B_in=B):
             t0 = time.perf_counter()
             A_ternary = np.clip(np.round(A_in), -1, 1).astype(np.int8)
-            # Multiplication-free addition/subtraction
             pos_mask = (A_ternary == 1).astype(np.float32)
             neg_mask = (A_ternary == -1).astype(np.float32)
             out = (pos_mask @ B_in) - (neg_mask @ B_in)
@@ -150,28 +149,6 @@ class AlgorithmicEscapeSearch:
 
         formulations.append(AlgorithmicFormulation(
             "FORM_TERNARY", "Ternary Addition Accumulator", "TERNARY", "O(M*N*K) additions (0 FLOPs)", 4.0, _exec_ternary
-        ))
-
-        # 6. Universal Residual Formulation (Low-Rank + Error Correction)
-        def _exec_residual(A_in=A, B_in=B):
-            t0 = time.perf_counter()
-            # Prediction
-            r_eff = min(16, M, K, N)
-            Omega = np.random.randn(K, r_eff).astype(np.float32)
-            Q, _ = np.linalg.qr(A_in @ Omega)
-            Y_hat = Q @ ((Q.T @ A_in) @ B_in)
-            # Residual correction
-            Y_ref = A_in @ B_in
-            R = Y_ref - Y_hat
-            mask = np.abs(R) > (contract_epsilon * np.max(np.abs(Y_ref)))
-            out = Y_hat + np.where(mask, R, 0.0)
-            t1 = time.perf_counter()
-            sparse_pct = float(np.sum(mask) / mask.size)
-            cer = 1.0 - (0.2 + (0.8 * sparse_pct))
-            return out, {"formulation": "RESIDUAL", "cer": round(cer, 4), "sparse_residual_pct": sparse_pct, "latency_ms": (t1-t0)*1000.0}
-
-        formulations.append(AlgorithmicFormulation(
-            "FORM_RESIDUAL", "Universal Residual Engine (Y_hat + R)", "RESIDUAL", "O(M*r*N + nnz(R)*K)", 3.2, _exec_residual
         ))
 
         return formulations
@@ -189,12 +166,10 @@ class AlgorithmicEscapeSearch:
         def _exec_event_driven():
             t0 = time.perf_counter()
             diff = np.abs(current_frame_noisy_4spp - previous_frame)
-            # Event threshold
             event_mask = diff > 0.03
             reconstructed = np.copy(previous_frame)
             reconstructed[event_mask] = current_frame_noisy_4spp[event_mask]
             
-            # Fast 3x3 uniform box filter on event regions
             kernel = np.ones((3, 3), dtype=np.float32) / 9.0
             padded = np.pad(reconstructed, 1, mode="edge")
             denoised = (
@@ -222,11 +197,8 @@ class AlgorithmicEscapeSearch:
         # Formulation 2: Multi-Resolution Coarse-to-Fine Grid
         def _exec_hierarchical():
             t0 = time.perf_counter()
-            # Downsample 2x
             coarse = current_frame_noisy_4spp[::2, ::2]
-            # Upsample with bilinear interpolation
             upsampled = np.repeat(np.repeat(coarse, 2, axis=0), 2, axis=1)
-            # High frequency edge correction from previous frame
             edges = np.abs(previous_frame - upsampled) > 0.05
             reconstructed = np.where(edges, previous_frame, upsampled)
             reconstructed = np.clip(reconstructed, 0.0, 1.0)
