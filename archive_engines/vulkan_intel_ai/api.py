@@ -42,6 +42,7 @@ async def handle_vulkan_query(raw_input: Dict[str, Any]):
         memory.scratchpad["goal"] = query
         
         async def run_vulkan_pipeline():
+            pipeline_failed = False
             try:
                 # 2. Perception & ACK (Layer 7)
                 yield json.dumps({"status": "ACK", "kernel": "Booting Vulkan-Accelerated Pipeline...", "t": f"{(time.time()-start_time)*1000:.1f}ms"})
@@ -75,12 +76,19 @@ async def handle_vulkan_query(raw_input: Dict[str, Any]):
                 yield json.dumps({"step": "HALT", "latency": f"{(time.time()-start_time)*1000:.1f}ms"})
             except Exception:
                 logger.error("Vulkan pipeline error during stream generation", exc_info=True)
+                pipeline_failed = True
+
+            if pipeline_failed:
                 yield json.dumps({"error": "Internal pipeline error during execution"})
 
         return StreamingResponse(run_vulkan_pipeline(), media_type="application/x-ndjson")
     except Exception:
         logger.error("Vulkan query handler error", exc_info=True)
-        return {"error": "Internal server error occurred"}
+        err_response = {"error": "Internal server error occurred"}
+
+    if err_response:
+        return err_response
+
 
 if __name__ == "__main__":
     import uvicorn
