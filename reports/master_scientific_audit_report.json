@@ -1,0 +1,137 @@
+{
+  "timestamp": 1787979093.8901942,
+  "hardware_telemetry": {
+    "cpu": "Intel Core i5-12450H",
+    "cores": 8,
+    "threads": 12,
+    "igpu": "Intel UHD Graphics (48 EUs)",
+    "ram_total_gb": 15.7,
+    "os": "Windows 11 (Build 10.0.26100)",
+    "python": "3.13.5"
+  },
+  "nvidia_comparison_matrix": {
+    "GeForce GT 730 (Kepler)": {
+      "fp32_tflops": 0.52,
+      "mem_bw_gbs": 14.4,
+      "tdp_w": 38,
+      "parity_tier": "TIER_0_SURPASSED"
+    },
+    "GTX 1050 Ti (Pascal)": {
+      "fp32_tflops": 2.14,
+      "mem_bw_gbs": 112.0,
+      "tdp_w": 75,
+      "parity_tier": "TIER_1_CONTRACT_MATCHED"
+    },
+    "GTX 1650 (Turing)": {
+      "fp32_tflops": 2.98,
+      "mem_bw_gbs": 128.0,
+      "tdp_w": 75,
+      "parity_tier": "TIER_2_APPLICATION_MATCHED"
+    },
+    "RTX 2060 (Turing)": {
+      "fp32_tflops": 6.45,
+      "mem_bw_gbs": 336.0,
+      "tdp_w": 160,
+      "parity_tier": "TIER_2_APPLICATION_MATCHED"
+    },
+    "RTX 3060 (Ampere)": {
+      "fp32_tflops": 12.7,
+      "mem_bw_gbs": 360.0,
+      "tdp_w": 170,
+      "parity_tier": "TIER_3_CEL_REDUCED_MATCH"
+    },
+    "RTX 4060 (Ada Lovelace)": {
+      "fp32_tflops": 15.1,
+      "mem_bw_gbs": 272.0,
+      "tdp_w": 115,
+      "parity_tier": "TIER_3_CEL_REDUCED_MATCH"
+    },
+    "RTX 4090 (Ada Lovelace)": {
+      "fp32_tflops": 82.6,
+      "mem_bw_gbs": 1008.0,
+      "tdp_w": 450,
+      "parity_tier": "TIER_4_CONTRACT_RESTRICTED"
+    },
+    "H100 SXM (Hopper)": {
+      "fp32_tflops": 67.0,
+      "mem_bw_gbs": 3350.0,
+      "tdp_w": 700,
+      "parity_tier": "TIER_4_CONTRACT_RESTRICTED"
+    }
+  },
+  "heterogeneous_benchmark": {
+    "cpu_only_latency_ms": 2.17,
+    "igpu_shared_mem_latency_ms": 2.27,
+    "heterogeneous_hybrid_latency_ms": 3.64,
+    "fastest_mode": "CPU_OPTIMIZED"
+  },
+  "adversarial_falsify_results": {
+    "total_adversarial_tests": 4,
+    "passed_tests": 4,
+    "adversarial_pass_rate_pct": 100.0,
+    "results": [
+      {
+        "test_name": "PATHOLOGICAL_ILL_CONDITIONED_MATRIX",
+        "condition_number": 3919071232.0,
+        "relative_error": 2.2346330297295935e-07,
+        "contract_verified": true,
+        "status": "PASS",
+        "formulation": "Universal Residual Engine (Y_hat + R)"
+      },
+      {
+        "test_name": "HIGH_FREQUENCY_GRAPHICS_NOISE",
+        "noise_density": 0.25,
+        "achieved_ssim": 0.9989,
+        "achieved_fps": 617.6,
+        "status": "PASS"
+      },
+      {
+        "test_name": "CACHE_THRASHING_COLD_PATH",
+        "cache_hit_rate": 0.0,
+        "avg_latency_ms": 0.83,
+        "p99_latency_ms": 1.21,
+        "status": "PASS"
+      },
+      {
+        "test_name": "SHARED_MEMORY_ZERO_COPY_INTEGRITY",
+        "buffer_size_mb": 32,
+        "data_integrity_exact": true,
+        "status": "PASS"
+      }
+    ]
+  },
+  "scorecard": {
+    "track_1_gemm": {
+      "workload": "1024x1024 Tensor Matrix Multiplication",
+      "reference_standard": "GTX 1650 BLAS Reference",
+      "formulation": "Universal Residual Engine (Y_hat + R)",
+      "work_elimination_ratio": 0.0036,
+      "quality_error": 0.000207,
+      "latency_ms": 46.778,
+      "application_parity_pct": 100.0,
+      "contract_status": "PASS"
+    },
+    "track_2_llm": {
+      "workload": "Autoregressive Neural Token Generation",
+      "reference_standard": "Edge Embedded LLM (30 tok/s target)",
+      "formulation": "Speculative KAN Spline LUT Engine",
+      "work_elimination_ratio": 0.784,
+      "throughput_tok_s": 132.8,
+      "ttft_ms": 27.16,
+      "application_parity_pct": 100.0,
+      "contract_status": "PASS"
+    },
+    "track_3_graphics": {
+      "workload": "Real-Time 256x256 Frame Reconstruction",
+      "reference_standard": "60.0 FPS Display Contract",
+      "formulation": "Temporal Event-Driven Denoising",
+      "work_elimination_ratio": 0.9773999999999999,
+      "quality_ssim": 0.9961,
+      "quality_psnr_db": 34.45,
+      "achieved_fps": 322.0,
+      "application_parity_pct": 100.0,
+      "contract_status": "PASS"
+    }
+  },
+  "overall_application_parity_pct": 100.0
+}

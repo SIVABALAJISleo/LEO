@@ -73,6 +73,22 @@ class AlchemySharedMemoryBuffer:
         
         return tensor
 
+    def write(self, tensor: np.ndarray, name: str = "shared_tensor") -> np.ndarray:
+        """Allocates a buffer and copies data zero-copy into pinned shared memory."""
+        shared_t = self.allocate_tensor(name, tensor.shape, tensor.dtype)
+        np.copyto(shared_t, tensor)
+        return shared_t
+
+    def read(self, shape: Tuple[int, ...], dtype: np.dtype = np.float32, name: str = "shared_tensor") -> np.ndarray:
+        """Reads back tensor from pinned memory view."""
+        meta = self.get_tensor_metadata(name)
+        if meta:
+            offset = meta["offset"]
+            nbytes = meta["nbytes"]
+            buf_slice = memoryview(self._raw_buffer)[offset:offset + nbytes]
+            return np.frombuffer(buf_slice, dtype=dtype).reshape(shape)
+        return self.allocate_tensor(f"{name}_read", shape, dtype)
+
     def get_tensor_metadata(self, name: str) -> Optional[Dict[str, Any]]:
         """Retrieves allocation metadata for a named shared tensor."""
         return self.allocations.get(name)

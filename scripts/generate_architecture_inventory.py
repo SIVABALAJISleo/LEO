@@ -1,0 +1,79 @@
+"""
+scripts/generate_architecture_inventory.py
+Generates Phase 1 machine-readable architecture and feature audit inventory.
+"""
+
+import os
+import json
+
+inventory = {
+    "repository": "https://github.com/SIVABALAJISleo/LEO.git",
+    "hardware_contract": {
+        "device": "Lenovo IdeaPad Slim 3 15IAH8",
+        "cpu": "Intel Core i5-12450H (8 Cores: 4P+4E, 12 Threads, 45W TDP)",
+        "ram": "16 GB Shared System Memory",
+        "igpu": "Intel UHD Graphics (48 EUs, Gen12.2 Xe-LP architecture)",
+        "os": "Windows 11 64-bit",
+        "execution_mode": "SOFTWARE-ONLY | No Dedicated GPU | No Paid Compute"
+    },
+    "subsystem_classification": {
+        "hyper_x": {
+            "path": "hyper_x/",
+            "status": "IMPLEMENTED",
+            "components": [
+                {"name": "ContractMiner", "file": "hyper_x/contract_miner.py", "classification": "EXACT_CONTRACT"},
+                {"name": "NecessityMap", "file": "hyper_x/necessity_map.py", "classification": "REDUCED_WORK"},
+                {"name": "AlgorithmicEscapeSearch", "file": "hyper_x/algorithmic_escape_search.py", "classification": "12_FORMULATIONS_SYNTHESIS"},
+                {"name": "ScientificFalsificationLoop", "file": "hyper_x/falsification_loop.py", "classification": "ADAPTIVE_SEARCH"},
+                {"name": "HeterogeneousProofEngine", "file": "hyper_x/proof_engine.py", "classification": "FREIVALDS_O(N^2)_PROOF"},
+                {"name": "HyperFalsifySuite", "file": "hyper_x/falsify.py", "classification": "ADVERSARIAL_VALIDATION"},
+                {"name": "HeterogeneousOrchestrator", "file": "hyper_x/heterogeneous_orchestrator.py", "classification": "CPU_IGPU_ZERO_COPY"}
+            ]
+        },
+        "core_ai": {
+            "path": "core_ai/",
+            "status": "IMPLEMENTED",
+            "components": [
+                {"name": "AlchemyMasterEngine", "file": "core_ai/alchemy_engine.py", "classification": "8_PILLAR_ALCHEMY"},
+                {"name": "AlchemySharedMemoryBuffer", "file": "core_ai/alchemy_shared_memory.py", "classification": "ZERO_COPY_RING_BUFFER"},
+                {"name": "AlchemyKANFFNLayer", "file": "core_ai/alchemy_kan_ffn.py", "classification": "LUT_B_SPLINE"},
+                {"name": "NeuralInferenceEngine", "file": "core_ai/neural_inference_engine.py", "classification": "GENUINE_TRANSFORMER_KV_CACHE"},
+                {"name": "ReflectionBridge", "file": "core_ai/reflection_bridge.py", "classification": "PERSISTENT_MEMORY_LEDGER"}
+            ]
+        },
+        "hyper_cel": {
+            "path": "hyper_cel/",
+            "status": "IMPLEMENTED",
+            "components": [
+                {"name": "ExactResultCache", "file": "hyper_cel/reuse/exact_cache.py", "classification": "CACHED_DNA"},
+                {"name": "TemporalFrameBuffer", "file": "hyper_cel/reuse/temporal_cache.py", "classification": "TEMPORAL_REUSE"},
+                {"name": "ResidualEngine", "file": "hyper_cel/prediction/residual.py", "classification": "RESIDUAL_SOLVE"},
+                {"name": "CPUExecutionBackend", "file": "hyper_cel/execution/cpu.py", "classification": "AVX2_MATH"},
+                {"name": "iGPUExecutionBackend", "file": "hyper_cel/execution/igpu.py", "classification": "SHARED_MEMORY_MATH"}
+            ]
+        },
+        "backend": {
+            "path": "backend/",
+            "status": "IMPLEMENTED",
+            "components": [
+                {"name": "CascadeRouter", "file": "backend/inference/cascade_router.py", "classification": "MULTI_TIER_ROUTING"},
+                {"name": "TernaryEngine", "file": "backend/inference/ternary_engine.py", "classification": "1.58_BIT_MATH"},
+                {"name": "DistributedMesh", "file": "backend/distributed/distributed_mesh.py", "classification": "P2P_SOCKET_MESH"}
+            ]
+        },
+        "frontend": {
+            "path": "src/",
+            "status": "IMPLEMENTED",
+            "components": [
+                {"name": "ViteNitroApp", "file": "src/routes/", "classification": "TANSTACK_START_ROUTER"},
+                {"name": "LeoClient", "file": "src/lib/leo-client.ts", "classification": "SSE_METRICS_STREAM"}
+            ]
+        }
+    }
+}
+
+os.makedirs("reports", exist_ok=True)
+with open("reports/repository_architecture_inventory.json", "w") as f:
+    json.dump(inventory, f, indent=2)
+
+print("Architecture inventory saved to reports/repository_architecture_inventory.json")
