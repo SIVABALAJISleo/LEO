@@ -23,6 +23,7 @@ import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedAppBenchmarksRouteImport } from './routes/_authenticated.app.benchmarks'
 import { Route as AuthenticatedAppCaaoBreakthroughRouteImport } from './routes/_authenticated.app.caao-breakthrough'
 import { Route as AuthenticatedAppChatRouteImport } from './routes/_authenticated.app.chat'
+import { Route as AuthenticatedAppCyberpunkCgfpRouteImport } from './routes/_authenticated.app.cyberpunk-cgfp'
 import { Route as AuthenticatedAppEmbeddingsRouteImport } from './routes/_authenticated.app.embeddings'
 import { Route as AuthenticatedAppKnowledgeGraphRouteImport } from './routes/_authenticated.app.knowledge-graph'
 import { Route as AuthenticatedAppMemoryRouteImport } from './routes/_authenticated.app.memory'
@@ -103,6 +104,12 @@ const AuthenticatedAppChatRoute = AuthenticatedAppChatRouteImport.update({
   path: '/chat',
   getParentRoute: () => AuthenticatedAppRoute,
 } as any)
+const AuthenticatedAppCyberpunkCgfpRoute =
+  AuthenticatedAppCyberpunkCgfpRouteImport.update({
+    id: '/cyberpunk-cgfp',
+    path: '/cyberpunk-cgfp',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
 const AuthenticatedAppEmbeddingsRoute =
   AuthenticatedAppEmbeddingsRouteImport.update({
     id: '/embeddings',
@@ -162,6 +169,7 @@ export interface FileRoutesByFullPath {
   '/app/benchmarks': typeof AuthenticatedAppBenchmarksRoute
   '/app/caao-breakthrough': typeof AuthenticatedAppCaaoBreakthroughRoute
   '/app/chat': typeof AuthenticatedAppChatRoute
+  '/app/cyberpunk-cgfp': typeof AuthenticatedAppCyberpunkCgfpRoute
   '/app/embeddings': typeof AuthenticatedAppEmbeddingsRoute
   '/app/knowledge-graph': typeof AuthenticatedAppKnowledgeGraphRoute
   '/app/memory': typeof AuthenticatedAppMemoryRoute
@@ -184,6 +192,7 @@ export interface FileRoutesByTo {
   '/app/benchmarks': typeof AuthenticatedAppBenchmarksRoute
   '/app/caao-breakthrough': typeof AuthenticatedAppCaaoBreakthroughRoute
   '/app/chat': typeof AuthenticatedAppChatRoute
+  '/app/cyberpunk-cgfp': typeof AuthenticatedAppCyberpunkCgfpRoute
   '/app/embeddings': typeof AuthenticatedAppEmbeddingsRoute
   '/app/knowledge-graph': typeof AuthenticatedAppKnowledgeGraphRoute
   '/app/memory': typeof AuthenticatedAppMemoryRoute
@@ -209,6 +218,7 @@ export interface FileRoutesById {
   '/_authenticated/app/benchmarks': typeof AuthenticatedAppBenchmarksRoute
   '/_authenticated/app/caao-breakthrough': typeof AuthenticatedAppCaaoBreakthroughRoute
   '/_authenticated/app/chat': typeof AuthenticatedAppChatRoute
+  '/_authenticated/app/cyberpunk-cgfp': typeof AuthenticatedAppCyberpunkCgfpRoute
   '/_authenticated/app/embeddings': typeof AuthenticatedAppEmbeddingsRoute
   '/_authenticated/app/knowledge-graph': typeof AuthenticatedAppKnowledgeGraphRoute
   '/_authenticated/app/memory': typeof AuthenticatedAppMemoryRoute
@@ -234,6 +244,7 @@ export interface FileRouteTypes {
     | '/app/benchmarks'
     | '/app/caao-breakthrough'
     | '/app/chat'
+    | '/app/cyberpunk-cgfp'
     | '/app/embeddings'
     | '/app/knowledge-graph'
     | '/app/memory'
@@ -256,6 +267,7 @@ export interface FileRouteTypes {
     | '/app/benchmarks'
     | '/app/caao-breakthrough'
     | '/app/chat'
+    | '/app/cyberpunk-cgfp'
     | '/app/embeddings'
     | '/app/knowledge-graph'
     | '/app/memory'
@@ -280,6 +292,7 @@ export interface FileRouteTypes {
     | '/_authenticated/app/benchmarks'
     | '/_authenticated/app/caao-breakthrough'
     | '/_authenticated/app/chat'
+    | '/_authenticated/app/cyberpunk-cgfp'
     | '/_authenticated/app/embeddings'
     | '/_authenticated/app/knowledge-graph'
     | '/_authenticated/app/memory'
@@ -404,6 +417,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppChatRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
+    '/_authenticated/app/cyberpunk-cgfp': {
+      id: '/_authenticated/app/cyberpunk-cgfp'
+      path: '/cyberpunk-cgfp'
+      fullPath: '/app/cyberpunk-cgfp'
+      preLoaderRoute: typeof AuthenticatedAppCyberpunkCgfpRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
     '/_authenticated/app/embeddings': {
       id: '/_authenticated/app/embeddings'
       path: '/embeddings'
@@ -467,6 +487,7 @@ interface AuthenticatedAppRouteChildren {
   AuthenticatedAppBenchmarksRoute: typeof AuthenticatedAppBenchmarksRoute
   AuthenticatedAppCaaoBreakthroughRoute: typeof AuthenticatedAppCaaoBreakthroughRoute
   AuthenticatedAppChatRoute: typeof AuthenticatedAppChatRoute
+  AuthenticatedAppCyberpunkCgfpRoute: typeof AuthenticatedAppCyberpunkCgfpRoute
   AuthenticatedAppEmbeddingsRoute: typeof AuthenticatedAppEmbeddingsRoute
   AuthenticatedAppKnowledgeGraphRoute: typeof AuthenticatedAppKnowledgeGraphRoute
   AuthenticatedAppMemoryRoute: typeof AuthenticatedAppMemoryRoute
@@ -480,6 +501,7 @@ const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
   AuthenticatedAppBenchmarksRoute: AuthenticatedAppBenchmarksRoute,
   AuthenticatedAppCaaoBreakthroughRoute: AuthenticatedAppCaaoBreakthroughRoute,
   AuthenticatedAppChatRoute: AuthenticatedAppChatRoute,
+  AuthenticatedAppCyberpunkCgfpRoute: AuthenticatedAppCyberpunkCgfpRoute,
   AuthenticatedAppEmbeddingsRoute: AuthenticatedAppEmbeddingsRoute,
   AuthenticatedAppKnowledgeGraphRoute: AuthenticatedAppKnowledgeGraphRoute,
   AuthenticatedAppMemoryRoute: AuthenticatedAppMemoryRoute,

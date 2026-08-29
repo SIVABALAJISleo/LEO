@@ -5,6 +5,7 @@ import {
   Activity,
   Brain,
   Database,
+  Gamepad2,
   GitBranch,
   LayoutDashboard,
   LogOut,
@@ -22,6 +23,7 @@ import type { ReactNode } from "react";
 const nav = [
   { to: "/app", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { to: "/app/caao-breakthrough", label: "100% Parity (CAAO)", icon: Zap },
+  { to: "/app/cyberpunk-cgfp", label: "Cyberpunk (CGFP)", icon: Gamepad2 },
   { to: "/app/chat", label: "Chat", icon: MessageSquare },
   { to: "/app/orchestrate", label: "Orchestrate", icon: GitBranch },
   { to: "/app/memory", label: "Memory", icon: Brain },
@@ -31,6 +33,7 @@ const nav = [
   { to: "/app/security", label: "Security", icon: Shield },
   { to: "/app/settings", label: "Settings", icon: Settings },
 ];
+
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -62,7 +65,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       </Link>
       <nav className="flex-1 py-4 flex flex-col justify-between" aria-label="Console navigation">
         <div className="space-y-0.5">
-          {nav.slice(0, 9).map((n) => {
+          {nav.slice(0, 10).map((n) => {
             const active = isActive(n.to, n.exact);
             return (
               <Link
@@ -85,8 +88,9 @@ export function AppShell({ children }: { children: ReactNode }) {
 
         {/* Settings Navigation Link */}
         <div className="pt-3 mt-3 border-t border-border/60 px-4 space-y-2">
-          {nav.slice(9).map((n) => {
+          {nav.slice(10).map((n) => {
             const active = isActive(n.to, n.exact);
+
 
             return (
               <Link

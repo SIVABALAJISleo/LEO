@@ -145,6 +145,10 @@ app.include_router(caao_router)
 from backend.routers.contract_engine_v1 import router as contract_v1_router
 app.include_router(contract_v1_router)
 
+from backend.routers.cgfp import router as cgfp_router
+app.include_router(cgfp_router)
+
+
 
 
 

@@ -1,0 +1,43 @@
+# contracts/cyberpunk_2077_igpu.yaml
+# LEO Contract-Gated Frame Pipeline (CGFP) Specification
+# Target: Cyberpunk 2077 on Intel Core i5-12450H (8c/12t) + Intel UHD Graphics (48 EUs)
+
+contract:
+  title: "LEO-Frame: Cyberpunk 2077 Interactive & Thermal Contract"
+  scope:
+    device: "Intel Core i5-12450H (4P + 4E Cores) + Intel UHD Graphics (48 EUs)"
+    memory: "16 GB Unified System RAM (DDR4-3200 / DDR5, ~50 GB/s floor)"
+    display: "1080p Internal / Laptop Panel"
+    session_duration_min: 30
+
+  perceptual:
+    upscaling_engine: "Intel XeSS Balanced (DP4a accelerated)"
+    frame_generation: "FSR 3.0 / LSFG Frame Generation"
+    variable_rate_shading: "Tier-1 VRS On"
+    visual_fidelity: "Medium/High mix with SSR Medium (Non-RT path)"
+    aesthetic_target: "Night-city neon GI, atmospheric lighting, smooth motion"
+
+  interactive:
+    perceived_fps_min: 45
+    target_perceived_fps: 60
+    input_latency_p95_ms: 100
+    max_hitch_duration_ms: 250
+    zero_freeze_guarantee: true
+
+  thermal:
+    package_temp_max_celsius: 88.0
+    hysteresis_celsius: 3.0
+    clock_oscillation_max_pct: 5.0
+    thermal_saw_suppression: "ACTIVE (Prevents emergency DTM drop to 0.8GHz)"
+
+actuation_levers:
+  lever_1: "Dynamic Render Resolution Scale (-5% increments down to 720p internal)"
+  lever_2: "XeSS Quality Step Modulation (Ultra Quality -> Quality -> Balanced -> Performance)"
+  lever_3: "Frame Generation Multiplier Pacing (2x Interpolation with Coherent Frame Pacing)"
+  lever_4: "Shared-RAM Texture Memory Tier Shift (Prevents page fault freeze)"
+  lever_5: "P-Core / E-Core Thread Isolation (Game -> Cores 0-7, System/LEO -> Cores 8-11)"
+
+verification:
+  telemetry_sink: "LEO Reflect Ledger"
+  escape_rate_audit: "Per-frame p99 latency logging"
+  self_falsification: true
