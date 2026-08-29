@@ -19,9 +19,51 @@ import logging
 import os
 import platform
 import sys
+import ctypes
 from typing import List, Optional
 
 logger = logging.getLogger(__name__)
+
+# Direct Windows Kernel32 Binding for per-thread micro-affinity
+if platform.system() == "Windows":
+    try:
+        kernel32 = ctypes.windll.kernel32
+    except Exception:
+        kernel32 = None
+else:
+    kernel32 = None
+
+
+def pin_to_p_cores() -> bool:
+    """
+    Pin the current calling thread exclusively to P-cores (cores 0-3 on Intel i5-12450H).
+    Affinity mask 0x0F = bits 0, 1, 2, 3 (or 0x00FF with hyperthreading).
+    Eliminates E-core context switching and L2 cache thrashing during neural generation.
+    """
+    if kernel32 is not None:
+        try:
+            handle = kernel32.GetCurrentThread()
+            # 4 P-cores on i5-12450H: mask 0x0F (or 0xFF for 8 logical threads)
+            kernel32.SetThreadAffinityMask(handle, 0xFF)
+            return True
+        except Exception as e:
+            logger.debug(f"P-core pinning fallback: {e}")
+    return False
+
+
+def offload_to_e_cores() -> bool:
+    """
+    Offload lightweight background tasks (embedding, cache lookups) to E-cores (cores 4-7 on Intel i5-12450H).
+    Affinity mask 0xF00 = bits 8, 9, 10, 11 on 12-thread CPU.
+    """
+    if kernel32 is not None:
+        try:
+            handle = kernel32.GetCurrentThread()
+            kernel32.SetThreadAffinityMask(handle, 0xF00)
+            return True
+        except Exception as e:
+            logger.debug(f"E-core offload fallback: {e}")
+    return False
 
 
 # ─── P-Core Detection ─────────────────────────────────────────────────────────

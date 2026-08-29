@@ -98,3 +98,18 @@ class SymplecticPhysicsEngine:
             "energy_conservation_drift": round(drift, 7),
             "invariant_preserved": bool(drift < 1e-3)
         }
+
+    def simulate_orbit(self, num_bodies: int = 32, steps: int = 50) -> Dict[str, Any]:
+        """Convenience wrapper for orbit simulations."""
+        self.num_bodies = num_bodies
+        self.positions = np.random.randn(num_bodies, 3).astype(np.float32)
+        self.velocities = np.random.randn(num_bodies, 3).astype(np.float32) * 0.1
+        self.masses = np.ones(num_bodies, dtype=np.float32) / num_bodies
+        res = self.simulate_trajectory(steps=steps)
+        res["simulation_time_ms"] = res["elapsed_ms"]
+        res["energy_drift_abs"] = res["energy_conservation_drift"]
+        return res
+
+
+# Backward compatible alias
+CausalPhysicsEngine = SymplecticPhysicsEngine
