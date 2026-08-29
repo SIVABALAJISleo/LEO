@@ -1,0 +1,50 @@
+# contracts/chat_assistant.yaml
+# LEO Contract Engine v1.0 Formal Contract Specification
+# Defines verifiable quality thresholds, latency bounds, and tier parities for Intel Core i5-12450H + UHD iGPU
+
+contract:
+  task: conversational_qa
+  quality:
+    metric: embedding_cosine_vs_reference
+    threshold: 0.88
+    additional_checks:
+      - json_valid
+      - citation_exists
+      - no_hallucinated_url
+  latency:
+    p95_ms: 5000
+    target_tier0_ms: 0.5
+    target_tier1_ms: 25.0
+    target_tier2_ms: 800.0
+    target_tier3_ms: 2500.0
+  scope:
+    distribution: held_out_blind_set_v2
+    hardware_target: Intel Core i5-12450H (8c/12t) + Intel UHD Graphics (48 EUs)
+    memory_bandwidth_floor_gbps: 50.0
+
+parities:
+  tier0:
+    name: "Exact Cache"
+    type: EXACT
+    description: "Byte-identical or hash-keyed semantic match (0 ms compute)"
+  tier1:
+    name: "Semantic Retrieval & Vector Subsumption"
+    type: APPROXIMATE
+    description: "FAISS cosine similarity >= 0.88 with 100% compute avoidance"
+  tier2:
+    name: "Distilled Student 3B/4B INT4"
+    type: APPROXIMATE
+    description: "OpenVINO / IPEX-LLM executed on iGPU (GPU.0, ~13.7 tok/s)"
+  tier3:
+    name: "Full 7B Q4 GGUF"
+    type: EXACT_WORKLOAD
+    description: "llama.cpp SYCL co-execution across iGPU + CPU AVX2"
+  tier4:
+    name: "Speculative Decoding"
+    type: EXACT
+    description: "1B Draft model verified against 7B model preserving exact token distribution"
+
+report:
+  metric: "P[quality >= tau AND latency <= L] on blind set"
+  escape_rate_policy: "Transparently measured, published, and never hidden"
+  self_falsification: true

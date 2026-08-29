@@ -142,6 +142,10 @@ app.include_router(contract_subsumption_router)
 from backend.routers.caao import router as caao_router
 app.include_router(caao_router)
 
+from backend.routers.contract_engine_v1 import router as contract_v1_router
+app.include_router(contract_v1_router)
+
+
 
 
 
