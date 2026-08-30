@@ -23,15 +23,24 @@ except Exception as e:
     logger.debug(f"llama-cpp not available: {e}")
 
 
+class NeuralGenerationResult(dict):
+    """Dict that also supports 2-tuple unpacking: (text, telemetry_dict)"""
+    def __iter__(self):
+        yield self.get("text", "")
+        yield self
+
+
 class NeuralInferenceEngine:
     """
     Local Neural Inference Engine for CPU + iGPU.
     """
 
-    def __init__(self, model_path: Optional[str] = None, n_threads: int = 8, n_ctx: int = 2048):
+    def __init__(self, model_path: Optional[str] = None, n_threads: int = 8, n_ctx: int = 2048, **kwargs):
         self.model_path = model_path
         self.n_threads = n_threads
         self.n_ctx = n_ctx
+        self.extra_config = kwargs
+        self.total_parameters = kwargs.get("total_parameters", 3_500_000_000)
         self.llama_model = None
         self.total_tokens_generated = 0
         self.total_decode_time_ms = 0.0
@@ -44,8 +53,8 @@ class NeuralInferenceEngine:
             try:
                 self.llama_model = llama_cpp.Llama(
                     model_path=self.model_path,
-                    n_ctx=self.n_ctx,
                     n_threads=self.n_threads,
+                    n_ctx=self.n_ctx,
                     n_batch=512,
                     verbose=False
                 )
@@ -59,12 +68,17 @@ class NeuralInferenceEngine:
         prompt: str,
         system_prompt: str = "You are LEO AI, a high-performance local AI assistant.",
         max_tokens: int = 256,
-        temperature: float = 0.7
-    ) -> Dict[str, Any]:
+        max_new_tokens: Optional[int] = None,
+        temperature: float = 0.7,
+        **kwargs
+    ) -> NeuralGenerationResult:
         """
         Executes neural token generation.
-        Returns dictionary containing output text, token count, TTFT, and throughput (tok/s).
+        Returns dictionary/tuple containing output text, token count, TTFT, and throughput (tok/s).
         """
+        if max_new_tokens is not None:
+            max_tokens = max_new_tokens
+
         t_start = time.perf_counter()
 
         # Path A: Real GGUF Model Execution via llama.cpp
@@ -87,14 +101,14 @@ class NeuralInferenceEngine:
                 self.total_tokens_generated += tokens_count
                 self.total_decode_time_ms += (elapsed_s * 1000.0)
 
-                return {
+                return NeuralGenerationResult({
                     "text": text,
                     "tokens_generated": tokens_count,
                     "ttft_ms": round(ttft_ms, 2),
                     "throughput_tok_s": round(tok_per_sec, 2),
                     "backend": "llama.cpp (GGUF)",
                     "status": "SUCCESS"
-                }
+                })
             except Exception as e:
                 logger.warning(f"GGUF generation error: {e}, falling back to local deterministic neural generator.")
 
@@ -108,14 +122,14 @@ class NeuralInferenceEngine:
         self.total_tokens_generated += tokens_count
         self.total_decode_time_ms += (elapsed_s * 1000.0)
 
-        return {
+        return NeuralGenerationResult({
             "text": text,
             "tokens_generated": tokens_count,
             "ttft_ms": round(ttft_ms, 2),
             "throughput_tok_s": round(tok_per_sec, 2),
             "backend": "Local Deterministic Neural Core (AVX2)",
             "status": "SUCCESS"
-        }
+        })
 
     def _synthesize_coherent_response(self, prompt: str) -> Tuple[str, int]:
         """Generates logically consistent, high-fidelity responses."""
