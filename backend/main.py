@@ -148,6 +148,9 @@ app.include_router(contract_v1_router)
 from backend.routers.cgfp import router as cgfp_router
 app.include_router(cgfp_router)
 
+from backend.routers.breakthrough_dashboard import router as breakthrough_dashboard_router
+app.include_router(breakthrough_dashboard_router)
+
 
 
 

@@ -22,7 +22,7 @@ import type { ReactNode } from "react";
 
 const nav = [
   { to: "/app", label: "Dashboard", icon: LayoutDashboard, exact: true },
-  { to: "/app/caao-breakthrough", label: "100% Parity (CAAO)", icon: Zap },
+  { to: "/app/caao-breakthrough", label: "Breakthroughs (100% Parity)", icon: Zap },
   { to: "/app/cyberpunk-cgfp", label: "Cyberpunk (CGFP)", icon: Gamepad2 },
   { to: "/app/chat", label: "Chat", icon: MessageSquare },
   { to: "/app/orchestrate", label: "Orchestrate", icon: GitBranch },

@@ -2,9 +2,9 @@
   "total_generations": 2,
   "best_fitness": 0.54,
   "best_params": {
-    "confidence_floor": 0.6083,
+    "confidence_floor": 0.6167,
     "max_spec_tokens": 8,
-    "sparsity_threshold": 0.3431,
+    "sparsity_threshold": 0.3089,
     "allocated_experts_budget": 2,
     "dreamer_branches": 9,
     "dreamer_depth": 6
@@ -20,9 +20,9 @@
         "low_density"
       ],
       "mutations": {
-        "confidence_floor": 0.6083,
+        "confidence_floor": 0.6167,
         "max_spec_tokens": 8,
-        "sparsity_threshold": 0.3431,
+        "sparsity_threshold": 0.3089,
         "allocated_experts_budget": 2,
         "dreamer_branches": 9,
         "dreamer_depth": 6
@@ -31,7 +31,7 @@
       "active_classes": [
         "cacheable"
       ],
-      "timestamp": 1788011263.0012293
+      "timestamp": 1788088117.627823
     },
     {
       "generation": 2,
@@ -43,9 +43,9 @@
         "low_density"
       ],
       "mutations": {
-        "confidence_floor": 0.5871,
+        "confidence_floor": 0.5788,
         "max_spec_tokens": 8,
-        "sparsity_threshold": 0.4028,
+        "sparsity_threshold": 0.374,
         "allocated_experts_budget": 2,
         "dreamer_branches": 10,
         "dreamer_depth": 7
@@ -54,7 +54,7 @@
       "active_classes": [
         "cacheable"
       ],
-      "timestamp": 1788011263.0140638
+      "timestamp": 1788088117.6463878
     }
   ]
 }

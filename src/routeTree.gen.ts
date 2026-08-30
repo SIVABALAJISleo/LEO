@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as BenchmarksRouteImport } from './routes/benchmarks'
+import { Route as BreakthroughRouteImport } from './routes/breakthrough'
 import { Route as DocsRouteImport } from './routes/docs'
 import { Route as FeaturesRouteImport } from './routes/features'
 import { Route as LoginRouteImport } from './routes/login'
@@ -50,6 +51,11 @@ const AboutRoute = AboutRouteImport.update({
 const BenchmarksRoute = BenchmarksRouteImport.update({
   id: '/benchmarks',
   path: '/benchmarks',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BreakthroughRoute = BreakthroughRouteImport.update({
+  id: '/breakthrough',
+  path: '/breakthrough',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DocsRoute = DocsRouteImport.update({
@@ -160,6 +166,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/benchmarks': typeof BenchmarksRoute
+  '/breakthrough': typeof BreakthroughRoute
   '/docs': typeof DocsRoute
   '/features': typeof FeaturesRoute
   '/login': typeof LoginRoute
@@ -184,6 +191,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/benchmarks': typeof BenchmarksRoute
+  '/breakthrough': typeof BreakthroughRoute
   '/docs': typeof DocsRoute
   '/features': typeof FeaturesRoute
   '/login': typeof LoginRoute
@@ -209,6 +217,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/about': typeof AboutRoute
   '/benchmarks': typeof BenchmarksRoute
+  '/breakthrough': typeof BreakthroughRoute
   '/docs': typeof DocsRoute
   '/features': typeof FeaturesRoute
   '/login': typeof LoginRoute
@@ -235,6 +244,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/benchmarks'
+    | '/breakthrough'
     | '/docs'
     | '/features'
     | '/login'
@@ -259,6 +269,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/benchmarks'
+    | '/breakthrough'
     | '/docs'
     | '/features'
     | '/login'
@@ -283,6 +294,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/about'
     | '/benchmarks'
+    | '/breakthrough'
     | '/docs'
     | '/features'
     | '/login'
@@ -309,6 +321,7 @@ export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AboutRoute: typeof AboutRoute
   BenchmarksRoute: typeof BenchmarksRoute
+  BreakthroughRoute: typeof BreakthroughRoute
   DocsRoute: typeof DocsRoute
   FeaturesRoute: typeof FeaturesRoute
   LoginRoute: typeof LoginRoute
@@ -345,6 +358,13 @@ declare module '@tanstack/react-router' {
       path: '/benchmarks'
       fullPath: '/benchmarks'
       preLoaderRoute: typeof BenchmarksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/breakthrough': {
+      id: '/breakthrough'
+      path: '/breakthrough'
+      fullPath: '/breakthrough'
+      preLoaderRoute: typeof BreakthroughRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/docs': {
@@ -543,6 +563,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AboutRoute: AboutRoute,
   BenchmarksRoute: BenchmarksRoute,
+  BreakthroughRoute: BreakthroughRoute,
   DocsRoute: DocsRoute,
   FeaturesRoute: FeaturesRoute,
   LoginRoute: LoginRoute,
