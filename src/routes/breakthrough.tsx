@@ -28,6 +28,8 @@ import { Module15UnrealEngine } from "@/components/breakthrough/modules/Module15
 
 import { Zap, Flame, Cpu, ShieldCheck, ArrowDown, Activity, Sparkles, Server, Layers, BarChart3, Atom } from "lucide-react";
 
+import { CGACEStudio } from "@/components/breakthrough/CGACEStudio";
+
 export const Route = createFileRoute("/breakthrough")({
   head: () => ({
     meta: [
@@ -43,7 +45,7 @@ export const Route = createFileRoute("/breakthrough")({
 });
 
 function BreakthroughPage() {
-  const [activeTab, setActiveTab] = useState<"pipeline" | "solvers" | "nvidia_matrix" | "workbenches" | "falsification">("pipeline");
+  const [activeTab, setActiveTab] = useState<"cgace" | "pipeline" | "solvers" | "nvidia_matrix" | "workbenches" | "falsification">("cgace");
 
   const moduleDemoMap: Record<number, React.ReactNode> = {
     1: <Module1DenseGemm />,
@@ -79,7 +81,7 @@ function BreakthroughPage() {
             <Sparkles className="h-3.5 w-3.5 text-amber-400" />
             <span>THE 100% CONTRACT PARITY SYSTEM</span>
             <span className="text-muted-foreground">·</span>
-            <span className="text-emerald-400">SOFTWARE-ONLY PARITY</span>
+            <span className="text-emerald-400">C-GACE ARCHITECTURE</span>
           </div>
 
           <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl text-foreground">
@@ -92,6 +94,7 @@ function BreakthroughPage() {
           {/* Master Navigation Bar */}
           <div className="flex flex-wrap items-center justify-center gap-2 font-mono text-xs pt-4">
             {[
+              { id: "cgace", label: "C-GACE Adaptive Studio", icon: Sparkles },
               { id: "pipeline", label: "Master Pipeline Simulator", icon: Layers },
               { id: "solvers", label: "15 In-Browser Solvers", icon: Zap },
               { id: "nvidia_matrix", label: "NVIDIA Historical Matrix (1995–2025)", icon: Server },
@@ -116,6 +119,11 @@ function BreakthroughPage() {
             })}
           </div>
         </div>
+
+        {/* Tab View 0: C-GACE Studio */}
+        {activeTab === "cgace" && (
+          <CGACEStudio />
+        )}
 
         {/* Tab View 1: Master Pipeline Simulator */}
         {activeTab === "pipeline" && (

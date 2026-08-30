@@ -151,6 +151,9 @@ app.include_router(cgfp_router)
 from backend.routers.breakthrough_dashboard import router as breakthrough_dashboard_router
 app.include_router(breakthrough_dashboard_router)
 
+from backend.routers.cgace import router as cgace_router
+app.include_router(cgace_router)
+
 
 
 

@@ -43,12 +43,14 @@ import { Module13OptionPricing } from "@/components/breakthrough/modules/Module1
 import { Module14BlenderCycles } from "@/components/breakthrough/modules/Module14BlenderCycles";
 import { Module15UnrealEngine } from "@/components/breakthrough/modules/Module15UnrealEngine";
 
+import { CGACEStudio } from "@/components/breakthrough/CGACEStudio";
+
 export const Route = createFileRoute("/_authenticated/app/caao-breakthrough")({
   component: BreakthroughDashboardStudio,
 });
 
 export function BreakthroughDashboardStudio() {
-  const [activeTab, setActiveTab] = useState<"pipeline" | "solvers" | "nvidia_matrix" | "workbenches" | "falsification">("pipeline");
+  const [activeTab, setActiveTab] = useState<"cgace" | "pipeline" | "solvers" | "nvidia_matrix" | "workbenches" | "falsification">("cgace");
 
   const moduleDemoMap: Record<number, React.ReactNode> = {
     1: <Module1DenseGemm />,
@@ -82,7 +84,7 @@ export function BreakthroughDashboardStudio() {
                 HYPER Breakthrough Engine
               </h1>
               <p className="text-xs md:text-sm text-muted-foreground font-mono">
-                100% Contract Parity Architecture · The 15 Hardware-to-Contract Solutions
+                Contract-Gated Adaptive Computation Elimination (C-GACE) · 100% Contract Parity
               </p>
             </div>
           </div>
@@ -103,6 +105,7 @@ export function BreakthroughDashboardStudio() {
       {/* Navigation Sub-Tabs */}
       <div className="flex flex-wrap items-center gap-2 font-mono text-xs">
         {[
+          { id: "cgace", label: "C-GACE Adaptive Studio", icon: Sparkles },
           { id: "pipeline", label: "Master Pipeline Simulator", icon: Layers },
           { id: "solvers", label: "15 In-Browser Solvers", icon: Zap },
           { id: "nvidia_matrix", label: "NVIDIA Matrix (1995–2025)", icon: Server },
@@ -128,6 +131,8 @@ export function BreakthroughDashboardStudio() {
       </div>
 
       {/* Render Active Tab */}
+      {activeTab === "cgace" && <CGACEStudio />}
+
       {activeTab === "pipeline" && (
         <div className="space-y-8">
           <MasterReductionPipeline />
