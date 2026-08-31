@@ -147,9 +147,18 @@ def run():
         # Select Extreme mode
         try:
             print("[HYPER] Selecting 'Extreme' mode...")
-            btn_extreme = page.locator("button, a, div", has_text="Extreme").first
-            btn_extreme.scroll_into_view_if_needed(timeout=5000)
-            btn_extreme.click(timeout=8000, force=True)
+            clicked = page.evaluate("""() => {
+                const buttons = Array.from(document.querySelectorAll('button, a, div, span, input'));
+                const btn = buttons.find(b => b.textContent && b.textContent.trim().toLowerCase() === 'extreme');
+                if (btn) {
+                    btn.click();
+                    return true;
+                }
+                return false;
+            }""")
+            if not clicked:
+                btn_extreme = page.locator("button, a, div", has_text="Extreme").first
+                btn_extreme.click(timeout=3000, force=True)
             page.wait_for_timeout(1000)
             print("[HYPER] ✓ 'Extreme' mode selected successfully.")
         except Exception as e:
@@ -158,9 +167,18 @@ def run():
         # Start Test
         try:
             print("[HYPER] Starting Live Benchmark Test...")
-            btn_start = page.locator("button, a, div", has_text="Start Test").first
-            btn_start.scroll_into_view_if_needed(timeout=5000)
-            btn_start.click(timeout=8000, force=True)
+            clicked_start = page.evaluate("""() => {
+                const buttons = Array.from(document.querySelectorAll('button, a, div, span, input'));
+                const btn = buttons.find(b => b.textContent && (b.textContent.includes('Start Test') || b.textContent.includes('Run Test') || b.textContent.trim() === 'Start'));
+                if (btn) {
+                    btn.click();
+                    return true;
+                }
+                return false;
+            }""")
+            if not clicked_start:
+                btn_start = page.locator("button, a, div", has_text="Start Test").first
+                btn_start.click(timeout=3000, force=True)
             print("[HYPER] ✓ 'Start Test' clicked — Volume Shader is now running LIVE at 60+ FPS!")
         except Exception as e:
             print(f"[HYPER] Notice starting test: {e}")
