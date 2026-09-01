@@ -24,7 +24,10 @@ export interface SfftResult {
 /**
  * Standard Radix-2 Cooley-Tukey FFT (O(N log N))
  */
-export function standardFft(real: Float64Array, imag: Float64Array): { outReal: Float64Array; outImag: Float64Array } {
+export function standardFft(
+  real: Float64Array,
+  imag: Float64Array,
+): { outReal: Float64Array; outImag: Float64Array } {
   const n = real.length;
   if (n <= 1) {
     return { outReal: new Float64Array(real), outImag: new Float64Array(imag) };
@@ -90,10 +93,7 @@ export function standardFft(real: Float64Array, imag: Float64Array): { outReal: 
  * Sublinear Sparse FFT (SFFT)
  * Uses Dirichlet filter subsampling and bucket hashing to isolate dominant K frequencies.
  */
-export function sparseFft(
-  signal: Float64Array,
-  k: number = 6
-): SfftResult {
+export function sparseFft(signal: Float64Array, k: number = 6): SfftResult {
   const n = signal.length;
   const imag = new Float64Array(n);
 

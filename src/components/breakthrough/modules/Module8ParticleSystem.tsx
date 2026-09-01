@@ -54,7 +54,9 @@ export function Module8ParticleSystem() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="rounded-lg border border-border/60 bg-zinc-950 p-4 space-y-2">
           <div className="flex justify-between">
-            <label className="text-muted-foreground uppercase font-bold">Base Guide Particles:</label>
+            <label className="text-muted-foreground uppercase font-bold">
+              Base Guide Particles:
+            </label>
             <span className="font-bold text-cyan-400">{guideCount.toLocaleString()} Guides</span>
           </div>
           <input
@@ -70,7 +72,9 @@ export function Module8ParticleSystem() {
 
         <div className="rounded-lg border border-border/60 bg-zinc-950 p-4 space-y-2">
           <div className="flex justify-between">
-            <label className="text-muted-foreground uppercase font-bold">Analytical Curl Turbulence:</label>
+            <label className="text-muted-foreground uppercase font-bold">
+              Analytical Curl Turbulence:
+            </label>
             <span className="font-bold text-amber-400">{curlTurbulence.toFixed(1)}x Vorticity</span>
           </div>
           <input
@@ -87,10 +91,17 @@ export function Module8ParticleSystem() {
 
       <div className="rounded-lg border border-cyan-500/30 bg-black p-3 space-y-2">
         <div className="flex justify-between text-[11px] text-muted-foreground">
-          <span className="text-cyan-400 font-bold">Real-Time Incompressible Curl Noise Vortex</span>
+          <span className="text-cyan-400 font-bold">
+            Real-Time Incompressible Curl Noise Vortex
+          </span>
           <span className="text-amber-400">Equivalent Visual Fidelity: 1,000,000 Particles</span>
         </div>
-        <canvas ref={canvasRef} width={600} height={160} className="w-full rounded bg-zinc-950 border border-border/40" />
+        <canvas
+          ref={canvasRef}
+          width={600}
+          height={160}
+          className="w-full rounded bg-zinc-950 border border-border/40"
+        />
       </div>
     </div>
   );

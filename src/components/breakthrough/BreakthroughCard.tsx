@@ -1,7 +1,16 @@
 import React, { useState } from "react";
 import { type BreakthroughModuleData } from "@/lib/breakthrough-data";
 import { calculateLiveWorkReduction } from "@/lib/breakthrough-store";
-import { Cpu, Zap, CheckCircle2, AlertTriangle, ArrowRight, Activity, Terminal, ShieldCheck } from "lucide-react";
+import {
+  Cpu,
+  Zap,
+  CheckCircle2,
+  AlertTriangle,
+  ArrowRight,
+  Activity,
+  Terminal,
+  ShieldCheck,
+} from "lucide-react";
 
 interface BreakthroughCardProps {
   module: BreakthroughModuleData;
@@ -10,7 +19,12 @@ interface BreakthroughCardProps {
   children?: React.ReactNode;
 }
 
-export function BreakthroughCard({ module, customParamValue, onParamChange, children }: BreakthroughCardProps) {
+export function BreakthroughCard({
+  module,
+  customParamValue,
+  onParamChange,
+  children,
+}: BreakthroughCardProps) {
   const [activeTab, setActiveTab] = useState<"demo" | "math" | "silicon">("demo");
   const paramVal = customParamValue !== undefined ? customParamValue : module.defaultContract.value;
   const metrics = calculateLiveWorkReduction(module, paramVal);
@@ -45,12 +59,12 @@ export function BreakthroughCard({ module, customParamValue, onParamChange, chil
             <span className="flex h-7 w-7 items-center justify-center rounded bg-cyan-500/10 font-mono text-xs font-bold text-cyan-400 border border-cyan-500/30">
               #{module.id < 10 ? `0${module.id}` : module.id}
             </span>
-            <span className={`rounded-full border px-2.5 py-0.5 font-mono text-xs font-semibold uppercase tracking-wider ${getBadgeColor(module.workloadClass)}`}>
+            <span
+              className={`rounded-full border px-2.5 py-0.5 font-mono text-xs font-semibold uppercase tracking-wider ${getBadgeColor(module.workloadClass)}`}
+            >
               {module.workloadClass} PARITY
             </span>
-            <span className="text-xs text-muted-foreground font-mono">
-              {module.category}
-            </span>
+            <span className="text-xs text-muted-foreground font-mono">{module.category}</span>
           </div>
           <h3 className="mt-2 text-xl md:text-2xl font-bold tracking-tight text-foreground">
             {module.title}
@@ -120,15 +134,13 @@ export function BreakthroughCard({ module, customParamValue, onParamChange, chil
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 rounded-lg border border-border/50 bg-zinc-950/60 p-4 font-mono">
               <div>
                 <span className="text-[11px] text-muted-foreground uppercase">Work Eliminated</span>
-                <p className="mt-1 text-lg font-bold text-cyan-400">
-                  {metrics.workEliminatedPct}%
-                </p>
+                <p className="mt-1 text-lg font-bold text-cyan-400">{metrics.workEliminatedPct}%</p>
               </div>
               <div>
-                <span className="text-[11px] text-muted-foreground uppercase">Effective Speedup</span>
-                <p className="mt-1 text-lg font-bold text-amber-400">
-                  {metrics.effectiveSpeedup}x
-                </p>
+                <span className="text-[11px] text-muted-foreground uppercase">
+                  Effective Speedup
+                </span>
+                <p className="mt-1 text-lg font-bold text-amber-400">{metrics.effectiveSpeedup}x</p>
               </div>
               <div>
                 <span className="text-[11px] text-muted-foreground uppercase">Error Delta (ε)</span>
@@ -157,9 +169,17 @@ export function BreakthroughCard({ module, customParamValue, onParamChange, chil
             </div>
 
             <div className="space-y-2 text-muted-foreground leading-relaxed">
-              <p><strong className="text-foreground">Algorithm:</strong> {module.algorithmName}</p>
-              <p><strong className="text-foreground">Contract Invariant:</strong> {module.contractStatement}</p>
-              <p><strong className="text-foreground">Proof Mechanics:</strong> {module.mathExplanation}</p>
+              <p>
+                <strong className="text-foreground">Algorithm:</strong> {module.algorithmName}
+              </p>
+              <p>
+                <strong className="text-foreground">Contract Invariant:</strong>{" "}
+                {module.contractStatement}
+              </p>
+              <p>
+                <strong className="text-foreground">Proof Mechanics:</strong>{" "}
+                {module.mathExplanation}
+              </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
@@ -178,16 +198,21 @@ export function BreakthroughCard({ module, customParamValue, onParamChange, chil
         {activeTab === "silicon" && (
           <div className="space-y-4 font-mono text-xs">
             <div className="rounded-lg border border-border/60 bg-zinc-950/80 p-4">
-              <span className="text-amber-400 font-bold uppercase">Host Hardware Execution Target:</span>
+              <span className="text-amber-400 font-bold uppercase">
+                Host Hardware Execution Target:
+              </span>
               <p className="mt-1 text-foreground">{module.hardwareTarget}</p>
             </div>
 
             <div className="space-y-3 text-muted-foreground leading-relaxed">
               <p>
-                <strong className="text-foreground">Why the GPU advantage is irrelevant:</strong> {module.description}
+                <strong className="text-foreground">Why the GPU advantage is irrelevant:</strong>{" "}
+                {module.description}
               </p>
               <p>
-                <strong className="text-foreground">Host Silicon Routing:</strong> Computation is scheduled on the 4 P-cores + 4 E-cores of the Intel Core i5-12450H with AVX2 vectorized SIMD kernels and OpenVINO iGPU dispatch.
+                <strong className="text-foreground">Host Silicon Routing:</strong> Computation is
+                scheduled on the 4 P-cores + 4 E-cores of the Intel Core i5-12450H with AVX2
+                vectorized SIMD kernels and OpenVINO iGPU dispatch.
               </p>
             </div>
           </div>

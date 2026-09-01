@@ -1,7 +1,8 @@
 # Reflect - Self-Improving Skills System
+
 ## Benutzer-Guide
 
-*"Correct once, never again"* - Ein System, das aus Ihren Korrekturen lernt und Claude Code kontinuierlich verbessert.
+_"Correct once, never again"_ - Ein System, das aus Ihren Korrekturen lernt und Claude Code kontinuierlich verbessert.
 
 ---
 
@@ -65,6 +66,7 @@ Session N: Claude verwendet automatisch uv ✅
 ```
 
 Zeigt:
+
 - Ob Auto-Reflection aktiv ist
 - Wann die letzte Analyse war
 - Verfügbare Commands
@@ -78,6 +80,7 @@ Nachdem Sie Claude in einer Session korrigiert haben:
 ```
 
 Sie sehen dann:
+
 1. **Detected Signals** - Was erkannt wurde
 2. **Proposed Changes** - Diff der vorgeschlagenen Änderungen
 3. **Approval Prompt** - [A]pprove / [M]odify / [S]kip / [Q]uit
@@ -103,6 +106,7 @@ Deaktivieren:
 ### 🔧 Modus 1: Manual Reflection
 
 **Wann verwenden?**
+
 - Sie haben Claude gerade korrigiert
 - Sie wollen gezielt eine Session analysieren
 - Sie wollen volle Kontrolle über jeden Schritt
@@ -118,6 +122,7 @@ Deaktivieren:
 ```
 
 **Workflow:**
+
 1. Sie arbeiten mit Claude und korrigieren Fehler
 2. Am Ende der Session: `/reflect`
 3. Review der erkannten Signale und Änderungen
@@ -125,11 +130,13 @@ Deaktivieren:
 5. Skills werden aktualisiert und committed
 
 **Vorteile:**
+
 - ✅ Volle Kontrolle
 - ✅ Gezieltes Lernen
 - ✅ Keine Überraschungen
 
 **Nachteile:**
+
 - ❌ Manueller Aufwand
 - ❌ Kann vergessen werden
 
@@ -138,6 +145,7 @@ Deaktivieren:
 ### 🤖 Modus 2: Automatic Reflection
 
 **Wann verwenden?**
+
 - Sie arbeiten täglich intensiv mit Claude
 - Sie wollen kontinuierliches Lernen ohne manuelle Schritte
 - Sie vertrauen dem System
@@ -149,17 +157,20 @@ Deaktivieren:
 ```
 
 **Workflow:**
+
 1. Sie arbeiten ganz normal mit Claude
 2. Bei Session-Ende: Reflection läuft automatisch im Hintergrund
 3. Nächste Session: Sie sehen eine Benachrichtigung falls Skills aktualisiert wurden
 4. Änderungen sind bereits committed
 
 **Vorteile:**
+
 - ✅ Automatisches Lernen
 - ✅ Kein manueller Aufwand
 - ✅ Kontinuierliche Verbesserung
 
 **Nachteile:**
+
 - ❌ Weniger Kontrolle
 - ❌ Läuft im Hintergrund (kann übersehen werden)
 
@@ -237,7 +248,7 @@ Claude: Verstanden, ich verwende jetzt uv install...
 
 **Erkanntes Signal:**
 
-```
+````
 ═══════════════════════════════════════════════════════════
 REFLECTION REVIEW
 ═══════════════════════════════════════════════════════════
@@ -266,7 +277,7 @@ REFLECTION REVIEW
 +- ✓ Do: uv install
 +
  ## Overview
-```
+````
 
 [A]pprove / [M]odify / [S]kip / [Q]uit? A
 
@@ -275,6 +286,7 @@ REFLECTION REVIEW
 ✓ Changes committed to git
 
 ✓ 1 skill(s) updated successfully
+
 ```
 
 **Ergebnis:** Ab jetzt verwendet Claude automatisch `uv` statt `pip` in Python-Projekten!
@@ -286,25 +298,28 @@ REFLECTION REVIEW
 **Session-Verlauf:**
 
 ```
+
 User: Schreibe Tests für die API
 
 Claude: Ich strukturiere die Tests mit pytest in folgende Kategorien:
+
 - test_unit/ für Unit-Tests
 - test_integration/ für Integration-Tests
 - test_e2e/ für End-to-End-Tests
 
 User: Ja, perfekt! Diese Struktur ist sehr übersichtlich.
-```
+
+````
 
 **Reflection:**
 
 ```bash
 /reflect
-```
+````
 
 **Erkanntes Signal:**
 
-```
+````
 ## Signals Detected
 
 **testing-framework**:
@@ -316,7 +331,7 @@ User: Ja, perfekt! Diese Struktur ist sehr übersichtlich.
 +## Best Practices
 +
 +- Approved approach: Structure tests with pytest in categories: test_unit/, test_integration/, test_e2e/
-```
+````
 
 **Ergebnis:** Pattern wird als Best Practice dokumentiert.
 
@@ -344,7 +359,7 @@ Claude: Gute Idee! Das würde die Fehler spezifischer machen.
 
 **Erkanntes Signal:**
 
-```
+````
 ## Signals Detected
 
 **error-handling**:
@@ -356,7 +371,7 @@ Claude: Gute Idee! Das würde die Fehler spezifischer machen.
 +## Advanced Considerations
 +
 +- Consider: using custom exception classes statt generic try-catch blocks
-```
+````
 
 **Ergebnis:** Wird als Überlegung notiert für zukünftige Referenz.
 
@@ -369,6 +384,7 @@ Das System klassifiziert Signale in drei Confidence-Levels:
 ### 🔴 HIGH Confidence - Korrekturen
 
 **Erkennungspatterns:**
+
 - "Nein, verwende X statt Y"
 - "Tatsächlich ist es X, nicht Y"
 - "Niemals X tun"
@@ -377,6 +393,7 @@ Das System klassifiziert Signale in drei Confidence-Levels:
 **Aktion:** Erstellt "Critical Corrections" Sektion mit ✗/✓ Vergleich
 
 **Beispiele:**
+
 ```
 ❌ "Nein, der Button heißt 'SubmitButton' nicht 'SendButton'"
 ❌ "Verwende uv statt pip"
@@ -391,6 +408,7 @@ Das System klassifiziert Signale in drei Confidence-Levels:
 ### 🟡 MEDIUM Confidence - Approvals
 
 **Erkennungspatterns:**
+
 - "Ja, perfekt"
 - "Das ist genau richtig"
 - "Funktioniert gut"
@@ -399,6 +417,7 @@ Das System klassifiziert Signale in drei Confidence-Levels:
 **Aktion:** Fügt zu "Best Practices" Sektion hinzu
 
 **Beispiele:**
+
 ```
 ✅ "Ja, diese Projektstruktur ist perfekt"
 ✅ "Das funktioniert sehr gut"
@@ -412,6 +431,7 @@ Das System klassifiziert Signale in drei Confidence-Levels:
 ### 🟢 LOW Confidence - Überlegungen
 
 **Erkennungspatterns:**
+
 - "Have you considered..."
 - "Was ist mit..."
 - "Warum nicht versuchen..."
@@ -419,6 +439,7 @@ Das System klassifiziert Signale in drei Confidence-Levels:
 **Aktion:** Fügt zu "Advanced Considerations" hinzu
 
 **Beispiele:**
+
 ```
 💡 "Have you considered using TypeScript?"
 💡 "Was ist mit Edge Cases?"
@@ -439,18 +460,21 @@ Das System klassifiziert Signale in drei Confidence-Levels:
    - Verstehen Sie, was erkannt wird
 
 2. **Spezifisch korrigieren**
+
    ```
    ✅ "Verwende 'uv' statt 'pip'"
    ❌ "Das ist falsch"
    ```
 
 3. **Kontext geben**
+
    ```
    ✅ "Verwende uv statt pip, weil es schneller ist"
    ❌ "Verwende uv"
    ```
 
 4. **Git-History prüfen**
+
    ```bash
    cd ~/.claude/skills
    git log --oneline --graph
@@ -465,12 +489,14 @@ Das System klassifiziert Signale in drei Confidence-Levels:
 ### ❌ Don'ts
 
 1. **Nicht zu vage**
+
    ```
    ❌ "Das ist irgendwie nicht gut"
    ✅ "Verwende const statt var für Variablen"
    ```
 
 2. **Nicht widersprüchlich**
+
    ```
    Session 1: "Verwende pip"
    Session 2: "Verwende uv"
@@ -478,6 +504,7 @@ Das System klassifiziert Signale in drei Confidence-Levels:
    ```
 
 3. **Nicht Auto-Modus sofort aktivieren**
+
    ```
    ❌ Tag 1: /reflect-on
    ✅ Tag 1-7: /reflect (manuell)
@@ -496,6 +523,7 @@ Das System klassifiziert Signale in drei Confidence-Levels:
 ### Problem: "/reflect findet keine Signale"
 
 **Symptom:**
+
 ```
 ✓ No improvement suggestions found
 ```
@@ -521,6 +549,7 @@ Das System klassifiziert Signale in drei Confidence-Levels:
 ### Problem: "Skills werden nicht aktualisiert"
 
 **Symptom:**
+
 ```
 ✗ Error updating skill-name: ...
 ```
@@ -551,6 +580,7 @@ Das System klassifiziert Signale in drei Confidence-Levels:
 ### Problem: "Git-Commit schlägt fehl"
 
 **Symptom:**
+
 ```
 Warning: Git commit failed: ...
 Changes were applied but not committed.
@@ -577,16 +607,20 @@ Kein Reflection bei Session-Ende
 **Checkliste:**
 
 1. **Ist Auto-Reflection aktiviert?**
+
    ```bash
    /reflect-status
    # Sollte zeigen: Status: ✓ Aktiviert
    ```
 
 2. **Hook konfiguriert?**
+
    ```bash
    cat ~/.claude/settings.local.json | grep -A 10 hooks
    ```
+
    Sollte enthalten:
+
    ```json
    "hooks": {
      "Stop": [{
@@ -598,6 +632,7 @@ Kein Reflection bei Session-Ende
    ```
 
 3. **Script ausführbar?**
+
    ```bash
    ls -la ~/.claude/skills/reflect/scripts/hook-stop.sh
    # Sollte -rwxr-xr-x zeigen
@@ -693,6 +728,7 @@ Oder erweitern Sie die Pattern-Library:
 **A:** Mehrere Möglichkeiten:
 
 **1. Git-History:**
+
 ```bash
 cd ~/.claude/skills
 git log --oneline --grep="reflection"
@@ -700,11 +736,13 @@ git show <commit-hash>
 ```
 
 **2. Skill-Dateien direkt:**
+
 ```bash
 cat ~/.claude/skills/{skill-name}/SKILL.md
 ```
 
 **3. Git-Diff:**
+
 ```bash
 cd ~/.claude/skills
 git log --all --full-history --oneline -- {skill-name}/SKILL.md
@@ -740,6 +778,7 @@ git diff <commit1> <commit2> -- {skill-name}/SKILL.md
 - Plus: `general` als Fallback
 
 **Filtern auf bestimmten Skill:**
+
 ```bash
 /reflect python-project-creator
 ```
@@ -751,15 +790,18 @@ git diff <commit1> <commit2> -- {skill-name}/SKILL.md
 **A:** Ja, mehrere Optionen:
 
 **Temporär (diese Session):**
+
 - Einfach `/reflect` nicht ausführen (Manual Mode)
 - Oder Skip (`S`) bei Review
 
 **Dauerhaft:**
+
 ```bash
 /reflect-off
 ```
 
 **Für spezifische Sessions:**
+
 - Deaktivieren vor Session: `/reflect-off`
 - Nach Session reaktivieren: `/reflect-on`
 
@@ -796,6 +838,7 @@ Erstellen Sie projekt-spezifische Skills in `.claude/skills/` (lokal).
 **A:** Ja, via Git:
 
 **Setup Remote:**
+
 ```bash
 cd ~/.claude/skills
 git remote add origin <your-repo-url>
@@ -803,12 +846,14 @@ git push -u origin main
 ```
 
 **Auf anderem Rechner:**
+
 ```bash
 cd ~/.claude
 git clone <your-repo-url> skills
 ```
 
 **Sync:**
+
 ```bash
 cd ~/.claude/skills
 git pull   # Hole Updates
@@ -828,6 +873,7 @@ git push   # Pushe eigene Updates
 - **Timeout**: Hook hat 5s Timeout, dann Background-Processing
 
 **Bei langen Transcripts:**
+
 - Extraktion kann 5-10s dauern
 - Background-Process verhindert Session-Blockierung
 - Check Log: `tail ~/.claude/reflect-hook.log`
@@ -921,11 +967,13 @@ def main():
 ### Dateien zum Studieren
 
 1. **Pattern-Library:**
+
    ```
    ~/.claude/skills/reflect/references/signal-patterns.md
    ```
 
 2. **Scripts:**
+
    ```
    ~/.claude/skills/reflect/scripts/extract_signals.py    # Pattern-Detection
    ~/.claude/skills/reflect/scripts/update_skill.py       # Skill-Updates
@@ -960,22 +1008,22 @@ tail -f ~/.claude/reflect-hook.log
 
 ### Schnellreferenz
 
-| Command | Funktion |
-|---------|----------|
-| `/reflect` | Manuelle Analyse der Session |
-| `/reflect <skill>` | Analysiere nur einen Skill |
-| `/reflect-on` | Auto-Reflection aktivieren |
-| `/reflect-off` | Auto-Reflection deaktivieren |
-| `/reflect-status` | Status anzeigen |
+| Command            | Funktion                     |
+| ------------------ | ---------------------------- |
+| `/reflect`         | Manuelle Analyse der Session |
+| `/reflect <skill>` | Analysiere nur einen Skill   |
+| `/reflect-on`      | Auto-Reflection aktivieren   |
+| `/reflect-off`     | Auto-Reflection deaktivieren |
+| `/reflect-status`  | Status anzeigen              |
 
 ### Review-Optionen
 
-| Taste | Aktion |
-|-------|--------|
-| `A` | Approve (Alle Änderungen übernehmen) |
-| `M` | Modify (Mit Natural Language modifizieren) |
-| `S` | Skip (Diesen Skill überspringen) |
-| `Q` | Quit (Review abbrechen) |
+| Taste | Aktion                                     |
+| ----- | ------------------------------------------ |
+| `A`   | Approve (Alle Änderungen übernehmen)       |
+| `M`   | Modify (Mit Natural Language modifizieren) |
+| `S`   | Skip (Diesen Skill überspringen)           |
+| `Q`   | Quit (Review abbrechen)                    |
 
 ### Wichtige Pfade
 
@@ -1001,5 +1049,5 @@ tail -f ~/.claude/reflect-hook.log
 
 ---
 
-*Letzte Aktualisierung: 2026-01-05*
-*Version: 1.0.0*
+_Letzte Aktualisierung: 2026-01-05_
+_Version: 1.0.0_

@@ -1,23 +1,48 @@
 import React, { useState } from "react";
-import { BREAKTHROUGH_MODULES, PARITY_TIERS, type BreakthroughModuleData } from "@/lib/breakthrough-data";
-import { Download, Search, Filter, ShieldCheck, CheckCircle2, AlertTriangle, Zap, Terminal, FileText } from "lucide-react";
+import {
+  BREAKTHROUGH_MODULES,
+  PARITY_TIERS,
+  type BreakthroughModuleData,
+} from "@/lib/breakthrough-data";
+import {
+  Download,
+  Search,
+  Filter,
+  ShieldCheck,
+  CheckCircle2,
+  AlertTriangle,
+  Zap,
+  Terminal,
+  FileText,
+} from "lucide-react";
 
 export function CompetitiveDashboard() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
 
-  const categories = ["ALL", "Linear Algebra", "Signal & Streaming", "AI & Language", "Graphics & Rendering", "Physics & Simulation", "Hardware Media"];
+  const categories = [
+    "ALL",
+    "Linear Algebra",
+    "Signal & Streaming",
+    "AI & Language",
+    "Graphics & Rendering",
+    "Physics & Simulation",
+    "Hardware Media",
+  ];
 
   const filteredModules = BREAKTHROUGH_MODULES.filter((m) => {
     const matchesCat = selectedCategory === "ALL" || m.category === selectedCategory;
-    const matchesSearch = m.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          m.algorithmName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          m.originalGap.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch =
+      m.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      m.algorithmName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      m.originalGap.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCat && matchesSearch;
   });
 
   const handleExportJson = () => {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(BREAKTHROUGH_MODULES, null, 2));
+    const dataStr =
+      "data:text/json;charset=utf-8," +
+      encodeURIComponent(JSON.stringify(BREAKTHROUGH_MODULES, null, 2));
     const downloadAnchor = document.createElement("a");
     downloadAnchor.setAttribute("href", dataStr);
     downloadAnchor.setAttribute("download", "LEO_HYPER_15_BREAKTHROUGHS_BENCHMARK.json");
@@ -27,9 +52,11 @@ export function CompetitiveDashboard() {
   };
 
   const handleExportCsv = () => {
-    const headers = "ID,Title,Category,Classification,Original Gap,Reference GPU,Work Reduction,Competitive %\n";
-    const rows = BREAKTHROUGH_MODULES.map(m =>
-      `"${m.id}","${m.title}","${m.category}","${m.workloadClass}","${m.originalGap}","${m.referenceGpu}","${m.workReductionFactor}x","${m.resultingCompetitivePct}%"`
+    const headers =
+      "ID,Title,Category,Classification,Original Gap,Reference GPU,Work Reduction,Competitive %\n";
+    const rows = BREAKTHROUGH_MODULES.map(
+      (m) =>
+        `"${m.id}","${m.title}","${m.category}","${m.workloadClass}","${m.originalGap}","${m.referenceGpu}","${m.workReductionFactor}x","${m.resultingCompetitivePct}%"`,
     ).join("\n");
     const blob = new Blob([headers + rows], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
@@ -62,17 +89,20 @@ export function CompetitiveDashboard() {
               className="rounded-xl border border-border/60 bg-zinc-950/80 p-5 space-y-3 transition-all hover:border-cyan-500/40"
             >
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold text-muted-foreground uppercase">{tier.tier.split(":")[0]}</span>
-                <span className="rounded px-2 py-0.5 text-[10px] font-bold" style={{ backgroundColor: `${tier.color}20`, color: tier.color }}>
+                <span className="text-[11px] font-bold text-muted-foreground uppercase">
+                  {tier.tier.split(":")[0]}
+                </span>
+                <span
+                  className="rounded px-2 py-0.5 text-[10px] font-bold"
+                  style={{ backgroundColor: `${tier.color}20`, color: tier.color }}
+                >
                   {tier.status}
                 </span>
               </div>
               <div className="text-3xl font-black" style={{ color: tier.color }}>
                 {tier.parityPct}
               </div>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                {tier.description}
-              </p>
+              <p className="text-xs text-muted-foreground leading-relaxed">{tier.description}</p>
             </div>
           ))}
         </div>
@@ -200,21 +230,41 @@ export function CompetitiveDashboard() {
           Self-Falsification: Where Breakthroughs Hold vs. Physics Limits
         </h3>
         <p className="text-sm text-muted-foreground leading-relaxed">
-          In strict compliance with scientific honesty, LEO explicitly demarcates between problems where algorithmic substitution achieves 100% contract parity vs. incompressible physical boundaries.
+          In strict compliance with scientific honesty, LEO explicitly demarcates between problems
+          where algorithmic substitution achieves 100% contract parity vs. incompressible physical
+          boundaries.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="rounded-xl border border-emerald-500/30 bg-emerald-950/10 p-5 space-y-3">
             <span className="text-xs font-bold text-emerald-400 flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4" /> SURVIVES HOSTILE FALSIFICATION (100% Contract Parity)
+              <CheckCircle2 className="h-4 w-4" /> SURVIVES HOSTILE FALSIFICATION (100% Contract
+              Parity)
             </span>
             <ul className="space-y-2 text-xs text-muted-foreground">
-              <li>• <strong>Low-Rank GEMM</strong>: Eigenspectrum decay allows exact low-rank reconstruction.</li>
-              <li>• <strong>BitNet 1.58-Bit</strong>: Eliminates multiplications via integer addition trees.</li>
-              <li>• <strong>Sparse FFT</strong>: Recovers top-k peaks sublinearly in O(k log N).</li>
-              <li>• <strong>4-SPP Path Tracing + OIDN</strong>: Perceptually indistinguishable with SSIM &gt; 0.95.</li>
-              <li>• <strong>Semantic FAISS Cache</strong>: Instant 0.05ms O(1) retrieval for recurring prompts.</li>
-              <li>• <strong>Fast Multipole N-Body</strong>: Symplectic energy drift conserved within 1e-4.</li>
+              <li>
+                • <strong>Low-Rank GEMM</strong>: Eigenspectrum decay allows exact low-rank
+                reconstruction.
+              </li>
+              <li>
+                • <strong>BitNet 1.58-Bit</strong>: Eliminates multiplications via integer addition
+                trees.
+              </li>
+              <li>
+                • <strong>Sparse FFT</strong>: Recovers top-k peaks sublinearly in O(k log N).
+              </li>
+              <li>
+                • <strong>4-SPP Path Tracing + OIDN</strong>: Perceptually indistinguishable with
+                SSIM &gt; 0.95.
+              </li>
+              <li>
+                • <strong>Semantic FAISS Cache</strong>: Instant 0.05ms O(1) retrieval for recurring
+                prompts.
+              </li>
+              <li>
+                • <strong>Fast Multipole N-Body</strong>: Symplectic energy drift conserved within
+                1e-4.
+              </li>
             </ul>
           </div>
 
@@ -223,10 +273,22 @@ export function CompetitiveDashboard() {
               <AlertTriangle className="h-4 w-4" /> ACKNOWLEDGED PHYSICAL SILICON LIMITS
             </span>
             <ul className="space-y-2 text-xs text-muted-foreground">
-              <li>• <strong>Incompressible High-Entropy FP32</strong>: Cannot bypass full-rank random matrix GEMM.</li>
-              <li>• <strong>Uncached 100% Novel Tokens</strong>: Limited to CPU AVX2 throughput (15-25 tok/s).</li>
-              <li>• <strong>Exact 1000 SPP Raw Unfiltered Noise</strong>: Cannot emulate without brute-force rays.</li>
-              <li>• <strong>Raw Memory Bus Bandwidth</strong>: DDR4/DDR5 unified RAM (51.2 GB/s) vs HBM3e (3.3 TB/s).</li>
+              <li>
+                • <strong>Incompressible High-Entropy FP32</strong>: Cannot bypass full-rank random
+                matrix GEMM.
+              </li>
+              <li>
+                • <strong>Uncached 100% Novel Tokens</strong>: Limited to CPU AVX2 throughput (15-25
+                tok/s).
+              </li>
+              <li>
+                • <strong>Exact 1000 SPP Raw Unfiltered Noise</strong>: Cannot emulate without
+                brute-force rays.
+              </li>
+              <li>
+                • <strong>Raw Memory Bus Bandwidth</strong>: DDR4/DDR5 unified RAM (51.2 GB/s) vs
+                HBM3e (3.3 TB/s).
+              </li>
             </ul>
           </div>
         </div>

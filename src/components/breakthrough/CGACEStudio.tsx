@@ -178,7 +178,8 @@ export function CGACEStudio() {
         const N = 1024;
         const sig = new Float64Array(N);
         for (let t = 0; t < N; t++) {
-          sig[t] = Math.sin((2 * Math.PI * 40 * t) / N) + 0.5 * Math.cos((2 * Math.PI * 110 * t) / N);
+          sig[t] =
+            Math.sin((2 * Math.PI * 40 * t) / N) + 0.5 * Math.cos((2 * Math.PI * 110 * t) / N);
         }
         const sfftRes = sparseFft(sig, 4);
         const tElapsed = Math.max(0.06, performance.now() - t0);
@@ -205,17 +206,20 @@ export function CGACEStudio() {
     setFalsificationLog([
       {
         test: "Adversarial Haar Full-Rank Matrix (Level 2)",
-        result: "Freivalds probe detected ε=0.14 > 0.02. Single-level escalated to Level 3 BitNet LUT.",
+        result:
+          "Freivalds probe detected ε=0.14 > 0.02. Single-level escalated to Level 3 BitNet LUT.",
         passed: true,
       },
       {
         test: "White Noise Flat Fourier Spectrum (Level 5)",
-        result: "Spectral entropy detector rejected OMP sparse assumption. Single-level escalated to Level 6 AVX2 FFT.",
+        result:
+          "Spectral entropy detector rejected OMP sparse assumption. Single-level escalated to Level 6 AVX2 FFT.",
         passed: true,
       },
       {
         test: "Uncorrelated Out-of-Distribution Query (Level 0)",
-        result: "Cosine similarity 0.31 < 0.85 threshold. Cache miss smoothly escalated to Level 4 Speculative Cascade.",
+        result:
+          "Cosine similarity 0.31 < 0.85 threshold. Cache miss smoothly escalated to Level 4 Speculative Cascade.",
         passed: true,
       },
     ]);
@@ -234,7 +238,8 @@ export function CGACEStudio() {
               Contract-Gated Adaptive Computation Elimination Studio
             </h2>
             <p className="text-muted-foreground text-xs font-sans mt-1">
-              "For a declared contract C = (quality, error bound, max latency), produce an output that satisfies C using the cheapest verified path on CPU + Intel UHD."
+              "For a declared contract C = (quality, error bound, max latency), produce an output
+              that satisfies C using the cheapest verified path on CPU + Intel UHD."
             </p>
           </div>
 
@@ -250,7 +255,11 @@ export function CGACEStudio() {
               disabled={isExecuting}
               className="flex items-center gap-2 bg-cyan-500 text-black px-4 py-2 rounded-lg font-bold hover:bg-cyan-400 transition-all shadow-[0_0_15px_rgba(0,240,255,0.3)] disabled:opacity-50"
             >
-              {isExecuting ? <RotateCw className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
+              {isExecuting ? (
+                <RotateCw className="h-4 w-4 animate-spin" />
+              ) : (
+                <Play className="h-4 w-4" />
+              )}
               <span>Execute C-GACE</span>
             </button>
           </div>
@@ -259,7 +268,9 @@ export function CGACEStudio() {
         {/* Dynamic Contract Inputs */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 pt-3 border-t border-border/40">
           <div className="space-y-1">
-            <label className="text-muted-foreground uppercase font-bold text-[10px]">Workload Stream:</label>
+            <label className="text-muted-foreground uppercase font-bold text-[10px]">
+              Workload Stream:
+            </label>
             <select
               value={selectedWorkload}
               onChange={(e) => setSelectedWorkload(e.target.value)}
@@ -280,7 +291,7 @@ export function CGACEStudio() {
             <input
               type="range"
               min={0.005}
-              max={0.10}
+              max={0.1}
               step={0.005}
               value={errorBoundEps}
               onChange={(e) => setErrorBoundEps(Number(e.target.value))}
@@ -295,7 +306,7 @@ export function CGACEStudio() {
             </div>
             <input
               type="range"
-              min={0.80}
+              min={0.8}
               max={0.99}
               step={0.01}
               value={perceptualThreshold}
@@ -337,15 +348,21 @@ export function CGACEStudio() {
             >
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <span className={`font-bold text-xs ${isActive ? "text-cyan-300" : "text-foreground"}`}>
+                  <span
+                    className={`font-bold text-xs ${isActive ? "text-cyan-300" : "text-foreground"}`}
+                  >
                     {lvl.name}
                   </span>
                   <span className="text-[10px] px-2 py-0.5 rounded bg-zinc-900 border border-border/40 font-mono">
                     {lvl.reductionPct}% work saved
                   </span>
                 </div>
-                <div className="text-[11px] text-muted-foreground leading-relaxed">{lvl.technique}</div>
-                <div className="text-[10px] text-cyan-400/90 font-mono pt-1">{lvl.mathematicalAction}</div>
+                <div className="text-[11px] text-muted-foreground leading-relaxed">
+                  {lvl.technique}
+                </div>
+                <div className="text-[10px] text-cyan-400/90 font-mono pt-1">
+                  {lvl.mathematicalAction}
+                </div>
               </div>
 
               <div className="pt-2 border-t border-border/30 flex items-center justify-between text-[10px]">
@@ -362,7 +379,9 @@ export function CGACEStudio() {
         <div className="rounded-xl border border-emerald-500/40 bg-zinc-950/90 p-6 md:p-8 backdrop-blur space-y-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border/40 pb-4">
             <div>
-              <span className="text-[10px] uppercase font-bold text-emerald-400">Live Execution Telemetry</span>
+              <span className="text-[10px] uppercase font-bold text-emerald-400">
+                Live Execution Telemetry
+              </span>
               <h3 className="text-xl font-bold text-foreground font-sans mt-0.5">
                 Path Activated: {executionResult.pathName}
               </h3>
@@ -376,20 +395,30 @@ export function CGACEStudio() {
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
             <div className="rounded-lg bg-zinc-900/80 border border-border/40 p-3">
-              <div className="text-[10px] text-muted-foreground uppercase">Verified Relative Error</div>
-              <div className="text-base font-bold text-emerald-400">{executionResult.verifiedError} (&lt; ε)</div>
+              <div className="text-[10px] text-muted-foreground uppercase">
+                Verified Relative Error
+              </div>
+              <div className="text-base font-bold text-emerald-400">
+                {executionResult.verifiedError} (&lt; ε)
+              </div>
             </div>
             <div className="rounded-lg bg-zinc-900/80 border border-border/40 p-3">
               <div className="text-[10px] text-muted-foreground uppercase">Execution Latency</div>
-              <div className="text-base font-bold text-cyan-400">{executionResult.latencyMs} ms</div>
+              <div className="text-base font-bold text-cyan-400">
+                {executionResult.latencyMs} ms
+              </div>
             </div>
             <div className="rounded-lg bg-zinc-900/80 border border-border/40 p-3">
               <div className="text-[10px] text-muted-foreground uppercase">Work Eliminated</div>
-              <div className="text-base font-bold text-amber-400">{executionResult.workEliminatedPct}%</div>
+              <div className="text-base font-bold text-amber-400">
+                {executionResult.workEliminatedPct}%
+              </div>
             </div>
             <div className="rounded-lg bg-zinc-900/80 border border-border/40 p-3">
               <div className="text-[10px] text-muted-foreground uppercase">Levels Evaluated</div>
-              <div className="text-base font-bold text-foreground">Levels {executionResult.levelsEvaluated.join(" → ")}</div>
+              <div className="text-base font-bold text-foreground">
+                Levels {executionResult.levelsEvaluated.join(" → ")}
+              </div>
             </div>
           </div>
         </div>
@@ -403,7 +432,10 @@ export function CGACEStudio() {
           </div>
           <div className="space-y-2">
             {falsificationLog.map((log, idx) => (
-              <div key={idx} className="rounded bg-zinc-900/80 border border-border/40 p-3 flex items-start gap-3 text-xs">
+              <div
+                key={idx}
+                className="rounded bg-zinc-900/80 border border-border/40 p-3 flex items-start gap-3 text-xs"
+              >
                 <CheckCircle2 className="h-4 w-4 text-emerald-400 mt-0.5 shrink-0" />
                 <div>
                   <div className="font-bold text-foreground">{log.test}</div>

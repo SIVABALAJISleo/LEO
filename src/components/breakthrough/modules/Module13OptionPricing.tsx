@@ -7,7 +7,7 @@ export function Module13OptionPricing() {
 
   const bruteForcePaths = 5000000; // 5M paths on CUDA
   const qmcReductionRatio = Math.round(bruteForcePaths / qmcPaths);
-  const estimatedStdError = Math.round((0.005 * (50000 / qmcPaths)) * 10000) / 10000;
+  const estimatedStdError = Math.round(0.005 * (50000 / qmcPaths) * 10000) / 10000;
   const cpuLatencyMs = Math.round((qmcPaths / 50000) * 8.4 * 10) / 10;
   const gpuLatencyMs = 45.0; // 45ms for 5M paths
 
@@ -16,7 +16,9 @@ export function Module13OptionPricing() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="rounded-lg border border-border/60 bg-zinc-950 p-4 space-y-2">
           <div className="flex justify-between">
-            <label className="text-muted-foreground uppercase font-bold">QMC Sobol Sample Budget:</label>
+            <label className="text-muted-foreground uppercase font-bold">
+              QMC Sobol Sample Budget:
+            </label>
             <span className="font-bold text-cyan-400">{qmcPaths.toLocaleString()} paths</span>
           </div>
           <input
@@ -32,7 +34,9 @@ export function Module13OptionPricing() {
 
         <div className="rounded-lg border border-border/60 bg-zinc-950 p-4 space-y-2">
           <div className="flex justify-between">
-            <label className="text-muted-foreground uppercase font-bold">Contract Standard Error Bound:</label>
+            <label className="text-muted-foreground uppercase font-bold">
+              Contract Standard Error Bound:
+            </label>
             <span className="font-bold text-emerald-400">±${estimatedStdError} (&lt; $0.01)</span>
           </div>
           <div className="flex items-center gap-2 pt-2 text-muted-foreground text-[11px]">

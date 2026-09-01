@@ -34,7 +34,7 @@
       "hyper_time_ms": 3.377,
       "speedup": 8.0,
       "cer_pct": 87.5,
-      "error": 1e-06,
+      "error": 1e-6,
       "verified": true,
       "contract_parity_pct": 100.0,
       "application_parity_pct": 100.0

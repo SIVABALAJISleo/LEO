@@ -8,7 +8,7 @@
     "dgpu_ref_val": 12720.0,
     "unit": "GFLOPS",
     "perf_ratio": 0.0021348244018626126,
-    "error_delta": 7.6e-05,
+    "error_delta": 7.6e-5,
     "checksum_pass": true,
     "verdict": "FAIL"
   },

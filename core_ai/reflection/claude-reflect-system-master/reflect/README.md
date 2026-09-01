@@ -1,6 +1,6 @@
 # Reflect - Self-Improving Skills System
 
-> *"Correct once, never again"*
+> _"Correct once, never again"_
 
 Ein intelligentes Lernsystem für Claude Code, das aus Ihren Korrekturen lernt und Skills automatisch verbessert.
 
@@ -36,18 +36,18 @@ Ein intelligentes Lernsystem für Claude Code, das aus Ihren Korrekturen lernt u
 
 Semantic Detection nutzt Claude selbst als ML-Engine für intelligentere Pattern-Erkennung:
 
-| Feature | Regex (Standard) | Semantic (--semantic) |
-|---------|------------------|----------------------|
-| **Sprachen** | Englisch + Deutsch | Alle Sprachen |
-| **Genauigkeit** | Gut | Exzellent |
-| **Geschwindigkeit** | Sofort | ~2-3s pro Message |
-| **False Positives** | Möglich | Sehr selten |
+| Feature             | Regex (Standard)   | Semantic (--semantic) |
+| ------------------- | ------------------ | --------------------- |
+| **Sprachen**        | Englisch + Deutsch | Alle Sprachen         |
+| **Genauigkeit**     | Gut                | Exzellent             |
+| **Geschwindigkeit** | Sofort             | ~2-3s pro Message     |
+| **False Positives** | Möglich            | Sehr selten           |
 
 ### Multi-Language Beispiele
 
 ```
 🇬🇧 "No, use uv instead of pip"           → ✓ Detected
-🇩🇪 "Nein, benutze pytest statt unittest" → ✓ Detected  
+🇩🇪 "Nein, benutze pytest statt unittest" → ✓ Detected
 🇪🇸 "No, usa Python en vez de JavaScript" → ✓ Detected
 🇫🇷 "Non, utilise toujours ruff"          → ✓ Detected
 ```
@@ -110,11 +110,11 @@ $ python3 promote_learning.py list
 
 ### Dateien
 
-| Datei | Beschreibung |
-|-------|--------------|
-| `~/.claude/reflect/learnings.db` | SQLite Ledger |
-| `~/.claude/CLAUDE.md` | Globale Regeln |
-| `~/.claude/backups/` | Automatische Backups |
+| Datei                            | Beschreibung         |
+| -------------------------------- | -------------------- |
+| `~/.claude/reflect/learnings.db` | SQLite Ledger        |
+| `~/.claude/CLAUDE.md`            | Globale Regeln       |
+| `~/.claude/backups/`             | Automatische Backups |
 
 ---
 
@@ -206,46 +206,49 @@ reflect/
 
 ## 🔗 Commands Cheat Sheet
 
-| Command | Beschreibung |
-|---------|--------------|
-| `/reflect` | Manuelle Analyse (Regex) |
-| `/reflect --semantic` | Manuelle Analyse (AI-powered) |
-| `/reflect <skill>` | Analysiere nur einen Skill |
-| `/reflect-on` | Auto-Reflection aktivieren |
-| `/reflect-off` | Auto-Reflection deaktivieren |
-| `/reflect-status` | Status anzeigen |
-| `/reflect-stats` | Cross-Skill Statistiken (NEU!) |
-| `/reflect-promote` | Learnings zu Global promoten (NEU!) |
+| Command               | Beschreibung                        |
+| --------------------- | ----------------------------------- |
+| `/reflect`            | Manuelle Analyse (Regex)            |
+| `/reflect --semantic` | Manuelle Analyse (AI-powered)       |
+| `/reflect <skill>`    | Analysiere nur einen Skill          |
+| `/reflect-on`         | Auto-Reflection aktivieren          |
+| `/reflect-off`        | Auto-Reflection deaktivieren        |
+| `/reflect-status`     | Status anzeigen                     |
+| `/reflect-stats`      | Cross-Skill Statistiken (NEU!)      |
+| `/reflect-promote`    | Learnings zu Global promoten (NEU!) |
 
 ### CLI-Optionen
 
-| Option | Beschreibung |
-|--------|--------------|
-| `--semantic` | AI-powered Detection (Multi-Language) |
-| `--model <name>` | Modell für Semantic (default: haiku) |
+| Option           | Beschreibung                          |
+| ---------------- | ------------------------------------- |
+| `--semantic`     | AI-powered Detection (Multi-Language) |
+| `--model <name>` | Modell für Semantic (default: haiku)  |
 
 ### Review-Optionen
 
-| Taste | Aktion |
-|-------|--------|
-| `A` | Approve - Alle Änderungen übernehmen |
-| `M` | Modify - Mit Natural Language modifizieren |
-| `S` | Skip - Diesen Skill überspringen |
-| `Q` | Quit - Review abbrechen |
+| Taste | Aktion                                     |
+| ----- | ------------------------------------------ |
+| `A`   | Approve - Alle Änderungen übernehmen       |
+| `M`   | Modify - Mit Natural Language modifizieren |
+| `S`   | Skip - Diesen Skill überspringen           |
+| `Q`   | Quit - Review abbrechen                    |
 
 ---
 
 ## 🎓 Empfohlener Lernpfad
 
 ### Woche 1-2: Manual Mode + Semantic
+
 - `/reflect --semantic` nach Sessions mit Korrekturen
 - Verschiedene Sprachen ausprobieren
 
 ### Woche 3-4: Cross-Skill Tracking
+
 - `/reflect-stats` regelmäßig prüfen
 - Beobachten wie Learnings über Repos akkumulieren
 
 ### Ab Woche 5: Promotion Flow
+
 - `/reflect-promote` für reife Learnings
 - Globale CLAUDE.md aufbauen
 
@@ -253,12 +256,12 @@ reflect/
 
 ## 🚨 Troubleshooting Quick Ref
 
-| Problem | Lösung |
-|---------|--------|
-| Keine Signale erkannt | `--semantic` nutzen |
-| Ledger leer | Mehr `/reflect` Sessions durchführen |
+| Problem                | Lösung                                  |
+| ---------------------- | --------------------------------------- |
+| Keine Signale erkannt  | `--semantic` nutzen                     |
+| Ledger leer            | Mehr `/reflect` Sessions durchführen    |
 | Promotion schlägt fehl | Threshold noch nicht erreicht (2 repos) |
-| Backup nötig | `~/.claude/backups/` prüfen |
+| Backup nötig           | `~/.claude/backups/` prüfen             |
 
 ---
 
@@ -271,6 +274,7 @@ MIT License
 ## 🙏 Credits
 
 Inspiriert von:
+
 - [BayramAnnakov/claude-reflect](https://github.com/BayramAnnakov/claude-reflect) - Semantic Detection
 - [netresearch/claude-coach-plugin](https://github.com/netresearch/claude-coach-plugin) - Cross-Repo Learning
 
@@ -282,4 +286,4 @@ Entwickelt für Claude Code mit ❤️
 
 ---
 
-*Version: 1.2.0 | Semantic Detection: v1.1 | Cross-Skill Learning: v1.2*
+_Version: 1.2.0 | Semantic Detection: v1.1 | Cross-Skill Learning: v1.2_

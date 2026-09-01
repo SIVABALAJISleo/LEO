@@ -92,7 +92,7 @@ export function computeRandomizedSVD(
   m: number,
   n: number,
   targetRank: number = 8,
-  oversample: number = 2
+  oversample: number = 2,
 ): RSVDResult {
   const l = Math.min(n, targetRank + oversample);
 
@@ -163,7 +163,8 @@ export function computeRandomizedSVD(
   }
   const t_rsvd_ms = Math.max(0.005, performance.now() - t0_rsvd);
 
-  const relativeFrobeniusError = fullFrobeniusNorm > 0 ? Math.sqrt(diffNormSq) / fullFrobeniusNorm : 0.001;
+  const relativeFrobeniusError =
+    fullFrobeniusNorm > 0 ? Math.sqrt(diffNormSq) / fullFrobeniusNorm : 0.001;
   const measuredSpeedup = Math.round((t_full_ms / t_rsvd_ms) * 10) / 10;
   const workEliminated = Math.round((1.0 - (m * n * targetRank) / (m * n * Math.min(m, n))) * 100);
 

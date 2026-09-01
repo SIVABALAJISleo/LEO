@@ -50,7 +50,9 @@ export const Route = createFileRoute("/_authenticated/app/caao-breakthrough")({
 });
 
 export function BreakthroughDashboardStudio() {
-  const [activeTab, setActiveTab] = useState<"cgace" | "pipeline" | "solvers" | "nvidia_matrix" | "workbenches" | "falsification">("cgace");
+  const [activeTab, setActiveTab] = useState<
+    "cgace" | "pipeline" | "solvers" | "nvidia_matrix" | "workbenches" | "falsification"
+  >("cgace");
 
   const moduleDemoMap: Record<number, React.ReactNode> = {
     1: <Module1DenseGemm />,

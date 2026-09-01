@@ -2,7 +2,7 @@
 
 # Claude Code Self-Learning Skills - Reflect System 🧠
 
-> *"Correct once, never again"* - AI that learns from your corrections and never repeats mistakes
+> _"Correct once, never again"_ - AI that learns from your corrections and never repeats mistakes
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Claude Code](https://img.shields.io/badge/Claude-Code-purple)](https://claude.ai/code)
@@ -21,6 +21,7 @@
 **Perfect for:** Developers, AI engineers, automation enthusiasts, teams using Claude Code, anyone tired of repeating corrections to AI assistants.
 
 **Use Cases:**
+
 - 🔧 **Development workflows** - Teach Claude your preferred tools (uv, pytest, ruff)
 - 🎨 **Code style** - Enforce your coding standards automatically
 - 📦 **Project templates** - Remember your preferred project structures
@@ -75,12 +76,12 @@ cp -r python-project-creator ~/.claude/skills/
 
 ### Commands
 
-| Command | Action |
-|---------|--------|
-| `/reflect` | Analyze current session manually |
-| `/reflect-on` | Enable auto-reflection at session end |
-| `/reflect-off` | Disable auto-reflection |
-| `/reflect-status` | Show current configuration |
+| Command           | Action                                |
+| ----------------- | ------------------------------------- |
+| `/reflect`        | Analyze current session manually      |
+| `/reflect-on`     | Enable auto-reflection at session end |
+| `/reflect-off`    | Disable auto-reflection               |
+| `/reflect-status` | Show current configuration            |
 
 ---
 
@@ -105,6 +106,7 @@ Example skill that demonstrates learning:
 **Initial state:** Uses `pip` and `unittest`
 
 **After corrections:**
+
 1. ✅ Learned: Use `uv` instead of `pip`
 2. ✅ Learned: Always `pytest`, never `unittest`
 
@@ -117,31 +119,38 @@ Example skill that demonstrates learning:
 ### Three Confidence Levels
 
 #### 🔴 HIGH - Corrections
+
 ```
 "No, use X instead of Y"
 "Never do X"
 "Always check Y"
 ```
+
 → Creates **Critical Corrections** section
 
 #### 🟡 MEDIUM - Approvals
+
 ```
 "Yes, perfect!"
 "That works well"
 "Exactly right"
 ```
+
 → Adds to **Best Practices**
 
 #### 🟢 LOW - Observations
+
 ```
 "Have you considered...?"
 "What about...?"
 ```
+
 → Notes in **Considerations**
 
 ### Safe Application
 
 Every change includes:
+
 - ✅ Timestamped backup
 - ✅ YAML validation
 - ✅ User approval (manual mode)
@@ -153,6 +162,7 @@ Every change includes:
 ## ⚡ Features & Benefits
 
 ### Core Features
+
 - ✅ **Pattern Recognition** - Automatically detects corrections, approvals, and suggestions
 - ✅ **Confidence-Based Learning** - Three levels (HIGH/MEDIUM/LOW) for intelligent updates
 - ✅ **Safe Updates** - Timestamped backups, YAML validation, automatic rollback
@@ -164,16 +174,17 @@ Every change includes:
 
 ### Why Choose Reflect?
 
-| Feature | Traditional AI | Reflect System |
-|---------|---------------|----------------|
-| **Memory** | ❌ Forgets between sessions | ✅ Permanent learning |
-| **Corrections** | ❌ Repeat every time | ✅ Once and done |
-| **Version Control** | ❌ No history | ✅ Full Git integration |
-| **Transparency** | ❌ Black box | ✅ See all changes |
-| **Customization** | ❌ Limited | ✅ Fully customizable |
-| **Team Learning** | ❌ Individual only | ✅ Shareable via Git |
+| Feature             | Traditional AI              | Reflect System          |
+| ------------------- | --------------------------- | ----------------------- |
+| **Memory**          | ❌ Forgets between sessions | ✅ Permanent learning   |
+| **Corrections**     | ❌ Repeat every time        | ✅ Once and done        |
+| **Version Control** | ❌ No history               | ✅ Full Git integration |
+| **Transparency**    | ❌ Black box                | ✅ See all changes      |
+| **Customization**   | ❌ Limited                  | ✅ Fully customizable   |
+| **Team Learning**   | ❌ Individual only          | ✅ Shareable via Git    |
 
 ### Technical Highlights
+
 - 🐍 **Pure Python** - No complex dependencies
 - 🔒 **Privacy First** - All data stays local
 - 📦 **Modular Design** - Use components independently
@@ -187,6 +198,7 @@ Every change includes:
 ### Step 1: Initial Mistake
 
 Claude uses `pip install`:
+
 ```bash
 pip install fastapi
 pip freeze > requirements.txt
@@ -219,6 +231,7 @@ Signal detected:
 ### Step 5: Forever Learned
 
 Next session, Claude automatically:
+
 ```bash
 uv pip install fastapi
 uv pip freeze > requirements.txt
@@ -378,7 +391,7 @@ Built for Claude Code users who want AI that actually remembers.
 
 **Made with Claude Code 🤖**
 
-*System learns, you benefit* ✨
+_System learns, you benefit_ ✨
 
 ---
 
@@ -437,17 +450,20 @@ A: HIGH = explicit corrections, MEDIUM = approvals, LOW = suggestions. See [USER
 ## 🔗 Related Projects & Resources
 
 ### Similar Concepts
+
 - **Cursor** - AI code editor with memory (different approach)
 - **GitHub Copilot** - AI pair programmer (no learning system)
 - **Aider** - AI coding assistant (no persistent learning)
 
 ### Learn More
+
 - [Claude Code Documentation](https://docs.anthropic.com/claude/docs/claude-code)
 - [LLM Skill Systems](https://github.com/topics/llm-skills)
 - [AI Memory Systems](https://github.com/topics/ai-memory)
 - [Continuous Learning in AI](https://en.wikipedia.org/wiki/Continual_learning)
 
 ### Complementary Tools
+
 - **uv** - Fast Python package manager (learned preference in demo)
 - **pytest** - Testing framework (learned preference in demo)
 - **ruff** - Fast Python linter
@@ -456,25 +472,25 @@ A: HIGH = explicit corrections, MEDIUM = approvals, LOW = suggestions. See [USER
 
 ## 📊 Comparison with Alternatives
 
-| System | Memory | Learning | Open Source | Local |
-|--------|--------|----------|-------------|-------|
-| **Reflect** | ✅ Permanent | ✅ Automatic | ✅ Yes | ✅ Yes |
-| Cursor | ⚠️ Session | ❌ No | ❌ No | ⚠️ Hybrid |
-| Copilot | ❌ None | ❌ No | ❌ No | ❌ Cloud |
-| ChatGPT | ❌ None | ❌ No | ❌ No | ❌ Cloud |
-| Aider | ❌ None | ❌ No | ✅ Yes | ✅ Yes |
+| System      | Memory       | Learning     | Open Source | Local     |
+| ----------- | ------------ | ------------ | ----------- | --------- |
+| **Reflect** | ✅ Permanent | ✅ Automatic | ✅ Yes      | ✅ Yes    |
+| Cursor      | ⚠️ Session   | ❌ No        | ❌ No       | ⚠️ Hybrid |
+| Copilot     | ❌ None      | ❌ No        | ❌ No       | ❌ Cloud  |
+| ChatGPT     | ❌ None      | ❌ No        | ❌ No       | ❌ Cloud  |
+| Aider       | ❌ None      | ❌ No        | ✅ Yes      | ✅ Yes    |
 
 ---
 
 ## 🌟 Success Stories
 
-> *"After teaching Reflect my preferences once, Claude Code now always uses my exact stack. Saves me 30+ corrections per week!"*  
+> _"After teaching Reflect my preferences once, Claude Code now always uses my exact stack. Saves me 30+ corrections per week!"_  
 > — Python Developer
 
-> *"We shared our team's learned skills via Git. New team members instantly get our standards. Game changer!"*  
+> _"We shared our team's learned skills via Git. New team members instantly get our standards. Game changer!"_  
 > — Tech Lead
 
-> *"The Git integration is brilliant. I can see exactly when and why each learning happened."*  
+> _"The Git integration is brilliant. I can see exactly when and why each learning happened."_  
 > — DevOps Engineer
 
 ---
@@ -482,6 +498,7 @@ A: HIGH = explicit corrections, MEDIUM = approvals, LOW = suggestions. See [USER
 ## 🎯 Roadmap
 
 ### Planned Features
+
 - [ ] **ML-based pattern detection** - Learn patterns from historical corrections
 - [ ] **Cross-skill learning** - Extract general best practices across all skills
 - [ ] **Team collaboration** - Pull request workflows for skill updates
@@ -490,6 +507,7 @@ A: HIGH = explicit corrections, MEDIUM = approvals, LOW = suggestions. See [USER
 - [ ] **Multi-language support** - German, French, Spanish patterns
 
 ### Community Requests
+
 - [ ] VS Code extension for reflection
 - [ ] Slack/Discord notifications on learnings
 - [ ] Skill marketplace
@@ -531,6 +549,7 @@ A: HIGH = explicit corrections, MEDIUM = approvals, LOW = suggestions. See [USER
 ## 🙌 Acknowledgments
 
 Built with:
+
 - [Claude Code](https://claude.ai/code) - The AI coding assistant
 - [Python](https://python.org) - Programming language
 - [PyYAML](https://pyyaml.org) - YAML parsing
@@ -545,6 +564,7 @@ Inspired by the developer community's desire for AI that actually remembers.
 ## 📜 Changelog
 
 ### v1.0.0 (2026-01-05)
+
 - ✨ Initial release
 - ✅ Pattern detection system
 - ✅ Safe skill updates
@@ -568,7 +588,6 @@ Inspired by the developer community's desire for AI that actually remembers.
 
 ---
 
-*Made with ❤️ and Claude Code*  
-*Licensed under MIT - Use freely!*  
-*© 2026 Haddock Development*
-
+_Made with ❤️ and Claude Code_  
+_Licensed under MIT - Use freely!_  
+_© 2026 Haddock Development_

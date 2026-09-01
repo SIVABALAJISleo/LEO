@@ -7,11 +7,11 @@ export function Module1DenseGemm() {
 
   const N = 4096;
   const k = Math.max(8, Math.round(N * rankRatio));
-  const bruteFlops = 2 * (N ** 3); // 2 * 4096^3 = 137.4 GFLOPs
-  const svdFlops = 2 * (N ** 2) * k;
+  const bruteFlops = 2 * N ** 3; // 2 * 4096^3 = 137.4 GFLOPs
+  const svdFlops = 2 * N ** 2 * k;
   const workSavedPct = Math.round((1 - svdFlops / bruteFlops) * 1000) / 10;
   const speedup = Math.round((bruteFlops / svdFlops) * 10) / 10;
-  const errorBound = Math.round((rankRatio * 0.003) * 10000) / 10000;
+  const errorBound = Math.round(rankRatio * 0.003 * 10000) / 10000;
 
   return (
     <div className="space-y-4 font-mono text-xs">
@@ -20,12 +20,14 @@ export function Module1DenseGemm() {
           <label className="text-muted-foreground uppercase flex items-center gap-1.5 font-bold">
             <Sliders className="h-3.5 w-3.5 text-cyan-400" /> Truncated Rank Ratio (k/N = {k}/{N}):
           </label>
-          <span className="font-bold text-cyan-400">{(rankRatio * 100).toFixed(1)}% ({k} Eigenvectors)</span>
+          <span className="font-bold text-cyan-400">
+            {(rankRatio * 100).toFixed(1)}% ({k} Eigenvectors)
+          </span>
         </div>
         <input
           type="range"
           min={0.01}
-          max={0.30}
+          max={0.3}
           step={0.01}
           value={rankRatio}
           onChange={(e) => setRankRatio(Number(e.target.value))}
@@ -54,13 +56,17 @@ export function Module1DenseGemm() {
           <div className="w-full bg-zinc-800 h-3 rounded overflow-hidden">
             <div className="bg-red-500 h-full w-full" />
           </div>
-          <span className="text-[11px] text-muted-foreground">O(N³) = 2×4096³ dense FP32 operations</span>
+          <span className="text-[11px] text-muted-foreground">
+            O(N³) = 2×4096³ dense FP32 operations
+          </span>
         </div>
 
         <div className="rounded border border-cyan-500/30 bg-cyan-950/20 p-3.5 space-y-2">
           <div className="flex justify-between font-bold text-cyan-400">
             <span>HYPER Randomized SVD + BitNet</span>
-            <span>{(svdFlops / 1e9).toFixed(2)} {useBitNetTernary ? "G-Adds" : "GFLOPs"}</span>
+            <span>
+              {(svdFlops / 1e9).toFixed(2)} {useBitNetTernary ? "G-Adds" : "GFLOPs"}
+            </span>
           </div>
           <div className="w-full bg-zinc-800 h-3 rounded overflow-hidden">
             <div

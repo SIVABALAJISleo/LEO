@@ -1,6 +1,7 @@
 # 🏛️ HYPER-100: Prediction & Residual Computation Engine
 
 ## 1. Predictive Pipeline
+
 $$\boxed{\text{Result} = \text{Prediction} + \text{Residual}}$$
 
 1. **Lightweight Prediction:** Computes autoregressive or low-resolution baseline in $O(1)$ to $O(N)$.

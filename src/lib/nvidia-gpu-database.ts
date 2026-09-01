@@ -78,7 +78,7 @@ export const NVIDIA_GPU_DATABASE: NvidiaGpuSpec[] = [
     architecture: "RIVA (Direct3D Accelerated)",
     year: 1997,
     marketClass: "Consumer",
-    fp32Gflops: 0.10,
+    fp32Gflops: 0.1,
     memoryBandwidthGBs: 1.6,
     vramGB: 0.004, // 4MB SGRAM
     cudaCores: 1,
@@ -92,7 +92,7 @@ export const NVIDIA_GPU_DATABASE: NvidiaGpuSpec[] = [
     architecture: "TNT2",
     year: 1999,
     marketClass: "Consumer",
-    fp32Gflops: 0.30,
+    fp32Gflops: 0.3,
     memoryBandwidthGBs: 2.9,
     vramGB: 0.032, // 32MB SDRAM
     cudaCores: 2,
@@ -138,7 +138,7 @@ export const NVIDIA_GPU_DATABASE: NvidiaGpuSpec[] = [
     architecture: "Kelvin II",
     year: 2002,
     marketClass: "Consumer",
-    fp32Gflops: 4.80,
+    fp32Gflops: 4.8,
     memoryBandwidthGBs: 10.4,
     vramGB: 0.128,
     cudaCores: 4,
@@ -438,7 +438,8 @@ export const NVIDIA_GPU_DATABASE: NvidiaGpuSpec[] = [
     cudaCores: 6912,
     tdpWatts: 400,
     processNode: "7nm TSMC",
-    keyInnovation: "TensorFloat-32 (TF32), Structural Sparsity (624 TFLOPS), Multi-Instance GPU (MIG)",
+    keyInnovation:
+      "TensorFloat-32 (TF32), Structural Sparsity (624 TFLOPS), Multi-Instance GPU (MIG)",
   },
 
   // ---------------------------------------------------------------------------
@@ -472,7 +473,8 @@ export const NVIDIA_GPU_DATABASE: NvidiaGpuSpec[] = [
     cudaCores: 16384,
     tdpWatts: 450,
     processNode: "4N TSMC",
-    keyInnovation: "Consumer compute flagship with 82.6 TFLOPS FP32 and 1.3 PFLOPS FP8 tensor power",
+    keyInnovation:
+      "Consumer compute flagship with 82.6 TFLOPS FP32 and 1.3 PFLOPS FP8 tensor power",
   },
   {
     id: "h100-sxm5",
@@ -487,7 +489,8 @@ export const NVIDIA_GPU_DATABASE: NvidiaGpuSpec[] = [
     cudaCores: 14592,
     tdpWatts: 700,
     processNode: "4N TSMC",
-    keyInnovation: "Transformer Engine with dynamic FP8/FP16 precision, DPX dynamic programming instructions",
+    keyInnovation:
+      "Transformer Engine with dynamic FP8/FP16 precision, DPX dynamic programming instructions",
   },
   {
     id: "h200-sxm5",
@@ -521,7 +524,8 @@ export const NVIDIA_GPU_DATABASE: NvidiaGpuSpec[] = [
     cudaCores: 20480,
     tdpWatts: 1000,
     processNode: "4NP TSMC",
-    keyInnovation: "Dual-die 208B transistor package with 10 TB/s chip-to-chip link and native 4-bit floating point",
+    keyInnovation:
+      "Dual-die 208B transistor package with 10 TB/s chip-to-chip link and native 4-bit floating point",
   },
   {
     id: "gb200-nvl72",
@@ -576,7 +580,7 @@ export const NVIDIA_GPU_DATABASE: NvidiaGpuSpec[] = [
 export function calculateGpuComparison(
   gpu: NvidiaGpuSpec,
   host: HostHardwareProfile = HOST_HARDWARE,
-  breakthroughActive: boolean = false
+  breakthroughActive: boolean = false,
 ) {
   const rawFlopRatio = host.fp32Gflops / gpu.fp32Gflops;
   const rawFlopDeficitFactor = gpu.fp32Gflops / host.fp32Gflops;

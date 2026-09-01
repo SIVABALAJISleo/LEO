@@ -26,7 +26,19 @@ import { Module13OptionPricing } from "@/components/breakthrough/modules/Module1
 import { Module14BlenderCycles } from "@/components/breakthrough/modules/Module14BlenderCycles";
 import { Module15UnrealEngine } from "@/components/breakthrough/modules/Module15UnrealEngine";
 
-import { Zap, Flame, Cpu, ShieldCheck, ArrowDown, Activity, Sparkles, Server, Layers, BarChart3, Atom } from "lucide-react";
+import {
+  Zap,
+  Flame,
+  Cpu,
+  ShieldCheck,
+  ArrowDown,
+  Activity,
+  Sparkles,
+  Server,
+  Layers,
+  BarChart3,
+  Atom,
+} from "lucide-react";
 
 import { CGACEStudio } from "@/components/breakthrough/CGACEStudio";
 
@@ -45,7 +57,9 @@ export const Route = createFileRoute("/breakthrough")({
 });
 
 function BreakthroughPage() {
-  const [activeTab, setActiveTab] = useState<"cgace" | "pipeline" | "solvers" | "nvidia_matrix" | "workbenches" | "falsification">("cgace");
+  const [activeTab, setActiveTab] = useState<
+    "cgace" | "pipeline" | "solvers" | "nvidia_matrix" | "workbenches" | "falsification"
+  >("cgace");
 
   const moduleDemoMap: Record<number, React.ReactNode> = {
     1: <Module1DenseGemm />,
@@ -88,7 +102,9 @@ function BreakthroughPage() {
             HYPER Breakthrough Engine
           </h1>
           <p className="mx-auto max-w-3xl text-sm sm:text-base text-muted-foreground font-mono leading-relaxed">
-            The GPU wins by doing more operations in parallel. HYPER wins by needing fundamentally fewer operations for the same result. That is the "chemistry change" — making the GPU's speed irrelevant by eliminating the work it excels at.
+            The GPU wins by doing more operations in parallel. HYPER wins by needing fundamentally
+            fewer operations for the same result. That is the "chemistry change" — making the GPU's
+            speed irrelevant by eliminating the work it excels at.
           </p>
 
           {/* Master Navigation Bar */}
@@ -121,9 +137,7 @@ function BreakthroughPage() {
         </div>
 
         {/* Tab View 0: C-GACE Studio */}
-        {activeTab === "cgace" && (
-          <CGACEStudio />
-        )}
+        {activeTab === "cgace" && <CGACEStudio />}
 
         {/* Tab View 1: Master Pipeline Simulator */}
         {activeTab === "pipeline" && (
@@ -153,19 +167,13 @@ function BreakthroughPage() {
         )}
 
         {/* Tab View 3: NVIDIA Historical Matrix (1995–2025) */}
-        {activeTab === "nvidia_matrix" && (
-          <NvidiaGpuMatrix />
-        )}
+        {activeTab === "nvidia_matrix" && <NvidiaGpuMatrix />}
 
         {/* Tab View 4: Domain Workbenches */}
-        {activeTab === "workbenches" && (
-          <DomainWorkbenches />
-        )}
+        {activeTab === "workbenches" && <DomainWorkbenches />}
 
         {/* Tab View 5: Scientific Audit & Falsification */}
-        {activeTab === "falsification" && (
-          <FalsificationReport />
-        )}
+        {activeTab === "falsification" && <FalsificationReport />}
       </div>
     </div>
   );

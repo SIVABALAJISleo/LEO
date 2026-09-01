@@ -65,7 +65,14 @@ export function insertQuadTree(node: QuadTreeNode, p: Particle2D) {
       { xMin: node.xMin, yMin: node.yMin, size: half, totalMass: 0, centerX: 0, centerY: 0 }, // NW
       { xMin: node.xMin + half, yMin: node.yMin, size: half, totalMass: 0, centerX: 0, centerY: 0 }, // NE
       { xMin: node.xMin, yMin: node.yMin + half, size: half, totalMass: 0, centerX: 0, centerY: 0 }, // SW
-      { xMin: node.xMin + half, yMin: node.yMin + half, size: half, totalMass: 0, centerX: 0, centerY: 0 }, // SE
+      {
+        xMin: node.xMin + half,
+        yMin: node.yMin + half,
+        size: half,
+        totalMass: 0,
+        centerX: 0,
+        centerY: 0,
+      }, // SE
     ];
 
     if (node.particle) {
@@ -103,7 +110,7 @@ function computeTreeForce(
   theta: number,
   G: number,
   epsSq: number,
-  opCounter: { count: number }
+  opCounter: { count: number },
 ): { fx: number; fy: number } {
   let fx = 0;
   let fy = 0;
@@ -150,7 +157,7 @@ function computeTreeForce(
  */
 export function runFmmNBodyBenchmark(
   numParticles: number = 512,
-  theta: number = 0.5
+  theta: number = 0.5,
 ): FmmSimulationResult {
   const G = 1.0;
   const epsSq = 0.25;

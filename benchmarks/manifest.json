@@ -37,7 +37,7 @@
       "contract": {
         "max_latency_ms": 150.0,
         "max_relative_error": 0.01,
-        "min_work_elimination_ratio": 0.70
+        "min_work_elimination_ratio": 0.7
       }
     },
     "track_2_neural_language": {

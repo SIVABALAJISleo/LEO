@@ -5,9 +5,9 @@ export function Module4VectorReductions() {
   const [tolerance, setTolerance] = useState<number>(0.01);
 
   const rawElements = 1000000000; // 1 Billion records
-  const gpuMemoryRequiredGb = (rawElements * 8) / (1024 ** 3); // 7.45 GB
+  const gpuMemoryRequiredGb = (rawElements * 8) / 1024 ** 3; // 7.45 GB
   const hllRegisters = Math.round((1.04 / tolerance) ** 2);
-  const hllMemoryKb = Math.round((hllRegisters * 6) / 8 / 1024 * 10) / 10;
+  const hllMemoryKb = Math.round(((hllRegisters * 6) / 8 / 1024) * 10) / 10;
   const memoryReductionRatio = Math.round((gpuMemoryRequiredGb * 1024 * 1024) / hllMemoryKb);
 
   return (

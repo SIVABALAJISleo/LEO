@@ -26,19 +26,14 @@
     }
   ],
   "tensor_train_compression": {
-    "original_shape": [
-      16,
-      16,
-      16,
-      16
-    ],
+    "original_shape": [16, 16, 16, 16],
     "original_bytes": 262144,
     "tt_cores_bytes": 2560,
     "compression_ratio": "102.4x",
     "memory_reduction_pct": 99.02,
     "decomp_latency_ms": 27.731,
     "reconstruct_latency_ms": 0.299,
-    "max_abs_error": 4e-06
+    "max_abs_error": 4e-6
   },
   "kan_ffn_benchmark": {
     "dimensions": "d_model=128, d_hidden=256, seq=32, batch=16",

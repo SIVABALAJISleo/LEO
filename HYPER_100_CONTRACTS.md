@@ -1,6 +1,7 @@
 # 🏛️ HYPER-100: Universal Contracts Specification
 
 ## 1. Supported Contract Classes
+
 Every workload in HYPER binds to an explicit, immutable `UniversalContract`:
 
 1. **`EXACT`**: Bitwise / IEEE-754 FP32 mathematical identity.
@@ -15,6 +16,7 @@ Every workload in HYPER binds to an explicit, immutable `UniversalContract`:
 ---
 
 ## 2. Contract Dominance Law
+
 A stored result under contract $C_{\text{stored}}$ can only satisfy a query under contract $C_{\text{req}}$ if:
 $$\boxed{C_{\text{stored}} \ge C_{\text{req}} \iff (\epsilon_{\text{stored}} \le \epsilon_{\text{req}}) \land (\text{SSIM}_{\text{stored}} \ge \text{SSIM}_{\text{req}}) \land (\text{Latency}_{\text{stored}} \le \text{Latency}_{\text{req}})}$$
 

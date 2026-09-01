@@ -1,7 +1,9 @@
 # 🏛️ HYPER-100: Verification Engine & Stochastic Probes
 
 ## 1. Multi-Modal Verification Gating
+
 Every candidate path must be verified prior to returning output to the caller:
+
 1. **Bitwise Exact:** Direct memory hash / memcmp for `EXACT` contracts.
 2. **Freivalds Randomized Matrix Probe:** For $A \in \mathbb{R}^{M \times K}, B \in \mathbb{R}^{K \times N}$, and approximation $\hat{C} \approx A B$:
    - Draw random test vector $x \in \{-1, +1\}^N$.

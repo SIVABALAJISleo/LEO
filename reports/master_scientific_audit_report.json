@@ -27,7 +27,7 @@
       {
         "test_name": "PATHOLOGICAL_ILL_CONDITIONED_MATRIX",
         "condition_number": 3919071232.0,
-        "relative_error": 1.3482336669312645e-07,
+        "relative_error": 1.3482336669312645e-7,
         "contract_verified": true,
         "status": "PASS"
       },
@@ -73,7 +73,7 @@
         "test_name": "HETEROGENEOUS_DEVICE_CONCURRENCY",
         "gpu_device": "Intel(R) UHD Graphics (iGPU)",
         "is_real_gpu": true,
-        "relative_error": 2.6839052225113846e-07,
+        "relative_error": 2.6839052225113846e-7,
         "status": "PASS"
       },
       {
@@ -92,10 +92,7 @@
       },
       {
         "test_name": "DEGENERATE_DIMENSION_BOUNDARY",
-        "output_shape": [
-          1,
-          1
-        ],
+        "output_shape": [1, 1],
         "result_valid": true,
         "status": "PASS"
       },

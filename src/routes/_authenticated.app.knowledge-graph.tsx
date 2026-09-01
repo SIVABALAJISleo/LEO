@@ -10,7 +10,6 @@ export const Route = createFileRoute("/_authenticated/app/knowledge-graph")({
 
 function Page() {
   const [q, setQ] = useState("");
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 

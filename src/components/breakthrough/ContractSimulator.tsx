@@ -1,7 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { BREAKTHROUGH_MODULES, type BreakthroughModuleData } from "@/lib/breakthrough-data";
 import { calculateLiveWorkReduction, useBreakthroughStore } from "@/lib/breakthrough-store";
-import { Play, RotateCcw, Zap, CheckCircle2, Sliders, Layers, ArrowRight, Activity, Cpu, Sparkles } from "lucide-react";
+import {
+  Play,
+  RotateCcw,
+  Zap,
+  CheckCircle2,
+  Sliders,
+  Layers,
+  ArrowRight,
+  Activity,
+  Cpu,
+  Sparkles,
+} from "lucide-react";
 
 export function ContractSimulator() {
   const { recordRun } = useBreakthroughStore();
@@ -11,11 +22,12 @@ export function ContractSimulator() {
   const [activeStepIndex, setActiveStepIndex] = useState<number>(-1);
   const [viewMode, setViewMode] = useState<"comparison" | "pipeline">("comparison");
 
-  const currentModule = BREAKTHROUGH_MODULES.find((m) => m.id === selectedModuleId) || BREAKTHROUGH_MODULES[0];
+  const currentModule =
+    BREAKTHROUGH_MODULES.find((m) => m.id === selectedModuleId) || BREAKTHROUGH_MODULES[0];
 
   useEffect(() => {
     setContractParam(currentModule.defaultContract.value);
-  }, [selectedModuleId]);
+  }, [currentModule.defaultContract.value]);
 
   const liveMetrics = calculateLiveWorkReduction(currentModule, contractParam);
 
@@ -27,7 +39,7 @@ export function ContractSimulator() {
     { name: "Algorithm Substitution", desc: currentModule.algorithmName.split("+")[0].trim() },
     { name: "CPU+iGPU Scheduling", desc: "AVX2 P-Cores + Intel UHD Xe Dispatch" },
     { name: "Verification", desc: "Residual check ||Y - Y*|| <= epsilon" },
-    { name: "Adaptive Output", desc: "Delivering 100% Contract Satisfied Result" }
+    { name: "Adaptive Output", desc: "Delivering 100% Contract Satisfied Result" },
   ];
 
   const handleRunSimulation = () => {
@@ -54,7 +66,7 @@ export function ContractSimulator() {
           activePath: liveMetrics.activePath,
           executionTimeMs: liveMetrics.executionTimeMs,
           gpuBruteForceTimeMs: liveMetrics.gpuBruteForceTimeMs,
-          timestamp: new Date().toLocaleTimeString()
+          timestamp: new Date().toLocaleTimeString(),
         });
       }
     }, 120);
@@ -76,7 +88,8 @@ export function ContractSimulator() {
             Contract-Driven Computational Reduction Simulator
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Select any heavy workload, tune the required quality contract, and watch HYPER dynamically destroy redundant compute.
+            Select any heavy workload, tune the required quality contract, and watch HYPER
+            dynamically destroy redundant compute.
           </p>
         </div>
 
@@ -128,7 +141,8 @@ export function ContractSimulator() {
         <div className="md:col-span-6 space-y-2">
           <div className="flex items-center justify-between font-mono text-xs">
             <label className="text-muted-foreground uppercase">
-              2. Contract Parameter: <span className="text-amber-400">{currentModule.defaultContract.label}</span>
+              2. Contract Parameter:{" "}
+              <span className="text-amber-400">{currentModule.defaultContract.label}</span>
             </label>
             <span className="rounded bg-amber-500/10 px-2 py-0.5 font-bold text-amber-400 border border-amber-500/30">
               {contractParam} {currentModule.defaultContract.unit}
@@ -172,8 +186,8 @@ export function ContractSimulator() {
                     isActive
                       ? "border-cyan-400 bg-cyan-950/50 shadow-[0_0_15px_rgba(0,240,255,0.3)] scale-[1.02]"
                       : isPast
-                      ? "border-emerald-500/40 bg-emerald-950/20 text-emerald-300"
-                      : "border-border/40 bg-zinc-900/30 text-zinc-600"
+                        ? "border-emerald-500/40 bg-emerald-950/20 text-emerald-300"
+                        : "border-border/40 bg-zinc-900/30 text-zinc-600"
                   }`}
                 >
                   <div className="flex items-center justify-between text-[11px]">
@@ -181,7 +195,9 @@ export function ContractSimulator() {
                     {isPast && <CheckCircle2 className="h-3 w-3 text-emerald-400" />}
                   </div>
                   <h4 className="mt-1 text-xs font-bold text-foreground">{step.name}</h4>
-                  <p className="mt-1 text-[10px] text-muted-foreground leading-tight">{step.desc}</p>
+                  <p className="mt-1 text-[10px] text-muted-foreground leading-tight">
+                    {step.desc}
+                  </p>
                 </div>
               );
             })}
@@ -199,7 +215,8 @@ export function ContractSimulator() {
               <span className="text-[11px] text-red-300/80">O(N³) Multiplies</span>
             </div>
             <p className="text-muted-foreground leading-relaxed">
-              Computes all raw floating-point operations blindly regardless of whether the user or display can perceive the difference.
+              Computes all raw floating-point operations blindly regardless of whether the user or
+              display can perceive the difference.
             </p>
             <div className="space-y-1.5 pt-2">
               <div className="flex justify-between">
@@ -226,7 +243,8 @@ export function ContractSimulator() {
               <span className="text-[11px] text-cyan-300">O(1) / Sublinear</span>
             </div>
             <p className="text-muted-foreground leading-relaxed">
-              Executes the minimal computation necessary to strictly satisfy the application contract, eliminating up to 99% of work.
+              Executes the minimal computation necessary to strictly satisfy the application
+              contract, eliminating up to 99% of work.
             </p>
             <div className="space-y-1.5 pt-2">
               <div className="flex justify-between">
@@ -259,7 +277,8 @@ export function ContractSimulator() {
               {currentModule.title} → 100% Contract Parity
             </div>
             <div className="text-muted-foreground text-[11px]">
-              {liveMetrics.workEliminatedPct}% of calculations completely eliminated on Intel i5-12450H
+              {liveMetrics.workEliminatedPct}% of calculations completely eliminated on Intel
+              i5-12450H
             </div>
           </div>
         </div>

@@ -136,7 +136,7 @@ class LearningLedger:
             }
         else:
             # Create new learning
-            learning_id = hashlib.md5(f"{fingerprint}{now}".encode()).hexdigest()[:8]
+            learning_id = hashlib.md5(f"{fingerprint}{now}".encode(), usedforsecurity=False).hexdigest()[:8]
             
             conn.execute('''
                 INSERT INTO learnings 
@@ -225,7 +225,7 @@ class LearningLedger:
         ''', (now, now, fingerprint))
 
         # Record promotion
-        promo_id = hashlib.md5(f"{fingerprint}{now}".encode()).hexdigest()[:8]
+        promo_id = hashlib.md5(f"{fingerprint}{now}".encode(), usedforsecurity=False).hexdigest()[:8]
         conn.execute('''
             INSERT INTO promotions (id, fingerprint, from_scope, to_scope, reason)
             VALUES (?, ?, 'skill', 'global', ?)

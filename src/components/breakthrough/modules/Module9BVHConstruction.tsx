@@ -8,7 +8,9 @@ export function Module9BVHConstruction() {
   const totalTriangles = 500000;
   const dynamicTriangles = isStaticScene ? 0 : Math.round(totalTriangles * (dynamicRatio / 100));
   const fullRebuildMs = 45.0;
-  const lbvhRefitMs = isStaticScene ? 0.0 : Math.round((dynamicTriangles / totalTriangles) * 6.5 * 10) / 10;
+  const lbvhRefitMs = isStaticScene
+    ? 0.0
+    : Math.round((dynamicTriangles / totalTriangles) * 6.5 * 10) / 10;
   const speedup = Math.round((fullRebuildMs / Math.max(0.1, lbvhRefitMs)) * 10) / 10;
 
   return (
@@ -19,7 +21,9 @@ export function Module9BVHConstruction() {
             <Sliders className="h-3.5 w-3.5 text-cyan-400" /> Moving Geometry Ratio:
           </label>
           <span className="font-bold text-cyan-400">
-            {isStaticScene ? "0% (Fully Cached)" : `${dynamicRatio}% (${(dynamicTriangles / 1000).toFixed(0)}k Triangles)`}
+            {isStaticScene
+              ? "0% (Fully Cached)"
+              : `${dynamicRatio}% (${(dynamicTriangles / 1000).toFixed(0)}k Triangles)`}
           </span>
         </div>
         <input
@@ -49,7 +53,9 @@ export function Module9BVHConstruction() {
         <div className="rounded border border-red-500/30 bg-red-950/20 p-3.5 space-y-2">
           <span className="font-bold text-red-400">GPU SAH Tree Rebuild (Scratch)</span>
           <div className="text-sm font-bold text-red-300">45.0 ms / frame</div>
-          <span className="text-[11px] text-muted-foreground">O(T log T) Full sorting on 500,000 triangles</span>
+          <span className="text-[11px] text-muted-foreground">
+            O(T log T) Full sorting on 500,000 triangles
+          </span>
         </div>
 
         <div className="rounded border border-cyan-500/30 bg-cyan-950/20 p-3.5 space-y-2">

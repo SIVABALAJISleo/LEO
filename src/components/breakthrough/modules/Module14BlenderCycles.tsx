@@ -12,7 +12,9 @@ export function Module14BlenderCycles() {
     <div className="space-y-4 font-mono text-xs">
       <div className="rounded-lg border border-border/60 bg-zinc-950 p-4 space-y-2">
         <div className="flex justify-between">
-          <label className="text-muted-foreground uppercase font-bold">Cycles Adaptive SPP + Intel OIDN:</label>
+          <label className="text-muted-foreground uppercase font-bold">
+            Cycles Adaptive SPP + Intel OIDN:
+          </label>
           <span className="font-bold text-cyan-400">{spp} SPP (Intel Embree CPU Kernels)</span>
         </div>
         <input
@@ -30,7 +32,9 @@ export function Module14BlenderCycles() {
         <div className="rounded border border-red-500/30 bg-red-950/20 p-3.5 space-y-2">
           <span className="font-bold text-red-400">GPU Cycles 512 SPP Brute Force</span>
           <div className="text-sm font-bold text-red-300">{gpuCyclesTimeSec} seconds</div>
-          <span className="text-[11px] text-muted-foreground">512 raw samples without intelligent denoising</span>
+          <span className="text-[11px] text-muted-foreground">
+            512 raw samples without intelligent denoising
+          </span>
         </div>
 
         <div className="rounded border border-cyan-500/30 bg-cyan-950/20 p-3.5 space-y-2">

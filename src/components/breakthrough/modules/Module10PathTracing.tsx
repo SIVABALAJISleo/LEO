@@ -7,8 +7,12 @@ export function Module10PathTracing() {
 
   const baselineGpuSpp = 100;
   const workSavedPct = Math.round((1 - spp / baselineGpuSpp) * 100);
-  const psnr = enableOidn ? Math.round((32 + Math.log2(spp) * 2.8) * 10) / 10 : Math.round((18 + Math.log2(spp) * 2.5) * 10) / 10;
-  const ssim = enableOidn ? Math.min(0.98, Math.round((0.88 + Math.log2(spp) * 0.03) * 100) / 100) : 0.65;
+  const psnr = enableOidn
+    ? Math.round((32 + Math.log2(spp) * 2.8) * 10) / 10
+    : Math.round((18 + Math.log2(spp) * 2.5) * 10) / 10;
+  const ssim = enableOidn
+    ? Math.min(0.98, Math.round((0.88 + Math.log2(spp) * 0.03) * 100) / 100)
+    : 0.65;
 
   return (
     <div className="space-y-4 font-mono text-xs">

@@ -31,6 +31,7 @@ configures common development tools.
 ### 1. Understand Requirements
 
 Ask the user about:
+
 - **Project name** and purpose
 - **Type**: CLI tool, web app, library, data science project
 - **Dependencies**: Required packages
@@ -315,10 +316,13 @@ uv pip install pandas numpy matplotlib jupyter
 This skill includes examples in the bundled directories:
 
 ### scripts/
+
 - `example.py` - Template Python script with best practices
 
 ### references/
+
 - `api_reference.md` - Common library documentation references
 
 ### assets/
+
 - Project templates and boilerplate code

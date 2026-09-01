@@ -56,12 +56,14 @@ We follow **coordinated disclosure**:
 ### Data Storage
 
 **What We Store:**
+
 - Skill files (YAML + Markdown) in `~/.claude/skills/`
 - Backups in `.backups/` directories
 - Git history in `.git/` directory
 - State files in `.state/` directory
 
 **What We DON'T Store:**
+
 - Your actual code/projects
 - API keys or credentials
 - Personal information
@@ -70,6 +72,7 @@ We follow **coordinated disclosure**:
 ### File Permissions
 
 Recommended permissions:
+
 ```bash
 chmod 700 ~/.claude/skills/           # Owner only
 chmod 600 ~/.claude/skills/*/*.md     # Owner read/write only
@@ -79,6 +82,7 @@ chmod 700 ~/.claude/skills/*/scripts/ # Owner execute only
 ### Sensitive Data
 
 **⚠️ NEVER commit:**
+
 - API keys
 - Passwords
 - Personal data
@@ -92,12 +96,14 @@ The system includes `.gitignore` to prevent accidental commits.
 If you push skills to GitHub:
 
 **Public Repos:**
+
 - ✅ Share reflection system (safe)
 - ✅ Share learned preferences (safe)
 - ❌ Share company-specific skills (could leak IP)
 - ❌ Share credentials (even in history)
 
 **Private Repos:**
+
 - ✅ Share team learnings
 - ⚠️ Still avoid credentials
 - ⚠️ Review before pushing
@@ -105,11 +111,13 @@ If you push skills to GitHub:
 ### Backup Security
 
 **Automatic Backups:**
+
 - Stored in `.backups/` subdirectories
 - Auto-cleaned after 30 days
 - Same permissions as original files
 
 **Manual Backups:**
+
 - Recommended: encrypt before external storage
 - Use `tar + gpg` for secure backups:
   ```bash
@@ -122,6 +130,7 @@ If you push skills to GitHub:
 
 **Risk:** Skills can execute Python/Shell scripts
 **Mitigation:**
+
 - Only install skills from trusted sources
 - Review script contents before use
 - System doesn't auto-execute unknown code
@@ -130,6 +139,7 @@ If you push skills to GitHub:
 
 **Risk:** Malicious YAML could exploit parser
 **Mitigation:**
+
 - We use `yaml.safe_load()` (not `load()`)
 - Validation before processing
 - Rollback on errors
@@ -138,6 +148,7 @@ If you push skills to GitHub:
 
 **Risk:** Sensitive data in commit history
 **Mitigation:**
+
 - Review before committing
 - Use `.gitignore` properly
 - Git filter-branch if needed:
@@ -149,6 +160,7 @@ If you push skills to GitHub:
 
 **Risk:** Hook scripts run automatically
 **Mitigation:**
+
 - Hooks are opt-in (disabled by default)
 - User controls hook configuration
 - Timeouts prevent runaway processes
@@ -157,6 +169,7 @@ If you push skills to GitHub:
 
 **Risk:** Large transcripts could cause memory issues
 **Mitigation:**
+
 - Line-by-line processing
 - Graceful error handling
 - Background processing for auto-mode
@@ -202,6 +215,7 @@ If you push skills to GitHub:
 ## 📋 Security Updates
 
 We announce security updates via:
+
 - GitHub Security Advisories
 - Release notes
 - README.md updates
@@ -211,6 +225,7 @@ We announce security updates via:
 ## 🏆 Responsible Disclosure Recognition
 
 We credit security researchers (with permission) in:
+
 - SECURITY.md
 - Release notes
 - GitHub Security Advisories
@@ -220,6 +235,7 @@ We credit security researchers (with permission) in:
 ## ⚖️ Legal
 
 This project:
+
 - Is provided "AS IS" without warranty
 - Has no liability for data loss
 - Requires user review before changes

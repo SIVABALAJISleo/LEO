@@ -3,7 +3,7 @@ import json
 import logging
 from typing import Dict, Any
 from fastapi import FastAPI
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, JSONResponse
 
 # Vulkan Intel Components
 from archive_engines.vulkan_intel_ai.inference import SpeculativeEngine
@@ -76,18 +76,12 @@ async def handle_vulkan_query(raw_input: Dict[str, Any]):
                 yield json.dumps({"step": "HALT", "latency": f"{(time.time()-start_time)*1000:.1f}ms"})
             except Exception:
                 logger.error("Vulkan pipeline error during stream generation", exc_info=True)
-                pipeline_failed = True
-
-            if pipeline_failed:
                 yield json.dumps({"error": "Internal pipeline error during execution"})
 
         return StreamingResponse(run_vulkan_pipeline(), media_type="application/x-ndjson")
     except Exception:
         logger.error("Vulkan query handler error", exc_info=True)
-        err_response = {"error": "Internal server error occurred"}
-
-    if err_response:
-        return err_response
+        return JSONResponse(status_code=500, content={"error": "Internal server error occurred"})
 
 
 if __name__ == "__main__":

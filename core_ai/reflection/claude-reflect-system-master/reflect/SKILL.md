@@ -18,17 +18,22 @@ a "correct once, never again" learning system.
 ## Usage Modes
 
 ### 1. Manual Reflection (/reflect)
+
 Trigger analysis of the current conversation:
+
 ```
 /reflect [skill-name]
 ```
+
 - Without skill-name: Analyzes all skills used in conversation
 - With skill-name: Focuses on specific skill
 
 ### 2. Automatic Reflection
+
 When enabled via `/reflect-on`, runs automatically at session end via Stop hook.
 
 ### 3. Toggle Commands
+
 - `/reflect-on` - Enable automatic reflection
 - `/reflect-off` - Disable automatic reflection
 - `/reflect-status` - Show current configuration
@@ -36,16 +41,19 @@ When enabled via `/reflect-on`, runs automatically at session end via Stop hook.
 ## Confidence Levels
 
 **HIGH** - Explicit corrections:
+
 - User contradicts Claude's approach with specific alternative
 - Pattern: "Don't do X, do Y instead"
 - Action: Direct updates with deprecation warnings
 
 **MEDIUM** - Approvals and patterns:
+
 - User approves specific approach
 - Pattern succeeds multiple times
 - Action: Add to "Best Practices" section
 
 **LOW** - Observations:
+
 - User questions or suggests alternatives
 - Pattern: "Have you considered..." or "Why not try..."
 - Action: Add to "Considerations" section
@@ -63,12 +71,14 @@ When enabled via `/reflect-on`, runs automatically at session end via Stop hook.
 ## Scripts
 
 ### Core Engine
+
 - `scripts/reflect.py` - Main orchestration logic
 - `scripts/extract_signals.py` - Pattern detection engine
 - `scripts/update_skill.py` - Safe skill file updates
 - `scripts/present_review.py` - Interactive review interface
 
 ### Automation
+
 - `scripts/hook-stop.sh` - Stop hook integration
 - `scripts/toggle-on.sh` - Enable auto-reflection
 - `scripts/toggle-off.sh` - Disable auto-reflection

@@ -8,7 +8,10 @@ export function Module5UncachedLLM() {
   const gpuLatencyMs = 15.0; // 15ms per token on RTX 3060
   const cacheLatencyMs = 0.05; // 0.05ms FAISS lookup
   const uncachedCpuLatencyMs = 8.0 / pldSpeedup; // 3.2ms with PLD
-  const effectiveLatencyMs = Math.round(((hitRate / 100) * cacheLatencyMs + (1 - hitRate / 100) * uncachedCpuLatencyMs) * 100) / 100;
+  const effectiveLatencyMs =
+    Math.round(
+      ((hitRate / 100) * cacheLatencyMs + (1 - hitRate / 100) * uncachedCpuLatencyMs) * 100,
+    ) / 100;
   const speedupOverGpu = Math.round((gpuLatencyMs / Math.max(0.01, effectiveLatencyMs)) * 10) / 10;
 
   return (
@@ -16,7 +19,9 @@ export function Module5UncachedLLM() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="rounded-lg border border-border/60 bg-zinc-950 p-4 space-y-2">
           <div className="flex justify-between">
-            <label className="text-muted-foreground uppercase font-bold">Semantic Cache Hit Rate:</label>
+            <label className="text-muted-foreground uppercase font-bold">
+              Semantic Cache Hit Rate:
+            </label>
             <span className="font-bold text-cyan-400">{hitRate}%</span>
           </div>
           <input
@@ -32,7 +37,9 @@ export function Module5UncachedLLM() {
 
         <div className="rounded-lg border border-border/60 bg-zinc-950 p-4 space-y-2">
           <div className="flex justify-between">
-            <label className="text-muted-foreground uppercase font-bold">PLD Speculative Speedup:</label>
+            <label className="text-muted-foreground uppercase font-bold">
+              PLD Speculative Speedup:
+            </label>
             <span className="font-bold text-amber-400">{pldSpeedup}x Draft Acceleration</span>
           </div>
           <input
@@ -51,7 +58,10 @@ export function Module5UncachedLLM() {
         <div>
           <span className="text-cyan-400 font-bold uppercase">Effective End-to-End Latency:</span>
           <p className="text-2xl font-black text-foreground mt-1">
-            {effectiveLatencyMs} ms <span className="text-sm font-normal text-muted-foreground">vs GPU's {gpuLatencyMs} ms</span>
+            {effectiveLatencyMs} ms{" "}
+            <span className="text-sm font-normal text-muted-foreground">
+              vs GPU's {gpuLatencyMs} ms
+            </span>
           </p>
         </div>
         <div className="flex items-center gap-2 rounded-lg bg-cyan-400/10 border border-cyan-400/30 px-3.5 py-2 text-cyan-300 font-bold">

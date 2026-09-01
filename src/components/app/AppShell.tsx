@@ -34,7 +34,6 @@ const nav = [
   { to: "/app/settings", label: "Settings", icon: Settings },
 ];
 
-
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const auth = useAuth();
@@ -90,7 +89,6 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="pt-3 mt-3 border-t border-border/60 px-4 space-y-2">
           {nav.slice(10).map((n) => {
             const active = isActive(n.to, n.exact);
-
 
             return (
               <Link

@@ -340,8 +340,8 @@
     ]
   },
   "track_c_kernels": {
-    "alphatensor_gemm_error": 1.9073486328125e-05,
+    "alphatensor_gemm_error": 1.9073486328125e-5,
     "tensor_train_compression_ratio": 102.4,
-    "tensor_train_error": 7.62939453125e-06
+    "tensor_train_error": 7.62939453125e-6
   }
 }

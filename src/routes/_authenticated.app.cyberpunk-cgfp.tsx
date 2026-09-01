@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Gamepad2,
   Thermometer,
@@ -23,23 +23,53 @@ export const Route = createFileRoute("/_authenticated/app/cyberpunk-cgfp")({
 
 interface CGFPStatus {
   active: boolean;
-  contract: {
+  detected_game?: string;
+  governor_mode?: string;
+  render_scale_pct?: number;
+  xess_mode?: string;
+  target_fps?: number;
+  telemetry: {
+    fps?: number;
+    base_fps?: number;
+    perceived_fps?: number;
+    frame_time_ms: number;
+    frame_time_p99_ms?: number;
+    package_temp_celsius: number;
+    package_power_watts?: number;
+    cpu_clock_ghz?: number;
+    clock_frequency_ghz?: number;
+    clock_oscillation_pct?: string | number;
+    frametime_variance_ms?: number;
+    thermal_margin_celsius?: number;
+    dtm_trip_detected?: boolean;
+    page_faults_per_sec?: number;
+  };
+  actuator_decisions?: Array<{
+    timestamp: number;
+    rule: string;
+    render_scale: number;
+    xess_mode: string;
+    reason: string;
+  }>;
+  contract?: {
     target_perceived_fps: string;
     max_temp: string;
     clock_stability: string;
     current_status: string;
   };
-  telemetry: {
-    base_fps: number;
-    perceived_fps: number;
-    frame_time_ms: number;
-    frame_time_p99_ms: number;
-    package_temp_celsius: number;
-    clock_frequency_ghz: number;
-    clock_oscillation_pct: string;
-    page_faults_per_sec: number;
+  contract_invariants?: {
+    visual_fidelity_ssim_min: number;
+    framerate_perceived_min_fps: number;
+    temp_ceiling_celsius: number;
+    pacing_variance_max_ms: number;
+    satisfaction: {
+      ssim_satisfied: boolean;
+      fps_satisfied: boolean;
+      temp_satisfied: boolean;
+      pacing_satisfied: boolean;
+    };
   };
-  levers: {
+  levers?: {
     render_scale_pct: string;
     xess_mode: string;
     frame_generation: string;
@@ -49,7 +79,7 @@ interface CGFPStatus {
       background_threads: string;
     };
   };
-  hardware: {
+  hardware?: {
     cpu: string;
     igpu: string;
     memory_bandwidth_floor: string;
@@ -63,7 +93,7 @@ export function CyberpunkCGFPStudio() {
   const [renderScale, setRenderScale] = useState<number>(75);
   const [xessMode, setXessMode] = useState<string>("Balanced");
 
-  const fetchStatus = async () => {
+  const fetchStatus = useCallback(async () => {
     try {
       const res = await fetch("http://localhost:8005/api/v1/cgfp/status");
       if (res.ok) {
@@ -73,9 +103,9 @@ export function CyberpunkCGFPStudio() {
     } catch {
       // Fallback
     }
-  };
+  }, []);
 
-  const triggerTick = async () => {
+  const triggerTick = useCallback(async () => {
     try {
       const res = await fetch("http://localhost:8005/api/v1/cgfp/tick", {
         method: "POST",
@@ -88,7 +118,7 @@ export function CyberpunkCGFPStudio() {
     } catch {
       // Ignore tick error
     }
-  };
+  }, [fetchStatus]);
 
   const actuateLevers = async (newScale: number, newXess: string) => {
     setLoading(true);
@@ -96,7 +126,10 @@ export function CyberpunkCGFPStudio() {
       const res = await fetch("http://localhost:8005/api/v1/cgfp/actuate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ render_scale_pct: newScale, xess_mode: newXess }),
+        body: JSON.stringify({
+          render_scale_pct: newScale,
+          xess_mode: newXess,
+        }),
       });
       if (res.ok) {
         toast.success(`Levers actuated: XeSS ${newXess} · Render Scale ${newScale}%`);
@@ -117,7 +150,7 @@ export function CyberpunkCGFPStudio() {
       }
     }, 2000);
     return () => clearInterval(interval);
-  }, [simulating]);
+  }, [simulating, fetchStatus, triggerTick]);
 
   const temp = status?.telemetry.package_temp_celsius ?? 72.5;
   const isOverheating = temp > 85.0;
@@ -136,7 +169,8 @@ export function CyberpunkCGFPStudio() {
                 Project LEO-Frame: Cyberpunk 2077 CGFP Governor
               </h1>
               <p className="text-sm text-muted-foreground">
-                Contract-Gated Frame Pipeline (CGFP) · Thermal-Aware Pacing & Zero-Freeze Shield on Intel UHD
+                Contract-Gated Frame Pipeline (CGFP) · Thermal-Aware Pacing & Zero-Freeze Shield on
+                Intel UHD
               </p>
             </div>
           </div>
@@ -183,9 +217,11 @@ export function CyberpunkCGFPStudio() {
           <div className="text-xs text-muted-foreground uppercase tracking-widest font-mono mb-1">
             Package Temperature
           </div>
-          <div className={`text-4xl font-extrabold font-display flex items-baseline gap-2 ${
-            isOverheating ? "text-rose-500" : "text-sky-400"
-          }`}>
+          <div
+            className={`text-4xl font-extrabold font-display flex items-baseline gap-2 ${
+              isOverheating ? "text-rose-500" : "text-sky-400"
+            }`}
+          >
             {temp}°C
             <span className="text-xs font-normal text-muted-foreground">/ 88°C Max</span>
           </div>
@@ -314,23 +350,34 @@ export function CyberpunkCGFPStudio() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs mb-6">
               <div className="bg-background border border-border rounded-lg p-3">
                 <div className="font-bold text-foreground mb-1">Perceptual Quality</div>
-                <div className="text-muted-foreground">Night-City Neon Lighting, SSR Medium, Screen-Space GI</div>
+                <div className="text-muted-foreground">
+                  Night-City Neon Lighting, SSR Medium, Screen-Space GI
+                </div>
               </div>
               <div className="bg-background border border-border rounded-lg p-3">
                 <div className="font-bold text-foreground mb-1">Interactive Pacing</div>
-                <div className="text-muted-foreground">60 Perceived FPS, &le;100ms Input Latency, Zero Stutter</div>
+                <div className="text-muted-foreground">
+                  60 Perceived FPS, &le;100ms Input Latency, Zero Stutter
+                </div>
               </div>
               <div className="bg-background border border-border rounded-lg p-3">
                 <div className="font-bold text-foreground mb-1">Thermal Envelope</div>
-                <div className="text-muted-foreground">&le;88°C Sustained, Zero Throttle Saw, Stable 3.6 GHz Clock</div>
+                <div className="text-muted-foreground">
+                  &le;88°C Sustained, Zero Throttle Saw, Stable 3.6 GHz Clock
+                </div>
               </div>
             </div>
 
             <div className="bg-background border border-border/80 rounded-lg p-4 font-mono text-xs text-muted-foreground space-y-1.5">
-              <div className="text-pink-400 font-bold"># Telemetry Audit Trail (Reflect Ledger):</div>
+              <div className="text-pink-400 font-bold">
+                # Telemetry Audit Trail (Reflect Ledger):
+              </div>
               <div>[CGFP] Hardware target: Intel Core i5-12450H + Intel UHD 48 EUs (No XMX)</div>
               <div>[CGFP] Memory floor: 16 GB Unified System RAM (~50.0 GB/s floor)</div>
-              <div>[CGFP] Thermal shield: Dynamic resolution and XeSS modulation prevents 100°C DTM trip</div>
+              <div>
+                [CGFP] Thermal shield: Dynamic resolution and XeSS modulation prevents 100°C DTM
+                trip
+              </div>
               <div>[CGFP] Status: 100% Experience Parity verified without hardware damage</div>
             </div>
           </div>

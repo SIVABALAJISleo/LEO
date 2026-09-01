@@ -9,13 +9,13 @@
 
 All metrics below are computed from raw wall-clock timers and verified via the decoupled [`IndependentVerifier`](file:///c:/Users/sivab/OneDrive/Documents/HYPER/hyper_x/independent_verifier.py).
 
-| Workload Track | Hardware Reference | HYPER Algorithmic Path | $P_{\text{ref}}$ (Uncapped) | Work Elimination (WER) | Contract Status | Application Parity |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Track 1A: Exact Dense GEMM** | NVIDIA GTX 1650 BLAS | AVX2 Cache-Blocked Morton | **$110.4\%$** | $0.0\%$ | 🟢 **PASS** ($\text{SLO} \le 150\text{ ms}$) | **$100.0\%$** |
-| **Track 1B: Structured GEMM** | NVIDIA GTX 1650 BLAS | Universal Predictive Residual | **$28.7\%$** | $80.3\%$ | 🟢 **PASS** ($\epsilon \le 0.01$) | **$100.0\%$** |
-| **Track 2: Neural Language** | NVIDIA RTX 3060 Mobile | Speculative KAN Spline LUT | **$1128.1\%$** | $86.0\%$ | 🟢 **PASS** ($> 30\text{ tok/s}$) | **$100.0\%$** |
-| **Track 3: Real-Time Graphics** | NVIDIA GTX 1050 Ti | Temporal Event Delta Denoise | **$532.7\%$** | $96.0\%$ | 🟢 **PASS** ($\text{SSIM} \ge 0.92$) | **$100.0\%$** |
-| **Track 4: Scientific Simulation** | NVIDIA Tesla K40 / GTX 1650 | Multi-Grid Coarse + Residual | **$192.3\%$** | $48.0\%$ | 🟢 **PASS** ($\epsilon \le 0.05$) | **$100.0\%$** |
+| Workload Track                     | Hardware Reference          | HYPER Algorithmic Path        | $P_{\text{ref}}$ (Uncapped) | Work Elimination (WER) | Contract Status                              | Application Parity |
+| :--------------------------------- | :-------------------------- | :---------------------------- | :-------------------------- | :--------------------- | :------------------------------------------- | :----------------- |
+| **Track 1A: Exact Dense GEMM**     | NVIDIA GTX 1650 BLAS        | AVX2 Cache-Blocked Morton     | **$110.4\%$**               | $0.0\%$                | 🟢 **PASS** ($\text{SLO} \le 150\text{ ms}$) | **$100.0\%$**      |
+| **Track 1B: Structured GEMM**      | NVIDIA GTX 1650 BLAS        | Universal Predictive Residual | **$28.7\%$**                | $80.3\%$               | 🟢 **PASS** ($\epsilon \le 0.01$)            | **$100.0\%$**      |
+| **Track 2: Neural Language**       | NVIDIA RTX 3060 Mobile      | Speculative KAN Spline LUT    | **$1128.1\%$**              | $86.0\%$               | 🟢 **PASS** ($> 30\text{ tok/s}$)            | **$100.0\%$**      |
+| **Track 3: Real-Time Graphics**    | NVIDIA GTX 1050 Ti          | Temporal Event Delta Denoise  | **$532.7\%$**               | $96.0\%$               | 🟢 **PASS** ($\text{SSIM} \ge 0.92$)         | **$100.0\%$**      |
+| **Track 4: Scientific Simulation** | NVIDIA Tesla K40 / GTX 1650 | Multi-Grid Coarse + Residual  | **$192.3\%$**               | $48.0\%$               | 🟢 **PASS** ($\epsilon \le 0.05$)            | **$100.0\%$**      |
 
 ---
 

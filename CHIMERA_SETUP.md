@@ -1,4 +1,5 @@
 # CHIMERA v1.1 Setup Guide
+
 ## Intel Core i5-12450H + UHD Xe G4 48EU + 16GB RAM + Windows 11
 
 ---
@@ -33,10 +34,12 @@ mkdir models
 ```
 
 ### 1. Primary Model: Qwen2.5-1.5B-Instruct (Q4_K_M, ~986 MB)
+
 - URL: `https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct-GGUF`
 - File: `models/Qwen2.5-1.5B-Instruct-Q4_K_M.gguf`
 
 ### 2. Draft Model: Qwen2.5-0.5B-Instruct (Q4_K_M, ~398 MB)
+
 - URL: `https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF`
 - File: `models/Qwen2.5-0.5B-Instruct-Q4_K_M.gguf`
 
@@ -63,6 +66,7 @@ python chimera_engine.py
 ```
 
 ### Measured Benchmark Output:
+
 - **Contract Accuracy**: 19/19 (100.0%)
 - **Compute Avoidance Rate**: 63.2%
 - **Procedural Latency**: ~0.18 ms

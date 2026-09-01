@@ -8,10 +8,54 @@ import time
 import queue
 import threading
 import logging
+import ast
+import operator
 import numpy as np
 from typing import Dict, Any, Tuple, Optional, List
 
 logger = logging.getLogger(__name__)
+
+_SAFE_OPERATORS = {
+    ast.Add: operator.add,
+    ast.Sub: operator.sub,
+    ast.Mult: operator.mul,
+    ast.Div: operator.truediv,
+    ast.FloorDiv: operator.floordiv,
+    ast.Mod: operator.mod,
+    ast.Pow: operator.pow,
+    ast.USub: operator.neg,
+    ast.UAdd: operator.pos,
+}
+
+def _safe_eval_math_expr(node):
+    if isinstance(node, ast.Constant):
+        if isinstance(node.value, (int, float)):
+            return node.value
+        raise ValueError("Non-numeric constant")
+    elif isinstance(node, ast.BinOp):
+        left = _safe_eval_math_expr(node.left)
+        right = _safe_eval_math_expr(node.right)
+        op_type = type(node.op)
+        if op_type in _SAFE_OPERATORS:
+            return _SAFE_OPERATORS[op_type](left, right)
+        raise ValueError("Unsupported binary operator")
+    elif isinstance(node, ast.UnaryOp):
+        operand = _safe_eval_math_expr(node.operand)
+        op_type = type(node.op)
+        if op_type in _SAFE_OPERATORS:
+            return _SAFE_OPERATORS[op_type](operand)
+        raise ValueError("Unsupported unary operator")
+    elif isinstance(node, ast.Expression):
+        return _safe_eval_math_expr(node.body)
+    raise ValueError("Unsupported expression")
+
+def safe_math_eval(expr_str: str) -> Optional[float]:
+    try:
+        parsed = ast.parse(expr_str.strip(), mode="eval")
+        return _safe_eval_math_expr(parsed)
+    except Exception:
+        return None
+
 
 class MemoryPool:
     """Contiguous memory buffer pool to prevent heap allocation fragmentation."""
@@ -171,13 +215,16 @@ class ConfidenceGatedCache:
         clean_q = query.lower().strip()
         
         # 1. Math evaluation
-        math_q = clean_q.replace(" ", "").replace("?", "")
-        if all(c in "0123456789+-*/()." for c in math_q) and len(math_q) > 2:
-            try:
-                val = eval(math_q, {"__builtins__": None}, {})
+        raw_math = clean_q
+        for prefix in ["what is", "calculate", "evaluate", "solve", "compute"]:
+            if raw_math.startswith(prefix):
+                raw_math = raw_math[len(prefix):].strip()
+        
+        math_q = raw_math.replace(" ", "").replace("?", "").replace("=", "")
+        if math_q and all(c in "0123456789+-*/()." for c in math_q) and any(c in "+-*/" for c in math_q):
+            val = safe_math_eval(math_q)
+            if val is not None:
                 return f"[Procedural Bypass] Calculated value: {val} (computed locally in 0ms)."
-            except Exception:
-                pass
                 
         # 2. Datetime bypass
         if "current time" in clean_q or "date today" in clean_q or clean_q == "date":

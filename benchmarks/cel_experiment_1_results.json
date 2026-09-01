@@ -21,5 +21,5 @@
     "energy_joules": 0.002849
   },
   "max_abs_error": 0.09619140625,
-  "rel_frobenius_error": 7.592688689328497e-06
+  "rel_frobenius_error": 7.592688689328497e-6
 }

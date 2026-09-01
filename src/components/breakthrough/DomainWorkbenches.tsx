@@ -20,7 +20,9 @@ import { runQmcOptionBenchmark } from "@/lib/breakthrough-algorithms/quasi-monte
 import { runFmmNBodyBenchmark } from "@/lib/breakthrough-algorithms/fast-multipole-method";
 
 export function DomainWorkbenches() {
-  const [activeDomain, setActiveDomain] = useState<"gaming" | "training" | "video" | "scientific">("gaming");
+  const [activeDomain, setActiveDomain] = useState<"gaming" | "training" | "video" | "scientific">(
+    "gaming",
+  );
 
   // Gaming State (Cyberpunk 2077)
   const [internalResScale, setInternalResScale] = useState<number>(0.5); // 540p -> 1080p
@@ -42,7 +44,9 @@ export function DomainWorkbenches() {
   const rawPixelCount = 1920 * 1080;
   const renderedPixelCount = Math.round(1920 * internalResScale * 1080 * internalResScale);
   const pixelReductionPct = Math.round((1 - renderedPixelCount / rawPixelCount) * 100);
-  const estimatedFps = Math.round(28 + (1 - internalResScale) * 30 + (lodAggressiveness - 1.0) * 10);
+  const estimatedFps = Math.round(
+    28 + (1 - internalResScale) * 30 + (lodAggressiveness - 1.0) * 10,
+  );
   const frameTimeMs = Math.round((1000 / estimatedFps) * 10) / 10;
 
   // Training Calculations (7B Model)
@@ -50,7 +54,8 @@ export function DomainWorkbenches() {
   const loraTrainableParams = Math.round((loraRank / 4096) * totalBaseParams * 0.05); // ~0.05% - 0.2%
   const trainableParamRatio = (loraTrainableParams / totalBaseParams) * 100;
   const baseVramRequiredFullFp16 = 28.0; // 28 GB for full fine-tuning
-  const loraVramRequired = Math.round((baseVramRequiredFullFp16 * 0.22 * (use8BitOptimizer ? 0.6 : 1.0)) * 10) / 10; // Fits in 16GB RAM!
+  const loraVramRequired =
+    Math.round(baseVramRequiredFullFp16 * 0.22 * (use8BitOptimizer ? 0.6 : 1.0) * 10) / 10; // Fits in 16GB RAM!
 
   return (
     <div className="space-y-6 font-mono text-xs">
@@ -65,7 +70,8 @@ export function DomainWorkbenches() {
               Real-World Workload Reformulation
             </h2>
             <p className="text-muted-foreground text-xs font-sans mt-1">
-              Interactive deep-dives into Gaming (Cyberpunk), LLM Training, 4K Video, and Scientific Computing.
+              Interactive deep-dives into Gaming (Cyberpunk), LLM Training, 4K Video, and Scientific
+              Computing.
             </p>
           </div>
 
@@ -101,17 +107,22 @@ export function DomainWorkbenches() {
         <div className="rounded-xl border border-border/60 bg-zinc-950/90 p-6 md:p-8 backdrop-blur space-y-6">
           <div className="flex items-center justify-between border-b border-border/40 pb-4">
             <div>
-              <span className="text-cyan-400 font-bold uppercase text-[10px]">Workload Class: Interactive Graphics</span>
+              <span className="text-cyan-400 font-bold uppercase text-[10px]">
+                Workload Class: Interactive Graphics
+              </span>
               <h3 className="text-xl font-bold text-foreground font-sans mt-1">
                 Cyberpunk 2077 — 100% Visual Experience Parity at 35+ FPS
               </h3>
               <p className="text-muted-foreground text-xs mt-1">
-                Contract: "Same visual gameplay fluidity at 1080p effective resolution" vs RTX 4090 native 4K brute-force.
+                Contract: "Same visual gameplay fluidity at 1080p effective resolution" vs RTX 4090
+                native 4K brute-force.
               </p>
             </div>
             <div className="text-right">
               <span className="text-[10px] text-muted-foreground uppercase">Intel UHD Status</span>
-              <p className="text-emerald-400 font-bold text-lg">{estimatedFps} FPS ({frameTimeMs} ms)</p>
+              <p className="text-emerald-400 font-bold text-lg">
+                {estimatedFps} FPS ({frameTimeMs} ms)
+              </p>
             </div>
           </div>
 
@@ -119,8 +130,12 @@ export function DomainWorkbenches() {
             <div className="space-y-4">
               <div className="rounded-lg border border-border/60 bg-zinc-900/60 p-4 space-y-2">
                 <div className="flex justify-between">
-                  <label className="text-muted-foreground font-bold uppercase">Internal Render Resolution Scale:</label>
-                  <span className="font-bold text-cyan-400">{Math.round(1080 * internalResScale)}p ({(internalResScale * 100).toFixed(0)}%)</span>
+                  <label className="text-muted-foreground font-bold uppercase">
+                    Internal Render Resolution Scale:
+                  </label>
+                  <span className="font-bold text-cyan-400">
+                    {Math.round(1080 * internalResScale)}p ({(internalResScale * 100).toFixed(0)}%)
+                  </span>
                 </div>
                 <input
                   type="range"
@@ -132,14 +147,19 @@ export function DomainWorkbenches() {
                   className="w-full h-2 rounded bg-zinc-800 accent-cyan-400 cursor-pointer"
                 />
                 <span className="text-[10px] text-muted-foreground">
-                  Neural super-resolution upscales {Math.round(1080 * internalResScale)}p to sharp 1080p target display.
+                  Neural super-resolution upscales {Math.round(1080 * internalResScale)}p to sharp
+                  1080p target display.
                 </span>
               </div>
 
               <div className="rounded-lg border border-border/60 bg-zinc-900/60 p-4 space-y-2">
                 <div className="flex justify-between">
-                  <label className="text-muted-foreground font-bold uppercase">Geometric Continuous LOD Scale:</label>
-                  <span className="font-bold text-amber-400">{lodAggressiveness}x Culling Factor</span>
+                  <label className="text-muted-foreground font-bold uppercase">
+                    Geometric Continuous LOD Scale:
+                  </label>
+                  <span className="font-bold text-amber-400">
+                    {lodAggressiveness}x Culling Factor
+                  </span>
                 </div>
                 <input
                   type="range"
@@ -157,9 +177,19 @@ export function DomainWorkbenches() {
               <div className="space-y-2">
                 <div className="text-cyan-400 font-bold uppercase">Breakthrough Mechanics:</div>
                 <ul className="space-y-1.5 text-muted-foreground text-xs list-disc list-inside">
-                  <li><strong className="text-foreground">Software DLSS:</strong> Render at 540p ({pixelReductionPct}% pixels eliminated), reconstruct with bilateral edge filter.</li>
-                  <li><strong className="text-foreground">Screen-Space Diffuse Probes:</strong> Global illumination simulated via 16x16 irradiance probe grid instead of full hardware raymarching.</li>
-                  <li><strong className="text-foreground">Temporal Accumulation:</strong> Jittered sub-pixel reconstruction reuses 85% of previous frame samples.</li>
+                  <li>
+                    <strong className="text-foreground">Software DLSS:</strong> Render at 540p (
+                    {pixelReductionPct}% pixels eliminated), reconstruct with bilateral edge filter.
+                  </li>
+                  <li>
+                    <strong className="text-foreground">Screen-Space Diffuse Probes:</strong> Global
+                    illumination simulated via 16x16 irradiance probe grid instead of full hardware
+                    raymarching.
+                  </li>
+                  <li>
+                    <strong className="text-foreground">Temporal Accumulation:</strong> Jittered
+                    sub-pixel reconstruction reuses 85% of previous frame samples.
+                  </li>
                 </ul>
               </div>
 
@@ -179,17 +209,22 @@ export function DomainWorkbenches() {
         <div className="rounded-xl border border-border/60 bg-zinc-950/90 p-6 md:p-8 backdrop-blur space-y-6">
           <div className="flex items-center justify-between border-b border-border/40 pb-4">
             <div>
-              <span className="text-purple-400 font-bold uppercase text-[10px]">Workload Class: Large Model Fine-Tuning</span>
+              <span className="text-purple-400 font-bold uppercase text-[10px]">
+                Workload Class: Large Model Fine-Tuning
+              </span>
               <h3 className="text-xl font-bold text-foreground font-sans mt-1">
                 Billion-Parameter LLM Training — LoRA & Memory Distillation
               </h3>
               <p className="text-muted-foreground text-xs mt-1">
-                Contract: "Achieve downstream task specialization" vs brute-force full parameter pre-training.
+                Contract: "Achieve downstream task specialization" vs brute-force full parameter
+                pre-training.
               </p>
             </div>
             <div className="text-right">
               <span className="text-[10px] text-muted-foreground uppercase">Memory Footprint</span>
-              <p className="text-cyan-400 font-bold text-lg">{loraVramRequired} GB RAM (Fits 16GB)</p>
+              <p className="text-cyan-400 font-bold text-lg">
+                {loraVramRequired} GB RAM (Fits 16GB)
+              </p>
             </div>
           </div>
 
@@ -197,8 +232,12 @@ export function DomainWorkbenches() {
             <div className="space-y-4">
               <div className="rounded-lg border border-border/60 bg-zinc-900/60 p-4 space-y-2">
                 <div className="flex justify-between">
-                  <label className="text-muted-foreground font-bold uppercase">LoRA Adaptation Rank (r):</label>
-                  <span className="font-bold text-purple-400">r = {loraRank} ({trainableParamRatio.toFixed(2)}% weights updated)</span>
+                  <label className="text-muted-foreground font-bold uppercase">
+                    LoRA Adaptation Rank (r):
+                  </label>
+                  <span className="font-bold text-purple-400">
+                    r = {loraRank} ({trainableParamRatio.toFixed(2)}% weights updated)
+                  </span>
                 </div>
                 <input
                   type="range"
@@ -210,19 +249,26 @@ export function DomainWorkbenches() {
                   className="w-full h-2 rounded bg-zinc-800 accent-purple-400 cursor-pointer"
                 />
                 <span className="text-[10px] text-muted-foreground">
-                  Freezes all 7B base weights W_0. Trains only low-rank matrices A in R^{"{d x r}"} and B in R^{"{r x k}"}.
+                  Freezes all 7B base weights W_0. Trains only low-rank matrices A in R^{"{d x r}"}{" "}
+                  and B in R^{"{r x k}"}.
                 </span>
               </div>
 
               <div className="flex items-center justify-between rounded-lg border border-border/60 bg-zinc-900/60 p-4">
                 <div>
-                  <div className="font-bold text-foreground">8-Bit Quantized Optimizer (BitsAndBytes):</div>
-                  <div className="text-[10px] text-muted-foreground">Reduces AdamW momentum/variance states from 32-bit to 8-bit.</div>
+                  <div className="font-bold text-foreground">
+                    8-Bit Quantized Optimizer (BitsAndBytes):
+                  </div>
+                  <div className="text-[10px] text-muted-foreground">
+                    Reduces AdamW momentum/variance states from 32-bit to 8-bit.
+                  </div>
                 </div>
                 <button
                   onClick={() => setUse8BitOptimizer(!use8BitOptimizer)}
                   className={`px-3 py-1 rounded text-xs font-bold ${
-                    use8BitOptimizer ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/40" : "bg-zinc-800 text-zinc-400"
+                    use8BitOptimizer
+                      ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/40"
+                      : "bg-zinc-800 text-zinc-400"
                   }`}
                 >
                   {use8BitOptimizer ? "ENABLED" : "DISABLED"}
@@ -232,11 +278,24 @@ export function DomainWorkbenches() {
 
             <div className="space-y-3 rounded-lg border border-purple-500/30 bg-black/60 p-5 flex flex-col justify-between">
               <div className="space-y-2">
-                <div className="text-purple-400 font-bold uppercase">Why the 100% Contract Holds:</div>
+                <div className="text-purple-400 font-bold uppercase">
+                  Why the 100% Contract Holds:
+                </div>
                 <ul className="space-y-1.5 text-muted-foreground text-xs list-disc list-inside">
-                  <li><strong className="text-foreground">Pre-training is impossible:</strong> Training 70B models from scratch requires 512 H100 GPUs and 200kW power. That is physically impossible on a laptop.</li>
-                  <li><strong className="text-foreground">Downstream Specialization:</strong> 99.8% of enterprise/user applications require fine-tuning, not pre-training.</li>
-                  <li><strong className="text-foreground">16GB RAM is Sufficient:</strong> QLoRA 4-bit base weights + LoRA rank-16 updates require only ~7.2 GB RAM, running seamlessly on the i5-12450H.</li>
+                  <li>
+                    <strong className="text-foreground">Pre-training is impossible:</strong>{" "}
+                    Training 70B models from scratch requires 512 H100 GPUs and 200kW power. That is
+                    physically impossible on a laptop.
+                  </li>
+                  <li>
+                    <strong className="text-foreground">Downstream Specialization:</strong> 99.8% of
+                    enterprise/user applications require fine-tuning, not pre-training.
+                  </li>
+                  <li>
+                    <strong className="text-foreground">16GB RAM is Sufficient:</strong> QLoRA 4-bit
+                    base weights + LoRA rank-16 updates require only ~7.2 GB RAM, running seamlessly
+                    on the i5-12450H.
+                  </li>
                 </ul>
               </div>
 
@@ -256,7 +315,9 @@ export function DomainWorkbenches() {
         <div className="rounded-xl border border-border/60 bg-zinc-950/90 p-6 md:p-8 backdrop-blur space-y-6">
           <div className="flex items-center justify-between border-b border-border/40 pb-4">
             <div>
-              <span className="text-amber-400 font-bold uppercase text-[10px]">Workload Class: Media Encoding & Transcoding</span>
+              <span className="text-amber-400 font-bold uppercase text-[10px]">
+                Workload Class: Media Encoding & Transcoding
+              </span>
               <h3 className="text-xl font-bold text-foreground font-sans mt-1">
                 4K Video Pipeline — Intel QuickSync Video (QSV) Native Silicon
               </h3>
@@ -265,7 +326,9 @@ export function DomainWorkbenches() {
               </p>
             </div>
             <div className="text-right">
-              <span className="text-[10px] text-muted-foreground uppercase">Hardware Silicon Mode</span>
+              <span className="text-[10px] text-muted-foreground uppercase">
+                Hardware Silicon Mode
+              </span>
               <p className="text-emerald-400 font-bold text-lg">QuickSync MFX ACTIVE</p>
             </div>
           </div>
@@ -274,16 +337,22 @@ export function DomainWorkbenches() {
             <div className="space-y-3 rounded-lg border border-border/60 bg-zinc-900/60 p-5">
               <div className="text-amber-400 font-bold uppercase">The Hardware Secret:</div>
               <p className="text-muted-foreground text-xs leading-relaxed">
-                The Intel Core i5-12450H is not just a general CPU; it includes a dedicated, fixed-function hardware silicon block called <strong className="text-foreground">Intel QuickSync Video (QSV)</strong>.
+                The Intel Core i5-12450H is not just a general CPU; it includes a dedicated,
+                fixed-function hardware silicon block called{" "}
+                <strong className="text-foreground">Intel QuickSync Video (QSV)</strong>.
               </p>
               <p className="text-muted-foreground text-xs leading-relaxed">
-                QuickSync handles 4K H.264, HEVC (H.265), and AV1 decoding and encoding in pure fixed-function ASICs at 120+ FPS with near-zero CPU utilization, exactly matching NVIDIA NVENC.
+                QuickSync handles 4K H.264, HEVC (H.265), and AV1 decoding and encoding in pure
+                fixed-function ASICs at 120+ FPS with near-zero CPU utilization, exactly matching
+                NVIDIA NVENC.
               </p>
             </div>
 
             <div className="space-y-3 rounded-lg border border-emerald-500/30 bg-black/60 p-5 flex flex-col justify-between">
               <div>
-                <div className="text-emerald-400 font-bold uppercase">Throughput Metrics (4K 60 FPS Video):</div>
+                <div className="text-emerald-400 font-bold uppercase">
+                  Throughput Metrics (4K 60 FPS Video):
+                </div>
                 <div className="mt-3 space-y-2 text-xs">
                   <div className="flex justify-between py-1 border-b border-border/40">
                     <span className="text-muted-foreground">Intel QuickSync QSV Decode:</span>
@@ -301,7 +370,8 @@ export function DomainWorkbenches() {
               </div>
 
               <div className="pt-3 border-t border-border/40 text-[11px] text-muted-foreground">
-                No software tricks required. Fully solved by properly routing media calls directly to Intel QSV hardware drivers.
+                No software tricks required. Fully solved by properly routing media calls directly
+                to Intel QSV hardware drivers.
               </div>
             </div>
           </div>
@@ -313,7 +383,9 @@ export function DomainWorkbenches() {
         <div className="rounded-xl border border-border/60 bg-zinc-950/90 p-6 md:p-8 backdrop-blur space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border/40 pb-4">
             <div>
-              <span className="text-cyan-400 font-bold uppercase text-[10px]">Workload Class: Scientific Computing</span>
+              <span className="text-cyan-400 font-bold uppercase text-[10px]">
+                Workload Class: Scientific Computing
+              </span>
               <h3 className="text-xl font-bold text-foreground font-sans mt-1">
                 Sublinear Scientific Engine (SFFT, QMC, FMM)
               </h3>
@@ -329,7 +401,9 @@ export function DomainWorkbenches() {
                   key={t.id}
                   onClick={() => setScientificTab(t.id as any)}
                   className={`px-3 py-1.5 rounded text-[11px] font-bold transition-all ${
-                    scientificTab === t.id ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/40" : "text-muted-foreground"
+                    scientificTab === t.id
+                      ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/40"
+                      : "text-muted-foreground"
                   }`}
                 >
                   {t.label}
@@ -344,7 +418,9 @@ export function DomainWorkbenches() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="rounded-lg border border-border/60 bg-zinc-900 p-4 space-y-2">
                   <div className="flex justify-between">
-                    <label className="text-muted-foreground uppercase font-bold">Signal Sparsity (k dominant modes):</label>
+                    <label className="text-muted-foreground uppercase font-bold">
+                      Signal Sparsity (k dominant modes):
+                    </label>
                     <span className="font-bold text-cyan-400">k = {sfftK} frequencies</span>
                   </div>
                   <input
@@ -359,9 +435,12 @@ export function DomainWorkbenches() {
                 </div>
 
                 <div className="rounded-lg border border-border/60 bg-zinc-900 p-4 flex flex-col justify-center space-y-1">
-                  <div className="text-muted-foreground uppercase font-bold text-[10px]">Mathematical Insight:</div>
+                  <div className="text-muted-foreground uppercase font-bold text-[10px]">
+                    Mathematical Insight:
+                  </div>
                   <div className="text-foreground text-xs">
-                    Natural signals (audio, radio, images) are sparse in frequency. SFFT locates dominant modes in sublinear time without computing unneeded spectral bins.
+                    Natural signals (audio, radio, images) are sparse in frequency. SFFT locates
+                    dominant modes in sublinear time without computing unneeded spectral bins.
                   </div>
                 </div>
               </div>
@@ -371,26 +450,38 @@ export function DomainWorkbenches() {
                   const N = 1024;
                   const sig = new Float64Array(N);
                   for (let t = 0; t < N; t++) {
-                    sig[t] = Math.sin((2 * Math.PI * 40 * t) / N) + 0.5 * Math.cos((2 * Math.PI * 110 * t) / N);
+                    sig[t] =
+                      Math.sin((2 * Math.PI * 40 * t) / N) +
+                      0.5 * Math.cos((2 * Math.PI * 110 * t) / N);
                   }
                   const res = sparseFft(sig, sfftK);
                   return (
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
                       <div className="p-2 rounded bg-zinc-900/80 border border-border/40">
                         <div className="text-[10px] text-muted-foreground">Standard FFT Time</div>
-                        <div className="text-sm font-bold text-red-400">{res.standardFftTimeMs} ms</div>
+                        <div className="text-sm font-bold text-red-400">
+                          {res.standardFftTimeMs} ms
+                        </div>
                       </div>
                       <div className="p-2 rounded bg-zinc-900/80 border border-border/40">
                         <div className="text-[10px] text-muted-foreground">Sparse FFT Time</div>
-                        <div className="text-sm font-bold text-cyan-400">{res.sparseFftTimeMs} ms</div>
+                        <div className="text-sm font-bold text-cyan-400">
+                          {res.sparseFftTimeMs} ms
+                        </div>
                       </div>
                       <div className="p-2 rounded bg-zinc-900/80 border border-border/40">
                         <div className="text-[10px] text-muted-foreground">Measured Speedup</div>
-                        <div className="text-sm font-bold text-emerald-400">{res.measuredSpeedup}x Faster</div>
+                        <div className="text-sm font-bold text-emerald-400">
+                          {res.measuredSpeedup}x Faster
+                        </div>
                       </div>
                       <div className="p-2 rounded bg-zinc-900/80 border border-border/40">
-                        <div className="text-[10px] text-muted-foreground">Operations Eliminated</div>
-                        <div className="text-sm font-bold text-amber-400">{res.operationsEliminatedPct}%</div>
+                        <div className="text-[10px] text-muted-foreground">
+                          Operations Eliminated
+                        </div>
+                        <div className="text-sm font-bold text-amber-400">
+                          {res.operationsEliminatedPct}%
+                        </div>
                       </div>
                     </div>
                   );
@@ -405,8 +496,12 @@ export function DomainWorkbenches() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="rounded-lg border border-border/60 bg-zinc-900 p-4 space-y-2">
                   <div className="flex justify-between">
-                    <label className="text-muted-foreground uppercase font-bold">Simulated Sample Budget:</label>
-                    <span className="font-bold text-cyan-400">{qmcSamples.toLocaleString()} samples</span>
+                    <label className="text-muted-foreground uppercase font-bold">
+                      Simulated Sample Budget:
+                    </label>
+                    <span className="font-bold text-cyan-400">
+                      {qmcSamples.toLocaleString()} samples
+                    </span>
                   </div>
                   <input
                     type="range"
@@ -419,7 +514,9 @@ export function DomainWorkbenches() {
                   />
                 </div>
                 <div className="rounded-lg border border-border/60 bg-zinc-900 p-4 flex flex-col justify-center space-y-1">
-                  <div className="text-muted-foreground uppercase font-bold text-[10px]">Convergence Formula:</div>
+                  <div className="text-muted-foreground uppercase font-bold text-[10px]">
+                    Convergence Formula:
+                  </div>
                   <div className="text-foreground text-xs">
                     Sobol Low-Discrepancy Error = O(1/N) vs Pseudorandom Error = O(1/√N)
                   </div>
@@ -432,8 +529,12 @@ export function DomainWorkbenches() {
                   return (
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
                       <div className="p-2 rounded bg-zinc-900/80 border border-border/40">
-                        <div className="text-[10px] text-muted-foreground">Exact Analytical Truth</div>
-                        <div className="text-sm font-bold text-foreground">${res.exactAnalyticalValue}</div>
+                        <div className="text-[10px] text-muted-foreground">
+                          Exact Analytical Truth
+                        </div>
+                        <div className="text-sm font-bold text-foreground">
+                          ${res.exactAnalyticalValue}
+                        </div>
                       </div>
                       <div className="p-2 rounded bg-zinc-900/80 border border-border/40">
                         <div className="text-[10px] text-muted-foreground">Random MC Error</div>
@@ -441,11 +542,17 @@ export function DomainWorkbenches() {
                       </div>
                       <div className="p-2 rounded bg-zinc-900/80 border border-border/40">
                         <div className="text-[10px] text-muted-foreground">QMC Sobol Error</div>
-                        <div className="text-sm font-bold text-emerald-400">±${res.finalQmcError}</div>
+                        <div className="text-sm font-bold text-emerald-400">
+                          ±${res.finalQmcError}
+                        </div>
                       </div>
                       <div className="p-2 rounded bg-zinc-900/80 border border-border/40">
-                        <div className="text-[10px] text-muted-foreground">Sample Work Reduction</div>
-                        <div className="text-sm font-bold text-cyan-400">{res.workReductionRatio}x Fewer</div>
+                        <div className="text-[10px] text-muted-foreground">
+                          Sample Work Reduction
+                        </div>
+                        <div className="text-sm font-bold text-cyan-400">
+                          {res.workReductionRatio}x Fewer
+                        </div>
                       </div>
                     </div>
                   );
@@ -460,7 +567,9 @@ export function DomainWorkbenches() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="rounded-lg border border-border/60 bg-zinc-900 p-4 space-y-2">
                   <div className="flex justify-between">
-                    <label className="text-muted-foreground uppercase font-bold">N-Body Particle Cluster:</label>
+                    <label className="text-muted-foreground uppercase font-bold">
+                      N-Body Particle Cluster:
+                    </label>
                     <span className="font-bold text-cyan-400">N = {fmmParticles} bodies</span>
                   </div>
                   <input
@@ -474,9 +583,12 @@ export function DomainWorkbenches() {
                   />
                 </div>
                 <div className="rounded-lg border border-border/60 bg-zinc-900 p-4 flex flex-col justify-center space-y-1">
-                  <div className="text-muted-foreground uppercase font-bold text-[10px]">Greengard FMM Tree:</div>
+                  <div className="text-muted-foreground uppercase font-bold text-[10px]">
+                    Greengard FMM Tree:
+                  </div>
                   <div className="text-foreground text-xs">
-                    Groups far-field clusters into quadtree multipole centers, reducing operations from O(N^2) to O(N).
+                    Groups far-field clusters into quadtree multipole centers, reducing operations
+                    from O(N^2) to O(N).
                   </div>
                 </div>
               </div>
@@ -487,20 +599,30 @@ export function DomainWorkbenches() {
                   return (
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
                       <div className="p-2 rounded bg-zinc-900/80 border border-border/40">
-                        <div className="text-[10px] text-muted-foreground">Brute Force Ops (N^2)</div>
-                        <div className="text-sm font-bold text-red-400">{res.bruteForceOps.toLocaleString()}</div>
+                        <div className="text-[10px] text-muted-foreground">
+                          Brute Force Ops (N^2)
+                        </div>
+                        <div className="text-sm font-bold text-red-400">
+                          {res.bruteForceOps.toLocaleString()}
+                        </div>
                       </div>
                       <div className="p-2 rounded bg-zinc-900/80 border border-border/40">
                         <div className="text-[10px] text-muted-foreground">FMM Tree Ops (O(N))</div>
-                        <div className="text-sm font-bold text-cyan-400">{res.fmmOps.toLocaleString()}</div>
+                        <div className="text-sm font-bold text-cyan-400">
+                          {res.fmmOps.toLocaleString()}
+                        </div>
                       </div>
                       <div className="p-2 rounded bg-zinc-900/80 border border-border/40">
                         <div className="text-[10px] text-muted-foreground">Operation Reduction</div>
-                        <div className="text-sm font-bold text-emerald-400">{res.operationsEliminatedRatio}x Fewer</div>
+                        <div className="text-sm font-bold text-emerald-400">
+                          {res.operationsEliminatedRatio}x Fewer
+                        </div>
                       </div>
                       <div className="p-2 rounded bg-zinc-900/80 border border-border/40">
                         <div className="text-[10px] text-muted-foreground">Relative Error</div>
-                        <div className="text-sm font-bold text-amber-400">{res.maxRelativeForceError} (&lt; 0.1%)</div>
+                        <div className="text-sm font-bold text-amber-400">
+                          {res.maxRelativeForceError} (&lt; 0.1%)
+                        </div>
                       </div>
                     </div>
                   );

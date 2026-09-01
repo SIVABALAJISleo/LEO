@@ -1,6 +1,6 @@
 # LEO x HYPER — Self-Improving Edge AI Engine
 
-> *"The best inference is the one that never happens."*
+> _"The best inference is the one that never happens."_
 
 **LEO (Local Edge Orchestrator)** is a memory-efficient, self-improving AI backend engineered for consumer laptop hardware. It eliminates cloud dependency while continuously learning from its own query patterns through the integrated **Claude Reflect System**.
 
@@ -37,13 +37,13 @@ User Query
 
 ### Core Stack
 
-| Layer | Component | Purpose |
-|-------|-----------|---------|
-| **Engine** | `leo_engine.py` | Memory-efficient singleton, on-demand model lifecycle |
-| **Cache** | `leo_cache.json` | Zero-latency semantic lookup store |
-| **Reflect** | `backend/reflect/` | Self-improvement via Claude Reflect System |
-| **API** | `backend/server.py` | FastAPI REST + `/v1/chat/completions` |
-| **Frontend** | `src/` | React + TanStack Router UI |
+| Layer        | Component           | Purpose                                               |
+| ------------ | ------------------- | ----------------------------------------------------- |
+| **Engine**   | `leo_engine.py`     | Memory-efficient singleton, on-demand model lifecycle |
+| **Cache**    | `leo_cache.json`    | Zero-latency semantic lookup store                    |
+| **Reflect**  | `backend/reflect/`  | Self-improvement via Claude Reflect System            |
+| **API**      | `backend/server.py` | FastAPI REST + `/v1/chat/completions`                 |
+| **Frontend** | `src/`              | React + TanStack Router UI                            |
 
 ### LEO v7 Memory-Efficient Engine
 
@@ -103,25 +103,25 @@ python backend/reflect/leo_reflect_service.py
 
 ## API Endpoints
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/v1/leo/orchestrate` | `POST` | Main query endpoint with cache + reflection |
-| `/api/v1/leo/metrics` | `GET` | Live performance metrics |
-| `/api/v1/leo/frontiers` | `GET` | Engine frontier status |
-| `/api/v1/memory` | `GET/POST` | Persistent memory store |
-| `/v1/chat/completions` | `POST` | OpenAI-compatible chat API |
+| Endpoint                  | Method     | Description                                 |
+| ------------------------- | ---------- | ------------------------------------------- |
+| `/api/v1/leo/orchestrate` | `POST`     | Main query endpoint with cache + reflection |
+| `/api/v1/leo/metrics`     | `GET`      | Live performance metrics                    |
+| `/api/v1/leo/frontiers`   | `GET`      | Engine frontier status                      |
+| `/api/v1/memory`          | `GET/POST` | Persistent memory store                     |
+| `/v1/chat/completions`    | `POST`     | OpenAI-compatible chat API                  |
 
 ---
 
 ## Hardware Requirements
 
-| Spec | Minimum | Tested On |
-|------|---------|-----------|
-| CPU | Intel Core i5+ (8th gen+) | i5-12450H (P+E cores) |
-| RAM | 8 GB | 16 GB DDR5 |
-| GPU | iGPU / discrete | Intel UHD (Xe) |
-| Storage | 20 GB free | NVMe SSD |
-| OS | Windows 10+ / Linux | Windows 11 |
+| Spec    | Minimum                   | Tested On             |
+| ------- | ------------------------- | --------------------- |
+| CPU     | Intel Core i5+ (8th gen+) | i5-12450H (P+E cores) |
+| RAM     | 8 GB                      | 16 GB DDR5            |
+| GPU     | iGPU / discrete           | Intel UHD (Xe)        |
+| Storage | 20 GB free                | NVMe SSD              |
+| OS      | Windows 10+ / Linux       | Windows 11            |
 
 > **Note:** LEO is an experimental edge-optimized system for local-first AI. It does not compete with data-center hardware in raw throughput.
 
@@ -129,14 +129,14 @@ python backend/reflect/leo_reflect_service.py
 
 ## Key Modules
 
-| File | Role |
-|------|------|
-| `leo_engine.py` | Core inference engine (v7 memory-efficient) |
-| `leo_v7_memory_efficient.py` | Standalone v7 edition |
-| `populate_cache.py` | Seed the semantic cache with FAQ data |
-| `backend/reflect/leo_reflect_service.py` | Reflection + learning ledger service |
-| `test_reflect_integration.py` | Integration test suite |
-| `backend/server.py` | FastAPI REST backend |
+| File                                     | Role                                        |
+| ---------------------------------------- | ------------------------------------------- |
+| `leo_engine.py`                          | Core inference engine (v7 memory-efficient) |
+| `leo_v7_memory_efficient.py`             | Standalone v7 edition                       |
+| `populate_cache.py`                      | Seed the semantic cache with FAQ data       |
+| `backend/reflect/leo_reflect_service.py` | Reflection + learning ledger service        |
+| `test_reflect_integration.py`            | Integration test suite                      |
+| `backend/server.py`                      | FastAPI REST backend                        |
 
 ---
 
@@ -152,15 +152,15 @@ Full deployment guide: [DEPLOYMENT.md](DEPLOYMENT.md)
 
 ## Documentation
 
-| Document | Description |
-|----------|-------------|
-| [Architecture.md](Architecture.md) | Full 17-layer system design |
-| [LEO_Whitepaper.md](LEO_Whitepaper.md) | Technical whitepaper |
-| [PERFORMANCE_REPORT.md](PERFORMANCE_REPORT.md) | Benchmark results |
-| [SECURITY.md](SECURITY.md) | Security hardening notes |
-| [CONTRIBUTING.md](CONTRIBUTING.md) | Contribution guide |
-| [DEPLOYMENT.md](DEPLOYMENT.md) | Deployment instructions |
-| [RELEASE_NOTES.md](RELEASE_NOTES.md) | Version history |
+| Document                                       | Description                 |
+| ---------------------------------------------- | --------------------------- |
+| [Architecture.md](Architecture.md)             | Full 17-layer system design |
+| [LEO_Whitepaper.md](LEO_Whitepaper.md)         | Technical whitepaper        |
+| [PERFORMANCE_REPORT.md](PERFORMANCE_REPORT.md) | Benchmark results           |
+| [SECURITY.md](SECURITY.md)                     | Security hardening notes    |
+| [CONTRIBUTING.md](CONTRIBUTING.md)             | Contribution guide          |
+| [DEPLOYMENT.md](DEPLOYMENT.md)                 | Deployment instructions     |
+| [RELEASE_NOTES.md](RELEASE_NOTES.md)           | Version history             |
 
 ---
 
@@ -180,4 +180,3 @@ The 6 core algorithmic breakthrough modules powering LEO's efficient compute:
 ## License
 
 [MIT](LICENSE) — Built for local-first, privacy-preserving AI.
-

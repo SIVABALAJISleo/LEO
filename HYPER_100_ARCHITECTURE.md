@@ -1,6 +1,7 @@
 # 🏛️ HYPER-100: Modular Architecture
 
 ## 1. Unified Modular Pipeline (`hyper/`)
+
 HYPER organizes computation elimination into 29 modular subsystems:
 
 ```

@@ -66,8 +66,30 @@ export function generateHalton2D(n: number): Array<[number, number]> {
 export function generateSobolSequence(numPoints: number): Array<[number, number]> {
   const points: Array<[number, number]> = [];
   // Direction numbers for dim 1 (base 2) and dim 2 (polynomial x + 1)
-  const v1 = [1 << 31, 1 << 30, 1 << 29, 1 << 28, 1 << 27, 1 << 26, 1 << 25, 1 << 24, 1 << 23, 1 << 22];
-  const v2 = [1 << 31, 3 << 30, 7 << 29, 1 << 28, 11 << 27, 13 << 26, 61 << 25, 1 << 24, 19 << 23, 115 << 22];
+  const v1 = [
+    1 << 31,
+    1 << 30,
+    1 << 29,
+    1 << 28,
+    1 << 27,
+    1 << 26,
+    1 << 25,
+    1 << 24,
+    1 << 23,
+    1 << 22,
+  ];
+  const v2 = [
+    1 << 31,
+    3 << 30,
+    7 << 29,
+    1 << 28,
+    11 << 27,
+    13 << 26,
+    61 << 25,
+    1 << 24,
+    19 << 23,
+    115 << 22,
+  ];
 
   let x1 = 0;
   let x2 = 0;
@@ -84,10 +106,7 @@ export function generateSobolSequence(numPoints: number): Array<[number, number]
     x1 ^= v1[bit];
     x2 ^= v2[bit];
 
-    points.push([
-      (x1 >>> 0) / 4294967296.0,
-      (x2 >>> 0) / 4294967296.0,
-    ]);
+    points.push([(x1 >>> 0) / 4294967296.0, (x2 >>> 0) / 4294967296.0]);
   }
   return points;
 }
@@ -102,7 +121,7 @@ export function runQmcOptionBenchmark(
   K: number = 100.0,
   T: number = 1.0,
   r: number = 0.05,
-  sigma: number = 0.20
+  sigma: number = 0.2,
 ): QmcSimulationResult {
   // Analytical Black-Scholes Formula for Call Option
   const d1 = (Math.log(S0 / K) + (r + 0.5 * sigma * sigma) * T) / (sigma * Math.sqrt(T));
@@ -110,12 +129,16 @@ export function runQmcOptionBenchmark(
 
   // Standard normal CDF approximation (Abramowitz & Stegun)
   const normCdf = (x: number) => {
-    const a1 = 0.254829592, a2 = -0.284496736, a3 = 1.421413741, a4 = -1.453152027, a5 = 1.061405429;
+    const a1 = 0.254829592,
+      a2 = -0.284496736,
+      a3 = 1.421413741,
+      a4 = -1.453152027,
+      a5 = 1.061405429;
     const p = 0.3275911;
     const sign = x < 0 ? -1 : 1;
     const absX = Math.abs(x) / Math.sqrt(2.0);
     const t = 1.0 / (1.0 + p * absX);
-    const erf = 1.0 - (((((a5 * t + a4) * t + a3) * t + a2) * t + a1) * t) * Math.exp(-absX * absX);
+    const erf = 1.0 - ((((a5 * t + a4) * t + a3) * t + a2) * t + a1) * t * Math.exp(-absX * absX);
     return 0.5 * (1.0 + sign * erf);
   };
 
@@ -123,10 +146,19 @@ export function runQmcOptionBenchmark(
 
   // Inverse normal CDF (Acklam approximation)
   const invNormCdf = (p: number): number => {
-    const a = [-3.969683028665376e1, 2.209460984245205e2, -2.759285104469687e2, 1.38357751867269e2, -3.066479806614716e1, 2.506628277459239e0];
-    const b = [-5.447609879822406e1, 1.615858368580409e2, -1.556989798598866e2, 6.680131188771972e1, -1.328068155288572e1];
-    const c = [-7.784894002430293e-3, -3.223964580411365e-1, -2.400758277161838e0, -2.549732539343734e0, 4.374664141464968e0, 2.938163982698783e0];
-    const d = [7.784695709041462e-3, 3.224671290700398e-1, 2.445134137142996e0, 3.754408661907416e0];
+    const a = [
+      -3.969683028665376e1, 2.209460984245205e2, -2.759285104469687e2, 1.38357751867269e2,
+      -3.066479806614716e1, 2.506628277459239,
+    ];
+    const b = [
+      -5.447609879822406e1, 1.615858368580409e2, -1.556989798598866e2, 6.680131188771972e1,
+      -1.328068155288572e1,
+    ];
+    const c = [
+      -7.784894002430293e-3, -3.223964580411365e-1, -2.400758277161838, -2.549732539343734,
+      4.374664141464968, 2.938163982698783,
+    ];
+    const d = [7.784695709041462e-3, 3.224671290700398e-1, 2.445134137142996, 3.754408661907416];
 
     const pLow = 0.02425;
     const pHigh = 1 - pLow;
@@ -134,24 +166,32 @@ export function runQmcOptionBenchmark(
 
     if (clampedP < pLow) {
       const q = Math.sqrt(-2 * Math.log(clampedP));
-      return (((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) /
-             ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1);
+      return (
+        (((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) /
+        ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1)
+      );
     }
     if (clampedP > pHigh) {
       const q = Math.sqrt(-2 * Math.log(1 - clampedP));
-      return -(((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) /
-              ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1);
+      return (
+        -(((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) /
+        ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1)
+      );
     }
     const q = clampedP - 0.5;
     const rVal = q * q;
-    return (((((a[0] * rVal + a[1]) * rVal + a[2]) * rVal + a[3]) * rVal + a[4]) * rVal + a[5]) * q /
-           (((((b[0] * rVal + b[1]) * rVal + b[2]) * rVal + b[3]) * rVal + b[4]) * rVal + 1);
+    return (
+      ((((((a[0] * rVal + a[1]) * rVal + a[2]) * rVal + a[3]) * rVal + a[4]) * rVal + a[5]) * q) /
+      (((((b[0] * rVal + b[1]) * rVal + b[2]) * rVal + b[3]) * rVal + b[4]) * rVal + 1)
+    );
   };
 
   // 1. Standard Pseudorandom Monte Carlo
   const t0_mc = performance.now();
   let mcSum = 0;
-  const trajectoryCheckpoints = [100, 500, 1000, 2500, 5000, 10000, 20000].filter(cp => cp <= sampleBudget);
+  const trajectoryCheckpoints = [100, 500, 1000, 2500, 5000, 10000, 20000].filter(
+    (cp) => cp <= sampleBudget,
+  );
   const convergenceTrajectory: QmcConvergencePoint[] = [];
 
   const sobolPoints = generateSobolSequence(sampleBudget);

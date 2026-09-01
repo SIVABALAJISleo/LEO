@@ -154,7 +154,7 @@ export function runStreamingSketchBenchmark(streamSize: number = 25000) {
   const t0 = performance.now();
   for (let i = 0; i < streamSize; i++) {
     // Generate domain keys with Zipfian distribution
-    const keyId = Math.floor(10000 * (Math.random() ** 2));
+    const keyId = Math.floor(10000 * Math.random() ** 2);
     const key = `user_${keyId}`;
     exactSet.add(key);
     hll.add(key);

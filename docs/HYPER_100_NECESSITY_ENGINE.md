@@ -1,7 +1,9 @@
 # 🏛️ HYPER-100: Computation Necessity Engine
 
 ## 1. Necessity Map & Classification
+
 For every operation within a workload, HYPER classifies its contribution into one of 10 necessity classes:
+
 1. `NECESSARY`: Unavoidable mathematical core.
 2. `REDUNDANT`: Dead branch or common subexpression.
 3. `REUSABLE`: Intermediate state identical to a cached state.

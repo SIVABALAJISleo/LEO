@@ -9,10 +9,12 @@ First off, thank you for considering contributing to the Claude Reflect System! 
 Found a bug? Help us fix it!
 
 **Before submitting:**
+
 - Check existing [issues](https://github.com/haddock-development/claude-reflect-system/issues)
 - Ensure you're using the latest version
 
 **Include in your report:**
+
 - Claude Code version
 - Python version (`python3 --version`)
 - Operating system
@@ -25,6 +27,7 @@ Found a bug? Help us fix it!
 Have an idea? We'd love to hear it!
 
 **Good feature requests include:**
+
 - Clear description of the problem it solves
 - Examples of how it would work
 - Why it's useful to others (not just you)
@@ -32,6 +35,7 @@ Have an idea? We'd love to hear it!
 ### 3. Improve Documentation
 
 Documentation improvements are always welcome:
+
 - Fix typos
 - Clarify confusing sections
 - Add examples
@@ -51,6 +55,7 @@ CORRECTION_PATTERNS = [
 ```
 
 **Include:**
+
 - Pattern regex
 - Example sentences that match
 - Test cases
@@ -58,6 +63,7 @@ CORRECTION_PATTERNS = [
 ### 5. Create Skills
 
 Share your learned skills:
+
 - Create useful skills
 - Let them learn from corrections
 - Share the results!
@@ -82,6 +88,7 @@ pytest tests/
 ```
 
 **Coding Standards:**
+
 - Follow PEP 8
 - Use type hints
 - Add docstrings
@@ -89,6 +96,7 @@ pytest tests/
 - Keep it simple
 
 **Before Submitting:**
+
 - Run `black .` to format code
 - Run `flake8 .` to check style
 - Run `mypy .` to check types
@@ -120,9 +128,11 @@ test: add tests for pattern matching
 
 ```markdown
 ## Description
+
 What does this PR do?
 
 ## Type of Change
+
 - [ ] Bug fix
 - [ ] New feature
 - [ ] Documentation update
@@ -130,9 +140,11 @@ What does this PR do?
 - [ ] Other (describe)
 
 ## Testing
+
 How did you test this?
 
 ## Checklist
+
 - [ ] Code follows project style
 - [ ] Self-reviewed the code
 - [ ] Commented complex parts
@@ -146,6 +158,7 @@ How did you test this?
 ### Pattern Detection
 
 When adding new patterns:
+
 - Be specific (avoid false positives)
 - Include examples
 - Document in `signal-patterns.md`
@@ -154,6 +167,7 @@ When adding new patterns:
 ### Skill Updates
 
 When modifying `update_skill.py`:
+
 - Preserve YAML structure
 - Always create backups
 - Validate before writing
@@ -169,6 +183,7 @@ When modifying `update_skill.py`:
 ## 🧪 Testing
 
 Currently manual testing with Claude Code:
+
 ```bash
 # Test pattern detection
 python3 reflect/scripts/extract_signals.py test_transcript.jsonl
@@ -200,11 +215,13 @@ claude-reflect-system/
 ### Our Standards
 
 ✅ **Positive Environment:**
+
 - Be respectful and inclusive
 - Accept constructive criticism
 - Focus on what's best for the community
 
 ❌ **Unacceptable Behavior:**
+
 - Harassment or discrimination
 - Trolling or insulting comments
 - Publishing private information
@@ -213,6 +230,7 @@ claude-reflect-system/
 ### Enforcement
 
 Violations will be reviewed and may result in:
+
 1. Warning
 2. Temporary ban
 3. Permanent ban
@@ -224,18 +242,21 @@ Report issues to: haddock.development@gmail.com
 Not sure where to start? Try these:
 
 ### Beginner Friendly
+
 - Fix typos in documentation
 - Add more pattern examples
 - Improve error messages
 - Add comments to code
 
 ### Intermediate
+
 - Add new correction patterns
 - Improve backup system
 - Enhance Git integration
 - Add tests
 
 ### Advanced
+
 - ML-based pattern detection
 - Cross-skill learning
 - Analytics dashboard
@@ -271,6 +292,7 @@ New to the codebase? Start here:
 ## 🙏 Thank You!
 
 Every contribution matters:
+
 - Code contributions
 - Bug reports
 - Documentation improvements
@@ -281,5 +303,5 @@ Every contribution matters:
 
 ---
 
-*Happy Contributing!*
-*The Claude Reflect Team*
+_Happy Contributing!_
+_The Claude Reflect Team_

@@ -88,7 +88,10 @@ export function runBvhBenchmark(primitiveCount: number = 20000): BvhBenchmarkRes
       dummySahSplits += Math.log2(sampleCount);
     }
   }
-  const t_sah_ms = Math.max(0.05, (performance.now() - t0_sah) * (primitiveCount / sampleCount) * 1.8);
+  const t_sah_ms = Math.max(
+    0.05,
+    (performance.now() - t0_sah) * (primitiveCount / sampleCount) * 1.8,
+  );
 
   // 2. Morton Z-Order Radix Sort (LBVH)
   const t0_morton = performance.now();

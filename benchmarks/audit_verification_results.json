@@ -1,0 +1,64 @@
+{
+  "neural_gemm_surrogate": {
+    "matrix_shape": "(128, 128) x (128, 64)",
+    "latency_ms": 10.474,
+    "relative_error": 0.0,
+    "status": "PASS"
+  },
+  "compressed_sensing_fft": {
+    "n_points": 1024,
+    "measurements_m": 128,
+    "latency_ms": 47.586,
+    "method": "COMPRESSED_SENSING_OMP",
+    "status": "PASS"
+  },
+  "tensor_train_gemm": {
+    "matrix_shape": "(64, 64) x (64, 32)",
+    "latency_ms": 7.195,
+    "parameter_reduction_pct": 50.0,
+    "status": "PASS"
+  },
+  "rendering_contract": {
+    "resolution": "80x60",
+    "ground_truth_spp": 32,
+    "ground_truth_latency_ms": 40.17,
+    "perceptual_spp": 4,
+    "perceptual_latency_ms": 12.12,
+    "speedup": 3.31,
+    "ssim": 0.9998,
+    "psnr": 44.89,
+    "status": "PASS"
+  },
+  "causal_physics": {
+    "num_particles": 64,
+    "latency_ms": 0.702,
+    "energy_drift_ratio": 0.000773,
+    "status": "PASS"
+  },
+  "alphatensor_specialization": {
+    "matrix_shape": "16x16",
+    "block_size": 4,
+    "latency_ms": 5.193,
+    "scalar_mults_eliminated_pct": 23.4375,
+    "blocks_specialized": 64,
+    "status": "PASS"
+  },
+  "oracle_cache": {
+    "lookup_latency_ms": 2.58,
+    "similarity_score": 1.0,
+    "contract_satisfied": true,
+    "status": "PASS"
+  },
+  "prompt_lookup_decoder": {
+    "ngram_size": 2,
+    "proposed": 4,
+    "accepted": 4,
+    "telemetry": {
+      "total_proposed_tokens": 4,
+      "total_accepted_tokens": 4,
+      "acceptance_rate_pct": 100.0,
+      "estimated_speedup": 2.5
+    },
+    "status": "PASS"
+  }
+}

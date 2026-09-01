@@ -13,7 +13,9 @@ export function Module12NBodySimulation() {
     <div className="space-y-4 font-mono text-xs">
       <div className="rounded-lg border border-border/60 bg-zinc-950 p-4 space-y-2">
         <div className="flex justify-between">
-          <label className="text-muted-foreground uppercase font-bold">Simulated Gravitational Bodies (N):</label>
+          <label className="text-muted-foreground uppercase font-bold">
+            Simulated Gravitational Bodies (N):
+          </label>
           <span className="font-bold text-cyan-400">{numBodies.toLocaleString()} Bodies</span>
         </div>
         <input
@@ -33,7 +35,9 @@ export function Module12NBodySimulation() {
           <div className="text-sm font-bold text-red-300">
             {(directPairs / 1e6).toFixed(2)} Million Interactions
           </div>
-          <span className="text-[11px] text-muted-foreground">Every body interacts with every single other body</span>
+          <span className="text-[11px] text-muted-foreground">
+            Every body interacts with every single other body
+          </span>
         </div>
 
         <div className="rounded border border-cyan-500/30 bg-cyan-950/20 p-3.5 space-y-2">

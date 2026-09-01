@@ -11,7 +11,9 @@ export function Module13MonteCarloOption() {
     <div className="space-y-4 font-mono text-xs">
       <div className="rounded-lg border border-border/60 bg-zinc-950 p-4 space-y-2">
         <div className="flex justify-between">
-          <label className="text-muted-foreground uppercase font-bold">Sobol Low-Discrepancy Simulated Paths:</label>
+          <label className="text-muted-foreground uppercase font-bold">
+            Sobol Low-Discrepancy Simulated Paths:
+          </label>
           <span className="font-bold text-amber-400">{qmcPaths.toLocaleString()} Paths</span>
         </div>
         <input
@@ -31,7 +33,9 @@ export function Module13MonteCarloOption() {
           <div className="text-sm font-bold text-red-300">
             {(equivalentMcPaths / 1e6).toFixed(1)} Million Paths Needed
           </div>
-          <span className="text-[11px] text-muted-foreground">O(1/√N) slow convergence due to path clumping</span>
+          <span className="text-[11px] text-muted-foreground">
+            O(1/√N) slow convergence due to path clumping
+          </span>
         </div>
 
         <div className="rounded border border-cyan-500/30 bg-cyan-950/20 p-3.5 space-y-2">

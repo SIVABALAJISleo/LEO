@@ -55,9 +55,15 @@ export function Module2TensorGemm() {
           </div>
         </div>
         <div className="flex justify-between text-[11px] text-muted-foreground">
-          <span className="text-emerald-400">Positive Additions: {(posWeights / 1000).toFixed(0)}k</span>
-          <span className="text-zinc-400">Zero Multiplications: {(zeroWeights / 1000).toFixed(0)}k</span>
-          <span className="text-red-400">Negative Subtractions: {(negWeights / 1000).toFixed(0)}k</span>
+          <span className="text-emerald-400">
+            Positive Additions: {(posWeights / 1000).toFixed(0)}k
+          </span>
+          <span className="text-zinc-400">
+            Zero Multiplications: {(zeroWeights / 1000).toFixed(0)}k
+          </span>
+          <span className="text-red-400">
+            Negative Subtractions: {(negWeights / 1000).toFixed(0)}k
+          </span>
         </div>
       </div>
     </div>

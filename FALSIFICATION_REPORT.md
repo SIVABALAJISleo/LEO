@@ -54,24 +54,24 @@ While HYPER provides substantial speedups over standard single-threaded CPU base
 
 Rather than attempting to brute-force identical raw hardware operations, HYPER reformulates the computational structure of each workload to satisfy the application's actual quality contract $\mathcal{C}$ using minimal sufficient computation:
 
-| Domain | Workload Counterexample | Conventional Raw Bottleneck | HYPER Breakthrough Solution | New Algorithmic Complexity | Computation Eliminated (CER) | Contract Parity |
-| :--- | :--- | :--- | :--- | :--- | :---: | :---: |
-| **Dense Compute** | FP32 GEMM ($2048 \times 2048$) | $O(N^3)$ Memory & FLOP bound | Randomized SVD Factorization + Freivalds $O(N^2)$ Probe | $O(NKr)$ | **87.50%** | **100.0% (PASS)** |
-| **Dense Compute** | FP16 GEMM ($2048 \times 2048$) | Tensor Core MAC array deficit | BitNet b1.58 Ternary LUT (Addition-only, zero float mults) | $O(N^2)$ Integer Adds | **95.00%** | **100.0% (PASS)** |
-| **Dense Compute** | 2D FFT ($2048 \times 2048$) | $O(N^2 \log N)$ Memory bandwidth | Sublinear Sparse FFT (MIT SFFT Hashed Subsampling) | $O(K \log N)$ | **99.61%** | **100.0% (PASS)** |
-| **Dense Compute** | Vector Sum (10M floats) | Sequential memory bus bottleneck | HyperLogLog $O(1)$ registers + Count-Min Sketch | $O(1)$ Space (128 bytes) | **99.80%** | **100.0% (PASS)** |
-| **AI / ML** | Uncached Batch-1 Inference | Autoregressive token-by-token pass | Prompt Lookup (PLD) + Speculative Decoder Cascade | $O(T / \alpha)$ Target Passes | **75.00%** | **100.0% (PASS)** |
-| **AI / ML** | Batch-16 Inference Throughput | VRAM capacity & bandwidth bound | Hierarchical Subspace Clustering & Weight Sharing | $O(B \log N)$ | **85.00%** | **100.0% (PASS)** |
-| **AI / ML** | Cached Semantic Query Latency | KV cache reload latency | Semantic Memory Index with Contract Dominance ($C_{\text{stored}} \ge C_{\text{req}}$) | $O(1)$ Hash Table ($0.06\text{ms}$) | **99.98%** | **100.0% (PASS)** |
-| **Graphics** | Rasterization (100k Tris) | Pixel shader fillrate bound | 540p Internal Raster + Bilateral Neural Upscaling | $960 \times 540$ Core Shading | **75.00%** | **100.0% (PASS)** |
-| **Graphics** | Particle Physics ($10^6$ particles) | Per-frame force updates | Temporal Delta State Coherence ($S_t = S_{t-1} + \Delta$) | $O(N_{\text{active}})$ | **88.00%** | **100.0% (PASS)** |
-| **Ray Tracing** | BVH Construction (100k prims) | $O(N \log N)$ SAH Tree search | 30-bit Morton Curve Linear BVH (LBVH) + Parallel Refit | $O(N)$ Parallel Radix | **80.00%** | **100.0% (PASS)** |
-| **Ray Tracing** | Path Tracing 1080p (100 SPP) | Ray-triangle intersection bound | 4 SPP Quasi-Monte Carlo (Sobol) + Neural Bilateral Denoising | $O(N \cdot 4\text{ SPP})$ | **84.00%** | **100.0% (PASS)** |
-| **Media** | 4K Video Pipeline | CPU software encode bottleneck | Intel QuickSync Video (QSV Dual MFX) Native ASICs | Fixed-Function Dedicated | **98.00%** | **100.0% (PASS)** |
-| **Scientific** | N-Body Simulation (4096 bodies) | $O(N^2)$ Pairwise force integration | Fast Multipole Method (FMM 2D/3D Quadtree) | $O(N)$ Multipoles | **92.97%** | **100.0% (PASS)** |
-| **Scientific** | Monte Carlo (10M Paths) | $O(1/\sqrt{N})$ slow error decay | Sobol Low-Discrepancy Brownian Bridge Integration | $O(1/N)$ Quasi-Samples | **90.00%** | **100.0% (PASS)** |
-| **Applications** | Blender Cycles Viewport | Full scene BVH re-traversal | Tile Geometry Cache + Screen-Space Irradiance Probes | Progressive Dirty Tiles | **70.00%** | **100.0% (PASS)** |
-| **Applications** | Unreal Engine 5 Scene Frame Time | Micro-polygon overshading | Continuous Geometric LOD Chains + Nanite Cluster Culling | Screen-Space Projected LOD | **82.00%** | **100.0% (PASS)** |
+| Domain            | Workload Counterexample             | Conventional Raw Bottleneck         | HYPER Breakthrough Solution                                                            | New Algorithmic Complexity          | Computation Eliminated (CER) |  Contract Parity  |
+| :---------------- | :---------------------------------- | :---------------------------------- | :------------------------------------------------------------------------------------- | :---------------------------------- | :--------------------------: | :---------------: |
+| **Dense Compute** | FP32 GEMM ($2048 \times 2048$)      | $O(N^3)$ Memory & FLOP bound        | Randomized SVD Factorization + Freivalds $O(N^2)$ Probe                                | $O(NKr)$                            |          **87.50%**          | **100.0% (PASS)** |
+| **Dense Compute** | FP16 GEMM ($2048 \times 2048$)      | Tensor Core MAC array deficit       | BitNet b1.58 Ternary LUT (Addition-only, zero float mults)                             | $O(N^2)$ Integer Adds               |          **95.00%**          | **100.0% (PASS)** |
+| **Dense Compute** | 2D FFT ($2048 \times 2048$)         | $O(N^2 \log N)$ Memory bandwidth    | Sublinear Sparse FFT (MIT SFFT Hashed Subsampling)                                     | $O(K \log N)$                       |          **99.61%**          | **100.0% (PASS)** |
+| **Dense Compute** | Vector Sum (10M floats)             | Sequential memory bus bottleneck    | HyperLogLog $O(1)$ registers + Count-Min Sketch                                        | $O(1)$ Space (128 bytes)            |          **99.80%**          | **100.0% (PASS)** |
+| **AI / ML**       | Uncached Batch-1 Inference          | Autoregressive token-by-token pass  | Prompt Lookup (PLD) + Speculative Decoder Cascade                                      | $O(T / \alpha)$ Target Passes       |          **75.00%**          | **100.0% (PASS)** |
+| **AI / ML**       | Batch-16 Inference Throughput       | VRAM capacity & bandwidth bound     | Hierarchical Subspace Clustering & Weight Sharing                                      | $O(B \log N)$                       |          **85.00%**          | **100.0% (PASS)** |
+| **AI / ML**       | Cached Semantic Query Latency       | KV cache reload latency             | Semantic Memory Index with Contract Dominance ($C_{\text{stored}} \ge C_{\text{req}}$) | $O(1)$ Hash Table ($0.06\text{ms}$) |          **99.98%**          | **100.0% (PASS)** |
+| **Graphics**      | Rasterization (100k Tris)           | Pixel shader fillrate bound         | 540p Internal Raster + Bilateral Neural Upscaling                                      | $960 \times 540$ Core Shading       |          **75.00%**          | **100.0% (PASS)** |
+| **Graphics**      | Particle Physics ($10^6$ particles) | Per-frame force updates             | Temporal Delta State Coherence ($S_t = S_{t-1} + \Delta$)                              | $O(N_{\text{active}})$              |          **88.00%**          | **100.0% (PASS)** |
+| **Ray Tracing**   | BVH Construction (100k prims)       | $O(N \log N)$ SAH Tree search       | 30-bit Morton Curve Linear BVH (LBVH) + Parallel Refit                                 | $O(N)$ Parallel Radix               |          **80.00%**          | **100.0% (PASS)** |
+| **Ray Tracing**   | Path Tracing 1080p (100 SPP)        | Ray-triangle intersection bound     | 4 SPP Quasi-Monte Carlo (Sobol) + Neural Bilateral Denoising                           | $O(N \cdot 4\text{ SPP})$           |          **84.00%**          | **100.0% (PASS)** |
+| **Media**         | 4K Video Pipeline                   | CPU software encode bottleneck      | Intel QuickSync Video (QSV Dual MFX) Native ASICs                                      | Fixed-Function Dedicated            |          **98.00%**          | **100.0% (PASS)** |
+| **Scientific**    | N-Body Simulation (4096 bodies)     | $O(N^2)$ Pairwise force integration | Fast Multipole Method (FMM 2D/3D Quadtree)                                             | $O(N)$ Multipoles                   |          **92.97%**          | **100.0% (PASS)** |
+| **Scientific**    | Monte Carlo (10M Paths)             | $O(1/\sqrt{N})$ slow error decay    | Sobol Low-Discrepancy Brownian Bridge Integration                                      | $O(1/N)$ Quasi-Samples              |          **90.00%**          | **100.0% (PASS)** |
+| **Applications**  | Blender Cycles Viewport             | Full scene BVH re-traversal         | Tile Geometry Cache + Screen-Space Irradiance Probes                                   | Progressive Dirty Tiles             |          **70.00%**          | **100.0% (PASS)** |
+| **Applications**  | Unreal Engine 5 Scene Frame Time    | Micro-polygon overshading           | Continuous Geometric LOD Chains + Nanite Cluster Culling                               | Screen-Space Projected LOD          |          **82.00%**          | **100.0% (PASS)** |
 
 ---
 
@@ -79,4 +79,3 @@ Rather than attempting to brute-force identical raw hardware operations, HYPER r
 
 1. **On Raw Silicon Compute / FLOPs (Tier A):** Dedicated GPUs remain physically superior due to their 450W TDP, 16,384 CUDA cores, and 1,008 GB/s memory bandwidth.
 2. **On Application Contract Parity (Tier C & Tier D):** **100% PARITY IS FULLY ACHIEVED.** By eliminating $70\% - 99.8\%$ of unnecessary computation through mathematical reformulation, the host laptop fulfills all declared quality, accuracy, latency, and visual fluidity invariants.
-

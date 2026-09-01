@@ -1,10 +1,21 @@
 import { describe, it, expect } from "vitest";
-import { NVIDIA_GPU_DATABASE, HOST_HARDWARE, calculateGpuComparison } from "../lib/nvidia-gpu-database";
+import {
+  NVIDIA_GPU_DATABASE,
+  HOST_HARDWARE,
+  calculateGpuComparison,
+} from "../lib/nvidia-gpu-database";
 import { sparseFft } from "../lib/breakthrough-algorithms/sparse-fft";
 import { computeRandomizedSVD } from "../lib/breakthrough-algorithms/randomized-svd";
-import { runQmcOptionBenchmark, generateSobolSequence } from "../lib/breakthrough-algorithms/quasi-monte-carlo";
+import {
+  runQmcOptionBenchmark,
+  generateSobolSequence,
+} from "../lib/breakthrough-algorithms/quasi-monte-carlo";
 import { runFmmNBodyBenchmark } from "../lib/breakthrough-algorithms/fast-multipole-method";
-import { HyperLogLogSketch, BloomFilterSketch, CountMinSketch } from "../lib/breakthrough-algorithms/streaming-sketches";
+import {
+  HyperLogLogSketch,
+  BloomFilterSketch,
+  CountMinSketch,
+} from "../lib/breakthrough-algorithms/streaming-sketches";
 import { runBitNetTernaryBenchmark } from "../lib/breakthrough-algorithms/ternary-bitnet";
 import { BrowserSemanticCache } from "../lib/breakthrough-algorithms/semantic-cache";
 import { computeMorton3D, runBvhBenchmark } from "../lib/breakthrough-algorithms/morton-bvh";
@@ -12,13 +23,13 @@ import { computeMorton3D, runBvhBenchmark } from "../lib/breakthrough-algorithms
 describe("NVIDIA GPU Historical Database (1995-2025)", () => {
   it("should contain representative GPUs across all eras from NV1 to RTX 5090", () => {
     expect(NVIDIA_GPU_DATABASE.length).toBeGreaterThanOrEqual(25);
-    const years = NVIDIA_GPU_DATABASE.map(g => g.year);
+    const years = NVIDIA_GPU_DATABASE.map((g) => g.year);
     expect(Math.min(...years)).toBe(1995);
     expect(Math.max(...years)).toBe(2025);
   });
 
   it("should calculate raw silicon deficit and 100% contract parity correctly", () => {
-    const rtx4090 = NVIDIA_GPU_DATABASE.find(g => g.id === "rtx-4090");
+    const rtx4090 = NVIDIA_GPU_DATABASE.find((g) => g.id === "rtx-4090");
     expect(rtx4090).toBeDefined();
 
     const rawComp = calculateGpuComparison(rtx4090!, HOST_HARDWARE, false);

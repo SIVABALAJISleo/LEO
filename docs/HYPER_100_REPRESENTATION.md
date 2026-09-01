@@ -1,7 +1,9 @@
 # 🏛️ HYPER-100: Representation & Compression Engine
 
 ## 1. Optimal State Representation
+
 Rather than storing full-rank uncompressed tensors, HYPER maps states to minimal sufficient representations:
+
 - **Sparse CSR / COO:** For tensors with $>40\%$ structural zeros.
 - **Factorized Low-Rank ($U_r, V_r$):** For spectral decay matrices.
 - **Ternary BitNet $\{-1, 0, +1\}$:** For attention and linear weights ($93.75\%$ memory footprint reduction).

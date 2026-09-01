@@ -17,6 +17,7 @@ import {
   Server,
   Layers,
   Sparkles,
+  CheckCircle2,
 } from "lucide-react";
 
 export function NvidiaGpuMatrix() {
@@ -106,7 +107,8 @@ export function NvidiaGpuMatrix() {
               NVIDIA GPU Historical Comparison Matrix
             </h2>
             <p className="text-muted-foreground text-xs font-sans mt-1">
-              Evaluating 30 years of GPU architectures against the Intel Core i5-12450H host baseline.
+              Evaluating 30 years of GPU architectures against the Intel Core i5-12450H host
+              baseline.
             </p>
           </div>
 
@@ -196,14 +198,20 @@ export function NvidiaGpuMatrix() {
         </div>
         <div>
           <span className="text-[10px] text-muted-foreground uppercase">Integrated iGPU</span>
-          <p className="font-bold text-foreground">{HOST_HARDWARE.igpuName} ({HOST_HARDWARE.fp32Gflops} GFLOPS)</p>
+          <p className="font-bold text-foreground">
+            {HOST_HARDWARE.igpuName} ({HOST_HARDWARE.fp32Gflops} GFLOPS)
+          </p>
         </div>
         <div>
           <span className="text-[10px] text-muted-foreground uppercase">System Memory</span>
-          <p className="font-bold text-cyan-400">{HOST_HARDWARE.ramGB} GB DDR5 ({HOST_HARDWARE.memoryBandwidthGBs} GB/s)</p>
+          <p className="font-bold text-cyan-400">
+            {HOST_HARDWARE.ramGB} GB DDR5 ({HOST_HARDWARE.memoryBandwidthGBs} GB/s)
+          </p>
         </div>
         <div>
-          <span className="text-[10px] text-muted-foreground uppercase">Fixed-Function Acceleration</span>
+          <span className="text-[10px] text-muted-foreground uppercase">
+            Fixed-Function Acceleration
+          </span>
           <p className="font-bold text-emerald-400">QuickSync QSV + GNA 3.0</p>
         </div>
       </div>
@@ -214,28 +222,52 @@ export function NvidiaGpuMatrix() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-border/60 bg-zinc-950 text-[11px] uppercase text-muted-foreground font-bold">
-                <th onClick={() => handleSort("name")} className="p-3.5 cursor-pointer hover:text-foreground">
+                <th
+                  onClick={() => handleSort("name")}
+                  className="p-3.5 cursor-pointer hover:text-foreground"
+                >
                   GPU Model <ArrowUpDown className="inline h-3 w-3 ml-1" />
                 </th>
-                <th onClick={() => handleSort("architecture")} className="p-3.5 cursor-pointer hover:text-foreground">
+                <th
+                  onClick={() => handleSort("architecture")}
+                  className="p-3.5 cursor-pointer hover:text-foreground"
+                >
                   Architecture
                 </th>
-                <th onClick={() => handleSort("year")} className="p-3.5 cursor-pointer hover:text-foreground">
+                <th
+                  onClick={() => handleSort("year")}
+                  className="p-3.5 cursor-pointer hover:text-foreground"
+                >
                   Year <ArrowUpDown className="inline h-3 w-3 ml-1" />
                 </th>
-                <th onClick={() => handleSort("marketClass")} className="p-3.5 cursor-pointer hover:text-foreground">
+                <th
+                  onClick={() => handleSort("marketClass")}
+                  className="p-3.5 cursor-pointer hover:text-foreground"
+                >
                   Class
                 </th>
-                <th onClick={() => handleSort("fp32Gflops")} className="p-3.5 cursor-pointer hover:text-foreground">
+                <th
+                  onClick={() => handleSort("fp32Gflops")}
+                  className="p-3.5 cursor-pointer hover:text-foreground"
+                >
                   FP32 FLOPS <ArrowUpDown className="inline h-3 w-3 ml-1" />
                 </th>
-                <th onClick={() => handleSort("memoryBandwidthGBs")} className="p-3.5 cursor-pointer hover:text-foreground">
+                <th
+                  onClick={() => handleSort("memoryBandwidthGBs")}
+                  className="p-3.5 cursor-pointer hover:text-foreground"
+                >
                   Memory BW <ArrowUpDown className="inline h-3 w-3 ml-1" />
                 </th>
-                <th onClick={() => handleSort("vramGB")} className="p-3.5 cursor-pointer hover:text-foreground">
+                <th
+                  onClick={() => handleSort("vramGB")}
+                  className="p-3.5 cursor-pointer hover:text-foreground"
+                >
                   VRAM
                 </th>
-                <th onClick={() => handleSort("tdpWatts")} className="p-3.5 cursor-pointer hover:text-foreground">
+                <th
+                  onClick={() => handleSort("tdpWatts")}
+                  className="p-3.5 cursor-pointer hover:text-foreground"
+                >
                   TDP
                 </th>
                 <th className="p-3.5 text-right font-bold text-cyan-400">
@@ -248,10 +280,7 @@ export function NvidiaGpuMatrix() {
                 const comp = calculateGpuComparison(gpu, HOST_HARDWARE, breakthroughMode);
                 const isSuperFast = gpu.fp32Gflops > 50000;
                 return (
-                  <tr
-                    key={gpu.id}
-                    className="hover:bg-zinc-900/60 transition-colors group text-xs"
-                  >
+                  <tr key={gpu.id} className="hover:bg-zinc-900/60 transition-colors group text-xs">
                     <td className="p-3.5 font-bold text-foreground flex flex-col">
                       <span>{gpu.name}</span>
                       <span className="text-[10px] text-muted-foreground font-normal group-hover:text-cyan-400/80 transition-colors">
@@ -266,8 +295,8 @@ export function NvidiaGpuMatrix() {
                           gpu.marketClass === "Datacenter"
                             ? "bg-purple-500/20 text-purple-400 border border-purple-500/30"
                             : gpu.marketClass === "Workstation"
-                            ? "bg-amber-500/20 text-amber-400 border border-amber-500/30"
-                            : "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30"
+                              ? "bg-amber-500/20 text-amber-400 border border-amber-500/30"
+                              : "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30"
                         }`}
                       >
                         {gpu.marketClass}
@@ -300,8 +329,8 @@ export function NvidiaGpuMatrix() {
                               comp.rawSiliconParityPct < 5.0
                                 ? "text-red-400"
                                 : comp.rawSiliconParityPct < 50.0
-                                ? "text-amber-400"
-                                : "text-emerald-400"
+                                  ? "text-amber-400"
+                                  : "text-emerald-400"
                             }`}
                           >
                             {comp.rawSiliconParityPct}% Raw

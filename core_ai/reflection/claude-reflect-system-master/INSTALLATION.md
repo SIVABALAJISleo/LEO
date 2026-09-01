@@ -203,6 +203,7 @@ head -30 ~/.claude/skills/python-project-creator/SKILL.md
 **Cause**: Skill not loaded or path wrong
 
 **Fix**:
+
 ```bash
 # Verify skill location
 ls -la ~/.claude/skills/reflect/SKILL.md
@@ -215,6 +216,7 @@ ls -la ~/.claude/skills/reflect/SKILL.md
 **Cause**: Scripts not executable
 
 **Fix**:
+
 ```bash
 chmod +x ~/.claude/skills/reflect/scripts/*.py
 chmod +x ~/.claude/skills/reflect/scripts/*.sh
@@ -225,6 +227,7 @@ chmod +x ~/.claude/skills/reflect/scripts/*.sh
 **Cause**: Hook path incorrect in settings.local.json
 
 **Fix**:
+
 ```bash
 # Check your actual path
 echo "$HOME/.claude/skills/reflect/scripts/hook-stop.sh"
@@ -240,6 +243,7 @@ ls -la $HOME/.claude/skills/reflect/scripts/hook-stop.sh
 **Cause**: PyYAML not installed
 
 **Fix**:
+
 ```bash
 pip3 install pyyaml
 # or
@@ -251,6 +255,7 @@ uv pip install pyyaml
 **Cause**: Transcript too large or processing slow
 
 **Fix**: Hook spawns background process, should complete eventually. Check log:
+
 ```bash
 tail -f ~/.claude/reflect-hook.log
 ```
@@ -321,11 +326,15 @@ Default: 5 seconds. To change in `~/.claude/settings.local.json`:
 ```json
 {
   "hooks": {
-    "Stop": [{
-      "hooks": [{
-        "timeout": 10000  // ← Change to 10 seconds
-      }]
-    }]
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "timeout": 10000 // ← Change to 10 seconds
+          }
+        ]
+      }
+    ]
   }
 }
 ```

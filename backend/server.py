@@ -33,6 +33,8 @@ igpu_engine = OpenVINOiGPUEngine()
 # In-memory storage for local metrics and memories
 metrics_data = {
     "requests_total": 0,
+    "cache_hits_total": 0,
+    "total_latency_ms": 0.0,
     "start_time": time.time(),
 }
 memories_store: List[Dict[str, Any]] = [
@@ -44,12 +46,20 @@ memories_store: List[Dict[str, Any]] = [
 @app.get("/api/v1/leo/metrics")
 async def get_metrics():
     uptime = time.time() - metrics_data["start_time"]
+    total = metrics_data["requests_total"]
+    hits = metrics_data["cache_hits_total"]
+    avoidance_rate = round((hits / max(total, 1)) * 100.0 if total > 0 else 0.0, 1)
+    avg_latency = round(metrics_data["total_latency_ms"] / max(total, 1), 2)
+    # Estimate watt-seconds avoided (15W per avoided discrete inference)
+    watts_saved = int(hits * 15)
+
     return {
-        "leo_total_requests": metrics_data["requests_total"],
-        "leo_compute_avoided": int(metrics_data["requests_total"] * 0.7),
-        "leo_avoidance_rate_pct": 70.0,
-        "leo_gpu_watts_saved": 450,
-        "leo_crystallization_hit_rate": 95.0,
+        "leo_total_requests": total,
+        "leo_compute_avoided": hits,
+        "leo_avoidance_rate_pct": avoidance_rate,
+        "leo_gpu_watts_saved": watts_saved,
+        "leo_crystallization_hit_rate": avoidance_rate,
+        "average_latency_ms": avg_latency,
         "uptime_seconds": round(uptime, 2),
     }
 
@@ -95,6 +105,8 @@ async def orchestrate(req: Request):
     if cached_res:
         elapsed_ms = round((time.time() - start) * 1000, 2)
         metrics_data["requests_total"] += 1
+        metrics_data["cache_hits_total"] += 1
+        metrics_data["total_latency_ms"] += elapsed_ms
         return {
             "route": route,
             "confidence": similarity,
@@ -106,6 +118,7 @@ async def orchestrate(req: Request):
     response_text = orchestrator.generate(prompt, max_tokens=128)
     elapsed_ms = round((time.time() - start) * 1000, 2)
     metrics_data["requests_total"] += 1
+    metrics_data["total_latency_ms"] += elapsed_ms
 
     # Trigger Pillar 2 Background pre-generation (Speculative Prefill)
     import threading
@@ -165,11 +178,13 @@ async def chat_completions(req: Request):
     # Streaming mode
     def event_generator():
         response_text = orchestrator.generate(prompt, max_tokens=256)
-        chunk = {
-            "id": f"chatcmpl-{int(time.time())}",
-            "choices": [{"index": 0, "delta": {"content": response_text}, "finish_reason": None}],
-        }
-        yield f"data: {json.dumps(chunk)}\n\n"
+        words = response_text.split(" ")
+        for i, word in enumerate(words):
+            chunk = {
+                "id": f"chatcmpl-{int(time.time())}",
+                "choices": [{"index": 0, "delta": {"content": word + (" " if i < len(words) - 1 else "")}, "finish_reason": None}],
+            }
+            yield f"data: {json.dumps(chunk)}\n\n"
         yield "data: [DONE]\n\n"
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")

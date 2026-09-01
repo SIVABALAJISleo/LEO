@@ -40,7 +40,14 @@ export function Module7Rasterization() {
     ctx.rect(splitX, 0, width - splitX, height);
     ctx.clip();
 
-    const gradient = ctx.createRadialGradient(width / 2, height / 2, 10, width / 2, height / 2, 140);
+    const gradient = ctx.createRadialGradient(
+      width / 2,
+      height / 2,
+      10,
+      width / 2,
+      height / 2,
+      140,
+    );
     gradient.addColorStop(0, "#00f0ff");
     gradient.addColorStop(0.5, "#005588");
     gradient.addColorStop(1, "#050b14");
@@ -62,8 +69,12 @@ export function Module7Rasterization() {
     <div className="space-y-4 font-mono text-xs">
       <div className="rounded-lg border border-border/60 bg-zinc-950 p-4 space-y-2">
         <div className="flex justify-between">
-          <label className="text-muted-foreground uppercase font-bold">Split Screen Comparison Slider:</label>
-          <span className="font-bold text-cyan-400">Left: 540p Subsampled | Right: Neural Reconstructed (SSIM 0.96)</span>
+          <label className="text-muted-foreground uppercase font-bold">
+            Split Screen Comparison Slider:
+          </label>
+          <span className="font-bold text-cyan-400">
+            Left: 540p Subsampled | Right: Neural Reconstructed (SSIM 0.96)
+          </span>
         </div>
         <input
           type="range"
@@ -80,7 +91,12 @@ export function Module7Rasterization() {
           <span className="text-amber-400 font-bold">540p 25% Pixel Budget (18ms)</span>
           <span className="text-cyan-400 font-bold">Bilateral Reconstructed 1080p (60+ FPS)</span>
         </div>
-        <canvas ref={canvasRef} width={600} height={160} className="w-full rounded bg-zinc-950 border border-border/40" />
+        <canvas
+          ref={canvasRef}
+          width={600}
+          height={160}
+          className="w-full rounded bg-zinc-950 border border-border/40"
+        />
       </div>
     </div>
   );

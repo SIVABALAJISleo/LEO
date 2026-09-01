@@ -86,7 +86,7 @@ export class BrowserSemanticCache {
 
   public query(
     userQuery: string,
-    threshold: number = 0.75
+    threshold: number = 0.75,
   ): {
     hit: boolean;
     response?: string;

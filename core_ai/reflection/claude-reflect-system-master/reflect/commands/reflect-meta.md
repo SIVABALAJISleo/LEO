@@ -39,6 +39,7 @@ To enable meta-learning to actually influence confidence scores:
 ```
 
 This will:
+
 - Boost confidence of high-performing patterns (+0.1)
 - Lower confidence of poorly-performing patterns (-0.15 to -0.3)
 - Flag deprecated patterns in the review UI
@@ -46,11 +47,13 @@ This will:
 ## Data Management
 
 View raw scores:
+
 ```bash
 python ~/.claude/skills/reflect/scripts/meta_learning.py scores
 ```
 
 Reset all meta-learning data:
+
 ```bash
 python ~/.claude/skills/reflect/scripts/meta_learning.py reset --confirm
 ```

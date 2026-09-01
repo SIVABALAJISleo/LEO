@@ -33,7 +33,7 @@ export interface BitNetBenchmarkResult {
 export function runBitNetTernaryBenchmark(
   rows: number = 256,
   cols: number = 256,
-  sparsity: number = 0.50
+  sparsity: number = 0.5,
 ): BitNetBenchmarkResult {
   // 1. Generate Input Activation Vector
   const x = new Float32Array(cols);

@@ -71,9 +71,16 @@ export function Module3SparseFFT() {
       <div className="rounded-lg border border-cyan-500/30 bg-black p-3 space-y-2">
         <div className="flex justify-between text-[11px] text-muted-foreground">
           <span className="text-red-400">GPU: Computes all 1,000,000 bins O(N log N)</span>
-          <span className="text-cyan-400 font-bold">HYPER sFFT: Recovers only {kSparsity} peaks in O(k log N)</span>
+          <span className="text-cyan-400 font-bold">
+            HYPER sFFT: Recovers only {kSparsity} peaks in O(k log N)
+          </span>
         </div>
-        <canvas ref={canvasRef} width={600} height={140} className="w-full rounded bg-zinc-950 border border-border/40" />
+        <canvas
+          ref={canvasRef}
+          width={600}
+          height={140}
+          className="w-full rounded bg-zinc-950 border border-border/40"
+        />
       </div>
     </div>
   );

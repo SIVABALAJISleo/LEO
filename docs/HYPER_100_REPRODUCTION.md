@@ -1,6 +1,7 @@
 # 🏛️ HYPER-100: Reproduction Guide & Commands
 
 ## 1. Step-by-Step Reproduction
+
 All results, measurements, and tests are completely reproducible on Windows 11 with Python 3.11+ / Node.js 18+.
 
 ```powershell
