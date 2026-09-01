@@ -19,8 +19,9 @@ class SymbolicCore:
             expr = sympy.sympify(expression)
             result = sympy.solve(expr)
             return str(result)
-        except Exception as e:
-            return f"SymPy Error: {e}"
+        except Exception:
+            logger.error("SymPy math resolution error", exc_info=True)
+            return "SymPy Error: Failed to resolve mathematical expression"
 
     def solve_logic(self, constraints: str) -> str:
         """
@@ -43,5 +44,6 @@ class SymbolicCore:
             if s.check() == sat:
                 return f"SAT: {s.model()}"
             return "UNSAT"
-        except Exception as e:
-            return f"Z3 Error: {e}"
+        except Exception:
+            logger.error("Z3 logic resolution error", exc_info=True)
+            return "Z3 Error: Failed to solve logical constraints"

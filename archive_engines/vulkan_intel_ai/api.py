@@ -42,7 +42,6 @@ async def handle_vulkan_query(raw_input: Dict[str, Any]):
         memory.scratchpad["goal"] = query
         
         async def run_vulkan_pipeline():
-            pipeline_failed = False
             try:
                 # 2. Perception & ACK (Layer 7)
                 yield json.dumps({"status": "ACK", "kernel": "Booting Vulkan-Accelerated Pipeline...", "t": f"{(time.time()-start_time)*1000:.1f}ms"})

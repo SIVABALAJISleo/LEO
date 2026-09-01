@@ -10,8 +10,8 @@ class ToolExecutionLayer:
         try:
             res = sympy.simplify(expression)
             return f"Exact Math Result: {res}"
-        except Exception as e:
-            return f"Math Error: {e}"
+        except Exception:
+            return "Math Error: Failed to simplify expression"
             
     def solve_logic(self, premise: str) -> str:
         """Route to Z3 Solver (Mocked for generic python env)"""

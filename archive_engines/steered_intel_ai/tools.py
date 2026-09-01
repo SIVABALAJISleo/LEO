@@ -20,10 +20,26 @@ class ToolLayer:
 
     def _calculate(self, expression: str) -> str:
         try:
-            # Dangerous in production, but here we assume a safe parser
-            return str(eval(expression, {"__builtins__": {}}, {}))
-        except Exception as e:
-            return f"Math Error: {e}"
+            import ast
+            import operator
+            operators = {
+                ast.Add: operator.add, ast.Sub: operator.sub,
+                ast.Mult: operator.mul, ast.Div: operator.truediv,
+                ast.Pow: operator.pow, ast.USub: operator.neg,
+            }
+            def eval_node(node):
+                if isinstance(node, ast.Constant) and isinstance(node.value, (int, float)):
+                    return node.value
+                elif isinstance(node, ast.BinOp) and type(node.op) in operators:
+                    return operators[type(node.op)](eval_node(node.left), eval_node(node.right))
+                elif isinstance(node, ast.UnaryOp) and type(node.op) in operators:
+                    return operators[type(node.op)](eval_node(node.operand))
+                raise ValueError("Unsupported expression")
+            tree = ast.parse(expression, mode='eval')
+            return str(eval_node(tree.body))
+        except Exception:
+            logger.error("Safe calculation failed", exc_info=True)
+            return "Math Error: Invalid or unsupported mathematical expression"
 
     def _rule_engine(self, rule: str, data: Any) -> str:
         # Simple boolean logic gate

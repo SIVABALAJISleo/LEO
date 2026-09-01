@@ -70,8 +70,9 @@ class InferenceHub:
             try:
                 output = self.llm(f"User: {prompt}\nAssistant:", max_tokens=max_tokens, stop=["User:"])
                 return output['choices'][0]['text']
-            except Exception as e:
-                return f"Inference Error: {e}"
+            except Exception:
+                logger.error("Inference execution failed", exc_info=True)
+                return "Inference Error: Failed to generate model response"
         
         return "LLM Engine Offline. (Please download models/tinyllama... and ensure llama-cpp-python is installed)"
 

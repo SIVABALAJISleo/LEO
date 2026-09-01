@@ -89,7 +89,7 @@ class CognitiveCDN:
                 
         except Exception as e:
             logger.error(f"Dynamic CDN asset execution failed: {e}")
-            return f"Execution error: {e}"
+            return "Execution error: Failed to execute procedural asset payload"
 
 # Singleton for edge CDN routing
 cdn_router = CognitiveCDN()

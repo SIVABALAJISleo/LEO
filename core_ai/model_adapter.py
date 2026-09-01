@@ -195,7 +195,7 @@ class LEOInferenceAdapter:
             except Exception as e:
                 logger.error(f"[InferenceAdapter] Llama generation failed: {e}")
                 yield {
-                    "text": f"\n[Generation Error: {e}]",
+                    "text": "\n[Generation Error: Model generation failed]",
                     "metadata": {"device": device, "tokens": token_count, "status": "ERROR", "latency_ms": (time.time() - t_start) * 1000.0}
                 }
 
