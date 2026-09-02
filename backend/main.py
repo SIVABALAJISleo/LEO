@@ -154,8 +154,5 @@ app.include_router(breakthrough_dashboard_router)
 from backend.routers.cgace import router as cgace_router
 app.include_router(cgace_router)
 
-
-
-
-
-
+from backend.routers.hyper_v2_api import router as hyper_v2_router
+app.include_router(hyper_v2_router)

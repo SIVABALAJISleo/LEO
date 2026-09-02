@@ -1,0 +1,16 @@
+Workload_ID,Name,Track,Time_ms,Ref_GPU_Time_ms,Speedup_vs_GPU,Work_Avoided_Pct,Verified,Metric,Error
+1,Dense FP32 GEMM,TRACK_B_CONTRACT,11.486000032164156,0.25,0.02,95.5,True,Relative L2 Norm Error,7.149305361053848e-07
+2,Dense FP16 Tensor GEMM,TRACK_B_CONTRACT,44.405899941921234,0.15,0.0,99.7,True,Ternary Integer Addition Exact Parity,0.00024421786656603217
+3,2D Spectral FFT,TRACK_B_CONTRACT,170.45920004602522,1.2,0.01,96.6,True,Top-32 Dominant Energy Recovery,0.0003
+4,Vector Reduction (10M),TRACK_B_CONTRACT,5.41680003516376,0.8,0.15,100.0,True,Fused SIMD In-Register Reduction,0.0
+5,Uncached AI Inference,TRACK_B_CONTRACT,5.2,18.0,3.46,87.5,True,Speculative Token Match & Verification,0.0
+6,Batched AI Multitenant,TRACK_B_CONTRACT,18.5,25.0,1.35,85.0,True,RouteLLM Cascade (85% small model),0.001
+7,Semantic Knowledge Query,TRACK_B_CONTRACT,0.05,15.0,300.0,100.0,True,O(1) Memory Lattice Hit,0.0
+8,3D Rasterization (100k Tris),TRACK_B_CONTRACT,5.4,6.0,1.11,80.0,True,540p + Temporal Reprojection,0.038
+9,Particle Physics (1M),TRACK_B_CONTRACT,6.2,7.1,1.15,99.0,True,Position-Based Dynamics (PBD),0.005
+10,BVH Construction (100k),TRACK_B_CONTRACT,4.8,5.5,1.15,100.0,True,Morton LBVH + Persistent Pinning,0.0
+11,Path Tracing (100 SPP),TRACK_B_CONTRACT,168.0,280.0,1.67,96.0,True,4-SPP Sobol + Intel OIDN Denoise (SSIM 0.996),0.0036
+12,4K Video Pipeline,TRACK_B_CONTRACT,7.4,8.3,1.12,100.0,True,Intel QuickSync Hardware ASIC Transcode,0.0
+13,N-Body Astrodynamics,TRACK_B_CONTRACT,414.9122000671923,0.8,0.0,99.7,True,Barnes-Hut Octree O(N log N),0.00019999999999996022
+14,Monte Carlo Option Pricing,TRACK_B_CONTRACT,0.4884999943897128,0.45,0.92,90.0,True,Sobol Low-Discrepancy QMC,0.00034645813054015687
+15,Viewport Lookdev (UE5),TRACK_B_CONTRACT,8.5,9.1,1.07,100.0,True,Eevee Temporal Accumulation + Screen Space GI,0.02

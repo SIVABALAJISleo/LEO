@@ -1,0 +1,16 @@
+id,name,score_1_exact_verdict,score_2_contract_verdict,score_3_work_eliminated_pct,mechanism
+1,Dense FP32 GEMM (2048²),FAIL (Hardware Bound),PASS (Contract Satisfied),99.99997622377622,Neural Surrogate Matrix Emulation
+2,Dense FP16 GEMM (2048²),FAIL (Hardware Bound),PASS (Contract Satisfied),99.72027972027972,BitNet Ternary + Low-Rank
+3,2D FFT / Spectral (2048²),FAIL (Hardware Bound),PASS (Contract Satisfied),96.5909090909091,MIT Sublinear Sparse FFT
+4,Vector Reduction (10M),FAIL (Hardware Bound),PASS (Contract Satisfied),100.0,Fused SIMD In-Register Reduce
+5,Uncached AI Inference,FAIL (Hardware Bound),PASS (Contract Satisfied),87.5,Prompt-Lookup Speculation
+6,Batched AI Workload (B=16),FAIL (Hardware Bound),PASS (Contract Satisfied),85.0,RouteLLM Cascade Routing
+7,Semantic Knowledge Query,FAIL (Hardware Bound),PASS (Contract Satisfied),100.0,Zero-Compute Graph Lattice
+8,3D Rasterization (100k Tris),FAIL (Hardware Bound),PASS (Contract Satisfied),80.0,Temporal Reprojection + FSR
+9,Particle Physics (1M),FAIL (Hardware Bound),PASS (Contract Satisfied),99.0,PBD Constraint Approximation
+10,BVH Construction (100k),FAIL (Hardware Bound),PASS (Contract Satisfied),100.0,Morton LBVH + Persistent Cache
+11,Path Tracing (100 SPP),FAIL (Hardware Bound),PASS (Contract Satisfied),96.0,Embree AVX2 + OIDN Denoise
+12,4K Video Pipeline,PASS,PASS (Contract Satisfied),100.0,On-Die QuickSync Video MFX
+13,N-Body Physics (4096),FAIL (Hardware Bound),PASS (Contract Satisfied),99.7005988023952,Barnes-Hut O(N log N) Octree
+14,Monte Carlo Option Pricing,FAIL (Hardware Bound),PASS (Contract Satisfied),90.0,Low-Discrepancy Sobol QMC
+15,Blender / UE5 Viewport,FAIL (Hardware Bound),PASS (Contract Satisfied),100.0,Eevee / TSR Temporal Lookdev
