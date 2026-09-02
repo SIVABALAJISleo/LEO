@@ -2,9 +2,9 @@
   "total_generations": 2,
   "best_fitness": 0.54,
   "best_params": {
-    "confidence_floor": 0.6178,
-    "max_spec_tokens": 9,
-    "sparsity_threshold": 0.3215,
+    "confidence_floor": 0.5966,
+    "max_spec_tokens": 8,
+    "sparsity_threshold": 0.3166,
     "allocated_experts_budget": 2,
     "dreamer_branches": 9,
     "dreamer_depth": 6
@@ -13,34 +13,48 @@
     {
       "generation": 1,
       "fitness": 0.54,
-      "weaknesses": ["low_avoidance", "high_latency", "low_throughput", "low_density"],
+      "weaknesses": [
+        "low_avoidance",
+        "high_latency",
+        "low_throughput",
+        "low_density"
+      ],
       "mutations": {
-        "confidence_floor": 0.6178,
-        "max_spec_tokens": 9,
-        "sparsity_threshold": 0.3215,
+        "confidence_floor": 0.5966,
+        "max_spec_tokens": 8,
+        "sparsity_threshold": 0.3166,
         "allocated_experts_budget": 2,
         "dreamer_branches": 9,
         "dreamer_depth": 6
       },
       "curriculum_level": "basic",
-      "active_classes": ["cacheable"],
-      "timestamp": 1788088441.9953098
+      "active_classes": [
+        "cacheable"
+      ],
+      "timestamp": 1788273601.0327141
     },
     {
       "generation": 2,
       "fitness": 0.54,
-      "weaknesses": ["low_avoidance", "high_latency", "low_throughput", "low_density"],
+      "weaknesses": [
+        "low_avoidance",
+        "high_latency",
+        "low_throughput",
+        "low_density"
+      ],
       "mutations": {
-        "confidence_floor": 0.596,
-        "max_spec_tokens": 9,
-        "sparsity_threshold": 0.4018,
+        "confidence_floor": 0.5315,
+        "max_spec_tokens": 8,
+        "sparsity_threshold": 0.3985,
         "allocated_experts_budget": 2,
         "dreamer_branches": 10,
         "dreamer_depth": 7
       },
       "curriculum_level": "basic",
-      "active_classes": ["cacheable"],
-      "timestamp": 1788088442.0072787
+      "active_classes": [
+        "cacheable"
+      ],
+      "timestamp": 1788273601.0417867
     }
   ]
 }
