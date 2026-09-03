@@ -1,22 +1,22 @@
-# HYPER: Benchmark Protocol & Evaluation Integrity
+# HYPER Benchmark Protocol: Track Isolation & Reproducibility
 
-## 1. Dual-Scoreboard Architecture
-To eliminate all ambiguity between exact hardware comparisons and application-level computational sufficiency, HYPER enforces two strictly isolated scoreboards:
+## 1. Strict Track Separation
 
-### Scoreboard A: Exact Workload Parity
-- Bit-exact mathematical reference computation.
-- No algorithmic shortcuts, low-rank approximations, or precision drops permitted.
-- Measures raw compute and memory throughput on the host CPU + iGPU.
+To ensure scientific honesty and prevent contamination:
 
-### Scoreboard B: Contract-Aware Computational Sufficiency
-- Permits contract-legal transformations (low-rank SVD, 2:4 sparsity, adaptive sampling, BitNet quantization).
-- Every output independently verified against frozen contract bounds.
-- Measures Verified Work Avoidance (VWA%), wall-clock speedup, and error tolerance compliance.
+### Track A: EXACT COMPUTATION
+- **Rule**: Must execute identical mathematical operations on identical inputs, producing identical outputs within standard floating-point roundoff ($10^{-5}$).
+- **Prohibited**: Approximations, downsampling, denoising, low-rank truncation, lossy quantization.
+- **Objective**: Measure raw algorithmic and kernel implementation efficiency on Intel CPU + iGPU.
+
+### Track B: CONTRACT-AWARE COMPUTATION
+- **Rule**: Algorithmic substitutions, low-rank factorization, sparse transforms, and neural denoising are permitted **provided** the output satisfies the contract ($\text{Error} \le \epsilon$, $\text{SSIM} \ge 0.95$, $\text{PSNR} \ge 35\text{ dB}$).
+- **Objective**: Measure real-world application computational sufficiency.
 
 ---
 
-## 2. Measurement Methodology
-1. **Deterministic Random Seeds**: Workload inputs are generated deterministically per workload ID.
-2. **Warmup Cycles**: Two unmeasured warmup iterations are executed before timing begins to ensure JIT/CPU frequency stabilization.
-3. **High-Precision Monotonic Timers**: All execution timings use `time.perf_counter()` with sub-microsecond resolution.
-4. **Out-of-Distribution Blind Holdout**: Frozen holdout workloads (prime dimension GEMM, white noise FFT, ill-conditioned matrices) are evaluated without optimization tuning to prevent benchmark overfitting.
+## 2. Scientific Benchmark Measurement Rules
+
+1. **Zero Hardcoded Timers**: Every latency, FPS, or throughput figure must be derived from `time.perf_counter()` or platform telemetry.
+2. **Cold vs Warm Runs**: Always execute 3 warmup iterations to prime caches and JIT compilations, followed by 10 measured repetitions recording minimum, median, and 95th-percentile execution times.
+3. **Hardware Telemetry Recording**: Every benchmark run records exact CPU package power, core frequency, memory utilization, and thread affinity.

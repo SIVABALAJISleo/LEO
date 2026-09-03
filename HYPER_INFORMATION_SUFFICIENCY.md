@@ -1,32 +1,36 @@
-# HYPER: Information Sufficiency Specification
+# HYPER Information Sufficiency Engine
 
-## 1. Executive Concept
-The **Information Sufficiency Engine** (`information_sufficiency/`) answers the foundational question:
-> **Which information from the complete computation can actually affect the requested output under the frozen contract?**
+## 1. Overview
+The Information Sufficiency Engine answers the foundational question of Minimum Verified Computation:
+> **"What information is actually required by the user's contract, and what can be safely ignored or derived?"**
 
-Traditional compilers blindly optimize whatever operations the developer wrote. HYPER instead inspects downstream consumers to discard computation whose outputs are never read or whose contributions lie below contract perception thresholds.
-
----
-
-## 2. Seven-Class Node Classification Taxonomy
-
-Every operation and tensor in the universal computation graph is categorized into one of seven distinct classes:
-
-| Classification | Definition | Elimination Strategy |
-|---|---|---|
-| `ESSENTIAL` | Directly influences downstream output within contract bounds. | Optimize implementation (SIMD, fusion, loop tiling). |
-| `CONDITIONALLY_ESSENTIAL` | Influences output only under specific input regimes or threshold conditions. | Adaptive depth / early exit evaluation. |
-| `REDUNDANT` | Identical or algebraically equivalent to an existing active result. | Subgraph reuse, common subexpression elimination, or cache lookup. |
-| `DERIVABLE` | Output can be produced via a cheaper exact or bounded mathematical shortcut. | Algebraic reformulation, low-rank SVD, or sublinear transform. |
-| `PREDICTABLE` | High confidence speculative prediction verifiable via cheap spot checks. | Predict-Verify-Accept cascade with fallback. |
-| `DISCARDABLE` | Produces output components with zero downstream consumption. | Dead-code elimination (DCE) and channel culling. |
-| `UNKNOWN` | Insufficient profile data to prove safety. | Conservatively preserved as essential until profiled. |
+Conventional computing computes all elements of an intermediate tensor or state array blindly. The Information Sufficiency Engine traces output dependencies backwards from the user-facing contract to identify:
+1. **Required Outputs**: The subset of outputs inspected by downstream consumers.
+2. **Output Sensitivity**: The Jacobian $\frac{\partial \text{Output}}{\partial \text{Input}}$ identifying elements whose variations fall below the contract's error tolerance $\epsilon$.
+3. **Discardable Dimensions**: Unused channels, zero-padded margins, and high-frequency noise.
+4. **Decision Boundaries**: For classification, ranking, or thresholding tasks, only the sign or ordinal rank is needed—exact scalar magnitudes are irrelevant.
+5. **Visible Geometry / Rays**: In rendering, geometry hidden behind opaque occluders requires zero shading computation.
 
 ---
 
-## 3. Downstream Sensitivity & Value Density
-- **Top-K Selection**: When an application requires only top-$k$ elements, full sorting $O(N \log N)$ is replaced by QuickSelect / Argpartition $O(N)$.
-- **Frustum & Region-of-Interest Culling**: Geometry and pixels outside the active viewport are culled prior to rasterization or shading.
-- **Computation Value Density**:
-$$\text{Value Density} = \frac{\Delta \text{Information Gain (bits)} \times 10^6}{\text{Total Work Units}}$$
-Computations with $\text{Value Density} < 0.1$ are prioritized for elimination or bounded approximation.
+## 2. Classification of Computation
+
+Every operation in the computation DAG is categorized by information utility:
+
+- **`ESSENTIAL`**: Required to satisfy the contract; cannot be derived or predicted within error $\epsilon$.
+- **`CONDITIONALLY_ESSENTIAL`**: Required only if a branch or threshold condition is triggered.
+- **`REDUNDANT`**: Identical to an already computed or cached value.
+- **`DERIVABLE`**: Can be computed with fewer FLOPs via an invariant or closed-form statistic.
+- **`PREDICTABLE`**: Can be estimated cheaply with confidence exceeding the verification threshold.
+- **`DISCARDABLE`**: Output does not influence user-visible contract metrics.
+- **`UNKNOWN`**: Insufficient static information; requires dynamic instrumentation.
+
+---
+
+## 3. Mathematical Formulation of Value Density
+
+We define **Computational Value Density** ($V_D$) as:
+
+$$V_D = \frac{\Delta \text{Information Content} \times \text{Sensitivity Weight}}{\text{FLOPs} + \alpha \cdot \text{Memory Bytes}}$$
+
+Operations with high $V_D$ are prioritized and scheduled on high-throughput P-cores or iGPU vector units. Operations with low $V_D$ are pruned, downsampled, or deferred.

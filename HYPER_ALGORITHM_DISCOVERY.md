@@ -1,31 +1,52 @@
-# HYPER: Autonomous Algorithm Discovery Specification
+# HYPER Algorithm Discovery & Strategy Search
 
-## 1. Beyond Hardcoded Rules
-Most compiler and runtime optimizers are limited to fixed, hand-coded heuristics (e.g. unroll loop by 4, tile by 64).
-**HYPER Algorithm Discovery** (`algorithm_discovery/`) systematically searches for alternative algorithms with lower asymptotic complexity or better hardware alignment.
+## 1. Beyond Fixed Heuristics
+Static optimization passes only apply known code transformations. HYPER Algorithm Discovery treats computational strategy as an evolving genome:
 
----
-
-## 2. The Algorithmic Transformation Catalog
-
-```mermaid
-graph LR
-    O_N2[O(N^2) All-Pairs] -->|Spatial Octree| O_NLOGN[O(N log N) Barnes-Hut]
-    O_NLOGN_FFT[O(N log N) Dense FFT] -->|Frequency Sparsity| O_KLOGN[O(k log N) Sublinear sFFT]
-    O_MNK[O(M*N*K) Dense GEMM] -->|Spectral Decay| O_LR[O(r*(M+N)*K) Low-Rank SVD]
-    MC[O(1/eps^2) Monte Carlo] -->|Sobol Sequences| QMC[O(1/eps) Quasi-Monte Carlo]
-    SORT[O(N log N) Full Sort] -->|Top-K Query| SELECT[O(N) QuickSelect / Argpartition]
+```json
+{
+  "algorithm": "RandomizedSVD_BitNet",
+  "representation": "Ternary_b1.58",
+  "precision": "INT2_Packed",
+  "tiling": [64, 64, 32],
+  "fusion": ["MatmulBiasAdd", "GELUActivation"],
+  "memory_plan": "ZeroCopy_SharedPool",
+  "cpu_ratio": 0.70,
+  "igpu_ratio": 0.30,
+  "sampling": "Sobol_LowDiscrepancy",
+  "verification": "Freivalds_Randomized"
+}
 ```
 
 ---
 
-## 3. Autonomous Evolutionary Optimization Loop
+## 2. The Evolutionary Discovery Loop
 
-The evolutionary discovery engine continuously explores the multi-dimensional parameter space:
-1. **GENERATE**: Initial population generated from templates and historical strategy memory.
-2. **COMPILE**: Lowered to Universal Computation IR with layout alignment.
-3. **TEST & VERIFY**: Evaluated by independent verifiers against frozen contracts.
-4. **BENCHMARK**: Multi-term work function ($W_{\text{total}}$), latency, and memory traffic measured.
-5. **SCORE & SELECT**: Top performers selected along non-dominated Pareto frontier.
-6. **MUTATE & RECOMBINE**: Tile sizes, CPU/iGPU partition ratios, and approximation tolerances mutated.
-7. **PERSIST**: Certified champions saved to persistent Strategy Database.
+```mermaid
+graph TD
+    Pop[Strategy Population] --> Mutate[Mutate & Recombine]
+    Mutate --> Cand[Candidate Strategy]
+    Cand --> Comp[Compile / Specialize]
+    Comp --> Test[Sanity Check]
+    Test --> Verif[Independent Verification]
+    Verif -- FAILED --> Discard[Discard & Log Failure]
+    Verif -- PASSED --> Bench[Real Hardware Benchmark]
+    Bench --> Score[Multi-Objective Pareto Ranking]
+    Score --> Pareto[Update Pareto Frontier]
+    Pareto --> Select[Select Best Parents]
+    Select --> Pop
+```
+
+---
+
+## 3. Multi-Objective Pareto Optimization
+
+HYPER maintains a Pareto frontier across 6 non-fungible metrics:
+1. **Latency** (ms to solution)
+2. **Quality / Error** (PSNR, SSIM, relative residual)
+3. **Total Work Done** (FLOPs + memory bytes)
+4. **Peak Memory Footprint** (MB allocated)
+5. **Energy / Thermal Cost** (estimated Joules)
+6. **Verification Cost** (overhead of safety verification)
+
+A candidate strategy is admitted only if it dominates the incumbent on at least one dimension without violating the contract.

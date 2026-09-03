@@ -160,5 +160,5 @@ app.include_router(hyper_v2_router)
 from backend.routers.hyper_v3_api import router as hyper_v3_router
 app.include_router(hyper_v3_router)
 
-from backend.routers.hyper_mvc_api import router as hyper_mvc_router
-app.include_router(hyper_mvc_router)
+from backend.routers.hyper_mvc_dar_router import router as hyper_mvc_dar_router
+app.include_router(hyper_mvc_dar_router)

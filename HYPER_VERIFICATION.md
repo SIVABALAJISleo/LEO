@@ -1,27 +1,35 @@
-# HYPER: Independent Verification Engine Specification
+# HYPER Verification & Safety Architecture
 
-## 1. Verification Principles
-1. **Independent Reference Path**: The verifier executes separate validation algorithms that do not share intermediate memory or buffers with the optimizer.
-2. **Sub-linear Verification**: For operations where full recalculation would erase optimization gains (e.g. matrix multiplication), the verifier employs randomized sub-linear algorithms.
-3. **Multi-Domain Coverage**: Verification methods are domain-specialized (algebraic, symplectic, perceptual, statistical).
+## 1. Principle of Independent Verification
+The optimizer and the verifier are logically decoupled. The verifier has zero knowledge of which heuristic or approximation was selected by the optimizer; it only checks whether the resulting output satisfies the formal contract.
 
 ---
 
-## 2. Mathematical Verification Methods
+## 2. Verification Methodologies
 
-### A. Freivalds Randomized Matrix Multiplication Check
-To verify $A \cdot B = C$ for $N \times N$ matrices in $O(k \cdot N^2)$ rather than $O(N^3)$:
-1. Choose $k$ random binary vectors $r \in \{0, 1\}^N$.
-2. Compute $v_1 = A \cdot (B \cdot r)$ and $v_2 = C \cdot r$.
-3. If $v_1 = v_2$ for all $k$ rounds, $C$ is correct with error probability $P(\text{error}) \le 2^{-k}$. For $k=5$, $P(\text{error}) < 0.03125$.
+1. **Freivalds' Randomized Algorithm**: For matrix multiplication $C = AB$, verifies equality in $O(N^2)$ instead of $O(N^3)$ by testing $A(Br) = Cr$ for random boolean vector $r \in \{0, 1\}^N$. Iterating $k=5$ times bounds false-positive probability to $2^{-5} < 0.032$.
+2. **Metamorphic Testing**: Verifies invariant properties under input transformation:
+   - Linearity: $f(ax + by) = a f(x) + b f(y)$
+   - Symmetry: $f(A^T) = f(A)^T$
+   - Permutation Invariance: In N-body or particle systems, permuting input body indices produces identical center-of-mass trajectory.
+3. **Symplectic Hamiltonian Invariants**: In physical simulations, energy drift is verified via Hamiltonian conservation:
+   $$\Delta H = |H(t) - H(0)| < \epsilon$$
+4. **Perceptual Metrics (SSIM / PSNR)**: In rendering, visual fidelity is verified using multi-scale SSIM $> 0.95$ and PSNR $> 35\text{ dB}$ against reference samples.
 
-### B. Symplectic Energy Drift (N-Body & Particle Physics)
-Physical dynamical systems conserve Hamiltonian energy $H(p, q)$. The verifier measures fractional energy drift:
-$$\Delta E = \frac{|E_{\text{final}} - E_{\text{initial}}|}{\max(E_{\text{initial}}, 10^{-6})} \le 0.05$$
+---
 
-### C. Structural Similarity Index (SSIM - Rendering & Video)
-For image and rendering outputs, pointwise MSE is often misleading. The verifier computes 2D structural luminance, contrast, and structure:
-$$\text{SSIM}(x, y) = \frac{(2\mu_x\mu_y + c_1)(2\sigma_{xy} + c_2)}{(\mu_x^2 + \mu_y^2 + c_1)(\sigma_x^2 + \sigma_y^2 + c_2)} \ge 0.85$$
+## 3. The 9-Level Automatic Fallback Ladder
 
-### D. Metamorphic Testing
-Verifies mathematical invariances (scale linearity, translation invariance, permutation equivariance) across randomized inputs.
+```text
+Level 0: Exact Hash / Semantic Cache Hit (<0.05ms)
+Level 1: Exact Algebraic Simplification
+Level 2: Exact Algorithmic Reformulation
+Level 3: Exact Sparse / Structured Exploitation
+Level 4: Memory-Tiled / Fused Kernel Optimization
+Level 5: Heterogeneous CPU + iGPU Partitioning
+Level 6: Bounded Numerical / Perceptual Approximation
+Level 7: Speculative Prediction + Verified Acceptance
+Level 8: Reference Gold-Standard Exact Fallback (Guaranteed Correctness)
+```
+
+If verification fails at any level, execution immediately cascades to the next tier without throwing an unhandled exception or returning corrupted data.
