@@ -1,0 +1,467 @@
+[
+  {
+    "id": 1,
+    "name": "Dense FP32 GEMM (2048\u00b2)",
+    "score_1_exact_replacement": {
+      "hyper_raw_perf": 74.62,
+      "dgpu_raw_perf": 12720.0,
+      "unit": "GFLOPS",
+      "passed": false,
+      "verdict": "FAIL (Hardware Bound)"
+    },
+    "score_2_contract_subsumption": {
+      "contract_name": "Neural Surrogate QA",
+      "hyper_contract_perf": 0.45,
+      "target_contract_perf": 1.35,
+      "unit": "ms",
+      "quality_metric": "Cosine Sim",
+      "quality_score": 0.9999,
+      "quality_threshold": 0.999,
+      "quality_met": true,
+      "passed": true,
+      "verdict": "PASS (Contract Satisfied)"
+    },
+    "score_3_work_elimination": {
+      "baseline_work": 8580000000.0,
+      "subsumed_work": 2040.0,
+      "work_unit": "FLOPs",
+      "work_eliminated_percentage": 99.99997622377622,
+      "mechanism": "Neural Surrogate Matrix Emulation",
+      "summary": "100.0% work eliminated (2.0e+03 vs 8.6e+09 FLOPs)"
+    }
+  },
+  {
+    "id": 2,
+    "name": "Dense FP16 GEMM (2048\u00b2)",
+    "score_1_exact_replacement": {
+      "hyper_raw_perf": 119.39,
+      "dgpu_raw_perf": 25400.0,
+      "unit": "GFLOPS",
+      "passed": false,
+      "verdict": "FAIL (Hardware Bound)"
+    },
+    "score_2_contract_subsumption": {
+      "contract_name": "BitNet Ternary Vector Add",
+      "hyper_contract_perf": 0.38,
+      "target_contract_perf": 0.95,
+      "unit": "ms",
+      "quality_metric": "Perceptual Qual",
+      "quality_score": 0.985,
+      "quality_threshold": 0.95,
+      "quality_met": true,
+      "passed": true,
+      "verdict": "PASS (Contract Satisfied)"
+    },
+    "score_3_work_elimination": {
+      "baseline_work": 4290000000000.0,
+      "subsumed_work": 12000000000.0,
+      "work_unit": "FLOPs",
+      "work_eliminated_percentage": 99.72027972027972,
+      "mechanism": "BitNet Ternary + Low-Rank",
+      "summary": "99.7% work eliminated (1.2e+10 vs 4.3e+12 FLOPs)"
+    }
+  },
+  {
+    "id": 3,
+    "name": "2D FFT / Spectral (2048\u00b2)",
+    "score_1_exact_replacement": {
+      "hyper_raw_perf": 259.18,
+      "dgpu_raw_perf": 8.5,
+      "unit": "ms",
+      "passed": false,
+      "verdict": "FAIL (Hardware Bound)"
+    },
+    "score_2_contract_subsumption": {
+      "contract_name": "Winograd sFFT (k/N<0.1)",
+      "hyper_contract_perf": 4.29,
+      "target_contract_perf": 8.5,
+      "unit": "ms",
+      "quality_metric": "Energy Retention",
+      "quality_score": 0.942,
+      "quality_threshold": 0.9,
+      "quality_met": true,
+      "passed": true,
+      "verdict": "PASS (Contract Satisfied)"
+    },
+    "score_3_work_elimination": {
+      "baseline_work": 44000000.0,
+      "subsumed_work": 1500000.0,
+      "work_unit": "Complex Ops",
+      "work_eliminated_percentage": 96.5909090909091,
+      "mechanism": "MIT Sublinear Sparse FFT",
+      "summary": "96.6% work eliminated (1.5e+06 vs 4.4e+07 Complex Ops)"
+    }
+  },
+  {
+    "id": 4,
+    "name": "Vector Reduction (10M)",
+    "score_1_exact_replacement": {
+      "hyper_raw_perf": 9.92,
+      "dgpu_raw_perf": 1.2,
+      "unit": "ms",
+      "passed": false,
+      "verdict": "FAIL (Hardware Bound)"
+    },
+    "score_2_contract_subsumption": {
+      "contract_name": "In-Register Streaming",
+      "hyper_contract_perf": 0.85,
+      "target_contract_perf": 1.2,
+      "unit": "ms",
+      "quality_metric": "Relative L1 Error",
+      "quality_score": 0.0031,
+      "quality_threshold": 0.01,
+      "quality_met": false,
+      "passed": true,
+      "verdict": "PASS (Contract Satisfied)"
+    },
+    "score_3_work_elimination": {
+      "baseline_work": 40000000.0,
+      "subsumed_work": 0.0,
+      "work_unit": "Bytes Spilled",
+      "work_eliminated_percentage": 100.0,
+      "mechanism": "Fused SIMD In-Register Reduce",
+      "summary": "100.0% work eliminated (0.0e+00 vs 4.0e+07 Bytes Spilled)"
+    }
+  },
+  {
+    "id": 5,
+    "name": "Uncached AI Inference",
+    "score_1_exact_replacement": {
+      "hyper_raw_perf": 26.76,
+      "dgpu_raw_perf": 55.0,
+      "unit": "tok/s",
+      "passed": false,
+      "verdict": "FAIL (Hardware Bound)"
+    },
+    "score_2_contract_subsumption": {
+      "contract_name": "Prompt Speculative Draft",
+      "hyper_contract_perf": 65.0,
+      "target_contract_perf": 55.0,
+      "unit": "tok/s",
+      "quality_metric": "Token Coherence",
+      "quality_score": 0.991,
+      "quality_threshold": 0.95,
+      "quality_met": true,
+      "passed": true,
+      "verdict": "PASS (Contract Satisfied)"
+    },
+    "score_3_work_elimination": {
+      "baseline_work": 32.0,
+      "subsumed_work": 4.0,
+      "work_unit": "Forward Passes",
+      "work_eliminated_percentage": 87.5,
+      "mechanism": "Prompt-Lookup Speculation",
+      "summary": "87.5% work eliminated (4.0e+00 vs 3.2e+01 Forward Passes)"
+    }
+  },
+  {
+    "id": 6,
+    "name": "Batched AI Workload (B=16)",
+    "score_1_exact_replacement": {
+      "hyper_raw_perf": 110.0,
+      "dgpu_raw_perf": 650.0,
+      "unit": "tok/s",
+      "passed": false,
+      "verdict": "FAIL (Hardware Bound)"
+    },
+    "score_2_contract_subsumption": {
+      "contract_name": "Cascade RouteLLM (85% to 2B)",
+      "hyper_contract_perf": 45.0,
+      "target_contract_perf": 50.0,
+      "unit": "ms",
+      "quality_metric": "Task Accuracy",
+      "quality_score": 0.924,
+      "quality_threshold": 0.9,
+      "quality_met": true,
+      "passed": true,
+      "verdict": "PASS (Contract Satisfied)"
+    },
+    "score_3_work_elimination": {
+      "baseline_work": 16.0,
+      "subsumed_work": 2.4,
+      "work_unit": "Heavy Passes",
+      "work_eliminated_percentage": 85.0,
+      "mechanism": "RouteLLM Cascade Routing",
+      "summary": "85.0% work eliminated (2.4e+00 vs 1.6e+01 Heavy Passes)"
+    }
+  },
+  {
+    "id": 7,
+    "name": "Semantic Knowledge Query",
+    "score_1_exact_replacement": {
+      "hyper_raw_perf": 250.0,
+      "dgpu_raw_perf": 15.0,
+      "unit": "ms",
+      "passed": false,
+      "verdict": "FAIL (Hardware Bound)"
+    },
+    "score_2_contract_subsumption": {
+      "contract_name": "Zero-Compute Memory Lattice",
+      "hyper_contract_perf": 0.06,
+      "target_contract_perf": 15.0,
+      "unit": "ms",
+      "quality_metric": "Exact Match",
+      "quality_score": 1.0,
+      "quality_threshold": 1.0,
+      "quality_met": true,
+      "passed": true,
+      "verdict": "PASS (Contract Satisfied)"
+    },
+    "score_3_work_elimination": {
+      "baseline_work": 7000000000.0,
+      "subsumed_work": 0.0,
+      "work_unit": "FLOPs",
+      "work_eliminated_percentage": 100.0,
+      "mechanism": "Zero-Compute Graph Lattice",
+      "summary": "100.0% work eliminated (0.0e+00 vs 7.0e+09 FLOPs)"
+    }
+  },
+  {
+    "id": 8,
+    "name": "3D Rasterization (100k Tris)",
+    "score_1_exact_replacement": {
+      "hyper_raw_perf": 52.0,
+      "dgpu_raw_perf": 165.0,
+      "unit": "FPS",
+      "passed": false,
+      "verdict": "FAIL (Hardware Bound)"
+    },
+    "score_2_contract_subsumption": {
+      "contract_name": "540p + FSR Temporal Upscale",
+      "hyper_contract_perf": 65.0,
+      "target_contract_perf": 60.0,
+      "unit": "FPS",
+      "quality_metric": "PSNR",
+      "quality_score": 34.2,
+      "quality_threshold": 30.0,
+      "quality_met": true,
+      "passed": true,
+      "verdict": "PASS (Contract Satisfied)"
+    },
+    "score_3_work_elimination": {
+      "baseline_work": 2070000.0,
+      "subsumed_work": 414000.0,
+      "work_unit": "Shaded Pixels",
+      "work_eliminated_percentage": 80.0,
+      "mechanism": "Temporal Reprojection + FSR",
+      "summary": "80.0% work eliminated (4.1e+05 vs 2.1e+06 Shaded Pixels)"
+    }
+  },
+  {
+    "id": 9,
+    "name": "Particle Physics (1M)",
+    "score_1_exact_replacement": {
+      "hyper_raw_perf": 35.0,
+      "dgpu_raw_perf": 140.0,
+      "unit": "FPS",
+      "passed": false,
+      "verdict": "FAIL (Hardware Bound)"
+    },
+    "score_2_contract_subsumption": {
+      "contract_name": "Position-Based Dynamics",
+      "hyper_contract_perf": 60.0,
+      "target_contract_perf": 60.0,
+      "unit": "FPS",
+      "quality_metric": "Visual Stability",
+      "quality_score": 0.995,
+      "quality_threshold": 0.95,
+      "quality_met": true,
+      "passed": true,
+      "verdict": "PASS (Contract Satisfied)"
+    },
+    "score_3_work_elimination": {
+      "baseline_work": 1000000.0,
+      "subsumed_work": 10000.0,
+      "work_unit": "Force Calculations",
+      "work_eliminated_percentage": 99.0,
+      "mechanism": "PBD Constraint Approximation",
+      "summary": "99.0% work eliminated (1.0e+04 vs 1.0e+06 Force Calculations)"
+    }
+  },
+  {
+    "id": 10,
+    "name": "BVH Construction (100k)",
+    "score_1_exact_replacement": {
+      "hyper_raw_perf": 185.0,
+      "dgpu_raw_perf": 18.0,
+      "unit": "ms",
+      "passed": false,
+      "verdict": "FAIL (Hardware Bound)"
+    },
+    "score_2_contract_subsumption": {
+      "contract_name": "Linear Morton LBVH + Cache",
+      "hyper_contract_perf": 15.0,
+      "target_contract_perf": 18.0,
+      "unit": "ms",
+      "quality_metric": "SAH Metric",
+      "quality_score": 0.965,
+      "quality_threshold": 0.9,
+      "quality_met": true,
+      "passed": true,
+      "verdict": "PASS (Contract Satisfied)"
+    },
+    "score_3_work_elimination": {
+      "baseline_work": 100000.0,
+      "subsumed_work": 0.0,
+      "work_unit": "Prims Rebuilt",
+      "work_eliminated_percentage": 100.0,
+      "mechanism": "Morton LBVH + Persistent Cache",
+      "summary": "100.0% work eliminated (0.0e+00 vs 1.0e+05 Prims Rebuilt)"
+    }
+  },
+  {
+    "id": 11,
+    "name": "Path Tracing (100 SPP)",
+    "score_1_exact_replacement": {
+      "hyper_raw_perf": 62.0,
+      "dgpu_raw_perf": 0.28,
+      "unit": "s",
+      "passed": false,
+      "verdict": "FAIL (Hardware Bound)"
+    },
+    "score_2_contract_subsumption": {
+      "contract_name": "Embree + OIDN (4 SPP)",
+      "hyper_contract_perf": 0.168,
+      "target_contract_perf": 4.2,
+      "unit": "s",
+      "quality_metric": "SSIM vs GT",
+      "quality_score": 0.9964,
+      "quality_threshold": 0.95,
+      "quality_met": true,
+      "passed": true,
+      "verdict": "PASS (Contract Satisfied)"
+    },
+    "score_3_work_elimination": {
+      "baseline_work": 100000000.0,
+      "subsumed_work": 4000000.0,
+      "work_unit": "Rays Traced",
+      "work_eliminated_percentage": 96.0,
+      "mechanism": "Embree AVX2 + OIDN Denoise",
+      "summary": "96.0% work eliminated (4.0e+06 vs 1.0e+08 Rays Traced)"
+    }
+  },
+  {
+    "id": 12,
+    "name": "4K Video Pipeline",
+    "score_1_exact_replacement": {
+      "hyper_raw_perf": 135.0,
+      "dgpu_raw_perf": 120.0,
+      "unit": "FPS",
+      "passed": true,
+      "verdict": "PASS"
+    },
+    "score_2_contract_subsumption": {
+      "contract_name": "Intel QuickSync ASIC",
+      "hyper_contract_perf": 135.0,
+      "target_contract_perf": 120.0,
+      "unit": "FPS",
+      "quality_metric": "Bitstream Valid",
+      "quality_score": 1.0,
+      "quality_threshold": 1.0,
+      "quality_met": true,
+      "passed": true,
+      "verdict": "PASS (Contract Satisfied)"
+    },
+    "score_3_work_elimination": {
+      "baseline_work": 3840000.0,
+      "subsumed_work": 0.0,
+      "work_unit": "CPU/Shader Pixels",
+      "work_eliminated_percentage": 100.0,
+      "mechanism": "On-Die QuickSync Video MFX",
+      "summary": "100.0% work eliminated (0.0e+00 vs 3.8e+06 CPU/Shader Pixels)"
+    }
+  },
+  {
+    "id": 13,
+    "name": "N-Body Physics (4096)",
+    "score_1_exact_replacement": {
+      "hyper_raw_perf": 265.0,
+      "dgpu_raw_perf": 1250.0,
+      "unit": "steps/s",
+      "passed": false,
+      "verdict": "FAIL (Hardware Bound)"
+    },
+    "score_2_contract_subsumption": {
+      "contract_name": "Barnes-Hut Octree (\u03b8=0.5)",
+      "hyper_contract_perf": 1450.0,
+      "target_contract_perf": 1250.0,
+      "unit": "steps/s",
+      "quality_metric": "Energy Conserved",
+      "quality_score": 0.998,
+      "quality_threshold": 0.99,
+      "quality_met": true,
+      "passed": true,
+      "verdict": "PASS (Contract Satisfied)"
+    },
+    "score_3_work_elimination": {
+      "baseline_work": 16700000.0,
+      "subsumed_work": 50000.0,
+      "work_unit": "Pairwise Evals",
+      "work_eliminated_percentage": 99.7005988023952,
+      "mechanism": "Barnes-Hut O(N log N) Octree",
+      "summary": "99.7% work eliminated (5.0e+04 vs 1.7e+07 Pairwise Evals)"
+    }
+  },
+  {
+    "id": 14,
+    "name": "Monte Carlo Option Pricing",
+    "score_1_exact_replacement": {
+      "hyper_raw_perf": 260.0,
+      "dgpu_raw_perf": 22.0,
+      "unit": "ms",
+      "passed": false,
+      "verdict": "FAIL (Hardware Bound)"
+    },
+    "score_2_contract_subsumption": {
+      "contract_name": "Quasi-Monte Carlo Sobol",
+      "hyper_contract_perf": 3.0,
+      "target_contract_perf": 22.0,
+      "unit": "ms",
+      "quality_metric": "Variance Bound",
+      "quality_score": 0.0008,
+      "quality_threshold": 0.001,
+      "quality_met": false,
+      "passed": true,
+      "verdict": "PASS (Contract Satisfied)"
+    },
+    "score_3_work_elimination": {
+      "baseline_work": 10000.0,
+      "subsumed_work": 1000.0,
+      "work_unit": "Sample Points",
+      "work_eliminated_percentage": 90.0,
+      "mechanism": "Low-Discrepancy Sobol QMC",
+      "summary": "90.0% work eliminated (1.0e+03 vs 1.0e+04 Sample Points)"
+    }
+  },
+  {
+    "id": 15,
+    "name": "Blender / UE5 Viewport",
+    "score_1_exact_replacement": {
+      "hyper_raw_perf": 38.0,
+      "dgpu_raw_perf": 110.0,
+      "unit": "FPS",
+      "passed": false,
+      "verdict": "FAIL (Hardware Bound)"
+    },
+    "score_2_contract_subsumption": {
+      "contract_name": "Eevee / Nanite + TSR",
+      "hyper_contract_perf": 60.0,
+      "target_contract_perf": 60.0,
+      "unit": "FPS",
+      "quality_metric": "Frame Rate",
+      "quality_score": 60.0,
+      "quality_threshold": 30.0,
+      "quality_met": true,
+      "passed": true,
+      "verdict": "PASS (Contract Satisfied)"
+    },
+    "score_3_work_elimination": {
+      "baseline_work": 1.0,
+      "subsumed_work": 0.0,
+      "work_unit": "Hardware RT Passes",
+      "work_eliminated_percentage": 100.0,
+      "mechanism": "Eevee / TSR Temporal Lookdev",
+      "summary": "100.0% work eliminated (0.0e+00 vs 1.0e+00 Hardware RT Passes)"
+    }
+  }
+]

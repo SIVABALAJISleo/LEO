@@ -1,0 +1,33 @@
+{
+  "hardware": {
+    "os": "Windows 11",
+    "cpu": {
+      "name": "Intel64 Family 6 Model 186 Stepping 2, GenuineIntel",
+      "physical_cores": 8,
+      "logical_cores": 12,
+      "ram_gb": 15.7,
+      "simd_extensions": [
+        "AVX2",
+        "FMA",
+        "SSE4.2"
+      ]
+    },
+    "igpu": {
+      "available": true,
+      "name": "Intel(R) UHD Graphics (iGPU)",
+      "runtime": "OpenVINO",
+      "execution_units": 48,
+      "shared_memory_gb": 7.85
+    },
+    "openvino_devices": [
+      "CPU",
+      "GPU"
+    ]
+  },
+  "calibration": {
+    "measured_ram_bandwidth_gbs": 5.0,
+    "measured_cpu_peak_gflops": 49.48,
+    "simd_width_bits": 256,
+    "calibrated_status": "VALIDATED"
+  }
+}

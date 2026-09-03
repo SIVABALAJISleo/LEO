@@ -1,0 +1,16 @@
+workload,exact_latency_us,reference_flops,status
+dense_gemm_fp32,18373.4,2147483648,PASS
+dense_gemm_fp16,168384.4,17179869184,PASS
+fft_1d,5120.5,1146880,PASS
+vector_reduction,6151.7,10000000,PASS
+batch1_ai,158.5,524288,PASS
+batched_ai,15531.2,268435456,PASS
+semantic_query,559.6,3072000,PASS
+rasterization,13641.5,655360,PASS
+particle_physics,1534.6,100663296,PASS
+bvh_hierarchy,204.6,675840,PASS
+path_tracing,3559.2,104857600,PASS
+video_pipeline,11036.3,51840000,PASS
+nbody_simulation,495235.6,83886080,PASS
+monte_carlo,3509.1,2500000,PASS
+viewport_transform,1056.5,1600000,PASS

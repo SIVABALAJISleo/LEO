@@ -1,0 +1,17 @@
+{
+  "holdout_odd_gemm": {
+    "latency_us": 3968.3,
+    "flops": 487707414,
+    "status": "PASS"
+  },
+  "holdout_multiscale_fft": {
+    "latency_us": 3103.0,
+    "flops": 746642,
+    "status": "PASS"
+  },
+  "adv_ill_conditioned_gemm": {
+    "latency_us": 2455.9,
+    "flops": 268435456,
+    "status": "PASS"
+  }
+}

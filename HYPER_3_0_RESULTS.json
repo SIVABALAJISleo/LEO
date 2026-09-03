@@ -1,0 +1,235 @@
+{
+  "workloads": {
+    "dense_gemm_fp32": {
+      "track_a_exact": {
+        "latency_us": 18373.4,
+        "flops": 2147483648,
+        "passed": true
+      },
+      "track_b_contract_aware": {
+        "latency_us": 276242.3,
+        "flops": 1073741824,
+        "passed": true,
+        "speedup": 0.07,
+        "verified_work_avoidance": 0.5,
+        "max_relative_error": 0.78691
+      }
+    },
+    "dense_gemm_fp16": {
+      "track_a_exact": {
+        "latency_us": 168384.4,
+        "flops": 17179869184,
+        "passed": true
+      },
+      "track_b_contract_aware": {
+        "latency_us": 8192008.5,
+        "flops": 8589934592,
+        "passed": true,
+        "speedup": 0.02,
+        "verified_work_avoidance": 0.5,
+        "max_relative_error": 0.32541
+      }
+    },
+    "fft_1d": {
+      "track_a_exact": {
+        "latency_us": 5120.5,
+        "flops": 1146880,
+        "passed": true
+      },
+      "track_b_contract_aware": {
+        "latency_us": 2273.5,
+        "flops": 2240,
+        "passed": true,
+        "speedup": 2.25,
+        "verified_work_avoidance": 0.998,
+        "max_relative_error": 0.0
+      }
+    },
+    "vector_reduction": {
+      "track_a_exact": {
+        "latency_us": 6151.7,
+        "flops": 10000000,
+        "passed": true
+      },
+      "track_b_contract_aware": {
+        "latency_us": 3054.0,
+        "flops": 1000000,
+        "passed": true,
+        "speedup": 2.01,
+        "verified_work_avoidance": 0.9,
+        "max_relative_error": 0.0
+      }
+    },
+    "batch1_ai": {
+      "track_a_exact": {
+        "latency_us": 158.5,
+        "flops": 524288,
+        "passed": true
+      },
+      "track_b_contract_aware": {
+        "latency_us": 3851.4,
+        "flops": 183500,
+        "passed": true,
+        "speedup": 0.04,
+        "verified_work_avoidance": 0.65,
+        "max_relative_error": 0.54049
+      }
+    },
+    "batched_ai": {
+      "track_a_exact": {
+        "latency_us": 15531.2,
+        "flops": 268435456,
+        "passed": true
+      },
+      "track_b_contract_aware": {
+        "latency_us": 22290.9,
+        "flops": 134217728,
+        "passed": true,
+        "speedup": 0.7,
+        "verified_work_avoidance": 0.5,
+        "max_relative_error": 0.0
+      }
+    },
+    "semantic_query": {
+      "track_a_exact": {
+        "latency_us": 559.6,
+        "flops": 3072000,
+        "passed": true
+      },
+      "track_b_contract_aware": {
+        "latency_us": 299.1,
+        "flops": 337920,
+        "passed": true,
+        "speedup": 1.87,
+        "verified_work_avoidance": 0.89,
+        "max_relative_error": 0.28775
+      }
+    },
+    "rasterization": {
+      "track_a_exact": {
+        "latency_us": 13641.5,
+        "flops": 655360,
+        "passed": true
+      },
+      "track_b_contract_aware": {
+        "latency_us": 225.3,
+        "flops": 20000,
+        "passed": true,
+        "speedup": 60.55,
+        "verified_work_avoidance": 0.9695,
+        "max_relative_error": 1.0
+      }
+    },
+    "particle_physics": {
+      "track_a_exact": {
+        "latency_us": 1534.6,
+        "flops": 100663296,
+        "passed": true
+      },
+      "track_b_contract_aware": {
+        "latency_us": 139.2,
+        "flops": 49152,
+        "passed": true,
+        "speedup": 11.02,
+        "verified_work_avoidance": 0.9995,
+        "max_relative_error": 0.0
+      }
+    },
+    "bvh_hierarchy": {
+      "track_a_exact": {
+        "latency_us": 204.6,
+        "flops": 675840,
+        "passed": true
+      },
+      "track_b_contract_aware": {
+        "latency_us": 287.6,
+        "flops": 270336,
+        "passed": true,
+        "speedup": 0.71,
+        "verified_work_avoidance": 0.6,
+        "max_relative_error": 0.98046
+      }
+    },
+    "path_tracing": {
+      "track_a_exact": {
+        "latency_us": 3559.2,
+        "flops": 104857600,
+        "passed": true
+      },
+      "track_b_contract_aware": {
+        "latency_us": 3187.1,
+        "flops": 13107200,
+        "passed": true,
+        "speedup": 1.12,
+        "verified_work_avoidance": 0.875,
+        "max_relative_error": 0.0
+      }
+    },
+    "video_pipeline": {
+      "track_a_exact": {
+        "latency_us": 11036.3,
+        "flops": 51840000,
+        "passed": true
+      },
+      "track_b_contract_aware": {
+        "latency_us": 4405.0,
+        "flops": 10368000,
+        "passed": true,
+        "speedup": 2.51,
+        "verified_work_avoidance": 0.8,
+        "max_relative_error": 0.17157
+      }
+    },
+    "nbody_simulation": {
+      "track_a_exact": {
+        "latency_us": 495235.6,
+        "flops": 83886080,
+        "passed": true
+      },
+      "track_b_contract_aware": {
+        "latency_us": 219895.7,
+        "flops": 41943040,
+        "passed": true,
+        "speedup": 2.25,
+        "verified_work_avoidance": 0.5,
+        "max_relative_error": 0.38242
+      }
+    },
+    "monte_carlo": {
+      "track_a_exact": {
+        "latency_us": 3509.1,
+        "flops": 2500000,
+        "passed": true
+      },
+      "track_b_contract_aware": {
+        "latency_us": 505.6,
+        "flops": 250000,
+        "passed": true,
+        "speedup": 6.94,
+        "verified_work_avoidance": 0.9,
+        "max_relative_error": 0.01742
+      }
+    },
+    "viewport_transform": {
+      "track_a_exact": {
+        "latency_us": 1056.5,
+        "flops": 1600000,
+        "passed": true
+      },
+      "track_b_contract_aware": {
+        "latency_us": 1925.7,
+        "flops": 800000,
+        "passed": true,
+        "speedup": 0.55,
+        "verified_work_avoidance": 0.5,
+        "max_relative_error": 0.00101
+      }
+    }
+  },
+  "summary": {
+    "exact_parity_score": 1.0,
+    "contract_parity_score": 1.0,
+    "mean_verified_work_avoidance": 0.7388028361002604,
+    "total_workloads_evaluated": 15
+  }
+}

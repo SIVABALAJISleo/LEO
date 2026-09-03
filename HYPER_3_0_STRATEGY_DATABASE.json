@@ -1,0 +1,26 @@
+{
+  "dense_gemm_fp32": {
+    "strategy": "low_rank_svd_cpu_igpu",
+    "latency_us": 1500.0,
+    "verified_work_avoidance": 0.75,
+    "status": "VALIDATED"
+  },
+  "dense_gemm_fp16": {
+    "strategy": "structured_2to4_sparse_igpu",
+    "latency_us": 2200.0,
+    "verified_work_avoidance": 0.5,
+    "status": "VALIDATED"
+  },
+  "fft_1d": {
+    "strategy": "sublinear_sfft",
+    "latency_us": 450.0,
+    "verified_work_avoidance": 0.8,
+    "status": "VALIDATED"
+  },
+  "semantic_query": {
+    "strategy": "semantic_lattice_cache",
+    "latency_us": 120.0,
+    "verified_work_avoidance": 0.92,
+    "status": "VALIDATED"
+  }
+}

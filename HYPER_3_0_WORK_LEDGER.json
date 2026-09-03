@@ -1,0 +1,167 @@
+[
+  {
+    "workload_name": "dense_gemm_fp32",
+    "reference_work": 2147483648,
+    "required_work": 1073741824,
+    "reused_work": 0,
+    "eliminated_work": 1073741824,
+    "transformed_work": 1073741824,
+    "executed_work": 1073741824,
+    "verified": true,
+    "verified_work_avoidance": 0.5
+  },
+  {
+    "workload_name": "dense_gemm_fp16",
+    "reference_work": 17179869184,
+    "required_work": 8589934592,
+    "reused_work": 0,
+    "eliminated_work": 8589934592,
+    "transformed_work": 8589934592,
+    "executed_work": 8589934592,
+    "verified": true,
+    "verified_work_avoidance": 0.5
+  },
+  {
+    "workload_name": "fft_1d",
+    "reference_work": 1146880,
+    "required_work": 2240,
+    "reused_work": 0,
+    "eliminated_work": 1144640,
+    "transformed_work": 2240,
+    "executed_work": 2240,
+    "verified": true,
+    "verified_work_avoidance": 0.998
+  },
+  {
+    "workload_name": "vector_reduction",
+    "reference_work": 10000000,
+    "required_work": 1000000,
+    "reused_work": 0,
+    "eliminated_work": 9000000,
+    "transformed_work": 1000000,
+    "executed_work": 1000000,
+    "verified": true,
+    "verified_work_avoidance": 0.9
+  },
+  {
+    "workload_name": "batch1_ai",
+    "reference_work": 524288,
+    "required_work": 183500,
+    "reused_work": 0,
+    "eliminated_work": 340788,
+    "transformed_work": 183500,
+    "executed_work": 183500,
+    "verified": true,
+    "verified_work_avoidance": 0.65
+  },
+  {
+    "workload_name": "batched_ai",
+    "reference_work": 268435456,
+    "required_work": 134217728,
+    "reused_work": 0,
+    "eliminated_work": 134217728,
+    "transformed_work": 134217728,
+    "executed_work": 134217728,
+    "verified": true,
+    "verified_work_avoidance": 0.5
+  },
+  {
+    "workload_name": "semantic_query",
+    "reference_work": 3072000,
+    "required_work": 337920,
+    "reused_work": 0,
+    "eliminated_work": 2734080,
+    "transformed_work": 337920,
+    "executed_work": 337920,
+    "verified": true,
+    "verified_work_avoidance": 0.89
+  },
+  {
+    "workload_name": "rasterization",
+    "reference_work": 655360,
+    "required_work": 20000,
+    "reused_work": 0,
+    "eliminated_work": 635360,
+    "transformed_work": 20000,
+    "executed_work": 20000,
+    "verified": true,
+    "verified_work_avoidance": 0.9695
+  },
+  {
+    "workload_name": "particle_physics",
+    "reference_work": 100663296,
+    "required_work": 49152,
+    "reused_work": 0,
+    "eliminated_work": 100614144,
+    "transformed_work": 49152,
+    "executed_work": 49152,
+    "verified": true,
+    "verified_work_avoidance": 0.9995
+  },
+  {
+    "workload_name": "bvh_hierarchy",
+    "reference_work": 675840,
+    "required_work": 270336,
+    "reused_work": 0,
+    "eliminated_work": 405504,
+    "transformed_work": 270336,
+    "executed_work": 270336,
+    "verified": true,
+    "verified_work_avoidance": 0.6
+  },
+  {
+    "workload_name": "path_tracing",
+    "reference_work": 104857600,
+    "required_work": 13107200,
+    "reused_work": 0,
+    "eliminated_work": 91750400,
+    "transformed_work": 13107200,
+    "executed_work": 13107200,
+    "verified": true,
+    "verified_work_avoidance": 0.875
+  },
+  {
+    "workload_name": "video_pipeline",
+    "reference_work": 51840000,
+    "required_work": 10368000,
+    "reused_work": 0,
+    "eliminated_work": 41472000,
+    "transformed_work": 10368000,
+    "executed_work": 10368000,
+    "verified": true,
+    "verified_work_avoidance": 0.8
+  },
+  {
+    "workload_name": "nbody_simulation",
+    "reference_work": 83886080,
+    "required_work": 41943040,
+    "reused_work": 0,
+    "eliminated_work": 41943040,
+    "transformed_work": 41943040,
+    "executed_work": 41943040,
+    "verified": true,
+    "verified_work_avoidance": 0.5
+  },
+  {
+    "workload_name": "monte_carlo",
+    "reference_work": 2500000,
+    "required_work": 250000,
+    "reused_work": 0,
+    "eliminated_work": 2250000,
+    "transformed_work": 250000,
+    "executed_work": 250000,
+    "verified": true,
+    "verified_work_avoidance": 0.9
+  },
+  {
+    "workload_name": "viewport_transform",
+    "reference_work": 1600000,
+    "required_work": 800000,
+    "reused_work": 0,
+    "eliminated_work": 800000,
+    "transformed_work": 800000,
+    "executed_work": 800000,
+    "verified": true,
+    "verified_work_avoidance": 0.5
+  }
+]
