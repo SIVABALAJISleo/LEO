@@ -43,10 +43,10 @@ function Home() {
           </p>
           <div className="mt-10 flex flex-wrap gap-3">
             <Link
-              to="/breakthrough"
-              className="inline-flex items-center gap-2 bg-cyan-400 px-6 py-4 text-sm font-bold text-black hover:bg-cyan-300 shadow-[0_0_25px_rgba(0,240,255,0.4)]"
+              to="/signup"
+              className="inline-flex items-center gap-2 bg-leo px-6 py-4 text-sm font-semibold text-leo-foreground hover:brightness-110"
             >
-              100% Breakthrough Engine <span>⚡</span>
+              Get LEO AI <span>›</span>
             </Link>
             <Link
               to="/platform"

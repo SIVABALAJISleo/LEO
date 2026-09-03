@@ -13,7 +13,6 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as BenchmarksRouteImport } from './routes/benchmarks'
-import { Route as BreakthroughRouteImport } from './routes/breakthrough'
 import { Route as DocsRouteImport } from './routes/docs'
 import { Route as FeaturesRouteImport } from './routes/features'
 import { Route as LoginRouteImport } from './routes/login'
@@ -22,9 +21,7 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated.app'
 import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated.app.index'
 import { Route as AuthenticatedAppBenchmarksRouteImport } from './routes/_authenticated.app.benchmarks'
-import { Route as AuthenticatedAppCaaoBreakthroughRouteImport } from './routes/_authenticated.app.caao-breakthrough'
 import { Route as AuthenticatedAppChatRouteImport } from './routes/_authenticated.app.chat'
-import { Route as AuthenticatedAppCyberpunkCgfpRouteImport } from './routes/_authenticated.app.cyberpunk-cgfp'
 import { Route as AuthenticatedAppEmbeddingsRouteImport } from './routes/_authenticated.app.embeddings'
 import { Route as AuthenticatedAppKnowledgeGraphRouteImport } from './routes/_authenticated.app.knowledge-graph'
 import { Route as AuthenticatedAppMemoryRouteImport } from './routes/_authenticated.app.memory'
@@ -51,11 +48,6 @@ const AboutRoute = AboutRouteImport.update({
 const BenchmarksRoute = BenchmarksRouteImport.update({
   id: '/benchmarks',
   path: '/benchmarks',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BreakthroughRoute = BreakthroughRouteImport.update({
-  id: '/breakthrough',
-  path: '/breakthrough',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DocsRoute = DocsRouteImport.update({
@@ -99,23 +91,11 @@ const AuthenticatedAppBenchmarksRoute =
     path: '/benchmarks',
     getParentRoute: () => AuthenticatedAppRoute,
   } as any)
-const AuthenticatedAppCaaoBreakthroughRoute =
-  AuthenticatedAppCaaoBreakthroughRouteImport.update({
-    id: '/caao-breakthrough',
-    path: '/caao-breakthrough',
-    getParentRoute: () => AuthenticatedAppRoute,
-  } as any)
 const AuthenticatedAppChatRoute = AuthenticatedAppChatRouteImport.update({
   id: '/chat',
   path: '/chat',
   getParentRoute: () => AuthenticatedAppRoute,
 } as any)
-const AuthenticatedAppCyberpunkCgfpRoute =
-  AuthenticatedAppCyberpunkCgfpRouteImport.update({
-    id: '/cyberpunk-cgfp',
-    path: '/cyberpunk-cgfp',
-    getParentRoute: () => AuthenticatedAppRoute,
-  } as any)
 const AuthenticatedAppEmbeddingsRoute =
   AuthenticatedAppEmbeddingsRouteImport.update({
     id: '/embeddings',
@@ -166,7 +146,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/benchmarks': typeof BenchmarksRoute
-  '/breakthrough': typeof BreakthroughRoute
   '/docs': typeof DocsRoute
   '/features': typeof FeaturesRoute
   '/login': typeof LoginRoute
@@ -174,9 +153,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/app': typeof AuthenticatedAppRouteWithChildren
   '/app/benchmarks': typeof AuthenticatedAppBenchmarksRoute
-  '/app/caao-breakthrough': typeof AuthenticatedAppCaaoBreakthroughRoute
   '/app/chat': typeof AuthenticatedAppChatRoute
-  '/app/cyberpunk-cgfp': typeof AuthenticatedAppCyberpunkCgfpRoute
   '/app/embeddings': typeof AuthenticatedAppEmbeddingsRoute
   '/app/knowledge-graph': typeof AuthenticatedAppKnowledgeGraphRoute
   '/app/memory': typeof AuthenticatedAppMemoryRoute
@@ -191,16 +168,13 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/benchmarks': typeof BenchmarksRoute
-  '/breakthrough': typeof BreakthroughRoute
   '/docs': typeof DocsRoute
   '/features': typeof FeaturesRoute
   '/login': typeof LoginRoute
   '/platform': typeof PlatformRoute
   '/signup': typeof SignupRoute
   '/app/benchmarks': typeof AuthenticatedAppBenchmarksRoute
-  '/app/caao-breakthrough': typeof AuthenticatedAppCaaoBreakthroughRoute
   '/app/chat': typeof AuthenticatedAppChatRoute
-  '/app/cyberpunk-cgfp': typeof AuthenticatedAppCyberpunkCgfpRoute
   '/app/embeddings': typeof AuthenticatedAppEmbeddingsRoute
   '/app/knowledge-graph': typeof AuthenticatedAppKnowledgeGraphRoute
   '/app/memory': typeof AuthenticatedAppMemoryRoute
@@ -217,7 +191,6 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/about': typeof AboutRoute
   '/benchmarks': typeof BenchmarksRoute
-  '/breakthrough': typeof BreakthroughRoute
   '/docs': typeof DocsRoute
   '/features': typeof FeaturesRoute
   '/login': typeof LoginRoute
@@ -225,9 +198,7 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/_authenticated/app': typeof AuthenticatedAppRouteWithChildren
   '/_authenticated/app/benchmarks': typeof AuthenticatedAppBenchmarksRoute
-  '/_authenticated/app/caao-breakthrough': typeof AuthenticatedAppCaaoBreakthroughRoute
   '/_authenticated/app/chat': typeof AuthenticatedAppChatRoute
-  '/_authenticated/app/cyberpunk-cgfp': typeof AuthenticatedAppCyberpunkCgfpRoute
   '/_authenticated/app/embeddings': typeof AuthenticatedAppEmbeddingsRoute
   '/_authenticated/app/knowledge-graph': typeof AuthenticatedAppKnowledgeGraphRoute
   '/_authenticated/app/memory': typeof AuthenticatedAppMemoryRoute
@@ -244,7 +215,6 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/benchmarks'
-    | '/breakthrough'
     | '/docs'
     | '/features'
     | '/login'
@@ -252,9 +222,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/app'
     | '/app/benchmarks'
-    | '/app/caao-breakthrough'
     | '/app/chat'
-    | '/app/cyberpunk-cgfp'
     | '/app/embeddings'
     | '/app/knowledge-graph'
     | '/app/memory'
@@ -269,16 +237,13 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/benchmarks'
-    | '/breakthrough'
     | '/docs'
     | '/features'
     | '/login'
     | '/platform'
     | '/signup'
     | '/app/benchmarks'
-    | '/app/caao-breakthrough'
     | '/app/chat'
-    | '/app/cyberpunk-cgfp'
     | '/app/embeddings'
     | '/app/knowledge-graph'
     | '/app/memory'
@@ -294,7 +259,6 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/about'
     | '/benchmarks'
-    | '/breakthrough'
     | '/docs'
     | '/features'
     | '/login'
@@ -302,9 +266,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/_authenticated/app'
     | '/_authenticated/app/benchmarks'
-    | '/_authenticated/app/caao-breakthrough'
     | '/_authenticated/app/chat'
-    | '/_authenticated/app/cyberpunk-cgfp'
     | '/_authenticated/app/embeddings'
     | '/_authenticated/app/knowledge-graph'
     | '/_authenticated/app/memory'
@@ -321,7 +283,6 @@ export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AboutRoute: typeof AboutRoute
   BenchmarksRoute: typeof BenchmarksRoute
-  BreakthroughRoute: typeof BreakthroughRoute
   DocsRoute: typeof DocsRoute
   FeaturesRoute: typeof FeaturesRoute
   LoginRoute: typeof LoginRoute
@@ -358,13 +319,6 @@ declare module '@tanstack/react-router' {
       path: '/benchmarks'
       fullPath: '/benchmarks'
       preLoaderRoute: typeof BenchmarksRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/breakthrough': {
-      id: '/breakthrough'
-      path: '/breakthrough'
-      fullPath: '/breakthrough'
-      preLoaderRoute: typeof BreakthroughRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/docs': {
@@ -423,25 +377,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppBenchmarksRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
-    '/_authenticated/app/caao-breakthrough': {
-      id: '/_authenticated/app/caao-breakthrough'
-      path: '/caao-breakthrough'
-      fullPath: '/app/caao-breakthrough'
-      preLoaderRoute: typeof AuthenticatedAppCaaoBreakthroughRouteImport
-      parentRoute: typeof AuthenticatedAppRoute
-    }
     '/_authenticated/app/chat': {
       id: '/_authenticated/app/chat'
       path: '/chat'
       fullPath: '/app/chat'
       preLoaderRoute: typeof AuthenticatedAppChatRouteImport
-      parentRoute: typeof AuthenticatedAppRoute
-    }
-    '/_authenticated/app/cyberpunk-cgfp': {
-      id: '/_authenticated/app/cyberpunk-cgfp'
-      path: '/cyberpunk-cgfp'
-      fullPath: '/app/cyberpunk-cgfp'
-      preLoaderRoute: typeof AuthenticatedAppCyberpunkCgfpRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
     '/_authenticated/app/embeddings': {
@@ -505,9 +445,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAppRouteChildren {
   AuthenticatedAppBenchmarksRoute: typeof AuthenticatedAppBenchmarksRoute
-  AuthenticatedAppCaaoBreakthroughRoute: typeof AuthenticatedAppCaaoBreakthroughRoute
   AuthenticatedAppChatRoute: typeof AuthenticatedAppChatRoute
-  AuthenticatedAppCyberpunkCgfpRoute: typeof AuthenticatedAppCyberpunkCgfpRoute
   AuthenticatedAppEmbeddingsRoute: typeof AuthenticatedAppEmbeddingsRoute
   AuthenticatedAppKnowledgeGraphRoute: typeof AuthenticatedAppKnowledgeGraphRoute
   AuthenticatedAppMemoryRoute: typeof AuthenticatedAppMemoryRoute
@@ -519,9 +457,7 @@ interface AuthenticatedAppRouteChildren {
 
 const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
   AuthenticatedAppBenchmarksRoute: AuthenticatedAppBenchmarksRoute,
-  AuthenticatedAppCaaoBreakthroughRoute: AuthenticatedAppCaaoBreakthroughRoute,
   AuthenticatedAppChatRoute: AuthenticatedAppChatRoute,
-  AuthenticatedAppCyberpunkCgfpRoute: AuthenticatedAppCyberpunkCgfpRoute,
   AuthenticatedAppEmbeddingsRoute: AuthenticatedAppEmbeddingsRoute,
   AuthenticatedAppKnowledgeGraphRoute: AuthenticatedAppKnowledgeGraphRoute,
   AuthenticatedAppMemoryRoute: AuthenticatedAppMemoryRoute,
@@ -563,7 +499,6 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AboutRoute: AboutRoute,
   BenchmarksRoute: BenchmarksRoute,
-  BreakthroughRoute: BreakthroughRoute,
   DocsRoute: DocsRoute,
   FeaturesRoute: FeaturesRoute,
   LoginRoute: LoginRoute,
