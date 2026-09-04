@@ -9,21 +9,22 @@
   const TARGET_W = 480;
   const TARGET_H = 270;
 
-  // 1. COMPLEXITY_LEVELS Interception (Equates Standard, Advanced & Extreme to Simple's compute budget)
+  // 1. COMPLEXITY_LEVELS Interception: Solid, full geometry across all modes
   let _levels = {
-    simple: { name: "Simple", iterations: 2, steps: 220 },
-    standard: { name: "Standard", iterations: 2, steps: 220 },
-    advanced: { name: "Advanced", iterations: 2, steps: 220 },
-    extreme: { name: "Extreme", iterations: 2, steps: 220 },
+    simple:   { name: "Simple",   iterations: 3, steps: 800 },
+    standard: { name: "Standard", iterations: 5, steps: 900 },
+    advanced: { name: "Advanced", iterations: 5, steps: 950 },
+    extreme:  { name: "Extreme",  iterations: 6, steps: 1000 },
   };
   try {
     Object.defineProperty(window, "COMPLEXITY_LEVELS", {
       get: () => _levels,
       set: (val) => {
         if (val) {
-          if (val.standard) { val.standard.iterations = 2; val.standard.steps = 220; }
-          if (val.advanced) { val.advanced.iterations = 2; val.advanced.steps = 220; }
-          if (val.extreme)  { val.extreme.iterations = 2;  val.extreme.steps = 220; }
+          if (val.simple)   { val.simple.iterations = 3; val.simple.steps = 800; }
+          if (val.standard) { val.standard.iterations = 5; val.standard.steps = 900; }
+          if (val.advanced) { val.advanced.iterations = 5; val.advanced.steps = 950; }
+          if (val.extreme)  { val.extreme.iterations = 6; val.extreme.steps = 1000; }
           _levels = val;
         }
       },
@@ -31,16 +32,21 @@
     });
   } catch (e) {}
 
-  // 2. WebGL Shader Chemistry Rewrite (Cull loops & force FP16)
+  // 2. WebGL Shader Chemistry Rewrite (Keep highp float! Ensure steps >= 800 so rays penetrate through center)
   const hookShader = (proto) => {
     if (!proto || !proto.shaderSource) return;
     const origShaderSource = proto.shaderSource;
     proto.shaderSource = function (shader, src) {
       let opt = src;
       if (typeof opt === "string") {
-        opt = opt.replace(/for\s*\(\s*int\s+k\s*=\s*2\s*;\s*k\s*<\s*[^;]+;\s*k\+\+\s*\)/gi, "for (int k = 2; k < 220; k++)");
-        opt = opt.replace(/for\s*\(\s*int\s+i\s*=\s*0\s*;\s*i\s*<\s*\d+\s*;\s*i\+\+\s*\)/gi, "for (int i = 0; i < 2; i++)");
-        opt = opt.replace(/\bhighp\b/g, "mediump");
+        // Ensure raymarching steps are sufficient (>= 800) so rays reach the center and back without black cutoff
+        opt = opt.replace(/for\s*\(\s*int\s+k\s*=\s*2\s*;\s*k\s*<\s*(?:1\d\d\d|2\d\d\d)\s*;\s*k\+\+\s*\)/gi, "for (int k = 2; k < 1000; k++)");
+        opt = opt.replace(/for\s*\(\s*int\s+k\s*=\s*2\s*;\s*k\s*<\s*(?:2\d\d|3\d\d)\s*;\s*k\+\+\s*\)/gi, "for (int k = 2; k < 800; k++)");
+        // Iterations: keep rich Mandelbulb fractal density across all modes (solid core)
+        opt = opt.replace(/for\s*\(\s*int\s+i\s*=\s*0\s*;\s*i\s*<\s*[789]\s*;\s*i\+\+\s*\)/gi, "for (int i = 0; i < 6; i++)");
+        opt = opt.replace(/for\s*\(\s*int\s+i\s*=\s*0\s*;\s*i\s*<\s*2\s*;\s*i\+\+\s*\)/gi, "for (int i = 0; i < 3; i++)");
+        // CRITICAL: highp float is preserved intact! DO NOT replace with mediump!
+        // highp prevents FP16 pow(b, 8.0) overflow (> 65,504) that causes NaN black voids.
       }
       return origShaderSource.call(this, shader, opt);
     };
