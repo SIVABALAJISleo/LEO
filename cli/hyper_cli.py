@@ -132,6 +132,44 @@ def cmd_research(args):
     print(f"- Scientific Verdict: Application-level parity achieved under bounded contract.")
 
 
+def cmd_unseen(args):
+    action = getattr(args, "action", "list")
+    engine = HyperMVCDAREngine()
+
+    if action == "list":
+        print("=" * 75)
+        print("HYPER MVC-DAR: 10 NOVEL UNSEEN ACCELERATION MECHANISMS")
+        print("=" * 75)
+        features = [
+            ("UF01", "Neural Program Synthesis for Kernel Fusion", "DSL -> Synthesizer -> Fused OpenCL/CPU tiles"),
+            ("UF02", "Differentiable Memory Layout Optimizer", "Learned NCHW/NHWC/16c layout selector"),
+            ("UF03", "Self-Healing Approximate Operators (PI Error)", "Tunable approximate ops with online PI feedback"),
+            ("UF04", "Semantic Workload Gating via Tiny MoE", "Lightweight MoE router mapping inputs to minimal sub-nets"),
+            ("UF05", "Temporal Coherence with Residual Predictor", "Keyframe gating + learned delta predictor"),
+            ("UF06", "Contract-Aware Dynamic Precision Scaling", "Marginal impact precision scaling (FP32/FP16/INT8/Ternary)"),
+            ("UF07", "Heterogeneous Compute Compiler Auto-Tiling", "Auto-tiled schedules across Intel P/E-cores + UHD iGPU"),
+            ("UF08", "Latency-Optimized Speculative Execution", "Draft model speculative early exit with dynamic SLO deadline"),
+            ("UF09", "Perceptual Equivalence Engine", "SSIM/PSNR-HVS perceptual operator substitution"),
+            ("UF10", "Workload Morphing via Program Transformation", "Graph-level morphing: O(N^2) Attention -> O(N) Linear"),
+        ]
+        for fid, name, desc in features:
+            print(f"[{fid}] {name}")
+            print(f"       -> {desc}")
+    elif action in ("benchmark", "bench", "run"):
+        print("=" * 75)
+        print("RUNNING 10 UNSEEN FEATURES BENCHMARK MEASUREMENT PROTOCOL")
+        print("=" * 75)
+        summary = engine.run_unseen_benchmarks()
+        print(f"[STATUS] Total Features Tested: {summary['total_features']}")
+        print(f"[STATUS] Passing Features: {summary['passing_features']}")
+        print(f"[STATUS] Contract Parity Rate: {summary['contract_compliance_percent']:.1f}%")
+        print(f"[STATUS] Report Generated: {summary['report_path']}")
+        print("-" * 75)
+        for f in summary["features"]:
+            status_str = "PASS" if f["contract_compliant"] else "FAIL"
+            print(f"  [{f['id']}] {f['name']:<50} | {f['speedup']:>6.2f}x | {status_str}")
+
+
 def main():
     parser = argparse.ArgumentParser(description="HYPER MVC-DAR CLI: Autonomous Minimum Verified Computation")
     subparsers = parser.add_subparsers(dest="command", help="Available subcommands")
@@ -159,6 +197,9 @@ def main():
     p_res = subparsers.add_parser("research", help="Run automated research mode")
     p_res.add_argument("workload", nargs="?", default="w01_dense_gemm")
 
+    p_unseen = subparsers.add_parser("unseen", help="Manage 10 Novel Unseen Acceleration Features")
+    p_unseen.add_argument("action", nargs="?", default="list", choices=["list", "benchmark", "bench", "run"])
+
     args = parser.parse_args()
     if not args.command:
         parser.print_help()
@@ -174,6 +215,7 @@ def main():
         "verify": cmd_verify,
         "benchmark": cmd_benchmark,
         "research": cmd_research,
+        "unseen": cmd_unseen,
     }
 
     fn = dispatch.get(args.command)

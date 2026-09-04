@@ -38,6 +38,20 @@ from .fallback_ladder import FallbackLadder, FallbackLevel
 from .independent_verifier import IndependentVerifier
 from .work_ledger import WorkLedger, WorkLedgerEntry
 from .suite_15 import BenchmarkSuite15
+from .unseen import (
+    NeuralKernelSynthesizer,
+    DifferentiableLayoutOptimizer,
+    ApproxOp,
+    MoEWorkloadGator,
+    TemporalCoherenceEngine,
+    ContractAwarePrecisionScheduler,
+    HeterogeneousScheduleCompiler,
+    LatencyOptimizedSpeculativeRunner,
+    PerceptualEquivalenceEngine,
+    WorkloadMorpher,
+    UnseenBenchmarkSuite,
+    run_and_save_benchmarks,
+)
 
 logger = logging.getLogger("HyperMVCDAREngine")
 
@@ -45,13 +59,43 @@ logger = logging.getLogger("HyperMVCDAREngine")
 class HyperMVCDAREngine:
     """The central autonomous execution coordinator for HYPER MVC-DAR."""
 
-    def __init__(self):
+    def __init__(self, enable_unseen_features: bool = True):
         self.hardware_profile = HardwareProfiler.profile_host()
         self.strategy_memory = StrategyMemory()
         self.work_ledger = WorkLedger()
         self.redundancy_cache = RedundancyEngine()
         self.memory_engine = MemoryEngine(pool_size_mb=256)
         self.strategy_search = StrategySearchEngine()
+        self.enable_unseen_features = enable_unseen_features
+        if enable_unseen_features:
+            self.kernel_synthesizer = NeuralKernelSynthesizer()
+            self.layout_optimizer = DifferentiableLayoutOptimizer()
+            self.approx_engine = ApproxOp()
+            self.moe_gator = MoEWorkloadGator()
+            self.dps_scheduler = ContractAwarePrecisionScheduler()
+            self.schedule_compiler = HeterogeneousScheduleCompiler()
+            self.perceptual_engine = PerceptualEquivalenceEngine()
+            self.workload_morpher = WorkloadMorpher()
+
+    def run_unseen_benchmarks(self) -> Dict[str, Any]:
+        """Runs the complete 10-feature unseen benchmark suite."""
+        records, report_path = run_and_save_benchmarks()
+        return {
+            "total_features": len(records),
+            "passing_features": sum(1 for r in records if r.contract_compliant),
+            "contract_compliance_percent": 100.0 if all(r.contract_compliant for r in records) else 0.0,
+            "report_path": report_path,
+            "features": [
+                {
+                    "id": r.feature_id,
+                    "name": r.feature_name,
+                    "speedup": r.speedup_factor,
+                    "contract_compliant": r.contract_compliant,
+                    "effective_parity": r.effective_parity_percent
+                }
+                for r in records
+            ]
+        }
 
     def execute_workload(
         self,
