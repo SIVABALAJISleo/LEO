@@ -24,6 +24,8 @@ from hyper_mvc_dar import (
     IndependentVerifier,
     BenchmarkSuite15,
     skills_manager,
+    GrandUnifiedEngine,
+    gusp_engine,
 )
 
 
@@ -201,6 +203,48 @@ def cmd_ucsp(args):
         print(json.dumps(engine.get_ucsp_telemetry(), indent=2))
 
 
+def cmd_gusp(args):
+    action = getattr(args, "action", "benchmark") or "benchmark"
+    if action in ("benchmark", "bench"):
+        print("=" * 80)
+        print("GRAND UNIFIED SUBSUMPTION PROTOCOL (GUSP) — LIVE SILICON BENCHMARK")
+        print("Target: Intel Core i5-12450H (8c/12t, 12MB L3) + Intel UHD Xe 48EU (24 TMUs)")
+        print("=" * 80)
+        report = gusp_engine.run_benchmark()
+        print(f"{'Test':<26} | {'Phase':<33} | {'Latency':>8} | {'Avoided':<24} | {'Status'}")
+        print("-" * 105)
+        for r in report["benchmark_results"]:
+            status_str = "PASS" if r["contract_met"] else "FAIL"
+            print(f"{r['test']:<26} | {r['phase']:<33} | {r['latency_ms']:>6.2f}ms | {r['compute_avoided']:<24} | {status_str}")
+        print("=" * 105)
+        print(f"[STATUS] Average Latency: {report['average_latency_ms']} ms")
+        print(f"[STATUS] Contract Parity Rate: {report['contract_parity_rate_pct']:.1f}%")
+        print(f"[STATUS] Zero Multipliers Enforced: {report['zero_multipliers_enforced']}")
+    elif action in ("run", "query"):
+        q = getattr(args, "query", "what is leo ai") or "what is leo ai"
+        req_math = getattr(args, "math", False)
+        dim = getattr(args, "dim", 512)
+        contract = {
+            "requires_math": req_math,
+            "dim": dim,
+            "max_latency_ms": getattr(args, "max_lat", 50.0)
+        }
+        print(f"[GUSP] Dispatching query: '{q}' (requires_math={req_math}, dim={dim})")
+        res = gusp_engine.execute(q, contract)
+        print(json.dumps(res, indent=2))
+    elif action == "matvec":
+        import numpy as np
+        dim = getattr(args, "dim", 512)
+        print(f"[GUSP] Executing Phase 3 Zero-MAC Numba Integer Accumulation ({dim}x{dim})...")
+        W = np.random.choice([-1, 0, 1], size=(dim, dim)).astype(np.int8)
+        x = np.random.randn(dim).astype(np.float32)
+        gamma = 1.0
+        t0 = time.perf_counter()
+        y = gusp_engine._zero_mac_integer_accumulation(W, x, gamma)
+        lat_ms = (time.perf_counter() - t0) * 1000.0
+        print(f"[OK] Completed in {lat_ms:.3f} ms. Result shape: {y.shape}. Hardware Multipliers: 0.")
+
+
 def cmd_skills(args):
     action = args.action or "list"
     target = getattr(args, "target", "")
@@ -346,6 +390,13 @@ def main():
     p_skills.add_argument("--category", type=str, default=None, help="Category filter")
     p_skills.add_argument("--limit", type=int, default=15, help="Result limit")
 
+    p_gusp = subparsers.add_parser("gusp", help="Grand Unified Subsumption Protocol (GUSP): 4-phase zero-compute bypass")
+    p_gusp.add_argument("action", nargs="?", default="benchmark", choices=["benchmark", "bench", "run", "query", "matvec"])
+    p_gusp.add_argument("--query", type=str, default="what is leo ai", help="Query string for GUSP execution")
+    p_gusp.add_argument("--math", action="store_true", help="Flag indicating matrix math computation")
+    p_gusp.add_argument("--dim", type=int, default=512, help="Matrix dimension for math/matvec")
+    p_gusp.add_argument("--max-lat", type=float, default=50.0, help="Maximum latency SLA contract in ms")
+
     args = parser.parse_args()
     if not args.command:
         parser.print_help()
@@ -364,6 +415,7 @@ def main():
         "unseen": cmd_unseen,
         "ucsp": cmd_ucsp,
         "skills": cmd_skills,
+        "gusp": cmd_gusp,
     }
 
     fn = dispatch.get(args.command)

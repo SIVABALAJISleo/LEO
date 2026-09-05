@@ -38,6 +38,8 @@ from .ucsp import (
     ZeroCopyModelLoader,
 )
 from .skills_manager import SkillsManager, skills_manager
+from .gusp import GrandUnifiedEngine, gusp_engine
+
 
 
 __version__ = "1.0.0-mvc-dar"
@@ -89,5 +91,8 @@ __all__ = [
     "ZeroCopyModelLoader",
     "SkillsManager",
     "skills_manager",
+    "GrandUnifiedEngine",
+    "gusp_engine",
 ]
+
 

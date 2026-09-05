@@ -17,6 +17,8 @@ from hyper_mvc_dar import (
     HardwareProfiler,
     StrategySearchEngine,
     skills_manager,
+    GrandUnifiedEngine,
+    gusp_engine,
 )
 
 
@@ -359,5 +361,35 @@ def bootstrap_skills():
         "bootstrapped_count": len(installed),
         "skills": installed
     }
+
+
+# ==============================================================================
+# GRAND UNIFIED SUBSUMPTION PROTOCOL (GUSP) ENDPOINTS
+# ==============================================================================
+
+@router.post("/gusp/execute")
+def execute_gusp(payload: Optional[Dict[str, Any]] = Body(None)):
+    """
+    Executes a query through the Grand Unified Subsumption Protocol (GUSP).
+    Dispatches through the 4-Phase zero-compute pipeline:
+      Phase 1: Oracle (L3 Cache hit)
+      Phase 2: Hologram (TMU Splines)
+      Phase 3: Shadow (Zero-MAC Numba integer accumulation)
+      Phase 4: Ghost (Speculative Draft + Thermal SLA protection)
+    """
+    payload = payload or {}
+    query = payload.get("query", "what is leo ai")
+    contract = payload.get("contract", {})
+    return gusp_engine.execute(query, contract)
+
+
+@router.get("/gusp/benchmark")
+def benchmark_gusp():
+    """
+    Runs the live GUSP benchmark suite across all 4 phases on host silicon.
+    Verifies 100% Contract Parity and zero FP32 multiplier enforcement.
+    """
+    return gusp_engine.run_benchmark()
+
 
 
