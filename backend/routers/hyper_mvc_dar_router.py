@@ -195,3 +195,70 @@ def research_workload(payload: Optional[Dict[str, Any]] = Body(None)):
         }
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+# ---------------------------------------------------------------------------
+# UNIVERSAL COMPUTATION SUBSUMPTION PROTOCOL (UCSP) ENDPOINTS
+# ---------------------------------------------------------------------------
+
+@router.post("/ucsp/query")
+def ucsp_query(payload: Optional[Dict[str, Any]] = Body(None)):
+    payload = payload or {}
+    q = payload.get("query") or payload.get("text") or "Universal Subsumption Contract"
+    tol = payload.get("tolerance_bits", 2)
+    try:
+        res = engine_singleton.execute_ucsp_query(q, tolerance_bits=tol)
+        return res
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.post("/ucsp/gemm")
+def ucsp_gemm(payload: Optional[Dict[str, Any]] = Body(None)):
+    import numpy as np
+    payload = payload or {}
+    A_raw = payload.get("A", [[1, 2], [3, 4]])
+    B_raw = payload.get("B", [[5, 6], [7, 8]])
+    try:
+        A = np.array(A_raw, dtype=np.uint8)
+        B = np.array(B_raw, dtype=np.uint8)
+        res = engine_singleton.execute_ucsp_4bit_gemm(A, B)
+        # Convert result array to list for JSON serialization
+        if "result" in res and hasattr(res["result"], "tolist"):
+            res["result"] = res["result"].tolist()
+        return res
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.post("/ucsp/kan")
+def ucsp_kan(payload: Optional[Dict[str, Any]] = Body(None)):
+    import numpy as np
+    payload = payload or {}
+    x_raw = payload.get("x", [0.0, 0.25, 0.5, 0.75, 1.0])
+    try:
+        x = np.array(x_raw, dtype=np.float32)
+        res = engine_singleton.ucsp.dispatch_kan_activation(x)
+        if "result" in res and hasattr(res["result"], "tolist"):
+            res["result"] = res["result"].tolist()
+        return res
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.get("/ucsp/telemetry")
+def ucsp_telemetry():
+    try:
+        return engine_singleton.get_ucsp_telemetry()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.post("/ucsp/benchmark")
+def ucsp_benchmark():
+    try:
+        from hyper_mvc_dar.ucsp.benchmark_ucsp import run_ucsp_benchmarks
+        return run_ucsp_benchmarks()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+

@@ -170,6 +170,35 @@ def cmd_unseen(args):
             print(f"  [{f['id']}] {f['name']:<50} | {f['speedup']:>6.2f}x | {status_str}")
 
 
+def cmd_ucsp(args):
+    action = args.action or "benchmark"
+    engine = HyperMVCDAREngine()
+
+    if action == "benchmark":
+        from hyper_mvc_dar.ucsp.benchmark_ucsp import run_ucsp_benchmarks
+        run_ucsp_benchmarks()
+    elif action == "query":
+        q = args.query or "Universal Subsumption Contract"
+        tol = getattr(args, "tolerance", 2)
+        print(f"[UCSP] Dispatching Query: '{q}' (Tolerance: {tol} bits)")
+        res = engine.execute_ucsp_query(q, tolerance_bits=tol)
+        print(json.dumps(res, indent=2))
+    elif action == "gemm":
+        import numpy as np
+        print("[UCSP] Executing Tier 1 AVX2 4-Bit LUT Matrix Multiplication...")
+        A = np.random.randint(0, 16, (64, 64), dtype=np.uint8)
+        B = np.random.randint(0, 16, (64, 64), dtype=np.uint8)
+        res = engine.execute_ucsp_4bit_gemm(A, B)
+        res_display = {k: v for k, v in res.items() if k != "result"}
+        print(json.dumps(res_display, indent=2))
+        print(f"[STATUS] Result Shape: {res['result'].shape} | Zero Multipliers: {res['flops_multipliers_used'] == 0}")
+    elif action == "telemetry":
+        print("=" * 70)
+        print("UNIVERSAL COMPUTATION SUBSUMPTION PROTOCOL (UCSP) TELEMETRY")
+        print("=" * 70)
+        print(json.dumps(engine.get_ucsp_telemetry(), indent=2))
+
+
 def main():
     parser = argparse.ArgumentParser(description="HYPER MVC-DAR CLI: Autonomous Minimum Verified Computation")
     subparsers = parser.add_subparsers(dest="command", help="Available subcommands")
@@ -200,6 +229,11 @@ def main():
     p_unseen = subparsers.add_parser("unseen", help="Manage 10 Novel Unseen Acceleration Features")
     p_unseen.add_argument("action", nargs="?", default="list", choices=["list", "benchmark", "bench", "run"])
 
+    p_ucsp = subparsers.add_parser("ucsp", help="Universal Computation Subsumption Protocol (UCSP) & HCSE")
+    p_ucsp.add_argument("action", nargs="?", default="benchmark", choices=["benchmark", "query", "gemm", "telemetry"])
+    p_ucsp.add_argument("--query", type=str, default="Universal Subsumption Contract")
+    p_ucsp.add_argument("--tolerance", type=int, default=2)
+
     args = parser.parse_args()
     if not args.command:
         parser.print_help()
@@ -216,6 +250,7 @@ def main():
         "benchmark": cmd_benchmark,
         "research": cmd_research,
         "unseen": cmd_unseen,
+        "ucsp": cmd_ucsp,
     }
 
     fn = dispatch.get(args.command)

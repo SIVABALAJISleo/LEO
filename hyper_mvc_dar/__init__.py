@@ -28,6 +28,15 @@ from .independent_verifier import IndependentVerifier
 from .work_ledger import WorkLedgerEntry, WorkLedger
 from .suite_15 import BenchmarkSuite15
 from .engine import HyperMVCDAREngine
+from .ucsp import (
+    UCSPCoordinator,
+    SemanticGatekeeper,
+    AVX2LUTEngine,
+    TextureMappedKAN,
+    FreivaldsVerifier,
+    SpeculativeOracle,
+    ZeroCopyModelLoader,
+)
 
 __version__ = "1.0.0-mvc-dar"
 __all__ = [
@@ -69,4 +78,11 @@ __all__ = [
     "WorkLedger",
     "BenchmarkSuite15",
     "HyperMVCDAREngine",
+    "UCSPCoordinator",
+    "SemanticGatekeeper",
+    "AVX2LUTEngine",
+    "TextureMappedKAN",
+    "FreivaldsVerifier",
+    "SpeculativeOracle",
+    "ZeroCopyModelLoader",
 ]

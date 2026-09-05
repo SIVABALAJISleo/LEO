@@ -52,6 +52,7 @@ from .unseen import (
     UnseenBenchmarkSuite,
     run_and_save_benchmarks,
 )
+from .ucsp import UCSPCoordinator
 
 logger = logging.getLogger("HyperMVCDAREngine")
 
@@ -66,6 +67,7 @@ class HyperMVCDAREngine:
         self.redundancy_cache = RedundancyEngine()
         self.memory_engine = MemoryEngine(pool_size_mb=256)
         self.strategy_search = StrategySearchEngine()
+        self.ucsp = UCSPCoordinator()
         self.enable_unseen_features = enable_unseen_features
         if enable_unseen_features:
             self.kernel_synthesizer = NeuralKernelSynthesizer()
@@ -76,6 +78,22 @@ class HyperMVCDAREngine:
             self.schedule_compiler = HeterogeneousScheduleCompiler()
             self.perceptual_engine = PerceptualEquivalenceEngine()
             self.workload_morpher = WorkloadMorpher()
+
+    def execute_ucsp_query(self, query_text: str, tolerance_bits: Optional[int] = None) -> Dict[str, Any]:
+        """Dispatches a query through the 4-tier Universal Computation Subsumption Protocol."""
+        return self.ucsp.dispatch_query(query_text, tolerance_bits=tolerance_bits)
+
+    def execute_ucsp_4bit_gemm(self, A: np.ndarray, B: np.ndarray) -> Dict[str, Any]:
+        """Executes Tier 1 AVX2 4-bit LUT GEMM bypassing hardware multipliers with zero ALUs."""
+        return self.ucsp.dispatch_4bit_gemm(A, B)
+
+    def execute_ucsp_matrix(self, A: np.ndarray, B: np.ndarray) -> Dict[str, Any]:
+        """Dispatches matrix multiplication with Tier 2 Freivalds verification and Tier 3 fallback."""
+        return self.ucsp.dispatch_matrix_op(A, B)
+
+    def get_ucsp_telemetry(self) -> Dict[str, Any]:
+        """Returns UCSP live telemetric statistics."""
+        return self.ucsp.get_telemetry()
 
     def run_unseen_benchmarks(self) -> Dict[str, Any]:
         """Runs the complete 10-feature unseen benchmark suite."""
