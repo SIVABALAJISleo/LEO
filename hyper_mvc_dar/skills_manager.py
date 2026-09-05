@@ -27,10 +27,13 @@ AAS_SKILLS_DIR = AAS_ROOT / "skills"
 AAS_CATALOG_FILE = AAS_DATA_DIR / "catalog.json"
 AAS_BUNDLES_FILE = AAS_DATA_DIR / "bundles.json"
 
+STRIX_ROOT = PROJECT_ROOT / "strix-main"
+STRIX_SKILLS_DIR = STRIX_ROOT / "skills"
+
 DEFAULT_ACTIVE_DIR = PROJECT_ROOT / ".agents" / "skills"
 
 # High-impact core foundational skills specifically curated for HYPER:
-# (High-performance AI, VolumeShader 60FPS WebGL/WebGPU, FastAPI, React/Vite, Architecture & Testing)
+# (High-performance AI, VolumeShader 60FPS WebGL/WebGPU, FastAPI, React/Vite, Architecture & Security)
 FOUNDATIONAL_SKILLS = [
     "systematic-debugging",
     "test-driven-development",
@@ -48,6 +51,10 @@ FOUNDATIONAL_SKILLS = [
     "fastapi-pro",
     "python-performance-optimization",
     "ui-ux-pro-max",
+    "owasp-top-10-testing",
+    "api-security-testing",
+    "find-security-vulnerabilities-in-code",
+    "fix-security-vulnerabilities-with-strix",
 ]
 
 
@@ -60,49 +67,83 @@ class SkillsManager:
         self._bundles_cache: Optional[Dict[str, Any]] = None
 
     def _load_catalog(self) -> List[Dict[str, Any]]:
-        """Loads and caches the 2,000+ skills catalog."""
+        """Loads and caches the 2,000+ skills catalog, augmented with Strix security skills."""
         if self._catalog_cache is not None:
             return self._catalog_cache
 
-        if not AAS_CATALOG_FILE.exists():
-            return []
+        skills_list: List[Dict[str, Any]] = []
 
-        try:
-            with open(AAS_CATALOG_FILE, "r", encoding="utf-8") as f:
-                data = json.load(f)
-                if isinstance(data, dict):
-                    self._catalog_cache = data.get("skills", [])
-                elif isinstance(data, list):
-                    self._catalog_cache = data
-                else:
-                    self._catalog_cache = []
-        except Exception as e:
-            print(f"[SkillsManager] Error loading catalog: {e}")
-            self._catalog_cache = []
+        if AAS_CATALOG_FILE.exists():
+            try:
+                with open(AAS_CATALOG_FILE, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    if isinstance(data, dict):
+                        skills_list = list(data.get("skills", []))
+                    elif isinstance(data, list):
+                        skills_list = list(data)
+            except Exception as e:
+                print(f"[SkillsManager] Error loading catalog: {e}")
 
+        # Seamlessly integrate Strix Autonomous Security skills into the catalog
+        if STRIX_SKILLS_DIR.exists():
+            existing_ids = {s.get("id") for s in skills_list}
+            for d in sorted(os.listdir(STRIX_SKILLS_DIR)):
+                if d in existing_ids or not SAFE_NAME_PATTERN.match(d):
+                    continue
+                skill_md = STRIX_SKILLS_DIR / d / "SKILL.md"
+                if skill_md.is_file():
+                    desc = ""
+                    try:
+                        with open(skill_md, "r", encoding="utf-8") as f:
+                            for line in f:
+                                if line.startswith("description:"):
+                                    desc = line.split("description:", 1)[1].strip().strip('"\'')
+                                    break
+                    except Exception:
+                        pass
+                    skills_list.append({
+                        "id": d,
+                        "name": d.replace("-", " ").title(),
+                        "category": "security",
+                        "description": desc or f"Strix autonomous AppSec playbook for {d}",
+                        "tags": ["security", "audit", "pentest", "strix", "owasp", "vulnerability"],
+                        "source": "strix"
+                    })
+
+        self._catalog_cache = skills_list
         return self._catalog_cache
 
     def _load_bundles(self) -> Dict[str, Any]:
-        """Loads and caches the bundle definitions."""
+        """Loads and caches bundle definitions, augmented with Strix security bundle."""
         if self._bundles_cache is not None:
             return self._bundles_cache
 
-        if not AAS_BUNDLES_FILE.exists():
-            return {}
+        bundles: Dict[str, Any] = {}
+        if AAS_BUNDLES_FILE.exists():
+            try:
+                with open(AAS_BUNDLES_FILE, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    if isinstance(data, dict) and "bundles" in data:
+                        bundles = dict(data["bundles"])
+                    elif isinstance(data, dict):
+                        bundles = dict(data)
+            except Exception as e:
+                print(f"[SkillsManager] Error loading bundles: {e}")
 
-        try:
-            with open(AAS_BUNDLES_FILE, "r", encoding="utf-8") as f:
-                data = json.load(f)
-                if isinstance(data, dict) and "bundles" in data:
-                    self._bundles_cache = data["bundles"]
-                elif isinstance(data, dict):
-                    self._bundles_cache = data
-                else:
-                    self._bundles_cache = {}
-        except Exception as e:
-            print(f"[SkillsManager] Error loading bundles: {e}")
-            self._bundles_cache = {}
+        # Add Strix Security bundle if Strix skills exist
+        if STRIX_SKILLS_DIR.exists():
+            strix_ids = [
+                d for d in sorted(os.listdir(STRIX_SKILLS_DIR))
+                if (STRIX_SKILLS_DIR / d / "SKILL.md").is_file() and SAFE_NAME_PATTERN.match(d)
+            ]
+            if strix_ids:
+                bundles["strix-security"] = {
+                    "name": "Strix Autonomous Security & Pentesting",
+                    "description": "Autonomous AI penetration testing, OWASP Top 10 auditing, API security, and vulnerability remediation playbooks.",
+                    "skills": strix_ids
+                }
 
+        self._bundles_cache = bundles
         return self._bundles_cache
 
     def search(
@@ -170,7 +211,7 @@ class SkillsManager:
 
     def _resolve_safe_src_path(self, skill_id: str) -> Optional[Path]:
         """
-        Securely resolves a skill's source directory within AAS_SKILLS_DIR.
+        Securely resolves a skill's source directory within STRIX_SKILLS_DIR or AAS_SKILLS_DIR.
         Enforces strict path containment to prevent path traversal attacks (CWE-22/CWE-73).
         """
         if not self._is_valid_skill_id(skill_id):
@@ -179,22 +220,31 @@ class SkillsManager:
         normalized = skill_id.replace("\\", "/").strip()
         parts = normalized.split("/")
 
-        base_resolved = AAS_SKILLS_DIR.resolve()
-        target_path = base_resolved.joinpath(*parts).resolve()
+        # 1. Check STRIX_SKILLS_DIR first
+        if STRIX_SKILLS_DIR.exists():
+            strix_base = STRIX_SKILLS_DIR.resolve()
+            target_strix = strix_base.joinpath(*parts).resolve()
+            try:
+                target_strix.relative_to(strix_base)
+                if os.path.commonpath([str(strix_base), str(target_strix)]) == str(strix_base):
+                    if target_strix.exists():
+                        return target_strix
+            except (ValueError, TypeError):
+                pass
 
-        # Strict containment verification
-        try:
-            target_path.relative_to(base_resolved)
-        except ValueError:
-            return None
+        # 2. Check AAS_SKILLS_DIR
+        if AAS_SKILLS_DIR.exists():
+            base_resolved = AAS_SKILLS_DIR.resolve()
+            target_path = base_resolved.joinpath(*parts).resolve()
+            try:
+                target_path.relative_to(base_resolved)
+                if os.path.commonpath([str(base_resolved), str(target_path)]) == str(base_resolved):
+                    if target_path.exists():
+                        return target_path
+            except (ValueError, TypeError):
+                pass
 
-        try:
-            if os.path.commonpath([str(base_resolved), str(target_path)]) != str(base_resolved):
-                return None
-        except (ValueError, TypeError):
-            return None
-
-        return target_path
+        return None
 
     def _resolve_safe_dst_path(self, skill_id: str) -> Optional[Path]:
         """
