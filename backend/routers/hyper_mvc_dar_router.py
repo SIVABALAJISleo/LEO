@@ -301,6 +301,8 @@ def search_skills(
 @router.get("/skills/info/{skill_id}")
 def get_skill_info(skill_id: str):
     """Retrieves full metadata and SKILL.md for a given skill."""
+    if not skills_manager._is_valid_skill_id(skill_id):
+        raise HTTPException(status_code=400, detail=f"Invalid skill_id format: '{skill_id}'")
     info = skills_manager.get_skill_info(skill_id)
     if not info:
         raise HTTPException(status_code=404, detail=f"Skill '{skill_id}' not found")
@@ -311,8 +313,10 @@ def get_skill_info(skill_id: str):
 def install_skill(payload: Dict[str, Any] = Body(...)):
     """Activates a skill into .agents/skills for Antigravity IDE and agent discovery."""
     skill_id = payload.get("skill_id")
-    if not skill_id:
-        raise HTTPException(status_code=400, detail="skill_id is required")
+    if not skill_id or not isinstance(skill_id, str):
+        raise HTTPException(status_code=400, detail="skill_id string is required")
+    if not skills_manager._is_valid_skill_id(skill_id):
+        raise HTTPException(status_code=400, detail=f"Invalid skill_id format: '{skill_id}'")
     success = skills_manager.install(skill_id)
     if not success:
         raise HTTPException(status_code=404, detail=f"Skill '{skill_id}' not found in library")
@@ -322,10 +326,13 @@ def install_skill(payload: Dict[str, Any] = Body(...)):
 @router.delete("/skills/{skill_id}")
 def uninstall_skill(skill_id: str):
     """Removes a skill from .agents/skills."""
+    if not skills_manager._is_valid_skill_id(skill_id):
+        raise HTTPException(status_code=400, detail=f"Invalid skill_id format: '{skill_id}'")
     success = skills_manager.uninstall(skill_id)
     if not success:
         raise HTTPException(status_code=404, detail=f"Skill '{skill_id}' was not installed")
     return {"status": "success", "message": f"Skill '{skill_id}' uninstalled successfully"}
+
 
 
 @router.get("/skills/bundles")

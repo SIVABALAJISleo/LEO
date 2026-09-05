@@ -9,10 +9,15 @@ injection without polluting Git or context windows.
 """
 
 import os
+import re
 import json
 import shutil
 from typing import List, Dict, Any, Optional
 from pathlib import Path
+
+# Security patterns for path traversal prevention (CWE-22 / CWE-73)
+SKILL_ID_PATTERN = re.compile(r"^[a-zA-Z0-9_-]+(?:/[a-zA-Z0-9_-]+)*$")
+SAFE_NAME_PATTERN = re.compile(r"^[a-zA-Z0-9_-]+$")
 
 # Paths relative to project root
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -147,16 +152,105 @@ class SkillsManager:
         results.sort(key=lambda x: x[0], reverse=True)
         return [item[1] for item in results[:limit]]
 
+    @staticmethod
+    def _is_valid_skill_id(skill_id: Any) -> bool:
+        """
+        Validates that skill_id is a safe relative identifier without traversal elements.
+        Blocks path traversal (CWE-22 / CWE-73).
+        """
+        if not isinstance(skill_id, str):
+            return False
+        normalized = skill_id.replace("\\", "/").strip()
+        if not normalized or not SKILL_ID_PATTERN.match(normalized):
+            return False
+        parts = normalized.split("/")
+        if any(p in ("", ".", "..") for p in parts):
+            return False
+        return True
+
+    def _resolve_safe_src_path(self, skill_id: str) -> Optional[Path]:
+        """
+        Securely resolves a skill's source directory within AAS_SKILLS_DIR.
+        Enforces strict path containment to prevent path traversal attacks (CWE-22/CWE-73).
+        """
+        if not self._is_valid_skill_id(skill_id):
+            return None
+
+        normalized = skill_id.replace("\\", "/").strip()
+        parts = normalized.split("/")
+
+        base_resolved = AAS_SKILLS_DIR.resolve()
+        target_path = base_resolved.joinpath(*parts).resolve()
+
+        # Strict containment verification
+        try:
+            target_path.relative_to(base_resolved)
+        except ValueError:
+            return None
+
+        try:
+            if os.path.commonpath([str(base_resolved), str(target_path)]) != str(base_resolved):
+                return None
+        except (ValueError, TypeError):
+            return None
+
+        return target_path
+
+    def _resolve_safe_dst_path(self, skill_id: str) -> Optional[Path]:
+        """
+        Securely resolves the target destination folder inside self.active_dir.
+        Enforces that the destination is strictly an immediate subdirectory of active_dir.
+        """
+        if not self._is_valid_skill_id(skill_id):
+            return None
+
+        normalized = skill_id.replace("\\", "/").strip()
+        parts = [p for p in normalized.split("/") if p and p not in (".", "..")]
+        if not parts:
+            return None
+
+        leaf_name = parts[-1]
+        if not SAFE_NAME_PATTERN.match(leaf_name):
+            return None
+
+        base_resolved = self.active_dir.resolve()
+        target_path = (base_resolved / leaf_name).resolve()
+
+        # Must be strictly an immediate child of active_dir (cannot be active_dir or parent)
+        if target_path.parent != base_resolved or target_path == base_resolved:
+            return None
+
+        try:
+            target_path.relative_to(base_resolved)
+        except ValueError:
+            return None
+
+        try:
+            if os.path.commonpath([str(base_resolved), str(target_path)]) != str(base_resolved):
+                return None
+        except (ValueError, TypeError):
+            return None
+
+        return target_path
+
     def get_skill_info(self, skill_id: str) -> Optional[Dict[str, Any]]:
         """Retrieves metadata and full SKILL.md for a given skill ID."""
+        src_folder = self._resolve_safe_src_path(skill_id)
+        if src_folder is None:
+            return None
+
         catalog = self._load_catalog()
         skill_meta = next((s for s in catalog if s.get("id") == skill_id), None)
 
-        skill_folder = AAS_SKILLS_DIR / skill_id
-        skill_file = skill_folder / "SKILL.md"
+        skill_file = (src_folder / "SKILL.md").resolve()
+        # Verify skill_file is strictly inside src_folder
+        try:
+            skill_file.relative_to(src_folder)
+        except ValueError:
+            return None
 
         content = ""
-        if skill_file.exists():
+        if skill_file.is_file():
             try:
                 with open(skill_file, "r", encoding="utf-8") as f:
                     content = f.read()
@@ -166,10 +260,15 @@ class SkillsManager:
         if not skill_meta and not skill_file.exists():
             return None
 
+        dst_folder = self._resolve_safe_dst_path(skill_id)
+        is_installed = False
+        if dst_folder is not None and dst_folder.exists() and dst_folder.is_dir():
+            is_installed = True
+
         res = dict(skill_meta) if skill_meta else {"id": skill_id}
-        res["path"] = str(skill_folder)
+        res["path"] = str(src_folder)
         res["skill_md_content"] = content
-        res["is_installed"] = (self.active_dir / skill_id).exists()
+        res["is_installed"] = is_installed
         return res
 
     def install(self, skill_id: str) -> bool:
@@ -177,17 +276,21 @@ class SkillsManager:
         Installs a skill from the AAS library directly into the workspace active skills
         directory (.agents/skills/<skill_id>) for Antigravity discovery.
         """
-        parts = skill_id.replace("\\", "/").split("/")
-        src = AAS_SKILLS_DIR / skill_id
-        if not src.exists():
-            src = AAS_SKILLS_DIR.joinpath(*parts)
-            if not src.exists():
-                return False
+        src = self._resolve_safe_src_path(skill_id)
+        if src is None or not src.is_dir():
+            return False
+
+        dst = self._resolve_safe_dst_path(skill_id)
+        if dst is None:
+            return False
 
         self.active_dir.mkdir(parents=True, exist_ok=True)
-        dst = self.active_dir / parts[-1]
 
         if dst.exists():
+            # Strict safety guard: never rmtree active_dir or anything outside it
+            base_resolved = self.active_dir.resolve()
+            if dst == base_resolved or dst.parent != base_resolved:
+                return False
             shutil.rmtree(dst)
 
         shutil.copytree(src, dst)
@@ -195,12 +298,19 @@ class SkillsManager:
 
     def uninstall(self, skill_id: str) -> bool:
         """Removes a skill from the active workspace directory."""
-        parts = skill_id.replace("\\", "/").split("/")
-        dst = self.active_dir / parts[-1]
+        dst = self._resolve_safe_dst_path(skill_id)
+        if dst is None:
+            return False
+
         if dst.exists():
+            # Strict safety guard: never rmtree active_dir or anything outside it
+            base_resolved = self.active_dir.resolve()
+            if dst == base_resolved or dst.parent != base_resolved:
+                return False
             shutil.rmtree(dst)
             return True
         return False
+
 
 
     def list_active(self) -> List[Dict[str, Any]]:

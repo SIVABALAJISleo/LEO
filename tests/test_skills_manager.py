@@ -82,3 +82,38 @@ def test_bootstrap_foundational(temp_skills_dir):
     assert "systematic-debugging" in active_ids
     assert "react-best-practices" in active_ids
     assert "senior-architect" in active_ids
+
+
+def test_path_traversal_prevention_cwe_22(temp_skills_dir):
+    """
+    Security test for CWE-22 / CWE-73: Uncontrolled data in path expressions.
+    Verifies that all path traversal attempts and invalid IDs are strictly rejected.
+    """
+    mgr = SkillsManager(active_dir=temp_skills_dir)
+
+    malicious_inputs = [
+        "../../etc/passwd",
+        "../secret",
+        "..",
+        ".",
+        "",
+        "/etc/shadow",
+        "C:\\Windows\\System32",
+        "systematic-debugging/../../../etc",
+        "foo/../bar",
+        "skill\0name",
+        "skill;rm -rf /",
+        "systematic-debugging/..",
+    ]
+
+    for attack in malicious_inputs:
+        # get_skill_info must return None
+        assert mgr.get_skill_info(attack) is None, f"Failed to reject attack in get_skill_info: {attack}"
+        # install must return False
+        assert mgr.install(attack) is False, f"Failed to reject attack in install: {attack}"
+        # uninstall must return False
+        assert mgr.uninstall(attack) is False, f"Failed to reject attack in uninstall: {attack}"
+
+    # Verify active directory remains completely empty and uncompromised
+    assert len(mgr.list_active()) == 0
+
