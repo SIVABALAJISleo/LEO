@@ -16,7 +16,9 @@ from hyper_mvc_dar import (
     ExecutionTrack,
     HardwareProfiler,
     StrategySearchEngine,
+    skills_manager,
 )
+
 
 router = APIRouter(prefix="/hyper", tags=["HYPER MVC-DAR"])
 engine_singleton = HyperMVCDAREngine()
@@ -261,4 +263,101 @@ def ucsp_benchmark():
         return run_ucsp_benchmarks()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+# -------------------------------------------------------------------------
+# Agentic Awesome Skills (AAS) Management Endpoints
+# -------------------------------------------------------------------------
+
+@router.get("/skills/active")
+def get_active_skills():
+    """Returns all currently active workspace skills (.agents/skills)."""
+    return {
+        "status": "success",
+        "total_active": len(skills_manager.list_active()),
+        "skills": skills_manager.list_active()
+    }
+
+
+@router.get("/skills/search")
+def search_skills(
+    q: str = Query("", description="Search term for skill name, ID, or description"),
+    category: Optional[str] = Query(None, description="Filter by category"),
+    limit: int = Query(15, ge=1, le=100)
+):
+    """Searches the 2,017+ local AAS skills catalog with sub-millisecond latency."""
+    results = skills_manager.search(q, category=category, limit=limit)
+    return {
+        "status": "success",
+        "query": q,
+        "category": category,
+        "count": len(results),
+        "skills": results
+    }
+
+
+@router.get("/skills/info/{skill_id}")
+def get_skill_info(skill_id: str):
+    """Retrieves full metadata and SKILL.md for a given skill."""
+    info = skills_manager.get_skill_info(skill_id)
+    if not info:
+        raise HTTPException(status_code=404, detail=f"Skill '{skill_id}' not found")
+    return info
+
+
+@router.post("/skills/install")
+def install_skill(payload: Dict[str, Any] = Body(...)):
+    """Activates a skill into .agents/skills for Antigravity IDE and agent discovery."""
+    skill_id = payload.get("skill_id")
+    if not skill_id:
+        raise HTTPException(status_code=400, detail="skill_id is required")
+    success = skills_manager.install(skill_id)
+    if not success:
+        raise HTTPException(status_code=404, detail=f"Skill '{skill_id}' not found in library")
+    return {"status": "success", "message": f"Skill '{skill_id}' installed successfully"}
+
+
+@router.delete("/skills/{skill_id}")
+def uninstall_skill(skill_id: str):
+    """Removes a skill from .agents/skills."""
+    success = skills_manager.uninstall(skill_id)
+    if not success:
+        raise HTTPException(status_code=404, detail=f"Skill '{skill_id}' was not installed")
+    return {"status": "success", "message": f"Skill '{skill_id}' uninstalled successfully"}
+
+
+@router.get("/skills/bundles")
+def list_bundles():
+    """Lists all available pre-configured domain bundles."""
+    return {
+        "status": "success",
+        "bundles": skills_manager.list_bundles()
+    }
+
+
+@router.post("/skills/install-bundle")
+def install_bundle(payload: Dict[str, Any] = Body(...)):
+    """Installs an entire domain bundle into .agents/skills."""
+    bundle_id = payload.get("bundle_id")
+    if not bundle_id:
+        raise HTTPException(status_code=400, detail="bundle_id is required")
+    installed = skills_manager.install_bundle(bundle_id)
+    return {
+        "status": "success",
+        "bundle_id": bundle_id,
+        "installed_count": len(installed),
+        "installed_skills": installed
+    }
+
+
+@router.post("/skills/bootstrap")
+def bootstrap_skills():
+    """Bootstraps the essential high-impact foundational skills for HYPER."""
+    installed = skills_manager.bootstrap_foundational()
+    return {
+        "status": "success",
+        "bootstrapped_count": len(installed),
+        "skills": installed
+    }
+
 

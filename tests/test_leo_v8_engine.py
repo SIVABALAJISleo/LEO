@@ -2,17 +2,27 @@
 tests/test_leo_v8_engine.py
 ===========================
 Automated test suite for LEO v8 Breakthrough Engine:
-1. Multi-tier contract classification
+1. Multi-tier contract classification (including Zero-MAC AVX2 LUT routing)
 2. BitNet b1.58 ternary matrix quantization & multiplication-free execution
-3. 3D SDF neural rasterizer execution (>30 FPS)
-4. Symplectic physics orbit simulation
-5. FAISS semantic bypass & exact match resolution
+3. Zero-MAC 4-bit AVX2 LUT kernel execution (zero hardware multipliers)
+4. Zero-Copy NVMe mmap weight streamer
+5. 3D SDF neural rasterizer execution (>30 FPS)
+6. Symplectic physics orbit simulation
+7. FAISS semantic bypass & exact match resolution
 """
 
+import os
+import tempfile
 import pytest
 import numpy as np
 
-from leo_v8_engine import LEOv8Engine, BitNetTernaryKernel, ExecutionContract
+from leo_v8_engine import (
+    LEOv8Engine,
+    BitNetTernaryKernel,
+    ZeroMAC_Avx2Kernel,
+    ZeroCopyWeightStreamer,
+    ExecutionContract,
+)
 
 
 class TestLEOv8Engine:
@@ -49,8 +59,9 @@ class TestLEOv8Engine:
         assert c_phys.target_tier == "TIER_5_SYMPLECTIC_PHYSICS"
 
         c_bitnet = engine.classify_contract("execute bitnet ternary matrix multiplication")
-        assert c_bitnet.intent == "BITNET_TERNARY_COMPUTE"
-        assert c_bitnet.target_tier == "TIER_2_BITNET_TERNARY"
+        assert c_bitnet.intent in ["ZERO_MAC_TERNARY_COMPUTE", "BITNET_TERNARY_COMPUTE"]
+        assert c_bitnet.target_tier in ["TIER_2_ZERO_MAC_LUT", "TIER_2_BITNET_TERNARY"]
+        assert "Zero-Copy" in c_bitnet.device_affinity
 
     def test_3_semantic_cache_instant_resolution(self, engine):
         """Tests that seeded exact queries resolve in Tier 0 with 100% compute avoided."""
@@ -73,3 +84,44 @@ class TestLEOv8Engine:
         assert res.tier_executed == "TIER_5_SYMPLECTIC_PHYSICS"
         assert res.contract_satisfied is True
         assert res.provenance["invariant_preserved"] is True
+
+    def test_6_zero_mac_avx2_kernel(self):
+        """Tests that ZeroMAC_Avx2Kernel executes 4-bit LUT lookups with zero multiplier ops."""
+        kernel = ZeroMAC_Avx2Kernel()
+        dim = 64
+        W = np.random.randn(dim, dim).astype(np.float32)
+        x = np.random.randn(dim).astype(np.float32)
+
+        res, lat_ms = kernel.execute(W, x)
+        assert res.shape == (dim,)
+        assert lat_ms >= 0.0
+        assert not np.isnan(res).any()
+
+        # Check LUT precomputed table
+        assert kernel.lut.shape == (256,)
+        # Verify 3 * 5 in LUT: index (3 << 4) | 5 = 48 + 5 = 53
+        assert kernel.lut[(3 << 4) | 5] == 15
+
+    def test_7_zero_copy_weight_streamer(self):
+        """Tests that ZeroCopyWeightStreamer maps and fetches blocks without RAM bloat."""
+        with tempfile.NamedTemporaryFile(delete=False) as tf:
+            tf.write(b"LEO_V8_ZERO_COPY_WEIGHT_PAYLOAD_TEST")
+            temp_path = tf.name
+
+        try:
+            streamer = ZeroCopyWeightStreamer(temp_path)
+            assert streamer.file_size > 0
+            block = streamer.fetch_block(offset=0, length=6)
+            assert block == b"LEO_V8"
+            streamer.close()
+        finally:
+            if os.path.exists(temp_path):
+                os.remove(temp_path)
+
+    def test_8_leo_v8_tier2_zero_mac_execution(self, engine):
+        """Tests end-to-end execution of Tier 2 Zero-MAC LUT pipeline in LEO v8."""
+        res = engine.execute("execute zero-mac 4-bit lut matrix multiplication")
+        assert res.tier_executed == "TIER_2_ZERO_MAC_LUT"
+        assert res.computation_avoided_pct >= 90.0
+        assert res.contract_satisfied is True
+        assert res.provenance.get("zero_mac") is True

@@ -37,6 +37,8 @@ from .ucsp import (
     SpeculativeOracle,
     ZeroCopyModelLoader,
 )
+from .skills_manager import SkillsManager, skills_manager
+
 
 __version__ = "1.0.0-mvc-dar"
 __all__ = [
@@ -85,4 +87,7 @@ __all__ = [
     "FreivaldsVerifier",
     "SpeculativeOracle",
     "ZeroCopyModelLoader",
+    "SkillsManager",
+    "skills_manager",
 ]
+

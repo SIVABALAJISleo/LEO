@@ -23,7 +23,9 @@ from hyper_mvc_dar import (
     StrategySearchEngine,
     IndependentVerifier,
     BenchmarkSuite15,
+    skills_manager,
 )
+
 
 
 def cmd_audit(args):
@@ -199,6 +201,109 @@ def cmd_ucsp(args):
         print(json.dumps(engine.get_ucsp_telemetry(), indent=2))
 
 
+def cmd_skills(args):
+    action = args.action or "list"
+    target = getattr(args, "target", "")
+
+    if action == "list":
+        print("=" * 70)
+        print("HYPER AGENTIC SKILLS: ACTIVE WORKSPACE SKILLS (.agents/skills)")
+        print("=" * 70)
+        active = skills_manager.list_active()
+        if not active:
+            print("[INFO] No active skills found in .agents/skills.")
+            print("[TIP] Run 'python cli/hyper_cli.py skills bootstrap' to activate foundational skills.")
+        else:
+            print(f"Total Active Skills: {len(active)}\n")
+            for s in active:
+                print(f" * {s['id']:<32} [{s['risk'].upper()}] - {s['description'][:60]}")
+    elif action == "search":
+        q = target or getattr(args, "query", "")
+        cat = getattr(args, "category", None)
+        limit = getattr(args, "limit", 15)
+        print("=" * 70)
+        print(f"HYPER AGENTIC SKILLS: CATALOG SEARCH (Query: '{q}')")
+        print("=" * 70)
+        results = skills_manager.search(q, category=cat, limit=limit)
+        print(f"Found {len(results)} matching skill(s):\n")
+        for s in results:
+            cat_str = f"[{s.get('category', 'general')}]"
+            print(f" * {s.get('id', ''):<32} {cat_str:<20}")
+            print(f"   {s.get('description', '')[:90]}")
+            print()
+    elif action == "install":
+        if not target:
+            print("[ERROR] Please provide a skill ID: python cli/hyper_cli.py skills install <skill_id>")
+            return
+        print(f"[SKILLS] Installing skill '{target}' into .agents/skills...")
+        success = skills_manager.install(target)
+        if success:
+            print(f"[OK] Skill '{target}' activated! Antigravity IDE and agents will detect it.")
+        else:
+            print(f"[ERROR] Skill '{target}' not found in local AAS library.")
+    elif action == "uninstall":
+        if not target:
+            print("[ERROR] Please provide a skill ID: python cli/hyper_cli.py skills uninstall <skill_id>")
+            return
+        success = skills_manager.uninstall(target)
+        if success:
+            print(f"[OK] Skill '{target}' removed from .agents/skills.")
+        else:
+            print(f"[WARN] Skill '{target}' was not installed.")
+    elif action == "info":
+        if not target:
+            print("[ERROR] Please provide a skill ID: python cli/hyper_cli.py skills info <skill_id>")
+            return
+        info = skills_manager.get_skill_info(target)
+        if not info:
+            print(f"[ERROR] Skill '{target}' not found.")
+            return
+        print("=" * 70)
+        print(f"SKILL OVERVIEW: {info.get('id')} ({'INSTALLED' if info.get('is_installed') else 'AVAILABLE'})")
+        print("=" * 70)
+        print(f"Name:        {info.get('name', '')}")
+        print(f"Category:    {info.get('category', 'general')}")
+        print(f"Description: {info.get('description', '')}")
+        print(f"Tags:        {', '.join(info.get('tags', []))}")
+        print(f"Path:        {info.get('path', '')}")
+        content = info.get("skill_md_content", "")
+        if content:
+            print("\n--- SKILL.md (First 35 lines) ---")
+            for l in content.splitlines()[:35]:
+                print(l)
+    elif action == "bundles":
+        print("=" * 70)
+        print("HYPER AGENTIC SKILLS: AVAILABLE DOMAIN BUNDLES")
+        print("=" * 70)
+        bundles = skills_manager.list_bundles()
+        for b in bundles:
+            print(f" * {b['id']:<25} ({b['skill_count']} skills): {b['name']}")
+            print(f"   Sample: {', '.join(b['sample_skills'])}")
+            print()
+    elif action == "install-bundle":
+        if not target:
+            print("[ERROR] Please provide a bundle ID: python cli/hyper_cli.py skills install-bundle <bundle_id>")
+            return
+        print(f"[SKILLS] Installing bundle '{target}'...")
+        installed = skills_manager.install_bundle(target)
+        print(f"[OK] Installed {len(installed)} skills from bundle '{target}'.")
+    elif action == "bootstrap":
+        print("[SKILLS] Bootstrapping foundational HYPER skills...")
+        boot = skills_manager.bootstrap_foundational()
+        print(f"[OK] Activated {len(boot)} foundational skills in .agents/skills:")
+        for s in boot:
+            print(f" + {s}")
+    elif action == "webapp":
+        bat_file = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "agentic-awesome-skills-main", "START_APP.bat"))
+        print(f"[SKILLS] Launching AAS Interactive Skills Explorer Web App: {bat_file}")
+        if os.path.exists(bat_file):
+            import subprocess
+            subprocess.Popen(["cmd.exe", "/c", bat_file], cwd=os.path.dirname(bat_file))
+            print("[OK] Web App launcher spawned. Opening browser...")
+        else:
+            print(f"[ERROR] START_APP.bat not found at {bat_file}")
+
+
 def main():
     parser = argparse.ArgumentParser(description="HYPER MVC-DAR CLI: Autonomous Minimum Verified Computation")
     subparsers = parser.add_subparsers(dest="command", help="Available subcommands")
@@ -234,6 +339,13 @@ def main():
     p_ucsp.add_argument("--query", type=str, default="Universal Subsumption Contract")
     p_ucsp.add_argument("--tolerance", type=int, default=2)
 
+    p_skills = subparsers.add_parser("skills", help="Manage 2,017+ Agentic Awesome Skills, Bundles & Antigravity Playbooks")
+    p_skills.add_argument("action", nargs="?", default="list", choices=["list", "search", "install", "uninstall", "info", "bundles", "install-bundle", "bootstrap", "webapp"])
+    p_skills.add_argument("target", nargs="?", default="", help="Skill ID, search term, or bundle ID")
+    p_skills.add_argument("--query", type=str, default="", help="Search query string")
+    p_skills.add_argument("--category", type=str, default=None, help="Category filter")
+    p_skills.add_argument("--limit", type=int, default=15, help="Result limit")
+
     args = parser.parse_args()
     if not args.command:
         parser.print_help()
@@ -251,6 +363,7 @@ def main():
         "research": cmd_research,
         "unseen": cmd_unseen,
         "ucsp": cmd_ucsp,
+        "skills": cmd_skills,
     }
 
     fn = dispatch.get(args.command)
@@ -262,3 +375,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
