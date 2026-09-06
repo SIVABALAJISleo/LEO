@@ -65,6 +65,10 @@ class SkillsManager:
         self.active_dir = active_dir or DEFAULT_ACTIVE_DIR
         self._catalog_cache: Optional[List[Dict[str, Any]]] = None
         self._bundles_cache: Optional[Dict[str, Any]] = None
+        self._allowed_ids_cache: Optional[set] = None
+        self._allowed_leaves_cache: Optional[set] = None
+        self._src_map_cache: Optional[Dict[str, Path]] = None
+        self._dst_name_map_cache: Optional[Dict[str, str]] = None
 
     def _load_catalog(self) -> List[Dict[str, Any]]:
         """Loads and caches the 2,000+ skills catalog, augmented with Strix security skills."""
@@ -193,6 +197,115 @@ class SkillsManager:
         results.sort(key=lambda x: x[0], reverse=True)
         return [item[1] for item in results[:limit]]
 
+    def _build_index(self) -> None:
+        """
+        Builds a strict whitelist index of all valid skill IDs, source paths,
+        and safe destination folder names from catalog and filesystem.
+        Eliminates uncontrolled data from path expressions (CWE-22 / CWE-73).
+        """
+        if self._allowed_ids_cache is not None:
+            return
+
+        allowed_ids: set[str] = set()
+        allowed_leaves: set[str] = set()
+        src_map: Dict[str, Path] = {}
+        dst_name_map: Dict[str, str] = {}
+
+        # 1. Index AAS catalog
+        if AAS_CATALOG_FILE.exists():
+            try:
+                with open(AAS_CATALOG_FILE, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    skills = data.get("skills", []) if isinstance(data, dict) else data
+                    for s in skills:
+                        if not isinstance(s, dict):
+                            continue
+                        sid = s.get("id")
+                        spath = s.get("path")
+                        if not sid or not isinstance(sid, str):
+                            continue
+                        leaf = sid.split("/")[-1]
+                        if not SAFE_NAME_PATTERN.match(leaf) or os.path.basename(leaf) != leaf:
+                            continue
+
+                        folder = None
+                        if spath and isinstance(spath, str):
+                            candidate = (AAS_ROOT / spath).resolve().parent
+                            if candidate.is_dir():
+                                folder = candidate
+                        if folder is None and AAS_SKILLS_DIR.exists():
+                            parts = sid.split("/")
+                            candidate = AAS_SKILLS_DIR.joinpath(*parts).resolve()
+                            if candidate.is_dir():
+                                folder = candidate
+
+                        if folder is not None and folder.is_dir():
+                            src_map[sid] = folder
+                            src_map[leaf] = folder
+                            dst_name_map[sid] = leaf
+                            dst_name_map[leaf] = leaf
+                            allowed_ids.add(sid)
+                            allowed_ids.add(leaf)
+                            allowed_leaves.add(leaf)
+            except Exception as e:
+                print(f"[SkillsManager] Error indexing catalog: {e}")
+
+        # 2. Index Strix Skills
+        if STRIX_SKILLS_DIR.exists():
+            for d in STRIX_SKILLS_DIR.iterdir():
+                if d.is_dir() and (d / "SKILL.md").is_file():
+                    name = d.name
+                    if SAFE_NAME_PATTERN.match(name) and os.path.basename(name) == name:
+                        src_map[name] = d.resolve()
+                        dst_name_map[name] = name
+                        allowed_ids.add(name)
+                        allowed_leaves.add(name)
+
+        # 3. Index Active Directory (so already installed skills can be queried/uninstalled)
+        if self.active_dir.exists():
+            for d in self.active_dir.iterdir():
+                if d.is_dir() and SAFE_NAME_PATTERN.match(d.name) and os.path.basename(d.name) == d.name:
+                    dst_name_map[d.name] = d.name
+                    allowed_ids.add(d.name)
+                    allowed_leaves.add(d.name)
+
+        # 4. Foundational skills
+        for fs in FOUNDATIONAL_SKILLS:
+            allowed_ids.add(fs)
+            allowed_leaves.add(fs)
+
+        self._allowed_ids_cache = allowed_ids
+        self._allowed_leaves_cache = allowed_leaves
+        self._src_map_cache = src_map
+        self._dst_name_map_cache = dst_name_map
+
+    def _get_allowed_skill_ids(self) -> set[str]:
+        if self._allowed_ids_cache is None:
+            self._build_index()
+        return self._allowed_ids_cache or set()
+
+    def _get_allowed_leaf_names(self) -> set[str]:
+        if self._allowed_leaves_cache is None:
+            self._build_index()
+        return self._allowed_leaves_cache or set()
+
+    def _get_src_skills_map(self) -> Dict[str, Path]:
+        if self._src_map_cache is None:
+            self._build_index()
+        return self._src_map_cache or {}
+
+    def _get_dst_names_map(self) -> Dict[str, str]:
+        if self._dst_name_map_cache is None:
+            self._build_index()
+        if self.active_dir.exists() and self._dst_name_map_cache is not None and self._allowed_ids_cache is not None:
+            for d in self.active_dir.iterdir():
+                if d.is_dir() and SAFE_NAME_PATTERN.match(d.name):
+                    self._dst_name_map_cache[d.name] = d.name
+                    self._allowed_ids_cache.add(d.name)
+                    if self._allowed_leaves_cache is not None:
+                        self._allowed_leaves_cache.add(d.name)
+        return self._dst_name_map_cache or {}
+
     @staticmethod
     def _is_valid_skill_id(skill_id: Any) -> bool:
         """
@@ -211,71 +324,64 @@ class SkillsManager:
 
     def _resolve_safe_src_path(self, skill_id: str) -> Optional[Path]:
         """
-        Securely resolves a skill's source directory within STRIX_SKILLS_DIR or AAS_SKILLS_DIR.
-        Enforces strict path containment to prevent path traversal attacks (CWE-22/CWE-73).
+        Securely resolves a skill's source directory from the pre-indexed whitelist map.
+        Guarantees zero uncontrolled data propagation (CWE-22 / CWE-73).
         """
         if not self._is_valid_skill_id(skill_id):
             return None
 
-        normalized = skill_id.replace("\\", "/").strip()
-        parts = normalized.split("/")
+        # Whitelist barrier (CodeQL WhitelistSanitizer)
+        allowed_ids = self._get_allowed_skill_ids()
+        if skill_id not in allowed_ids:
+            return None
 
-        # 1. Check STRIX_SKILLS_DIR first
-        if STRIX_SKILLS_DIR.exists():
-            strix_base = STRIX_SKILLS_DIR.resolve()
-            target_strix = strix_base.joinpath(*parts).resolve()
-            try:
-                target_strix.relative_to(strix_base)
-                if os.path.commonpath([str(strix_base), str(target_strix)]) == str(strix_base):
-                    if target_strix.exists():
-                        return target_strix
-            except (ValueError, TypeError):
-                pass
+        src_map = self._get_src_skills_map()
+        if skill_id not in src_map:
+            return None
 
-        # 2. Check AAS_SKILLS_DIR
-        if AAS_SKILLS_DIR.exists():
-            base_resolved = AAS_SKILLS_DIR.resolve()
-            target_path = base_resolved.joinpath(*parts).resolve()
-            try:
-                target_path.relative_to(base_resolved)
-                if os.path.commonpath([str(base_resolved), str(target_path)]) == str(base_resolved):
-                    if target_path.exists():
-                        return target_path
-            except (ValueError, TypeError):
-                pass
+        src_folder = src_map[skill_id]
+        if not src_folder.is_dir():
+            return None
 
-        return None
+        return src_folder
 
     def _resolve_safe_dst_path(self, skill_id: str) -> Optional[Path]:
         """
         Securely resolves the target destination folder inside self.active_dir.
-        Enforces that the destination is strictly an immediate subdirectory of active_dir.
+        Guarantees that destination is strictly an immediate subdirectory of active_dir
+        with a pre-validated whitelisted leaf name (CWE-22 / CWE-73).
         """
         if not self._is_valid_skill_id(skill_id):
             return None
 
-        normalized = skill_id.replace("\\", "/").strip()
-        parts = [p for p in normalized.split("/") if p and p not in (".", "..")]
-        if not parts:
+        # Whitelist barrier for skill_id (CodeQL WhitelistSanitizer)
+        allowed_ids = self._get_allowed_skill_ids()
+        if skill_id not in allowed_ids:
             return None
 
-        leaf_name = parts[-1]
-        if not SAFE_NAME_PATTERN.match(leaf_name):
+        dst_map = self._get_dst_names_map()
+        if skill_id not in dst_map:
+            return None
+
+        leaf_name = dst_map[skill_id]
+
+        # Whitelist barrier for leaf_name (CodeQL WhitelistSanitizer)
+        allowed_leaves = self._get_allowed_leaf_names()
+        if leaf_name not in allowed_leaves:
+            return None
+
+        # Strict single-component name verification
+        if not SAFE_NAME_PATTERN.match(leaf_name) or os.path.basename(leaf_name) != leaf_name:
             return None
 
         base_resolved = self.active_dir.resolve()
         target_path = (base_resolved / leaf_name).resolve()
 
-        # Must be strictly an immediate child of active_dir (cannot be active_dir or parent)
-        if target_path.parent != base_resolved or target_path == base_resolved:
-            return None
-
+        # Strict containment verification
         try:
             target_path.relative_to(base_resolved)
-        except ValueError:
-            return None
-
-        try:
+            if target_path.parent != base_resolved or target_path == base_resolved:
+                return None
             if os.path.commonpath([str(base_resolved), str(target_path)]) != str(base_resolved):
                 return None
         except (ValueError, TypeError):
@@ -285,6 +391,13 @@ class SkillsManager:
 
     def get_skill_info(self, skill_id: str) -> Optional[Dict[str, Any]]:
         """Retrieves metadata and full SKILL.md for a given skill ID."""
+        if not self._is_valid_skill_id(skill_id):
+            return None
+
+        allowed_ids = self._get_allowed_skill_ids()
+        if skill_id not in allowed_ids:
+            return None
+
         src_folder = self._resolve_safe_src_path(skill_id)
         if src_folder is None:
             return None
@@ -293,7 +406,6 @@ class SkillsManager:
         skill_meta = next((s for s in catalog if s.get("id") == skill_id), None)
 
         skill_file = (src_folder / "SKILL.md").resolve()
-        # Verify skill_file is strictly inside src_folder
         try:
             skill_file.relative_to(src_folder)
         except ValueError:
@@ -310,10 +422,13 @@ class SkillsManager:
         if not skill_meta and not skill_file.exists():
             return None
 
-        dst_folder = self._resolve_safe_dst_path(skill_id)
+        # Safe installation check: verify if skill directory exists in active_dir via directory enumeration
         is_installed = False
-        if dst_folder is not None and dst_folder.exists() and dst_folder.is_dir():
-            is_installed = True
+        if self.active_dir.exists():
+            active_names = {d.name for d in self.active_dir.iterdir() if d.is_dir()}
+            dst_folder = self._resolve_safe_dst_path(skill_id)
+            if dst_folder is not None and dst_folder.name in active_names:
+                is_installed = True
 
         res = dict(skill_meta) if skill_meta else {"id": skill_id}
         res["path"] = str(src_folder)
@@ -326,6 +441,13 @@ class SkillsManager:
         Installs a skill from the AAS library directly into the workspace active skills
         directory (.agents/skills/<skill_id>) for Antigravity discovery.
         """
+        if not self._is_valid_skill_id(skill_id):
+            return False
+
+        allowed_ids = self._get_allowed_skill_ids()
+        if skill_id not in allowed_ids:
+            return False
+
         src = self._resolve_safe_src_path(skill_id)
         if src is None or not src.is_dir():
             return False
@@ -334,32 +456,56 @@ class SkillsManager:
         if dst is None:
             return False
 
+        base_resolved = self.active_dir.resolve()
+        if dst == base_resolved or dst.parent != base_resolved:
+            return False
+
+        try:
+            dst.relative_to(base_resolved)
+            if os.path.commonpath([str(base_resolved), str(dst)]) != str(base_resolved):
+                return False
+        except (ValueError, TypeError):
+            return False
+
         self.active_dir.mkdir(parents=True, exist_ok=True)
 
-        if dst.exists():
-            # Strict safety guard: never rmtree active_dir or anything outside it
-            base_resolved = self.active_dir.resolve()
-            if dst == base_resolved or dst.parent != base_resolved:
-                return False
-            shutil.rmtree(dst)
+        # If already installed, remove pre-existing directory via enumerated directory object
+        active_map = {d.name: d for d in self.active_dir.iterdir() if d.is_dir()}
+        if dst.name in active_map:
+            existing_dir = active_map[dst.name]
+            if existing_dir.resolve().parent == base_resolved:
+                shutil.rmtree(existing_dir)
 
         shutil.copytree(src, dst)
         return True
 
     def uninstall(self, skill_id: str) -> bool:
         """Removes a skill from the active workspace directory."""
+        if not self._is_valid_skill_id(skill_id):
+            return False
+
+        allowed_ids = self._get_allowed_skill_ids()
+        if skill_id not in allowed_ids:
+            return False
+
         dst = self._resolve_safe_dst_path(skill_id)
         if dst is None:
             return False
 
-        if dst.exists():
-            # Strict safety guard: never rmtree active_dir or anything outside it
-            base_resolved = self.active_dir.resolve()
-            if dst == base_resolved or dst.parent != base_resolved:
-                return False
-            shutil.rmtree(dst)
-            return True
-        return False
+        if not self.active_dir.exists():
+            return False
+
+        base_resolved = self.active_dir.resolve()
+        active_map = {d.name: d for d in self.active_dir.iterdir() if d.is_dir()}
+        if dst.name not in active_map:
+            return False
+
+        target_dir = active_map[dst.name]
+        if target_dir.resolve().parent != base_resolved or target_dir.resolve() == base_resolved:
+            return False
+
+        shutil.rmtree(target_dir)
+        return True
 
 
 

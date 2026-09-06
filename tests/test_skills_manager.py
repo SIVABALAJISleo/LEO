@@ -117,3 +117,22 @@ def test_path_traversal_prevention_cwe_22(temp_skills_dir):
     # Verify active directory remains completely empty and uncompromised
     assert len(mgr.list_active()) == 0
 
+
+def test_whitelist_index_validation(temp_skills_dir):
+    """
+    Verifies that unknown or non-whitelisted skills cannot trigger path resolution
+    or filesystem modifications (CodeQL py/path-injection sanitizer verification).
+    """
+    mgr = SkillsManager(active_dir=temp_skills_dir)
+    allowed_ids = mgr._get_allowed_skill_ids()
+    assert len(allowed_ids) > 2000
+
+    # Test that an unknown skill name not in catalog is rejected
+    unknown_skill = "completely-unknown-fake-skill-12345"
+    assert unknown_skill not in allowed_ids
+    assert mgr.get_skill_info(unknown_skill) is None
+    assert mgr.install(unknown_skill) is False
+    assert mgr.uninstall(unknown_skill) is False
+    assert mgr._resolve_safe_src_path(unknown_skill) is None
+    assert mgr._resolve_safe_dst_path(unknown_skill) is None
+
