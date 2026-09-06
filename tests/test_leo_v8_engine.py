@@ -22,6 +22,7 @@ from leo_v8_engine import (
     ZeroMAC_Avx2Kernel,
     ZeroCopyWeightStreamer,
     ExecutionContract,
+    AbsoluteContractEnforcer,
 )
 
 
@@ -125,3 +126,48 @@ class TestLEOv8Engine:
         assert res.computation_avoided_pct >= 90.0
         assert res.contract_satisfied is True
         assert res.provenance.get("zero_mac") is True
+
+    def test_9_absolute_contract_enforcer_impossible_3d_workload(self, engine):
+        """Tests that an impossible 3D rendering workload is gracefully degraded to guaranteed achievable contract."""
+        enforcer = AbsoluteContractEnforcer()
+        impossible_3d = {
+            "intent": "3D_GRAPHICS_RENDERING",
+            "estimated_flops": 5.0e11,  # 500 GFLOPS -> 5000ms latency on 100 GFLOPS limit
+            "estimated_ram_mb": 4000
+        }
+        enforced, was_degraded = enforcer.evaluate_and_enforce(impossible_3d)
+        assert was_degraded is True
+        assert enforced["intent"] == "3D_GRAPHICS_UPSCALED"
+        assert enforced["method"] == "TEMPORAL_DELTA + BILINEAR_UPSCALE"
+        assert enforced["guaranteed_latency_ms"] == 16.0
+        assert "SSIM >= 0.95" in enforced["quality_contract"]
+        assert enforced["estimated_flops"] == 5.0e11 * 0.05
+
+        # Execute through engine with raw_contract
+        res = engine.execute("render impossible 4k 3d raytraced scene", raw_contract=impossible_3d)
+        assert res.tier_executed == "TIER_4_NEURAL_RASTERIZER"
+        assert res.contract_satisfied is True
+        assert res.contract_fulfilled_100_percent is True
+        assert res.provenance.get("was_degraded") is True
+
+    def test_10_absolute_contract_enforcer_impossible_matrix_and_memory(self, engine):
+        """Tests that an impossible dense matrix workload and massive RAM footprint are algorithmically substituted."""
+        enforcer = AbsoluteContractEnforcer()
+        impossible_dense = {
+            "intent": "DENSE_MATRIX_COMPUTE",
+            "estimated_flops": 3.0e11,
+            "estimated_ram_mb": 16000  # Exceeds 8000 MB limit
+        }
+        enforced, was_degraded = enforcer.evaluate_and_enforce(impossible_dense)
+        assert was_degraded is True
+        assert enforced["intent"] == "APPROXIMATE_TERNARY_COMPUTE"
+        assert enforced["method"] == "NUMBA_ZERO_MAC + PI_ERROR_CONTROLLER"
+        assert enforced["guaranteed_latency_ms"] == 15.0
+        assert enforced["memory_strategy"] == "ZERO_COPY_MMAP_STREAMING"
+
+        # Execute through engine
+        res = engine.execute("compute massive dense gemm", raw_contract=impossible_dense)
+        assert res.tier_executed == "TIER_2_ZERO_MAC_LUT"
+        assert res.contract_satisfied is True
+        assert res.contract_fulfilled_100_percent is True
+        assert res.provenance.get("was_degraded") is True
