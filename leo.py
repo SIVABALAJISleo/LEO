@@ -185,6 +185,38 @@ def main():
     # Download Model
     subparsers.add_parser("download-model", help="Download all real GGUF, OpenVINO IR, and ONNX models")
 
+    # CBE — Compute-Budget Elimination Engine
+    cbe_parser = subparsers.add_parser("cbe", help="LEO Compute-Budget Elimination Engine (CBE) operations")
+    cbe_subparsers = cbe_parser.add_subparsers(dest="cbe_command")
+
+    cbe_subparsers.add_parser("inspect", help="Inspect host hardware, Intel UHD iGPU, and runtime topology")
+    cbe_subparsers.add_parser("validate", help="Run full correctness, visual quality, and adversarial stress suite")
+
+    bench_sub = cbe_subparsers.add_parser("benchmark", help="Run 8-tier compute elimination benchmark")
+    bench_sub.add_argument("--suite", default="full", choices=["full", "smoke"], help="Benchmark execution suite")
+    bench_sub.add_argument("--runs", type=int, default=3, help="Number of repetitions per tier")
+    bench_sub.add_argument("--output", help="Save run results as JSON file")
+
+    prof_sub = cbe_subparsers.add_parser("profile", help="Profile stage-by-stage latency breakdown")
+    prof_sub.add_argument("--frames", type=int, default=10, help="Number of frames to profile")
+
+    render_sub = cbe_subparsers.add_parser("render", help="Render test sequence with live CBE telemetry")
+    render_sub.add_argument("--frames", type=int, default=10, help="Number of frames to render")
+    render_sub.add_argument("--motion", type=float, default=0.1, help="Motion delta level")
+
+    cbe_subparsers.add_parser("ablation", help="Run component ablation experiment")
+
+    rep_sub = cbe_subparsers.add_parser("report", help="Generate master CBE benchmark report")
+    rep_sub.add_argument("--output", default="cbe_benchmark_report.json", help="Path to write JSON report")
+
+    # HYPER-X — Computational Wormhole Search & Total Parity Engine
+    hyper_parser = subparsers.add_parser("hyper", help="HYPER-X CWS & Total NVIDIA Parity Verification Engine")
+    hyper_parser.add_argument("hyper_args", nargs=argparse.REMAINDER, help="Arguments passed to hyper_x CLI")
+
+    # CWS alias
+    cws_parser = subparsers.add_parser("cws", help="Computational Wormhole Search operations")
+    cws_parser.add_argument("cws_args", nargs=argparse.REMAINDER, help="Arguments passed to hyper_x CLI")
+
     args = parser.parse_args()
 
     if args.command == "doctor":
@@ -317,6 +349,31 @@ def main():
         except Exception as e:
             logger.error(f"Download failed: {e}")
             sys.exit(1)
+
+    elif args.command == "cbe":
+        from cbe import cli as cbe_cli
+        if args.cbe_command == "inspect":
+            sys.exit(cbe_cli.handle_cbe_inspect(args))
+        elif args.cbe_command == "validate":
+            sys.exit(cbe_cli.handle_cbe_validate(args))
+        elif args.cbe_command == "benchmark":
+            sys.exit(cbe_cli.handle_cbe_benchmark(args))
+        elif args.cbe_command == "profile":
+            sys.exit(cbe_cli.handle_cbe_profile(args))
+        elif args.cbe_command == "render":
+            sys.exit(cbe_cli.handle_cbe_render(args))
+        elif args.cbe_command == "ablation":
+            sys.exit(cbe_cli.handle_cbe_ablation(args))
+        elif args.cbe_command == "report":
+            sys.exit(cbe_cli.handle_cbe_report(args))
+        else:
+            cbe_parser.print_help()
+
+    elif args.command in ["hyper", "cws"]:
+        from hyper_x import cli as hyper_cli
+        sub_args = args.hyper_args if args.command == "hyper" else args.cws_args
+        sys.argv = ["hyper_x"] + sub_args
+        hyper_cli.main()
 
     else:
         parser.print_help()

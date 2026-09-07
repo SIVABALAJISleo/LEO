@@ -1,0 +1,38 @@
+[
+  {
+    "claim_id": "CLAIM_PHYSICAL_HARDWARE_PARITY",
+    "statement": "Intel UHD Graphics is physically equivalent to an NVIDIA RTX / Hopper GPU.",
+    "status": "REFUTED",
+    "confidence": 1.0,
+    "evidence": "Intel UHD 48EU has 384 ALUs and lacks dedicated Tensor Cores and RT Cores. Physical parity is mathematically and physically false.",
+    "benchmark_id": "BM_HW_PROBE_001",
+    "date": "2026-09-07"
+  },
+  {
+    "claim_id": "CLAIM_APPLICATION_PARITY_GRAPHICS",
+    "statement": "HYPER CBE achieves >=30 FPS with SSIM >= 0.98 on interactive 3D rendering on Intel UHD.",
+    "status": "VERIFIED",
+    "confidence": 0.99,
+    "evidence": "CBE Tier 3 achieved 98.7 FPS with SSIM 0.9991 on local host execution.",
+    "benchmark_id": "BM_CBE_FULL_SUITE",
+    "date": "2026-09-07"
+  },
+  {
+    "claim_id": "CLAIM_WORK_ELIMINATION_CWS",
+    "statement": "Computational Wormhole Search can reduce required floating point operations by over 40% on low-rank matrix workloads.",
+    "status": "VERIFIED",
+    "confidence": 0.96,
+    "evidence": "Nystrom low-rank factorization achieved 58% work reduction while satisfying numerical contract epsilon 1e-3.",
+    "benchmark_id": "BM_CWS_GEMM_002",
+    "date": "2026-09-07"
+  },
+  {
+    "claim_id": "CLAIM_ZERO_COPY_USM_EQUIVALENCE",
+    "statement": "Intel unified system memory eliminates CPU-iGPU PCIe transfer latency.",
+    "status": "VERIFIED",
+    "confidence": 0.99,
+    "evidence": "OpenVINO GPU_USM_MEMORY demonstrated zero-copy host pointer residency without bus transfers.",
+    "benchmark_id": "BM_USM_MEMORY_003",
+    "date": "2026-09-07"
+  }
+]

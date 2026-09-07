@@ -1,0 +1,33 @@
+{
+  "provenance_version": "1.0.0",
+  "generated_at": "2026-09-07T22:50:00Z",
+  "git_branch": "main",
+  "hardware_fingerprint": {
+    "cpu_vendor": "Intel",
+    "cpu_model": "Intel Core i5-13420H",
+    "physical_cores": 8,
+    "logical_threads": 12,
+    "p_cores": 4,
+    "e_cores": 4,
+    "ram_total_gb": 16.0,
+    "igpu_vendor": "Intel Corporation",
+    "igpu_model": "Intel(R) UHD Graphics",
+    "igpu_execution_units": 48,
+    "openvino_version": "2026.2.1",
+    "level_zero_available": false,
+    "host_mismatch": true,
+    "target_hardware_match": false,
+    "fingerprint_status": "HOST_MISMATCH (Lenovo i5-12450H reference not identical to host i5-13420H)"
+  },
+  "os_environment": {
+    "system": "Windows",
+    "version": "11",
+    "architecture": "AMD64"
+  },
+  "power_telemetry": {
+    "status": "ESTIMATED",
+    "sensor_available": false,
+    "rule_enforced": "Section 43: Estimated power is strictly labeled ESTIMATED, never measured."
+  },
+  "measurement_method": "High-precision Python time.perf_counter wall-clock telemetry"
+}

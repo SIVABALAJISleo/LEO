@@ -1,0 +1,53 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2026-09-07T22:50:00Z",
+  "host_hardware": "Intel Core i5-13420H + Intel UHD Graphics 48EU (HOST_MISMATCH vs i5-12450H reference)",
+  "reference_targets": ["RTX_4090", "A100_SXM4_80GB", "H100_SXM5", "B200"],
+  "classification_legend": {
+    "EQUIVALENT": "Bitwise or physical parity",
+    "SUBSTITUTE": "Alternative software layer fulfills interface",
+    "ALGORITHMIC_BYPASS": "Eliminates need for capability via transformation",
+    "APPLICATION_EQUIVALENT": "Satisfies declared application observable contract",
+    "PARTIAL": "Supported at lower scale or precision",
+    "UNSUPPORTED": "Missing physical silicon, cannot be reproduced without ASIC",
+    "NOT_APPLICABLE": "Not demanded by target contract",
+    "UNKNOWN": "Unverified status (Never counted as PASS)"
+  },
+  "capabilities": {
+    "compute": {
+      "cuda_cores": { "status": "UNSUPPORTED", "hyper_approach": "OpenVINO GPU + AVX2 CPU multi-threading" },
+      "tensor_cores": { "status": "UNSUPPORTED", "hyper_approach": "Intel VNNI INT8 + AVX2 bit-manipulation" },
+      "rt_cores": { "status": "UNSUPPORTED", "hyper_approach": "Linear BVH + CWS Temporal accumulation" },
+      "fp64_compute": { "status": "PARTIAL", "hyper_approach": "IEEE 754 CPU execution" },
+      "fp32_compute": { "status": "APPLICATION_EQUIVALENT", "hyper_approach": "AVX2 256-bit SIMD execution" },
+      "fp16_compute": { "status": "APPLICATION_EQUIVALENT", "hyper_approach": "OpenVINO GPU FP16 USM execution" },
+      "int8_compute": { "status": "APPLICATION_EQUIVALENT", "hyper_approach": "Intel VNNI dot-product acceleration" },
+      "sparse_acceleration": { "status": "ALGORITHMIC_BYPASS", "hyper_approach": "Structured CSR & zero-skipping elimination" }
+    },
+    "memory": {
+      "hbm3_bandwidth": { "status": "UNSUPPORTED", "hyper_approach": "Bandwidth avoidance + communication minimization" },
+      "gddr6x_bandwidth": { "status": "UNSUPPORTED", "hyper_approach": "Cache reuse factor > 3.5x" },
+      "unified_memory": { "status": "EQUIVALENT", "hyper_approach": "Intel Shared System Memory (USM Zero-Copy)" }
+    },
+    "interconnect": {
+      "nvlink_p2p": { "status": "UNSUPPORTED", "hyper_approach": "Single-node unified memory ring bus" },
+      "nvswitch": { "status": "UNSUPPORTED", "hyper_approach": "In-memory tensor broadcast" }
+    },
+    "media": {
+      "nvenc_av1": { "status": "SUBSTITUTE", "hyper_approach": "Intel QuickSync Video (QSV) HW encoder" },
+      "nvdec_hevc": { "status": "SUBSTITUTE", "hyper_approach": "Intel QuickSync Video HW decoder" },
+      "optical_flow_sdk": { "status": "SUBSTITUTE", "hyper_approach": "CBE Block motion vector estimator" }
+    },
+    "graphics": {
+      "ray_tracing_hardware": { "status": "UNSUPPORTED", "hyper_approach": "Software RT + 8-tier compute-budget elimination" },
+      "dlss_frame_generation": { "status": "APPLICATION_EQUIVALENT", "hyper_approach": "CBE Temporal reconstruction + bilateral filter" }
+    },
+    "software_stack": {
+      "cublas": { "status": "SUBSTITUTE", "hyper_approach": "oneMKL / OpenVINO / AVX2 fast GEMM" },
+      "cutlass": { "status": "SUBSTITUTE", "hyper_approach": "CWS Algorithmic Escape Search" },
+      "tensorrt": { "status": "SUBSTITUTE", "hyper_approach": "OpenVINO Model Optimizer + CWS Runtime" },
+      "cudnn": { "status": "SUBSTITUTE", "hyper_approach": "OpenVINO Convolution execution" },
+      "nccl": { "status": "PARTIAL", "hyper_approach": "PyTorch Gloo / MPI CPU backend" }
+    }
+  }
+}

@@ -139,8 +139,6 @@ class LEOv7_MemoryEfficient:
             self.embedding_model = None
             self._cached_vectors = None
             gc.collect()
-            if torch.cuda.is_available():
-                torch.cuda.empty_cache()
             self.print_system_status()
     
     def load_llm(self):
@@ -170,8 +168,6 @@ class LEOv7_MemoryEfficient:
             self.llm_model = None
             self.llm_tokenizer = None
             gc.collect()
-            if torch.cuda.is_available():
-                torch.cuda.empty_cache()
             self.print_system_status()
     
     def initialize_cache(self, preload_vectors=True):

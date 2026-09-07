@@ -1,0 +1,50 @@
+{
+  "manifest_version": "1.0.0",
+  "generated_at": "2026-09-07T22:50:00Z",
+  "total_categories": 33,
+  "categories": [
+    {
+      "category": "dense_compute",
+      "workload_id": "GEMM_512x512",
+      "contract_mode": "NUMERICAL",
+      "tolerance_epsilon": 0.0001,
+      "benchmark_procedure": "hyper_x.master_engine.execute_workload_end_to_end"
+    },
+    {
+      "category": "sparse_compute",
+      "workload_id": "SPMV_CSR_10K",
+      "contract_mode": "NUMERICAL",
+      "tolerance_epsilon": 0.0001,
+      "benchmark_procedure": "hyper_x.representations.to_sparse_csr"
+    },
+    {
+      "category": "ai_inference",
+      "workload_id": "LLM_SPECULATIVE_32TOK",
+      "contract_mode": "APPLICATION",
+      "min_tokens_per_sec": 30.0,
+      "benchmark_procedure": "hyper_x.tracks.ai_parity.evaluate_llm_inference"
+    },
+    {
+      "category": "graphics",
+      "workload_id": "CBE_RENDER_720P",
+      "contract_mode": "APPLICATION",
+      "min_fps": 30.0,
+      "min_ssim": 0.98,
+      "benchmark_procedure": "hyper_x.tracks.graphics_parity.evaluate_frame_reconstruction"
+    },
+    {
+      "category": "video_transcode",
+      "workload_id": "QSV_AV1_TRANSCODE_1080P",
+      "contract_mode": "APPLICATION",
+      "min_fps": 60.0,
+      "benchmark_procedure": "hyper_x.tracks.media_parity.evaluate_transcode"
+    },
+    {
+      "category": "scientific_simulation",
+      "workload_id": "PDE_POISSON_ITERATIVE",
+      "contract_mode": "NUMERICAL",
+      "tolerance_epsilon": 0.001,
+      "benchmark_procedure": "hyper_x.tracks.hpc_parity.evaluate_gemm"
+    }
+  ]
+}

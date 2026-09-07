@@ -1,0 +1,50 @@
+[
+  {
+    "candidate_id": "CAND_SPARSE_SKIP_001",
+    "parent_id": "REF_DENSE_GEMM",
+    "workload_id": "GEMM_512x512",
+    "transformations": ["sparsify", "zero_skip"],
+    "expected_gain": 0.45,
+    "measured_gain": 0.42,
+    "correctness": true,
+    "quality_score": 0.9998,
+    "speedup": 1.72,
+    "memory_reduction_pct": 28.0,
+    "communication_reduction_pct": 35.0,
+    "hardware": "Intel Core i5-13420H + Intel UHD",
+    "verification_level": 4,
+    "status": "VERIFIED"
+  },
+  {
+    "candidate_id": "CAND_LOW_RANK_NYSTROM_002",
+    "parent_id": "REF_DENSE_GEMM",
+    "workload_id": "ATTN_PROJECTION_512",
+    "transformations": ["dense_to_low_rank", "subspace_projection"],
+    "expected_gain": 0.60,
+    "measured_gain": 0.58,
+    "correctness": true,
+    "quality_score": 0.994,
+    "speedup": 2.38,
+    "memory_reduction_pct": 52.0,
+    "communication_reduction_pct": 48.0,
+    "hardware": "Intel Core i5-13420H + Intel UHD",
+    "verification_level": 4,
+    "status": "VERIFIED"
+  },
+  {
+    "candidate_id": "CAND_CBE_TEMPORAL_003",
+    "parent_id": "REF_PATH_TRACER",
+    "workload_id": "CBE_RENDER_720P",
+    "transformations": ["temporal_reprojection", "bilateral_reconstruct"],
+    "expected_gain": 0.90,
+    "measured_gain": 0.92,
+    "correctness": true,
+    "quality_score": 0.9991,
+    "speedup": 13.7,
+    "memory_reduction_pct": 65.0,
+    "communication_reduction_pct": 78.0,
+    "hardware": "Intel Core i5-13420H + Intel UHD",
+    "verification_level": 4,
+    "status": "PRODUCTION"
+  }
+]

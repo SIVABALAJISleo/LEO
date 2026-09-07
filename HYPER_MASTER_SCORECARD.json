@@ -1,0 +1,15 @@
+{
+  "scorecard_version": "1.0.0",
+  "generated_at": "2026-09-07T22:50:00Z",
+  "research_progress_pct": 75.3,
+  "total_verified_100_gate": "FAIL",
+  "disqualifying_mandatory_dimensions": [
+    "physical_hardware_parity (UNSUPPORTED: 0.0%)",
+    "exact_computational_parity (PARTIAL: 65.0%)"
+  ],
+  "host_hardware": {
+    "cpu": "Intel Core i5-13420H",
+    "igpu": "Intel(R) UHD Graphics (48 EU)",
+    "status": "HOST_MISMATCH"
+  }
+}

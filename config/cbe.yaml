@@ -1,0 +1,73 @@
+# =============================================================================
+# LEO CBE — Compute-Budget Elimination Engine Configuration
+# Target Hardware: Intel Core i5-13420H (4P+4E cores) + Intel UHD Graphics iGPU
+# =============================================================================
+
+engine:
+  version: "1.0.0-cbe"
+  name: "LEO Compute-Budget Elimination Engine"
+  target_fps: 60.0
+  target_resolution:
+    width: 1920
+    height: 1080
+  internal_resolution:
+    scale_factor: 0.50 # 540p internal render resolution
+    min_scale: 0.33
+    max_scale: 1.00
+
+hardware:
+  device: "GPU.0" # Intel UHD Graphics via OpenVINO
+  cpu_fallback: true
+  openvino:
+    performance_hint: "LATENCY"
+    inference_precision: "FP16" # Intel Xe-LP optimal
+    enable_warmup: true
+  cpu_threads: 12
+  p_cores: 4
+  e_cores: 4
+  memory_pool:
+    zero_copy_usm: true
+    max_pool_mb: 256
+
+quality_contract:
+  min_ssim: 0.900
+  min_psnr: 28.00
+  max_latency_ms: 16.67 # Strict 60 FPS budget
+  max_ghosting_coeff: 0.050
+  max_temporal_flicker: 0.030
+  emergency_mode_threshold_ssim: 0.850
+
+thermal_controller:
+  max_cpu_percent: 85.0
+  frequency_throttle_ratio: 0.60
+  mitigation_factor: 0.65 # Shed 35% of expensive work when hot
+
+multi_fidelity_tiers:
+  tile_size: 16
+  enabled_tiers:
+    - 0 # Zero-Cost Cache Recall
+    - 1 # Spatiotemporal Reprojection
+    - 2 # Sparse Tile Residual + Radiance Cache
+    - 3 # Adaptive Resolution + ReSTIR Spatial + CAS
+    - 4 # Adaptive Resolution + Neural Denoise (OpenVINO GPU)
+    - 5 # Variable Rate Shading (VRS 2x2/4x4)
+    - 6 # Full Resolution Perceptual Contract (4 SPP)
+    - 7 # Ground Truth Reference (32-64 SPP)
+
+reconstruction:
+  cas_sharpness: 0.25 # Contrast Adaptive Sharpening factor
+  enable_neural: true # TinyIntelReconNet (<25k params)
+  temporal_super_resolution:
+    blend_weight_static: 0.85
+    blend_weight_motion: 0.20
+  spatial_reconstruction:
+    bilateral_sigma_spatial: 2.0
+    bilateral_sigma_color: 0.02
+
+caching:
+  radiance_cache:
+    cell_size: 0.10
+    max_entries: 100000
+    cache_ttl_frames: 60
+  temporal_ring_buffer:
+    max_history_frames: 8

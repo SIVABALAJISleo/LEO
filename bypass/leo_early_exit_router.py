@@ -1,54 +1,73 @@
 import numpy as np
 import logging
-from sklearn.tree import DecisionTreeClassifier
+from typing import Tuple, Optional
 
 logger = logging.getLogger(__name__)
 
 class EarlyExitRouter:
     """
-    Layer 2: The Early-Exit Router (Dynamic Compute).
-    Intercepts execution after 10% depth. Uses a Scikit-Learn Decision Tree 
-    to evaluate intermediate states. If confidence > 0.95, halts execution.
+    Layer 2: Calibrated Confidence Early-Exit Router.
+    Evaluates intermediate feature representations using Shannon entropy
+    and top-1/top-2 logit margin to decide if early exit is mathematically justified.
     """
-    def __init__(self, threshold=0.95):
-        self.threshold = threshold
-        # Initialize a lightweight decision tree classifier
-        self.clf = DecisionTreeClassifier(max_depth=3)
-        self.is_trained = False
-        
-        # Simulate training the tree on dummy "intermediate" state data
-        self._train_dummy_tree()
+    def __init__(self, confidence_threshold: float = 0.90, max_entropy: float = 0.35):
+        self.threshold = confidence_threshold
+        self.max_entropy = max_entropy
+        self.exit_count = 0
+        self.pass_count = 0
 
-    def _train_dummy_tree(self):
-        """Trains the decision tree on generic shapes to act as a fast logical gate."""
-        # Generating fake intermediate hidden states (e.g., 256 dim)
-        X_train = np.random.randn(100, 256)
-        # Binary target: 1 = "easy example" (exit early), 0 = "hard example" (continue)
-        y_train = np.random.randint(0, 2, 100)
-        
-        self.clf.fit(X_train, y_train)
-        self.is_trained = True
-        logger.debug("[EarlyExitRouter] Scikit-Learn Decision Tree initialized.")
-
-    def evaluate_intermediate_state(self, hidden_tensor: np.ndarray):
+    def evaluate_intermediate_state(
+        self,
+        hidden_tensor: np.ndarray,
+        projection_head: Optional[np.ndarray] = None
+    ) -> Tuple[bool, Optional[np.ndarray]]:
         """
-        Takes the tensor after the first 10% of the network.
-        Evaluates it through the decision tree logic gate.
-        Returns (True, predicted_output) if confidence is high enough.
+        Takes intermediate activation tensor.
+        Evaluates prediction entropy and confidence margin.
+        Returns: (exit_early: bool, early_output: Optional[np.ndarray])
         """
-        # Reshape to avoid memory copy
-        flat_tensor = hidden_tensor.reshape(-1)[:256].reshape(1, -1)
-        if flat_tensor.shape[1] < 256:
-            flat_tensor = np.pad(flat_tensor, ((0,0), (0, 256 - flat_tensor.shape[1])))
-
-        # Predict probability of being an "easy" answer
-        proba = self.clf.predict_proba(flat_tensor)[0]
-        max_conf = np.max(proba)
-        
-        if max_conf >= self.threshold:
-            logger.debug(f"[EarlyExitRouter] CONFIDENCE {max_conf:.2f} >= {self.threshold}. ABORTING NETWORK EXECUTION.")
-            # We confidently extrapolate the final output (mocked here as the hidden state passed through a linear projection)
-            extrapolated_output = hidden_tensor * 2.5 # Mock extrapolation math
-            return True, extrapolated_output
+        flat = hidden_tensor.reshape(-1)
+        if flat.size == 0:
+            return False, None
             
+        # Numerical stable softmax over feature slice
+        slice_len = min(256, flat.size)
+        x = flat[:slice_len]
+        x_max = np.max(x)
+        exp_x = np.exp(x - x_max)
+        probs = exp_x / np.maximum(1e-7, np.sum(exp_x))
+        
+        # 1. Top-1 vs Top-2 Margin Confidence
+        sorted_probs = np.sort(probs)[::-1]
+        top1 = float(sorted_probs[0])
+        top2 = float(sorted_probs[1]) if len(sorted_probs) > 1 else 0.0
+        margin_conf = top1 - top2
+        
+        # 2. Shannon Entropy: H(p) = -sum(p * log2(p))
+        safe_p = np.clip(probs, 1e-12, 1.0)
+        entropy = float(-np.sum(safe_p * np.log2(safe_p)) / np.log2(float(slice_len)))
+        
+        # Early exit condition: low uncertainty and high confidence margin
+        is_confident = (top1 >= self.threshold or margin_conf >= 0.80) and (entropy <= self.max_entropy)
+        
+        if is_confident:
+            self.exit_count += 1
+            logger.debug(f"[EarlyExitRouter] Calibrated confidence={top1:.3f}, entropy={entropy:.3f}. Early exit granted.")
+            # Project early representation
+            if projection_head is not None and projection_head.shape[0] == flat.shape[0]:
+                early_out = np.dot(flat, projection_head)
+            else:
+                early_out = flat[:slice_len].copy()
+            return True, early_out
+            
+        self.pass_count += 1
         return False, None
+
+    def get_stats(self) -> dict:
+        total = self.exit_count + self.pass_count
+        return {
+            "exit_count": self.exit_count,
+            "pass_count": self.pass_count,
+            "early_exit_ratio_pct": round((self.exit_count / max(1, total)) * 100.0, 2)
+        }
+

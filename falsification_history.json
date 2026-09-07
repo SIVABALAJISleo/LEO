@@ -1,0 +1,52 @@
+[
+  {
+    "candidate_id": "CAND_GEMM_STRESS",
+    "workload_id": "GEMM_FALSIFY",
+    "stress_test_name": "DIM_MICRO_4x4",
+    "passed": true,
+    "measured_error": 0.0,
+    "error_threshold": 0.001,
+    "failure_classification": null,
+    "timestamp": 1788803008.7860935
+  },
+  {
+    "candidate_id": "CAND_GEMM_STRESS",
+    "workload_id": "GEMM_FALSIFY",
+    "stress_test_name": "DIM_NON_SQUARE_37x129",
+    "passed": true,
+    "measured_error": 0.0,
+    "error_threshold": 0.001,
+    "failure_classification": null,
+    "timestamp": 1788803008.786623
+  },
+  {
+    "candidate_id": "CAND_GEMM_STRESS",
+    "workload_id": "GEMM_FALSIFY",
+    "stress_test_name": "DIST_HEAVY_TAIL",
+    "passed": true,
+    "measured_error": 0.0,
+    "error_threshold": 0.001,
+    "failure_classification": null,
+    "timestamp": 1788803008.7868004
+  },
+  {
+    "candidate_id": "CAND_GEMM_STRESS",
+    "workload_id": "GEMM_FALSIFY",
+    "stress_test_name": "HIGH_DYNAMIC_RANGE",
+    "passed": true,
+    "measured_error": 0.0,
+    "error_threshold": 0.001,
+    "failure_classification": null,
+    "timestamp": 1788803008.786915
+  },
+  {
+    "candidate_id": "CAND_GEMM_STRESS",
+    "workload_id": "GEMM_FALSIFY",
+    "stress_test_name": "SPARSE_IMPULSE",
+    "passed": true,
+    "measured_error": 0.0,
+    "error_threshold": 0.001,
+    "failure_classification": null,
+    "timestamp": 1788803008.7870677
+  }
+]

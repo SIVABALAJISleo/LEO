@@ -1,0 +1,19 @@
+{
+  "engine": "LEO Compute-Budget Elimination Engine (CBE)",
+  "version": "1.0.0",
+  "timestamp": "2026-09-06 14:13:56",
+  "hardware": {
+    "cpu_model": "Intel64 Family 6 Model 186 Stepping 2, GenuineIntel",
+    "physical_cores": 8,
+    "logical_processors": 12,
+    "gpu_name": "Intel(R) UHD Graphics (iGPU)",
+    "execution_units": 48,
+    "has_usm": true,
+    "openvino_gpu": true
+  },
+  "guarantees": {
+    "no_synthetic_mocks": true,
+    "physically_measured_timings": true,
+    "honest_cer_calculation": true
+  }
+}
