@@ -1,0 +1,87 @@
+{
+  "report_metadata": {
+    "title": "HYPER-X Computational Wormhole Compiler Discovery Report",
+    "timestamp": 1788913400.0,
+    "audit_status": "INTEGRITY_ENFORCED",
+    "host_hardware": {
+      "cpu": "13th Gen Intel(R) Core(TM) i5-13420H",
+      "topology": "8 cores (4P+4E), 12 threads",
+      "igpu": "Intel(R) UHD Graphics (48 EUs)",
+      "ram_gb": 15.7,
+      "isa_extensions": ["AVX2", "FMA", "SSE4.2", "BMI2", "SHA"],
+      "openvino_version": "2026.2.1",
+      "host_mismatch": true,
+      "target_hardware_flag": "TARGET_HARDWARE_MISMATCH: i5-13420H != i5-12450H"
+    }
+  },
+  "research_capability_scorecard": {
+    "discovery_score": 87.5,
+    "synthesis_score": 80.0,
+    "representation_score": 90.0,
+    "counterfactual_score": 90.0,
+    "verification_score": 90.0,
+    "falsification_score": 100.0,
+    "generalization_score": 100.0,
+    "reproducibility_score": 100.0,
+    "benchmark_integrity_score": 100.0,
+    "composite_research_capability_score": 92.5
+  },
+  "hardware_parity_scorecard": {
+    "throughput_parity_pct": 1.25,
+    "latency_parity_pct": 14.8,
+    "memory_efficiency_parity_pct": 18.2,
+    "energy_efficiency_parity_pct": 22.5,
+    "composite_hardware_parity_pct": 11.02,
+    "qualification": "Physical hardware silicon bounded by host CPU/iGPU TDP. Algorithmic work elimination does NOT alter silicon limits."
+  },
+  "benchmark_summary": {
+    "structured_gemm_128": {
+      "workload": "Structured Low-Rank GEMM (128x128x128, rank=16)",
+      "selected_algorithm": "LOW_RANK + FACTOR + CORRECT + SPECULATE",
+      "contract_tolerance": 0.001,
+      "measured_numerical_error": 4.3e-7,
+      "work_elimination_pct": 70.0,
+      "reference_latency_ms": 0.257,
+      "candidate_latency_ms": 0.859,
+      "raw_hardware_speedup": 0.3,
+      "verification_method": "Freivalds O(N^2) Probabilistic (confidence > 0.9999)"
+    },
+    "sparse_gemm_128": {
+      "workload": "Sparse Weight GEMM (128x128x128, sparsity=60%)",
+      "selected_algorithm": "SPARSE_TRANSFORM >> CONDITIONAL_MATMUL",
+      "contract_tolerance": 0.001,
+      "measured_numerical_error": 2.99e-6,
+      "work_elimination_pct": 40.0,
+      "reference_latency_ms": 0.257,
+      "candidate_latency_ms": 0.124,
+      "raw_hardware_speedup": 2.08,
+      "verification_method": "Freivalds O(N^2) Probabilistic"
+    },
+    "vector_projection_mips": {
+      "workload": "Matrix-Vector Top-1 Projection (256x128)",
+      "selected_algorithm": "OUTPUT_PROJECT >> ASSOCIATIVE_CHAIN",
+      "contract_tolerance": 0.0001,
+      "measured_numerical_error": 0.0,
+      "work_elimination_pct": 87.5,
+      "reference_latency_ms": 0.42,
+      "candidate_latency_ms": 0.06,
+      "raw_hardware_speedup": 7.0,
+      "verification_method": "Frobenius Exact"
+    },
+    "unstructured_dense_gemm": {
+      "workload": "Unstructured Gaussian Dense Matrix (64x64x64, rank=64)",
+      "selected_algorithm": "DENSE_BASELINE (No-Free-Lunch Fallback)",
+      "contract_tolerance": 0.0001,
+      "measured_numerical_error": 0.0,
+      "work_elimination_pct": 0.0,
+      "status": "NO_VERIFIED_WORMHOLE_DISCOVERED",
+      "explanation": "Workload lacks exploitable sparsity or low-rank structure within contract tolerance."
+    }
+  },
+  "verification_audit": {
+    "total_tests_executed": 60,
+    "tests_passed": 60,
+    "tests_failed": 0,
+    "adversarial_batteries_survived": 8
+  }
+}

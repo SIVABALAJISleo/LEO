@@ -46,6 +46,14 @@ from hyper_x.holdout.blind_eval import BlindHoldoutEngine
 from hyper_x.nvidia_db.database import NvidiaReferenceDatabase
 from hyper_x.strict.scorecard import TotalParityScorecard
 from hyper_x.master_engine import HyperXMasterEngine
+from hyper_x.wormhole_compiler import (
+    WormholeCompiler,
+    AutonomousResearchLoop,
+    MatrixMultiplicationAdapter,
+    ContractCompiler,
+    ObservableCompiler,
+    CandidateRegistry,
+)
 
 def cmd_audit(args: argparse.Namespace) -> None:
     audit_file = Path("docs/hyper_x/REPOSITORY_ARCHITECTURE.md")
@@ -225,6 +233,92 @@ def cmd_report(args: argparse.Namespace) -> None:
     else:
         print("Report not found.")
 
+def cmd_compile(args: argparse.Namespace) -> None:
+    dim = args.dim or 128
+    rank = args.rank or 16
+    structured = not args.unstructured
+    tolerance = args.tolerance or 1e-3
+    print("=== HYPER-X Computational Wormhole Compiler ===")
+    print(f"Target: GEMM ({dim}x{dim}x{dim}) | Structured: {structured} (Rank {rank}) | Tolerance: {tolerance}\n")
+
+    rng = np.random.default_rng(42)
+    if structured:
+        U = rng.standard_normal((dim, rank)).astype(np.float32)
+        V = rng.standard_normal((rank, dim)).astype(np.float32)
+        A = (U @ V) + (rng.standard_normal((dim, dim)).astype(np.float32) * 0.001)
+    else:
+        A = rng.standard_normal((dim, dim)).astype(np.float32)
+    B = rng.standard_normal((dim, dim)).astype(np.float32)
+
+    contract = MatrixMultiplicationAdapter.build_contract(dim, dim, dim, tolerance=tolerance)
+    observable = None
+    if getattr(args, "output_vector", False):
+        observable = ObservableCompiler.vector_projection(dim, 1, tolerance=tolerance)
+
+    compiler = WormholeCompiler()
+    res = compiler.compile_and_execute(A, B, contract=contract, observable=observable)
+
+    print(f"Status:               {res['status']}")
+    print(f"Selected Algorithm:   {res.get('selected_algorithm', 'BASELINE')}")
+    print(f"Work Elimination:     {res.get('work_elimination_pct', 0.0)}%")
+    print(f"Raw Hardware Speedup: {res.get('raw_hardware_speedup', 1.0)}x")
+    print(f"Numerical Error:      {res.get('numerical_error', 0.0):.2e}")
+    print(f"Candidate Latency:    {res.get('candidate_latency_ms', 0.0):.3f} ms")
+    print(f"Reference Latency:    {res.get('reference_latency_ms', 0.0):.3f} ms")
+    print(f"Hardware Mismatch:    {res['hardware_fingerprint']['host_mismatch']}")
+    print(f"Host CPU:             {res['hardware_fingerprint']['cpu_model']}")
+    if "explainability" in res and res["explainability"]:
+        print("\n--- Explainability Audit ---")
+        for k, v in res["explainability"].items():
+            print(f"  {k}: {v}")
+    elif "explanation" in res:
+        print(f"\nExplanation: {res['explanation']}")
+
+def cmd_research(args: argparse.Namespace) -> None:
+    domain = args.domain or "gemm"
+    iters = args.iterations or 5
+    print(f"=== HYPER-X Autonomous Research Loop ({domain.upper()}) ===")
+    print(f"Running autonomous hypothesis discovery (Budget: {iters} iterations)...\n")
+    loop = AutonomousResearchLoop(max_iterations=iters)
+    if domain == "graphics":
+        report = loop.run_graphics_research(resolution=(128, 128))
+    else:
+        report = loop.run_gemm_research(M=128, K=128, N=128, structured=True, rank=16)
+
+    print(f"Session ID:             {report.session_id}")
+    print(f"Iterations Evaluated:   {report.iterations_run}")
+    print(f"Pareto Frontier Size:   {report.pareto_frontier_size}")
+    print(f"Total Failures Logged:  {report.total_failures_recorded}")
+    print(f"Work Elimination Won:   {report.work_elimination_achieved_pct:.1f}%")
+    print(f"Raw Speedup Won:        {report.raw_hardware_speedup:.2f}x")
+    print("\n--- Discovered Iterations ---")
+    for it in report.iterations:
+        status_sym = "[PASS]" if it.verified and it.falsification_survived else "[FAIL]"
+        print(f" {status_sym} Iteration {it.iteration_index}: {it.hypothesis}")
+        print(f"        Expression: {it.grammar_expression}")
+        print(f"        Work Elim: {it.work_elimination_pct:.1f}% | Speedup: {it.speedup:.2f}x | Error: {it.numerical_error:.2e}")
+        if it.self_rectification_notes:
+            print(f"        Note: {it.self_rectification_notes}")
+
+def cmd_registry(args: argparse.Namespace) -> None:
+    compiler = WormholeCompiler()
+    print("=== HYPER-X Candidate & Failure Knowledge Registry ===\n")
+    print(f"Verified Candidates: {len(compiler.registry.verified_candidates)}")
+    print(f"Cataloged Failures:  {len(compiler.registry.failure_knowledge_base)}")
+    for fail in compiler.registry.failure_knowledge_base:
+        print(f"  - [{fail.failure_category.value}] {fail.grammar_expression}: {fail.diagnosis}")
+
+def cmd_explain(args: argparse.Namespace) -> None:
+    dim = args.dim or 128
+    print(f"=== Computational Wormhole Theoretical Explanation ({dim}x{dim}) ===\n")
+    print("Conventional GPU execution computes all M*K*N multiply-accumulate operations in O(N^3).")
+    print("Wormhole Compiler searches for information boundaries:")
+    print("  1. Low-Rank Factorization: If rank r << N, A = U @ V lowers FLOPs to 2*r*N^2.")
+    print("  2. Output Projection: If observable is A @ B @ x, associative rewrite gives A @ (B @ x) in O(N^2).")
+    print("  3. Sparse Filtering: Values below tolerance threshold epsilon are pruned to sparse CSR representation.")
+    print("  4. Intel UHD iGPU Co-Execution: Zero-copy shared memory avoids PCIe serialization latency.")
+    print("  5. Freivalds Probabilistic Proof: Verifies candidate in O(N^2) with confidence > 99.999%.")
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="HYPER-X Master CLI")
     subparsers = parser.add_subparsers(dest="subcommand")
@@ -232,7 +326,23 @@ def main() -> None:
     subparsers.add_parser("audit")
     subparsers.add_parser("hardware")
     subparsers.add_parser("contract")
-    
+
+    p_compile = subparsers.add_parser("compile")
+    p_compile.add_argument("--dim", type=int, default=128)
+    p_compile.add_argument("--rank", type=int, default=16)
+    p_compile.add_argument("--tolerance", type=float, default=1e-3)
+    p_compile.add_argument("--unstructured", action="store_true", help="Use random unstructured dense matrix (triggers No-Free-Lunch fallback)")
+    p_compile.add_argument("--output-vector", action="store_true", help="Contract only requires vector projection")
+
+    p_research = subparsers.add_parser("research")
+    p_research.add_argument("--domain", type=str, default="gemm", choices=["gemm", "graphics"])
+    p_research.add_argument("--iterations", type=int, default=5)
+
+    subparsers.add_parser("registry")
+
+    p_explain = subparsers.add_parser("explain")
+    p_explain.add_argument("--dim", type=int, default=128)
+
     p_analyze = subparsers.add_parser("analyze")
     p_analyze.add_argument("--dim", type=int, default=64)
 
@@ -265,6 +375,10 @@ def main() -> None:
         "audit": cmd_audit,
         "hardware": cmd_hardware,
         "contract": cmd_contract,
+        "compile": cmd_compile,
+        "research": cmd_research,
+        "registry": cmd_registry,
+        "explain": cmd_explain,
         "analyze": cmd_analyze,
         "wormhole": cmd_wormhole,
         "discover": cmd_discover,
