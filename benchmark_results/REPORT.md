@@ -7,7 +7,7 @@
 **Primary Evidence Class**: `MEASURED_NON_TARGET`  
 **Protocol**: `3 warmups` (discarded) + `30 timed repetitions` per workload  
 **Discrete GPU**: `ABSENT` (100% Software-Only Constraint Strictly Enforced)  
-**Timestamp**: `2026-09-09 15:38:12`  
+**Timestamp**: `2026-09-09 15:45:41`  
 
 ---
 
@@ -26,13 +26,13 @@ HYPER-CCO executes mathematical workloads on commodity Intel Core hardware by el
 
 | Workload | Evidence Class | Median (ms) | Mean (ms) | Min (ms) | P95 (ms) | P99 (ms) | Std (ms) | Speedup | Verification |
 |:---|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| `GEMM_512x512` | `MEASURED_NON_TARGET` | **4.503** | 4.467 | 4.01 | 4.824 | 5.054 | 0.275 | **0.67x** | `PASS` |
-| `SPMV_CSR_10K` | `MEASURED_NON_TARGET` | **2.506** | 2.546 | 2.325 | 2.831 | 2.928 | 0.157 | **0.27x** | `PASS` |
-| `LLM_SPECULATIVE_32TOK` | `MEASURED_NON_TARGET` | **8.379** | 8.468 | 6.026 | 11.603 | 11.763 | 1.682 | **0.13x** | `PASS` |
-| `CBE_RENDER_720P` | `MEASURED_NON_TARGET` | **8.091** | 9.336 | 6.967 | 16.677 | 23.981 | 3.87 | **12.3x** | `PASS` |
-| `QSV_AV1_TRANSCODE_1080P` | `MEASURED_NON_TARGET` | **381.053** | 389.014 | 310.757 | 471.397 | 486.347 | 45.759 | **0.31x** | `PASS` |
-| `PDE_POISSON_ITERATIVE` | `MEASURED_NON_TARGET` | **78.006** | 105.47 | 50.849 | 220.176 | 349.012 | 71.258 | **0.22x** | `PASS` |
-| `ADVERSARIAL_FLAT_SPECTRUM` | `MEASURED_NON_TARGET` | **13.541** | 13.541 | 13.541 | 13.541 | 13.541 | 0.0 | **1.0x** | `PASS` |
+| `GEMM_512x512` | `MEASURED_NON_TARGET` | **3.068** | 3.163 | 2.915 | 3.532 | 3.603 | 0.201 | **2.09x** | `PASS` |
+| `SPMV_CSR_10K` | `MEASURED_NON_TARGET` | **1.848** | 1.899 | 1.766 | 2.191 | 2.478 | 0.168 | **0.37x** | `PASS` |
+| `LLM_SPECULATIVE_32TOK` | `MEASURED_NON_TARGET` | **11.084** | 11.282 | 9.123 | 15.083 | 16.256 | 1.898 | **0.19x** | `PASS` |
+| `CBE_RENDER_720P` | `MEASURED_NON_TARGET` | **7.649** | 8.639 | 5.602 | 14.316 | 15.324 | 2.783 | **12.98x** | `PASS` |
+| `QSV_AV1_TRANSCODE_1080P` | `MEASURED_NON_TARGET` | **237.084** | 252.849 | 158.043 | 369.132 | 441.054 | 71.487 | **1.83x** | `PASS` |
+| `PDE_POISSON_ITERATIVE` | `MEASURED_NON_TARGET` | **27.576** | 28.826 | 25.628 | 35.533 | 38.18 | 3.297 | **0.25x** | `PASS` |
+| `ADVERSARIAL_FLAT_SPECTRUM` | `MEASURED_NON_TARGET` | **5.636** | 5.636 | 5.636 | 5.636 | 5.636 | 0.0 | **1.0x** | `PASS` |
 
 ---
 

@@ -1,0 +1,34 @@
+{
+  "workload_id": "SPMV_CSR_10K",
+  "input_hash": "fda31fa0beec74ac",
+  "model_hash": "baseline",
+  "code_hash": "hyper_cco_v1",
+  "contract_hash": "fda31fa0beec74ac",
+  "strategy": "CCO_PIPELINE",
+  "exactness_class": "NUMERICALLY_EQUIVALENT",
+  "original_work": 400000.0,
+  "executed_work": 400000.0,
+  "eliminated_work": 0.0,
+  "latency_ms": 1.8483,
+  "throughput": 0.0,
+  "error_abs": 0.0,
+  "error_rel": 0.0,
+  "quality_metrics": {},
+  "device": "CPU_AVX2_THREADED",
+  "cache_hit": false,
+  "fallback": false,
+  "verification": {
+    "status": "PASS",
+    "method": "CONTRACT_VALIDATOR",
+    "level": "LEVEL_3_FULL_NUMERICAL",
+    "confidence": 1.0
+  },
+  "measurement": {
+    "measured": true,
+    "estimated": false,
+    "timer_type": "time.perf_counter",
+    "hardware_counters_available": false
+  },
+  "timestamp": 1788948916.942162,
+  "certificate_digest": "2dcb43ccaaac8013a9ff4ce715845cf8575a89755832500ea02d52305044f7c8"
+}
