@@ -96,6 +96,11 @@ from .scorecard import (
     ParityBoundaryCertificate,
     FeasibleSetParityCalculator,
 )
+from .runtime_tracer import (
+    RuntimeDecisionRecord,
+    RuntimeDecisionTracer,
+    compute_data_hash,
+)
 
 __all__ = [
     "ComputeContract",
@@ -152,4 +157,7 @@ __all__ = [
     "ExcludedWorkloadRecord",
     "ParityBoundaryCertificate",
     "FeasibleSetParityCalculator",
+    "RuntimeDecisionRecord",
+    "RuntimeDecisionTracer",
+    "compute_data_hash",
 ]

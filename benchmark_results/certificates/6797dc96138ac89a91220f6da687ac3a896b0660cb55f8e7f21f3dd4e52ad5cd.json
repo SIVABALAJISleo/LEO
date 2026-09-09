@@ -1,0 +1,34 @@
+{
+  "workload_id": "LLM_SPECULATIVE_32TOK",
+  "input_hash": "2bf2fc9c596e6135",
+  "model_hash": "baseline",
+  "code_hash": "hyper_cco_v1",
+  "contract_hash": "2bf2fc9c596e6135",
+  "strategy": "SPECULATIVE_NEURAL_DRAFT_VERIFY",
+  "exactness_class": "EXACT",
+  "original_work": 32000000.0,
+  "executed_work": 32000000.0,
+  "eliminated_work": 0.0,
+  "latency_ms": 4.3352,
+  "throughput": 0.0,
+  "error_abs": 0.0,
+  "error_rel": 0.0,
+  "quality_metrics": {},
+  "device": "CPU_AVX2_THREADED",
+  "cache_hit": false,
+  "fallback": false,
+  "verification": {
+    "status": "PASS",
+    "method": "CONTRACT_VALIDATOR",
+    "level": "LEVEL_3_FULL_NUMERICAL",
+    "confidence": 1.0
+  },
+  "measurement": {
+    "measured": true,
+    "estimated": false,
+    "timer_type": "time.perf_counter",
+    "hardware_counters_available": false
+  },
+  "timestamp": 1788950807.7054908,
+  "certificate_digest": "6797dc96138ac89a91220f6da687ac3a896b0660cb55f8e7f21f3dd4e52ad5cd"
+}

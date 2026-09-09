@@ -1,0 +1,34 @@
+{
+  "workload_id": "QSV_AV1_TRANSCODE_1080P",
+  "input_hash": "3746860d4f47596f",
+  "model_hash": "baseline",
+  "code_hash": "hyper_cco_v1",
+  "contract_hash": "3746860d4f47596f",
+  "strategy": "INTEL_QSV_OR_AVX2_DCT_FALLBACK",
+  "exactness_class": "PERCEPTUAL_APPROXIMATION",
+  "original_work": 20736000.0,
+  "executed_work": 20736000.0,
+  "eliminated_work": 0.0,
+  "latency_ms": 78.2639,
+  "throughput": 0.0,
+  "error_abs": 0.020936323329806328,
+  "error_rel": 1.673447695793584e-05,
+  "quality_metrics": {},
+  "device": "CPU_AVX2_THREADED",
+  "cache_hit": false,
+  "fallback": false,
+  "verification": {
+    "status": "PASS",
+    "method": "CONTRACT_VALIDATOR",
+    "level": "LEVEL_3_FULL_NUMERICAL",
+    "confidence": 1.0
+  },
+  "measurement": {
+    "measured": true,
+    "estimated": false,
+    "timer_type": "time.perf_counter",
+    "hardware_counters_available": false
+  },
+  "timestamp": 1788950809.0824041,
+  "certificate_digest": "b33e034a7625a5868f1f69b9a374d2964e55e42c2ed9b0db7f7efe6adbdf33ae"
+}

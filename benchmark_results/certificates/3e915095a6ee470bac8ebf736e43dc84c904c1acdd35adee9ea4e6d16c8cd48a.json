@@ -1,0 +1,34 @@
+{
+  "workload_id": "SPMV_CSR_10K",
+  "input_hash": "fda31fa0beec74ac",
+  "model_hash": "baseline",
+  "code_hash": "hyper_cco_v1",
+  "contract_hash": "fda31fa0beec74ac",
+  "strategy": "SPARSITY_CSR_SYMBOLIC_CACHE",
+  "exactness_class": "NUMERICALLY_EQUIVALENT",
+  "original_work": 200000000.0,
+  "executed_work": 40000.0,
+  "eliminated_work": 199960000.0,
+  "latency_ms": 1.6689500000000002,
+  "throughput": 0.0,
+  "error_abs": 0.0,
+  "error_rel": 0.0,
+  "quality_metrics": {},
+  "device": "CPU_AVX2_THREADED",
+  "cache_hit": false,
+  "fallback": false,
+  "verification": {
+    "status": "PASS",
+    "method": "CONTRACT_VALIDATOR",
+    "level": "LEVEL_3_FULL_NUMERICAL",
+    "confidence": 1.0
+  },
+  "measurement": {
+    "measured": true,
+    "estimated": false,
+    "timer_type": "time.perf_counter",
+    "hardware_counters_available": false
+  },
+  "timestamp": 1788951661.7735558,
+  "certificate_digest": "3e915095a6ee470bac8ebf736e43dc84c904c1acdd35adee9ea4e6d16c8cd48a"
+}

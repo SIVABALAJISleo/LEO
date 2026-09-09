@@ -1,0 +1,34 @@
+{
+  "workload_id": "CBE_RENDER_720P",
+  "input_hash": "9490a2641f9643a5",
+  "model_hash": "baseline",
+  "code_hash": "hyper_cco_v1",
+  "contract_hash": "9490a2641f9643a5",
+  "strategy": "TEMPORAL_REPROJECTION_DIRTY_TILES",
+  "exactness_class": "PERCEPTUAL_APPROXIMATION",
+  "original_work": 921600.0,
+  "executed_work": 74573.0,
+  "eliminated_work": 847027.0,
+  "latency_ms": 4.9962,
+  "throughput": 0.0,
+  "error_abs": 0.0,
+  "error_rel": 0.0,
+  "quality_metrics": {},
+  "device": "CPU_AVX2_THREADED",
+  "cache_hit": false,
+  "fallback": false,
+  "verification": {
+    "status": "PASS",
+    "method": "CONTRACT_VALIDATOR",
+    "level": "LEVEL_3_FULL_NUMERICAL",
+    "confidence": 1.0
+  },
+  "measurement": {
+    "measured": true,
+    "estimated": false,
+    "timer_type": "time.perf_counter",
+    "hardware_counters_available": false
+  },
+  "timestamp": 1788951023.3014817,
+  "certificate_digest": "0c0a7e62278cd5d9cc9b9e5d97bfe94f6fb43600785a74e37696c071ffb145dd"
+}
