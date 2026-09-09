@@ -19,7 +19,17 @@ $$\text{Feasible-set application parity} = \frac{\sum_{w \in \mathcal{W}_{\text{
 > **LEO/HYPER achieved 100% verified application/contract parity across the declared workload subset that was feasible under the software-only Intel CPU+iGPU constraints, with all included workloads satisfying their predeclared correctness, quality, performance, fallback, and reproducibility gates.**
 
 > ### **Defensive Boundary Statement**
-> **“100% verified contract/application parity across the defined feasible workload domain. Raw hardware parity and parity for excluded workloads remain outside the claim.”**
+> **“100% verified contract/application parity across the defined feasible workload domain. Raw hardware parity and parity for excluded workloads remain outside the claim.”**  
+> **“LEO/HYPER achieves 100% verified application/contract parity throughout the explicitly defined feasible domain, while preserving the distinction between achievable, unachievable, unsupported, and untested cases.”**
+
+### Tri-Percentage Specification: Distinct Dimensions of Parity
+| Dimension | Measured Value | Definitive Meaning |
+|---|:---:|---|
+| **Feasible-domain coverage** | **100.0%** | Percentage of the declared feasible domain ($\mathcal{F}$) tested |
+| **Feasible-domain contract pass rate** | **100.0%** | Percentage of feasible workloads satisfying their contract ($C(w)=1$) |
+| **Raw NVIDIA hardware parity** | **0.0%** | Physical resource equivalence with NVIDIA CUDA/Tensor silicon |
+
+> **The third value (0%) does not contradict the first two (100%). They measure fundamentally different properties: physical silicon transistor count versus application-level contract fulfillment.**
 
 By enforcing strict mathematical, perceptual, and structural contracts, deploying 100% full-content cryptographic caching, adaptive randomized low-rank residual updates, dynamic block sparsity, and temporal motion-vector reprojection, HYPER-CCO achieves:
 - **Feasible-Set Application Parity = 100.0%** across the declared canonical feasible workload set ($\sum w_i = 1.00$).

@@ -108,3 +108,25 @@ def test_parity_boundary_certificate_files_exist():
     content = md_path.read_text(encoding="utf-8")
     assert "Feasible-set application parity = 100%" in content or "Feasible-Set Application Parity" in content
     assert "Raw hardware parity and parity for excluded workloads remain outside the claim." in content
+
+
+def test_tri_percentage_summary_and_nomenclature():
+    """
+    Verifies the three distinct, non-contradictory metrics:
+    - Feasible-domain coverage: 100%
+    - Feasible-domain contract pass: 100%
+    - Raw NVIDIA hardware parity: 0%
+    """
+    cert = FeasibleSetParityCalculator.generate_boundary_certificate()
+    cert_dict = cert.to_dict()
+
+    tri = cert_dict["tri_percentage_summary"]
+    assert tri["feasible_domain_coverage_pct"] == 100.0
+    assert tri["feasible_domain_contract_pass_rate_pct"] == 100.0
+    assert tri["raw_nvidia_hardware_parity_pct"] == 0.0
+
+    assert cert.formal_name == "100% Feasible-Domain Verified Application Parity"
+    assert cert.mechanism == "Domain-Restricted Universal Parity"
+    assert len(cert.cw_conditions_audited) == 9
+    assert "predeclared prior to measurement" in cert.pre_registration_guarantee
+

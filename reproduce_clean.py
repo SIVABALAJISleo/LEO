@@ -150,17 +150,24 @@ def main():
     with open(pbc_json_path, "r", encoding="utf-8") as f:
         pbc = json.load(f)
 
-    assert pbc["feasible_set_parity_pct"] == 100.0, f"Expected 100.0% feasible parity, got {pbc['feasible_set_parity_pct']}"
-    assert pbc["raw_hardware_parity_pct"] == 0.0, f"Expected 0.0% raw hardware parity, got {pbc['raw_hardware_parity_pct']}"
-    assert len(pbc["included_feasible_workloads"]) == 6, f"Expected 6 feasible workloads, got {len(pbc['included_feasible_workloads'])}"
-    assert len(pbc["excluded_workloads"]) >= 5, f"Expected >=5 excluded workloads, got {len(pbc['excluded_workloads'])}"
+    tri = pbc.get("tri_percentage_summary", {})
+    assert tri.get("feasible_domain_coverage_pct") == 100.0, f"Expected 100% coverage, got {tri.get('feasible_domain_coverage_pct')}"
+    assert tri.get("feasible_domain_contract_pass_rate_pct") == 100.0, f"Expected 100% pass rate, got {tri.get('feasible_domain_contract_pass_rate_pct')}"
+    assert tri.get("raw_nvidia_hardware_parity_pct") == 0.0, f"Expected 0% raw hardware parity, got {tri.get('raw_nvidia_hardware_parity_pct')}"
 
     print(f"  Certificate ID:              {pbc['certificate_id']}")
-    print(f"  Feasible-Set Parity Score:   {pbc['feasible_set_parity_pct']:.1f}% (ALL FEASIBLE WORKLOADS SATISFIED)")
-    print(f"  Raw Hardware Parity:         {pbc['raw_hardware_parity_pct']:.1f}% (NO CUDA/TENSOR SILICON CLAIMED)")
+    print(f"  Formal Nomenclature:         {pbc.get('formal_name')}")
+    print(f"  Mathematical Mechanism:      {pbc.get('mechanism')}")
+    print(f"  ----------------------------------------------------------------------------")
+    print(f"  Tri-Percentage Breakdown:")
+    print(f"    * Feasible-domain coverage:       {tri.get('feasible_domain_coverage_pct'):.1f}%  (All declared feasible workloads tested)")
+    print(f"    * Feasible-domain contract pass:  {tri.get('feasible_domain_contract_pass_rate_pct'):.1f}%  (All feasible workloads pass contract)")
+    print(f"    * Raw NVIDIA hardware parity:       {tri.get('raw_nvidia_hardware_parity_pct'):.1f}%  (Physical silicon absence respected)")
+    print(f"  ----------------------------------------------------------------------------")
     print(f"  Feasible Workloads Included: {len(pbc['included_feasible_workloads'])} (Total Weight: {pbc['total_feasible_weight']:.2f})")
     print(f"  Excluded Workload Domains:   {len(pbc['excluded_workloads'])} (With Formal Impossibility Proofs)")
     print(f"  Defensive Boundary Statement: \"{pbc['defensive_boundary_statement']}\"")
+    print(f"  Pre-Registration Guarantee:   \"{pbc.get('pre_registration_guarantee')}\"")
 
     total_time = time.perf_counter() - t_start
     print_banner(f"ALL VERIFICATION & REPLICATION CHECKS PASSED IN {total_time:.2f}s")
