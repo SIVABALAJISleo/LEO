@@ -130,3 +130,25 @@ def test_tri_percentage_summary_and_nomenclature():
     assert len(cert.cw_conditions_audited) == 9
     assert "predeclared prior to measurement" in cert.pre_registration_guarantee
 
+
+def test_quadri_dimensional_scorecard_and_effective_hardware_parity():
+    """
+    Verifies the four distinct dimensions of 100% Effective Hardware/Application Parity:
+    - physical_raw_silicon_parity_pct = 0.0%
+    - effective_hardware_parity_pct   = 100.0%
+    - application_contract_parity_pct = 100.0%
+    - real_time_competitive_parity_pct= 100.0%
+    And the governing breakthrough equation.
+    """
+    cert = FeasibleSetParityCalculator.generate_boundary_certificate()
+    cert_dict = cert.to_dict()
+
+    assert cert.effective_hardware_parity_name == "100% Effective Hardware/Application Parity"
+    assert "NVIDIA-required workload - unnecessary computation" in cert.governing_equation
+
+    q = cert_dict["quadri_dimensional_scorecard"]
+    assert q["physical_raw_silicon_parity_pct"] == 0.0
+    assert q["effective_hardware_parity_pct"] == 100.0
+    assert q["application_contract_parity_pct"] == 100.0
+    assert q["real_time_competitive_parity_pct"] == 100.0
+

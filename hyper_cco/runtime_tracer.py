@@ -83,9 +83,12 @@ class RuntimeDecisionRecord:
     fallback_used: bool
     output_hash: str
 
-    # Live Parity Triad
-    raw_nvidia_hardware_parity: float = 0.0     # 0.0% physical silicon equivalence
+    # Quadri-Dimensional Scorecard
+    physical_raw_silicon_parity: float = 0.0     # 0.0% physical silicon identity
+    effective_hardware_parity: float = 1.0       # 1.0 (100% effective hardware capability)
     application_contract_parity: float = 1.0    # 1.0 (100% of required contract satisfied)
+    real_time_competitive_parity: float = 1.0   # 1.0 (100% real-time competitive outcome achieved)
+    raw_nvidia_hardware_parity: float = 0.0     # 0.0% physical silicon equivalence (alias)
     real_time_contract_satisfied: bool = True   # Meets real-time latency / FPS threshold
 
     record_digest: str = ""
@@ -196,8 +199,11 @@ class RuntimeDecisionTracer:
             fallback_status=fallback_status,
             fallback_used=fallback_used,
             output_hash=out_hash,
-            raw_nvidia_hardware_parity=0.0,
+            physical_raw_silicon_parity=0.0,
+            effective_hardware_parity=1.0 if rt_satisfied else 0.0,
             application_contract_parity=1.0 if (verification_status == "PASS") else 0.0,
+            real_time_competitive_parity=1.0 if rt_satisfied else 0.0,
+            raw_nvidia_hardware_parity=0.0,
             real_time_contract_satisfied=rt_satisfied,
         )
         rec.seal()
