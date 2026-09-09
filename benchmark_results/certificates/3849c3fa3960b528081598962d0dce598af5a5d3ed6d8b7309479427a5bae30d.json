@@ -1,0 +1,37 @@
+{
+  "workload_id": "GRAPHICS_TEMPORAL_128x128",
+  "input_hash": "synthetic_scene_geom_h128_w128",
+  "model_hash": "baseline",
+  "code_hash": "hyper_cco_v1",
+  "contract_hash": "perceptual_psnr32_ssim0.92",
+  "strategy": "TEMPORAL_PERCEPTUAL_RECONSTRUCTION",
+  "exactness_class": "PERCEPTUAL_APPROXIMATION",
+  "original_work": 16384.0,
+  "executed_work": 16384.0,
+  "eliminated_work": 0.0,
+  "latency_ms": 1440.3087999962736,
+  "throughput": 0.0,
+  "error_abs": 0.0,
+  "error_rel": 0.0,
+  "quality_metrics": {
+    "psnr_db": Infinity,
+    "ssim": 1.0
+  },
+  "device": "CPU_AVX2_THREADED",
+  "cache_hit": false,
+  "fallback": false,
+  "verification": {
+    "status": "PASS",
+    "method": "PERCEPTUAL_PSNR_SSIM",
+    "level": "LEVEL_5_APPLICATION_VALIDATOR",
+    "confidence": 1.0
+  },
+  "measurement": {
+    "measured": true,
+    "estimated": false,
+    "timer_type": "time.perf_counter",
+    "hardware_counters_available": false
+  },
+  "timestamp": 1788934998.7937806,
+  "certificate_digest": "3849c3fa3960b528081598962d0dce598af5a5d3ed6d8b7309479427a5bae30d"
+}

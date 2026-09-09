@@ -1,0 +1,4 @@
+workload,baseline,strategy,device,cold_latency_ms,warm_latency_ms,throughput,original_work,executed_work,work_eliminated_pct,error_abs,error_rel,quality,cpu_util,gpu_util,memory_mb,thermal,energy,verification,fallback,parity_pct,confidence
+GEMM_256x256x256,CPU_BLAS_DENSE,EXACT_FULL_CONTENT_CACHE,CACHE_MEMORY,18.778,0.901,1110.4,33554432.0,0.0,100.0,0.0,0.0,1.0,51.7,,12968.5,,,PASS,False,100.0,99.997%
+GRAPHICS_TEMPORAL_128x128,BRUTE_FORCE_PER_PIXEL,TEMPORAL_PERCEPTUAL_RECONSTRUCTION,CPU_AVX2,1440.309,1152.247,0.7,16384.0,16384.0,0.0,0.0,0.0,1.0,54.1,,13001.1,,,PASS,False,98.0,100.0%
+ADVERSARIAL_FULL_RANK,CPU_BLAS,DISPATCH_CPU_AVX2,CPU_AVX2_THREADED,7.329,7.329,136.4,4194304.0,4194304.0,0.0,0.0,0.0,1.0,54.5,,13003.8,,,PASS,False,100.0,100.0%

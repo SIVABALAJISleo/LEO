@@ -64,19 +64,15 @@ class CacheReuseEngine:
 
     @staticmethod
     def compute_tensor_key(op_name: str, *tensors: np.ndarray, **kwargs: Any) -> str:
-        """Computes deterministic content-addressed hash for tensor operations."""
+        """Computes deterministic content-addressed hash for tensor operations over 100% of tensor bytes."""
         hasher = hashlib.sha256()
         hasher.update(op_name.encode("utf-8"))
         for t in tensors:
             if isinstance(t, np.ndarray):
                 hasher.update(str(t.shape).encode("utf-8"))
                 hasher.update(str(t.dtype).encode("utf-8"))
-                # Hash a stratified subsample for fast content verification
-                if t.size > 2048:
-                    sample = np.concatenate([t.ravel()[:512], t.ravel()[-512:]])
-                    hasher.update(sample.tobytes())
-                else:
-                    hasher.update(t.tobytes())
+                # Hash 100% full content bytes - NO SUBSAMPLING SHORTCUTS
+                hasher.update(t.tobytes())
             else:
                 hasher.update(str(t).encode("utf-8"))
         for k in sorted(kwargs.keys()):
