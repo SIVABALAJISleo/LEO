@@ -90,7 +90,11 @@ from .verifier import (
 from .scorecard import (
     DecoupledParityScorecard,
     DimensionScore,
-    ScorecardBuilder
+    ScorecardBuilder,
+    FeasibleWorkloadRecord,
+    ExcludedWorkloadRecord,
+    ParityBoundaryCertificate,
+    FeasibleSetParityCalculator,
 )
 
 __all__ = [
@@ -144,4 +148,8 @@ __all__ = [
     "DecoupledParityScorecard",
     "DimensionScore",
     "ScorecardBuilder",
+    "FeasibleWorkloadRecord",
+    "ExcludedWorkloadRecord",
+    "ParityBoundaryCertificate",
+    "FeasibleSetParityCalculator",
 ]

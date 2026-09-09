@@ -1,0 +1,34 @@
+{
+  "workload_id": "GEMM_512x512",
+  "input_hash": "66ef4f95e9dace9e",
+  "model_hash": "baseline",
+  "code_hash": "hyper_cco_v1",
+  "contract_hash": "66ef4f95e9dace9e",
+  "strategy": "CCO_PIPELINE",
+  "exactness_class": "NUMERICALLY_EQUIVALENT",
+  "original_work": 268435456.0,
+  "executed_work": 268435456.0,
+  "eliminated_work": 0.0,
+  "latency_ms": 2.79375,
+  "throughput": 0.0,
+  "error_abs": 0.0,
+  "error_rel": 0.0,
+  "quality_metrics": {},
+  "device": "CPU_AVX2_THREADED",
+  "cache_hit": false,
+  "fallback": false,
+  "verification": {
+    "status": "PASS",
+    "method": "CONTRACT_VALIDATOR",
+    "level": "LEVEL_3_FULL_NUMERICAL",
+    "confidence": 1.0
+  },
+  "measurement": {
+    "measured": true,
+    "estimated": false,
+    "timer_type": "time.perf_counter",
+    "hardware_counters_available": false
+  },
+  "timestamp": 1788949641.9715989,
+  "certificate_digest": "e708e22f0cf89ae224bbccdf351bc87930b7536a4b4c6bde2f1702a7267d480a"
+}
