@@ -132,8 +132,9 @@ class TemporalGraphicsEngine:
                 grad_x = np.abs(np.diff(pred_tile, axis=1)) if tile_w > 1 else 0.0
                 edge_intensity = float(np.mean(grad_y)) + float(np.mean(grad_x))
 
-                # Recompute critical edge/motion boundary tiles
-                if edge_intensity > residual_threshold or len(self.history_buffer) == 0:
+                # Recompute critical edge/motion boundary tiles or full recompute on scene cut
+                is_scene_cut = (motion_vectors is None)
+                if edge_intensity > residual_threshold or len(self.history_buffer) == 0 or is_scene_cut:
                     exact_tile = render_exact_tile_fn(y, y_end, x, x_end)
                     output_frame[y:y_end, x:x_end] = exact_tile
                     recomputed_pixels += (tile_h * tile_w)

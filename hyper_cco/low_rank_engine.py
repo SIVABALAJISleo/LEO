@@ -98,13 +98,17 @@ class LowRankEngine:
         A: np.ndarray,
         B: np.ndarray,
         rel_tolerance: float = 1e-3,
-        max_rank: Optional[int] = None
+        max_rank: Optional[int] = None,
+        max_relative_error: Optional[float] = None,
     ) -> LowRankResult:
         """
         Executes Y = A @ B using adaptive randomized SVD if spectral decay warrants it.
-        If singular values are flat (decay_ratio > 0.85 and k > 0.5 * min(M, K)),
+        If singular values are flat (decay_ratio >= 0.60),
         rejects low-rank factorization and falls back to exact computation.
         """
+        if max_relative_error is not None:
+            rel_tolerance = max_relative_error
+
         t0 = time.perf_counter()
         M, K = A.shape
         K2, N = B.shape
@@ -113,8 +117,8 @@ class LowRankEngine:
         chosen_k, s_vals, decay_ratio = cls.select_adaptive_rank(A, rel_tolerance, max_rank)
         min_dim = min(M, K)
 
-        # Adversarial check: flat spectrum, full rank -> reject approximation
-        if decay_ratio > 0.85 and chosen_k >= int(min_dim * 0.7):
+        # Adversarial check: flat spectrum (sigma_decay >= 0.60) -> reject approximation
+        if decay_ratio >= 0.60 or chosen_k >= int(min_dim * 0.7):
             # Fallback to standard matmul
             output = A @ B
             latency = (time.perf_counter() - t0) * 1000.0
@@ -189,3 +193,7 @@ class LowRankEngine:
             latency_ms=latency,
             strategy="LOW_RANK_RANDOMIZED_SVD"
         )
+
+    # Convenient method alias
+    execute_low_rank_gemm = execute_low_rank_matmul
+

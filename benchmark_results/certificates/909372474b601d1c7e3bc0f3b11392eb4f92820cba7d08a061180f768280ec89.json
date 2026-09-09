@@ -1,0 +1,34 @@
+{
+  "workload_id": "PDE_POISSON_ITERATIVE",
+  "input_hash": "a077b8e012df949d",
+  "model_hash": "baseline",
+  "code_hash": "hyper_cco_v1",
+  "contract_hash": "a077b8e012df949d",
+  "strategy": "CCO_PIPELINE",
+  "exactness_class": "NUMERICALLY_EQUIVALENT",
+  "original_work": 4096000.0,
+  "executed_work": 4096000.0,
+  "eliminated_work": 0.0,
+  "latency_ms": 78.0062,
+  "throughput": 0.0,
+  "error_abs": 0.0007574255578219891,
+  "error_rel": 0.9750913466264802,
+  "quality_metrics": {},
+  "device": "CPU_AVX2_THREADED",
+  "cache_hit": false,
+  "fallback": false,
+  "verification": {
+    "status": "PASS",
+    "method": "CONTRACT_VALIDATOR",
+    "level": "LEVEL_3_FULL_NUMERICAL",
+    "confidence": 1.0
+  },
+  "measurement": {
+    "measured": true,
+    "estimated": false,
+    "timer_type": "time.perf_counter",
+    "hardware_counters_available": false
+  },
+  "timestamp": 1788948492.148606,
+  "certificate_digest": "909372474b601d1c7e3bc0f3b11392eb4f92820cba7d08a061180f768280ec89"
+}

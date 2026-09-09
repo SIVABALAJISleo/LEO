@@ -1,7 +1,7 @@
 """
 hyper_cco/contract.py
 =====================
-Formal ComputeContract Specification & 12-Class Correctness Taxonomy.
+Formal ComputeContract Specification, 12-Class Correctness Taxonomy, and 8-Class Evidence Taxonomy.
 Enforces that every computational optimization executed by HYPER-CCO strictly satisfies
 the application's exactness class, error bounds, perceptual thresholds, latency,
 and throughput targets without silent contract relaxation.
@@ -33,6 +33,25 @@ class ExactnessClass(str, Enum):
     REDUCED_WORK = "REDUCED_WORK"                   # Only part of original computational graph evaluated
     SIMULATED = "SIMULATED"                         # Emulated behavior
     UNVERIFIED = "UNVERIFIED"                       # Result without verification (disallows parity claims)
+    # Convenient aliases
+    BITWISE_EXACT = "EXACT"
+    APPLICATION_PRESERVED = "PERCEPTUAL_APPROXIMATION"
+    PERCEPTUALLY_IDENTICAL = "PERCEPTUAL_APPROXIMATION"
+
+
+class EvidenceClass(str, Enum):
+    """
+    Strict 8-class primary evidence taxonomy.
+    Every result, report row, certificate, and API response must carry one and only one.
+    """
+    MEASURED_TARGET = "MEASURED_TARGET"             # Executed on physical Lenovo Core i5-12450H target machine
+    MEASURED_NON_TARGET = "MEASURED_NON_TARGET"     # Executed on host environment (e.g., i5-13420H), explicitly labeled
+    STATIC_FINDING = "STATIC_FINDING"               # Established from source, configuration, or deterministic inspection
+    DOCUMENTED_CLAIM = "DOCUMENTED_CLAIM"           # Present in repository artifacts without independently verified trial chain
+    BLOCKED = "BLOCKED"                             # Required model, input, device, dependency, or procedure unavailable
+    INCONCLUSIVE = "INCONCLUSIVE"                   # Execution occurred but evidence is insufficient to decide
+    HYPOTHESIS = "HYPOTHESIS"                       # Plausible proposal requiring experiment
+    UNSUPPORTED = "UNSUPPORTED"                     # Claim rejected because evidence or equivalence is invalid
 
 
 class VerificationLevel(str, Enum):
@@ -74,8 +93,10 @@ class ComputeContract:
     """
     workload_id: str = "default_workload"
     exactness_class: ExactnessClass = ExactnessClass.NUMERICALLY_EQUIVALENT
+    evidence_class: EvidenceClass = EvidenceClass.MEASURED_NON_TARGET
     max_absolute_error: Optional[float] = 1e-4
     max_relative_error: Optional[float] = 1e-3
+    normwise_error_bound: Optional[float] = None
     min_accuracy: Optional[float] = None
     min_psnr: Optional[float] = 35.0
     min_ssim: Optional[float] = 0.95
@@ -102,8 +123,10 @@ class ComputeContract:
         data = {
             "workload_id": self.workload_id,
             "exactness_class": self.exactness_class.value,
+            "evidence_class": self.evidence_class.value,
             "max_absolute_error": self.max_absolute_error,
             "max_relative_error": self.max_relative_error,
+            "normwise_error_bound": self.normwise_error_bound,
             "min_psnr": self.min_psnr,
             "min_ssim": self.min_ssim,
             "max_latency_ms": self.max_latency_ms,
@@ -136,6 +159,7 @@ class ComputeContract:
             "throughput": throughput,
             "error_abs": 0.0,
             "error_rel": 0.0,
+            "normwise_err": 0.0,
             "psnr": float("inf"),
             "ssim": 1.0,
             "violation_reason": None,
@@ -151,24 +175,41 @@ class ComputeContract:
             metrics["violation_reason"] = f"Throughput {throughput:.2f} below target {self.min_throughput:.2f}"
             return False, VerificationStatus.FAIL, metrics
 
-        # 3. Shape and Dtype check
+        # 3. Shape, Dtype, and Finiteness check
         if isinstance(candidate, np.ndarray):
+            # Strict finiteness check: reject NaN and Inf
+            if not np.all(np.isfinite(candidate)):
+                metrics["violation_reason"] = "Candidate contains non-finite values (NaN or Inf)"
+                return False, VerificationStatus.FAIL, metrics
+
             if self.output_shape is not None and candidate.shape != self.output_shape:
                 metrics["violation_reason"] = f"Shape mismatch: {candidate.shape} != expected {self.output_shape}"
                 return False, VerificationStatus.FAIL, metrics
+
             if self.output_dtype is not None and str(candidate.dtype) != self.output_dtype:
                 metrics["violation_reason"] = f"Dtype mismatch: {candidate.dtype} != expected {self.output_dtype}"
                 return False, VerificationStatus.FAIL, metrics
 
         # 4. Numerical error validation if baseline provided
         if baseline is not None and isinstance(candidate, np.ndarray) and isinstance(baseline, np.ndarray):
+            # Anti-truncation check: candidate size must match baseline size exactly
+            if candidate.shape != baseline.shape:
+                metrics["violation_reason"] = f"Shape mismatch against baseline: {candidate.shape} != {baseline.shape}"
+                return False, VerificationStatus.FAIL, metrics
+
+            if candidate.size < baseline.size:
+                metrics["violation_reason"] = f"Short candidate output: {candidate.size} < {baseline.size}"
+                return False, VerificationStatus.FAIL, metrics
+
             abs_diff = np.abs(candidate - baseline)
             max_abs = float(np.max(abs_diff)) if abs_diff.size > 0 else 0.0
             norm_base = float(np.linalg.norm(baseline))
-            rel_err = float(np.linalg.norm(abs_diff)) / max(1e-12, norm_base) if norm_base > 0 else max_abs
+            norm_diff = float(np.linalg.norm(abs_diff))
+            rel_err = norm_diff / max(1e-12, norm_base) if norm_base > 0 else max_abs
 
             metrics["error_abs"] = max_abs
             metrics["error_rel"] = rel_err
+            metrics["normwise_err"] = norm_diff
 
             if self.is_exact_required():
                 if max_abs > 0.0:
@@ -183,4 +224,12 @@ class ComputeContract:
                 metrics["violation_reason"] = f"Max relative error {rel_err:.2e} > allowed {self.max_relative_error:.2e}"
                 return False, VerificationStatus.FAIL, metrics
 
+            if self.normwise_error_bound is not None and norm_diff > (self.normwise_error_bound * 1.001 + 1e-8):
+                metrics["violation_reason"] = f"Normwise error {norm_diff:.2e} > allowed {self.normwise_error_bound:.2e}"
+                return False, VerificationStatus.FAIL, metrics
+
         return True, VerificationStatus.PASS, metrics
+
+    # Convenient method aliases
+    validate = validate_metrics
+    compute_contract_hash = compute_hash

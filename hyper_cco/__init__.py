@@ -13,6 +13,7 @@ ASK: "What part of the GPU's work does the application actually need?"
 from .contract import (
     ComputeContract,
     ExactnessClass,
+    EvidenceClass,
     VerificationLevel,
     VerificationStatus,
     ContractViolationError
@@ -95,6 +96,7 @@ from .scorecard import (
 __all__ = [
     "ComputeContract",
     "ExactnessClass",
+    "EvidenceClass",
     "VerificationLevel",
     "VerificationStatus",
     "ContractViolationError",

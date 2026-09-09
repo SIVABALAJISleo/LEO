@@ -183,3 +183,47 @@ class HeterogeneousScheduler:
             bytes_transferred=decision.data_size_bytes
         )
         return output, record
+
+
+class ExecutionDevice(str, Enum):
+    CPU = "CPU"
+    IGPU = "IGPU"
+
+
+@dataclass
+class DeviceProfile:
+    has_igpu: bool = True
+    cpu_cores: int = 8
+    cpu_threads: int = 12
+    max_cpu_concurrency: int = 12
+
+
+@dataclass
+class ScheduledBlock:
+    block_id: int
+    assigned_device: ExecutionDevice
+    memory_footprint_mb: float
+
+
+class CooperativeScheduler:
+    """High-level cooperative tile and block scheduler."""
+    def __init__(self, profile: Optional[DeviceProfile] = None):
+        self.profile = profile or DeviceProfile()
+        self.underlying = HeterogeneousScheduler()
+
+    def schedule_workload_blocks(self, total_blocks: int, memory_footprint_mb: float) -> List[ScheduledBlock]:
+        plan = []
+        for b in range(total_blocks):
+            if not self.profile.has_igpu:
+                dev = ExecutionDevice.CPU
+            else:
+                dev = ExecutionDevice.IGPU if (b % 2 == 0 and memory_footprint_mb >= 32.0) else ExecutionDevice.CPU
+            plan.append(
+                ScheduledBlock(
+                    block_id=b,
+                    assigned_device=dev,
+                    memory_footprint_mb=memory_footprint_mb / max(1, total_blocks),
+                )
+            )
+        return plan
+

@@ -241,3 +241,49 @@ class ExactFullContentCache:
         self._current_memory_bytes += size
         self.stats["total_bytes_cached"] = self._current_memory_bytes
         return True
+
+    def store(
+        self,
+        model_id: str,
+        contract_hash: str,
+        inputs: Dict[str, Any],
+        output: Any,
+        original_operations: float = 0.0,
+    ) -> bool:
+        """High-level convenience method to store an operation result."""
+        # Convert dictionary values to inputs and kwargs
+        in_list = list(inputs.values())
+        key = self.compute_full_content_key(
+            model_id,
+            *in_list,
+            model_hash=model_id,
+            contract_hash=contract_hash,
+        )
+        return self.put(
+            key=key,
+            data=output,
+            original_operations=original_operations,
+            model_hash=model_id,
+            contract_hash=contract_hash,
+        )
+
+    def lookup_inputs(
+        self,
+        model_id: str,
+        contract_hash: str,
+        inputs: Dict[str, Any],
+    ) -> Tuple[bool, Optional[Any]]:
+        """High-level convenience method to lookup by input dictionary."""
+        in_list = list(inputs.values())
+        key = self.compute_full_content_key(
+            model_id,
+            *in_list,
+            model_hash=model_id,
+            contract_hash=contract_hash,
+        )
+        res = self.lookup(key)
+        return res.hit, res.data
+
+
+ExactCacheEngine = ExactFullContentCache
+
