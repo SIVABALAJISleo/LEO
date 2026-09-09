@@ -1,1 +1,1 @@
-{"SYMBOLIC": {"priority": 9, "calls": 2090}, "SEMANTIC": {"priority": 2, "calls": 34}, "MMAP": {"priority": 1, "calls": 78}, "PREDICTED": {"priority": 3, "calls": 22}}
+{"SYMBOLIC": {"priority": 9, "calls": 2140}, "SEMANTIC": {"priority": 2, "calls": 34}, "MMAP": {"priority": 1, "calls": 80}, "PREDICTED": {"priority": 3, "calls": 23}}
