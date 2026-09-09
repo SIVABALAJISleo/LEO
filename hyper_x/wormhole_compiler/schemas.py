@@ -85,8 +85,10 @@ class MutationType(str, enum.Enum):
 class RepresentationType(str, enum.Enum):
     DENSE = "DENSE"
     SPARSE = "SPARSE"
+    SPARSE_CSR = "SPARSE_CSR"
     BLOCK_SPARSE = "BLOCK_SPARSE"
     LOW_RANK = "LOW_RANK"
+    FACTORED = "FACTORED"
     TENSOR_TRAIN = "TENSOR_TRAIN"
     QUANTIZED = "QUANTIZED"
     BINARY = "BINARY"

@@ -1,0 +1,75 @@
+{
+  "verified_candidates": [
+    {
+      "candidate_id": "CAND_64ec8e32",
+      "parent_ids": [],
+      "grammar_expression": "LOW_RANK + FACTOR + CORRECT + SPECULATE",
+      "representation": "FACTORED",
+      "target_operation": "matrix_multiply",
+      "contract_hash": "b2b01d6d40b575af",
+      "correctness_class": "NUMERICAL_TOLERANCE",
+      "numerical_error": 4.8e-07,
+      "latency_ms": 1.333299995167181,
+      "throughput": 750.0187531873584,
+      "memory_mb": 0.0625,
+      "work_elimination_ratio": 0.7,
+      "wormhole_score": 0.3,
+      "gpu_advantage_erased_pct": 45.0,
+      "verification_status": true,
+      "falsification_status": true,
+      "holdout_status": true,
+      "hardware_fingerprint_hash": "9e71035e0fc59761",
+      "compiler_version": "1.0.0",
+      "source_hash": "",
+      "is_novel_composition": true,
+      "timestamp": 1788932536.0439074
+    },
+    {
+      "candidate_id": "WORMHOLE_GEMM_RESEARCH_AUTO_bad2ea37",
+      "parent_ids": [
+        "ROOT_CANONICAL"
+      ],
+      "grammar_expression": "LOW_RANK_DECOMPOSE >> MATMUL >> RESIDUAL_CORRECTION",
+      "representation": "FACTORED",
+      "target_operation": "matrix_multiply",
+      "contract_hash": "b2b01d6d40b575af",
+      "correctness_class": "NUMERICAL_TOLERANCE",
+      "numerical_error": 4.8e-07,
+      "latency_ms": 1.333,
+      "throughput": 750.1875468867217,
+      "memory_mb": 12.5,
+      "work_elimination_ratio": 0.7,
+      "wormhole_score": 0.30000000000000004,
+      "gpu_advantage_erased_pct": 70.0,
+      "verification_status": true,
+      "falsification_status": true,
+      "holdout_status": true,
+      "hardware_fingerprint_hash": "9e71035e0fc59761",
+      "compiler_version": "1.0.0",
+      "source_hash": "",
+      "is_novel_composition": true,
+      "timestamp": 1788932536.344874
+    }
+  ],
+  "failures_recorded": [
+    {
+      "failure_id": "FAIL_35953",
+      "grammar_expression": "LOW_RANK_DECOMPOSE >> MATMUL",
+      "target_operation": "GEMM",
+      "failure_category": "NUMERICAL",
+      "measured_error": 0.76687783,
+      "tolerance": 0.001,
+      "input_characteristics": {
+        "M": 128,
+        "K": 128,
+        "sparsity": 0.0,
+        "rank_ratio": 0.203125,
+        "effective_rank": 13,
+        "condition_number": 1365450.875,
+        "has_exploitable_structure": true
+      },
+      "diagnosis": "Failed Freivalds check (error 7.67e-01 > tolerance 1.00e-03).",
+      "timestamp": 1788932535.953837
+    }
+  ]
+}

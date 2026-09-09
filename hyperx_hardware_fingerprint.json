@@ -1,0 +1,30 @@
+{
+  "cpu_vendor": "Intel",
+  "cpu_model": "13th Gen Intel(R) Core(TM) i5-13420H",
+  "cpu_cores_physical": 8,
+  "cpu_cores_logical": 12,
+  "p_cores": 4,
+  "e_cores": 4,
+  "isa_extensions": [
+    "AVX2",
+    "FMA",
+    "SSE4.2",
+    "VNNI",
+    "AVX_VNNI"
+  ],
+  "ram_total_gb": 15.7,
+  "igpu_vendor": "Intel Corporation",
+  "igpu_model": "Intel(R) UHD Graphics (iGPU)",
+  "igpu_execution_units": 48,
+  "igpu_driver_version": "DirectX/WDDM Detected",
+  "opencl_version": "OpenCL 3.0 (Intel Graphics)",
+  "level_zero_available": true,
+  "openvino_version": "2026.2.1-21919-ede283a88e3-releases/2026/2",
+  "os_name": "Windows",
+  "os_version": "10.0.26100",
+  "os_arch": "AMD64",
+  "power_telemetry_type": "ESTIMATED",
+  "host_mismatch": true,
+  "target_hardware_match": false,
+  "fingerprint_hash": "9e71035e0fc59761"
+}

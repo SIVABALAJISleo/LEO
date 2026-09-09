@@ -1,0 +1,21 @@
+[
+  {
+    "failure_id": "FAIL_35953",
+    "grammar_expression": "LOW_RANK_DECOMPOSE >> MATMUL",
+    "target_operation": "GEMM",
+    "failure_category": "NUMERICAL",
+    "measured_error": 0.76687783,
+    "tolerance": 0.001,
+    "input_characteristics": {
+      "M": 128,
+      "K": 128,
+      "sparsity": 0.0,
+      "rank_ratio": 0.203125,
+      "effective_rank": 13,
+      "condition_number": 1365450.875,
+      "has_exploitable_structure": true
+    },
+    "diagnosis": "Failed Freivalds check (error 7.67e-01 > tolerance 1.00e-03).",
+    "timestamp": 1788932535.953837
+  }
+]
