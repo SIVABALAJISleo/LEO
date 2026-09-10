@@ -1,7 +1,7 @@
 """
 hyper_x/wormhole_compiler/contract_ir.py
 =============================================================================
-Universal Contract IR (Section 2)
+Universal Contract IR & Exactness Firewall (Phases 1 & 55)
 =============================================================================
 Defines the authoritative, immutable specification of workload constraints,
 observables, invariant assertions, and tolerances.
@@ -10,16 +10,25 @@ The engine searches for G' such that:
     O(G'(X)) == O(G(X))
 under the declared correctness contract.
 
-Supported Correctness Modes:
+Supported Correctness Classes (Phase 1):
     1. EXACT: Identical mathematical output (zero tolerance, preserves shape & dtype)
-    2. EXACT_REFORMULATION: Mathematically equivalent representation (e.g., A @ (B @ x))
+    2. EXACT_REFORMULATION: Mathematically equivalent representation (e.g. A @ (B @ x))
     3. NUMERICALLY_EQUIVALENT: Bound by strict floating-point numerical error (eps)
     4. BOUNDED_APPROXIMATION: Bounded approximation within declared tolerance (e.g. low-rank, SVD)
     5. PERCEPTUAL_APPROXIMATION: Bound by perceptual metrics (SSIM >= min_ssim, PSNR >= min_psnr)
     6. PREDICTIVE: Speculative computation with verified residual guard and exact fallback
-    7. CONTRACT: General contract-level satisfaction over specified observables
+    7. SPECULATIVE: Speculative execution with rollback on invariant violation
+    8. CACHED: Exact memoization of previously verified deterministic inputs
+    9. REUSED: Partial or intermediate state reuse across frames or iterations
+   10. REDUCED_WORK: Provably unobserved computation pruned from the dependency graph
+   11. SIMULATED: Analytical or simulated execution for research exploration only
+   12. UNVERIFIED: Unverified candidate execution (strictly prohibited from certification)
 
-RULE: Never automatically downgrade EXACT -> APPROXIMATE without explicit contract permission.
+CRITICAL EXACTNESS FIREWALL (Phase 55):
+Never automatically downgrade EXACT -> APPROXIMATE without explicit contract permission.
+Any candidate attempting approximation, quantization, prediction, caching, sampling,
+reduced resolution, or reduced iterations must be blocked from EXACT mode unless
+mathematical equivalence is formally proven.
 """
 
 from __future__ import annotations
@@ -35,7 +44,13 @@ class CorrectnessMode(str, enum.Enum):
     BOUNDED_APPROXIMATION = "BOUNDED_APPROXIMATION"
     PERCEPTUAL_APPROXIMATION = "PERCEPTUAL_APPROXIMATION"
     PREDICTIVE = "PREDICTIVE"
-    CONTRACT = "CONTRACT"
+    SPECULATIVE = "SPECULATIVE"
+    CACHED = "CACHED"
+    REUSED = "REUSED"
+    REDUCED_WORK = "REDUCED_WORK"
+    SIMULATED = "SIMULATED"
+    UNVERIFIED = "UNVERIFIED"
+    CONTRACT = "CONTRACT"  # Alias for general contract mode
 
 
 class CachePolicy(str, enum.Enum):
@@ -57,6 +72,11 @@ class InvariantRule:
     description: str
     assertion_type: str  # "SHAPE_EQUAL", "FINITE_VALUES", "NORM_BOUND", "ENERGY_CONSERVATION", "RANK_BOUND"
     threshold: float = 0.0
+
+
+class ExactnessFirewallViolation(Exception):
+    """Raised when an approximation is introduced into an EXACT contract."""
+    pass
 
 
 @dataclass
@@ -107,13 +127,19 @@ class UniversalWorkloadContract:
     })
 
     def is_exact(self) -> bool:
-        return self.correctness_mode in (CorrectnessMode.EXACT, CorrectnessMode.EXACT_REFORMULATION)
+        return self.correctness_mode in (
+            CorrectnessMode.EXACT,
+            CorrectnessMode.EXACT_REFORMULATION,
+            CorrectnessMode.REDUCED_WORK,
+            CorrectnessMode.CACHED
+        )
 
     def allows_approximation(self) -> bool:
         return self.correctness_mode in (
             CorrectnessMode.BOUNDED_APPROXIMATION,
             CorrectnessMode.PERCEPTUAL_APPROXIMATION,
             CorrectnessMode.PREDICTIVE,
+            CorrectnessMode.SPECULATIVE,
             CorrectnessMode.CONTRACT
         )
 
@@ -121,9 +147,28 @@ class UniversalWorkloadContract:
         """
         Enforces: Never downgrade EXACT -> APPROXIMATE without explicit contract permission.
         """
-        if self.is_exact() and proposed_mode not in (CorrectnessMode.EXACT, CorrectnessMode.EXACT_REFORMULATION):
+        if self.is_exact() and proposed_mode not in (
+            CorrectnessMode.EXACT,
+            CorrectnessMode.EXACT_REFORMULATION,
+            CorrectnessMode.REDUCED_WORK,
+            CorrectnessMode.CACHED
+        ):
             return False
         return True
+
+    def check_exactness_firewall(self, transformation_name: str, is_lossless_proven: bool = False) -> None:
+        """
+        Blocks lossy transformations from EXACT contracts.
+        """
+        approx_keywords = ["approx", "low_rank", "quantiz", "prun", "downsampl", "truncat", "lossy", "threshold"]
+        name_lower = transformation_name.lower()
+        if self.is_exact() and not is_lossless_proven:
+            for kw in approx_keywords:
+                if kw in name_lower:
+                    raise ExactnessFirewallViolation(
+                        f"Exactness Firewall triggered: Transformation '{transformation_name}' attempts approximation "
+                        f"under strictly EXACT contract '{self.workload_id}' without proof of mathematical equivalence."
+                    )
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -144,4 +189,5 @@ class UniversalWorkloadContract:
             "execution_track": self.execution_track.value,
             "acceptable_approximations": self.acceptable_approximations,
             "forbidden_approximations": self.forbidden_approximations,
+            "target_hardware": self.target_hardware,
         }

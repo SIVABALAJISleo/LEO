@@ -41,11 +41,32 @@ class EGraphRewriteRule:
 
 
 @dataclass
+class HardwareCostVector:
+    flops: float = 1.0
+    memory_bytes: float = 1.0
+    l3_miss_estimate: float = 0.1
+    vectorization_efficiency: float = 0.8  # AVX2 256-bit utilization
+    igpu_profitability: float = 0.0        # > 0 when data-parallel density amortizes sync
+    scalar_cost: float = 1.0
+
+    def to_dict(self) -> Dict[str, float]:
+        return {
+            "flops": round(self.flops, 4),
+            "memory_bytes": round(self.memory_bytes, 2),
+            "l3_miss_estimate": round(self.l3_miss_estimate, 4),
+            "vectorization_efficiency": round(self.vectorization_efficiency, 2),
+            "igpu_profitability": round(self.igpu_profitability, 2),
+            "scalar_cost": round(self.scalar_cost, 4),
+        }
+
+
+@dataclass
 class EClassNode:
     class_id: int
     expressions: Set[str] = field(default_factory=set)
     best_cost: float = float("inf")
     best_expr: Optional[str] = None
+    best_cost_vector: Optional[HardwareCostVector] = None
 
 
 class EqualitySaturationEngine:
@@ -136,19 +157,71 @@ class EqualitySaturationEngine:
             ))
         return rules
 
-    def add_expression(self, expr: str, cost: float = 1.0) -> int:
+    def estimate_hardware_cost(self, expr: str) -> HardwareCostVector:
+        """
+        Microarchitectural cost estimator for Intel Core i5-12450H CPU (AVX2) + Intel UHD.
+        """
+        flops = 1.0
+        mem_bytes = 1.0
+        l3_miss = 0.15
+        vec_eff = 0.80
+        igpu_prof = 0.0
+
+        if "fused_" in expr:
+            # Kernel fusion keeps intermediate data in CPU L1/L2 registers
+            mem_bytes *= 0.40
+            l3_miss *= 0.25
+            vec_eff = 0.95
+        if "U @ (V @ B)" in expr or "A @ (B @ C)" in expr or "U_r @ V_r" in expr:
+            # Low-rank or associative contraction eliminates O(N^3) work
+            flops *= 0.30
+            mem_bytes *= 0.50
+            l3_miss *= 0.40
+            vec_eff = 0.90
+        if "A @ I" in expr or "A + 0" in expr:
+            flops = 0.01
+            mem_bytes = 0.01
+            l3_miss = 0.01
+            vec_eff = 1.0
+
+        # Intel UHD profit threshold: high parallel density (>50 FLOPs/byte)
+        if flops / max(0.01, mem_bytes) > 2.0 and "fused_" not in expr:
+            igpu_prof = 0.75
+
+        # Weighted scalar cost (AVX2 CPU execution)
+        scalar = 0.50 * flops + 0.35 * mem_bytes + 0.15 * l3_miss
+        return HardwareCostVector(
+            flops=flops,
+            memory_bytes=mem_bytes,
+            l3_miss_estimate=l3_miss,
+            vectorization_efficiency=vec_eff,
+            igpu_profitability=igpu_prof,
+            scalar_cost=scalar,
+        )
+
+    def add_expression(self, expr: str, cost: Optional[float] = None) -> int:
         canon = expr.strip()
+        vec = self.estimate_hardware_cost(canon)
+        effective_cost = cost if cost is not None else vec.scalar_cost
+
         if canon in self.expr_to_class:
             cid = self.expr_to_class[canon]
             ecls = self.classes[cid]
-            if cost < ecls.best_cost:
-                ecls.best_cost = cost
+            if effective_cost < ecls.best_cost:
+                ecls.best_cost = effective_cost
                 ecls.best_expr = canon
+                ecls.best_cost_vector = vec
             return cid
 
         cid = self.next_class_id
         self.next_class_id += 1
-        ecls = EClassNode(class_id=cid, expressions={canon}, best_cost=cost, best_expr=canon)
+        ecls = EClassNode(
+            class_id=cid,
+            expressions={canon},
+            best_cost=effective_cost,
+            best_expr=canon,
+            best_cost_vector=vec
+        )
         self.classes[cid] = ecls
         self.expr_to_class[canon] = cid
         return cid
@@ -166,6 +239,7 @@ class EqualitySaturationEngine:
         if e2.best_cost < e1.best_cost:
             e1.best_cost = e2.best_cost
             e1.best_expr = e2.best_expr
+            e1.best_cost_vector = e2.best_cost_vector
 
         del self.classes[cid2]
         return cid1
@@ -198,3 +272,41 @@ class EqualitySaturationEngine:
         if not ecls or not ecls.best_expr:
             return "UNKNOWN_EXPR", float("inf")
         return ecls.best_expr, ecls.best_cost
+
+    def extract_cheapest_vector(self, cid: int) -> Tuple[str, HardwareCostVector]:
+        """Extracts the best expression and its multi-attribute hardware cost vector."""
+        ecls = self.classes.get(cid)
+        if not ecls or not ecls.best_expr:
+            return "UNKNOWN_EXPR", HardwareCostVector()
+        vec = ecls.best_cost_vector or self.estimate_hardware_cost(ecls.best_expr)
+        return ecls.best_expr, vec
+
+    def extract_pareto_optimal(self, cid: int) -> List[Tuple[str, HardwareCostVector]]:
+        """
+        Extracts non-dominated expressions across (FLOPs, Memory Traffic).
+        """
+        ecls = self.classes.get(cid)
+        if not ecls:
+            return []
+
+        candidates = []
+        for expr in ecls.expressions:
+            vec = self.estimate_hardware_cost(expr)
+            candidates.append((expr, vec))
+
+        pareto: List[Tuple[str, HardwareCostVector]] = []
+        for expr_i, vec_i in candidates:
+            dominated = False
+            for expr_j, vec_j in candidates:
+                if expr_i == expr_j:
+                    continue
+                # vec_j dominates vec_i if <= in both and < in at least one
+                better_or_equal = (vec_j.flops <= vec_i.flops) and (vec_j.memory_bytes <= vec_i.memory_bytes)
+                strictly_better = (vec_j.flops < vec_i.flops) or (vec_j.memory_bytes < vec_i.memory_bytes)
+                if better_or_equal and strictly_better:
+                    dominated = True
+                    break
+            if not dominated and not any(p[0] == expr_i for p in pareto):
+                pareto.append((expr_i, vec_i))
+
+        return pareto

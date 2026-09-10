@@ -1,15 +1,29 @@
 """
 hyper_x/wormhole_compiler/observable_compiler.py
 =============================================================================
-Universal Observable Compiler & ObservableIR (Section 3)
+Universal Observable Compiler & ObservableIR (Phase 2)
 =============================================================================
-Compiles application output definitions into an explicit ObservableIR,
+Compiles application-level output definitions into explicit ObservableIR,
 distinguishing:
-  - internal state (scratch buffers, unobserved activations)
-  - intermediate state (unobserved products, temporary feature maps)
+  - internal state (scratch buffers, intermediate tensors)
+  - intermediate state (unobserved products, feature maps)
   - externally observable state (visible pixels, selected tokens, queried rows)
 
-Rule:
+Supported Observable Domains:
+  1. Scalar Observables (loss values, dot products, norms, determinants)
+  2. Vector Observables (projections, embeddings, gradients)
+  3. Tensor Observables (full dense arrays, multidimensional fields)
+  4. Classification Observables (argmax class IDs, top-k tokens)
+  5. Detection Observables (bounding boxes, threshold masks)
+  6. Ranking Observables (top-k sorted items, search scores)
+  7. Rendering Observables (visible pixels, depth buffers, motion vectors)
+  8. Numerical Quantities (eigenvalues, condition numbers, integrals)
+  9. Statistics (moments, histograms, quantiles)
+ 10. Time-Series Observables (temporal deltas, state transitions)
+ 11. Media Observables (decoded keyframes, spectrograms)
+ 12. Application-State Observables (boolean triggers, collision events)
+
+RULE:
 Only optimize away an operation when it is proven not to affect the required
 observable under the declared contract.
 """
@@ -22,13 +36,22 @@ import numpy as np
 
 
 class ObservableDomain(str, enum.Enum):
+    SCALAR = "SCALAR"
+    VECTOR = "VECTOR"
     DENSE_TENSOR = "DENSE_TENSOR"
-    GRAPHICS_PIXELS = "GRAPHICS_PIXELS"
-    AI_TOKENS = "AI_TOKENS"
-    DATABASE_ROWS = "DATABASE_ROWS"
-    SCIENTIFIC_QUANTITY = "SCIENTIFIC_QUANTITY"
-    VIDEO_FRAMES = "VIDEO_FRAMES"
-    DISCRETE_DECISION = "DISCRETE_DECISION"
+    CLASSIFICATION = "CLASSIFICATION"
+    DETECTION = "DETECTION"
+    RANKING = "RANKING"
+    RENDERING = "RENDERING"
+    NUMERICAL = "NUMERICAL"
+    STATISTICS = "STATISTICS"
+    TIME_SERIES = "TIME_SERIES"
+    MEDIA = "MEDIA"
+    APPLICATION_STATE = "APPLICATION_STATE"
+    GRAPHICS_PIXELS = "GRAPHICS_PIXELS"  # Alias
+    AI_TOKENS = "AI_TOKENS"              # Alias
+    DATABASE_ROWS = "DATABASE_ROWS"      # Alias
+    SCIENTIFIC_QUANTITY = "SCIENTIFIC_QUANTITY"  # Alias
 
 
 @dataclass
@@ -48,6 +71,7 @@ class ObservableIR:
     is_decision_relevant_only: bool = False
     is_user_visible_only: bool = True
     mask_indices: Optional[List[int]] = None
+    extractor_fn_name: str = "extract_identity"
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -60,6 +84,7 @@ class ObservableIR:
             "tolerance": self.tolerance,
             "is_decision_relevant_only": self.is_decision_relevant_only,
             "is_user_visible_only": self.is_user_visible_only,
+            "extractor_fn_name": self.extractor_fn_name,
         }
 
 
@@ -81,6 +106,23 @@ class UniversalObservableCompiler:
             tolerance=tolerance,
             is_decision_relevant_only=False,
             is_user_visible_only=True,
+            extractor_fn_name="extract_identity",
+        )
+
+    @staticmethod
+    def scalar_observable(name: str, tolerance: float = 1e-5) -> ObservableIR:
+        """Scalar value (e.g. loss, norm, inner product, boolean flag)."""
+        return ObservableIR(
+            observable_id=f"OBS_SCALAR_{name.upper()}",
+            domain=ObservableDomain.SCALAR,
+            description=f"Scalar observable: {name}",
+            target_shape=(1,),
+            dtype="float64",
+            dimension_reduction_ratio=0.0001,
+            tolerance=tolerance,
+            is_decision_relevant_only=True,
+            is_user_visible_only=True,
+            extractor_fn_name="extract_scalar",
         )
 
     @staticmethod
@@ -88,7 +130,7 @@ class UniversalObservableCompiler:
         """Only linear projection or vector product is observed (e.g. y = (A @ B) @ x)."""
         return ObservableIR(
             observable_id="OBS_OUTPUT_PROJECTION",
-            domain=ObservableDomain.DENSE_TENSOR,
+            domain=ObservableDomain.VECTOR,
             description=f"Linear output projection of dimension {output_dim} from total {total_dim}",
             target_shape=(output_dim, 1),
             dtype="float32",
@@ -96,6 +138,7 @@ class UniversalObservableCompiler:
             tolerance=tolerance,
             is_decision_relevant_only=True,
             is_user_visible_only=False,
+            extractor_fn_name="extract_vector_projection",
         )
 
     @staticmethod
@@ -122,6 +165,7 @@ class UniversalObservableCompiler:
             tolerance=1.0 - min_ssim,
             is_decision_relevant_only=False,
             is_user_visible_only=True,
+            extractor_fn_name="extract_visible_pixels",
         )
 
     @staticmethod
@@ -142,6 +186,23 @@ class UniversalObservableCompiler:
             tolerance=0.0,
             is_decision_relevant_only=True,
             is_user_visible_only=True,
+            extractor_fn_name="extract_argmax" if mode == "ARGMAX" else "extract_top_k",
+        )
+
+    @staticmethod
+    def detection_bounding_boxes(max_boxes: int, total_candidates: int) -> ObservableIR:
+        """Detection domain: only NMS-filtered bounding boxes are returned."""
+        return ObservableIR(
+            observable_id=f"OBS_DETECTION_TOP_{max_boxes}",
+            domain=ObservableDomain.DETECTION,
+            description=f"Filtered object detection bounding boxes (up to {max_boxes})",
+            target_shape=(max_boxes, 5),  # (x1, y1, x2, y2, confidence)
+            dtype="float32",
+            dimension_reduction_ratio=float(max_boxes) / max(1.0, float(total_candidates)),
+            tolerance=1e-3,
+            is_decision_relevant_only=True,
+            is_user_visible_only=True,
+            extractor_fn_name="extract_boxes",
         )
 
     @staticmethod
@@ -162,6 +223,7 @@ class UniversalObservableCompiler:
             tolerance=0.0,
             is_decision_relevant_only=True,
             is_user_visible_only=True,
+            extractor_fn_name="extract_rows",
         )
 
     @staticmethod
@@ -173,7 +235,7 @@ class UniversalObservableCompiler:
         """Scientific computing: integrated macroscopic quantity or sensor measurement."""
         return ObservableIR(
             observable_id="OBS_SCIENTIFIC_QUANTITY",
-            domain=ObservableDomain.SCIENTIFIC_QUANTITY,
+            domain=ObservableDomain.NUMERICAL,
             description=f"Macroscopic quantities: {', '.join(conserved_quantities)}",
             target_shape=(len(conserved_quantities),),
             dtype="float64",
@@ -181,4 +243,5 @@ class UniversalObservableCompiler:
             tolerance=tolerance,
             is_decision_relevant_only=True,
             is_user_visible_only=True,
+            extractor_fn_name="extract_integrals",
         )

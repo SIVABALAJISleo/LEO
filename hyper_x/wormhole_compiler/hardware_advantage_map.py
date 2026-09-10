@@ -88,6 +88,50 @@ class HardwareAdvantageMap:
         }
 
     @staticmethod
+    def calculate_gadr_and_hae(
+        nominal_flops: float,
+        optimized_flops: float,
+        nominal_bytes_moved: float,
+        optimized_bytes_moved: float,
+        domain: str = "dense_linear_algebra"
+    ) -> Dict[str, Any]:
+        """
+        Calculates formal GADR (GPU Advantage Dependency Ratio) and HAE (Hardware Advantage Erasure).
+        
+        Analytical Formulas:
+          r_flops = optimized_flops / max(1.0, nominal_flops)
+          r_bytes = optimized_bytes_moved / max(1.0, nominal_bytes_moved)
+          GADR = w_f * r_flops + w_b * r_bytes
+          HAE = 1.0 - GADR
+          
+        NOTE: HAE quantifies algorithmic bypass of GPU physical advantages.
+              Physical silicon parity remains permanently 0.0%.
+        """
+        # Domain weights: memory-bound domains weight bandwidth higher
+        if domain in ["rag_search", "database_filter", "sparse_linear_algebra"]:
+            w_f, w_b = 0.35, 0.65
+        elif domain in ["graphics_temporal", "image_processing"]:
+            w_f, w_b = 0.40, 0.60
+        else:  # Compute-intensive default (GEMM, attention)
+            w_f, w_b = 0.65, 0.35
+
+        r_f = min(1.0, max(0.0, optimized_flops / max(1.0, nominal_flops)))
+        r_b = min(1.0, max(0.0, optimized_bytes_moved / max(1.0, nominal_bytes_moved)))
+
+        gadr = min(1.0, max(0.0, (w_f * r_f) + (w_b * r_b)))
+        hae = 1.0 - gadr
+
+        return {
+            "gadr": round(gadr, 4),
+            "hae": round(hae, 4),
+            "work_elimination_ratio": round(1.0 - r_f, 4),
+            "memory_movement_elimination_ratio": round(1.0 - r_b, 4),
+            "domain": domain,
+            "weights": {"flops_weight": w_f, "bandwidth_weight": w_b},
+            "scientific_disclaimer": "HAE measures algorithmic erasure of GPU advantage; physical silicon parity is strictly 0.0%."
+        }
+
+    @staticmethod
     def calculate_advantage_erasure(
         applied_transformations: List[str],
         workload_domain: str
@@ -122,13 +166,19 @@ class HardwareAdvantageMap:
         total_erased = (erased_tensor + erased_bandwidth + erased_parallel) / 3.0
         remaining = max(0.0, total_req - total_erased)
 
+        gadr = remaining / max(1.0, total_req)
+        hae = 1.0 - gadr
+
         return {
             "gpu_advantage_required_pct": round(total_req, 1),
             "gpu_advantage_erased_pct": round(total_erased, 1),
             "gpu_advantage_remaining_pct": round(remaining, 1),
+            "gadr": round(gadr, 4),
+            "hae": round(hae, 4),
             "breakdown": {
                 "tensor_cores_erased_pct": round(erased_tensor, 1),
                 "hbm_bandwidth_erased_pct": round(erased_bandwidth, 1),
                 "parallelism_erased_pct": round(erased_parallel, 1)
-            }
+            },
+            "scientific_disclaimer": "HAE measures algorithmic erasure of GPU advantage; physical silicon parity is strictly 0.0%."
         }

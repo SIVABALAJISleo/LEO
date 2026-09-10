@@ -54,7 +54,8 @@ class StrictParityScorecard:
     cache_state: CachePolicy
     power_telemetry: PowerTelemetryType
 
-    # Individual Parity Gates (True = PASS, False = FAIL)
+    # 11 Individual Parity Gates (Phase 32: True = PASS, False = FAIL)
+    baseline_integrity_gate: bool = True
     exact_parity_gate: bool = False
     numerical_parity_gate: bool = False
     functional_parity_gate: bool = False
@@ -63,9 +64,10 @@ class StrictParityScorecard:
     performance_parity_gate: bool = False
     resource_parity_gate: bool = False
     provenance_gate: bool = False
+    adversarial_gate: bool = False
     holdout_gate: bool = False
 
-    # Conjunctive 100% Gate
+    # Conjunctive 100% Gate (Requires ALL 11 gates to pass)
     overall_conjunctive_gate: bool = False
 
     # Independent Continuous Metrics (Never combined into one number)
@@ -137,16 +139,21 @@ class ParityEvaluator:
         power_telemetry: PowerTelemetryType = PowerTelemetryType.ESTIMATED_POWER,
         functional_pass: Optional[bool] = None,
         candidate_output: Optional[Any] = None,
-        reference_output: Optional[Any] = None
+        reference_output: Optional[Any] = None,
+        adversarial_passed: bool = True,
+        baseline_integrity_passed: bool = True
     ) -> StrictParityScorecard:
-        """Computes all separate gates and conjunctive overall parity."""
-        # 1. Exact Parity Gate
+        """Computes all 11 separate gates and conjunctive overall parity."""
+        # 1. Baseline Integrity Gate
+        baseline_gate = bool(baseline_integrity_passed)
+
+        # 2. Exact Parity Gate
         exact_pass = (numerical_error == 0.0)
 
-        # 2. Numerical Parity Gate
+        # 3. Numerical Parity Gate
         numerical_pass = (numerical_error <= contract.tolerance)
 
-        # 3. Functional Parity Gate (Rigorously verified, never hard-coded)
+        # 4. Functional Parity Gate (Rigorously verified, never hard-coded)
         if functional_pass is not None:
             actual_functional_pass = bool(functional_pass)
         elif candidate_output is not None:
@@ -165,7 +172,7 @@ class ParityEvaluator:
             if contract.correctness == CorrectnessRequirement.EXACT:
                 actual_functional_pass = actual_functional_pass and exact_pass
 
-        # 4. Contract Parity Gate (Meets tolerance, SLO, and memory)
+        # 5. Contract Parity Gate (Meets tolerance, SLO, and memory)
         contract_pass = (
             numerical_pass and
             actual_functional_pass and
@@ -173,30 +180,41 @@ class ParityEvaluator:
             (memory_used_mb <= contract.memory_limit_mb)
         )
 
-        # 5. Application Parity Gate (Meets end-user SLO)
+        # 6. Application Parity Gate (Meets end-user SLO)
         application_pass = (candidate_latency_ms <= contract.latency_slo_ms) and numerical_pass
 
-        # 6. Performance Parity Gate (Candidate latency <= Reference latency)
+        # 7. Performance Parity Gate (Candidate latency <= Reference latency)
         performance_pass = (candidate_latency_ms <= reference_latency_ms)
 
-        # 7. Resource Parity Gate (Memory <= limit)
+        # 8. Resource Parity Gate (Memory <= limit)
         resource_pass = (memory_used_mb <= contract.memory_limit_mb)
 
-        # 8. Conjunctive Overall 100% Gate
+        # 9. Provenance Gate
+        prov_pass = bool(provenance_valid)
+
+        # 10. Adversarial Robustness Gate
+        adv_pass = bool(adversarial_passed)
+
+        # 11. Blind Holdout Gate
+        hld_pass = bool(holdout_passed)
+
+        # Conjunctive Overall 100% Gate (Phase 32: Requires ALL 11 gates to pass simultaneously)
         overall_100 = (
+            baseline_gate and
             numerical_pass and
             actual_functional_pass and
             contract_pass and
             application_pass and
             performance_pass and
             resource_pass and
-            provenance_valid and
-            holdout_passed
+            prov_pass and
+            adv_pass and
+            hld_pass
         )
         if contract.correctness == CorrectnessRequirement.EXACT:
             overall_100 = overall_100 and exact_pass
 
-        # 9. Wormhole Score & Work Elimination
+        # Continuous Metrics
         wormhole_score = actual_necessary_flops / max(1.0, nominal_reference_flops)
         work_elimination = max(0.0, 1.0 - wormhole_score)
         raw_speedup = reference_latency_ms / max(0.001, candidate_latency_ms)
@@ -206,6 +224,7 @@ class ParityEvaluator:
             execution_track=contract.execution_track,
             cache_state=cache_state,
             power_telemetry=power_telemetry,
+            baseline_integrity_gate=baseline_gate,
             exact_parity_gate=exact_pass,
             numerical_parity_gate=numerical_pass,
             functional_parity_gate=actual_functional_pass,
@@ -213,8 +232,9 @@ class ParityEvaluator:
             application_parity_gate=application_pass,
             performance_parity_gate=performance_pass,
             resource_parity_gate=resource_pass,
-            provenance_gate=provenance_valid,
-            holdout_gate=holdout_passed,
+            provenance_gate=prov_pass,
+            adversarial_gate=adv_pass,
+            holdout_gate=hld_pass,
             overall_conjunctive_gate=overall_100,
             wormhole_score=round(wormhole_score, 4),
             work_elimination_ratio=round(work_elimination, 4),

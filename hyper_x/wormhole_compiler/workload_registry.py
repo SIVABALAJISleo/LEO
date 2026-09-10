@@ -101,6 +101,48 @@ class UniversalClosureScorecard:
         }
 
 
+@dataclass
+class CompetitiveCoverageScorecard:
+    """8-Dimensional Competitive Coverage Engine Scorecard (Phase 37)."""
+    total_evaluated_workloads: int
+    wormholes_found: int
+    necessity_proven: int
+    inconclusive_searches: int
+
+    # 8 Objective Coverage Dimensions
+    workload_coverage: float           # Profiled workloads vs universe target
+    exact_coverage: float              # Fraction with exactness verified (0.0 error)
+    contract_coverage: float           # Fraction meeting declared contract
+    application_coverage: float        # Fraction meeting end-user SLO
+    work_elimination_coverage: float   # Fraction achieving FLOP reduction
+    memory_elimination_coverage: float # Fraction achieving memory movement reduction
+    hae_mean: float                    # Hardware Advantage Erasure mean
+    closure_ratio: float               # (wormholes + necessity) / total
+
+    mean_speedup: float
+    audit_passed: bool
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "total_evaluated_workloads": self.total_evaluated_workloads,
+            "wormholes_found": self.wormholes_found,
+            "necessity_proven": self.necessity_proven,
+            "inconclusive_searches": self.inconclusive_searches,
+            "competitive_coverage_8d": {
+                "1_workload_coverage": f"{self.workload_coverage * 100:.2f}%",
+                "2_exact_coverage": f"{self.exact_coverage * 100:.2f}%",
+                "3_contract_coverage": f"{self.contract_coverage * 100:.2f}%",
+                "4_application_coverage": f"{self.application_coverage * 100:.2f}%",
+                "5_work_elimination_coverage": f"{self.work_elimination_coverage * 100:.2f}%",
+                "6_memory_elimination_coverage": f"{self.memory_elimination_coverage * 100:.2f}%",
+                "7_hardware_advantage_erasure_mean": f"{self.hae_mean * 100:.2f}%",
+                "8_closure_ratio": f"{self.closure_ratio * 100:.2f}%",
+            },
+            "mean_speedup": f"{self.mean_speedup:.2f}x",
+            "audit_passed": self.audit_passed,
+        }
+
+
 class UniversalWorkloadRegistry:
     """
     Registry maintaining all benchmark workload outcomes and computing objective closure.
@@ -114,6 +156,59 @@ class UniversalWorkloadRegistry:
     def register(self, entry: WorkloadRegistryEntry):
         self.entries[entry.workload_id] = entry
         self.save()
+
+    def compute_competitive_coverage(self, universe_target: int = 10) -> CompetitiveCoverageScorecard:
+        """Computes the 8-dimension Competitive Coverage Scorecard."""
+        total = len(self.entries)
+        if total == 0:
+            return CompetitiveCoverageScorecard(
+                total_evaluated_workloads=0,
+                wormholes_found=0,
+                necessity_proven=0,
+                inconclusive_searches=0,
+                workload_coverage=0.0,
+                exact_coverage=0.0,
+                contract_coverage=0.0,
+                application_coverage=0.0,
+                work_elimination_coverage=0.0,
+                memory_elimination_coverage=0.0,
+                hae_mean=0.0,
+                closure_ratio=0.0,
+                mean_speedup=1.0,
+                audit_passed=False,
+            )
+
+        wormholes = sum(1 for e in self.entries.values() if e.outcome == WorkloadOutcome.WORMHOLE_FOUND)
+        necessity = sum(1 for e in self.entries.values() if e.outcome == WorkloadOutcome.NECESSARY_COMPUTATION_PROVEN)
+        inconclusive = sum(1 for e in self.entries.values() if e.outcome == WorkloadOutcome.SEARCH_INCONCLUSIVE)
+
+        w_cov = min(1.0, total / max(1, universe_target))
+        ex_cov = sum(1 for e in self.entries.values() if e.exact_correctness) / total
+        con_cov = sum(1 for e in self.entries.values() if e.contract_correctness) / total
+        app_cov = sum(1 for e in self.entries.values() if e.contract_correctness and e.holdout_passed) / total
+        work_elim_cov = sum(1 for e in self.entries.values() if e.work_elimination_ratio > 0.0) / total
+        mem_elim_cov = sum(1 for e in self.entries.values() if e.hae > 0.1) / total
+        hae_m = sum(e.hae for e in self.entries.values()) / total
+        closure = (wormholes + necessity) / total
+        mean_spd = sum(e.speedup for e in self.entries.values()) / total
+        audit_ok = (inconclusive == 0 and total > 0 and all(e.provenance_verified for e in self.entries.values()))
+
+        return CompetitiveCoverageScorecard(
+            total_evaluated_workloads=total,
+            wormholes_found=wormholes,
+            necessity_proven=necessity,
+            inconclusive_searches=inconclusive,
+            workload_coverage=w_cov,
+            exact_coverage=ex_cov,
+            contract_coverage=con_cov,
+            application_coverage=app_cov,
+            work_elimination_coverage=work_elim_cov,
+            memory_elimination_coverage=mem_elim_cov,
+            hae_mean=hae_m,
+            closure_ratio=closure,
+            mean_speedup=mean_spd,
+            audit_passed=audit_ok,
+        )
 
     def compute_closure(self) -> UniversalClosureScorecard:
         total = len(self.entries)

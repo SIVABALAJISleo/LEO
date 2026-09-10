@@ -83,9 +83,23 @@ class GraphicsTemporalAdapter:
     @staticmethod
     def execute_reference(gt_100spp: np.ndarray) -> Tuple[np.ndarray, float]:
         t0 = time.perf_counter()
-        time.sleep(0.001)  # Nominal simulated ray-tracing cost
+        # Physical reference: perform actual multi-channel 3x3 box blur filtering across pixels
+        H, W = gt_100spp.shape[:2]
+        padded = np.pad(gt_100spp, ((1, 1), (1, 1), (0, 0)) if gt_100spp.ndim == 3 else ((1, 1), (1, 1)), mode="edge")
+        if gt_100spp.ndim == 3:
+            filtered = (
+                padded[:-2, :-2, :] + padded[:-2, 1:-1, :] + padded[:-2, 2:, :] +
+                padded[1:-1, :-2, :] + padded[1:-1, 1:-1, :] + padded[1:-1, 2:, :] +
+                padded[2:, :-2, :] + padded[2:, 1:-1, :] + padded[2:, 2:, :]
+            ) / 9.0
+        else:
+            filtered = (
+                padded[:-2, :-2] + padded[:-2, 1:-1] + padded[:-2, 2:] +
+                padded[1:-1, :-2] + padded[1:-1, 1:-1] + padded[1:-1, 2:] +
+                padded[2:, :-2] + padded[2:, 1:-1] + padded[2:, 2:]
+            ) / 9.0
         elapsed_ms = (time.perf_counter() - t0) * 1000.0
-        return gt_100spp, elapsed_ms
+        return filtered, elapsed_ms
 
 
 class OutputSensitiveTopKAdapter:
