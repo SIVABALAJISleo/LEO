@@ -49,9 +49,37 @@ try {
 `;
 
 async function measure(page, route) {
-  // Inject web vitals measurement script
+  // Inject web vitals measurement script with native PerformanceObserver
   await page.addInitScript(() => {
-    window.__vitals = {};
+    window.__vitals = { LCP: 0, CLS: 0 };
+    try {
+      new PerformanceObserver((entryList) => {
+        const entries = entryList.getEntries();
+        if (entries.length > 0) {
+          window.__vitals.LCP = entries[entries.length - 1].startTime;
+        }
+      }).observe({ type: "largest-contentful-paint", buffered: true });
+
+      let cls = 0;
+      new PerformanceObserver((entryList) => {
+        for (const entry of entryList.getEntries()) {
+          if (!entry.hadRecentInput) {
+            cls += entry.value;
+            window.__vitals.CLS = cls;
+          }
+        }
+      }).observe({ type: "layout-shift", buffered: true });
+
+      new PerformanceObserver((entryList) => {
+        const entries = entryList.getEntries();
+        if (entries.length > 0) {
+          const entry = entries[entries.length - 1];
+          window.__vitals.INP = entry.duration ?? (entry.processingEnd - entry.startTime);
+        }
+      }).observe({ type: "first-input", buffered: true });
+    } catch {
+      // PerformanceObserver fallback
+    }
   });
 
   await page.goto(`${BASE}${route}`, { waitUntil: "networkidle", timeout: 60_000 });

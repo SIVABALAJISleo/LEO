@@ -4,7 +4,6 @@ import tailwindcssAnimate from "tailwindcss-animate";
 export default {
   darkMode: ["class"],
   content: [
-    "./index.html",
     "./ui_core/App.tsx",
     "./ui_core/**/*.{ts,tsx}",
     "./ui_core/components/**/*.{ts,tsx}",
@@ -12,6 +11,7 @@ export default {
     "./ui_core/hooks/**/*.{ts,tsx}",
     "./ui_core/lib/**/*.{ts,tsx}",
     "./ui_core/contexts/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
   ],
   prefix: "",
   theme: {

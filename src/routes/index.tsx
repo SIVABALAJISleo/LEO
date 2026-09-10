@@ -14,6 +14,9 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "LEO AI — Local-first AI runtime" },
       { property: "og:description", content: "Fast, private AI on ordinary hardware." },
     ],
+    links: [
+      { rel: "preload", as: "image", href: heroImg, fetchPriority: "high" },
+    ],
   }),
   component: Home,
 });

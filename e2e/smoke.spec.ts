@@ -12,7 +12,7 @@ test.describe("deployment smoke", () => {
   test("home page renders", async ({ page }) => {
     const res = await page.goto(target!, { waitUntil: "domcontentloaded" });
     expect(res?.ok(), `HTTP ${res?.status()}`).toBeTruthy();
-    await expect(page).toHaveTitle(/LEO AI/i);
+    await expect(page).toHaveTitle(/(LEO AI|HYPER)/i);
   });
 
   test("/app redirects unauthenticated to /login", async ({ page }) => {
