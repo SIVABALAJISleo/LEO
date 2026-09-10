@@ -1,0 +1,36 @@
+{
+  "W1": {
+    "workload_id": "W1",
+    "domain": "matrix",
+    "contract_mode": "EXACT_REFORMULATION",
+    "observable": "vector",
+    "outcome": "WORMHOLE_FOUND",
+    "speedup": 3.5,
+    "work_elimination_ratio": 0.85,
+    "gadr": 0.15,
+    "hae": 0.85,
+    "provenance_verified": true,
+    "holdout_passed": true,
+    "exact_correctness": true,
+    "contract_correctness": true,
+    "timestamp": 1789052247.055265,
+    "notes": ""
+  },
+  "W2": {
+    "workload_id": "W2",
+    "domain": "dense_gaussian",
+    "contract_mode": "EXACT",
+    "observable": "full_matrix",
+    "outcome": "NECESSARY_COMPUTATION_PROVEN",
+    "speedup": 1.0,
+    "work_elimination_ratio": 0.0,
+    "gadr": 1.0,
+    "hae": 0.0,
+    "provenance_verified": true,
+    "holdout_passed": true,
+    "exact_correctness": true,
+    "contract_correctness": true,
+    "timestamp": 1789052247.055269,
+    "notes": ""
+  }
+}

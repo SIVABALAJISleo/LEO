@@ -49,3 +49,25 @@ class Counterexample:
             "diagnosis": self.diagnosis,
             "timestamp": self.timestamp,
         }
+
+
+@dataclass
+class CounterexampleRecord:
+    """Formal audit record of a candidate falsification / counterexample."""
+    counterexample_id: str
+    candidate_id: str
+    failure_reason: str
+    input_signature: str
+    reproduction_code: str
+    timestamp: float = field(default_factory=time.time)
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "counterexample_id": self.counterexample_id,
+            "candidate_id": self.candidate_id,
+            "failure_reason": self.failure_reason,
+            "input_signature": self.input_signature,
+            "reproduction_code": self.reproduction_code,
+            "timestamp": self.timestamp,
+        }
+

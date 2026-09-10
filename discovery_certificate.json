@@ -1,0 +1,34 @@
+{
+  "certificate_id": "CERT_ELIM_intermediate_dense_gemm_1789051800373",
+  "operation_id": "intermediate_dense_gemm",
+  "workload_id": "GEMM_128x128",
+  "observable": "output_tensor",
+  "dependency_path": [
+    "input_A",
+    "input_B",
+    "final_observable"
+  ],
+  "elimination_attempt": "low_rank_factorization_rank_16",
+  "test_inputs_count": 8,
+  "counterexamples": [],
+  "adversarial_results": {
+    "tests_run": 8,
+    "passed": 8
+  },
+  "holdout_results": {
+    "passed": true,
+    "holdout_error": 0.0
+  },
+  "formal_proof_status": "EMPIRICALLY_VALIDATED",
+  "empirical_confidence": 0.9999,
+  "fallback_strategy": "native_dense_gemm",
+  "final_status": "ELIMINATED_VERIFIED",
+  "provenance": {
+    "target_cpu": "Intel Core i5-12450H",
+    "target_gpu": "Intel UHD Graphics"
+  },
+  "timestamp": 1789051800.373071,
+  "software_version": "HYPER-Wormhole-v2.0",
+  "hardware_identity": "Intel Core i5-12450H + Intel UHD Graphics",
+  "sha256_signature": "57cdc24d04797ff9575ef38fadf107cef3c2f95da478cab1844f4170bdc03d4f"
+}

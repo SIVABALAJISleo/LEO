@@ -414,3 +414,55 @@ def test_end_to_end_wormhole_compiler_no_free_lunch_on_unstructured():
     assert res["work_elimination_pct"] == 0.0
     assert res["wormhole_score"] == 1.0
     assert "output" in res
+
+
+def test_universal_functional_verifier_rejects_false_candidates():
+    from hyper_x.wormhole_compiler.functional_verifier import UniversalFunctionalVerifier
+    from hyper_x.wormhole_compiler.contract import ContractCompiler
+    from hyper_x.wormhole_compiler.schemas import CorrectnessRequirement
+
+    contract = ContractCompiler.compile_matrix_contract("TEST_EXACT", (32, 32, 32), correctness=CorrectnessRequirement.EXACT)
+    A = np.eye(32, dtype=np.float32)
+    B = np.ones((32, 32), dtype=np.float32)
+
+    # 1. Candidate returning wrong shape
+    cand_wrong_shape = lambda a, b: np.zeros((16, 16), dtype=np.float32)
+    ref_fn = lambda a, b: a @ b
+    rep_shape = UniversalFunctionalVerifier.verify("cand_shape", cand_wrong_shape, ref_fn, (A, B), contract)
+    assert rep_shape.functional_pass is False
+    assert rep_shape.shape_pass is False
+
+    # 2. Candidate returning NaN
+    def cand_nan(a, b):
+        out = a @ b
+        out[0, 0] = np.nan
+        return out
+    rep_nan = UniversalFunctionalVerifier.verify("cand_nan", cand_nan, ref_fn, (A, B), contract)
+    assert rep_nan.functional_pass is False
+    assert rep_nan.finite_pass is False
+
+    # 3. Candidate with non-zero error under EXACT contract
+    def cand_approx(a, b):
+        out = a @ b
+        out[0, 0] += 0.001
+        return out
+    rep_exact = UniversalFunctionalVerifier.verify("cand_approx", cand_approx, ref_fn, (A, B), contract)
+    assert rep_exact.functional_pass is False
+    assert rep_exact.exact_pass is False
+
+    # 4. ParityEvaluator rejects when functional_pass is False
+    scorecard = ParityEvaluator.evaluate(
+        contract=contract,
+        candidate_latency_ms=5.0,
+        reference_latency_ms=10.0,
+        numerical_error=0.0,
+        nominal_reference_flops=1e5,
+        actual_necessary_flops=5e4,
+        memory_used_mb=1.0,
+        provenance_valid=True,
+        holdout_passed=True,
+        functional_pass=False
+    )
+    assert scorecard.functional_parity_gate is False
+    assert scorecard.overall_conjunctive_gate is False
+

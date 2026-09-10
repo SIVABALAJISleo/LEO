@@ -134,7 +134,10 @@ class ParityEvaluator:
         provenance_valid: bool,
         holdout_passed: bool,
         cache_state: CachePolicy = CachePolicy.COLD,
-        power_telemetry: PowerTelemetryType = PowerTelemetryType.ESTIMATED_POWER
+        power_telemetry: PowerTelemetryType = PowerTelemetryType.ESTIMATED_POWER,
+        functional_pass: Optional[bool] = None,
+        candidate_output: Optional[Any] = None,
+        reference_output: Optional[Any] = None
     ) -> StrictParityScorecard:
         """Computes all separate gates and conjunctive overall parity."""
         # 1. Exact Parity Gate
@@ -143,12 +146,29 @@ class ParityEvaluator:
         # 2. Numerical Parity Gate
         numerical_pass = (numerical_error <= contract.tolerance)
 
-        # 3. Functional Parity Gate (Produces required shape without crash)
-        functional_pass = True
+        # 3. Functional Parity Gate (Rigorously verified, never hard-coded)
+        if functional_pass is not None:
+            actual_functional_pass = bool(functional_pass)
+        elif candidate_output is not None:
+            # Check shape, finiteness, and NaN/Inf rejection
+            import numpy as np
+            c_arr = np.asarray(candidate_output)
+            finite_ok = bool(np.all(np.isfinite(c_arr)))
+            shape_ok = True
+            if reference_output is not None:
+                r_arr = np.asarray(reference_output)
+                shape_ok = (c_arr.shape == r_arr.shape)
+            actual_functional_pass = finite_ok and shape_ok and numerical_pass
+        else:
+            # When outputs are abstracted, require numerical pass and holdout pass
+            actual_functional_pass = numerical_pass and holdout_passed
+            if contract.correctness == CorrectnessRequirement.EXACT:
+                actual_functional_pass = actual_functional_pass and exact_pass
 
         # 4. Contract Parity Gate (Meets tolerance, SLO, and memory)
         contract_pass = (
             numerical_pass and
+            actual_functional_pass and
             (candidate_latency_ms <= contract.latency_slo_ms) and
             (memory_used_mb <= contract.memory_limit_mb)
         )
@@ -165,7 +185,7 @@ class ParityEvaluator:
         # 8. Conjunctive Overall 100% Gate
         overall_100 = (
             numerical_pass and
-            functional_pass and
+            actual_functional_pass and
             contract_pass and
             application_pass and
             performance_pass and
@@ -188,7 +208,7 @@ class ParityEvaluator:
             power_telemetry=power_telemetry,
             exact_parity_gate=exact_pass,
             numerical_parity_gate=numerical_pass,
-            functional_parity_gate=functional_pass,
+            functional_parity_gate=actual_functional_pass,
             contract_parity_gate=contract_pass,
             application_parity_gate=application_pass,
             performance_parity_gate=performance_pass,
