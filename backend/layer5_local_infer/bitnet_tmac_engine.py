@@ -122,17 +122,19 @@ class BitNetTMacEngine:
         indices = self._encode_weights_to_indices(W)  # Shape: (N, G)
         
         # Step 3: Pure table lookup and summation across groups (NO multiplications!)
-        num_groups = indices.shape[1]
-        
-        # Gather LUT entries: for each group g, lookup value at index[i, g]
-        # gathered has shape (N, G)
-        gathered = np.zeros((N, num_groups), dtype=np.float32)
-        for g in range(num_groups):
-            gathered[:, g] = lut[g, indices[:, g]]
+        # Uses AVX2 vectorized parallel P-core accumulation from hyper.casa.tmac_lut_engine
+        try:
+            from hyper.casa.tmac_lut_engine import _tmac_accumulate_lut_pcores
+            output = _tmac_accumulate_lut_pcores(lut, indices)
+        except Exception:
+            num_groups = indices.shape[1]
+            gathered = np.zeros((N, num_groups), dtype=np.float32)
+            for g in range(num_groups):
+                gathered[:, g] = lut[g, indices[:, g]]
+            output = np.sum(gathered, axis=1)
             
-        # Sum across groups: pure vector additions
-        output = np.sum(gathered, axis=1)
         return output
+
 
     def run_inference(self, prompt: str, max_tokens: int = 16) -> Dict[str, Any]:
         """

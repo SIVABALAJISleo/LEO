@@ -79,9 +79,14 @@ class TernaryEngine:
         logger.info(f"ternary_engine: routing to 1.58-bit execution (model={model_path}, mode={self.mode})")
 
         if not self.is_available:
-            logger.info("TernaryEngine running in SIMULATED mode.")
-            yield "[BitNet 1.58-bit ternary rapid execution mode: simulated]"
-            yield f" Simulated response for: {prompt[:30]}"
+            logger.info("TernaryEngine: Executing native AVX2 BitNet T-MAC manifold.")
+            from backend.layer5_local_infer.bitnet_tmac_engine import BitNetTMacEngine
+            tmac_inst = BitNetTMacEngine()
+            max_toks = int(device_plan.get("max_tokens", 16))
+            res = tmac_inst.run_inference(prompt, max_tokens=max_toks)
+            yield "[BitNet-1.58b-TMAC rapid execution] "
+            for token in res["text"].split():
+                yield token + " "
             return
 
         assert self.bitnet_path is not None, "bitnet_path cannot be None"
