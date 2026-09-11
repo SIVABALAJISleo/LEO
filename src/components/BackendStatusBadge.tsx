@@ -54,7 +54,7 @@ export function BackendStatusBadge({ compact = false }: { compact?: boolean }) {
         </>
       )}
       {h.status !== "online" && h.status !== "checking" && h.message && !compact && (
-        <span className="ml-2 text-red-400" role="alert">
+        <span className="ml-2 max-w-[200px] truncate text-red-400" role="alert">
           {h.message}
         </span>
       )}

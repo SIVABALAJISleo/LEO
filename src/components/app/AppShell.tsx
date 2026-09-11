@@ -1,6 +1,7 @@
 import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../../lib/auth-context";
+import { getToken } from "../../lib/leo-client";
 import {
   Activity,
   Brain,
@@ -35,6 +36,12 @@ export function AppShell({ children }: { children: ReactNode }) {
   const auth = useAuth();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && !getToken()) {
+      navigate({ to: "/login" });
+    }
+  }, [navigate]);
 
   function isActive(to: string, exact?: boolean) {
     return exact ? pathname === to : pathname === to || pathname.startsWith(to + "/");

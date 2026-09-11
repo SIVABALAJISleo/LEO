@@ -136,10 +136,6 @@ function BenchmarksPage() {
         <GeneratePdfReportButton />
       </div>
 
-      <div className="mt-4">
-        <HealthDegradationAlert />
-      </div>
-
       <fieldset className="mt-4 inline-flex flex-wrap items-center gap-3 border border-border bg-background/60 px-3 py-2 text-xs">
         <legend className="px-1 text-[11px] uppercase tracking-wide text-muted-foreground">
           Polling
@@ -157,7 +153,7 @@ function BenchmarksPage() {
         <span className="text-muted-foreground">0 = off</span>
       </fieldset>
 
-      <p className="mt-4 max-w-2xl text-muted-foreground" aria-live="polite">
+      <p className="mt-4 min-h-[1.5rem] max-w-2xl text-muted-foreground" aria-live="polite">
         {isLoading
           ? "Fetching live metrics… (auto-retrying with backoff)"
           : error
@@ -186,6 +182,10 @@ function BenchmarksPage() {
 
       <div className="mt-8">
         <BackendDiagnosticsPanel />
+      </div>
+
+      <div className="mt-8">
+        <HealthDegradationAlert />
       </div>
 
       <div className="mt-8">

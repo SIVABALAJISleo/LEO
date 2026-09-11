@@ -3,8 +3,7 @@ import { getToken } from "@/lib/leo-client";
 
 export const Route = createFileRoute("/_authenticated")({
   beforeLoad: ({ location }) => {
-    // Client-side check; loader runs on client because ssr:false
-    if (typeof window !== "undefined" && !getToken()) {
+    if (!getToken()) {
       throw redirect({ to: "/login", search: { redirect: location.href } as never });
     }
   },
