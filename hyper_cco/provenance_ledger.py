@@ -59,6 +59,7 @@ class TruthfulnessLabel(str, Enum):
     CACHED = "CACHED"
     PREDICTED = "PREDICTED"
     UNVERIFIED = "UNVERIFIED"
+    PHYSICALLY_MEASURED = "PHYSICALLY_MEASURED"
 
 
 REQUIRED_PROVENANCE_FIELDS = [
@@ -152,6 +153,10 @@ class BenchmarkProvenanceRecord:
     def verify_seal(self) -> bool:
         return bool(self.provenance_hash) and (self.provenance_hash == self.compute_hash())
 
+    @property
+    def certificate_id(self) -> str:
+        return self.provenance_hash
+
 
 class ProvenanceLedger:
     """
@@ -222,3 +227,36 @@ class ProvenanceLedger:
             d["truthfulness_label"] = r.truthfulness_label.value
             data.append(d)
         return json.dumps(data, indent=2, sort_keys=True)
+
+    def record_execution(
+        self,
+        workload_id: str,
+        contract: Any,
+        candidate_id: str,
+        latency_ms: float,
+        baseline_latency_ms: float,
+        correctness_class: Any,
+        verified: bool = True,
+        error_value: float = 0.0,
+        truthfulness: TruthfulnessLabel = TruthfulnessLabel.MEASURED,
+        extra_info: Optional[Dict[str, Any]] = None
+    ) -> BenchmarkProvenanceRecord:
+        """Helper to create and seal a benchmark record from execution metrics."""
+        input_hash = hashlib.sha256(f"{workload_id}_{candidate_id}_in".encode("utf-8")).hexdigest()
+        output_hash = hashlib.sha256(f"{workload_id}_{candidate_id}_out".encode("utf-8")).hexdigest()
+        truth_label = truthfulness if isinstance(truthfulness, TruthfulnessLabel) else TruthfulnessLabel.MEASURED
+        return self.create_record(
+            workload_id=workload_id,
+            input_hash=input_hash,
+            output_hash=output_hash,
+            exact_baseline_latency_ms=baseline_latency_ms,
+            optimized_latency_ms=latency_ms,
+            error_metrics={"error": error_value},
+            truthfulness_label=truth_label,
+            extra_info=extra_info
+        )
+
+
+# Canonical aliases
+AntiCheatProvenanceLedger = ProvenanceLedger
+AuditTruthfulness = TruthfulnessLabel

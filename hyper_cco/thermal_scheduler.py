@@ -43,6 +43,7 @@ except ImportError:
 
 class ScheduledTarget(str, Enum):
     CPU = "CPU"
+    CPU_AVX2 = "CPU_AVX2"
     INTEL_IGPU = "INTEL_IGPU"
     CPU_IGPU_PIPELINE = "CPU_IGPU_PIPELINE"
 
@@ -234,3 +235,8 @@ class ThermalDeadlineScheduler:
         )
         self.history.append(outcome)
         return outcome
+
+
+# Canonical aliases
+ExecutionTarget = ScheduledTarget
+ThermalAwareDeadlineScheduler = ThermalDeadlineScheduler

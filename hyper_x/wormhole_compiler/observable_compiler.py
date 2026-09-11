@@ -142,6 +142,23 @@ class UniversalObservableCompiler:
         )
 
     @staticmethod
+    def top_k(k: int, total_dim: int = 128, tolerance: float = 1e-4) -> ObservableIR:
+        """Ranking/Selection domain: only top-k items are observed."""
+        reduction = float(min(k, total_dim)) / max(1.0, float(total_dim))
+        return ObservableIR(
+            observable_id=f"OBS_TOP_{k}",
+            domain=ObservableDomain.RANKING,
+            description=f"Top-{k} sorted observable from dimension {total_dim}",
+            target_shape=(k,),
+            dtype="float32",
+            dimension_reduction_ratio=reduction,
+            tolerance=tolerance,
+            is_decision_relevant_only=True,
+            is_user_visible_only=True,
+            extractor_fn_name="extract_top_k",
+        )
+
+    @staticmethod
     def graphics_visible_pixels(
         resolution: Tuple[int, int],
         channels: int = 3,

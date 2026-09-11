@@ -1,5 +1,5 @@
 {
-  "certificate_id": "CERT_ELIM_intermediate_dense_gemm_1789051800373",
+  "certificate_id": "CERT_ELIM_intermediate_dense_gemm_1789139269649",
   "operation_id": "intermediate_dense_gemm",
   "workload_id": "GEMM_128x128",
   "observable": "output_tensor",
@@ -27,8 +27,8 @@
     "target_cpu": "Intel Core i5-12450H",
     "target_gpu": "Intel UHD Graphics"
   },
-  "timestamp": 1789051800.373071,
+  "timestamp": 1789139269.6493812,
   "software_version": "HYPER-Wormhole-v2.0",
   "hardware_identity": "Intel Core i5-12450H + Intel UHD Graphics",
-  "sha256_signature": "57cdc24d04797ff9575ef38fadf107cef3c2f95da478cab1844f4170bdc03d4f"
+  "sha256_signature": "d7711bf8f1a0c976150363da3122b64a764baf60556bd71e0cddaa320a76696f"
 }

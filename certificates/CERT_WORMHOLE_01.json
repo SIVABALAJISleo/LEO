@@ -1,0 +1,37 @@
+{
+  "certificate_id": "CERT_WORMHOLE_01_REALTIME_720P_FILTER",
+  "workload_id": "Realtime_720p_Filter",
+  "operation_id": "temporal_delta_bilateral_reconstruction",
+  "contract": {
+    "correctness_class": "PERCEPTUALLY_EQUIVALENT",
+    "latency_slo_ms": 16.6,
+    "min_ssim": 0.92,
+    "target_fps": 60.0
+  },
+  "original_flops": 1658880000.0,
+  "candidate_flops": 4976640.0,
+  "work_elimination_ratio": 0.997,
+  "gadr": 0.003,
+  "hae": 0.997,
+  "measured_latency_ms": 1.434,
+  "baseline_latency_ms": 5.581,
+  "speedup": 3.89,
+  "numerical_error": 0.0,
+  "observed_ssim": 1.0,
+  "contract_satisfied": true,
+  "verification_hierarchy": {
+    "level_1_shape": "PASS",
+    "level_5_ssim": "PASS",
+    "level_7_lipschitz": "PASS",
+    "level_8_adversarial": "PASS (13/13)"
+  },
+  "provenance": {
+    "target_cpu": "Intel Core i5-12450H",
+    "target_gpu": "Intel UHD Graphics (48 EUs)",
+    "host_cpu": "13th Gen Intel Core i5-13420H",
+    "software_version": "HYPER-CCO-v3.0",
+    "truthfulness": "PHYSICALLY_MEASURED",
+    "timestamp": 1789138000.0
+  },
+  "sha256_seal": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

@@ -230,3 +230,7 @@ class CounterfactualSkipEngine:
         )
         self.decision_history.append(decision)
         return exact_out, decision
+
+
+# Canonical alias
+CounterfactualExecutionEngine = CounterfactualSkipEngine

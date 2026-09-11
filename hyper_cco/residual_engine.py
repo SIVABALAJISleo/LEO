@@ -484,3 +484,7 @@ class ResidualEngine:
             predict_fn=predict,
             residual_fn=residual
         )
+
+
+# Canonical alias
+ResidualEngine7Mode = ResidualEngine

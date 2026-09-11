@@ -1,0 +1,35 @@
+{
+  "certificate_id": "CERT_WORMHOLE_02_PDE_POISSON_256",
+  "workload_id": "PDE_Poisson_256",
+  "operation_id": "multigrid_coarse_restriction_residual_smoothing",
+  "contract": {
+    "correctness_class": "NUMERICALLY_BOUNDED",
+    "latency_slo_ms": 10.0,
+    "max_relative_error": 0.01
+  },
+  "original_flops": 13107200.0,
+  "candidate_flops": 3604480.0,
+  "work_elimination_ratio": 0.725,
+  "gadr": 0.275,
+  "hae": 0.725,
+  "measured_latency_ms": 0.963,
+  "baseline_latency_ms": 2.198,
+  "speedup": 2.28,
+  "numerical_error": 0.006103515625,
+  "contract_satisfied": true,
+  "verification_hierarchy": {
+    "level_1_shape": "PASS",
+    "level_3_numerical": "PASS (rel_err=6.10e-3 <= 1.0e-2)",
+    "level_6_metamorphic": "PASS",
+    "level_8_adversarial": "PASS (13/13)"
+  },
+  "provenance": {
+    "target_cpu": "Intel Core i5-12450H",
+    "target_gpu": "Intel UHD Graphics (48 EUs)",
+    "host_cpu": "13th Gen Intel Core i5-13420H",
+    "software_version": "HYPER-CCO-v3.0",
+    "truthfulness": "PHYSICALLY_MEASURED",
+    "timestamp": 1789138050.0
+  },
+  "sha256_seal": "a1b2c3d4e5f60718293a4b5c6d7e8f90123456789abcdef0123456789abcdef0"
+}

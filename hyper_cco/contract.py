@@ -174,7 +174,19 @@ class ComputeContract:
 
     def is_exact_required(self) -> bool:
         """Checks if exact bitwise or mathematical reformulation is required."""
-        return self.exactness_class in (ExactnessClass.EXACT, ExactnessClass.EXACT_REFORMULATION)
+        return self.exactness_class in (ExactnessClass.EXACT, ExactnessClass.EXACT_REFORMULATION, ExactnessClass.EXACT_EQUIVALENT)
+
+    @property
+    def correctness_class(self) -> ExactnessClass:
+        return self.exactness_class
+
+    @property
+    def tolerance_rel(self) -> float:
+        return self.max_relative_error if self.max_relative_error is not None else 1e-3
+
+    @property
+    def tolerance_abs(self) -> float:
+        return self.max_absolute_error if self.max_absolute_error is not None else 1e-4
 
     def compute_hash(self) -> str:
         """Deterministic cryptographic hash of contract parameters."""
@@ -291,3 +303,8 @@ class ComputeContract:
     # Convenient method aliases
     validate = validate_metrics
     compute_contract_hash = compute_hash
+
+
+# Canonical aliases for interoperability
+WorkloadContract = ComputeContract
+CorrectnessClass = ExactnessClass

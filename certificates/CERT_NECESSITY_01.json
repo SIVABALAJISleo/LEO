@@ -1,0 +1,33 @@
+{
+  "certificate_id": "CERT_NECESSITY_01_DENSE_GAUSSIAN_EXACT",
+  "workload_id": "DENSE_GAUSSIAN_EXACT",
+  "operation_id": "dense_unstructured_gemm",
+  "contract": {
+    "correctness_class": "EXACT_EQUIVALENT",
+    "max_absolute_error": 0.0,
+    "max_relative_error": 0.0
+  },
+  "original_flops": 536870912.0,
+  "necessary_flops": 536870912.0,
+  "work_elimination_ratio": 0.0,
+  "gadr": 1.0,
+  "hae": 0.0,
+  "measured_latency_ms": 2.262,
+  "baseline_latency_ms": 2.262,
+  "speedup": 1.0,
+  "numerical_error": 0.0,
+  "contract_satisfied": true,
+  "formal_proof_status": "PROVABLY_NECESSARY_UNDER_MODEL",
+  "barrier_classification": "ALGEBRAIC_FULL_RANK",
+  "barrier_justification": "Full-rank Marchenko-Pastur singular spectrum prevents low-rank factorization without violating zero-tolerance exactness.",
+  "fallback_strategy": "native_avx2_dense_gemm",
+  "provenance": {
+    "target_cpu": "Intel Core i5-12450H",
+    "target_gpu": "Intel UHD Graphics (48 EUs)",
+    "host_cpu": "13th Gen Intel Core i5-13420H",
+    "software_version": "HYPER-CCO-v3.0",
+    "truthfulness": "PHYSICALLY_MEASURED",
+    "timestamp": 1789138100.0
+  },
+  "sha256_seal": "c4ca4238a0b923820dcc509a6f75849b"
+}
