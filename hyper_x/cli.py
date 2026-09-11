@@ -36,7 +36,7 @@ if sys.platform == "win32" and hasattr(sys.stdout, "reconfigure"):
         pass
 
 from hyper_x.hardware.fingerprint import HardwareFingerprint
-from hyper_x.strict.contracts import ContractCompiler, CorrectnessMode
+from hyper_x.strict.contracts import ContractCompiler as StrictContractCompiler, CorrectnessMode
 from hyper_x.info_boundary.compiler import InformationBoundaryCompiler
 from hyper_x.cws.search import ComputationalWormholeSearch
 from hyper_x.discovery.grammar import AlgorithmDiscoveryGrammar
@@ -73,7 +73,7 @@ def cmd_hardware(args: argparse.Namespace) -> None:
     print(f"Details: {eligibility['message']}")
 
 def cmd_contract(args: argparse.Namespace) -> None:
-    c = ContractCompiler.compile(
+    c = StrictContractCompiler.compile(
         workload_id="GEMM_Standard",
         domain="dense_compute",
         correctness_mode=CorrectnessMode.NUMERICAL,
@@ -99,7 +99,7 @@ def cmd_wormhole(args: argparse.Namespace) -> None:
     print(f"Running Computational Wormhole Search for GEMM {dim}x{dim}...\n")
     A = np.random.randn(dim, dim).astype(np.float32)
     B = np.random.randn(dim, dim).astype(np.float32)
-    contract = ContractCompiler.compile(
+    contract = StrictContractCompiler.compile(
         workload_id="CWS_GEMM",
         domain="matrix",
         correctness_mode=CorrectnessMode.NUMERICAL,
@@ -591,8 +591,13 @@ def main() -> None:
     p_eliminate = subparsers.add_parser("eliminate")
     p_eliminate.add_argument("--workload", type=str, default="GEMM")
 
+    subparsers.add_parser("inspect")
+
     p_certify = subparsers.add_parser("certify")
     p_certify.add_argument("--candidate", type=str, default="CAND_WORMHOLE_01")
+
+    p_certificate = subparsers.add_parser("certificate")
+    p_certificate.add_argument("--candidate", type=str, default="CAND_WORMHOLE_01")
 
     p_necessity = subparsers.add_parser("necessity")
     p_necessity.add_argument("--operation", type=str, default="dense_unstructured_gemm")
@@ -631,6 +636,7 @@ def main() -> None:
 
     handlers = {
         "audit": cmd_audit,
+        "inspect": cmd_audit,
         "hardware": cmd_hardware,
         "contract": cmd_contract,
         "compile": cmd_compile,
@@ -644,6 +650,7 @@ def main() -> None:
         "discover": cmd_discover,
         "eliminate": cmd_eliminate,
         "certify": cmd_certify,
+        "certificate": cmd_certify,
         "necessity": cmd_necessity,
         "search": cmd_search,
         "universal-search": cmd_universal_search,
