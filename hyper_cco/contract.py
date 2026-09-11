@@ -15,10 +15,37 @@ import hashlib
 import numpy as np
 
 
+class CorrectnessTaxonomy(str, Enum):
+    """
+    Required non-negotiable 10-class correctness taxonomy.
+    Every result MUST be classified as exactly one of these:
+      - EXACT_EQUIVALENT
+      - NUMERICALLY_BOUNDED
+      - PERCEPTUALLY_EQUIVALENT
+      - APPLICATION_CONTRACT_EQUIVALENT
+      - REDUCED_WORK
+      - PREDICTIVE
+      - CACHED
+      - SIMULATED
+      - UNVERIFIED
+      - FAILED_CONTRACT
+    Never use 'equivalent' without specifying the level.
+    """
+    EXACT_EQUIVALENT = "EXACT_EQUIVALENT"
+    NUMERICALLY_BOUNDED = "NUMERICALLY_BOUNDED"
+    PERCEPTUALLY_EQUIVALENT = "PERCEPTUALLY_EQUIVALENT"
+    APPLICATION_CONTRACT_EQUIVALENT = "APPLICATION_CONTRACT_EQUIVALENT"
+    REDUCED_WORK = "REDUCED_WORK"
+    PREDICTIVE = "PREDICTIVE"
+    CACHED = "CACHED"
+    SIMULATED = "SIMULATED"
+    UNVERIFIED = "UNVERIFIED"
+    FAILED_CONTRACT = "FAILED_CONTRACT"
+
+
 class ExactnessClass(str, Enum):
     """
-    Non-negotiable 12-class correctness taxonomy.
-    Every execution strategy MUST be explicitly classified as one of these.
+    12-class correctness taxonomy with direct mapping to the required 10-class taxonomy.
     Never mix or conflate these classifications.
     """
     EXACT = "EXACT"                                 # Output is mathematically identical under declared numerical semantics
@@ -33,10 +60,41 @@ class ExactnessClass(str, Enum):
     REDUCED_WORK = "REDUCED_WORK"                   # Only part of original computational graph evaluated
     SIMULATED = "SIMULATED"                         # Emulated behavior
     UNVERIFIED = "UNVERIFIED"                       # Result without verification (disallows parity claims)
+    FAILED_CONTRACT = "FAILED_CONTRACT"             # Result violated contract constraints
+
+    # Direct required taxonomy names
+    EXACT_EQUIVALENT = "EXACT_EQUIVALENT"
+    NUMERICALLY_BOUNDED = "NUMERICALLY_BOUNDED"
+    PERCEPTUALLY_EQUIVALENT = "PERCEPTUALLY_EQUIVALENT"
+    APPLICATION_CONTRACT_EQUIVALENT = "APPLICATION_CONTRACT_EQUIVALENT"
+
     # Convenient aliases
     BITWISE_EXACT = "EXACT"
     APPLICATION_PRESERVED = "PERCEPTUAL_APPROXIMATION"
     PERCEPTUALLY_IDENTICAL = "PERCEPTUAL_APPROXIMATION"
+
+    def to_canonical_taxonomy(self) -> CorrectnessTaxonomy:
+        """Map any exactness class to the strict 10-class correctness taxonomy."""
+        mapping = {
+            ExactnessClass.EXACT: CorrectnessTaxonomy.EXACT_EQUIVALENT,
+            ExactnessClass.EXACT_EQUIVALENT: CorrectnessTaxonomy.EXACT_EQUIVALENT,
+            ExactnessClass.EXACT_REFORMULATION: CorrectnessTaxonomy.EXACT_EQUIVALENT,
+            ExactnessClass.NUMERICALLY_EQUIVALENT: CorrectnessTaxonomy.NUMERICALLY_BOUNDED,
+            ExactnessClass.NUMERICALLY_BOUNDED: CorrectnessTaxonomy.NUMERICALLY_BOUNDED,
+            ExactnessClass.BOUNDED_APPROXIMATION: CorrectnessTaxonomy.NUMERICALLY_BOUNDED,
+            ExactnessClass.PERCEPTUAL_APPROXIMATION: CorrectnessTaxonomy.PERCEPTUALLY_EQUIVALENT,
+            ExactnessClass.PERCEPTUALLY_EQUIVALENT: CorrectnessTaxonomy.PERCEPTUALLY_EQUIVALENT,
+            ExactnessClass.APPLICATION_CONTRACT_EQUIVALENT: CorrectnessTaxonomy.APPLICATION_CONTRACT_EQUIVALENT,
+            ExactnessClass.REDUCED_WORK: CorrectnessTaxonomy.REDUCED_WORK,
+            ExactnessClass.PREDICTIVE: CorrectnessTaxonomy.PREDICTIVE,
+            ExactnessClass.SPECULATIVE: CorrectnessTaxonomy.PREDICTIVE,
+            ExactnessClass.CACHED: CorrectnessTaxonomy.CACHED,
+            ExactnessClass.REUSED: CorrectnessTaxonomy.CACHED,
+            ExactnessClass.SIMULATED: CorrectnessTaxonomy.SIMULATED,
+            ExactnessClass.UNVERIFIED: CorrectnessTaxonomy.UNVERIFIED,
+            ExactnessClass.FAILED_CONTRACT: CorrectnessTaxonomy.FAILED_CONTRACT,
+        }
+        return mapping.get(self, CorrectnessTaxonomy.UNVERIFIED)
 
 
 class EvidenceClass(str, Enum):

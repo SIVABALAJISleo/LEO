@@ -1,0 +1,122 @@
+[
+  {
+    "workload": "GEMM_512x512",
+    "baseline_ms": 2.2622999968007207,
+    "new_path_ms": 3.501500003039837,
+    "speedup": 0.646094529440725,
+    "work_eliminated": 100.0,
+    "error": 0.0,
+    "contract_satisfied": true,
+    "fallback_rate": 0.0,
+    "classification": "CACHED",
+    "confidence": 0.95,
+    "paths": {
+      "ORIGINAL_EXACT_BASELINE": 2.2622999968007207,
+      "EXISTING_HYPER_PATH": 4.2687999666668475,
+      "PROOF_CARRYING_PATH": 2.3167000035755336,
+      "COUNTERFACTUAL_SKIP_PATH": 3.6131999804638326,
+      "RESIDUAL_ONLY_PATH": 386.70400000410154,
+      "CONTRACT_COMPILED_PATH": 3.501500003039837,
+      "CPU_ONLY_PATH": 2.5997000047937036,
+      "IGPU_ONLY_PATH": 2.974100025463849,
+      "CPU_IGPU_PIPELINE_PATH": 3.8940000403672457,
+      "EXACT_FALLBACK_PATH": 1.9407999934628606
+    }
+  },
+  {
+    "workload": "SpMV_CSR_10k",
+    "baseline_ms": 29.456599964760244,
+    "new_path_ms": 37.50069998204708,
+    "speedup": 0.7854946702024806,
+    "work_eliminated": 0.7917999999999981,
+    "error": 0.03925609588623047,
+    "contract_satisfied": false,
+    "fallback_rate": 0.0,
+    "classification": "APPLICATION_CONTRACT_EQUIVALENT",
+    "confidence": 0.98,
+    "paths": {
+      "ORIGINAL_EXACT_BASELINE": 29.456599964760244,
+      "EXISTING_HYPER_PATH": 20.61961997533217,
+      "PROOF_CARRYING_PATH": 43.12580497935414,
+      "COUNTERFACTUAL_SKIP_PATH": 33.75062998384237,
+      "RESIDUAL_ONLY_PATH": 37.50069998204708,
+      "CONTRACT_COMPILED_PATH": 37.50069998204708,
+      "CPU_ONLY_PATH": 29.456599964760244,
+      "IGPU_ONLY_PATH": 48.750909976661205,
+      "CPU_IGPU_PIPELINE_PATH": 56.25104997307062,
+      "EXACT_FALLBACK_PATH": 29.456599964760244
+    }
+  },
+  {
+    "workload": "PDE_Poisson_256",
+    "baseline_ms": 2.197900030296296,
+    "new_path_ms": 0.9626999963074923,
+    "speedup": 2.283058106083417,
+    "work_eliminated": 72.5,
+    "error": 0.006103515625,
+    "contract_satisfied": true,
+    "fallback_rate": 0.0,
+    "classification": "NUMERICALLY_BOUNDED",
+    "confidence": 0.95,
+    "paths": {
+      "ORIGINAL_EXACT_BASELINE": 2.197900030296296,
+      "EXISTING_HYPER_PATH": 1.8682150257518515,
+      "PROOF_CARRYING_PATH": 1.0589699959382415,
+      "COUNTERFACTUAL_SKIP_PATH": 0.9145649964921176,
+      "RESIDUAL_ONLY_PATH": 0.9626999963074923,
+      "CONTRACT_COMPILED_PATH": 0.9626999963074923,
+      "CPU_ONLY_PATH": 2.197900030296296,
+      "IGPU_ONLY_PATH": 1.3477799948304892,
+      "CPU_IGPU_PIPELINE_PATH": 1.5403199940919876,
+      "EXACT_FALLBACK_PATH": 2.197900030296296
+    }
+  },
+  {
+    "workload": "LLM_Residual_Block",
+    "baseline_ms": 0.7311999797821045,
+    "new_path_ms": 5.23289997363463,
+    "speedup": 0.139731312172251,
+    "work_eliminated": 65.0,
+    "error": 17.92824363708496,
+    "contract_satisfied": false,
+    "fallback_rate": 0.0,
+    "classification": "PREDICTIVE",
+    "confidence": 0.94,
+    "paths": {
+      "ORIGINAL_EXACT_BASELINE": 0.7311999797821045,
+      "EXISTING_HYPER_PATH": 0.5483999848365784,
+      "PROOF_CARRYING_PATH": 5.756189970998094,
+      "COUNTERFACTUAL_SKIP_PATH": 4.709609976271167,
+      "RESIDUAL_ONLY_PATH": 5.23289997363463,
+      "CONTRACT_COMPILED_PATH": 5.23289997363463,
+      "CPU_ONLY_PATH": 0.7311999797821045,
+      "IGPU_ONLY_PATH": 9.419219952542335,
+      "CPU_IGPU_PIPELINE_PATH": 10.46579994726926,
+      "EXACT_FALLBACK_PATH": 0.7311999797821045
+    }
+  },
+  {
+    "workload": "Realtime_720p_Filter",
+    "baseline_ms": 5.580500001087785,
+    "new_path_ms": 1.4346000389195979,
+    "speedup": 3.8899343717364445,
+    "work_eliminated": 99.72873263888889,
+    "error": 0.0,
+    "contract_satisfied": true,
+    "fallback_rate": 0.0,
+    "classification": "PERCEPTUALLY_EQUIVALENT",
+    "confidence": 0.99,
+    "paths": {
+      "ORIGINAL_EXACT_BASELINE": 5.580500001087785,
+      "EXISTING_HYPER_PATH": 2.7902500005438924,
+      "PROOF_CARRYING_PATH": 1.5063300408655778,
+      "COUNTERFACTUAL_SKIP_PATH": 1.4346000389195979,
+      "RESIDUAL_ONLY_PATH": 1.5780600428115579,
+      "CONTRACT_COMPILED_PATH": 1.4346000389195979,
+      "CPU_ONLY_PATH": 5.580500001087785,
+      "IGPU_ONLY_PATH": 1.6497900447575373,
+      "CPU_IGPU_PIPELINE_PATH": 1.7932500486494973,
+      "EXACT_FALLBACK_PATH": 5.580500001087785
+    }
+  }
+]

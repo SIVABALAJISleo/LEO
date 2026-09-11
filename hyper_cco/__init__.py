@@ -13,10 +13,61 @@ ASK: "What part of the GPU's work does the application actually need?"
 from .contract import (
     ComputeContract,
     ExactnessClass,
+    CorrectnessTaxonomy,
     EvidenceClass,
     VerificationLevel,
     VerificationStatus,
     ContractViolationError
+)
+from .proof_elimination import (
+    ProofCarryingEliminationEngine,
+    RegionEliminationCertificate,
+    ProofBundle,
+    EliminationMode
+)
+from .counterfactual import (
+    CounterfactualSkipEngine,
+    CounterfactualDecision,
+    LipschitzEstimator
+)
+from .residual_engine import (
+    ResidualEngine,
+    ResidualResult,
+    ResidualMode,
+    ResidualTelemetry
+)
+from .contract_compiler import (
+    ContractCompiler,
+    CompiledPlan,
+    ExecutionStrategy,
+    TargetHardware
+)
+from .semantic_compression import (
+    SemanticCompressionEngine,
+    SemanticTier,
+    SemanticAllocation,
+    CompressionMetrics
+)
+from .thermal_scheduler import (
+    ThermalDeadlineScheduler,
+    ScheduledTarget,
+    HardwareTelemetry,
+    CostWeights,
+    SchedulingOutcome
+)
+from .provenance_ledger import (
+    ProvenanceLedger,
+    BenchmarkProvenanceRecord,
+    TruthfulnessLabel
+)
+from .adversarial_fuzzer import (
+    AdversarialContractFuzzer,
+    FailureMode,
+    FuzzAttackResult
+)
+from .cheapest_valid_path import (
+    AdaptiveCheapestValidPathEngine,
+    EngineExecutionReport
 )
 from .exact_cache import (
     ExactFullContentCache,
@@ -160,4 +211,35 @@ __all__ = [
     "RuntimeDecisionRecord",
     "RuntimeDecisionTracer",
     "compute_data_hash",
+    "CorrectnessTaxonomy",
+    "ProofCarryingEliminationEngine",
+    "RegionEliminationCertificate",
+    "ProofBundle",
+    "EliminationMode",
+    "CounterfactualSkipEngine",
+    "CounterfactualDecision",
+    "LipschitzEstimator",
+    "ResidualMode",
+    "ResidualTelemetry",
+    "ContractCompiler",
+    "CompiledPlan",
+    "ExecutionStrategy",
+    "TargetHardware",
+    "SemanticCompressionEngine",
+    "SemanticTier",
+    "SemanticAllocation",
+    "CompressionMetrics",
+    "ThermalDeadlineScheduler",
+    "ScheduledTarget",
+    "HardwareTelemetry",
+    "CostWeights",
+    "SchedulingOutcome",
+    "ProvenanceLedger",
+    "BenchmarkProvenanceRecord",
+    "TruthfulnessLabel",
+    "AdversarialContractFuzzer",
+    "FailureMode",
+    "FuzzAttackResult",
+    "AdaptiveCheapestValidPathEngine",
+    "EngineExecutionReport",
 ]
