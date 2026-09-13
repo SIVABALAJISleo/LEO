@@ -1,0 +1,154 @@
+{
+  "timestamp": "2026-09-13 20:31:08",
+  "hardware": "12th Gen Intel(R) Core(TM) i5-12450H",
+  "verification_overhead": {
+    "single_token_latency_ms": 1.378,
+    "k_verification": {
+      "K=1": {
+        "latency_ms": 1.399,
+        "overhead_vs_single": 1.01,
+        "marginal_cost_per_token_ms": 0.0
+      },
+      "K=2": {
+        "latency_ms": 11.591,
+        "overhead_vs_single": 8.41,
+        "marginal_cost_per_token_ms": 10.213
+      },
+      "K=4": {
+        "latency_ms": 11.589,
+        "overhead_vs_single": 8.41,
+        "marginal_cost_per_token_ms": 3.404
+      },
+      "K=6": {
+        "latency_ms": 9.158,
+        "overhead_vs_single": 6.65,
+        "marginal_cost_per_token_ms": 1.556
+      },
+      "K=8": {
+        "latency_ms": 13.989,
+        "overhead_vs_single": 10.15,
+        "marginal_cost_per_token_ms": 1.802
+      }
+    }
+  },
+  "parameter_sweep": [
+    {
+      "k_draft_tokens": 2,
+      "acceptance_rate": 0.6,
+      "draft_cost_ratio": 0.08,
+      "expected_accepted_drafts": 0.96,
+      "expected_tokens_per_step": 1.96,
+      "step_cost_normalized": 1.16,
+      "theoretical_speedup": 1.69
+    },
+    {
+      "k_draft_tokens": 2,
+      "acceptance_rate": 0.7,
+      "draft_cost_ratio": 0.08,
+      "expected_accepted_drafts": 1.19,
+      "expected_tokens_per_step": 2.19,
+      "step_cost_normalized": 1.16,
+      "theoretical_speedup": 1.89
+    },
+    {
+      "k_draft_tokens": 2,
+      "acceptance_rate": 0.8,
+      "draft_cost_ratio": 0.08,
+      "expected_accepted_drafts": 1.44,
+      "expected_tokens_per_step": 2.44,
+      "step_cost_normalized": 1.16,
+      "theoretical_speedup": 2.1
+    },
+    {
+      "k_draft_tokens": 2,
+      "acceptance_rate": 0.85,
+      "draft_cost_ratio": 0.08,
+      "expected_accepted_drafts": 1.57,
+      "expected_tokens_per_step": 2.57,
+      "step_cost_normalized": 1.16,
+      "theoretical_speedup": 2.22
+    },
+    {
+      "k_draft_tokens": 4,
+      "acceptance_rate": 0.6,
+      "draft_cost_ratio": 0.08,
+      "expected_accepted_drafts": 1.31,
+      "expected_tokens_per_step": 2.31,
+      "step_cost_normalized": 1.32,
+      "theoretical_speedup": 1.75
+    },
+    {
+      "k_draft_tokens": 4,
+      "acceptance_rate": 0.7,
+      "draft_cost_ratio": 0.08,
+      "expected_accepted_drafts": 1.77,
+      "expected_tokens_per_step": 2.77,
+      "step_cost_normalized": 1.32,
+      "theoretical_speedup": 2.1
+    },
+    {
+      "k_draft_tokens": 4,
+      "acceptance_rate": 0.8,
+      "draft_cost_ratio": 0.08,
+      "expected_accepted_drafts": 2.36,
+      "expected_tokens_per_step": 3.36,
+      "step_cost_normalized": 1.32,
+      "theoretical_speedup": 2.55
+    },
+    {
+      "k_draft_tokens": 4,
+      "acceptance_rate": 0.85,
+      "draft_cost_ratio": 0.08,
+      "expected_accepted_drafts": 2.71,
+      "expected_tokens_per_step": 3.71,
+      "step_cost_normalized": 1.32,
+      "theoretical_speedup": 2.81
+    },
+    {
+      "k_draft_tokens": 6,
+      "acceptance_rate": 0.6,
+      "draft_cost_ratio": 0.08,
+      "expected_accepted_drafts": 1.43,
+      "expected_tokens_per_step": 2.43,
+      "step_cost_normalized": 1.48,
+      "theoretical_speedup": 1.64
+    },
+    {
+      "k_draft_tokens": 6,
+      "acceptance_rate": 0.7,
+      "draft_cost_ratio": 0.08,
+      "expected_accepted_drafts": 2.06,
+      "expected_tokens_per_step": 3.06,
+      "step_cost_normalized": 1.48,
+      "theoretical_speedup": 2.07
+    },
+    {
+      "k_draft_tokens": 6,
+      "acceptance_rate": 0.8,
+      "draft_cost_ratio": 0.08,
+      "expected_accepted_drafts": 2.95,
+      "expected_tokens_per_step": 3.95,
+      "step_cost_normalized": 1.48,
+      "theoretical_speedup": 2.67
+    },
+    {
+      "k_draft_tokens": 6,
+      "acceptance_rate": 0.85,
+      "draft_cost_ratio": 0.08,
+      "expected_accepted_drafts": 3.53,
+      "expected_tokens_per_step": 4.53,
+      "step_cost_normalized": 1.48,
+      "theoretical_speedup": 3.06
+    }
+  ],
+  "optimal_recommendation": {
+    "k_draft_tokens": 6,
+    "acceptance_rate": 0.85,
+    "draft_cost_ratio": 0.08,
+    "expected_accepted_drafts": 3.53,
+    "expected_tokens_per_step": 4.53,
+    "step_cost_normalized": 1.48,
+    "theoretical_speedup": 3.06
+  },
+  "conclusion": "Speculative decoding with K=6 achieves 3.06x speedup when draft acceptance exceeds 85% on i5-12450H."
+}

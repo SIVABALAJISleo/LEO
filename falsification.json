@@ -28,8 +28,8 @@
   {
     "test_name": "Sub-100\u00b5s Router Dispatch Overhead",
     "hypothesis": "Dispatch decision overhead < 100 microseconds.",
-    "measured_avg_us": 5.73,
+    "measured_avg_us": 9.12,
     "honest_behavior_confirmed": true,
-    "details": "Average dispatch decision completed in 5.73 \u00b5s."
+    "details": "Average dispatch decision completed in 9.12 \u00b5s."
   }
 ]

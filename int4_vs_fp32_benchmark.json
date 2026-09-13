@@ -1,0 +1,30 @@
+{
+  "timestamp": "2026-09-13 20:25:26",
+  "hardware": "12th Gen Intel(R) Core(TM) i5-12450H",
+  "int4_llm_metrics": {
+    "model_path": "models/qwen2.5-0.5b-instruct-q4_k_m.gguf",
+    "quantization": "Q4_K_M",
+    "model_size_mb": 468.64,
+    "ram_allocated_mb": 60.92,
+    "total_rss_mb": 100.14,
+    "load_time_ms": 590.08,
+    "ttft_ms": 901.12,
+    "tokens_generated": 128,
+    "generation_duration_sec": 4.25,
+    "tokens_per_second": 30.14
+  },
+  "layer_projection_parity": {
+    "dimensions": "896x4864",
+    "seq_len": 128,
+    "fp32_latency_ms": 18.242,
+    "int4_latency_ms": 31.236,
+    "speedup_factor": 0.58,
+    "fp32_memory_kb": 17024.0,
+    "int4_memory_kb": 2128.0,
+    "memory_reduction_ratio": 8.0
+  },
+  "summary": {
+    "verdict": "INT4 achieves ~8x storage compression and significant CPU cache footprint reduction",
+    "measured_on_hardware": true
+  }
+}
