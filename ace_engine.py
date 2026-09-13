@@ -191,13 +191,19 @@ def freivalds(A: np.ndarray, B: np.ndarray, C: np.ndarray, k: int = 10, tol: flo
     Runs in O(k * n^2) rather than O(n^3).
     Guarantees Pr[false accept] <= 2^-k against arbitrary adversarial errors.
     """
+    if np.isnan(A).any() or np.isnan(B).any() or np.isnan(C).any():
+        return False
+    if np.isinf(A).any() or np.isinf(B).any() or np.isinf(C).any():
+        return False
+
     n = B.shape[1]
     for _ in range(k):
         x = RNG.choice([-1.0, 1.0], size=(n, 1)).astype(np.float32)
         lhs = A @ (B @ x)
         rhs = C @ x
         denom = float(np.linalg.norm(lhs)) + 1e-12
-        if float(np.linalg.norm(lhs - rhs)) / denom > tol:
+        diff = float(np.linalg.norm(lhs - rhs))
+        if np.isnan(diff) or diff / denom > tol:
             return False
     return True
 

@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-09-13 19:43:50",
+  "hardware": "12th Gen Intel(R) Core(TM) i5-12450H",
+  "model": "models/qwen2.5-0.5b-instruct-q4_k_m.gguf",
+  "threads": 8,
+  "model_load_ms": 969.87,
+  "ttft_ms": 417.62,
+  "tokens_generated": 256,
+  "generation_duration_sec": 9.41,
+  "tokens_per_second": 27.19,
+  "memory_rss_mb": 477.61,
+  "success_criteria_met": {
+    "first_token_sub_1s": true,
+    "generation_256_sub_30s": true,
+    "hardware_identified": true
+  }
+}

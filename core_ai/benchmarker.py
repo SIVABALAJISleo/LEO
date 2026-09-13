@@ -42,8 +42,12 @@ class LEOBenchmarker:
 
     def run_inference_benchmark(self, prompt: str = "Explain machine learning in one sentence.", runs_count: int = 3) -> Dict[str, Any]:
         """Measures TTFT, generation tokens/sec, p50/p95, and peak RAM loads."""
+        if not os.path.exists(self.target_model_path) and os.path.exists(self.draft_model_path):
+            logger.info(f"[Benchmarker] Using available local model '{self.draft_model_path}' for real hardware benchmark.")
+            self.target_model_path = self.draft_model_path
+
         if not os.path.exists(self.target_model_path):
-            logger.info(f"[Benchmarker] Model file '{self.target_model_path}' not found. Returning simulated benchmark metrics.")
+            logger.info(f"[Benchmarker] Model file '{self.target_model_path}' not found. Returning estimated benchmark metrics.")
             return {
                 "benchmark_status": "ESTIMATED",
                 "threads": self.threads,

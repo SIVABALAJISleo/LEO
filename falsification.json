@@ -1,0 +1,35 @@
+[
+  {
+    "test_name": "Full-Rank Adversarial Noise",
+    "hypothesis": "White noise has irreducible rank and must fall back to exact.",
+    "strategy_chosen": "exact",
+    "fallback_engaged": true,
+    "work_eliminated_pct": 0.0,
+    "honest_behavior_confirmed": true,
+    "details": "Confirmed: Random Gaussian noise is mathematically irreducible; ACE does not falsely claim speedup."
+  },
+  {
+    "test_name": "Rank-1 Degenerate Matrix",
+    "hypothesis": "Rank-1 matrix achieves > 90% work elimination.",
+    "strategy_chosen": "lowrank",
+    "work_eliminated_pct": 99.22,
+    "verified": true,
+    "honest_behavior_confirmed": true,
+    "details": "Confirmed: Eliminates 99.22% of operations with Freivalds stochastic proof."
+  },
+  {
+    "test_name": "Infinite Boilerplate Text Pruning",
+    "hypothesis": "Repetitive tokens compressed by >= 50% without information loss.",
+    "reduction_pct": 50.0,
+    "retained_tokens": 50,
+    "honest_behavior_confirmed": true,
+    "details": "Compressed 100 duplicate tokens to 50 tokens (50.0% reduction)."
+  },
+  {
+    "test_name": "Sub-100\u00b5s Router Dispatch Overhead",
+    "hypothesis": "Dispatch decision overhead < 100 microseconds.",
+    "measured_avg_us": 5.73,
+    "honest_behavior_confirmed": true,
+    "details": "Average dispatch decision completed in 5.73 \u00b5s."
+  }
+]

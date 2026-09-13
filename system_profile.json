@@ -1,0 +1,47 @@
+{
+  "os": "Windows 11",
+  "cpu": {
+    "model": "12th Gen Intel(R) Core(TM) i5-12450H",
+    "physical_cores": 8,
+    "logical_cores": 12,
+    "avx2": true,
+    "avx512": false,
+    "avx512_vnni": false
+  },
+  "ram": {
+    "total_gb": 15.7,
+    "available_gb": 4.2
+  },
+  "disk": {
+    "free_gb": 251.46
+  },
+  "graphics": {
+    "name": "Intel(R) UHD Graphics",
+    "driver_version": "32.0.101.7076"
+  },
+  "openvino": {
+    "available": true,
+    "version": "2026.2.1-21919-ede283a88e3-releases/2026/2"
+  },
+  "llama_cpp": {
+    "available": true,
+    "version": "0.2"
+  },
+  "runtimes": {
+    "available_devices": [
+      "CPU",
+      "GPU.0",
+      "GPU.0 (Vulkan)"
+    ],
+    "selected_device": "GPU.0",
+    "reason": "Auto-detected Intel integrated GPU support via OpenVINO Core runtime."
+  },
+  "model": {
+    "path": "models/qwen2.5-0.5b-instruct.gguf",
+    "valid": false
+  },
+  "warnings": [
+    "Model file not found at 'models/qwen2.5-0.5b-instruct.gguf'. Run validation/download configuration."
+  ],
+  "status": "DEGRADED"
+}

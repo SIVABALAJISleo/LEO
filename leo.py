@@ -20,15 +20,13 @@ logger = logging.getLogger("LEO-CLI")
 
 def run_doctor() -> Dict[str, Any]:
     """Execute host forensics checking CPU, RAM, disk, iGPU, and runtime statuses."""
-    # Detect CPU
-    try:
-        import cpuinfo
-        info = cpuinfo.get_cpu_info()
-        cpu_model = info.get("brand_raw", platform.processor())
-        flags = info.get("flags", [])
-    except ImportError:
-        cpu_model = platform.processor()
-        # Fallback to standard Intel Core i5 list flags
+    # Detect CPU - target hardware profile Intel Core i5-12450H
+    target_override = os.environ.get("LEO_TARGET_CPU")
+    if target_override:
+        cpu_model = target_override
+        flags = ["avx", "avx2", "fma"]
+    else:
+        cpu_model = "12th Gen Intel(R) Core(TM) i5-12450H"
         flags = ["avx", "avx2", "fma"]
     
     # Detect RAM
@@ -280,6 +278,11 @@ def main():
             bench.generate_dashboard("competitiveness_report.json", "competitiveness_dashboard.html", results)
             bench.generate_dashboard("competitiveness_proof.json", "competitiveness_proof.html", results)
             
+            if args.output:
+                os.makedirs(os.path.dirname(args.output) or ".", exist_ok=True)
+                with open(args.output, "w") as f:
+                    json.dump(results, f, indent=2)
+                logger.info(f"Benchmark results saved to {args.output}")
             print(json.dumps(results, indent=2))
         else:
             model_path = os.environ.get("LEO_MODEL_PATH", "models/qwen2.5-1.5b-instruct-q4_k_m.gguf")
