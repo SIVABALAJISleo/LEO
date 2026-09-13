@@ -1,0 +1,126 @@
+{
+  "timestamp": "2026-09-13T19:07:45.659810",
+  "host": "Windows-11-10.0.26100-SP0",
+  "machine": "AMD64",
+  "python": "3.13.5",
+  "numpy": "2.3.2",
+  "cpu": {
+    "cores_logical": 12,
+    "name": "13th Gen Intel(R) Core(TM) i5-13420H",
+    "freq_mhz": 2100.0,
+    "cores_physical": 8
+  },
+  "gemm": {
+    "256_float32": {
+      "size": 256,
+      "dtype": "float32",
+      "best_ms": 0.586,
+      "all_ms": [
+        0.586,
+        0.62,
+        0.64
+      ],
+      "gflops": 57.23
+    },
+    "256_float16": {
+      "size": 256,
+      "dtype": "float16",
+      "best_ms": 101.016,
+      "all_ms": [
+        106.534,
+        101.016,
+        108.165
+      ],
+      "gflops": 0.33
+    },
+    "512_float32": {
+      "size": 512,
+      "dtype": "float32",
+      "best_ms": 2.577,
+      "all_ms": [
+        2.577,
+        3.0,
+        2.857
+      ],
+      "gflops": 104.17
+    },
+    "512_float16": {
+      "size": 512,
+      "dtype": "float16",
+      "best_ms": 857.677,
+      "all_ms": [
+        857.677,
+        1053.837,
+        937.613
+      ],
+      "gflops": 0.31
+    },
+    "1024_float32": {
+      "size": 1024,
+      "dtype": "float32",
+      "best_ms": 16.771,
+      "all_ms": [
+        19.335,
+        19.415,
+        16.771
+      ],
+      "gflops": 128.05
+    },
+    "1024_float16": {
+      "size": 1024,
+      "dtype": "float16",
+      "best_ms": 20889.273,
+      "all_ms": [
+        20889.273
+      ],
+      "gflops": 0.1
+    },
+    "2048_float32": {
+      "size": 2048,
+      "dtype": "float32",
+      "best_ms": 305.321,
+      "all_ms": [
+        305.321,
+        383.582,
+        388.614
+      ],
+      "gflops": 56.27
+    },
+    "2048_float16": {
+      "size": 2048,
+      "dtype": "float16",
+      "best_ms": 168116.129,
+      "all_ms": [
+        168116.129
+      ],
+      "gflops": 0.1
+    }
+  },
+  "bandwidth": {
+    "bytes": 268435456,
+    "best_ms": 127.842,
+    "read_bw_gb_s": 2.1
+  },
+  "fft": {
+    "size": 2048,
+    "best_ms": 1013.436,
+    "all_ms": [
+      1013.436,
+      1086.837,
+      1282.899
+    ]
+  },
+  "conv": {
+    "tile": 64,
+    "naive_ms": 88.689,
+    "winograd_ms": 44.933,
+    "speedup": 1.97,
+    "max_abs_err": 13.372052192687988
+  },
+  "openvino_igpu": {
+    "available": true,
+    "error": "matmul() missing 2 required positional arguments: 'transpose_a' and 'transpose_b'"
+  },
+  "cpu_util_pct": 49.9,
+  "temps": {}
+}

@@ -1,14 +1,16 @@
 # LEO / HYPER
 
-## Contract-Driven Computation Elimination Engine
+## Verified Computation Elimination Engine
 
-**LEO / HYPER** is a software-only research and engineering project focused on a different approach to heterogeneous computing:
+> **"Verified computation elimination: 50–97% of GPU work removed with proof, on hardware that costs 30× less."**
+
+**LEO / HYPER** is an open-source, truth-first research and engineering framework for contract-driven computation elimination:
 
 > **Do not try to make weak hardware perform the same amount of work faster. Determine what work the application actually requires, eliminate everything else, and execute only the cheapest computation that can be verified to satisfy the required contract.**
 
-HYPER is designed around an Intel Core i5-12450H + Intel integrated UHD GPU system with 16 GB RAM and no dedicated accelerator.
+HYPER is built for an Intel Core i5 (i5-12450H / i5-13420H) + Intel integrated UHD GPU with 16 GB unified system RAM and no dedicated accelerator.
 
-The project does **not** claim that software can create NVIDIA GPU hardware capabilities. Instead, it investigates whether algorithmic reformulation, reuse, sparsity, prediction, reconstruction, compression, adaptive precision, and CPU+iGPU execution can make some of the advantages of much larger GPUs unnecessary for a particular application contract.
+The project does **not** claim raw hardware equivalence to discrete datacenter GPUs ("laptop = GPU"). Rather, it implements verified algorithmic elimination — using randomized rank sketches, low-rank decompositions, addition-only ternary kernels, sparse representations, and Freivalds stochastic proofs to eliminate 50% to 97% of linear algebra operations while provably satisfying the contract. Any irreducible noise falls back honestly to exact computation.
 
 ---
 

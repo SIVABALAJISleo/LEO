@@ -143,6 +143,27 @@ class CASAOrchestrator:
         
         return y_out, telemetry
 
+    def execute_verified_linear(
+        self,
+        A: np.ndarray,
+        B: np.ndarray,
+        contract: Optional[UniversalContract] = None
+    ) -> Tuple[np.ndarray, Dict[str, Any]]:
+        """
+        Executes linear algebraic layer via the Adaptive Compute Eliminator (ACE).
+        Analyzes weights once, caches decomposition, verifies approximate outputs
+        using Freivalds stochastic probes, falls back to exact computation if violated,
+        and outputs a cryptographic proof certificate.
+        """
+        from ace_engine import ace_matmul, Contract as ACEContract
+        eps = contract.error_bound_eps if contract else 1e-3
+        ace_con = ACEContract(
+            max_rel_error=eps,
+            freivalds_probes=10,
+            enable_cache=True
+        )
+        return ace_matmul(A, B, ace_con)
+
     def run_falsification_stream(
         self,
         stream_type: str = "correlated",
