@@ -58,13 +58,13 @@
   },
   {
     "candidate_id": "pathway_exact_reference",
-    "workload_id": "gemm_rank16_ultrasonic",
+    "workload_id": "gemm_omega_512",
     "exactness_class": "NUMERICALLY_EQUIVALENT",
     "correctness_result": "PASS",
     "work_elimination_pct": 0.0,
-    "throughput_ops_per_sec": 2.07,
+    "throughput_ops_per_sec": 2.41,
     "provenance": "MEASURED",
     "hardware": "Intel Core i5-12450H + UHD Graphics (48 EU)",
-    "last_verified_timestamp": 1789318916.6462355
+    "last_verified_timestamp": 1789319773.4117837
   }
 ]

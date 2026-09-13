@@ -69,6 +69,12 @@ class ExecutionCertificate:
     holdout_status: str = "PASS"
     provenance_status: str = "MEASURED"
     final_status: str = CertificateFinalStatus.VERIFIED_CONTRACT.value
+    # Project Omega: Software-Defined Compute Fabric metrics
+    virtual_work_units: int = 0
+    physical_execution_units: int = 56
+    software_parallel_worker_equivalence: float = 0.0
+    computational_compression_ratio: float = 1.0
+    gap_root_cause: str = "NONE"
     # Backward compatibility fields
     output_hash: str = ""
     exactness_class: str = "NUMERICALLY_EQUIVALENT"

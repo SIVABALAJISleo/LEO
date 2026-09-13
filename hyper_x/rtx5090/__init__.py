@@ -2,5 +2,14 @@
 # -*- coding: utf-8 -*-
 """hyper_x/rtx5090 package."""
 from .comparison_engine import RTX5090ComparisonEngine, WorkloadEquivalenceRecord, EvidenceClass
+from .gap_engine import RTX5090GapEngine, BottleneckCause, OptimizationHypothesis, GapAnalysisReport
 
-__all__ = ["RTX5090ComparisonEngine", "WorkloadEquivalenceRecord", "EvidenceClass"]
+__all__ = [
+    "RTX5090ComparisonEngine",
+    "WorkloadEquivalenceRecord",
+    "EvidenceClass",
+    "RTX5090GapEngine",
+    "BottleneckCause",
+    "OptimizationHypothesis",
+    "GapAnalysisReport"
+]

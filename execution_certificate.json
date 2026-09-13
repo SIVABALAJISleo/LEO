@@ -1,9 +1,9 @@
 {
-  "certificate_id": "cert_276761f64f55",
-  "timestamp": 1789318916.6462355,
-  "workload_id": "gemm_rank16_ultrasonic",
-  "contract_hash": "2d21fb3ef5f880be7a7842be0fe98d684720c788e623306ffc8a5615dccd0f8f",
-  "input_hash": "4738560786056767249",
+  "certificate_id": "cert_6ed397a26a75",
+  "timestamp": 1789319773.4117837,
+  "workload_id": "gemm_omega_512",
+  "contract_hash": "921162db1434babb735d820e66f9408b8399566b73299f4043101f9029c21446",
+  "input_hash": "3818844626883961145",
   "candidate_hash": "pathway_exact_reference",
   "reference_hash": "reference_blas_fp32",
   "hardware_fingerprint": "Intel Core i5-12450H + UHD Graphics (48 EU)",
@@ -17,9 +17,9 @@
   "predicted_work": 0.0,
   "reconstructed_work": 0.0,
   "verification_work": 0.0,
-  "latency": 482.075,
-  "throughput": 2.07,
-  "memory": 43.79,
+  "latency": 414.24,
+  "throughput": 2.41,
+  "memory": 45.25,
   "correctness": "PASS",
   "numerical_error": 0.0,
   "exact_status": "EXACT_MATCH",
@@ -27,6 +27,11 @@
   "holdout_status": "PASS",
   "provenance_status": "MEASURED",
   "final_status": "VERIFIED_CONTRACT",
+  "virtual_work_units": 576,
+  "physical_execution_units": 56,
+  "software_parallel_worker_equivalence": 1.0,
+  "computational_compression_ratio": 1.0,
+  "gap_root_cause": "ARITHMETIC_BOUND",
   "output_hash": "3d7adbed9260a2bcfa738eac7f9444634cca98577a4c66b24e66c9ee52726d2c",
   "exactness_class": "NUMERICALLY_EQUIVALENT",
   "correctness_result": "PASS",
@@ -34,10 +39,10 @@
   "adversarial_result": {},
   "holdout_result": {},
   "latency_samples_ms": [
-    482.075
+    414.24
   ],
-  "throughput_ops_per_sec": 2.07,
-  "memory_rss_mb": 43.79,
+  "throughput_ops_per_sec": 2.41,
+  "memory_rss_mb": 45.25,
   "work_reference_flops": 268435456.0,
   "work_necessary_flops": 268435456.0,
   "work_eliminated_ratio": 0.0,
@@ -45,5 +50,5 @@
   "provenance": "MEASURED",
   "fallback_status": "NONE",
   "verifier_version": "vNext-2.0",
-  "certificate_signature": "57e02b5004df7916d132fed5382a605505d39bd980ad753886dcbfc97817557b"
+  "certificate_signature": "c01708b5af9f42b2030b34c65b49033c3409c2345ce11b4934dff619d5b6ec32"
 }

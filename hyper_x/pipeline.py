@@ -62,6 +62,15 @@ Executes the complete unbranching chain:
 """
 
 from __future__ import annotations
+import sys
+import os
+from pathlib import Path
+
+# Ensure root workspace is in sys.path
+_ROOT = Path(__file__).resolve().parent.parent
+if str(_ROOT) not in sys.path:
+    sys.path.insert(0, str(_ROOT))
+
 import time
 import uuid
 from typing import Dict, Any, Tuple, Optional
@@ -84,6 +93,9 @@ from hyper_x.decp.engine import DECPEngine
 from hyper_x.decp.manifest import FrozenExecutionManifest
 from hyper_x.certificates.certificate import ExecutionCertificate, CertificateFinalStatus
 from hyper_x.evidence.ledger import EvidenceLedger
+from hyper_x.compute_fabric.fabric import ComputeFabric
+from hyper_x.compute_fabric.task_graph import TaskGraph
+from hyper_x.rtx5090.gap_engine import RTX5090GapEngine
 
 
 class AuthoritativePipeline:
@@ -108,6 +120,9 @@ class AuthoritativePipeline:
         self.fallback = FallbackEngine()
         self.decp = DECPEngine()
         self.ledger = EvidenceLedger(ledger_path, registry_path)
+        # Project Omega: Compute Fabric and Gap Engine
+        self.fabric = ComputeFabric()
+        self.gap_engine = RTX5090GapEngine()
 
     def execute_matrix_workload(
         self,
@@ -194,7 +209,7 @@ class AuthoritativePipeline:
             verif_status = VerificationStatus.PASS
             verif_meta = fb_meta
 
-        # Step 10: Final Necessary-Work Accounting
+        # Step 10: Final Necessary-Work Accounting & Fabric TaskGraph Decomposition
         is_cache = (selected_candidate.strategy_name == "EXACT_REUSE")
         work_breakdown = self.necessity.compile_matrix_work(
             M=M, K=K, N=N,
@@ -203,6 +218,18 @@ class AuthoritativePipeline:
             is_exact_cache_hit=is_cache,
             is_fallback=fallback_engaged
         )
+
+        # Software-Defined Compute Fabric scheduling & execution
+        task_graph = TaskGraph.partition_matrix_gemm(
+            M=M, K=K, N=N,
+            tile_size=64,
+            sparsity_ratio=sparsity,
+            effective_rank=eff_rank if selected_candidate.strategy_name == "LOW_RANK_SVD" else None,
+            is_exact_cache=is_cache
+        )
+        fabric_res = self.fabric.execute_task_graph(task_graph)
+        parallel_equiv = fabric_res["software_parallel_worker_equivalence"]
+        comp_ratio = fabric_res["computational_compression_ratio"]
 
         # Step 11: HYPER-DECP Deterministic Verification (Track A vs Track B)
         manifest = FrozenExecutionManifest(workload_id=workload_id)
@@ -217,11 +244,20 @@ class AuthoritativePipeline:
             contract_satisfied=(verif_status == VerificationStatus.PASS)
         )
 
-        # Step 12: Timing & Telemetry
+        # Step 12: Timing & Telemetry & Gap Analysis
         t_pipeline_end = time.perf_counter()
         total_latency_ms = (t_pipeline_end - t_pipeline_start) * 1000.0
         sys_telemetry = self.orchestrator.sample_telemetry()
         throughput = (1.0 / max(total_latency_ms / 1000.0, 1e-6))
+
+        # RTX 5090 Gap Engine diagnosis
+        gap_report = self.gap_engine.analyze_gap(
+            workload_id=workload_id,
+            current_latency_ms=total_latency_ms,
+            current_memory_mb=sys_telemetry.process_rss_mb,
+            arithmetic_flops=work_breakdown.original_flops,
+            verification_latency_ms=0.05
+        )
 
         # Determine Final Status
         if fallback_engaged:
@@ -261,7 +297,12 @@ class AuthoritativePipeline:
             provenance_status="MEASURED",
             final_status=final_status,
             cache_state="CACHE_HIT" if is_cache else "WARM",
-            fallback_status="FALLBACK_EXECUTED" if fallback_engaged else "NONE"
+            fallback_status="FALLBACK_EXECUTED" if fallback_engaged else "NONE",
+            virtual_work_units=parallel_equiv["virtual_work_units"],
+            physical_execution_units=parallel_equiv["physical_execution_units"],
+            software_parallel_worker_equivalence=parallel_equiv["effective_worker_amplification"],
+            computational_compression_ratio=comp_ratio["computational_compression_ratio"],
+            gap_root_cause=gap_report.root_cause.value
         )
 
         # Step 14: Evidence Ledger Update
@@ -279,7 +320,14 @@ class AuthoritativePipeline:
             "decp_classification": decp_res["classification"],
             "fallback_engaged": fallback_engaged,
             "memory_rss_mb": sys_telemetry.process_rss_mb,
-            "certificate_id": cert.certificate_id
+            "certificate_id": cert.certificate_id,
+            "virtual_work_units": parallel_equiv["virtual_work_units"],
+            "physical_execution_units": parallel_equiv["physical_execution_units"],
+            "software_parallel_worker_equivalence": parallel_equiv["effective_worker_amplification"],
+            "computational_compression_ratio": comp_ratio["computational_compression_ratio"],
+            "rtx5090_target_latency_ms": gap_report.target_rtx5090_latency_ms,
+            "latency_gap_ratio": gap_report.latency_gap_ratio,
+            "gap_root_cause": gap_report.root_cause.value
         }
 
         return selected_output, cert, run_summary

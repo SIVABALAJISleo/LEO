@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-09-13 22:32:03",
-  "total_certificates_evaluated": 7,
+  "timestamp": "2026-09-13 22:46:38",
+  "total_certificates_evaluated": 17,
   "target_hardware": "12th Gen Intel(R) Core(TM) i5-12450H",
   "scores": {
     "RAW_HARDWARE_PARITY": {
