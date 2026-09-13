@@ -1,16 +1,9 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
-hyper_x/runtime.py
-=============================================================================
-HYPER-X Execution Runtime (HyperRuntime) & Safe Fallback Engine
-=============================================================================
-Responsibilities:
-  - Dynamic hardware detection
-  - Pathway dispatch & scheduling
-  - Caching & reuse
-  - Independent verification
-  - Automatic safe reference fallback:
-    No optimization may silently corrupt output. If confidence is insufficient,
-    contract uncertain, or hardware unsupported, immediately use safe reference.
+hyper_x/runtime/__init__.py
+===========================
+Total GPU Omega: Software Accelerator Runtime & Driver Services.
 """
 
 from __future__ import annotations
@@ -22,11 +15,19 @@ from hyper_x.compiler import CompiledPathway
 from hyper_x.strict.verifier import VerificationHierarchy
 from hyper_x.strict.contracts import WorkloadContract
 
+from .command_queue import CommandQueue
+from .driver import SoftwareAcceleratorDriver
+from .memory_ecosystem import MemoryEcosystemManager
+
+
 class HyperRuntime:
     """Production runtime executing compiled pathways with zero-corruption guarantee."""
 
     def __init__(self):
         self.verifier = VerificationHierarchy()
+        self.driver = SoftwareAcceleratorDriver()
+        self.memory_mgr = MemoryEcosystemManager()
+        self.queue = CommandQueue()
 
     def execute(
         self,
@@ -52,3 +53,11 @@ class HyperRuntime:
         elapsed_ms = (time.perf_counter() - t0) * 1000.0
         meta["runtime_latency_ms"] = elapsed_ms
         return out, meta
+
+
+__all__ = [
+    "CommandQueue",
+    "SoftwareAcceleratorDriver",
+    "MemoryEcosystemManager",
+    "HyperRuntime"
+]

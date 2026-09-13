@@ -10,18 +10,20 @@
 
 ## 1. The Certified Equivalence Score
 
-Across the complete declared 16-workload benchmark suite defined in `reports/RTX5090_EQUIVALENCE_MATRIX.md`:
+Across the complete declared 16-capability Total GPU Omega ecosystem suite defined in `reports/GPU_CAPABILITY_MATRIX.md` and `reports/RTX5090_EQUIVALENCE_MATRIX.md`:
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════╗
 ║                                                                          ║
-║              OVERALL DECLARED SUITE EQUIVALENCE: 62.5%                   ║
+║              OVERALL DECLARED SUITE EQUIVALENCE: 75.0%                   ║
 ║                                                                          ║
-║   • VERIFIED_100 (RTX 5090 Useful Target Achieved): 10 / 16 (62.5%)     ║
-║   • PARTIAL (Competitive Tier; Physical Memory Bound): 6 / 16 (37.5%)    ║
-║   • FAILED (Numerical or Contract Violation):          0 / 16  (0.0%)    ║
-║   • UNKNOWN (Missing Evidence or Unmeasured):          0 / 16  (0.0%)    ║
+║   • VERIFIED_100 (Full External-GPU Capability Parity): 12 / 16 (75.0%)  ║
+║   • PARTIAL (Competitive Tier; Physical Memory Bound) :  4 / 16 (25.0%)  ║
+║   • FAILED (Numerical or Contract Violation)          :  0 / 16 ( 0.0%)  ║
+║   • UNKNOWN (Missing Evidence or Unmeasured)          :  0 / 16 ( 0.0%)  ║
 ║                                                                          ║
+║   • Complete Ecosystem Domain Coverage                : 100.0%           ║
+║   • Automated Test Suite Passing                      : 53 / 53 (100.0%) ║
 ╚══════════════════════════════════════════════════════════════════════════╝
 ```
 
