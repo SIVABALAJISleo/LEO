@@ -6,6 +6,13 @@ hyper_x/information_boundary/engine.py
 Phase 3: Information Boundary Engine.
 
 Calculates the minimal sufficient statistic required to determine the requested observable.
+Explicitly identifies:
+  - WHAT MUST BE COMPUTED
+  - WHAT DOES NOT NEED TO BE COMPUTED
+  - WHAT CAN BE REUSED
+  - WHAT CAN BE APPROXIMATED
+  - WHAT CAN BE PREDICTED
+  - WHAT MUST BE VERIFIED
 """
 
 import time
@@ -24,7 +31,8 @@ class InformationBoundaryEngine:
         self,
         A: np.ndarray,
         B: Optional[np.ndarray] = None,
-        target_observable: str = "full_product"
+        target_observable: str = "full_product",
+        cache_hit: bool = False
     ) -> Dict[str, Any]:
         """
         Analyzes matrix data to partition into required vs redundant spectral components.
@@ -55,18 +63,29 @@ class InformationBoundaryEngine:
 
         # Build formal influence graph
         graph = InfluenceGraph()
-        graph.add_node("input_A", category=InformationCategory.REQUIRED_INFORMATION, shape=[m, k])
-        if B is not None:
-            graph.add_node("input_B", category=InformationCategory.REQUIRED_INFORMATION, shape=list(B.shape))
-            graph.add_node("observable_Y", is_observable=True, dependencies=["input_A", "input_B"])
+        if cache_hit:
+            graph.add_node("cached_result", category=InformationCategory.REUSABLE_INFORMATION)
+            graph.add_node("observable_Y", is_observable=True, dependencies=["cached_result"])
         else:
-            graph.add_node("observable_Y", is_observable=True, dependencies=["input_A"])
+            cat_A = InformationCategory.APPROXIMABLE_INFORMATION if effective_rank < min(m, k) * 0.75 else InformationCategory.REQUIRED_INFORMATION
+            graph.add_node("input_A_dominant_subspace", category=cat_A, shape=[m, effective_rank])
+            if effective_rank < min(m, k):
+                graph.add_node("input_A_null_residual", category=InformationCategory.REDUNDANT_INFORMATION, shape=[m, min(m, k) - effective_rank])
+
+            if B is not None:
+                graph.add_node("input_B", category=InformationCategory.REQUIRED_INFORMATION, shape=list(B.shape))
+                graph.add_node("observable_Y", is_observable=True, dependencies=["input_A_dominant_subspace", "input_B"])
+            else:
+                graph.add_node("observable_Y", is_observable=True, dependencies=["input_A_dominant_subspace"])
 
         # Sufficient dimension: low-rank subspace dimension vs full dimension
         redundant_fraction = max(0.0, 1.0 - (effective_rank / min(m, k)))
         sufficient_statistic_dim = effective_rank
 
         dt_ms = (time.perf_counter() - t0) * 1000.0
+
+        # Get explicit 6-way classification
+        six_way = graph.get_six_way_classification()
 
         return {
             "workload_type": "matrix",
@@ -78,7 +97,14 @@ class InformationBoundaryEngine:
             "sufficient_rank": sufficient_statistic_dim,
             "redundant_information_ratio": round(redundant_fraction, 4),
             "can_eliminate_dense_full_rank": redundant_fraction > 0.40,
-            "analysis_latency_ms": round(dt_ms, 3)
+            "analysis_latency_ms": round(dt_ms, 3),
+            "six_way_classification": six_way,
+            "WHAT_MUST_BE_COMPUTED": six_way["WHAT_MUST_BE_COMPUTED"],
+            "WHAT_DOES_NOT_NEED_TO_BE_COMPUTED": six_way["WHAT_DOES_NOT_NEED_TO_BE_COMPUTED"],
+            "WHAT_CAN_BE_REUSED": six_way["WHAT_CAN_BE_REUSED"],
+            "WHAT_CAN_BE_APPROXIMATED": six_way["WHAT_CAN_BE_APPROXIMATED"],
+            "WHAT_CAN_BE_PREDICTED": six_way["WHAT_CAN_BE_PREDICTED"],
+            "WHAT_MUST_BE_VERIFIED": six_way["WHAT_MUST_BE_VERIFIED"]
         }
 
     def analyze_sequence_workload(
@@ -90,11 +116,26 @@ class InformationBoundaryEngine:
         Analyzes sequential prompt data for semantic information boundaries.
         """
         redundant_ratio = repetitive_tokens / max(token_count, 1)
+        graph = InfluenceGraph()
+        graph.add_node("informative_prefix", category=InformationCategory.REQUIRED_INFORMATION)
+        if repetitive_tokens > 0:
+            graph.add_node("boilerplate_tokens", category=InformationCategory.REDUNDANT_INFORMATION)
+        graph.add_node("predicted_continuation", category=InformationCategory.PREDICTABLE_INFORMATION)
+        graph.add_node("next_token_observable", is_observable=True, dependencies=["informative_prefix"])
+
+        six_way = graph.get_six_way_classification()
         return {
             "workload_type": "sequence",
             "total_tokens": token_count,
             "redundant_tokens": repetitive_tokens,
             "required_tokens": token_count - repetitive_tokens,
             "redundant_information_ratio": round(redundant_ratio, 4),
-            "can_prune": redundant_ratio >= 0.20
+            "can_prune": redundant_ratio >= 0.20,
+            "six_way_classification": six_way,
+            "WHAT_MUST_BE_COMPUTED": six_way["WHAT_MUST_BE_COMPUTED"],
+            "WHAT_DOES_NOT_NEED_TO_BE_COMPUTED": six_way["WHAT_DOES_NOT_NEED_TO_BE_COMPUTED"],
+            "WHAT_CAN_BE_REUSED": six_way["WHAT_CAN_BE_REUSED"],
+            "WHAT_CAN_BE_APPROXIMATED": six_way["WHAT_CAN_BE_APPROXIMATED"],
+            "WHAT_CAN_BE_PREDICTED": six_way["WHAT_CAN_BE_PREDICTED"],
+            "WHAT_MUST_BE_VERIFIED": six_way["WHAT_MUST_BE_VERIFIED"]
         }

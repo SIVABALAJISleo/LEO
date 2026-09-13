@@ -89,6 +89,23 @@ class NvidiaReferenceDatabase:
         )
 
         return {
+            "RTX_5090": NvidiaGpuSpec(
+                model_name="NVIDIA GeForce RTX 5090",
+                architecture="Blackwell",
+                product_class="GeForce Flagship",
+                cuda_cores=21760,
+                tensor_cores=680,
+                rt_cores=170,
+                memory_gb=32.0,
+                memory_type="GDDR7",
+                bandwidth_gbps=1792.0,
+                fp32_tflops=105.0,
+                tensor_tflops=3300.0,
+                interconnect="PCIe 5.0 x16",
+                nvlink_gbps=0.0,
+                tdp_watts=600.0,
+                sources=[src_nvidia]
+            ),
             "RTX_4090": NvidiaGpuSpec(
                 model_name="NVIDIA GeForce RTX 4090",
                 architecture="Ada Lovelace",
@@ -196,3 +213,7 @@ class NvidiaReferenceDatabase:
             "OPTIX_RAY_TRACING": CapabilityStatus.SUBSTITUTE
         }
         return mapping.get(capability_name, CapabilityStatus.UNKNOWN)
+
+
+# Backward compatibility alias
+NvidiaDatabase = NvidiaReferenceDatabase

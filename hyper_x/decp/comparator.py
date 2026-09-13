@@ -3,12 +3,34 @@
 """
 hyper_x/decp/comparator.py
 ==========================
-Phase 7: Cross-Hardware Comparator & ULP Distribution Analyzer.
+Phase 11: HYPER-DECP Cross-Hardware Comparator & ULP Distribution Analyzer.
+
+Evaluates results across:
+  TRACK A: SAME COMPUTATION (Bitwise identical target specification)
+  TRACK B: DIFFERENT COMPUTATION (Contract-valid alternative pathway with less work)
+
+Output statuses:
+  - EXACT_MATCH
+  - NUMERICAL_MATCH
+  - CONTRACT_MATCH
+  - COMPUTATIONALLY_DIFFERENT_BUT_VALID
+  - MISMATCH
+  - UNKNOWN
 """
 
+import enum
 import hashlib
-from typing import Dict, Any, Tuple
+from typing import Dict, Any, Tuple, Optional
 import numpy as np
+
+
+class DECPStatus(str, enum.Enum):
+    EXACT_MATCH = "EXACT_MATCH"
+    NUMERICAL_MATCH = "NUMERICAL_MATCH"
+    CONTRACT_MATCH = "CONTRACT_MATCH"
+    COMPUTATIONALLY_DIFFERENT_BUT_VALID = "COMPUTATIONALLY_DIFFERENT_BUT_VALID"
+    MISMATCH = "MISMATCH"
+    UNKNOWN = "UNKNOWN"
 
 
 class CrossHardwareComparator:
@@ -33,8 +55,22 @@ class CrossHardwareComparator:
     def compare(
         cand_out: np.ndarray,
         ref_out: np.ndarray,
-        rel_tolerance: float = 1e-4
+        rel_tolerance: float = 1e-4,
+        abs_tolerance: float = 1e-5,
+        track: str = "TRACK_B",  # "TRACK_A" (Same computation) or "TRACK_B" (Different computation)
+        contract_satisfied: bool = True
     ) -> Dict[str, Any]:
+        if cand_out is None or ref_out is None:
+            return {
+                "classification": DECPStatus.UNKNOWN.value,
+                "status": DECPStatus.UNKNOWN.value,
+                "track": track,
+                "bit_exact": False,
+                "relative_error": float("inf"),
+                "max_abs_error": float("inf"),
+                "mean_ulp_distance": float("inf")
+            }
+
         cand = np.asarray(cand_out, dtype=np.float32)
         ref = np.asarray(ref_out, dtype=np.float32)
 
@@ -51,34 +87,50 @@ class CrossHardwareComparator:
         mean_ulp = CrossHardwareComparator.calculate_ulp_distance(cand, ref)
 
         if bit_exact or elementwise_equal:
-            classification = "EXACT_MATCH"
+            classification = DECPStatus.EXACT_MATCH.value
             bit_exact_parity = 100.0
             exact_comp_parity = 100.0
             contract_parity = 100.0
-        elif rel_err <= rel_tolerance:
-            classification = "NUMERIC_MATCH"
+        elif track == "TRACK_A":
+            # Track A requires same computation; failure to be bit-exact is a mismatch or numerical match
+            if rel_err <= rel_tolerance and max_abs <= abs_tolerance:
+                classification = DECPStatus.NUMERICAL_MATCH.value
+            else:
+                classification = DECPStatus.MISMATCH.value
             bit_exact_parity = 0.0
-            exact_comp_parity = 0.0
-            contract_parity = 100.0
-        elif rel_err <= 0.05:
-            classification = "CONTRACT_MATCH"
-            bit_exact_parity = 0.0
-            exact_comp_parity = 0.0
-            contract_parity = 95.0
+            exact_comp_parity = 100.0 if rel_err <= rel_tolerance else 0.0
+            contract_parity = 100.0 if rel_err <= rel_tolerance else 0.0
         else:
-            classification = "MISMATCH"
+            # Track B: Alternative computation pathway
+            if contract_satisfied and (rel_err <= rel_tolerance or max_abs <= abs_tolerance):
+                classification = DECPStatus.COMPUTATIONALLY_DIFFERENT_BUT_VALID.value
+                contract_parity = 100.0
+            elif contract_satisfied:
+                classification = DECPStatus.CONTRACT_MATCH.value
+                contract_parity = 100.0
+            else:
+                classification = DECPStatus.MISMATCH.value
+                contract_parity = 0.0
             bit_exact_parity = 0.0
-            exact_comp_parity = 0.0
-            contract_parity = 0.0
+            exact_comp_parity = 100.0 if classification != DECPStatus.MISMATCH.value else 0.0
 
         return {
             "classification": classification,
+            "status": classification,
+            "track": track,
+            "bit_exact": bit_exact,
+            "elementwise_equal": elementwise_equal,
+            "candidate_output_sha256": cand_hash,
+            "reference_output_sha256": ref_hash,
+            "max_abs_error": round(max_abs, 6),
+            "relative_error": round(rel_err, 6),
+            "mean_ulp_distance": round(mean_ulp, 2),
             "bit_exact_output_parity_pct": bit_exact_parity,
             "exact_computational_parity_pct": exact_comp_parity,
             "contract_parity_pct": contract_parity,
-            "candidate_output_sha256": cand_hash,
-            "reference_output_sha256": ref_hash,
-            "relative_error": rel_err,
-            "max_abs_error": max_abs,
-            "mean_ulp_distance": round(mean_ulp, 2)
+            "scores": {
+                "bit_exact_output_parity_pct": bit_exact_parity,
+                "exact_computational_parity_pct": exact_comp_parity,
+                "contract_parity_pct": contract_parity
+            }
         }

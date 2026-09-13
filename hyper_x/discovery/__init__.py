@@ -1,14 +1,6 @@
-"""
-hyper_x/discovery package
-"""
-from hyper_x.discovery.grammar import (
-    AlgorithmDiscoveryGrammar,
-    DiscoveredAlgorithmCandidate,
-    NoveltyStatus
-)
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""hyper_x/discovery package."""
+from .discovery_engine import AlgorithmDiscoveryEngine, DiscoveryCandidate, CandidateLifecycleStage
 
-__all__ = [
-    "AlgorithmDiscoveryGrammar",
-    "DiscoveredAlgorithmCandidate",
-    "NoveltyStatus"
-]
+__all__ = ["AlgorithmDiscoveryEngine", "DiscoveryCandidate", "CandidateLifecycleStage"]

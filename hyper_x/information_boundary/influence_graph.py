@@ -17,6 +17,9 @@ class InformationCategory(str, enum.Enum):
     REQUIRED_INFORMATION = "REQUIRED_INFORMATION"
     OPTIONAL_INFORMATION = "OPTIONAL_INFORMATION"
     REDUNDANT_INFORMATION = "REDUNDANT_INFORMATION"
+    REUSABLE_INFORMATION = "REUSABLE_INFORMATION"
+    APPROXIMABLE_INFORMATION = "APPROXIMABLE_INFORMATION"
+    PREDICTABLE_INFORMATION = "PREDICTABLE_INFORMATION"
     UNKNOWN_INFORMATION = "UNKNOWN_INFORMATION"
 
 
@@ -44,14 +47,16 @@ class InfluenceGraph:
         shape: Optional[List[int]] = None,
         influence_score: float = 1.0,
         dependencies: Optional[List[str]] = None,
-        is_observable: bool = False
+        is_observable: bool = False,
+        metadata: Optional[Dict[str, Any]] = None
     ) -> InfluenceNode:
         node = InfluenceNode(
             node_id=node_id,
             category=category,
             shape=shape,
             influence_score=influence_score,
-            dependencies=dependencies or []
+            dependencies=dependencies or [],
+            metadata=metadata or {}
         )
         self.nodes[node_id] = node
         if is_observable:
@@ -89,3 +94,40 @@ class InfluenceGraph:
                 partition["redundant"].append(node_id)
 
         return partition
+
+    def get_six_way_classification(self) -> Dict[str, List[str]]:
+        """
+        Returns the formal 6-way classification:
+        - WHAT_MUST_BE_COMPUTED
+        - WHAT_DOES_NOT_NEED_TO_BE_COMPUTED
+        - WHAT_CAN_BE_REUSED
+        - WHAT_CAN_BE_APPROXIMATED
+        - WHAT_CAN_BE_PREDICTED
+        - WHAT_MUST_BE_VERIFIED
+        """
+        six_way: Dict[str, List[str]] = {
+            "WHAT_MUST_BE_COMPUTED": [],
+            "WHAT_DOES_NOT_NEED_TO_BE_COMPUTED": [],
+            "WHAT_CAN_BE_REUSED": [],
+            "WHAT_CAN_BE_APPROXIMATED": [],
+            "WHAT_CAN_BE_PREDICTED": [],
+            "WHAT_MUST_BE_VERIFIED": []
+        }
+
+        for node_id, node in self.nodes.items():
+            if node.category == InformationCategory.REQUIRED_INFORMATION:
+                six_way["WHAT_MUST_BE_COMPUTED"].append(node_id)
+            elif node.category == InformationCategory.REDUNDANT_INFORMATION:
+                six_way["WHAT_DOES_NOT_NEED_TO_BE_COMPUTED"].append(node_id)
+            elif node.category == InformationCategory.REUSABLE_INFORMATION:
+                six_way["WHAT_CAN_BE_REUSED"].append(node_id)
+            elif node.category == InformationCategory.APPROXIMABLE_INFORMATION:
+                six_way["WHAT_CAN_BE_APPROXIMATED"].append(node_id)
+            elif node.category == InformationCategory.PREDICTABLE_INFORMATION:
+                six_way["WHAT_CAN_BE_PREDICTED"].append(node_id)
+
+            # Any node with influence > 0.0 that is an observable or approximated must be verified
+            if node_id in self.observable_ids or node.category == InformationCategory.APPROXIMABLE_INFORMATION:
+                six_way["WHAT_MUST_BE_VERIFIED"].append(node_id)
+
+        return six_way

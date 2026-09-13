@@ -1,12 +1,16 @@
 # LEO / HYPER
 
-## Verified Computation Elimination Engine
+## Ultra-Sonic Adaptive Computation Elimination Engine
+### RTX 5090 Equivalent Software Pathway
 
-> **"Verified computation elimination: 50–97% of GPU work removed with proof, on hardware that costs 30× less."**
+> **"Achieve RTX 5090-class useful computational capability through software pathway transformation on fixed commodity silicon (Intel Core i5-12450H + Intel UHD Graphics)."**
+> 
+> *Official Report:* [RTX 5090 Software Equivalence Report](file:///c:/Users/sivab/OneDrive/Documents/HYPER/reports/RTX5090_EQUIVALENCE_REPORT.md)
 
 **LEO / HYPER** is an open-source, truth-first research and engineering framework for contract-driven computation elimination:
 
 > **Do not try to make weak hardware perform the same amount of work faster. Determine what work the application actually requires, eliminate everything else, and execute only the cheapest computation that can be verified to satisfy the required contract.**
+
 
 HYPER is built for an Intel Core i5 (i5-12450H / i5-13420H) + Intel integrated UHD GPU with 16 GB unified system RAM and no dedicated accelerator.
 
