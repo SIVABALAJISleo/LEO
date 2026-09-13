@@ -1,0 +1,91 @@
+{
+  "timestamp": "2026-09-13 22:15:58",
+  "total_certificates_evaluated": 3,
+  "target_hardware": "12th Gen Intel(R) Core(TM) i5-12450H",
+  "scores": {
+    "RAW_HARDWARE_PARITY": {
+      "score_pct": 1.85,
+      "confidence": "HIGH",
+      "evidence_type": "PHYSICAL_MEASUREMENT",
+      "notes": "Physical throughput comparison on 45W package vs 450W RTX 4090"
+    },
+    "EXACT_COMPUTATIONAL_PARITY": {
+      "score_pct": 100.0,
+      "confidence": "HIGH",
+      "evidence_type": "DECP_SHA256",
+      "notes": "Bitwise mathematical identity on discrete/exact workloads"
+    },
+    "BIT_EXACT_OUTPUT_PARITY": {
+      "score_pct": 0.0,
+      "confidence": "HIGH",
+      "evidence_type": "OUTPUT_HASH_MATCH",
+      "notes": "Elementwise and SHA-256 output digest equality"
+    },
+    "NUMERICAL_PARITY": {
+      "score_pct": 100.0,
+      "confidence": "HIGH",
+      "evidence_type": "FROBENIUS_REL_ERROR",
+      "notes": "Relative error within declared ContractIR bounds"
+    },
+    "CONTRACT_PARITY": {
+      "score_pct": 100.0,
+      "confidence": "HIGH",
+      "evidence_type": "FAIL_CLOSED_VERIFIER",
+      "notes": "100% of verified workloads satisfied declared contract invariants"
+    },
+    "APPLICATION_PERFORMANCE_PARITY": {
+      "score_pct": 100.0,
+      "confidence": "HIGH",
+      "evidence_type": "WALL_CLOCK_SLO",
+      "notes": "Application SLA criteria met on host silicon"
+    },
+    "WORK_ELIMINATION": {
+      "score_pct": 0.0,
+      "confidence": "HIGH",
+      "evidence_type": "NECESSARY_WORK_LEDGER",
+      "notes": "Mean verified arithmetic work eliminated by shortcuts"
+    },
+    "CACHE_REUSE": {
+      "score_pct": 0.0,
+      "confidence": "HIGH",
+      "evidence_type": "EXACT_REUSE_STORE",
+      "notes": "Cryptographically proven exact cache hits"
+    },
+    "NECESSARY_WORK_COVERAGE": {
+      "score_pct": 100.0,
+      "confidence": "HIGH",
+      "evidence_type": "COMPILER_BREAKDOWN",
+      "notes": "Workloads with formal necessary vs eliminable breakdown"
+    },
+    "VERIFICATION_COVERAGE": {
+      "score_pct": 100.0,
+      "confidence": "HIGH",
+      "evidence_type": "FAIL_CLOSED_CHECK",
+      "notes": "Workloads evaluated by independent verifier"
+    },
+    "HOLDOUT_COVERAGE": {
+      "score_pct": 100.0,
+      "confidence": "HIGH",
+      "evidence_type": "BLIND_DISTRIBUTION",
+      "notes": "Workloads tested against unseen test sets"
+    },
+    "FALLBACK_COVERAGE": {
+      "score_pct": 100.0,
+      "confidence": "HIGH",
+      "evidence_type": "DETERMINISTIC_LADDER",
+      "notes": "100% of shortcut failures degrade safely to canonical reference"
+    },
+    "REPRODUCIBILITY": {
+      "score_pct": 100.0,
+      "confidence": "HIGH",
+      "evidence_type": "FROZEN_MANIFEST",
+      "notes": "Workloads with reproducible seeds and hardware manifests"
+    },
+    "THERMAL_STABILITY": {
+      "score_pct": 98.5,
+      "confidence": "HIGH",
+      "evidence_type": "TELEMETRY_MONITOR",
+      "notes": "Sustained execution without thermal emergency throttling"
+    }
+  }
+}

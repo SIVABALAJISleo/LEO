@@ -1,153 +1,55 @@
 {
-  "manifest_version": "1.0.0",
-  "project": "LEO Compute-Budget Elimination Engine (CBE)",
-  "timestamp": "2026-09-06T14:30:00Z",
-  "host_hardware": {
-    "cpu_model": "Intel64 Family 6 Model 186 Stepping 2, GenuineIntel (Intel Core i5-13420H)",
-    "physical_cores": 8,
-    "p_cores": 4,
-    "e_cores": 4,
-    "logical_processors": 12,
-    "gpu_name": "Intel(R) UHD Graphics (iGPU)",
-    "gpu_architecture": "GPU: vendor=0x8086 arch=v12.3.0 (Gen12 Xe-LP)",
-    "execution_units": 48,
-    "system_ram_gb": 15.70,
-    "unified_shared_memory": true,
-    "vrs_capability_tier": "Tier 1"
+  "version": "vNext-1.0",
+  "generated_at": "2026-09-13 22:12:24",
+  "target_hardware": {
+    "cpu": "12th Gen Intel(R) Core(TM) i5-12450H",
+    "igpu": "Intel(R) UHD Graphics (48 EUs)",
+    "ram": "16 GB Unified System RAM",
+    "os": "Windows 11"
   },
-  "runtime_environment": {
-    "os": "Windows 11 Home Build 26100",
-    "python_version": "3.13.5",
-    "openvino_version": "2026.2.1-21919-ede283a88e3-releases/2026/2",
-    "openvino_devices": ["CPU", "GPU"],
-    "active_device": "GPU.0",
-    "system_dlls": {
-      "opencl": true,
-      "level_zero": true,
-      "directx12": true
-    }
-  },
-  "benchmark_tier_results": [
+  "declared_workloads": [
     {
-      "tier_index": 0,
-      "tier_name": "Tier 0: Temporal Zero-Cost Cache",
-      "latency_ms": 0.001,
-      "fps": 100000.0,
-      "cer_pct": 100.0,
-      "ssim": 1.0000,
-      "psnr_db": 100.0
+      "id": "gemm_dense_512",
+      "domain": "DENSE_LINEAR_ALGEBRA",
+      "shape": [
+        512,
+        512
+      ],
+      "contract": "NUMERICALLY_EQUIVALENT",
+      "tolerance": 0.0001,
+      "target_latency_ms": 15.0
     },
     {
-      "tier_index": 1,
-      "tier_name": "Tier 1: Reprojection + Fill",
-      "latency_ms": 5.96,
-      "fps": 167.9,
-      "cer_pct": 100.0,
-      "ssim": 1.0000,
-      "psnr_db": 100.0
+      "id": "gemm_rank16_512",
+      "domain": "DENSE_LINEAR_ALGEBRA",
+      "shape": [
+        512,
+        512
+      ],
+      "rank": 16,
+      "contract": "BOUNDED_APPROXIMATION",
+      "tolerance": 0.01,
+      "target_latency_ms": 3.0
     },
     {
-      "tier_index": 2,
-      "tier_name": "Tier 2: Sparse Tile Residual",
-      "latency_ms": 154.48,
-      "fps": 6.5,
-      "cer_pct": 98.5,
-      "ssim": 1.0000,
-      "psnr_db": 51.9
+      "id": "llm_qwen_generation_256",
+      "domain": "LLM_INFERENCE",
+      "model": "qwen2.5-0.5b-instruct-q4_k_m.gguf",
+      "tokens": 256,
+      "target_tps": 25.0
     },
     {
-      "tier_index": 3,
-      "tier_name": "Tier 3: Adaptive 50% Res + CAS",
-      "latency_ms": 10.14,
-      "fps": 98.7,
-      "cer_pct": 98.4,
-      "ssim": 0.9991,
-      "psnr_db": 37.8
-    },
-    {
-      "tier_index": 4,
-      "tier_name": "Tier 4: Adaptive Res + Neural",
-      "latency_ms": 11.99,
-      "fps": 83.4,
-      "cer_pct": 96.9,
-      "ssim": 0.9992,
-      "psnr_db": 38.6
-    },
-    {
-      "tier_index": 5,
-      "tier_name": "Tier 5: VRS 2x2/4x4 + Importance",
-      "latency_ms": 32.17,
-      "fps": 31.1,
-      "cer_pct": 94.5,
-      "ssim": 0.9999,
-      "psnr_db": 46.5
-    },
-    {
-      "tier_index": 6,
-      "tier_name": "Tier 6: 4 SPP Perceptual Contract",
-      "latency_ms": 26.36,
-      "fps": 37.9,
-      "cer_pct": 87.5,
-      "ssim": 0.9999,
-      "psnr_db": 47.0
-    },
-    {
-      "tier_index": 7,
-      "tier_name": "Tier 7: 32 SPP Ground Truth",
-      "latency_ms": 139.45,
-      "fps": 7.2,
-      "cer_pct": 0.0,
-      "ssim": 1.0000,
-      "psnr_db": 100.0
+      "id": "sparse_attention_1024",
+      "domain": "LLM_INFERENCE",
+      "seq_len": 1024,
+      "target_sparsity": 0.93,
+      "target_speedup": 2.5
     }
   ],
-  "ablation_results": [
-    {
-      "configuration": "1. Full CBE (Adaptive + Spatial + CAS)",
-      "cer_pct": 98.4,
-      "ssim": 0.9978,
-      "speedup_vs_ground_truth": 7.17
-    },
-    {
-      "configuration": "2. No Adaptive Scaling (4 SPP Full-Res)",
-      "cer_pct": 87.5,
-      "ssim": 0.9998,
-      "speedup_vs_ground_truth": 4.28
-    },
-    {
-      "configuration": "3. Pure Path Trace (Zero Elimination)",
-      "cer_pct": 0.0,
-      "ssim": 1.0000,
-      "speedup_vs_ground_truth": 1.00
-    }
-  ],
-  "adversarial_stress_summary": {
-    "camera_teleportation": {
-      "p50_latency_ms": 2.44,
-      "p90_latency_ms": 2.70,
-      "p95_latency_ms": 2.72,
-      "p99_latency_ms": 2.87,
-      "passed": true
-    },
-    "strobe_lighting": {
-      "p50_latency_ms": 2.73,
-      "p90_latency_ms": 3.32,
-      "p95_latency_ms": 3.41,
-      "p99_latency_ms": 3.47,
-      "passed": true
-    },
-    "subpixel_thin_geometry": {
-      "p50_latency_ms": 2.66,
-      "p90_latency_ms": 3.18,
-      "p95_latency_ms": 3.29,
-      "p99_latency_ms": 3.77,
-      "passed": true
-    }
-  },
-  "scientific_integrity_guarantees": {
-    "zero_mocks_in_production": true,
-    "physical_timing_measurement": true,
-    "no_double_counted_cer": true,
-    "zero_cuda_dependency": true
+  "protocol": {
+    "cold_runs": 1,
+    "warm_runs": 20,
+    "cache_hit_runs": 5,
+    "mix_allowed": false
   }
 }
