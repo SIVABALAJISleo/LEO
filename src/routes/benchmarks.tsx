@@ -114,7 +114,7 @@ function BenchmarksPage() {
     <div className="mx-auto max-w-[1440px] px-6 py-24">
       <p className="eyebrow">Benchmarks</p>
       <h1 className="mt-3 font-display text-5xl font-bold md:text-6xl">Measured, not simulated.</h1>
-      <div className="mt-4 flex flex-wrap items-center gap-4">
+      <div className="mt-4 flex flex-wrap items-center gap-4 min-h-[38px]">
         <BackendStatusBadge />
         <SseLiveIndicator />
         <button
@@ -125,6 +125,9 @@ function BenchmarksPage() {
         >
           {isFetching || health.status === "checking" ? "Running…" : "Re-run checks"}
         </button>
+      </div>
+
+      <div className="mt-3 flex flex-wrap items-center gap-2">
         <CurlHealthButton />
         <CurlMetricsButton />
         <CopyDebugReportButton />

@@ -57,32 +57,12 @@ async function openStream(
   if (priorPartial) {
     body.resume = { prior_partial: priorPartial, length: priorPartial.length };
   }
-  try {
-    const res = await fetch(url, {
-      method: "POST",
-      headers,
-      signal,
-      body: JSON.stringify(body),
-    });
-    if (res.ok) return res;
-    throw new Error(`HTTP ${res.status}`);
-  } catch {
-    const userPrompt = messages.filter((m) => m.role === "user").pop()?.content || "Hello";
-    const text = `LEO AI Engine (Local Mode): Received query "${userPrompt}". All systems active and operational.`;
-    const encoder = new TextEncoder();
-    const stream = new ReadableStream({
-      start(controller) {
-        const payload = `data: ${JSON.stringify({ choices: [{ delta: { content: text } }] })}\n\n`;
-        controller.enqueue(encoder.encode(payload));
-        controller.enqueue(encoder.encode("data: [DONE]\n\n"));
-        controller.close();
-      },
-    });
-    return new Response(stream, {
-      status: 200,
-      headers: { "Content-Type": "text/event-stream" },
-    });
-  }
+  return fetch(url, {
+    method: "POST",
+    headers,
+    signal,
+    body: JSON.stringify(body),
+  });
 }
 
 export async function streamChat(
@@ -124,19 +104,26 @@ export async function streamChat(
       if (isTransientNetworkError(err) && attempt < maxReconnects) {
         attempt += 1;
         const delay = baseMs * 2 ** (attempt - 1);
-        handlers.onReconnect?.(attempt, delay);
+        await handlers.onReconnect?.(attempt, delay);
         await new Promise((r) => setTimeout(r, delay));
         continue;
       }
       const e = new LeoError(0, "Cannot reach LEO backend.", err);
-      handlers.onError?.(e);
+      await handlers.onError?.(e);
       throw e;
     }
 
     if (!res.ok || !res.body) {
+      if (res.status >= 500 && attempt < maxReconnects) {
+        attempt += 1;
+        const delay = baseMs * 2 ** (attempt - 1);
+        await handlers.onReconnect?.(attempt, delay);
+        await new Promise((r) => setTimeout(r, delay));
+        continue;
+      }
       const text = await res.text().catch(() => "");
       const e = new LeoError(res.status, text || `HTTP ${res.status}`);
-      handlers.onError?.(e);
+      await handlers.onError?.(e);
       throw e;
     }
 
@@ -191,17 +178,21 @@ export async function streamChat(
     }
 
     if (sawDone) {
-      handlers.onDone?.();
+      await handlers.onDone?.();
       done = true;
     } else if (streamDroppedMidway && attempt < maxReconnects && !handlers.signal?.aborted) {
       attempt += 1;
       const delay = baseMs * 2 ** (attempt - 1);
-      handlers.onReconnect?.(attempt, delay);
+      await handlers.onReconnect?.(attempt, delay);
       await new Promise((r) => setTimeout(r, delay));
       // loop → reconnect with prior_partial
     } else {
       // give up — finalize with whatever we got
-      handlers.onDone?.();
+      if (streamDroppedMidway) {
+        await handlers.onError?.(new Error("Stream connection lost midway."));
+      } else {
+        await handlers.onDone?.();
+      }
       done = true;
     }
   }

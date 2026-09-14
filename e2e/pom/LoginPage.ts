@@ -10,7 +10,7 @@ export class LoginPage {
     this.page = page;
     this.emailInput = page.getByLabel(/email/i);
     this.passwordInput = page.getByLabel(/password/i);
-    this.submitButton = page.getByRole("button", { name: /sign in|log in/i });
+    this.submitButton = page.locator("form").getByRole("button", { name: /sign in/i });
   }
 
   async goto() {

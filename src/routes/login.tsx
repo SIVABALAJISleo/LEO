@@ -58,10 +58,11 @@ function LoginPage() {
 
       <button
         type="button"
+        data-testid="admin-bypass-btn"
         onClick={directAdminLogin}
         className="mt-6 w-full bg-leo px-4 py-3 text-sm font-bold text-leo-foreground shadow-md hover:brightness-110"
       >
-        ⚡ Direct Login as Admin (Bypass Sign In)
+        ⚡ Quick Admin Access (Bypass)
       </button>
 
       <div className="relative my-6 text-center text-xs text-muted-foreground uppercase tracking-widest before:absolute before:left-0 before:top-1/2 before:w-5/12 before:border-t before:border-border after:absolute after:right-0 after:top-1/2 after:w-5/12 after:border-t after:border-border">
@@ -72,6 +73,7 @@ function LoginPage() {
         <Field label="Email" type="email" value={email} onChange={setEmail} />
         <Field label="Password" type="password" value={password} onChange={setPassword} />
         <button
+          type="submit"
           disabled={loading}
           className="w-full border border-border px-4 py-3 text-sm font-semibold hover:border-leo disabled:opacity-60"
         >

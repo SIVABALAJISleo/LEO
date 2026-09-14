@@ -27,26 +27,26 @@ export function BackendStatusBadge({ compact = false }: { compact?: boolean }) {
       role="status"
       aria-live="polite"
       title={title}
-      className="inline-flex items-center gap-2 border border-border bg-background/60 px-3 py-1.5 text-xs font-medium"
+      className="inline-flex h-[34px] items-center gap-2 border border-border bg-background/60 px-3 py-1.5 text-xs font-medium"
     >
-      <span className={`inline-block h-2 w-2 rounded-full ${DOT[h.status]}`} aria-hidden />
-      <span>{LABEL[h.status]}</span>
+      <span className={`inline-block h-2 w-2 shrink-0 rounded-full ${DOT[h.status]}`} aria-hidden />
+      <span className="shrink-0">{LABEL[h.status]}</span>
       {!compact && (
         <>
           <span className="text-muted-foreground">·</span>
           <code
-            className="max-w-[280px] truncate font-mono text-[11px] text-muted-foreground"
+            className="max-w-[240px] truncate font-mono text-[11px] text-muted-foreground"
             aria-label="Request URL"
           >
             {h.url}
           </code>
           {h.latencyMs != null && h.status === "online" && (
-            <span className="text-muted-foreground">· {h.latencyMs}ms</span>
+            <span className="shrink-0 text-muted-foreground">· {h.latencyMs}ms</span>
           )}
           <button
             type="button"
             onClick={h.refresh}
-            className="ml-1 border border-border px-2 py-0.5 text-[11px] hover:border-leo hover:text-leo focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
+            className="ml-1 shrink-0 border border-border px-2 py-0.5 text-[11px] hover:border-leo hover:text-leo focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
             aria-label="Re-check backend health"
           >
             Retry
@@ -54,7 +54,7 @@ export function BackendStatusBadge({ compact = false }: { compact?: boolean }) {
         </>
       )}
       {h.status !== "online" && h.status !== "checking" && h.message && !compact && (
-        <span className="ml-2 max-w-[200px] truncate text-red-400" role="alert">
+        <span className="ml-2 max-w-[160px] truncate text-red-400" role="alert">
           {h.message}
         </span>
       )}

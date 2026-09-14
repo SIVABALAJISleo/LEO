@@ -1,9 +1,16 @@
 import { test, expect } from "@playwright/test";
 import { mockLeoBackend } from "./mocks";
 
+async function seedAuth(page: import("@playwright/test").Page) {
+  await page.addInitScript(() => {
+    window.localStorage.setItem("leo.jwt", "test-jwt-token-abcdef");
+  });
+}
+
 test.describe("AI & LLM Robustness, Jailbreak & Stress Suite", () => {
   test.beforeEach(async ({ page }) => {
     await mockLeoBackend(page);
+    await seedAuth(page);
   });
 
   test("Jailbreak & Prompt Injection Defense", async ({ page }) => {

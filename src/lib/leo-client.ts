@@ -304,18 +304,11 @@ export function getMockResponse(path: string, init: RequestInit = {}): Response 
     );
   }
 
-  // 8. Auth Endpoints
+  // 8. Auth Endpoints (Reject unauthenticated or unreachable credentials)
   if (cleanPath.includes("/auth/login") || cleanPath.includes("/auth/signup")) {
     return new Response(
-      JSON.stringify({
-        access_token: "admin-auto-session",
-        user: {
-          email: bodyData.email || "admin@leo.ai",
-          username: "admin",
-          permissions: ["admin"],
-        },
-      }),
-      { status: 200, headers: { "Content-Type": "application/json" } },
+      JSON.stringify({ message: "Invalid credentials or backend unreachable" }),
+      { status: 401, headers: { "Content-Type": "application/json" } },
     );
   }
 

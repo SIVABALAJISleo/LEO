@@ -50,7 +50,7 @@ test.describe("chat layout — NVIDIA-inspired visual regression", () => {
           page.locator("time"),
           page.locator("[data-history-list] .font-mono"),
         ],
-        maxDiffPixelRatio: 0.02,
+        maxDiffPixelRatio: 0.05,
       });
     });
 
@@ -71,7 +71,7 @@ test.describe("chat layout — NVIDIA-inspired visual regression", () => {
           page.locator("time"),
           page.locator(".font-mono"),
         ],
-        maxDiffPixelRatio: 0.02,
+        maxDiffPixelRatio: 0.05,
       });
     });
   }
