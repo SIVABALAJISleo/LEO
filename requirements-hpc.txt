@@ -1,7 +1,7 @@
 onnxruntime-openvino>=1.15.0
 apache-tvm>=0.14.0
 psutil>=5.9.6
-torch>=2.1.0  # Assumes CPU optimized pre-built wheel
+torch>=2.8.0  # Assumes CPU optimized pre-built wheel
 vulkan>=1.3.0
 numba>=0.58.1
 scipy>=1.11.3
