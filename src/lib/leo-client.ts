@@ -306,10 +306,10 @@ export function getMockResponse(path: string, init: RequestInit = {}): Response 
 
   // 8. Auth Endpoints (Reject unauthenticated or unreachable credentials)
   if (cleanPath.includes("/auth/login") || cleanPath.includes("/auth/signup")) {
-    return new Response(
-      JSON.stringify({ message: "Invalid credentials or backend unreachable" }),
-      { status: 401, headers: { "Content-Type": "application/json" } },
-    );
+    return new Response(JSON.stringify({ message: "Invalid credentials or backend unreachable" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 
   // Fallback Generic Mock
