@@ -1,0 +1,76 @@
+{
+  "timestamp": "2026-09-14T03:27:50Z",
+  "hardware": "Intel Core i5-12450H + Intel UHD",
+  "parameters": {
+    "block_size": 64,
+    "summary_size": 20,
+    "window_size": 64,
+    "d": 64
+  },
+  "results": {
+    "256": {
+      "seq_len": 256,
+      "d": 64,
+      "dense_ms": 3.98,
+      "block_ms": 1.73,
+      "block_speedup": 2.29,
+      "block_error": 0.84394,
+      "block_flops": 5505024,
+      "local_ms": 7.21,
+      "local_speedup": 0.55,
+      "local_error": 0.56811,
+      "local_flops": 4194304,
+      "full_flops": 16777216,
+      "theoretical_block_speedup": 3.05,
+      "theoretical_local_speedup": 4.0
+    },
+    "512": {
+      "seq_len": 512,
+      "d": 64,
+      "dense_ms": 12.51,
+      "block_ms": 2.64,
+      "block_speedup": 4.73,
+      "block_error": 1.3669,
+      "block_flops": 11010048,
+      "local_ms": 14.58,
+      "local_speedup": 0.86,
+      "local_error": 0.94724,
+      "local_flops": 8388608,
+      "full_flops": 67108864,
+      "theoretical_block_speedup": 6.1,
+      "theoretical_local_speedup": 8.0
+    },
+    "1024": {
+      "seq_len": 1024,
+      "d": 64,
+      "dense_ms": 47.24,
+      "block_ms": 6.8,
+      "block_speedup": 6.95,
+      "block_error": 1.9534,
+      "block_flops": 22020096,
+      "local_ms": 28.35,
+      "local_speedup": 1.67,
+      "local_error": 1.3979,
+      "local_flops": 16777216,
+      "full_flops": 268435456,
+      "theoretical_block_speedup": 12.19,
+      "theoretical_local_speedup": 16.0
+    },
+    "2048": {
+      "seq_len": 2048,
+      "d": 64,
+      "dense_ms": 175.52,
+      "block_ms": 14.32,
+      "block_speedup": 12.25,
+      "block_error": 2.8231,
+      "block_flops": 44040192,
+      "local_ms": 57.26,
+      "local_speedup": 3.07,
+      "local_error": 2.0302,
+      "local_flops": 33554432,
+      "full_flops": 1073741824,
+      "theoretical_block_speedup": 24.38,
+      "theoretical_local_speedup": 32.0
+    }
+  }
+}
