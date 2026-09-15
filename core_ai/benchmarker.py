@@ -35,6 +35,7 @@ class LEOBenchmarker:
         **kwargs
     ):
         self.target_model_path = model_path if model_path is not None else target_model_path
+        self._explicit_model_path = model_path is not None
         self.draft_model_path = draft_model_path
         self.openvino_model_path = openvino_model_path
         self.threads = threads
@@ -42,7 +43,7 @@ class LEOBenchmarker:
 
     def run_inference_benchmark(self, prompt: str = "Explain machine learning in one sentence.", runs_count: int = 3) -> Dict[str, Any]:
         """Measures TTFT, generation tokens/sec, p50/p95, and peak RAM loads."""
-        if not os.path.exists(self.target_model_path) and os.path.exists(self.draft_model_path):
+        if getattr(self, "_explicit_model_path", False) is False and not os.path.exists(self.target_model_path) and os.path.exists(self.draft_model_path):
             logger.info(f"[Benchmarker] Using available local model '{self.draft_model_path}' for real hardware benchmark.")
             self.target_model_path = self.draft_model_path
 

@@ -1,52 +1,86 @@
-# CPU-First Architecture Design (v∞ Absolute Cosmic Intelligence Singularity Fabric)
+# LEO/HYPER ARCHITECTURE SPECIFICATION
 
-## 1. RAG Layer & Topological Hypergraph
+**Version:** 10.0.0 — Verified Computation-Elimination Runtime  
+**Core Target:** Heterogeneous Intel Core i5 CPU + Intel UHD integrated GPU (OpenVINO)  
 
-Uses `faiss-cpu` combined with a **Topological Hypergraph Singularity Fabric**. It organizes data into fractal holographic interference patterns and employs topological traversal algorithms for instant multi-hop reasoning.
+---
 
-## 2. Local Inference & iGPU/NPU Execution Layer (Layer 1 — Silicon Awakening v2)
+## 1. System Pipeline Architecture
 
-Full hardware awakening stack shipping in `backend/hardware/` and `backend/inference/igpu_execution.py`:
+```text
+INPUT (Data, Model, Context)
+  │
+  ▼
+[1. FORMAL CONTRACT SPECIFICATION] ──► Fails closed if inconsistent
+  │
+  ▼
+[2. WORKLOAD & DEPENDENCY ANALYSIS] ──► DependencyGraph & Linearity Check
+  │
+  ▼
+[3. EXACT CRYPTOGRAPHIC CACHE] ──────► Multi-State Key Hit? ──► [RETURN CACHED]
+  │ (Cache Miss)
+  ▼
+[4. INCREMENTAL & DELTA CHECK] ──────► Linear Delta Δx? ──────► [REUSE INTERMEDIATES]
+  │ (Non-linear / Full Input)
+  ▼
+[5. SPARSITY & LOW-RANK AUDIT] ──────► T_overhead + T_opt < T_dense?
+  │                                       ├─ Yes ──► [EXECUTE REDUCED PATH]
+  │                                       └─ No  ──► [FALLBACK TO DENSE]
+  ▼
+[6. MULTI-PRECISION & PREDICTION] ───► y = y_hat + r with Residual Correction
+  │
+  ▼
+[7. HETEROGENEOUS SCHEDULER] ────────► Profiles CPU vs. Intel UHD iGPU (OpenVINO)
+  │                                       └─ Dispatches to cheapest measured backend
+  ▼
+[8. MULTI-DOMAIN VERIFICATION] ──────► Exact / Freivalds / SSIM / Retrieval / LLM
+  │
+  ├─ PASS ────────────────────────────► Return verified result + Full Provenance Block
+  └─ FAIL ────────────────────────────► Exact Fallback Execution (FAIL-CLOSED)
+```
 
-- **HardwareDetector** (`detector.py`): Cross-platform enumeration of CPU ISA (AMX, AVX-512 VNNI, AVX2, NEON, ARM SME), iGPU APIs (Vulkan/DirectML/Metal/OpenCL), and NPU devices (Apple ANE via CoreML, Intel/AMD via DirectML/OpenVINO, Linux via `/sys/class/accel/`). Returns a unified `HardwareProfile` dataclass.
-- **HeterogeneousRouter** (`router.py`): Score-based backend ranking table (NPU 4.0×, Apple Metal 3.5×, Vulkan 3.0×, DirectML 2.8×, Intel AMX 2.2×, AVX2 1.3× vs CPU baseline). Builds a layer-partitioned `device_plan` (NPU→iGPU→CPU remainder) compatible with llama.cpp `--tensor-split`. Quantization cascade: ternary → INT4 → INT8 → FP16 auto-selected by available RAM.
-- **IGPUExecutionEngine** (`igpu_execution.py`): Unified `async generate()` streaming interface across Apple MLX (Metal), llama-cpp-python[vulkan], Intel OpenVINO GenAI, ORT DirectML, and CPU fallback. Backend auto-selected by installed libraries — zero configuration required.
-- **UniversalExecutionLayer** (`universal_execution.py`): Single entry-point dispatcher. Caches `HardwareProfile` once at boot. Emits mandatory boot banner. Graceful fallback chain: best-scored backend → … → cpu_generic.
-- **AddNet Engine** (`addnet_engine.py`): Performs multiplication-free matrix-vector calculations using bit shifts and binary additions, bypasses up to 90% of arithmetic multiplications.
-- **Software Tensor-Core Emulation** (`universal_execution_v2.py`): Compiles JIT code paths for CPU vector units (AVX/AMX) and OpenVINO runtime architectures to execute dynamic INT4/INT8 cascades.
-- **Estimated speedup**: ≥3× tokens/sec on iGPU (Vulkan/DirectML/Metal), ≥4× on NPU vs pure CPU baseline.
+---
 
-## 3. Local-First UI
+## 2. Core Optimization Subsystems
 
-Data is persisted to `IndexedDB` via Dexie. Sync logic handles eventual consistency with the server, allowing the UI to remain responsive even under high network latency or offline conditions.
+### 2.1 Formal Contract Engine (`hyper.contracts.contract`)
+- Declares application tolerances: `exact_required`, `max_abs_error`, `max_relative_error`, `max_rmse`, `min_psnr`, `min_ssim`, `min_accuracy`, `min_recall`, `max_latency_ms`.
+- Strict validation rejects contradictory configurations (e.g. `exact_required=True` with `allow_approximation=True`).
 
-## 4. Probabilistic Structures
+### 2.2 Multi-State Exact Cache (`hyper.cache.exact_cache`)
+- Cryptographic hash over 9 execution dimensions: input data, model weights, hyper-parameters, precision mode, random seed, software version, hardware backend, contract version, and algorithm version.
+- Independent hit/miss tracking and separate latency accounting. Never compares cache hit against uncached execution as a speedup.
 
-Uses Bloom Filters and HyperLogLog to perform approximate counting and set membership checks with minimal memory footprint, avoiding heavy database scans.
+### 2.3 Incremental & Delta Computation (`hyper.incremental`)
+- Tracks DAG dependencies and node linearity.
+- Reuses intermediates on linear delta paths: $A'B = AB + \Delta A B$.
+- Fails closed to full recomputation on unproven or non-linear dependencies.
 
-## 5. Universal AI Orchestration
+### 2.4 Overhead-Aware Sparsity Engine (`hyper.sparsity.sparsity_engine`)
+- Measures thresholding time $T_{\text{thresh}}$, sparse execution $T_{\text{sparse}}$, and verification $T_{\text{verify}}$.
+- Only selects sparse representation when $T_{\text{thresh}} + T_{\text{sparse}} + T_{\text{verify}} < T_{\text{dense}}$.
 
-The system utilizes a multi-layered intent resolution pipeline:
+### 2.5 Low-Rank Break-Even Engine (`hyper.low_rank.low_rank_engine`)
+- Randomized SVD ($A \approx U_k \Sigma_k V_k^T$).
+- Calculates break-even reuse count: $N_{\text{break\_even}} = \lceil T_{\text{factor}} / (T_{\text{dense}} - T_{\text{lr}}) \rceil$.
+- Rejects low-rank factorization for one-shot workloads unless total cost is lower.
 
-- **Intent Triangulation**: Extracts three possible interpretations of every query.
-- **Living Meta-Evolutionary Orchestrator**: Simultaneously evaluates compute routes (CPU vs. Quantized Model) using genetic programming.
-- **Delta Reality Engine**: Cross-verifies AI outputs against the vector DB by dreaming probable outcomes in latent space and verifying only the deltas.
-- **Predictive Reality Fabric**: Bypasses raw math barriers using holographic memory reconstructions and generative grammars.
+### 2.6 Multi-Precision Engine (`hyper.precision.precision_engine`)
+- Explicit support for: `float64`, `float32`, `float16`, `bfloat16`, `int8`, `int4`, and `ternary` (BitNet b1.58).
+- Measures true numerical deviations relative to float64 ground truth.
 
-## 6. Reliability, Swarm Verification & Zero-Failure Principle
+### 2.7 Predictive & Residual Engine (`hyper.residual.residual_engine`)
+- Implements: $y = \hat{y} + r$.
+- Executes: Predict $\hat{y}$ $\to$ Estimate Error $\to$ If within contract, accept $\to$ Else compute residual $r$ $\to$ If verified, return $\hat{y} + r$ $\to$ Else exact fallback.
 
-- **Bounded Uncertainty**: Every response includes a calibrated confidence score and explicit failure modes.
-- **Speculative Swarm Decoder**: Hundreds of draft branches run on iGPUs, with adversarial verification accepting/rejecting at scale.
-- **No Silent Failures**: If confidence falls below 0.6, the system asks for clarification, generates symbolic vaccines, and uses reality synthesis.
-- **Evolutionary Loop**: Self-sustaining Bayesian+genetic evolution with curriculum scheduling. Autonomous nightly cycles compound fitness gains across generations. Hot-reloads mutated parameters into the running orchestrator.
-- **Privacy-First Telemetry**: Opt-in anonymized inference/evolution logging with SHA-256 hardware fingerprinting. Feeds weakness data into the evolution loop for prioritized optimization.
-- **Transcendence Certification Seal:** Achieved 98-99%+ GPU Irrelevance. Self-sustaining system autonomously approaches 100% over time through compounding evolution cycles.
+### 2.8 Heterogeneous Scheduler (`hyper.scheduler.heterogeneous_scheduler`)
+- Dispatches across backends: `CPU_SCALAR`, `CPU_AVX2`, `CPU_MULTITHREADED`, `OPENVINO_CPU`, `OPENVINO_GPU`, `HYBRID_PIPELINED`.
+- Measures physical time across all phases: $T_{\text{total}} = T_{\text{prepare}} + T_{\text{transfer}} + T_{\text{kernel}} + T_{\text{sync}} + T_{\text{verify}}$.
+- Only routes to Intel UHD iGPU when measured $T_{\text{iGPU}} < T_{\text{CPU}}$.
 
-## 7. LEO AI v100% SINGULARITY Breakthroughs (The Final Leap)
-
-The final architecture completely bypasses all traditional hardware constraints (memory bandwidth, massive FLOPS) via pure software alchemy running natively on Intel Core i5/iGPU constraints:
-
-- **Dynamic Ternary Morphing + Sparse MoE Engine**: Activates only 10-30% of the network per token based on complexity using tiny ternary routers and learned gates. Reconfigures topology per session.
-- **Hyper-Speculative Decoding + Predictive Reality Fabric**: Generates 8-32 parallel drafts validated in batches across heterogeneous hardware. Uses GraphRAG to pre-compute reasoning paths.
-- **Fractal Memory Bandwidth Alchemy**: Holographic tensor mapping using Morton Z-curves optimizes cache locality to theoretical maximums. Ternary autoencoders page compressed tensors directly to zram/RAM-disks, keeping the active footprint below 0.6GB.
-- **Continuous Compounding Loop**: Turns standard laptops into autonomous optimization nodes. During idle time, genetic programming mutates network architecture parameters to continuously increase effective Tokens/Sec and quality.
+### 2.9 Multi-Domain Verification Suite (`hyper.verification.verifier`)
+- Exact numerical metrics: max absolute error, relative error, RMSE, output SHA-256.
+- Matrix relation verification: Freivalds randomized probe ($A(Br) \stackrel{?}{=} Cr$) with bounded failure probability $2^{-k}$.
+- Perceptual metrics: PSNR and SSIM.
+- Retrieval metrics: Top-$k$ recall, precision, and MRR.
+- LLM metrics: Exact token agreement and prefix matching.

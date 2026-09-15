@@ -8,18 +8,27 @@ import os
 import subprocess
 import time
 import winreg
+import logging
+
+logger = logging.getLogger("leo_gpu_boost")
+logging.basicConfig(level=logging.INFO, format="[LEO %(levelname)s] %(message)s")
 
 if hasattr(sys.stdout, 'reconfigure'):
     try:
         sys.stdout.reconfigure(encoding='utf-8')
-    except Exception:
-        pass
+    except (AttributeError, OSError) as exc:
+        logger.debug("Failed to reconfigure stdout encoding: %s", exc)
 
 try:
     import psutil
-except ModuleNotFoundError:
-    subprocess.run([sys.executable, "-m", "pip", "install", "psutil"], check=True)
-    import psutil
+except ImportError as exc:
+    logger.warning("Optional dependency 'psutil' is not installed: %s. Attempting graceful fallback.", exc)
+    try:
+        subprocess.run([sys.executable, "-m", "pip", "install", "psutil"], check=True)
+        import psutil
+    except Exception as install_err:
+        logger.error("Failed to install psutil: %s. Process management will be limited.", install_err)
+        psutil = None
 
 # ─── Configuration ───────────────────────────────────────────────────────────
 BENCHMARK_URL = "https://volumeshaderbm.com/start/"
@@ -53,8 +62,8 @@ def find_chrome():
         winreg.CloseKey(key)
         if os.path.exists(path):
             return path
-    except Exception:
-        pass
+    except OSError as exc:
+        logger.debug("Chrome registry lookup failed: %s", exc)
 
     candidates = [
         r"C:\Program Files\Google\Chrome\Application\chrome.exe",

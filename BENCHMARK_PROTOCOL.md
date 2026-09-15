@@ -1,47 +1,42 @@
-# 📜 Full-Stack Benchmark & Falsification Protocol (Phase 3)
+# LEO/HYPER BENCHMARKING PROTOCOL
 
-**Protocol Version:** `2.0.0-FALSIFICATION-GAUNTLET`  
-**Status:** **FROZEN & IMMUTABLE**
-
----
-
-## 1. Adversarial Falsification Methodology
-
-This protocol is designed to test the claim:
-
-> _"HYPER replaces dedicated GPUs for all workloads end-to-end across the entire hardware/software stack."_
-
-The protocol treats this claim as a hypothesis to be falsified. If HYPER fails to achieve functional equivalence or performance parity against a physical discrete GPU in **any** material category, the universal replacement claim is ruled **FALSIFIED**, and the specific validated boundary is recorded.
+**Module Reference:** `hyper.benchmark.master_benchmark`  
+**Output Target:** `HYPER_100_RESULTS.json`  
+**Standard:** Phase 13 & 14 Ground-Truth Measurement Standard  
 
 ---
 
-## 2. Hardcoded Pass/Fail Thresholds
+## 1. Non-Negotiable Benchmarking Rules
 
-1. **Numerical Correctness:**
-   - Double-precision reference standard ($C_{\text{ref}}$).
-   - Maximum absolute error $\Delta \le 10^{-4}$ for floating-point calculations.
-   - Exact bitwise matching for integer hashing and cryptographic tasks.
-2. **Performance Target:**
-   - Universal replacement requires $\ge 100\%$ throughput of the dedicated GPU reference baseline.
-   - Interactive tasks require P95 latency $\le 16.0\,\text{ms}$ (graphics) or $\le \text{P95}_{\text{dGPU}}$ (AI).
-3. **Cache Integrity (Two Separate Tracks):**
-   - **Track 1 (Uncached):** 100% active model generation. Semantic cache strictly disabled.
-   - **Track 2 (Cached):** Measures exact hit rate, semantic similarity hit rate, and zero-compute lookup latency.
-   - _Rule: Cached and uncached numbers must NEVER be merged into a single headline metric._
-4. **Endurance & Stability:**
-   - Continuous multi-workload execution for up to 60 minutes.
-   - Maximum permitted performance degradation (thermal throttling drop): $\le 15.0\%$.
-   - Memory leak tolerance: $\le 256\,\text{MB}$.
+1. **Physical Timing Only**: All benchmark timings must use high-resolution system timers (`time.perf_counter_ns()`). The use of `time.time()` for micro-benchmarks is strictly prohibited.
+2. **Warmup & Measurement Minimums**:
+   - Minimum **10 warmup iterations** to prime instruction caches, CPU branch predictors, and runtime JITs.
+   - Minimum **30 measured iterations** for fast kernels.
+   - Minimum **10 measured iterations** for heavy end-to-end workloads.
+3. **Statistical Reporting**: A single timing measurement is unacceptable. Benchmarks must report the full distribution:
+   - `min`: Fastest observed latency
+   - `median`: 50th percentile (primary comparison metric)
+   - `mean`: Arithmetic average
+   - `p95`: 95th percentile (tail latency)
+   - `max`: Slowest observed latency
+   - `std_dev`: Standard deviation
+4. **Zero Fabrication**: Speedups, baseline times, error values, and parity scores must never be hardcoded or inferred from synthetic formulas.
+5. **Separation of Concerns**:
+   - Speedup is defined strictly as:
+     $$\text{speedup} = \frac{\text{median}(T_{\text{baseline}})}{\text{median}(T_{\text{candidate}})}$$
+   - Algorithmic operation reduction is defined separately as:
+     $$\text{work\_eliminated\_pct} = (1 - \frac{W_{\text{candidate}}}{W_{\text{baseline}}}) \times 100$$
+   - FLOP reductions or memory bandwidth reductions must NEVER be reported as "latency speedup".
+6. **Device Synchronization**: GPU kernels (OpenVINO iGPU) must explicitly wait for completion via `infer_request.wait()` before stopping the timer.
 
 ---
 
-## 3. The 8 Evaluation Domains
+## 2. Benchmark Execution Command
 
-- **Domain A — Dense Compute:** FP32/FP16/INT8 GEMM, FFT, Convolutions, Vector Reductions.
-- **Domain B — AI / Machine Learning:** Transformer Attention, Embeddings, CNN, Batch 1 vs Batch 8/16/32, TTFT, Tokens/sec.
-- **Domain C — AI Component Ablation:** Baseline $\to$ +Quant $\to$ +Speculative $\to$ +Heterogeneous $\to$ +Cache $\to$ +MoE.
-- **Domain D — Graphics:** Complete rendering pipeline (Vertex $\to$ Raster $\to$ Fragment $\to$ Compute).
-- **Domain E — Ray Tracing:** BVH construction, Ray traversal, Shadows, Global Illumination.
-- **Domain F — Media:** 4K decode $\to$ convolution filter $\to$ encode.
-- **Domain G — Scientific / HPC:** N-Body ($10^6$ bodies), Monte Carlo, Linear Algebra.
-- **Domain H — Real Application & System Integration:** Blender viewport/geometry scaling, Unity/Unreal graphics pipeline, driver interaction, DMA data movement.
+To execute the ground-truth benchmark suite locally:
+
+```bash
+python -m hyper.benchmark.master_benchmark
+```
+
+This runs all authenticated workloads, validates contracts, and writes the complete machine-readable record to `HYPER_100_RESULTS.json`.

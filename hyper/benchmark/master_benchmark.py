@@ -1,177 +1,134 @@
 """
 hyper/benchmark/master_benchmark.py
 ===================================
-Master Benchmark Runner for LEO/HYPER:
-- Executes all 15 workloads across CPU, iGPU, and hybrid execution
-- Records wall-clock latency, throughput, CER, error, and 4-tier parity breakdown
-- Outputs machine-readable results to HYPER_100_RESULTS.json
+Master Benchmark Runner for LEO/HYPER.
+Fulfills Phase 13 & 14 of the Master Architectural Specification.
+Zero hardcoded speedups. Zero synthetic timings.
+Generates fully compliant JSON records adhering to the Phase 14 Schema.
 """
 
-import sys
-import os
+import datetime
 import json
+import os
 import time
+from pathlib import Path
+from typing import Any, Dict, List
 import psutil
-import numpy as np
-from typing import Dict, Any, List
-
-from hyper.contracts.contract_types import UniversalContract, ContractClass
-from hyper.contracts.engine import UniversalContractEngine
 from hyper.benchmark.workload_suite import MasterWorkloadSuite
-from hyper.telemetry.ledger import ProvenanceLedger
-from hyper.profiling.thermal_profiler import ThermalProfiler
+from hyper.contracts.contract import contract_to_json
+from hyper.hardware import get_hardware_profile
+
+ROOT = Path(__file__).resolve().parent.parent.parent
 
 
-def run_master_benchmarks() -> Dict[str, Any]:
-    print("=" * 80)
-    print("[HYPER] RUNNING LEO/HYPER MASTER 100% PARITY BENCHMARK SUITE")
-    print("   Platform: Lenovo IdeaPad Slim 3 15IAH8 (Intel Core i5-12450H + Intel UHD Xe)")
-    print("   Execution: Pure Software-Only (Zero External/Dedicated GPUs)")
-    print("=" * 80)
-
+def run_master_benchmarks(warmup_runs: int = 10, measured_runs: int = 30) -> Dict[str, Any]:
+    """
+    Run authentic local benchmarks across host hardware.
+    Collects measured latency distributions, error metrics, and provenance.
+    """
+    hw_profile = get_hardware_profile()
     suite = MasterWorkloadSuite()
-    ledger = ProvenanceLedger()
-    profiler = ThermalProfiler()
-    contract_engine = UniversalContractEngine()
 
-    t_suite_start = time.time()
-    results = []
+    timestamp = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    experiment_id = f"EXP_{int(time.time())}_{hw_profile['cpu_model'].replace(' ', '_')}"
 
-    # 1. Run Workloads
-    w1 = suite.run_workload_1_dense_gemm(N=256)
-    results.append(w1)
-    print(f"[{w1['workload_id']}/15] {w1['name']}: Speedup={w1['speedup']}x, CER={w1['cer_pct']}%, Contract={w1['contract_parity_pct']}%")
+    print("=" * 80)
+    print("LEO / HYPER VERIFIED COMPUTATION-ELIMINATION BENCHMARK SUITE")
+    print(f"Hardware: {hw_profile['cpu_model']} | {hw_profile['physical_cores']} Cores / {hw_profile['logical_processors']} Threads")
+    print(f"GPU: {hw_profile['gpu_model']} (Type: {hw_profile['gpu_type']})")
+    print(f"OpenVINO Devices: {hw_profile['openvino_devices']}")
+    print(f"Timestamp: {timestamp}")
+    print("=" * 80)
 
-    w2 = suite.run_workload_2_tensor_attention(N=128)
-    results.append(w2)
-    print(f"[{w2['workload_id']}/15] {w2['name']}: Speedup={w2['speedup']}x, CER={w2['cer_pct']}%, Contract={w2['contract_parity_pct']}%")
-
-    w3 = suite.run_workload_3_sparse_fft(N=1024)
-    results.append(w3)
-    print(f"[{w3['workload_id']}/15] {w3['name']}: Speedup={w3['speedup']}x, CER={w3['cer_pct']}%, Contract={w3['contract_parity_pct']}%")
-
-    w12 = suite.run_workload_12_nbody_fmm(N=512)
-    results.append(w12)
-    print(f"[{w12['workload_id']}/15] {w12['name']}: Speedup={w12['speedup']}x, CER={w12['cer_pct']}%, Contract={w12['contract_parity_pct']}%")
-
-    # Add remaining synthetic & empirical verified benchmarks
-    workload_catalog = [
-        {"id": 4, "name": "Vector Reductions (HLL Stream)", "speedup": 18.2, "cer": 99.8, "ref": "NVIDIA V100 Reduction"},
-        {"id": 5, "name": "LLM Inference (Speculative Draft)", "speedup": 3.4, "cer": 75.0, "ref": "A100 TensorRT-LLM"},
-        {"id": 6, "name": "Batched AI Retrieval (Cosine Subspace)", "speedup": 6.8, "cer": 85.0, "ref": "FAISS-GPU"},
-        {"id": 7, "name": "Interactive 2D/3D Rasterization (540p->1080p)", "speedup": 2.8, "cer": 75.0, "ref": "RTX 3060 Raster"},
-        {"id": 8, "name": "Particle Simulation (Temporal Delta)", "speedup": 5.2, "cer": 88.0, "ref": "CUDA Particle Kernel"},
-        {"id": 9, "name": "Dynamic BVH (Morton 30-bit LBVH)", "speedup": 4.5, "cer": 80.0, "ref": "OptiX BVH Builder"},
-        {"id": 10, "name": "Path Tracing (QMC Sobol + Denoise)", "speedup": 3.8, "cer": 84.0, "ref": "RTX 4080 DXR Path Tracer"},
-        {"id": 11, "name": "4K Video Transcode (QuickSync QSV)", "speedup": 1.2, "cer": 98.0, "ref": "NVIDIA NVENC Dual"},
-        {"id": 13, "name": "Option Pricing (Sobol QMC Integration)", "speedup": 12.5, "cer": 90.0, "ref": "CUDA Financial Engine"},
-        {"id": 14, "name": "Blender Cycles Ray-Tracing (Mesh Cache)", "speedup": 2.9, "cer": 70.0, "ref": "OptiX Cycles RTX 3070"},
-        {"id": 15, "name": "Unreal Engine 5 Nanite (Geometric LOD Chains)", "speedup": 3.6, "cer": 82.0, "ref": "RTX 4090 Nanite Cluster"},
+    workload_runners = [
+        suite.run_workload_1_dense_gemm,
+        suite.run_workload_2_tensor_attention,
+        suite.run_workload_3_sparse_fft,
+        suite.run_workload_4_sparse_matmul,
     ]
 
-    for item in workload_catalog:
-        res = {
-            "workload_id": item["id"],
-            "name": item["name"],
-            "reference_gpu": item["ref"],
-            "baseline_time_ms": 15.0,
-            "hyper_time_ms": round(15.0 / item["speedup"], 3),
-            "speedup": item["speedup"],
-            "cer_pct": item["cer"],
-            "error": 0.002,
-            "verified": True,
-            "contract_parity_pct": 100.0,
-            "application_parity_pct": 100.0,
+    benchmark_records: List[Dict[str, Any]] = []
+
+    for runner in workload_runners:
+        cpu_before = psutil.cpu_percent(interval=0.1)
+        res = runner(warmup=warmup_runs, runs=measured_runs)
+        cpu_after = psutil.cpu_percent(interval=0.1)
+        avg_cpu = float((cpu_before + cpu_after) / 2.0)
+
+        cand_lat = res["candidate_latency_ms"]
+        out_metrics = res.get("output_metrics", {})
+        contract_obj = res.get("contract")
+        contract_dict = json.loads(contract_to_json(contract_obj)) if contract_obj else {}
+
+        record = {
+            "experiment_id": experiment_id,
+            "timestamp_utc": timestamp,
+            "workload": res["name"],
+            "input_shape": res["input_shape"],
+            "dtype": res["dtype"],
+            "path_class": res["path_class"],
+            "backend": res["backend"],
+            "hardware_profile": hw_profile,
+            "software_profile": {
+                "python_version": hw_profile["python_version"],
+                "package_versions": hw_profile["package_versions"],
+            },
+            "warmup_runs": res["warmup_runs"],
+            "measured_runs": res["measured_runs"],
+            "cold_cache": True,
+            "cache_hit": False,
+            "latency_ms": {
+                "min": cand_lat["min"],
+                "median": cand_lat["median"],
+                "mean": cand_lat["mean"],
+                "p95": cand_lat["p95"],
+                "max": cand_lat["max"],
+                "std_dev": cand_lat["std_dev"],
+            },
+            "throughput": round(1000.0 / max(1e-6, cand_lat["median"]), 2),
+            "memory_bytes": hw_profile["ram_total_bytes"],
+            "cpu_utilization_pct": avg_cpu,
+            "gpu_utilization_pct": None,
+            "temperature_c": None,
+            "power_w": None,
+            "output_metrics": {
+                "max_abs_error": out_metrics.get("max_abs_error"),
+                "relative_error": out_metrics.get("relative_error"),
+                "rmse": out_metrics.get("rmse"),
+                "psnr": out_metrics.get("psnr"),
+                "ssim": out_metrics.get("ssim"),
+            },
+            "contract": contract_dict,
+            "contract_satisfied": res["contract_satisfied"],
+            "fallback_used": res["fallback_used"],
+            "measured_speedup_vs_dense": res.get("measured_speedup"),
+            "work_eliminated_pct": res.get("work_eliminated_pct"),
+            "provenance": res["provenance"],
         }
-        results.append(res)
-        print(f"[{res['workload_id']}/15] {res['name']}: Speedup={res['speedup']}x, CER={res['cer_pct']}%, Contract={res['contract_parity_pct']}%")
+        benchmark_records.append(record)
+        print(f"[{res['workload_id']}] {res['name']}:")
+        print(f"     Candidate Median: {cand_lat['median']:.4f} ms (p95: {cand_lat['p95']:.4f} ms)")
+        print(f"     Baseline Median:  {res['baseline_latency_ms']['median']:.4f} ms")
+        print(f"     Speedup:          {res.get('measured_speedup')}x")
+        print(f"     Work Eliminated:  {res.get('work_eliminated_pct')}%")
+        print(f"     Error (Max Abs):  {out_metrics.get('max_abs_error')}")
+        print(f"     Contract Satisfied: {res['contract_satisfied']}")
 
-    # Sort by workload ID
-    results.sort(key=lambda x: x["workload_id"])
-
-    print("\n" + "=" * 80)
-    print("[SECTION 78] DETAILED WORKLOAD EVALUATION REPORTS")
-    print("=" * 80)
-
-    for r in results:
-        print(f"""
-WORKLOAD:                 {r['name']}
-REFERENCE:                {r['reference_gpu']}
-CONTRACT:
-  - accuracy:             {100.0 - r['error'] * 100:.2f}%
-  - quality:              99.5%
-  - latency SLA:          <= 33.3ms
-  - throughput:           Satisfied
-  - FPS:                  >= 30 FPS
-  - memory:               Within 16GB DDR5
-  - error bound:          eps <= 0.01
-REFERENCE PERFORMANCE:    Baseline {r['baseline_time_ms']} ms
-HYPER PERFORMANCE:        HYPER {r['hyper_time_ms']} ms ({r['speedup']}x speedup)
-BASELINE COMPUTATION:     100.0% Dense
-HYPER COMPUTATION:        {100.0 - r['cer_pct']:.2f}% Minimal Sufficient
-COMPUTATION ELIMINATED:   {r['cer_pct']:.2f}% (CER = {r['cer_pct']/100:.4f})
-MEMORY REDUCTION:         75.0% - 95.0%
-DATA-MOVEMENT REDUCTION:  Zero-copy shared memory path
-CPU UTILIZATION:          Nominal (Golden Cove P-cores)
-UHD UTILIZATION:          Xe-LP 48 EUs OpenVINO Tiled
-THERMAL:                  NOMINAL (No throttling)
-POWER:                    ~28.5 W Package Power
-CORRECTNESS:              PASS (Freivalds Probe Verified)
-ERROR:                    {r['error']:.6f}
-CONTRACT PARITY:          {r['contract_parity_pct']:.1f}% (PASS)
-APPLICATION PARITY:       {r['application_parity_pct']:.1f}% (PASS)
-CONFIDENCE:               HIGH (Reproducible & Falsifiable)
-REMAINING GAP:            Zero Contract Gap (Contract Fully Satisfied)
-ROOT CAUSE OF GAP:        Raw silicon deficit eliminated via Algorithmic Reformulation
-NEXT EXPERIMENT:          Maintain verified low-rank / sparse / BitNet kernels
---------------------------------------------------------------------------------""")
-
-    # Aggregate summaries
-    mean_speedup = round(float(np.mean([r["speedup"] for r in results])), 2)
-    mean_cer = round(float(np.mean([r["cer_pct"] for r in results])), 2)
-    mean_contract_parity = round(float(np.mean([r["contract_parity_pct"] for r in results])), 2)
-    mean_app_parity = round(float(np.mean([r["application_parity_pct"] for r in results])), 2)
-
-    thermal = profiler.capture_snapshot()
-    total_elapsed = round(time.time() - t_suite_start, 2)
-
-    master_payload = {
-        "timestamp": time.time(),
-        "git_commit": "e681e58",
-        "hardware": {
-            "target": "Lenovo IdeaPad Slim 3 15IAH8",
-            "cpu": "Intel Core i5-12450H (4P+4E cores, 12 threads)",
-            "igpu": "Intel UHD Graphics (Xe-LP 48 Execution Units)",
-            "ram": "16 GB DDR5 (~51.2 GB/s unified bandwidth)",
-            "os": "Windows 11 64-bit",
-        },
-        "parity_summary": {
-            "raw_hardware_parity_pct": 0.8,
-            "exact_computational_parity_pct": 18.5,
-            "contract_parity_pct": mean_contract_parity,
-            "application_parity_pct": mean_app_parity,
-            "mean_speedup": mean_speedup,
-            "mean_cer_pct": mean_cer,
-        },
-        "thermal_profile": thermal,
-        "total_benchmarked_seconds": total_elapsed,
-        "workload_results": results
+    final_output = {
+        "experiment_id": experiment_id,
+        "timestamp_utc": timestamp,
+        "total_workloads_measured": len(benchmark_records),
+        "results": benchmark_records,
     }
 
-    # Save to disk
-    output_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "..", "HYPER_100_RESULTS.json")
-    with open(output_path, "w", encoding="utf-8") as f:
-        json.dump(master_payload, f, indent=2)
+    out_file = ROOT / "HYPER_100_RESULTS.json"
+    with open(out_file, "w", encoding="utf-8") as f:
+        json.dump(final_output, f, indent=2)
 
+    print("\n" + "=" * 80)
+    print(f"Results written to {out_file}")
     print("=" * 80)
-    print(f"[PASS] BENCHMARK COMPLETE: 15/15 Workloads Evaluated in {total_elapsed}s")
-    print(f"   Grand Mean Speedup: {mean_speedup}x")
-    print(f"   Computation Eliminated (CER): {mean_cer}%")
-    print(f"   Contract Parity: {mean_contract_parity}% | Application Parity: {mean_app_parity}%")
-    print(f"   Results written to: HYPER_100_RESULTS.json")
-    print("=" * 80)
-
-    return master_payload
+    return final_output
 
 
 if __name__ == "__main__":
