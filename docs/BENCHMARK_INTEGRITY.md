@@ -1,27 +1,42 @@
-# HYPER / LEO — Anti-Benchmark-Gaming & Integrity Standard
-**Document Version:** 2.0.0 (Ultra-Sonic Master Engineering)
+# HYPER-Ω Benchmark Integrity & Anti-Fraud Specification
+
+## 1. Zero-Cheating Policy
+HYPER-Ω enforces an automated anti-cheating system via `BenchmarkIntegrityGuard`.
+Any benchmark harness, candidate function, or measurement run that exhibits fraudulent patterns is automatically flagged as **`INVALID`**.
+
+**Rule**: An `INVALID` result can NEVER be converted into a `PASS`.
 
 ---
 
-## 1. Prohibited Benchmark Gaming Practices
+## 2. Prohibited Patterns & Automatic Rejection Criteria
 
-HYPER's automated verification framework actively detects and rejects the following 18 benchmark gaming practices:
+The following patterns trigger immediate disqualification:
 
-1. **Workload Alteration**: Reducing matrix dimensions or dataset size between candidate and reference runs.
-2. **Dimension Truncation**: Cutting off sequence lengths or hidden dimensions to inflate tokens/sec.
-3. **Reduced Sample Counts**: Benchmarking fewer iterations than declared in the frozen manifest.
-4. **Quality Degradation**: Subtly dropping numerical precision without declaring `BOUNDED_APPROXIMATION`.
-5. **Model Downscaling**: Silently swapping a 1.5B model for a 0.5B model.
-6. **Context Truncation**: Dropping attention context window during generation.
-7. **Hidden Caching**: Warming caches prior to cold benchmark execution.
-8. **Warm-Cache Contamination**: Disguising cached lookup latency as arithmetic compute throughput.
-9. **Simulated Timing**: Using analytical or synthetic sleep calls instead of `time.perf_counter()`.
-10. **Hardcoded Timing**: Inserting pre-baked latency numbers.
-11. **Reference Constants**: Hardcoding reference outputs rather than computing trusted baselines.
-12. **Candidate/Reference Identity**: Comparing `fn(A, B)` against `fn(A, B)` to force a false pass.
-13. **Omitted Preprocessing**: Excluding tokenization or data layout conversion from end-to-end timing.
-14. **Omitted Postprocessing**: Excluding detokenization, detiling, or output format normalization.
-15. **Omitted Transfer Overhead**: Ignoring host-to-device buffer copy times.
-16. **Omitted Verification Time**: Hiding audit and verification costs from latency budgets.
-17. **Cherry-Picked Outliers**: Reporting the single best run rather than P50/P90/P99 distributions.
-18. **Invalid Hardware Metadata**: Reporting execution on hardware differing from the host CPU/iGPU.
+1. **Hard-Coded Performance Numbers**:
+   - Assigning constant speedups: `speedup = 2.15`
+   - Assigning constant work elimination percentages: `work_elimination = 70.0`
+   - Hardcoded execution timings: `latency = 9.8`
+
+2. **Artificial Timing Injection**:
+   - Using `time.sleep(...)` to fabricate latency differences between reference and candidate runs.
+
+3. **Precomputed Benchmark Oracles**:
+   - Returning pre-stored arrays or lookup tables indexed by benchmark names (e.g. `if "test_case" in name: return lookup_table`).
+
+4. **Self-Comparison (Identity Verification)**:
+   - Comparing a candidate function against itself or trivially wrapping the reference function without algorithmic modification.
+
+5. **Silent Contract Downgrades**:
+   - Downscaling image resolution from 1080p to 720p without declaring it in the contract.
+   - Reducing precision (e.g. FP32 to INT4) when the contract specifies exact numerical equivalence.
+   - Using smaller model checkpoints without demonstrating equivalence to the target model.
+
+6. **Hardware Emulation Claims**:
+   - Reporting that software executed on NVIDIA CUDA Tensor Cores or GDDR7 memory when running on Intel hardware.
+
+---
+
+## 3. Automated Inspection Mechanism
+The `BenchmarkIntegrityGuard` performs two distinct audit passes:
+- **Static Inspection**: Uses Python AST and regex inspects source code of candidate callables for suspicious patterns.
+- **Dynamic Telemetry Inspection**: Validates that latency is non-zero, raw clock measurements exist, and claimed work elimination percentages fall strictly in $[0.0, 100.0]$.

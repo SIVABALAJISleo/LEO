@@ -151,6 +151,8 @@ class VerificationEngine:
             "max_per_pixel_error": max_pixel_err,
         }
 
+    verify_image = verify_perceptual
+
     # 4. Retrieval Verification
     @staticmethod
     def verify_retrieval(

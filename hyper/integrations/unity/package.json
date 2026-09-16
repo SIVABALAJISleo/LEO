@@ -1,0 +1,13 @@
+{
+  "name": "com.hyper.unity",
+  "version": "1.0.0",
+  "displayName": "HYPER.Unity: Dynamic Computation Elimination & Temporal Reconstruction",
+  "description": "Software-driven computation elimination, temporal reprojection, and CPU+iGPU cooperative rendering runtime for Unity URP/HDRP on mobile and integrated GPUs.",
+  "unity": "2022.3",
+  "author": {
+    "name": "HYPER Systems Engineering Team"
+  },
+  "dependencies": {
+    "com.unity.render-pipelines.universal": "14.0.0"
+  }
+}

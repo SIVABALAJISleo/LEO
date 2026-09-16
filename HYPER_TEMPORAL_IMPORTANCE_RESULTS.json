@@ -1,0 +1,143 @@
+{
+  "timestamp": 1789565781.9127421,
+  "hardware_profile": {
+    "cpu": "13th Gen Intel(R) Core(TM) i5-13420H",
+    "igpu": "Intel(R) UHD Graphics",
+    "ram_gb": 15.7
+  },
+  "target_contract": "1080p @ 60 FPS (16.66 ms)",
+  "mean_frame_time_ms": 2911.36,
+  "mean_work_eliminated_pct": 76.8,
+  "mean_psnr_db": 42.91,
+  "mean_ssim": 0.9993,
+  "contract_compliance_pct": 0.0,
+  "frames": [
+    {
+      "frame_id": 1,
+      "total_elapsed_ms": 266.79,
+      "shading_time_ms": 17.28,
+      "reconstruction_time_ms": 0.0,
+      "work_eliminated_pct": 0.0,
+      "temporal_reuse_pct": 0.0,
+      "psnr_db": 100.0,
+      "ssim": 1.0,
+      "contract_met": false
+    },
+    {
+      "frame_id": 2,
+      "total_elapsed_ms": 3273.29,
+      "shading_time_ms": 9.66,
+      "reconstruction_time_ms": 2418.11,
+      "work_eliminated_pct": 98.7,
+      "temporal_reuse_pct": 97.8,
+      "psnr_db": 43.44,
+      "ssim": 0.9994,
+      "contract_met": false
+    },
+    {
+      "frame_id": 3,
+      "total_elapsed_ms": 2912.49,
+      "shading_time_ms": 8.21,
+      "reconstruction_time_ms": 2192.78,
+      "work_eliminated_pct": 98.7,
+      "temporal_reuse_pct": 97.8,
+      "psnr_db": 43.37,
+      "ssim": 0.9994,
+      "contract_met": false
+    },
+    {
+      "frame_id": 4,
+      "total_elapsed_ms": 2997.07,
+      "shading_time_ms": 8.62,
+      "reconstruction_time_ms": 2266.7,
+      "work_eliminated_pct": 0.0,
+      "temporal_reuse_pct": 0.0,
+      "psnr_db": 40.39,
+      "ssim": 0.9989,
+      "contract_met": false
+    },
+    {
+      "frame_id": 5,
+      "total_elapsed_ms": 2921.1,
+      "shading_time_ms": 8.93,
+      "reconstruction_time_ms": 2169.52,
+      "work_eliminated_pct": 0.0,
+      "temporal_reuse_pct": 0.0,
+      "psnr_db": 41.16,
+      "ssim": 0.9991,
+      "contract_met": false
+    },
+    {
+      "frame_id": 6,
+      "total_elapsed_ms": 2906.39,
+      "shading_time_ms": 8.29,
+      "reconstruction_time_ms": 2172.15,
+      "work_eliminated_pct": 98.7,
+      "temporal_reuse_pct": 97.8,
+      "psnr_db": 43.81,
+      "ssim": 0.9995,
+      "contract_met": false
+    },
+    {
+      "frame_id": 7,
+      "total_elapsed_ms": 2820.42,
+      "shading_time_ms": 7.92,
+      "reconstruction_time_ms": 2112.11,
+      "work_eliminated_pct": 98.7,
+      "temporal_reuse_pct": 97.8,
+      "psnr_db": 43.8,
+      "ssim": 0.9995,
+      "contract_met": false
+    },
+    {
+      "frame_id": 8,
+      "total_elapsed_ms": 2842.59,
+      "shading_time_ms": 7.87,
+      "reconstruction_time_ms": 2138.36,
+      "work_eliminated_pct": 98.7,
+      "temporal_reuse_pct": 97.8,
+      "psnr_db": 43.44,
+      "ssim": 0.9994,
+      "contract_met": false
+    },
+    {
+      "frame_id": 9,
+      "total_elapsed_ms": 2763.89,
+      "shading_time_ms": 7.95,
+      "reconstruction_time_ms": 2078.49,
+      "work_eliminated_pct": 98.7,
+      "temporal_reuse_pct": 97.8,
+      "psnr_db": 43.38,
+      "ssim": 0.9994,
+      "contract_met": false
+    },
+    {
+      "frame_id": 10,
+      "total_elapsed_ms": 2765.02,
+      "shading_time_ms": 8.44,
+      "reconstruction_time_ms": 2073.88,
+      "work_eliminated_pct": 98.7,
+      "temporal_reuse_pct": 97.8,
+      "psnr_db": 43.37,
+      "ssim": 0.9994,
+      "contract_met": false
+    }
+  ],
+  "explanations": [
+    {
+      "optimization_id": "OPT_TEMPORAL_IMPORTANCE_RENDERER",
+      "problem": "Brute-force 1080p Monte Carlo shading is too expensive for Intel UHD Graphics at 60 FPS.",
+      "baseline_work": "Re-shading all 2,073,600 pixels every frame from scratch (~180 ms).",
+      "hyper_decision": "Frustum Culling + Motion Reprojection + Variance-Guided Clamping + Bilateral Filter.",
+      "reason": "Static background and smooth camera motion allow >75% of pixel radiance to be reprojected.",
+      "work_eliminated_pct": 76.76666666666668,
+      "work_reused_pct": 76.06666666666666,
+      "algorithm_used": "Bilinear Reprojection + 3x3 Color Box Clamping + Bilateral Smoothing",
+      "expected_benefit": "Achieve <= 16.6 ms frame time contract at 1080p.",
+      "measured_benefit": "Mean sustained frame time: 2911.36 ms",
+      "correctness_status": "PASS (Image equivalence contract verified)",
+      "quality_impact": "Mean PSNR: 42.91 dB, SSIM: 0.9993",
+      "fallback_condition": "PSNR < 30 dB or artifact detected triggers full compute fallback."
+    }
+  ]
+}

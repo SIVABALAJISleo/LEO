@@ -1,0 +1,27 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0.0",
+	"FriendlyName": "HYPERRuntime: Unreal Engine 5 Temporal-Importance Optimization Suite",
+	"Description": "Software-driven computation elimination, temporal reprojection, and CPU+iGPU cooperative rendering runtime for Unreal Engine 5 on mobile/integrated hardware.",
+	"Category": "Rendering",
+	"CreatedBy": "HYPER Systems Engineering Team",
+	"CreatedByURL": "https://github.com/hyper-project",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "HYPERRuntime",
+			"Type": "Runtime",
+			"LoadingPhase": "PostConfigInit",
+			"PlatformAllowList": [
+				"Win64"
+			]
+		}
+	]
+}

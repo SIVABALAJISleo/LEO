@@ -30,5 +30,8 @@ __all__ = [
     "TaskGraph",
     "FabricCostModel",
     "FabricWorkerPool",
-    "ComputeFabric"
+    "ComputeFabric",
+    "HeterogeneousExecutionFabric",
 ]
+
+HeterogeneousExecutionFabric = ComputeFabric

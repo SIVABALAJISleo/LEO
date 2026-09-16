@@ -10,6 +10,10 @@ from hyper_x.info_boundary.compiler import (
     EdgeType,
     NecessityClassification
 )
+from hyper_x.info_boundary.engine import (
+    InformationBoundaryEngine,
+    BoundaryDecision
+)
 
 __all__ = [
     "InformationBoundaryCompiler",
@@ -18,5 +22,7 @@ __all__ = [
     "InfoEdge",
     "NodeType",
     "EdgeType",
-    "NecessityClassification"
+    "NecessityClassification",
+    "InformationBoundaryEngine",
+    "BoundaryDecision",
 ]
