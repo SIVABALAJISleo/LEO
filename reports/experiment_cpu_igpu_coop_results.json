@@ -1,0 +1,58 @@
+[
+  {
+    "dimension": 128,
+    "cpu_median_ms": 0.2475,
+    "igpu_backend": "INTEL_UHD_IGPU",
+    "igpu_median_ms": 2.1754,
+    "hybrid_backend": "HYBRID_CPU_IGPU",
+    "hybrid_median_ms": 1.5516,
+    "speedup_igpu_vs_cpu": 0.11,
+    "speedup_hybrid_vs_cpu": 0.16,
+    "max_abs_error_cpu": 0.0,
+    "max_abs_error_igpu": 2.288818359375e-05,
+    "max_abs_error_hybrid": 2.288818359375e-05,
+    "notes": "Balanced heterogeneous split: 60% CPU (P/E cores) + 40% Intel UHD (48 EUs)"
+  },
+  {
+    "dimension": 256,
+    "cpu_median_ms": 0.8268,
+    "igpu_backend": "INTEL_UHD_IGPU",
+    "igpu_median_ms": 11.4605,
+    "hybrid_backend": "HYBRID_CPU_IGPU",
+    "hybrid_median_ms": 2.7745,
+    "speedup_igpu_vs_cpu": 0.07,
+    "speedup_hybrid_vs_cpu": 0.3,
+    "max_abs_error_cpu": 0.0,
+    "max_abs_error_igpu": 5.7220458984375e-05,
+    "max_abs_error_hybrid": 5.7220458984375e-05,
+    "notes": "Balanced heterogeneous split: 60% CPU (P/E cores) + 40% Intel UHD (48 EUs)"
+  },
+  {
+    "dimension": 512,
+    "cpu_median_ms": 4.1081,
+    "igpu_backend": "INTEL_UHD_IGPU",
+    "igpu_median_ms": 115.2895,
+    "hybrid_backend": "HYBRID_CPU_IGPU",
+    "hybrid_median_ms": 22.0254,
+    "speedup_igpu_vs_cpu": 0.04,
+    "speedup_hybrid_vs_cpu": 0.19,
+    "max_abs_error_cpu": 0.0,
+    "max_abs_error_igpu": 9.918212890625e-05,
+    "max_abs_error_hybrid": 8.392333984375e-05,
+    "notes": "Balanced heterogeneous split: 60% CPU (P/E cores) + 40% Intel UHD (48 EUs)"
+  },
+  {
+    "dimension": 1024,
+    "cpu_median_ms": 17.3044,
+    "igpu_backend": "INTEL_UHD_IGPU",
+    "igpu_median_ms": 665.6574,
+    "hybrid_backend": "HYBRID_CPU_IGPU",
+    "hybrid_median_ms": 67.8947,
+    "speedup_igpu_vs_cpu": 0.03,
+    "speedup_hybrid_vs_cpu": 0.25,
+    "max_abs_error_cpu": 0.0,
+    "max_abs_error_igpu": 0.00020599365234375,
+    "max_abs_error_hybrid": 0.0001983642578125,
+    "notes": "Balanced heterogeneous split: 60% CPU (P/E cores) + 40% Intel UHD (48 EUs)"
+  }
+]

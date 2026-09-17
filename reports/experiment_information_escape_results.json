@@ -1,0 +1,98 @@
+[
+  {
+    "rank": 1,
+    "N": 256,
+    "storage_kb": 2.0,
+    "compression_ratio": 0.0078,
+    "factored_median_ms": 0.1194,
+    "dense_baseline_ms": 0.4728,
+    "speedup": 3.96,
+    "max_abs_error": 9.918212890625e-05,
+    "parity_status": "EXACT_PARITY",
+    "break_even": true
+  },
+  {
+    "rank": 2,
+    "N": 256,
+    "storage_kb": 4.0,
+    "compression_ratio": 0.0156,
+    "factored_median_ms": 0.0698,
+    "dense_baseline_ms": 0.4728,
+    "speedup": 6.77,
+    "max_abs_error": 0.0001068115234375,
+    "parity_status": "APPROX_PARITY",
+    "break_even": true
+  },
+  {
+    "rank": 4,
+    "N": 256,
+    "storage_kb": 8.0,
+    "compression_ratio": 0.0312,
+    "factored_median_ms": 0.0921,
+    "dense_baseline_ms": 0.4728,
+    "speedup": 5.13,
+    "max_abs_error": 0.0001068115234375,
+    "parity_status": "APPROX_PARITY",
+    "break_even": true
+  },
+  {
+    "rank": 8,
+    "N": 256,
+    "storage_kb": 16.0,
+    "compression_ratio": 0.0625,
+    "factored_median_ms": 0.1613,
+    "dense_baseline_ms": 0.4728,
+    "speedup": 2.93,
+    "max_abs_error": 0.000152587890625,
+    "parity_status": "APPROX_PARITY",
+    "break_even": true
+  },
+  {
+    "rank": 16,
+    "N": 256,
+    "storage_kb": 32.0,
+    "compression_ratio": 0.125,
+    "factored_median_ms": 0.218,
+    "dense_baseline_ms": 0.4728,
+    "speedup": 2.17,
+    "max_abs_error": 0.000213623046875,
+    "parity_status": "APPROX_PARITY",
+    "break_even": true
+  },
+  {
+    "rank": 32,
+    "N": 256,
+    "storage_kb": 64.0,
+    "compression_ratio": 0.25,
+    "factored_median_ms": 0.3365,
+    "dense_baseline_ms": 0.4728,
+    "speedup": 1.41,
+    "max_abs_error": 0.000244140625,
+    "parity_status": "APPROX_PARITY",
+    "break_even": true
+  },
+  {
+    "rank": 64,
+    "N": 256,
+    "storage_kb": 128.0,
+    "compression_ratio": 0.5,
+    "factored_median_ms": 0.4883,
+    "dense_baseline_ms": 0.4728,
+    "speedup": 0.97,
+    "max_abs_error": 0.000457763671875,
+    "parity_status": "APPROX_PARITY",
+    "break_even": false
+  },
+  {
+    "rank": 128,
+    "N": 256,
+    "storage_kb": 256.0,
+    "compression_ratio": 1.0,
+    "factored_median_ms": 0.6182,
+    "dense_baseline_ms": 0.4728,
+    "speedup": 0.76,
+    "max_abs_error": 0.00054931640625,
+    "parity_status": "APPROX_PARITY",
+    "break_even": false
+  }
+]

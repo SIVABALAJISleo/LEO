@@ -1,0 +1,50 @@
+[
+  {
+    "dimension": 64,
+    "iterations": 5,
+    "median_exec_ms": 1.6651,
+    "median_ref_ms": 0.023,
+    "median_overhead_ms": 1.6425,
+    "overhead_pct": 7141.3,
+    "max_abs_error": 0.0,
+    "chosen_path": "FALLBACK",
+    "correct_fallback_observed": true,
+    "contract_preserved": true
+  },
+  {
+    "dimension": 128,
+    "iterations": 5,
+    "median_exec_ms": 5.6504,
+    "median_ref_ms": 0.6399,
+    "median_overhead_ms": 5.0105,
+    "overhead_pct": 783.01,
+    "max_abs_error": 0.0,
+    "chosen_path": "FALLBACK",
+    "correct_fallback_observed": true,
+    "contract_preserved": true
+  },
+  {
+    "dimension": 256,
+    "iterations": 5,
+    "median_exec_ms": 11.9895,
+    "median_ref_ms": 0.7532,
+    "median_overhead_ms": 11.1295,
+    "overhead_pct": 1477.63,
+    "max_abs_error": 0.0,
+    "chosen_path": "FALLBACK",
+    "correct_fallback_observed": true,
+    "contract_preserved": true
+  },
+  {
+    "dimension": 512,
+    "iterations": 5,
+    "median_exec_ms": 73.5761,
+    "median_ref_ms": 3.0906,
+    "median_overhead_ms": 70.4855,
+    "overhead_pct": 2280.64,
+    "max_abs_error": 0.0,
+    "chosen_path": "FALLBACK",
+    "correct_fallback_observed": true,
+    "contract_preserved": true
+  }
+]
