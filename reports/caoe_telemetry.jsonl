@@ -1,0 +1,1 @@
+{"execution_id": "e2e_gemm", "timestamp": 1789668096.2704377, "input_shape": [32, 32], "precision": 8, "sparsity_eliminated_pct": 0.0, "executor": "cpu", "latency_ms": 0.0083, "speedup": 4.83, "contract_met": true, "error_rel": 0.0, "cache_hit": false, "notes": "strategy=DENSE"}
