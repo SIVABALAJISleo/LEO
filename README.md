@@ -6,7 +6,7 @@
 > **"Change the path. Preserve the result."**  
 > Rather than attempting to physically emulate an external GPU, HYPER-Ω mathematically reformulates computation to discover alternative software execution pathways that satisfy declared application contracts under fixed local hardware constraints.
 
-**Target Hardware**: Intel Core i5-12450H / i5-13420H CPU, Intel UHD Integrated Graphics (32 EUs), 16 GB Unified System RAM (Software Only).  
+**Target Hardware**: Intel Core i5-12450H CPU (8 cores / 12 threads: 4P+4E), Intel UHD Graphics (Official Spec: 48 EUs), 16 GB Unified System RAM (Software Only).  
 **Strict Constraints**: No discrete GPU, no cloud compute, no fake timing, no precomputed benchmark lookups, no unverified claims.
 
 ---

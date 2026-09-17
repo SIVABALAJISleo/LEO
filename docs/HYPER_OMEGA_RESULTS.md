@@ -2,8 +2,8 @@
 
 **Execution Date**: September 16, 2026  
 **Hardware Environment**:
-- **CPU**: Intel(R) Core(TM) i5-13420H (4 P-cores + 4 E-cores, 12 logical threads, 2.1 - 4.6 GHz)
-- **iGPU**: Intel(R) UHD Graphics (32 EUs, Driver 32.0.101.7076)
+- **CPU**: Intel(R) Core(TM) i5-12450H (4 P-cores + 4 E-cores, 12 logical threads, 12MB L3 Smart Cache)
+- **iGPU**: Intel(R) UHD Graphics (Official Spec: 48 EUs, OpenCL 3.0 NEO)
 - **RAM**: 16.0 GB Unified System Memory (LPDDR5, ~52 GB/s physical memory bandwidth)
 - **OS**: Windows 11 Home (x86_64)
 

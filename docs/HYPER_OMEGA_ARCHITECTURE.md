@@ -2,8 +2,8 @@
 
 ## 1. System Mission & Destination
 HYPER-Ω is an advanced algorithmic discovery and verification engine designed to produce computational outputs equivalent to designated high-end external GPU references (specifically the NVIDIA GeForce RTX 5090 Blackwell baseline) running strictly under fixed local hardware constraints:
-- **Processor**: Intel Core i5-13420H / i5-12450H CPU (8 physical cores, 12 threads)
-- **Graphics**: Intel UHD Graphics iGPU (32 EUs)
+- **Processor**: Intel Core i5-12450H CPU (8 physical cores: 4P+4E, 12 threads)
+- **Graphics**: Intel UHD Graphics iGPU (Official Spec: 48 EUs)
 - **Memory**: 16 GB Unified System RAM (~40-60 GB/s)
 - **Local Software Only**: No discrete GPU, cloud compute, paid APIs, hidden oracles, or fabricated benchmarks.
 
