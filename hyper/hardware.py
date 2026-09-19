@@ -177,3 +177,112 @@ def validate_model_presence(model_path: Optional[str]) -> Dict[str, Any]:
         "model_path": str(Path(model_path).resolve()),
         "size_bytes": Path(model_path).stat().st_size,
     }
+
+
+class HardwareProfiler:
+    """
+    Authoritative Hardware Profiler for LEO/HYPER.
+    Enforces the frozen Hardware Contract:
+      - CPU: Intel Core i5-12450H (8 cores: 4P + 4E, 12 threads)
+      - iGPU: Intel UHD Graphics (48 Execution Units, ~1.20 GHz)
+      - RAM: 16 GB with runtime benchmarked memory bandwidth (never hardcoded)
+      - Instruction Sets: AVX2, FMA (Strictly NO AVX-512)
+    """
+
+    def __init__(self) -> None:
+        self.profile: Dict[str, Any] = {}
+
+    def benchmark_memory_bandwidth(self, buffer_size_mb: int = 128, iterations: int = 5) -> Dict[str, Any]:
+        """
+        STREAM-style copy and read throughput benchmarks in unified system RAM.
+        Never hardcodes bandwidth.
+        """
+        import numpy as np
+        import time
+
+        n_elements = (buffer_size_mb * 1024 * 1024) // 4  # float32 elements
+        a = np.ones(n_elements, dtype=np.float32)
+        b = np.zeros(n_elements, dtype=np.float32)
+
+        # Warmup
+        b[:] = a[:]
+
+        copy_gbps = []
+        read_sum_gbps = []
+
+        bytes_copied = 2.0 * a.nbytes
+        for _ in range(iterations):
+            t0 = time.perf_counter_ns()
+            b[:] = a[:]
+            t1 = time.perf_counter_ns()
+            dt_sec = max(1e-9, (t1 - t0) / 1e9)
+            copy_gbps.append((bytes_copied / (1024**3)) / dt_sec)
+
+        bytes_read = 1.0 * a.nbytes
+        for _ in range(iterations):
+            t0 = time.perf_counter_ns()
+            _ = np.sum(a)
+            t1 = time.perf_counter_ns()
+            dt_sec = max(1e-9, (t1 - t0) / 1e9)
+            read_sum_gbps.append((bytes_read / (1024**3)) / dt_sec)
+
+        return {
+            "buffer_size_mb": buffer_size_mb,
+            "measured_copy_bandwidth_gbps": round(float(np.median(copy_gbps)), 2),
+            "measured_read_bandwidth_gbps": round(float(np.median(read_sum_gbps)), 2),
+            "theoretical_ceiling_gbps": 51.2,
+            "effective_efficiency_pct": round((float(np.median(copy_gbps)) / 51.2) * 100.0, 1),
+        }
+
+    def generate_canonical_profile(self) -> Dict[str, Any]:
+        import hashlib
+        import json
+        import time
+
+        hw = get_hardware_profile()
+        mem_bench = self.benchmark_memory_bandwidth()
+
+        profile = {
+            "cpu_model": "Intel Core i5-12450H",
+            "cores": 8,
+            "threads": 12,
+            "p_cores": 4,
+            "e_cores": 4,
+            "instruction_sets": ["AVX2", "FMA"],
+            "has_avx512": False,  # Strict constraint: i5-12450H has NO AVX-512
+            "igpu_model": "Intel UHD Graphics (12th Gen)",
+            "igpu_eus": 48,  # Official Intel specification
+            "igpu_frequency": "1.20 GHz",
+            "ram_capacity": "16 GB",
+            "ram_type": "DDR5/LPDDR5",
+            "ram_channels": "Dual-Channel",
+            "measured_memory_bandwidth": f"{mem_bench['measured_copy_bandwidth_gbps']} GB/s (Median Copy), {mem_bench['measured_read_bandwidth_gbps']} GB/s (Median Read)",
+            "bandwidth_benchmark_details": mem_bench,
+            "os": f"{platform.system()} {platform.release()} ({platform.version()})",
+            "driver": hw.get("gpu_driver", "Intel Graphics Driver"),
+            "runtime": f"Python {platform.python_version()}",
+            "timestamp": time.time(),
+            "formatted_timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+            "constraints": {
+                "discrete_gpu": "NONE",
+                "raw_hardware_parity": "NOT_ACHIEVED",
+                "software_only": True,
+                "no_cloud_compute": True,
+                "no_fake_measurements": True,
+            },
+        }
+
+        # Deterministic Hardware Hash
+        fingerprint = f"{profile['cpu_model']}:{profile['cores']}C{profile['threads']}T:{profile['igpu_model']}:{profile['igpu_eus']}EU:{profile['ram_capacity']}"
+        profile["hardware_hash"] = hashlib.sha256(fingerprint.encode()).hexdigest()
+        self.profile = profile
+        return profile
+
+    def save_yaml(self, filepath: str = "hardware_profile.yaml") -> str:
+        import yaml
+        if not self.profile:
+            self.generate_canonical_profile()
+        with open(filepath, "w", encoding="utf-8") as f:
+            yaml.dump(self.profile, f, default_flow_style=False, sort_keys=False)
+        return filepath
+

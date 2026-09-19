@@ -1,9 +1,9 @@
 {
-  "certificate_id": "cert_25fbfa5bfa79",
-  "timestamp": 1789486671.719096,
-  "workload_id": "pipeline_unit_test",
-  "contract_hash": "b8790fb4eddb2b858750274c5db2f92de71a6fdd1110fad043a2e59d7cff1cdc",
-  "input_hash": "8690738374066244589",
+  "certificate_id": "cert_9b3954d8fcfd",
+  "timestamp": 1789838892.0612435,
+  "workload_id": "e2e_test_workload",
+  "contract_hash": "02aae5c15d591bcc0ff7434131b31cd9193eb2a723a29aa8e7ec3fd706b7a58d",
+  "input_hash": "7274572600057626706",
   "candidate_hash": "pathway_exact_reference",
   "reference_hash": "reference_blas_fp32",
   "hardware_fingerprint": "Intel Core i5-12450H + UHD Graphics (48 EU)",
@@ -17,9 +17,9 @@
   "predicted_work": 0.0,
   "reconstructed_work": 0.0,
   "verification_work": 0.0,
-  "latency": 10.891,
-  "throughput": 91.82,
-  "memory": 1426.88,
+  "latency": 15.164,
+  "throughput": 65.95,
+  "memory": 1209.27,
   "correctness": "PASS",
   "numerical_error": 0.0,
   "exact_status": "EXACT_MATCH",
@@ -32,17 +32,17 @@
   "software_parallel_worker_equivalence": 1.0,
   "computational_compression_ratio": 1.0,
   "gap_root_cause": "MEMORY_BOUND",
-  "output_hash": "b3668d41cea38946ffb5f3b037a6d2ef63cbb3e113b514c5dfb79184e3dd3a97",
+  "output_hash": "d170b92c3f3411e96059b38a17cbc10d71086f8cb93546a319679770e0230ed1",
   "exactness_class": "NUMERICALLY_EQUIVALENT",
   "correctness_result": "PASS",
   "numerical_metrics": {},
   "adversarial_result": {},
   "holdout_result": {},
   "latency_samples_ms": [
-    10.891
+    15.164
   ],
-  "throughput_ops_per_sec": 91.82,
-  "memory_rss_mb": 1426.88,
+  "throughput_ops_per_sec": 65.95,
+  "memory_rss_mb": 1209.27,
   "work_reference_flops": 524288.0,
   "work_necessary_flops": 524288.0,
   "work_eliminated_ratio": 0.0,
@@ -50,5 +50,5 @@
   "provenance": "MEASURED",
   "fallback_status": "NONE",
   "verifier_version": "vNext-2.0",
-  "certificate_signature": "0991a6edcc6a82c3d3d5a8150268f5302d5f4e6798604c20c17b2ec06404002d"
+  "certificate_signature": "46d36796606c647ebb44358ba0740313af4fecc31b98367a47fff4034a6bda0b"
 }

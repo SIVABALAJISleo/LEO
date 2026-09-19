@@ -56,6 +56,8 @@ __pycache__/
 .venv/
 venv/
 *.db
+*.db-shm
+*.db-wal
 *.sqlite
 *.sqlite3
 confidence_weights.json

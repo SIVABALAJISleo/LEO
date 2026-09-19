@@ -1,0 +1,34 @@
+cpu_model: Intel Core i5-12450H
+cores: 8
+threads: 12
+p_cores: 4
+e_cores: 4
+instruction_sets:
+- AVX2
+- FMA
+has_avx512: false
+igpu_model: Intel UHD Graphics (12th Gen)
+igpu_eus: 48
+igpu_frequency: 1.20 GHz
+ram_capacity: 16 GB
+ram_type: DDR5/LPDDR5
+ram_channels: Dual-Channel
+measured_memory_bandwidth: 18.57 GB/s (Median Copy), 5.45 GB/s (Median Read)
+bandwidth_benchmark_details:
+  buffer_size_mb: 128
+  measured_copy_bandwidth_gbps: 18.57
+  measured_read_bandwidth_gbps: 5.45
+  theoretical_ceiling_gbps: 51.2
+  effective_efficiency_pct: 36.3
+os: Windows 11 (10.0.26100)
+driver: unknown
+runtime: Python 3.13.5
+timestamp: 1789839245.5520082
+formatted_timestamp: '2026-09-19T17:34:05Z'
+constraints:
+  discrete_gpu: NONE
+  raw_hardware_parity: NOT_ACHIEVED
+  software_only: true
+  no_cloud_compute: true
+  no_fake_measurements: true
+hardware_hash: 71b214d9b6c67773e932281401e1e1173ed7f5977f0785d00d1190af85c41ce6
