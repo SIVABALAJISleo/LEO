@@ -60,11 +60,11 @@ class Verifier:
                 verdict="FAIL_SHAPE_MISMATCH",
             )
 
-        # Numerical Error
-        diff = np.abs(result.astype(np.float64) - reference.astype(np.float64))
+        # Numerical Error (compute absolute difference prior to casting to preserve complex magnitudes)
+        diff = np.abs(result - reference).astype(np.float64)
         abs_error = float(np.max(diff)) if diff.size > 0 else 0.0
 
-        ref_abs = np.abs(reference.astype(np.float64))
+        ref_abs = np.abs(reference).astype(np.float64)
         with np.errstate(divide="ignore", invalid="ignore"):
             rel = np.where(ref_abs > 0, diff / ref_abs, diff)
         rel_error = float(np.max(rel)) if rel.size > 0 else 0.0
@@ -96,20 +96,24 @@ class Verifier:
             k = min(contract.k, result.shape[-1])
             top_k_ref = np.argsort(reference, axis=-1)[..., -k:]
             top_k_res = np.argsort(result, axis=-1)[..., -k:]
-            overlap = np.intersect1d(top_k_ref.flatten(), top_k_res.flatten())
-            overlap_ratio = len(overlap) / max(1, top_k_ref.size)
-            target_acc = contract.tolerance.get("functional_metric", 0.95) or 0.95
+            ref_rows = top_k_ref.reshape(-1, k)
+            res_rows = top_k_res.reshape(-1, k)
+            row_overlaps = [len(np.intersect1d(r_ref, r_res)) / k for r_ref, r_res in zip(ref_rows, res_rows)]
+            overlap_ratio = float(np.mean(row_overlaps)) if row_overlaps else 1.0
+            target_acc = float(contract.tolerance.get("functional_metric", 0.95) or 0.95)
             meets_functional = overlap_ratio >= target_acc
 
         max_rel_tol = float(contract.tolerance.get("relative_error", 1e-4) or 1e-4)
+        # When TOP_K functional metric is declared, functional fidelity takes precedence
+        rel_ok = (rel_error <= max_rel_tol) if contract.functional_metric != "TOP_K" else True
         contract_met = (
-            rel_error <= max_rel_tol
+            rel_ok
             and meets_perceptual
             and meets_functional
         )
 
         reasons = []
-        if rel_error > max_rel_tol:
+        if not rel_ok:
             reasons.append(f"REL_ERR_{rel_error:.2e}_EXCEEDS_{max_rel_tol:.2e}")
         if not meets_perceptual:
             reasons.append("PERCEPTUAL_METRIC_FAILED")

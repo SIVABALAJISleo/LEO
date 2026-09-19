@@ -124,3 +124,38 @@ def test_layer7_caoe_end_to_end():
 
     metrics = engine.telemetry.aggregate_metrics()
     assert metrics["contract_parity_pct"] == 100.0
+
+
+def test_phase3_intent_layer_v2():
+    from backend.caoe.intent_router import IntentLayer_v2
+
+    router = IntentLayer_v2()
+    # Test intent classifications
+    assert router.classify_query("render dynamic frame 60fps").intent_type == "RENDERING"
+    assert router.classify_query("generate embedding token top_k").intent_type == "INFERENCE"
+    assert router.classify_query("fourier spectral transform").intent_type == "FFT"
+    assert router.classify_query("matrix multiplication gemm").intent_type == "GEMM"
+
+    # Test route and execute
+    A = np.ones((16, 16), dtype=np.float32)
+    res, meta = router.route_and_execute(
+        query="render dynamic frame",
+        input_tensor=A,
+        computation_fn=lambda x, p, s: x * 2.0,
+        reference_execution=A * 2.0,
+    )
+    assert meta["verification"]["contract_met"]
+    assert meta["classified_intent"] == "RENDERING"
+
+
+def test_phase5_benchmark_suite_execution():
+    from backend.caoe.benchmark_suite import CAOEBenchmarkSuite
+
+    suite = CAOEBenchmarkSuite()
+    # Run falsification checklist
+    falsify = suite.run_falsification_checklist()
+    assert falsify["falsification_verdict"] == "PASS"
+    assert falsify["cold_start"]["contract_met"]
+    assert falsify["hot_cache"]["contract_met"]
+    assert falsify["adversarial_input"]["contract_met"]
+

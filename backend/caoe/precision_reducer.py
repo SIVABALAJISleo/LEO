@@ -64,8 +64,8 @@ class PrecisionReducer:
             reduced = computation_fn(inp, target_prec)
             reduced_ms = max(1e-6, (time.perf_counter_ns() - t0) / 1e6)
 
-            diff = np.abs(reduced.astype(np.float64) - reference.astype(np.float64))
-            ref_abs = np.abs(reference.astype(np.float64))
+            diff = np.abs(reduced - reference).astype(np.float64)
+            ref_abs = np.abs(reference).astype(np.float64)
             with np.errstate(divide="ignore", invalid="ignore"):
                 rel = np.where(ref_abs > 0, diff / ref_abs, diff)
             err = float(np.max(rel)) if rel.size > 0 else 0.0

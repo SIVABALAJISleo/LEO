@@ -22,6 +22,7 @@ from .cpu_igpu_scheduler import CPUiGPUScheduler
 from .verifier import Verifier, VerificationResult
 from .telemetry import TelemetryLayer
 from .caoe_engine import ContractAwareOptimizationEngine
+from .intent_router import IntentLayer_v2, IntentClassification
 
 __all__ = [
     "ContractAwareOptimizationEngine",
@@ -35,4 +36,6 @@ __all__ = [
     "Verifier",
     "VerificationResult",
     "TelemetryLayer",
+    "IntentLayer_v2",
+    "IntentClassification",
 ]
