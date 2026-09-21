@@ -124,6 +124,9 @@ app.include_router(scoreboard_router)
 from backend.routers.escape_engine_router import router as escape_engine_router
 app.include_router(escape_engine_router)
 
+from backend.routers.universal_router import router as universal_router
+app.include_router(universal_router)
+
 from backend.ira_router import router as ira_router
 app.include_router(ira_router)
 

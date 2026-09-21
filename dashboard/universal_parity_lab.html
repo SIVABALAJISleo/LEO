@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HYPER — Universal Computational Parity Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #07090e;
+      --card-bg: rgba(14, 19, 32, 0.82);
+      --border: rgba(99, 102, 241, 0.25);
+      --accent: #6366f1;
+      --accent-glow: rgba(99, 102, 241, 0.45);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --font-sans: 'Outfit', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(16, 185, 129, 0.06) 0%, transparent 40%);
+    }
+    header {
+      padding: 1.25rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      background: rgba(7, 9, 14, 0.85);
+      backdrop-filter: blur(16px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .badge {
+      background: rgba(99, 102, 241, 0.15);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 0.25rem 0.6rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      backdrop-filter: blur(8px);
+    }
+    h2 { font-size: 1.15rem; margin-bottom: 1rem; color: #fff; display: flex; justify-content: space-between; align-items: center; }
+    label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.4rem; }
+    select, input, button {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      padding: 0.65rem 0.9rem;
+      border-radius: 8px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+    button.btn-primary {
+      background: var(--accent);
+      color: white;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    button.btn-primary:hover {
+      background: #4f46e5;
+      box-shadow: 0 0 16px var(--accent-glow);
+    }
+    .scorecard-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    .scorecard-table th, .scorecard-table td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .scorecard-table th { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; }
+    .status-pill {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .pill-green { background: rgba(16, 185, 129, 0.15); color: var(--success); }
+    .pill-yellow { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+    .pill-red { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+    .pill-blue { background: rgba(99, 102, 241, 0.15); color: var(--accent); }
+    .log-box {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      max-height: 250px;
+      overflow-y: auto;
+      color: #93c5fd;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <h1 style="font-size: 1.4rem; font-weight: 700; letter-spacing: -0.02em;">HYPER <span style="font-weight:300; color:var(--text-muted);">UNIVERSAL PARITY LAB</span></h1>
+      <span class="badge">UCPE v2.0</span>
+    </div>
+    <div style="font-size: 0.85rem; color: var(--text-muted); font-family: var(--font-mono);">
+      Target Hardware: <span style="color:#fff;">Intel Core i5-12450H + Intel UHD (48 EU)</span>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="grid-2">
+      <!-- Control Panel -->
+      <div class="card">
+        <h2>Workload Intake</h2>
+        <label>Select Computational Domain</label>
+        <select id="domainSelect">
+          <option value="POLYNOMIAL">Numerical: Horner Polynomial (O(N) vs O(N²))</option>
+          <option value="SORTING">Sorting: Non-Comparative Counting Sort</option>
+          <option value="MATRIX">Matrix Tensor: Dense / Low-Rank SVD</option>
+          <option value="UNSEEN">Unseen: Dynamically Generated User Workload</option>
+          <option value="ADVERSARIAL_NOISE">Adversarial: Incompressible Noise (Entropy Barrier)</option>
+        </select>
+
+        <label>Workload Dimension / Size</label>
+        <input type="number" id="dimensionInput" value="1000" min="10" max="50000">
+
+        <label>Search Budget (Max Candidates)</label>
+        <input type="number" id="candidatesInput" value="15" min="5" max="50">
+
+        <button class="btn-primary" id="runBtn" onclick="runUniversalSearch()">Launch Universal Adaptive Search</button>
+
+        <div style="margin-top: 1rem;">
+          <label>Target Reference Standard</label>
+          <div style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">
+            <strong>NVIDIA GeForce RTX 5090</strong> (Blackwell GB202, 24,576 CUDA cores, 576 Tensor cores, 1,792 GB/s, 600W).
+          </div>
+        </div>
+      </div>
+
+      <!-- Scorecard Panel -->
+      <div class="card">
+        <h2>
+          Universal Parity Scorecard
+          <span id="outcomeBadge" class="status-pill pill-blue">STANDBY</span>
+        </h2>
+        <table class="scorecard-table">
+          <thead>
+            <tr>
+              <th>Dimension</th>
+              <th>HYPER (i5-12450H)</th>
+              <th>RTX 5090 Ref</th>
+              <th>Ratio</th>
+              <th>Parity Status</th>
+            </tr>
+          </thead>
+          <tbody id="scorecardBody">
+            <tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Launch a workload experiment to inspect multi-dimensional parity.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Details Row -->
+    <div class="card">
+      <h2>Discovery & Execution Audit Log</h2>
+      <div class="log-box" id="auditLog">System initialized. Awaiting workload intake...</div>
+    </div>
+  </div>
+
+  <script>
+    async function runUniversalSearch() {
+      const btn = document.getElementById('runBtn');
+      const log = document.getElementById('auditLog');
+      const badge = document.getElementById('outcomeBadge');
+      btn.disabled = true;
+      btn.innerText = 'Searching & Verifying...';
+
+      const payload = {
+        workload_domain: document.getElementById('domainSelect').value,
+        dimension: parseInt(document.getElementById('dimensionInput').value),
+        max_candidates: parseInt(document.getElementById('candidatesInput').value),
+      };
+
+      log.innerHTML += `<br>[INIT] Dispatched universal search for domain: ${payload.workload_domain}...`;
+
+      try {
+        const resp = await fetch('/api/v1/universal/search', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await resp.json();
+
+        badge.innerText = data.status || 'EVALUATED';
+        badge.className = 'status-pill ' + (data.status === 'TARGET_REACHED' ? 'pill-green' : data.status === 'IMPROVEMENT_FOUND' ? 'pill-blue' : 'pill-yellow');
+
+        // Render Scorecard
+        const sc = data.parity_scorecard;
+        if (sc && sc.dimensions) {
+          const tbody = document.getElementById('scorecardBody');
+          tbody.innerHTML = '';
+          sc.dimensions.forEach(d => {
+            const row = document.createElement('tr');
+            const pillClass = d.status.includes('PARITY') || d.status === 'PASS' || d.status === 'ENERGY_SUPERIOR' ? 'pill-green' : (d.status.includes('NOT_ACHIEVED') ? 'pill-yellow' : 'pill-blue');
+            row.innerHTML = `
+              <td><strong>${d.dimension}</strong></td>
+              <td>${d.hyper} ${d.unit || ''}</td>
+              <td>${d.rtx_5090} ${d.unit || ''}</td>
+              <td>${d.ratio_hyper_vs_rtx ? d.ratio_hyper_vs_rtx + 'x' : '—'}</td>
+              <td><span class="status-pill ${pillClass}">${d.status}</span></td>
+            `;
+            tbody.appendChild(row);
+          });
+        }
+
+        log.innerHTML += `<br>[SUCCESS] Experiment ${data.experiment_id} complete. Verified Speedup: ${data.verified_speedup}x vs baseline.`;
+        if (data.breakthrough && data.breakthrough.is_improvement) {
+          log.innerHTML += `<br>[BREAKTHROUGH] ${data.breakthrough.label} registered. Work reduction: ${data.breakthrough.work_reduction_pct}%.`;
+        }
+        if (data.barrier_verdict && data.barrier_verdict.has_barrier) {
+          log.innerHTML += `<br>[BARRIER] Classified: ${data.barrier_verdict.barrier_type} - ${data.barrier_verdict.evidence}`;
+        }
+      } catch (err) {
+        log.innerHTML += `<br>[ERROR] Failed: ${err.message}`;
+      } finally {
+        btn.disabled = false;
+        btn.innerText = 'Launch Universal Adaptive Search';
+        log.scrollTop = log.scrollHeight;
+      }
+    }
+  </script>
+</body>
+</html>
