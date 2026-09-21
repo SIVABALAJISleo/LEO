@@ -192,6 +192,17 @@ class UniversalWorkloadAdapter:
             # Function might require special handling
             pass
 
+        meta = dict(metadata) if metadata else {}
+        if "coeffs" not in meta and hasattr(fn, "__closure__") and fn.__closure__:
+            for cell in fn.__closure__:
+                try:
+                    val = cell.cell_contents
+                    if isinstance(val, np.ndarray) and val.ndim == 1:
+                        meta["coeffs"] = val
+                        break
+                except Exception:
+                    pass
+
         return UniversalWorkload(
             workload_id=w_id,
             target_fn=fn,
@@ -199,13 +210,15 @@ class UniversalWorkloadAdapter:
             domain=inferred_domain,
             reference_output=ref_out,
             name=name,
-            metadata=metadata,
+            metadata=meta,
         )
 
     @staticmethod
     def infer_domain(fn: Callable[[Any], Any], sample_input: Any, name_hint: Optional[str] = None) -> WorkloadDomain:
         name = f"{getattr(fn, '__name__', '')} {name_hint or ''}".lower()
 
+        if any(k in name for k in ["poly", "horner", "taylor", "power_sum"]):
+            return WorkloadDomain.NUMERICAL
         if any(k in name for k in ["gemm", "matmul", "matrix", "tensor", "dot"]):
             return WorkloadDomain.MATRIX_TENSOR
         if any(k in name for k in ["sort", "search", "binary_search", "partition"]):
