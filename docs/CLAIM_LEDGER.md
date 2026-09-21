@@ -24,6 +24,7 @@ Every performance and architectural statement in the LEO/HYPER repository is ass
 ## 2. Exhaustive Claim Ledger
 
 ### CLM-01: Discrete GPU Hardware Fabrication / Transistor Emulation
+
 - **Claim**: "Software emulates RTX 5090 / H100 hardware transistors or increases physical memory bandwidth."
 - **Workload**: All workloads.
 - **Hardware**: Intel Core i5-12450H + Intel UHD Graphics.
@@ -33,6 +34,7 @@ Every performance and architectural statement in the LEO/HYPER repository is ass
 ---
 
 ### CLM-02: Zero-Cost Caching of Incompressible Random Matrices
+
 - **Claim**: "Cache hit achieves 10x compute speedup on random, unique dense matrices."
 - **Workload**: Random Gaussian Dense Matrix Multiplication ($N \in [64, 512]$).
 - **Hardware**: Intel Core i5-12450H.
@@ -42,6 +44,7 @@ Every performance and architectural statement in the LEO/HYPER repository is ass
 ---
 
 ### CLM-03: Incremental Exact Residual GEMM Acceleration
+
 - **Claim**: "When only $k$ rows of matrix $A$ change, computing only the row residual delivers measured speedup with $0.00\text{e}+00$ error."
 - **Workload**: Streaming matrix updates ($10\%$ row delta) at $N=128, 256, 512$.
 - **Hardware**: Intel Core i5-12450H.
@@ -56,6 +59,7 @@ Every performance and architectural statement in the LEO/HYPER repository is ass
 ---
 
 ### CLM-04: Low-Rank Matrix Factorization Break-Even Boundary
+
 - **Claim**: "Factoring $A \approx U V$ into rank $r$ factors eliminates operations, but exhibits a break-even threshold at $r \approx N/4$."
 - **Workload**: Low-Rank Factored GEMM $U \times (V \times B)$ for $N=256$, swept across $r \in [1, 128]$.
 - **Hardware**: Intel Core i5-12450H.
@@ -72,6 +76,7 @@ Every performance and architectural statement in the LEO/HYPER repository is ass
 ---
 
 ### CLM-05: Unblocked Intel UHD OpenCL Dense GEMM
+
 - **Claim**: "Offloading naive unblocked dense GEMM to Intel UHD iGPU (48 EUs) is faster than CPU AVX2."
 - **Workload**: Dense FP32 GEMM ($N \in [128, 1024]$).
 - **Hardware**: Intel UHD Graphics (48 EUs) vs Intel Core i5-12450H.
@@ -82,6 +87,7 @@ Every performance and architectural statement in the LEO/HYPER repository is ass
 ---
 
 ### CLM-06: T-MAC BitNet b1.58 Zero-MAC Inference Kernel
+
 - **Claim**: "T-MAC eliminates floating-point matrix multiplication from token generation via 2-bit ternary LUT and AVX2 shuffle/add."
 - **Workload**: BitNet b1.58 token projection ($N=256, K=512$).
 - **Hardware**: Intel Core i5-12450H (AVX2 SIMD).
@@ -93,6 +99,7 @@ Every performance and architectural statement in the LEO/HYPER repository is ass
 ---
 
 ### CLM-07: Contract-100 Parity Under Adversarial Gauntlets
+
 - **Claim**: "The contract gate prevents incorrect results by safely falling back to verified reference execution on adversarial or pathological inputs."
 - **Workload**: 12 pathological stress tests (NaN/Inf, extreme dynamic range, ill-conditioned, cache collision).
 - **Hardware**: Intel Core i5-12450H.
@@ -103,6 +110,7 @@ Every performance and architectural statement in the LEO/HYPER repository is ass
 ---
 
 ### CLM-08: 6-Mode Benchmark Suite Integrity (Anti-Cheating & Cache Transparency)
+
 - **Claim**: "LEO/HYPER strictly segregates COLD, WARM, PERSISTENT_CACHE, RANDOM, ADVERSARIAL, and APPLICATION_REALISTIC benchmark modes with zero hidden caching, zero pre-compiled lookup cheating, and transparent reporting."
 - **Workload**: GEMM 256x256 benchmarked across all 6 modes via `BenchmarkIntegritySuite`.
 - **Hardware**: Intel Core i5-12450H.
@@ -120,6 +128,7 @@ Every performance and architectural statement in the LEO/HYPER repository is ass
 ---
 
 ### CLM-09: Live Physical Memory Bandwidth STREAM-Style Profiling
+
 - **Claim**: "Memory bandwidth is never hardcoded; it is benchmarked live via STREAM-style array copy, read, and write kernels at engine initialization."
 - **Workload**: 16 MB float32 array streaming benchmarks (5 runs, median recorded).
 - **Hardware**: Intel Core i5-12450H (16 GB Unified System RAM, DDR5-4800 / LPDDR5 architecture).
@@ -135,6 +144,7 @@ Every performance and architectural statement in the LEO/HYPER repository is ass
 ---
 
 ### CLM-10: Work-DAG and Necessary-Work Graph Reduction
+
 - **Claim**: "Work-DAGs accurately detect dead nodes and common subexpressions, while the Necessary-Work Engine classifies operations into 9 necessity classes (`REQUIRED`, `CONDITIONAL`, `REDUNDANT`, `REUSABLE`, `INCREMENTAL`, `PREDICTABLE`, `RECONSTRUCTABLE`, `ELIMINABLE`, `UNKNOWN`)."
 - **Workload**: Synthetic compute graphs with redundant matrix multiplies and unused dead leaf branches.
 - **Hardware**: Intel Core i5-12450H.
@@ -146,6 +156,7 @@ Every performance and architectural statement in the LEO/HYPER repository is ass
 ---
 
 ### CLM-11: 22 Canonical Escape Strategies & Cryptographic Proof Certificates
+
 - **Claim**: "The Escape Compiler tests 22 canonical strategies in priority order, falling back to `NO_ESCAPE_FOUND` or `CONTRACT_UNSATISFIABLE` when budgets are violated, generating SHA-256 verified execution certificates with Levels 0-5 verification including Freivalds $O(k n^2)$ randomized checking."
 - **Workload**: Matrix operations, PDE diffusion simulation, LLM prefix decoding, and graphics subregion rendering.
 - **Hardware**: Intel Core i5-12450H.
@@ -157,6 +168,7 @@ Every performance and architectural statement in the LEO/HYPER repository is ass
 ---
 
 ### CLM-12: Strict Metric Separation and Physical Parity Realism
+
 - **Claim**: "LEO/HYPER strictly separates Latency Speedup ($T_{\text{ref}} / T_{\text{hyper}}$), Work Reduction ($1 - W_{\text{hyper}} / W_{\text{ref}}$), and Data-Movement Reduction ($1 - B_{\text{hyper}} / B_{\text{ref}}$), and explicitly reports `RAW_HARDWARE_PARITY = NOT_ACHIEVED`."
 - **Workload**: Microbenchmarks across CPU and OpenCL iGPU backends.
 - **Hardware**: Intel Core i5-12450H + Intel UHD 48 EU.
@@ -168,6 +180,7 @@ Every performance and architectural statement in the LEO/HYPER repository is ass
 ---
 
 ### CLM-13: Verified Adaptive Algorithmic Escape Engine (VAEE) Multi-Workload Search
+
 - **Claim**: "The VAEE dynamically generates, evaluates, and verifies algorithmic pathways across diverse workload domains (polynomial evaluation, bounded key sorting, 2D convolution, dynamic programming, and matrix multiplication), discovering legitimate algorithmic escapes that outperform naive baseline executions on the physical Intel Core i5-12450H."
 - **Workload**: 5 canonical scientific research workloads:
   - Polynomial Evaluation ($O(N)$ Horner's Rule vs $O(N^2)$ direct power expansion)
@@ -188,6 +201,7 @@ Every performance and architectural statement in the LEO/HYPER repository is ass
 ---
 
 ### CLM-14: Independent Multi-Strategy Verification & Zero-Self-Confirmation
+
 - **Claim**: "VAEE guarantees that no candidate computational pathway can ever verify itself or bypass the independent verifier. The MasterVerifier validates candidates across four orthogonal verification paradigms: Exact bitwise matching, Differential relative/absolute bounds, Structural invariants (monotonicity, permutation), and Freivalds $O(K N^2)$ probabilistic polynomial checking."
 - **Workload**: Synthetic and research workload candidate outputs.
 - **Hardware**: Intel Core i5-12450H.
@@ -199,6 +213,7 @@ Every performance and architectural statement in the LEO/HYPER repository is ass
 ---
 
 ### CLM-15: Formal Barrier Detection and Epistemic Uncertainty Quantification
+
 - **Claim**: "When an algorithmic escape is fundamentally bounded by information entropy, irreducible data dependency, or hardware cache capacity, the BarrierDetector classifies the computational boundary into `BARRIER_CLASSIFIED` (`INFORMATION_ENTROPY`, `DATA_DEPENDENCY`, `NUMERICAL_INSTABILITY`, or `HARDWARE_SATURATION`) rather than pursuing unachievable optimization."
 - **Workload**: Incompressible high-entropy sequences, recurrence relations, and ILL-conditioned matrices.
 - **Hardware**: Intel Core i5-12450H.
@@ -210,6 +225,7 @@ Every performance and architectural statement in the LEO/HYPER repository is ass
 ---
 
 ### CLM-16: Universal Computational Parity Engine (UCPE) Arbitrary Workload Intake & Contract Extraction
+
 - **Claim**: "The Universal Computational Parity Engine (UCPE) ingests arbitrary, previously unseen computational workloads across numerical, sorting, matrix, dynamic programming, vision, physics, and cryptographic domains, automatically extracting 13-field formal contracts (strict error budgets, invariant predicates, memory constraints, time budgets) without manual intervention."
 - **Workload**: Arbitrary functions and AST graphs (numerical polynomials, bounded sorting, dense GEMM, synthetic kernels).
 - **Hardware**: Intel Core i5-12450H (4P+4E cores, 12 threads).
@@ -221,6 +237,7 @@ Every performance and architectural statement in the LEO/HYPER repository is ass
 ---
 
 ### CLM-17: 10 Canonical Transformation Families & AST-Sandboxed Program Synthesis
+
 - **Claim**: "UCPE systematically explores 10 orthogonal transformation families (Mathematical Horner/CSE, Algorithmic Counting Sort, Structural Sparsity/SVD, Representation INT8/Ternary, Incremental Delta, Output-Directed Quickselect, Memory L2 Tiling/Recycling, Scheduling CPU+iGPU Co-Execution, Compiler AVX2 SIMD, and AST-Sandboxed Program Synthesis). The synthesis generator operates in an AST-restricted sandbox that strictly rejects unsafe operations (`os`, `sys`, `eval`, `exec`, filesystem, network)."
 - **Workload**: 10 pathway families applied to canonical numerical, sorting, matrix, and filtering tasks.
 - **Hardware**: Intel Core i5-12450H + Intel UHD 48 EU OpenCL.
@@ -232,6 +249,7 @@ Every performance and architectural statement in the LEO/HYPER repository is ass
 ---
 
 ### CLM-18: 12-Dimensional Parity Vector & Blackwell RTX 5090 Analytical Comparator
+
 - **Claim**: "UCPE measures candidate performance against an analytical reference model of NVIDIA GeForce RTX 5090 (GB202 Blackwell: 192 SMs, 24,576 CUDA cores, 1,792 GB/s GDDR7, 209 TFLOPS FP32) across 12 orthogonal dimensions ($P_{\text{contract}}, P_{\text{latency}}, P_{\text{energy}}, P_{\text{throughput}}, P_{\text{memory}}, P_{\text{arithmetic}}, P_{\text{cache}}, P_{\text{instruction}}, P_{\text{stability}}, P_{\text{scalability}}, P_{\text{exact}}, P_{\text{cost}}$). The system strictly asserts `RAW_HARDWARE_PARITY = NOT_ACHIEVED (PHYSICALLY_DISJOINT)`, but demonstrates contract parity $P_{\text{contract}} \ge 1.0$ through algorithmic work reduction."
 - **Workload**: Dense GEMM, polynomial Horner evaluation, and bounded integer sorting.
 - **Hardware**: Intel Core i5-12450H vs RTX 5090 Analytical Reference Model.
@@ -243,6 +261,7 @@ Every performance and architectural statement in the LEO/HYPER repository is ass
 ---
 
 ### CLM-19: Strict Anti-Cheat Cache Discipline & Evaluation Segregation
+
 - **Claim**: "UCPE enforces transparent cache discipline via `AntiCheatValidator`. Cold cache runs explicitly flush software state and execute on newly sampled random inputs; persistent cache hits are verified for byte-for-byte input digest matching; memoization without state dependency verification is rejected; and speedups from caching are explicitly categorized as `CACHE_HIT` rather than algorithmic acceleration."
 - **Workload**: Cached vs Cold evaluation across random and repeated inputs.
 - **Hardware**: Intel Core i5-12450H.
@@ -254,6 +273,7 @@ Every performance and architectural statement in the LEO/HYPER repository is ass
 ---
 
 ### CLM-20: 10-Level Escalation Ladder, Information Boundary Probing & Saturation Classification
+
 - **Claim**: "The Universal Adaptive Search Engine navigates a 10-level escalation ladder from baseline profiling through all 10 transformation families up to multi-pathway composition DAGs. When the search space and compute budget saturate without finding an escape, the engine terminates with formal barrier classification (`INFORMATION_ENTROPY`, `LOWER_BOUND`, `HARDWARE_SATURATION`) and logs `UNKNOWN` rather than claiming unprovable global optimality."
 - **Workload**: End-to-end adaptive search over polynomial evaluation, bounded key sorting, and adversarial recurrence loops.
 - **Hardware**: Intel Core i5-12450H.
@@ -265,6 +285,7 @@ Every performance and architectural statement in the LEO/HYPER repository is ass
 ---
 
 ### CLM-21: UCTDE First-Class Research Hypotheses & Discrete Epistemic Separation
+
 - **Claim**: "The Universal Computational Transformation, Discovery & Equivalence Engine (UCTDE) formalizes optimization search as explicit research hypotheses ($H: \forall W \in \mathcal{W}_{\text{domain}}, \exists P \dots$) and strictly segregates 7 discrete epistemic states (`TARGET`, `HYPOTHESIS`, `EXPERIMENT`, `EVIDENCE`, `PROOF`, `COUNTEREXAMPLE`, `UNKNOWN`). TARGET is never conflated with PROVEN FACT, and silicon parity remains strictly `RAW_HARDWARE_PARITY = NOT_ACHIEVED (PHYSICALLY_DISJOINT)`."
 - **Workload**: Arbitrary workload research hypotheses across numerical, sorting, matrix, and cryptographic domains.
 - **Hardware**: Intel Core i5-12450H (8 physical cores: 4P+4E, 12 threads) + Intel UHD 48 EU.
@@ -276,6 +297,7 @@ Every performance and architectural statement in the LEO/HYPER repository is ass
 ---
 
 ### CLM-22: SymPy-Backed Proof Discovery Engine & Exact Symbolic Equivalence
+
 - **Claim**: "UCTDE autonomously attempts formal mathematical proofs of transformation equivalence using SymPy symbolic algebra. When exact algebraic equivalence holds (e.g. nested Horner's rule vs canonical power sum $P(x) - H(x) \equiv 0$, or matrix multiplication associativity $(UV)B \equiv U(VB)$), formal proof certificates are generated. When proof cannot be deduced, the engine strictly emits `PROOF_NOT_ESTABLISHED` rather than claiming universal truth."
 - **Workload**: Polynomial evaluation of arbitrary degree and factored low-rank matrix multiplication.
 - **Hardware**: Intel Core i5-12450H.
@@ -287,6 +309,7 @@ Every performance and architectural statement in the LEO/HYPER repository is ass
 ---
 
 ### CLM-23: Mandatory Adversarial Counterexample Gauntlet & Delta-Debugging Minimization
+
 - **Claim**: "For every candidate transformation or hypothesis, UCTDE actively attempts to falsify it using an adversarial attack gauntlet comprising pathological dynamic ranges ($10^{\pm 30}$), Cauchy heavy-tailed noise, subnormal floats, ill-conditioned matrices, and dimension extremes. When a candidate breaks, the engine isolates the minimal failing input slice via delta-debugging and persists the counterexample into `CounterexampleDatabase`."
 - **Workload**: Extreme floating-point stress suites and fragile sorting candidates.
 - **Hardware**: Intel Core i5-12450H.
@@ -298,6 +321,7 @@ Every performance and architectural statement in the LEO/HYPER repository is ass
 ---
 
 ### CLM-24: 8-Level Universality Ladder & Universality Boundary Engine
+
 - **Claim**: "UCTDE enforces an 8-level Universality Ladder (Level 0: Candidate to Level 7: Universal Theorem) prohibiting arbitrary leaps from single instances to universal claims. When a hypothesis cannot achieve universal theorem status or encounters counterexamples, the Boundary Engine identifies `applicability_conditions` separating valid from invalid domains instead of emitting a generic failure."
 - **Workload**: Domain boundary analysis across bounded sorting and dynamic range constraints.
 - **Hardware**: Intel Core i5-12450H.
@@ -309,6 +333,7 @@ Every performance and architectural statement in the LEO/HYPER repository is ass
 ---
 
 ### CLM-25: Physical Resource Transcendence Modeling vs RTX 5090 Blackwell
+
 - **Claim**: "UCTDE models physical resource requirements $R(P) = (\text{Operations}, \text{Memory}, \text{Bandwidth}, \text{Parallelism}, \text{Synchronization}, \text{Latency})$ and rigorously evaluates whether algorithmic work reduction overcomes the physical compute deficit ($418\times$) and memory bandwidth deficit ($96.5\times$) of the local Intel Core i5-12450H + Intel UHD 48EU system compared to NVIDIA GeForce RTX 5090 (GB202 Blackwell: 209 TFLOPS, 1,792 GB/s)."
 - **Workload**: 90%+ work reduction algorithmic pathways (Horner rule, Low-Rank factored GEMM, Counting Sort).
 - **Hardware**: Intel Core i5-12450H vs RTX 5090 Analytical Profile.
@@ -316,5 +341,3 @@ Every performance and architectural statement in the LEO/HYPER repository is ass
 - **Result**: Feasibility verified against 16GB unified RAM and 18.57 GB/s bus; contractual parity ($P_{\text{contract}} \ge 1.0$) proven possible when algorithmic work elimination exceeds $90\%$, without fabricating physical silicon parity.
 - **Classification**: **`PROVEN / MEASURED / REPRODUCIBLE`**
 - **Reproduction Command**: `pytest tests/test_universal_discovery_engine.py -k test_resource_transcendence_model`
-
-
