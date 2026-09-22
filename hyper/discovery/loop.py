@@ -37,6 +37,9 @@ from hyper.discovery.universality_ladder import UniversalityLadder, Universality
 from hyper.discovery.resource_transcendence import ResourceTranscendenceEngine, ResourceVector, TranscendenceVerdict
 from hyper.discovery.self_critique import SelfCritiqueEngine, SelfCritiqueReport
 from hyper.discovery.transformation_library import TransformationLibrary, TransformationRule
+from hyper.discovery.search_space_compiler import SearchSpaceCompiler, TransformationSearchSpace
+from hyper.discovery.fairness_engine import BenchmarkFairnessEngine, FairnessReport
+from hyper.discovery.counterfactual_engine import CounterfactualEngine, CounterfactualHypothesis
 
 
 class DiscoveryExperimentResult(BaseModel):
@@ -58,6 +61,7 @@ class DiscoveryExperimentResult(BaseModel):
     transcendence_verdict: Optional[Dict[str, Any]] = None
     self_critique: Optional[Dict[str, Any]] = None
     boundary_report: Optional[Dict[str, Any]] = None
+    fairness_verdict: Optional[str] = "FAIR_BENCHMARK"
     achieved_universality_level: int = 0
     epistemic_state: str
     timestamp: float = Field(default_factory=time.time)
@@ -89,6 +93,9 @@ class UniversalDiscoveryLoop:
         self.boundary_analyzer = UniversalityBoundaryEngine()
         self.transcendence_engine = ResourceTranscendenceEngine()
         self.critique_engine = SelfCritiqueEngine()
+        self.search_space_compiler = SearchSpaceCompiler()
+        self.fairness_engine = BenchmarkFairnessEngine()
+        self.counterfactual_engine = CounterfactualEngine()
         self.experiments: List[DiscoveryExperimentResult] = []
 
     def execute_discovery(
@@ -100,6 +107,9 @@ class UniversalDiscoveryLoop:
         target_precision: PrecisionTier = PrecisionTier.FLOAT32,
         max_candidates: int = 15,
         metadata: Optional[Dict[str, Any]] = None,
+        contract_correctness: Optional[ContractCorrectness] = None,
+        numeric_tolerance: float = 1e-5,
+        relative_tolerance: float = 1e-4,
     ) -> DiscoveryExperimentResult:
         """
         Executes one complete scientific discovery cycle for the given workload.
@@ -109,15 +119,30 @@ class UniversalDiscoveryLoop:
         domain = domain_hint or meta.domain.value
 
         # Step 2: Contract Extraction
+        resolved_correctness = contract_correctness or (
+            ContractCorrectness.EXACT if "SORTING" in domain else ContractCorrectness.NUMERICAL
+        )
         contract = UniversalContract(
             contract_id=f"contract-{meta.workload_id}",
             workload_id=meta.workload_id,
-            correctness=ContractCorrectness.EXACT if "SORTING" in domain else ContractCorrectness.NUMERICAL,
+            correctness=resolved_correctness,
             precision=target_precision,
-            numeric_tolerance=1e-5,
-            relative_tolerance=1e-4,
+            numeric_tolerance=numeric_tolerance,
+            relative_tolerance=relative_tolerance,
             memory_requirement_mb=4096.0,
             latency_requirement_ms=5000.0,
+        )
+
+        # Step 2b: Search Space Compilation & Counterfactual Hypotheses
+        search_space = self.search_space_compiler.compile(
+            workload_name=workload_name,
+            contract=contract,
+            domain_hint=domain,
+        )
+        cf_hypotheses = self.counterfactual_engine.generate_hypotheses(
+            workload_name=workload_name,
+            contract=contract,
+            domain_hint=domain,
         )
 
         # Step 3: Information Boundary Analysis
@@ -202,6 +227,15 @@ class UniversalDiscoveryLoop:
         # Determine measured speedup
         speedup = baseline_ms / best_time_ms if best_pathway is not None else 1.0
         is_verified = (best_pathway is not None and "VERIFIED" in best_verif_status)
+
+        # Step 7b: Benchmark Fairness Audit
+        fairness_rep = self.fairness_engine.audit_execution(
+            candidate_input=sample_input,
+            candidate_output=best_output if best_output is not None else ref_output,
+            reference_input=sample_input,
+            reference_output=ref_output,
+            contract=contract,
+        )
 
         # Step 8: Proof Discovery Attempt
         proof_cert: Optional[ProofCertificate] = None
@@ -340,6 +374,7 @@ class UniversalDiscoveryLoop:
             transcendence_verdict=transcendence.to_dict(),
             self_critique=critique.to_dict(),
             boundary_report=boundary_report.to_dict(),
+            fairness_verdict=fairness_rep.verdict,
             achieved_universality_level=int(univ_level.value),
             epistemic_state=hyp.epistemic_state.value,
         )

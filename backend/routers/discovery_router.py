@@ -176,3 +176,54 @@ def list_transformation_rules() -> Dict[str, Any]:
 def get_knowledge_graph() -> Dict[str, Any]:
     """Returns full serialized Computational Knowledge Graph."""
     return _sanitize_for_json(_engine.get_knowledge_graph_summary())
+
+
+@router.get("/capability-matrix")
+def get_capability_matrix() -> Dict[str, Any]:
+    """Returns the verified system capability matrix and maturity level."""
+    from hyper.discovery.capability_registry import CapabilityRegistry
+    reg = CapabilityRegistry()
+    return _sanitize_for_json({
+        "system_maturity_level": reg.get_system_maturity_level().value,
+        "total_features": len(reg.list_features()),
+        "features": [e.model_dump() for e in reg.list_features()],
+    })
+
+
+@router.get("/alphatensor/strassen-2x2x2")
+def get_alphatensor_strassen() -> Dict[str, Any]:
+    """Evaluates AlphaTensor bilinear decomposition for 2x2x2 matrix multiplication."""
+    from hyper.discovery.alphatensor_engine import AlphaTensorEngine
+    engine = AlphaTensorEngine()
+    problem = engine.create_matrix_multiplication_tensor(2, 2, 2)
+    candidate = engine.search_algorithm(problem)
+    return _sanitize_for_json(candidate.model_dump())
+
+
+@router.post("/fairness-check")
+def run_fairness_check(payload: Dict[str, Any]) -> Dict[str, Any]:
+    """Runs the Benchmark Fairness & Anti-Cheat Engine on provided telemetry."""
+    from hyper.discovery.fairness_engine import BenchmarkFairnessEngine
+    from hyper.universal.contracts.universal_contract import UniversalContract
+    contract = UniversalContract(contract_id="audit", workload_id="sample")
+    engine = BenchmarkFairnessEngine()
+    report = engine.audit_execution(
+        candidate_input=payload.get("input", [1, 2, 3]),
+        candidate_output=payload.get("output", [2, 4, 6]),
+        reference_input=payload.get("ref_input", [1, 2, 3]),
+        reference_output=payload.get("ref_output", [2, 4, 6]),
+        contract=contract,
+        cache_mode=payload.get("cache_mode", "COLD"),
+        measured_time_ns=payload.get("measured_time_ns", 1000),
+    )
+    return _sanitize_for_json(report.model_dump())
+
+
+@router.get("/experiments/run-suite")
+def run_discovery_suite() -> Dict[str, Any]:
+    """Triggers the multi-domain discovery experiment suite."""
+    from hyper.discovery.discovery_experiments import DiscoveryExperimentSuite
+    suite = DiscoveryExperimentSuite()
+    res = suite.run_suite()
+    return _sanitize_for_json(res)
+

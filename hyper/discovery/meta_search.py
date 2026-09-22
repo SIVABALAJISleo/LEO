@@ -167,3 +167,108 @@ class MetaSearchEngine:
             "total_evaluations": len(self.cost_trajectory),
             "metrics": [m.model_dump() for m in self.strategy_history.values()],
         }
+
+
+class FormalBarrierType(str, Enum):
+    HARDWARE_BARRIER = "HARDWARE_BARRIER"
+    MEMORY_BARRIER = "MEMORY_BARRIER"
+    BANDWIDTH_BARRIER = "BANDWIDTH_BARRIER"
+    COMPUTATIONAL_BARRIER = "COMPUTATIONAL_BARRIER"
+    INFORMATION_BARRIER = "INFORMATION_BARRIER"
+    CONTRACT_BARRIER = "CONTRACT_BARRIER"
+    VERIFICATION_BARRIER = "VERIFICATION_BARRIER"
+    SEARCH_BARRIER = "SEARCH_BARRIER"
+    UNKNOWN = "UNKNOWN"
+
+
+class BarrierClassification(BaseModel):
+    barrier_type: FormalBarrierType
+    confidence: float = 1.0
+    rationale: str = ""
+    evidence: Dict[str, Any] = Field(default_factory=dict)
+
+
+class FormalBarrierClassifier:
+    """
+    Identifies root cause computational barriers preventing further optimization.
+    """
+
+    @staticmethod
+    def classify(
+        entropy_score: float,
+        memory_usage_mb: float,
+        bandwidth_required_gbs: float,
+        verification_failures: int,
+        search_iterations: int,
+    ) -> BarrierClassification:
+        if bandwidth_required_gbs > 18.57:
+            return BarrierClassification(
+                barrier_type=FormalBarrierType.BANDWIDTH_BARRIER,
+                confidence=0.95,
+                rationale=f"Required bandwidth ({bandwidth_required_gbs:.2f} GB/s) exceeds STREAM-measured physical ceiling (18.57 GB/s).",
+                evidence={"bandwidth_required": bandwidth_required_gbs, "measured_ceiling": 18.57},
+            )
+        elif memory_usage_mb > 14000.0:
+            return BarrierClassification(
+                barrier_type=FormalBarrierType.MEMORY_BARRIER,
+                confidence=0.90,
+                rationale="Workload footprint saturates 16 GB Unified System RAM.",
+                evidence={"memory_usage_mb": memory_usage_mb},
+            )
+        elif entropy_score > 0.95:
+            return BarrierClassification(
+                barrier_type=FormalBarrierType.INFORMATION_BARRIER,
+                confidence=0.88,
+                rationale="High Shannon entropy denotes incompressible input data; no lossless representation escape possible.",
+                evidence={"entropy": entropy_score},
+            )
+        elif verification_failures >= 5 and search_iterations >= 20:
+            return BarrierClassification(
+                barrier_type=FormalBarrierType.CONTRACT_BARRIER,
+                confidence=0.85,
+                rationale="Candidate pathways consistently violate strict contract error tolerances.",
+                evidence={"failures": verification_failures, "iterations": search_iterations},
+            )
+        elif search_iterations > 100:
+            return BarrierClassification(
+                barrier_type=FormalBarrierType.SEARCH_BARRIER,
+                confidence=0.80,
+                rationale="Search space grammar exhausted without finding non-trivial pathway.",
+                evidence={"iterations": search_iterations},
+            )
+        return BarrierClassification(
+            barrier_type=FormalBarrierType.UNKNOWN,
+            confidence=0.50,
+            rationale="Insufficient evidence to attribute barrier to physical or theoretical limit.",
+        )
+
+
+class AdaptiveSearchScaler:
+    """
+    Scales candidate search budgets: 10 -> 100 -> 1,000 -> 10,000.
+    Expands when discoveries and novelty are high; contracts/restarts when stagnated.
+    """
+
+    SCALING_TIERS = [10, 100, 1000, 10000, 100000]
+
+    def __init__(self, initial_budget: int = 10) -> None:
+        self.current_tier_idx = 0
+        self.budget = self.SCALING_TIERS[self.current_tier_idx]
+
+    def update_budget(self, discoveries_found: int, novelty_ratio: float, verification_yield: float) -> int:
+        """
+        Dynamically adjusts budget based on progress signals.
+        """
+        if discoveries_found > 0 and novelty_ratio > 0.60 and verification_yield > 0.50:
+            # Scale up to next tier
+            if self.current_tier_idx < len(self.SCALING_TIERS) - 1:
+                self.current_tier_idx += 1
+                self.budget = self.SCALING_TIERS[self.current_tier_idx]
+        elif novelty_ratio < 0.20 or verification_yield < 0.10:
+            # Stagnation: contract or restart tier
+            if self.current_tier_idx > 0:
+                self.current_tier_idx -= 1
+                self.budget = self.SCALING_TIERS[self.current_tier_idx]
+
+        return self.budget
+
