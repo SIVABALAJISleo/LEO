@@ -30,6 +30,29 @@ from hyper.discovery.alphaevolve_engine import AlphaEvolveEngine, ProgramIndivid
 from hyper.discovery.runtime_hook import RuntimeDiscoveryHook, RuntimeOpportunity, RuntimeObservation
 from hyper.discovery.discovery_experiments import DiscoveryExperimentSuite
 
+from hyper.discovery.capability_decomposer import GPUCapabilityDecomposer, CapabilityFamily, CapabilityDetail
+from hyper.discovery.workload_decomposer import WorkloadDecomposer, WorkloadDependencyGraph, WorkloadDecompositionResult
+from hyper.discovery.pathway_ir import (
+    PathwayIR,
+    TransformationStep,
+    ExecutionPlan,
+    ExecutionDevice,
+    MemoryPlan,
+    MemoryStrategy,
+    SchedulingPlan,
+    SchedulingStrategy,
+    VerificationPlan,
+    FallbackPlan,
+    PathwayCostEstimate,
+)
+from hyper.discovery.pathway_generator import PathwayGenerator
+from hyper.discovery.pathway_composer import PathwayComposer, CompositionInteractionResult
+from hyper.discovery.cost_model import PathwayCostModel, CostEvaluationResult, TimeBreakdown, ResourceProfile
+from hyper.discovery.checkpoint_engine import CheckpointEngine, DiscoveryCheckpoint, CheckpointMetadata
+from hyper.discovery.discovery_report import PathwayDiscoveryReport
+from hyper.discovery.destination_tracker import DestinationTracker, ParityMetrics
+from hyper.discovery.controlled_workloads import ControlledWorkloadBenchmark
+
 __all__ = [
     "EpistemicState",
     "UniversalityLevel",
@@ -85,4 +108,35 @@ __all__ = [
     "RuntimeOpportunity",
     "RuntimeObservation",
     "DiscoveryExperimentSuite",
+    "GPUCapabilityDecomposer",
+    "CapabilityFamily",
+    "CapabilityDetail",
+    "WorkloadDecomposer",
+    "WorkloadDependencyGraph",
+    "WorkloadDecompositionResult",
+    "PathwayIR",
+    "TransformationStep",
+    "ExecutionPlan",
+    "ExecutionDevice",
+    "MemoryPlan",
+    "MemoryStrategy",
+    "SchedulingPlan",
+    "SchedulingStrategy",
+    "VerificationPlan",
+    "FallbackPlan",
+    "PathwayCostEstimate",
+    "PathwayGenerator",
+    "PathwayComposer",
+    "CompositionInteractionResult",
+    "PathwayCostModel",
+    "CostEvaluationResult",
+    "TimeBreakdown",
+    "ResourceProfile",
+    "CheckpointEngine",
+    "DiscoveryCheckpoint",
+    "CheckpointMetadata",
+    "PathwayDiscoveryReport",
+    "DestinationTracker",
+    "ParityMetrics",
+    "ControlledWorkloadBenchmark",
 ]

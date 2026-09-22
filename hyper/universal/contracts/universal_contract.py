@@ -83,6 +83,9 @@ class UniversalContract:
     acceptable_approximations: List[str] = dataclasses.field(default_factory=list)
     forbidden_approximations: List[str] = dataclasses.field(default_factory=list)
     verification_method: str = "AUTO"
+    exactness_tier: ExactnessTier = ExactnessTier.NUMERICALLY_EXACT
+    allows_approximation: bool = False
+    metadata: Dict[str, Any] = dataclasses.field(default_factory=dict)
 
     def is_exact(self) -> bool:
         return self.correctness == ContractCorrectness.EXACT and self.numeric_tolerance == 0.0 and self.relative_tolerance == 0.0
@@ -106,10 +109,15 @@ class UniversalContract:
             "acceptable_approximations": self.acceptable_approximations,
             "forbidden_approximations": self.forbidden_approximations,
             "verification_method": self.verification_method,
+            "exactness_tier": self.exactness_tier.value,
+            "allows_approximation": self.allows_approximation,
+            "metadata": self.metadata,
         }
 
     @classmethod
     def from_dict(cls, d: Dict[str, Any]) -> UniversalContract:
+        tier = d.get("exactness_tier", "NUMERICALLY_EXACT")
+        exactness = ExactnessTier(tier) if tier in [t.value for t in ExactnessTier] else ExactnessTier.NUMERICALLY_EXACT
         return cls(
             contract_id=d["contract_id"],
             workload_id=d.get("workload_id", "unknown"),
@@ -128,4 +136,7 @@ class UniversalContract:
             acceptable_approximations=d.get("acceptable_approximations", []),
             forbidden_approximations=d.get("forbidden_approximations", []),
             verification_method=d.get("verification_method", "AUTO"),
+            exactness_tier=exactness,
+            allows_approximation=bool(d.get("allows_approximation", False)),
+            metadata=d.get("metadata", {}),
         )

@@ -9,6 +9,7 @@ formal proof investigation, counterexample generation, and knowledge graph persi
 
 from __future__ import annotations
 from typing import Any, Callable, Dict, List, Optional
+import numpy as np
 
 from hyper.discovery.hypotheses import EpistemicState, ResearchHypothesis, TargetStatus
 from hyper.discovery.knowledge_graph import ComputationalKnowledgeGraph
@@ -19,6 +20,19 @@ from hyper.discovery.resource_transcendence import ResourceTranscendenceEngine
 from hyper.discovery.self_critique import SelfCritiqueEngine
 from hyper.discovery.transformation_library import TransformationLibrary
 from hyper.discovery.loop import UniversalDiscoveryLoop, DiscoveryExperimentResult
+
+
+from hyper.discovery.capability_decomposer import GPUCapabilityDecomposer, CapabilityFamily
+from hyper.discovery.workload_decomposer import WorkloadDecomposer, WorkloadDecompositionResult
+from hyper.discovery.pathway_ir import PathwayIR
+from hyper.discovery.pathway_generator import PathwayGenerator
+from hyper.discovery.pathway_composer import PathwayComposer, CompositionInteractionResult
+from hyper.discovery.cost_model import PathwayCostModel, CostEvaluationResult
+from hyper.discovery.checkpoint_engine import CheckpointEngine, DiscoveryCheckpoint
+from hyper.discovery.destination_tracker import DestinationTracker, ParityMetrics
+from hyper.discovery.controlled_workloads import ControlledWorkloadBenchmark
+from hyper.discovery.discovery_report import PathwayDiscoveryReport
+from hyper.ai.kimi_k3_brain import KimiK3DiscoveryBrain, DebateSessionResult
 
 
 class UniversalComputationalDiscoveryEngine:
@@ -34,6 +48,15 @@ class UniversalComputationalDiscoveryEngine:
         self.meta_search = MetaSearchEngine()
         self.transcendence_engine = ResourceTranscendenceEngine()
         self.critique_engine = SelfCritiqueEngine()
+        self.capability_decomposer = GPUCapabilityDecomposer()
+        self.workload_decomposer = WorkloadDecomposer()
+        self.pathway_generator = PathwayGenerator()
+        self.pathway_composer = PathwayComposer()
+        self.cost_model = PathwayCostModel()
+        self.checkpoint_engine = CheckpointEngine()
+        self.destination_tracker = DestinationTracker()
+        self.controlled_benchmarks = ControlledWorkloadBenchmark()
+        self.k3_brain = KimiK3DiscoveryBrain()
         self.loop = UniversalDiscoveryLoop(
             knowledge_graph=self.knowledge_graph,
             transformation_library=self.transformation_library,
@@ -118,3 +141,42 @@ class UniversalComputationalDiscoveryEngine:
 
     def get_target_status(self) -> Dict[str, Any]:
         return self.target_status.to_dict()
+
+    def decompose_gpu_capability(self, capability_name: str, domain_hint: Optional[str] = None) -> Dict[str, Any]:
+        return self.capability_decomposer.decompose(capability_name, domain_hint).model_dump()
+
+    def decompose_workload_dag(self, workload_name: str, sample_input: Any) -> WorkloadDecompositionResult:
+        return self.workload_decomposer.decompose_workload(workload_name, sample_input)
+
+    def generate_pathway_candidates(self, workload_name: str, sample_input: Any, max_candidates: int = 10) -> List[PathwayIR]:
+        return self.pathway_generator.generate_candidates(workload_name, sample_input, max_candidates=max_candidates)
+
+    def evaluate_cost(self, pathway: PathwayIR, baseline_latency_ms: float = 10.0) -> CostEvaluationResult:
+        return self.cost_model.evaluate_cost(pathway, baseline_latency_ms)
+
+    def compose_pathways(self, pathway_a: PathwayIR, pathway_b: PathwayIR) -> CompositionInteractionResult:
+        return self.pathway_composer.compose_pair(pathway_a, pathway_b)
+
+    def run_k3_debate(self, workload_name: str) -> DebateSessionResult:
+        contract = self.capability_decomposer.create_contract_for_capability(workload_name, workload_name)
+        return self.k3_brain.conduct_adversarial_debate(workload_name, contract)
+
+    def run_controlled_workloads(self) -> List[PathwayDiscoveryReport]:
+        reports = self.controlled_benchmarks.run_all()
+        # Update destination tracker
+        verified_count = sum(1 for r in reports if r.status == "VERIFIED")
+        exact_count = sum(1 for r in reports if r.exactness == "EXACT")
+        avg_speedup = float(np.mean([r.speedup for r in reports])) if reports else 1.0
+        self.destination_tracker.update_from_benchmark_results(
+            workloads_total=len(reports),
+            workloads_verified=verified_count,
+            exact_matches=exact_count,
+            apps_covered=len(reports),
+            total_apps=12,
+            avg_speedup_vs_gpu_target=avg_speedup,
+        )
+        return reports
+
+    def get_destination_tracker_summary(self) -> Dict[str, Any]:
+        return self.destination_tracker.get_summary()
+

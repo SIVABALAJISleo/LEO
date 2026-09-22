@@ -227,3 +227,59 @@ def run_discovery_suite() -> Dict[str, Any]:
     res = suite.run_suite()
     return _sanitize_for_json(res)
 
+
+@router.get("/capabilities/families")
+def list_capability_families() -> Dict[str, Any]:
+    """Returns the full 7-family GPU capability taxonomy."""
+    return _sanitize_for_json({
+        "families": _engine.capability_decomposer.list_all_capabilities()
+    })
+
+
+@router.post("/pathway/generate")
+def generate_pathway(payload: Dict[str, Any]) -> Dict[str, Any]:
+    """Generates candidate PathwayIRs across mathematical, compiler, memory, runtime, and temporal families."""
+    workload = payload.get("workload_name", "Dense_Matrix_Multiplication")
+    max_cands = payload.get("max_candidates", 5)
+    cands = _engine.generate_pathway_candidates(workload, [1, 2, 3], max_candidates=max_cands)
+    return _sanitize_for_json({
+        "workload": workload,
+        "total_generated": len(cands),
+        "candidates": [c.model_dump() for c in cands],
+    })
+
+
+@router.post("/k3/debate")
+def run_k3_debate_endpoint(payload: Dict[str, Any]) -> Dict[str, Any]:
+    """Triggers a 6-stage multi-agent debate across Kimi K3 research roles."""
+    workload = payload.get("workload_name", "Dense_Matrix_Multiplication")
+    result = _engine.run_k3_debate(workload)
+    return _sanitize_for_json(result.model_dump())
+
+
+@router.get("/destination-tracker")
+def get_destination_tracker() -> Dict[str, Any]:
+    """Returns the 100% Destination Tracker metrics."""
+    return _sanitize_for_json(_engine.get_destination_tracker_summary())
+
+
+@router.get("/workloads/controlled-suite")
+def run_controlled_suite() -> Dict[str, Any]:
+    """Executes the 12 primary controlled workloads and updates destination metrics."""
+    reports = _engine.run_controlled_workloads()
+    return _sanitize_for_json({
+        "total_workloads": len(reports),
+        "reports": [r.model_dump() for r in reports],
+        "destination_metrics": _engine.get_destination_tracker_summary(),
+    })
+
+
+@router.get("/app-targets")
+def list_application_targets() -> Dict[str, Any]:
+    """Returns real-world application targets for Blender, Unreal, Unity, WebGPU, Vulkan, PyTorch, etc."""
+    from hyper.integrations.app_targets import ApplicationTargetRegistry
+    return _sanitize_for_json({
+        "targets": ApplicationTargetRegistry.list_targets()
+    })
+
+

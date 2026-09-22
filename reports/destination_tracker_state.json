@@ -1,0 +1,14 @@
+{
+  "physical_hardware_equivalence": "NOT CLAIMED (PHYSICALLY_DISJOINT)",
+  "functional_capability_coverage_pct": 38.5,
+  "verified_workload_contract_coverage_pct": 100.0,
+  "exact_computational_parity_pct": 66.7,
+  "application_contract_coverage_pct": 100.0,
+  "measured_performance_parity_pct": 65.0,
+  "memory_parity_pct": 22.0,
+  "latency_parity_pct": 60.0,
+  "universal_parity_status": "UNPROVEN (ACTIVE_SEARCH)",
+  "total_workloads_investigated": 12,
+  "total_pathways_verified": 12,
+  "last_updated": 1790100291.9031131
+}
