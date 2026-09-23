@@ -62,6 +62,16 @@ from hyper.discovery.transformation_dsl import (
 from hyper.discovery.sandbox import SecurePathwaySandbox, SandboxExecutionResult, ASTSecurityInspector, SecurityViolationType
 from hyper.discovery.verification_stack import FormalVerificationStack, FullVerificationStackReport, VerificationLevel
 from hyper.discovery.research_tracker import ResearchQuestionTracker, CoreHypothesis, HypothesisStatus
+from hyper.discovery.computational_bypass_engine import (
+    ComputationalBypassEngine,
+    BypassDomain,
+    BypassEvaluationResult,
+    ZeroCopyUnifiedMemoryBypass,
+    BitNetTernaryAdditiveBypass,
+    DynamicActivationSparsityBypass,
+    TemporalMotionVectorBypass,
+    AnalyticSDFSphereTracingBypass,
+)
 
 __all__ = [
     "EpistemicState",
@@ -168,4 +178,12 @@ __all__ = [
     "ResearchQuestionTracker",
     "CoreHypothesis",
     "HypothesisStatus",
+    "ComputationalBypassEngine",
+    "BypassDomain",
+    "BypassEvaluationResult",
+    "ZeroCopyUnifiedMemoryBypass",
+    "BitNetTernaryAdditiveBypass",
+    "DynamicActivationSparsityBypass",
+    "TemporalMotionVectorBypass",
+    "AnalyticSDFSphereTracingBypass",
 ]

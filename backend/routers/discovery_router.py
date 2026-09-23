@@ -358,3 +358,12 @@ def get_research_tracker_summary() -> Dict[str, Any]:
     return _sanitize_for_json(tracker.get_summary())
 
 
+@router.get("/bypass-engine")
+def get_bypass_engine_summary() -> Dict[str, Any]:
+    """Returns real-world benchmarks and mathematical proofs across the 5 hardware-bypassing foundations."""
+    from hyper.discovery.computational_bypass_engine import ComputationalBypassEngine
+    cbe = ComputationalBypassEngine()
+    return _sanitize_for_json(cbe.get_summary())
+
+
+
