@@ -283,3 +283,78 @@ def list_application_targets() -> Dict[str, Any]:
     })
 
 
+@router.get("/alphadev/catalog")
+def get_alphadev_catalog() -> Dict[str, Any]:
+    """Returns catalog of discovered branch-free sorting networks and kernels."""
+    from hyper.discovery.alphadev_engine import AlphaDevEngine
+    dev_engine = AlphaDevEngine()
+    return _sanitize_for_json({
+        "total_kernels": len(dev_engine.catalog),
+        "kernels": [
+            {
+                "kernel_id": k.kernel_id,
+                "name": k.name,
+                "input_size": k.input_size,
+                "instruction_count": k.instruction_count,
+                "is_branch_free": k.is_branch_free,
+                "is_verified": k.is_verified,
+                "theoretical_comparisons": k.theoretical_comparisons,
+                "metadata": k.metadata,
+            }
+            for k in dev_engine.catalog.values()
+        ],
+    })
+
+
+@router.post("/alphadev/benchmark")
+def benchmark_alphadev_kernel(payload: Dict[str, Any]) -> Dict[str, Any]:
+    """Benchmarks a discovered sorting kernel against canonical sorting."""
+    from hyper.discovery.alphadev_engine import AlphaDevEngine
+    dev_engine = AlphaDevEngine()
+    kernel_key = payload.get("kernel_key", "sort4")
+    kernel = dev_engine.catalog.get(kernel_key)
+    if not kernel:
+        raise HTTPException(status_code=404, detail=f"Kernel {kernel_key} not found")
+    
+    trials = payload.get("trials", 2000)
+    benchmarked = dev_engine.benchmark_sorting_kernel(kernel, trials=trials)
+    return _sanitize_for_json({
+        "kernel_id": benchmarked.kernel_id,
+        "name": benchmarked.name,
+        "trials": trials,
+        "measured_latency_ns": benchmarked.measured_latency_ns,
+        "baseline_latency_ns": benchmarked.baseline_latency_ns,
+        "measured_speedup": benchmarked.measured_speedup,
+    })
+
+
+@router.get("/dsl/rules")
+def list_dsl_rules() -> Dict[str, Any]:
+    """Returns all registered Transformation DSL rules with preconditions and cost models."""
+    from hyper.discovery.transformation_dsl import TransformationDSLEngine
+    dsl = TransformationDSLEngine()
+    return _sanitize_for_json({
+        "total_rules": len(dsl.rules),
+        "rules": [
+            {
+                "rule_id": r.rule_id,
+                "name": r.name,
+                "family": r.family.value,
+                "description": r.description,
+                "complexity": r.cost_model.complexity_class,
+                "estimated_speedup": r.cost_model.estimated_speedup,
+                "applicable_domains": list(r.applicable_domains),
+            }
+            for r in dsl.rules.values()
+        ],
+    })
+
+
+@router.get("/research-tracker")
+def get_research_tracker_summary() -> Dict[str, Any]:
+    """Returns the epistemic validation status of hypotheses H001 through H008."""
+    from hyper.discovery.research_tracker import ResearchQuestionTracker
+    tracker = ResearchQuestionTracker()
+    return _sanitize_for_json(tracker.get_summary())
+
+

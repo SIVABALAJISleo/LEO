@@ -51,7 +51,17 @@ from hyper.discovery.cost_model import PathwayCostModel, CostEvaluationResult, T
 from hyper.discovery.checkpoint_engine import CheckpointEngine, DiscoveryCheckpoint, CheckpointMetadata
 from hyper.discovery.discovery_report import PathwayDiscoveryReport
 from hyper.discovery.destination_tracker import DestinationTracker, ParityMetrics
-from hyper.discovery.controlled_workloads import ControlledWorkloadBenchmark
+from hyper.discovery.alphadev_engine import AlphaDevEngine, DiscoveredKernel, CompareSwapOp, KernelType
+from hyper.discovery.transformation_dsl import (
+    TransformationDSLEngine,
+    DSLTransformationRule,
+    TransformationFamilyType,
+    TransformationCostEstimate,
+    FailureMode,
+)
+from hyper.discovery.sandbox import SecurePathwaySandbox, SandboxExecutionResult, ASTSecurityInspector, SecurityViolationType
+from hyper.discovery.verification_stack import FormalVerificationStack, FullVerificationStackReport, VerificationLevel
+from hyper.discovery.research_tracker import ResearchQuestionTracker, CoreHypothesis, HypothesisStatus
 
 __all__ = [
     "EpistemicState",
@@ -139,4 +149,23 @@ __all__ = [
     "DestinationTracker",
     "ParityMetrics",
     "ControlledWorkloadBenchmark",
+    "AlphaDevEngine",
+    "DiscoveredKernel",
+    "CompareSwapOp",
+    "KernelType",
+    "TransformationDSLEngine",
+    "DSLTransformationRule",
+    "TransformationFamilyType",
+    "TransformationCostEstimate",
+    "FailureMode",
+    "SecurePathwaySandbox",
+    "SandboxExecutionResult",
+    "ASTSecurityInspector",
+    "SecurityViolationType",
+    "FormalVerificationStack",
+    "FullVerificationStackReport",
+    "VerificationLevel",
+    "ResearchQuestionTracker",
+    "CoreHypothesis",
+    "HypothesisStatus",
 ]

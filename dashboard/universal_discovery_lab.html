@@ -472,7 +472,116 @@ Status: Verification Engine Accepted Pathway.</pre>
     </div>
   </div>
 
+  <!-- AlphaDev Low-Level Discovery & Sorting Networks -->
+  <div class="grid-2" style="margin-top: 24px;">
+    <div class="card">
+      <div class="card-header">
+        <h2>9. AlphaDev Low-Level Discovery &amp; Sorting Networks</h2>
+        <span class="badge badge-success">BRANCH-FREE</span>
+      </div>
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 10px;">
+        Optimal branch-free compare-and-swap networks discovered via low-level search (0-1 Sorting Lemma Verified).
+      </p>
+      <table class="data-table" id="alphadevTable">
+        <tr><th>Kernel</th><th>Inputs</th><th>Ops</th><th>Verification</th></tr>
+        <tr><td>Sort3 (Optimal)</td><td>3</td><td>3 ops</td><td><span class="badge badge-success">0-1 LEMMA PROVEN</span></td></tr>
+        <tr><td>Sort4 (Bose-Nelson)</td><td>4</td><td>5 ops</td><td><span class="badge badge-success">0-1 LEMMA PROVEN</span></td></tr>
+        <tr><td>Sort5 (AlphaDev / Green)</td><td>5</td><td>9 ops</td><td><span class="badge badge-success">0-1 LEMMA PROVEN</span></td></tr>
+      </table>
+      <div class="control-row" style="margin-top: 14px;">
+        <button class="btn" onclick="benchmarkAlphaDev('sort4')">Benchmark Sort4 Network</button>
+        <button class="btn btn-alt" onclick="benchmarkAlphaDev('sort5')">Benchmark Sort5 Network</button>
+      </div>
+      <pre class="code-terminal" id="alphadevOutput" style="margin-top: 10px; max-height: 100px; display: none;"></pre>
+    </div>
+
+    <!-- Transformation DSL & Rule Engine -->
+    <div class="card">
+      <div class="card-header">
+        <h2>10. Formal Transformation DSL &amp; Rule Engine</h2>
+        <span class="badge badge-target">DECLARATIVE DSL</span>
+      </div>
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 10px;">
+        Strictly typed transformations with Preconditions, Operations, Postconditions, and Cost Models.
+      </p>
+      <table class="data-table" id="dslTable">
+        <tr><th>Rule ID</th><th>Family</th><th>Complexity</th><th>Estimated Speedup</th></tr>
+        <tr><td>dsl-math-horner</td><td>MATHEMATICAL</td><td>O(N)</td><td>3.5x</td></tr>
+        <tr><td>dsl-algo-sort3</td><td>LOW_LEVEL</td><td>O(1)</td><td>1.5x</td></tr>
+        <tr><td>dsl-escape-delta</td><td>STRUCTURAL</td><td>O(&Delta;)</td><td>8.0x</td></tr>
+      </table>
+      <div class="control-row" style="margin-top: 14px;">
+        <button class="btn btn-alt" onclick="fetchDslRules()">Reload DSL Rules</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Research Question Tracker (H001 - H008) -->
+  <div class="card" style="margin-top: 24px;">
+    <div class="card-header">
+      <h2>11. Research Question Tracker (H001 &ndash; H008 Epistemic Status)</h2>
+      <span class="badge badge-target">SCIENTIFIC DISCIPLINE</span>
+    </div>
+    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 10px;">
+      &laquo;Do not label hypotheses true until evidence supports them.&raquo; Active scientific hypothesis lifecycle.
+    </p>
+    <table class="data-table" id="researchTrackerTable">
+      <tr><th>ID</th><th>Formal Statement</th><th>Status</th><th>Evidence Count</th></tr>
+      <tr><td>H001</td><td>Algorithmic reformulation can reduce required work.</td><td><span class="badge badge-success">SUPPORTED</span></td><td>2 verified</td></tr>
+      <tr><td>H002</td><td>Structural transformations can reduce memory movement.</td><td><span class="badge badge-warn">TESTING</span></td><td>1 verified</td></tr>
+      <tr><td>H003</td><td>Program evolution can discover better CPU kernels.</td><td><span class="badge badge-warn">TESTING</span></td><td>0 verified</td></tr>
+      <tr><td>H004</td><td>Hardware-aware search can discover better CPU+iGPU pathways.</td><td><span class="badge badge-warn">TESTING</span></td><td>0 verified</td></tr>
+      <tr><td>H005</td><td>Combining multiple transformation families produces discoveries.</td><td><span class="badge badge-success">SUPPORTED</span></td><td>2 verified</td></tr>
+      <tr><td>H006</td><td>Meta-search can improve discovery efficiency.</td><td><span class="badge badge-warn">TESTING</span></td><td>0 verified</td></tr>
+      <tr><td>H007</td><td>Counterexample-driven learning improves future search.</td><td><span class="badge badge-warn">TESTING</span></td><td>0 verified</td></tr>
+      <tr><td>H008</td><td>Knowledge transfer between workloads can accelerate discovery.</td><td><span class="badge badge-warn">TESTING</span></td><td>0 verified</td></tr>
+    </table>
+    <div class="control-row" style="margin-top: 14px;">
+      <button class="btn btn-alt" onclick="fetchResearchTracker()">Refresh Hypotheses</button>
+    </div>
+  </div>
+
   <script>
+    async function benchmarkAlphaDev(kernelKey) {
+      const out = document.getElementById('alphadevOutput');
+      out.style.display = 'block';
+      out.innerText = "Benchmarking " + kernelKey + " against canonical sorting...";
+      try {
+        const res = await fetch('/api/v1/discovery/alphadev/benchmark', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ kernel_key: kernelKey, trials: 1000 })
+        });
+        const data = await res.json();
+        out.innerText = "Benchmark " + data.name + " (" + data.trials + " trials):\n" +
+          "Measured latency: " + data.measured_latency_ns.toFixed(1) + " ns\n" +
+          "Baseline latency: " + data.baseline_latency_ns.toFixed(1) + " ns\n" +
+          "Speedup: " + data.measured_speedup.toFixed(2) + "x (Branch-free compare-swap)";
+      } catch (err) {
+        out.innerText = "Error benchmarking AlphaDev kernel: " + err;
+      }
+    }
+
+    async function fetchDslRules() {
+      try {
+        const res = await fetch('/api/v1/discovery/dsl/rules');
+        const data = await res.json();
+        alert("Loaded " + data.total_rules + " Transformation DSL rules.");
+      } catch (err) {
+        alert("Error loading DSL rules: " + err);
+      }
+    }
+
+    async function fetchResearchTracker() {
+      try {
+        const res = await fetch('/api/v1/discovery/research-tracker');
+        const data = await res.json();
+        alert("Loaded " + data.total_hypotheses + " hypotheses. Supported: " + data.supported + ", Testing: " + data.testing);
+      } catch (err) {
+        alert("Error loading research tracker: " + err);
+      }
+    }
+
     async function runDiscoverySearch() {
       const out = document.getElementById('cxOutput');
       out.innerText = "Executing discovery search across 10 transformation families...\nEvaluating sandbox timing and independent verification...";

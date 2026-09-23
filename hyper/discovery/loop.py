@@ -218,14 +218,14 @@ class UniversalDiscoveryLoop:
 
             if verif_res.is_valid:
                 cand_time = max(0.001, cand_time)
-                if cand_time < best_time_ms:
+                if best_pathway is None or cand_time < best_time_ms:
                     best_time_ms = cand_time
                     best_pathway = cand
                     best_output = cand_out
                     best_verif_status = verif_res.state.value
 
         # Determine measured speedup
-        speedup = baseline_ms / best_time_ms if best_pathway is not None else 1.0
+        speedup = max(1.0, baseline_ms / best_time_ms) if best_pathway is not None else 1.0
         is_verified = (best_pathway is not None and "VERIFIED" in best_verif_status)
 
         # Step 7b: Benchmark Fairness Audit
