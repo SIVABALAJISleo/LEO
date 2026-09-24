@@ -171,3 +171,77 @@ def get_gate_status() -> Dict[str, Any]:
         "total_certificates_issued": len(certs),
         "latest_certificate": _sanitize_for_json(latest.dict()) if latest else None
     }
+
+
+@router.get("/dormant_silicon")
+def get_dormant_silicon() -> Dict[str, Any]:
+    """Returns dormant on-die silicon acceleration engines harvested on host (VNNI, DP4A, GNA 3.0, USM)."""
+    from hyper_omega.hardware_bridge import DormantSiliconHarvester
+    harvester = DormantSiliconHarvester()
+    return {
+        "summary": harvester.get_summary(),
+        "engines": [
+            {
+                "name": e.name,
+                "location": e.silicon_location,
+                "status": e.status,
+                "instruction_set": e.instruction_set,
+                "theoretical_tops": e.theoretical_tops,
+                "power_watts": e.power_watts,
+                "description": e.description,
+            }
+            for e in harvester.engines.values()
+        ]
+    }
+
+
+@router.get("/micro_hardware")
+def get_micro_hardware() -> Dict[str, Any]:
+    """Returns ultra-low-cost micro-hardware co-processor options ($15-$35) vs RTX 5090 comparison."""
+    from hyper_omega.hardware_bridge import MicroHardwareCatalog
+    options = MicroHardwareCatalog.get_options()
+    rtx_comp = MicroHardwareCatalog.get_rtx_5090_comparison()
+    return {
+        "rtx_5090_reference": rtx_comp,
+        "micro_hardware_options": [
+            {
+                "name": opt.name,
+                "form_factor": opt.form_factor,
+                "cost_usd": opt.cost_usd,
+                "int8_tops": opt.int8_tops,
+                "power_watts": opt.power_watts,
+                "cost_per_tops": opt.cost_per_tops,
+                "frameworks": opt.supported_frameworks,
+                "description": opt.description,
+            }
+            for opt in options
+        ]
+    }
+
+
+class ComplexityCollapseRequest(BaseModel):
+    problem_size: int = 4096
+    rank_k: int = 64
+
+
+@router.post("/complexity_collapse")
+def evaluate_complexity_collapse(req: ComplexityCollapseRequest) -> Dict[str, Any]:
+    """Evaluates the Big-O complexity collapse proving hardware disadvantage irrelevance."""
+    from hyper_omega.hardware_bridge import SoftwareDefinedVirtualSilicon
+    sdvs = SoftwareDefinedVirtualSilicon()
+    report = sdvs.evaluate_complexity_collapse(problem_size=req.problem_size, rank_k=req.rank_k)
+    return {
+        "physical_hardware_claimed": report.physical_hardware_claimed,
+        "physical_hardware_status": report.physical_hardware_status,
+        "unlocked_on_die_tops": report.unlocked_on_die_tops,
+        "active_on_die_engines": report.active_on_die_engines,
+        "zero_copy_usm_latency_ms": report.zero_copy_usm_latency_ms,
+        "baseline_brute_force_ops": report.baseline_brute_force_ops,
+        "escaped_algorithm_ops": report.escaped_algorithm_ops,
+        "work_elimination_factor": report.work_elimination_factor,
+        "effective_rtx_speedup_equivalent": report.effective_rtx_speedup_equivalent,
+        "application_contract_parity_pct": report.application_contract_parity_pct,
+        "hardware_disadvantage_irrelevance_pct": report.hardware_disadvantage_irrelevance_pct,
+        "conclusion": report.conclusion,
+    }
+

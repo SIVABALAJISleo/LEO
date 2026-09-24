@@ -29,6 +29,13 @@ from hyper_omega.counterexamples.database import CounterexampleDatabase
 from hyper_omega.theorem_engine.engine import TheoremDiscoveryEngine, TheoremStatus
 from hyper_omega.instant_path.engine import InstantPathEngine, ExecutionMode
 from hyper_omega.orchestrator import HyperOmegaOrchestrator, HyperOmegaExecutionSummary
+from hyper_omega.hardware_bridge import (
+    DormantSiliconHarvester,
+    MicroHardwareCatalog,
+    SoftwareDefinedVirtualSilicon,
+    HardwareIrrelevanceReport,
+    MicroHardwareOption,
+)
 
 __all__ = [
     "ResultTaxonomy",
@@ -59,4 +66,10 @@ __all__ = [
     "ExecutionMode",
     "HyperOmegaOrchestrator",
     "HyperOmegaExecutionSummary",
+    "DormantSiliconHarvester",
+    "MicroHardwareCatalog",
+    "SoftwareDefinedVirtualSilicon",
+    "HardwareIrrelevanceReport",
+    "MicroHardwareOption",
 ]
+
