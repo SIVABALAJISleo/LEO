@@ -130,9 +130,10 @@ class VerifiedAdaptiveEscapeEngine:
                 if B is not None:
                     pathway.run_fn = PathwayComposer.compose_matrix_multiplication(pathway, B)
                 else:
-                    pathway.run_fn = lambda x: reference_fn(x)
+                    return False, VerificationTrustLevel.FAILED, 0.0, 0.0
             elif pathway.run_fn is None:
-                pathway.run_fn = lambda x: reference_fn(x)
+                # Anti-Cheating Rule: Candidate must NOT delegate to reference_fn!
+                return False, VerificationTrustLevel.FAILED, 0.0, 0.0
 
             # Sandboxed execution
             success, out, exec_ms, err = self.executor.execute_pathway(pathway, input_sample)

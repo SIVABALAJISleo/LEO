@@ -150,24 +150,46 @@ class AlgorithmicEscapeEngine:
                 if self.registry.is_disproven(candidate.transformations):
                     continue
 
-                # Synthesize simulated pathway function according to transformations
+                # Execute candidate through real transformed pathway execution
                 t_cand0 = time.perf_counter()
                 try:
-                    # In real execution, applies candidate compilation transformations
-                    # For demonstration, performs cache-blocked/tiled or sparse computation
-                    cand_output = reference_fn(input_data)  # mathematically equivalent
+                    # Execute genuine computational transformations on input_data
+                    if any("SPARSE" in t for t in candidate.transformations) and isinstance(input_data, np.ndarray) and input_data.ndim == 2:
+                        import scipy.sparse as sp
+                        sp_mat = sp.csr_matrix(input_data)
+                        cand_output = (sp_mat @ sp_mat).toarray()
+                    elif any("LOW_RANK" in t for t in candidate.transformations) and isinstance(input_data, np.ndarray) and input_data.ndim == 2:
+                        u, s, vt = np.linalg.svd(input_data, full_matrices=False)
+                        k = max(1, min(16, len(s)))
+                        cand_output = (u[:, :k] * s[:k]) @ (vt[:k, :] @ input_data)
+                    elif any("BLOCKING" in t for t in candidate.transformations) and isinstance(input_data, np.ndarray) and input_data.ndim == 2:
+                        # Real block-tiled matrix multiplication
+                        M, N = input_data.shape
+                        cand_output = np.zeros((M, N), dtype=input_data.dtype)
+                        block_size = 32
+                        for ii in range(0, M, block_size):
+                            for jj in range(0, N, block_size):
+                                cand_output[ii:ii+block_size, jj:jj+block_size] = (
+                                    input_data[ii:ii+block_size, :] @ input_data[:, jj:jj+block_size]
+                                )
+                    elif callable(getattr(candidate, "compiled_fn", None)):
+                        cand_output = candidate.compiled_fn(input_data)
+                    else:
+                        # If candidate cannot execute independently, fail it rather than delegating to reference_fn
+                        continue
+
                     cand_time_ms = (time.perf_counter() - t_cand0) * 1000.0
 
-                    # Verify correctness strictly
+                    # Verify correctness strictly against reference output
                     is_valid = verifier_fn(cand_output, ref_output)
                     if is_valid:
                         candidate.is_verified = True
                         candidate.measured_latency_ms = cand_time_ms
-                        # Estimate work elimination based on transform complexity
-                        work_saved = min(0.90, len(candidate.transformations) * 0.18)
-                        candidate.verified_work_elimination = work_saved
+                        # Real measured work reduction based on physical execution time vs baseline
+                        measured_reduction = max(0.0, min(0.99, (ref_time_ms - cand_time_ms) / max(ref_time_ms, 1e-6)))
+                        candidate.verified_work_elimination = measured_reduction
                         speedup = ref_time_ms / max(1e-4, cand_time_ms)
-                        candidate.fitness_score = work_saved * 10.0 + speedup
+                        candidate.fitness_score = measured_reduction * 10.0 + speedup
 
                         if candidate.fitness_score > best.fitness_score and candidate.is_verified:
                             best = candidate
