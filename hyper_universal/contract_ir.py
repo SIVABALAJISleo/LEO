@@ -26,6 +26,7 @@ from pydantic import BaseModel, Field
 class ContractType(str, Enum):
     EXACT = "EXACT"
     NUMERICAL = "NUMERICAL"
+    NUMERICAL_TOLERANCE = "NUMERICAL_TOLERANCE"
     TOLERANCE = "TOLERANCE"
     SYMBOLIC = "SYMBOLIC"
     STRUCTURAL = "STRUCTURAL"
@@ -36,6 +37,7 @@ class ContractType(str, Enum):
     LATENCY = "LATENCY"
     THROUGHPUT = "THROUGHPUT"
     COMPOSITE = "COMPOSITE"
+
 
 
 class NumericalTolerance(BaseModel):
@@ -54,8 +56,8 @@ class ResourceLimits(BaseModel):
 
 
 class ContractIR(BaseModel):
-    contract_id: str
-    workload_id: str
+    contract_id: str = "contract_default"
+    workload_id: str = "workload_default"
     contract_type: ContractType = ContractType.EXACT
     mandatory_outputs: List[str] = Field(default_factory=lambda: ["output"])
     tolerance: NumericalTolerance = Field(default_factory=NumericalTolerance)
@@ -79,5 +81,10 @@ class ContractIR(BaseModel):
     what_may_differ: str = "Internal memory layout, loop ordering, and intermediate representations."
     created_at: float = Field(default_factory=time.time)
 
+    @property
+    def absolute_tolerance(self) -> float:
+        return self.tolerance.absolute_tolerance
+
     def is_exact(self) -> bool:
         return self.contract_type in (ContractType.EXACT, ContractType.SYMBOLIC)
+

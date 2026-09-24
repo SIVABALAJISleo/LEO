@@ -131,3 +131,27 @@ class SandboxExecutor:
                 error_type="runtime_failure",
                 error_message=f"Execution error: {str(e)}",
             )
+
+
+def execute_isolated_candidate(
+    source_code: str,
+    input_data: Any,
+    entry_function_name: str = "candidate",
+    timeout_seconds: float = 5.0,
+) -> Any:
+    """Convenience helper to compile and execute a candidate in the sandbox."""
+    executor = SandboxExecutor(timeout_ms=timeout_seconds * 1000.0)
+    args = (input_data,)
+    r = executor.compile_and_execute(source_code, entry_function_name, args)
+
+    class ResultWrapper:
+        def __init__(self, res: SandboxExecutionResult):
+            self.success = res.success
+            self.output = res.output
+            self.execution_time_ms = res.execution_time_ms
+            self.error_type = res.error_type
+            self.error_message = res.error_message
+            self.error = res.error_message
+
+    return ResultWrapper(r)
+

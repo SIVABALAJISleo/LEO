@@ -72,3 +72,24 @@ class ClaimStatus(str, Enum):
     GENERALIZED = "GENERALIZED"
     FORMALLY_ESTABLISHED = "FORMALLY_ESTABLISHED"
     UNKNOWN = "UNKNOWN"
+
+
+class ExecutionTarget(str, Enum):
+    CPU = "CPU"
+    IGPU = "IGPU"
+    HYBRID = "HYBRID"
+
+
+class HardwareProvenance(BaseModel):
+    cpu_model: str = "Unknown"
+    cpu_cores: int = 1
+    cpu_threads: int = 1
+    igpu_model: str = "Unknown"
+    ram_gb: float = 0.0
+    os: str = "Windows"
+
+
+# Section 57 taxonomy alias
+ResultTaxonomy = ResultState
+
+
