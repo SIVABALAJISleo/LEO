@@ -171,3 +171,7 @@ app.include_router(hyper_v3_router)
 
 from backend.routers.hyper_mvc_dar_router import router as hyper_mvc_dar_router
 app.include_router(hyper_mvc_dar_router)
+
+from backend.routers.omega_router import router as omega_router
+app.include_router(omega_router)
+
