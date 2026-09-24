@@ -366,4 +366,169 @@ def get_bypass_engine_summary() -> Dict[str, Any]:
     return _sanitize_for_json(cbe.get_summary())
 
 
+# ==============================================================================
+# MASTER ARCHITECTURE EXTENSIONS (Sections 5, 7, 24, 25, 26, 31, 34)
+# ==============================================================================
+
+@router.post("/workloads/extract")
+def extract_canonical_workload(payload: Dict[str, Any]) -> Dict[str, Any]:
+    """Extracts and formalizes canonical contracts and workload representations."""
+    from hyper.discovery.workload_model import ContractExtractor
+    name = payload.get("name", "GenericWorkload")
+    domain = payload.get("domain", "GENERAL")
+    force_exact = payload.get("force_exact", False)
+
+    # Synthetic sample based on domain
+    if domain == "SORTING":
+        sample = np.array([4, 2, 7, 1, 9], dtype=np.int32)
+        fn = np.sort
+    elif domain == "LINEAR_ALGEBRA":
+        sample = np.random.randn(8, 8).astype(np.float32)
+        fn = lambda x: x @ x
+    else:
+        sample = np.ones((10,), dtype=np.float32)
+        fn = lambda x: x * 2.0
+
+    workload = ContractExtractor.extract_from_callable(
+        fn=fn,
+        sample_input=sample,
+        name=name,
+        domain=domain,
+        force_exact=force_exact,
+    )
+    return _sanitize_for_json(workload.model_dump())
+
+
+@router.post("/necessary-work/analyze")
+def analyze_necessary_work(payload: Dict[str, Any]) -> Dict[str, Any]:
+    """Classifies operation dependency DAG into Necessary, Redundant, Fusible, Reusable, Eliminable."""
+    from hyper.discovery.necessary_work_analyzer import NecessaryWorkAnalyzer
+    workload_id = payload.get("workload_id", "wl-api")
+    operations = payload.get("operations", [
+        {"op_id": "op_0", "name": "copy_tensor", "op_type": "CAST", "flops": 10.0},
+        {"op_id": "op_1", "name": "matmul_core", "op_type": "GEMM", "flops": 1000.0},
+        {"op_id": "op_2", "name": "relu_activation", "op_type": "FUSED_RELU", "flops": 50.0},
+        {"op_id": "op_3", "name": "static_ambient_light", "op_type": "CONSTANT", "flops": 100.0},
+    ])
+    contract_exactness = payload.get("contract_exactness", "NUMERICALLY_TOLERANT")
+
+    analyzer = NecessaryWorkAnalyzer()
+    graph = analyzer.analyze_graph(
+        workload_id=workload_id,
+        operations=operations,
+        contract_exactness=contract_exactness,
+    )
+
+    return _sanitize_for_json({
+        "workload_id": graph.workload_id,
+        "total_flops": graph.total_flops,
+        "necessary_flops": graph.necessary_flops,
+        "redundant_flops": graph.redundant_flops,
+        "reusable_flops": graph.reusable_flops,
+        "fusible_flops": graph.fusible_flops,
+        "potential_work_reduction_pct": graph.potential_work_reduction_pct,
+        "nodes": {
+            k: {
+                "name": n.name,
+                "op_type": n.op_type,
+                "necessity": n.necessity.value,
+                "rationale": n.necessity_rationale,
+                "flops": n.estimated_flops,
+            }
+            for k, n in graph.nodes.items()
+        },
+    })
+
+
+@router.post("/theorems/prove-01")
+def prove_sorting_network_01(payload: Dict[str, Any]) -> Dict[str, Any]:
+    """Proves an N-element sorting comparator network via the 0-1 Sorting Lemma."""
+    from hyper.discovery.theorem_engine import TheoremDiscoveryEngine
+    n = payload.get("n", 4)
+    # Default to standard 4-sorter: [(0,1), (2,3), (0,2), (1,3), (1,2)]
+    default_net = [(0, 1), (2, 3), (0, 2), (1, 3), (1, 2)] if n == 4 else [(0, 1), (0, 2), (1, 2)]
+    network = [tuple(p) for p in payload.get("network", default_net)]
+
+    engine = TheoremDiscoveryEngine()
+    cert = engine.prove_zero_one_sorting_lemma(n=n, comparator_network=network)
+    return _sanitize_for_json(cert.model_dump())
+
+
+@router.post("/theorems/prove-horner")
+def prove_polynomial_horner_symbolic(payload: Dict[str, Any]) -> Dict[str, Any]:
+    """Proves polynomial vs Horner recurrence algebraic identity via SymPy."""
+    from hyper.discovery.theorem_engine import TheoremDiscoveryEngine
+    degree = payload.get("degree", 4)
+    engine = TheoremDiscoveryEngine()
+    cert = engine.prove_symbolic_polynomial_identity(degree=degree)
+    return _sanitize_for_json(cert.model_dump())
+
+
+@router.post("/barriers/analyze")
+def analyze_computational_barriers(payload: Dict[str, Any]) -> Dict[str, Any]:
+    """Evaluates theoretical lower bounds and separates impossible targets from bypassable ones."""
+    from hyper.discovery.barrier_engine import BarrierEngine
+    barrier_type = payload.get("barrier_type", "MEMORY_BANDWIDTH")
+    workload_name = payload.get("workload_name", "Workload_Alpha")
+    target_ms = float(payload.get("target_ms", 1.0))
+    allows_bypass = payload.get("allows_bypass", True)
+
+    engine = BarrierEngine()
+    if barrier_type == "MEMORY_BANDWIDTH":
+        bytes_data = int(payload.get("data_movement_bytes", 50 * 1024 * 1024))
+        report = engine.analyze_memory_bandwidth_barrier(
+            workload_name=workload_name,
+            data_movement_bytes=bytes_data,
+            target_latency_ms=target_ms,
+            allows_compression_or_sparsity=allows_bypass,
+        )
+    elif barrier_type == "COMPUTE_FLOPS":
+        flops = float(payload.get("total_flops", 1e10))
+        report = engine.analyze_compute_flops_barrier(
+            workload_name=workload_name,
+            total_flops=flops,
+            target_latency_ms=target_ms,
+            allows_algorithmic_bypass=allows_bypass,
+        )
+    elif barrier_type == "SORTING_SHANNON":
+        n = int(payload.get("n", 5))
+        comparisons = int(payload.get("target_comparisons", 6))
+        report = engine.analyze_sorting_complexity_barrier(n=n, target_comparisons=comparisons)
+    else:
+        raise HTTPException(status_code=400, detail=f"Unknown barrier type: {barrier_type}")
+
+    return _sanitize_for_json(report.model_dump())
+
+
+@router.post("/universality-gate/audit")
+def audit_universality_gate(payload: Dict[str, Any]) -> Dict[str, Any]:
+    """Executes the 12-item universality audit to determine if a pathway qualifies for GUARANTEED."""
+    from hyper.discovery.universality_gate import (
+        UniversalityGate,
+        UniversalityGateChecklist,
+        DiscoveryResultState,
+    )
+    workload_id = payload.get("workload_id", "wl-candidate-1")
+    pathway_name = payload.get("pathway_name", "BitNetTernaryAdditiveBypass")
+    curr_state_str = payload.get("current_state", "PROVEN")
+
+    try:
+        current_state = DiscoveryResultState(curr_state_str)
+    except ValueError:
+        current_state = DiscoveryResultState.PROVEN
+
+    checklist_dict = payload.get("checklist", {})
+    checklist = UniversalityGateChecklist(**checklist_dict)
+
+    gate = UniversalityGate()
+    report = gate.audit_for_guarantee(
+        workload_id=workload_id,
+        pathway_name=pathway_name,
+        current_state=current_state,
+        checklist=checklist,
+    )
+    return _sanitize_for_json(report.model_dump())
+
+
+
 

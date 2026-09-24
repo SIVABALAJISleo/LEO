@@ -72,6 +72,40 @@ from hyper.discovery.computational_bypass_engine import (
     TemporalMotionVectorBypass,
     AnalyticSDFSphereTracingBypass,
 )
+from hyper.discovery.workload_model import (
+    CanonicalWorkload,
+    ExtractedContract,
+    ContractExactnessType,
+    WorkloadPrecision,
+    WorkloadResourceConstraints,
+    ContractExtractor,
+)
+from hyper.discovery.necessary_work_analyzer import (
+    NecessaryWorkAnalyzer,
+    NecessaryWorkGraph,
+    OperationNode,
+    OperationNecessity,
+)
+from hyper.discovery.theorem_engine import (
+    TheoremDiscoveryEngine,
+    TheoremStatement,
+    TheoremType,
+    TheoremStatus,
+    FormalProofCertificate,
+)
+from hyper.discovery.barrier_engine import (
+    BarrierEngine,
+    BarrierAnalysisReport,
+    BarrierClassification,
+    BarrierType,
+    HostHardwareModel,
+)
+from hyper.discovery.universality_gate import (
+    UniversalityGate,
+    UniversalityGateChecklist,
+    UniversalityAuditReport,
+    DiscoveryResultState,
+)
 
 __all__ = [
     "EpistemicState",
@@ -186,4 +220,28 @@ __all__ = [
     "DynamicActivationSparsityBypass",
     "TemporalMotionVectorBypass",
     "AnalyticSDFSphereTracingBypass",
+    "CanonicalWorkload",
+    "ExtractedContract",
+    "ContractExactnessType",
+    "WorkloadPrecision",
+    "WorkloadResourceConstraints",
+    "ContractExtractor",
+    "NecessaryWorkAnalyzer",
+    "NecessaryWorkGraph",
+    "OperationNode",
+    "OperationNecessity",
+    "TheoremDiscoveryEngine",
+    "TheoremStatement",
+    "TheoremType",
+    "TheoremStatus",
+    "FormalProofCertificate",
+    "BarrierEngine",
+    "BarrierAnalysisReport",
+    "BarrierClassification",
+    "BarrierType",
+    "HostHardwareModel",
+    "UniversalityGate",
+    "UniversalityGateChecklist",
+    "UniversalityAuditReport",
+    "DiscoveryResultState",
 ]
