@@ -1,0 +1,7 @@
+{
+  "git_commit": "60e7c6007ddfb7871681e3857b7d6ee2d6d246b5",
+  "python": "3.13.5 (tags/v3.13.5:6cb20a2, Jun 11 2025, 16:15:46) [MSC v.1943 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26100-SP0",
+  "total_verified_artifacts": 14,
+  "reproducible_command": "python scripts/master_scientific_audit_runner.py"
+}

@@ -1,0 +1,10 @@
+[
+  {
+    "candidate_id": "aggressive_truncation_01",
+    "failure_type": "boundary_divergence",
+    "failed_contract": "EXACT",
+    "failed_assumption": "matrix_positive_definite",
+    "severity": "CRITICAL",
+    "timestamp": 1790343713.2508056
+  }
+]

@@ -1,0 +1,6 @@
+{
+  "rejected_hypotheses": [
+    "Integer rounding for transcendental sine function",
+    "Naive uncompressed FP32 streaming over DDR4"
+  ]
+}

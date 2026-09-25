@@ -1,0 +1,16 @@
+{
+  "workload": "Bilinear 2x2 Matrix Multiplication",
+  "contract": "EXACT",
+  "trials": 100,
+  "max_absolute_error": 4.440892098500626e-16,
+  "contract_satisfied": true,
+  "reference_multiplications": 8,
+  "discovered_multiplications": 7,
+  "multiplication_reduction_pct": 12.5,
+  "ref_time_mean_us": 5.052995402365923,
+  "ref_time_std_us": 3.2047719538407153,
+  "cand_time_mean_us": 6.368006579577923,
+  "cand_time_std_us": 1.5459593025598763,
+  "reference_leak_detected": false,
+  "provenance": "MEASURED_PHYSICAL"
+}

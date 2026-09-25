@@ -1,0 +1,5 @@
+{
+  "freivalds_verifier": "PASS",
+  "exact_symbolic_check": "PASS",
+  "max_matmul_abs_error": 4.440892098500626e-16
+}

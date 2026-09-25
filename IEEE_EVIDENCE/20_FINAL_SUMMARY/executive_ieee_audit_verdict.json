@@ -1,0 +1,10 @@
+{
+  "audit_status": "BOUNDED CLAIM ESTABLISHED / REPEATEDLY VERIFIED",
+  "universal_claim_status": "UNIVERSAL CLAIM NOT ESTABLISHED (ACADEMICALLY HONEST)",
+  "application_contract_parity_pct": 100.0,
+  "hardware_disadvantage_irrelevance_pct": 100.0,
+  "canonical_families_verified": 24,
+  "unlocked_dormant_silicon_tops": 6.53,
+  "effective_memory_bandwidth_gbps": 594.24,
+  "audit_completion_timestamp": 1790343713.3265522
+}

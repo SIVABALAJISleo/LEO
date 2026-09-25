@@ -1,0 +1,10 @@
+{
+  "system_cpu": "Intel Core i5-12450H (8 Physical Cores: 4 P-Cores, 4 E-Cores; 12 Logical Threads)",
+  "system_igpu": "Intel UHD Graphics Gen12 Xe-LP (48 EUs @ 1.2 GHz)",
+  "system_ram_gb": 15.700065612792969,
+  "os_version": "Windows-11-10.0.26100-SP0",
+  "python_version": "3.13.5 (tags/v3.13.5:6cb20a2, Jun 11 2025, 16:15:46) [MSC v.1943 64 bit (AMD64)]",
+  "torch_cuda_available": false,
+  "hardware_constraint_enforced": "SOFTWARE-ONLY (No discrete GPU, no cloud GPU)",
+  "timestamp": 1790343713.2682261
+}

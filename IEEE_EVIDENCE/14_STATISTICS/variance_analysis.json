@@ -1,0 +1,5 @@
+{
+  "matmul_ref_std_us": 3.2047719538407153,
+  "matmul_cand_std_us": 1.5459593025598763,
+  "confidence_level": 0.99
+}

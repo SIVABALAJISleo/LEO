@@ -1,0 +1,16 @@
+{
+  "01_SYSTEM_CONFIGURATION/system_environment.json": "a4e2fa345af063b558f4f8f4313fc334c8e1e89b4f60f9669aed12a10077c9dc",
+  "02_ARCHITECTURE/runtime_architecture.json": "558f1cb6d8555b371d5c93a2ff6ef7ff8803f41c7b06d3323e326f001b53fa75",
+  "03_WORKLOAD_DEFINITIONS/canonical_workload_families.json": "20ad0f691f76f4873f10fa4f9d4175f7a230ab33920ba31c0833b692227aba10",
+  "04_CONTRACT_DEFINITIONS/formal_contracts.json": "72d274c82aae80125eebde5ab52821650efbb4ed2858ea72cdbca588a4149403",
+  "05_BASELINE_RESULTS/baseline_measurements.json": "91950cc0f61963634a8d505e756d82d24b8fb52cc301d1a42ffee39c2a9cd6b8",
+  "06_HYPER_RESULTS/omega_candidate_executions.json": "04c859e877a71983aa7e5f55a968287301b85e6b9cb4c94dfe3b642c708a5737",
+  "07_WORK_REDUCTION/operation_reductions.json": "aa643ccde75c672fd3a702c21ca8275f625ce4da38c8f34f170358f4f6dc8d39",
+  "08_CPU_RESULTS/cpu_measurements.json": "80448d1551162e990d07db21132b2f32aa53582815cd12740f7dfe9a84924e5a",
+  "09_IGPU_RESULTS/intel_uhd_metrics.json": "b0b1577320b31dae1e0b3bdbbe1574521b7f142f9ca6109e3f7207ec8c908ba2",
+  "10_HYBRID_RESULTS/zero_copy_usm.json": "cf5c60942e5b3a56ad6ef17610ea677f656e0f52f8b2c2ec1ced33978f215cd2",
+  "11_VERIFICATION/verification_records.json": "c9350674ff87b00ef560756b6d430b4ee1102b1c513fa47434a69097e3569220",
+  "12_COUNTEREXAMPLES/counterexamples_database.json": "5c0f8bd55ca7f48c49eb5ed6f7deffcd281652d1df1ce6daa3510e766c76ed4c",
+  "13_GENERALIZATION/scaling_sweeps.json": "73f346bd4bc0a83e6b32781495dd8260310f8f7db986f5fd2ac5b1b3d9377297",
+  "14_STATISTICS/variance_analysis.json": "3b33a92cbccb91c29945be55f7388fbb3ab9c9ded764ca962c32b5a74929adf8"
+}

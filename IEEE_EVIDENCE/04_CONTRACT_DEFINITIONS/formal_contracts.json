@@ -1,0 +1,9 @@
+{
+  "contract_types": [
+    "EXACT",
+    "NUMERICAL",
+    "TOLERANCE",
+    "STRUCTURAL",
+    "SEMANTIC"
+  ]
+}

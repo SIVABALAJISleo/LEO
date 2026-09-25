@@ -1,0 +1,5 @@
+{
+  "physical_hardware_equivalence": "NOT CLAIMED (PHYSICALLY_DISJOINT)",
+  "unoptimizable_legacy_fp64_barrier": "Unoptimizable loops bound by 45W silicon FLOPS",
+  "foundation_model_training_from_scratch": "Requires petawatt energy clusters; out of laptop scope"
+}

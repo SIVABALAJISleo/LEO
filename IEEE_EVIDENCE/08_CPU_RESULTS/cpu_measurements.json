@@ -1,0 +1,6 @@
+{
+  "threads": 12,
+  "cores": 8,
+  "avx2_vnni_active": true,
+  "measured_sort_us": 7.586001884192228
+}

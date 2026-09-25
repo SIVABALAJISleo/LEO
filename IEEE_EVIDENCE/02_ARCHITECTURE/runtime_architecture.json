@@ -1,0 +1,3 @@
+{
+  "pipeline": "UI -> API -> Orchestrator -> Workload -> Escape -> AST -> Sandbox -> HW -> Verifier -> Gate"
+}

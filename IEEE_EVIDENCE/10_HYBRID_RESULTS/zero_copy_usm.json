@@ -1,0 +1,4 @@
+{
+  "zero_copy_latency_ms": 0.001,
+  "pcie_overhead_eliminated": true
+}
