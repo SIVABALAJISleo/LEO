@@ -175,3 +175,7 @@ app.include_router(hyper_mvc_dar_router)
 from backend.routers.omega_router import router as omega_router
 app.include_router(omega_router)
 
+from backend.routers.pathway_router import router as pathway_router, parity_router
+app.include_router(pathway_router)
+app.include_router(parity_router)
+

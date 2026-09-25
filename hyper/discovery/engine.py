@@ -180,3 +180,178 @@ class UniversalComputationalDiscoveryEngine:
     def get_destination_tracker_summary(self) -> Dict[str, Any]:
         return self.destination_tracker.get_summary()
 
+
+# =============================================================================
+# UNIFIED VERIFIED COMPUTATIONAL PATHWAY DISCOVERY ENGINE
+# =============================================================================
+
+import dataclasses
+import uuid
+from hyper.discovery.adversarial import AdversarialWorkloadGenerator, AdversarialWorkload
+from hyper.discovery.anticheat import AntiCheatGate, AntiCheatViolation
+from hyper.discovery.benchmarking import (
+    BenchmarkRunner,
+    BenchmarkStats,
+    NvidiaComparisonReport,
+    ReproducibilityManifest,
+)
+from hyper.discovery.cir import CIRGraph
+from hyper.discovery.contract import WorkloadContract
+from hyper.discovery.cost_model import CostModel
+from hyper.discovery.counterfactual import CounterfactualEngine
+from hyper.discovery.proof import ProofGenerator, ProofRecord
+from hyper.discovery.scheduler import ResourceAwareScheduler, SchedulingDecision
+from hyper.discovery.search import SearchConfig, SearchEngine, SearchResult, SearchStrategy
+from hyper.discovery.search_space import CandidatePathway, SearchSpaceCompiler
+from hyper.discovery.verifier import DoubleExecutionVerifier, IndependentReferenceBackend, VerificationRecord
+
+
+@dataclasses.dataclass
+class EngineExecutionReport:
+    """Complete, proof-carrying research report for an executed workload."""
+    workload_id: str
+    is_shortcut_found: bool
+    status_message: str
+    proof_record: ProofRecord
+    benchmark_stats: BenchmarkStats
+    scheduling_decision: SchedulingDecision
+    reproducibility_manifest: ReproducibilityManifest
+    nvidia_comparison: NvidiaComparisonReport
+    anti_cheat_violations: List[AntiCheatViolation]
+    unknown_workload_mode_used: bool
+    search_result: Optional[SearchResult] = None
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "workload_id": self.workload_id,
+            "is_shortcut_found": self.is_shortcut_found,
+            "status_message": self.status_message,
+            "proof_record": self.proof_record.to_dict(),
+            "benchmark_stats": self.benchmark_stats.to_dict(),
+            "scheduling_decision": dataclasses.asdict(self.scheduling_decision),
+            "reproducibility_manifest": self.reproducibility_manifest.to_dict(),
+            "nvidia_comparison": self.nvidia_comparison.to_dict(),
+            "anti_cheat_violations": [v.to_dict() for v in self.anti_cheat_violations],
+            "unknown_workload_mode_used": self.unknown_workload_mode_used,
+            "search_result": self.search_result.to_dict() if self.search_result else None,
+        }
+
+
+class VerifiedPathwayEngine:
+    """
+    Master Engine: Verified Computational Pathway Discovery Engine.
+    """
+
+    def __init__(self):
+        self.compiler = SearchSpaceCompiler()
+        self.counterfactual = CounterfactualEngine()
+        self.reference_backend = IndependentReferenceBackend()
+        self.verifier = DoubleExecutionVerifier(reference_backend=self.reference_backend)
+        self.search_engine = SearchEngine(
+            compiler=self.compiler,
+            counterfactual=self.counterfactual,
+            verifier=self.verifier,
+        )
+        self.anticheat = AntiCheatGate()
+        self.cost_model = CostModel()
+        self.scheduler = ResourceAwareScheduler(cost_model=self.cost_model)
+        self.proof_gen = ProofGenerator()
+        self.benchmarker = BenchmarkRunner()
+        self.adversarial_gen = AdversarialWorkloadGenerator()
+
+    def process_workload(
+        self,
+        graph: CIRGraph,
+        inputs: Dict[str, Any],
+        contract: WorkloadContract,
+        unknown_workload_mode: bool = False,
+        search_config: Optional[SearchConfig] = None,
+        benchmark_repetitions: int = 10,
+    ) -> EngineExecutionReport:
+        """
+        Execute full end-to-end Verified Computational Pathway Discovery pipeline.
+        """
+        # Step 1: Handle Unknown Workload Mode if enabled
+        if unknown_workload_mode:
+            exec_graph, exec_contract, name_map = self.anticheat.anonymize_for_unknown_workload_mode(graph, contract)
+            exec_inputs = {name_map.get(k, k): v for k, v in inputs.items()}
+        else:
+            exec_graph = graph
+            exec_contract = contract
+            exec_inputs = inputs
+
+        # Step 2: Automatic Discovery Loop & Bounded Search
+        search_res = self.search_engine.discover(
+            initial_graph=exec_graph,
+            sample_inputs=exec_inputs,
+            contract=exec_contract,
+            config=search_config,
+        )
+
+        best_pathway = search_res.best_pathway
+
+        # Step 3: Anti-Cheat Audit on selected best pathway
+        violations = self.anticheat.audit_candidate(best_pathway, exec_inputs, exec_contract)
+        if violations:
+            # Fatal violations revert immediately to baseline reference
+            search_res.is_shortcut_found = False
+            search_res.status_message = "NO_VERIFIED_SHORTCUT_FOUND"
+            search_res.best_pathway = CandidatePathway(
+                candidate_id=f"cand_baseline_{uuid.uuid4().hex[:8]}",
+                parent_id=None,
+                graph=exec_graph.clone(),
+                transformation_history=["Anti-cheat violation detected; reverted to baseline."],
+                estimated_cost=exec_graph.total_estimated_flops(),
+                verification_status="PASSED",
+            )
+            best_pathway = search_res.best_pathway
+
+        # Step 4: Resource-Aware Scheduling & Execution
+        decision = self.scheduler.schedule_workload(best_pathway.graph)
+
+        # Step 5: Statistical Multi-Repetition Benchmarking
+        bench_stats = self.benchmarker.run_benchmark(
+            graph=best_pathway.graph,
+            inputs=exec_inputs,
+            repetitions=benchmark_repetitions,
+            warmup=2,
+        )
+
+        # Step 6: Proof-Carrying Result & Explainer
+        proof = self.proof_gen.generate_proof(
+            search_result=search_res,
+            original_graph=exec_graph,
+            contract=exec_contract,
+        )
+
+        # Step 7: Reproducibility Manifest
+        manifest = self.benchmarker.create_reproducibility_manifest(
+            workload_id=contract.workload_name,
+            candidate_id=best_pathway.candidate_id,
+            inputs=exec_inputs,
+            contract=exec_contract,
+            search_result=search_res,
+        )
+
+        # Step 8: NVIDIA Reference Comparison
+        nvidia_comp = self.benchmarker.compare_against_nvidia_reference(
+            workload_name=contract.workload_name,
+            hyper_stats=bench_stats,
+            proof=proof,
+        )
+
+        return EngineExecutionReport(
+            workload_id=contract.workload_name,
+            is_shortcut_found=search_res.is_shortcut_found,
+            status_message=search_res.status_message,
+            proof_record=proof,
+            benchmark_stats=bench_stats,
+            scheduling_decision=decision,
+            reproducibility_manifest=manifest,
+            nvidia_comparison=nvidia_comp,
+            anti_cheat_violations=violations,
+            unknown_workload_mode_used=unknown_workload_mode,
+            search_result=search_res,
+        )
+
+

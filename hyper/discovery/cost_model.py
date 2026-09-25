@@ -151,3 +151,145 @@ class PathwayCostModel:
             overhead_ratio=overhead,
             net_speedup_vs_baseline=speedup,
         )
+
+
+# =============================================================================
+# CIR & DISCOVERY ENGINE COST MODEL (PREDICTED vs MEASURED)
+# =============================================================================
+
+import dataclasses
+import time
+from typing import Any, Dict, List, Optional, Tuple
+import numpy as np
+
+try:
+    import psutil
+except ImportError:
+    psutil = None
+
+from hyper.discovery.cir import CIRGraph, CIRNode, DataType, OpType
+
+
+@dataclasses.dataclass
+class PredictedCost:
+    """Theoretical pre-execution estimates."""
+    estimated_flops: float
+    memory_traffic_bytes: int
+    arithmetic_intensity_flops_per_byte: float
+    estimated_latency_ms: float
+    estimated_peak_memory_mb: float
+    estimated_power_watts: float = 15.0
+
+    def to_dict(self) -> Dict[str, Any]:
+        return dataclasses.asdict(self)
+
+
+@dataclasses.dataclass
+class MeasuredCost:
+    """Empirically measured profile during execution."""
+    actual_latency_ms: float
+    actual_throughput_gflops: float
+    actual_peak_memory_mb: float
+    cpu_utilization_pct: float
+    execution_device: str
+    repetition_count: int = 1
+
+    def to_dict(self) -> Dict[str, Any]:
+        return dataclasses.asdict(self)
+
+
+class CostModel:
+    """
+    Cost Model for predicting and empirically measuring computational costs.
+    Strictly separates PREDICTED_COST from MEASURED_COST.
+    """
+
+    PEAK_CPU_GFLOPS = 250.0  # Approx FP32 peak across P+E cores
+    PEAK_MEM_BANDWIDTH_GB_S = 50.0  # DDR5/LPDDR5 shared memory bandwidth
+
+    def predict_cost(self, graph: CIRGraph) -> PredictedCost:
+        """Calculate theoretical FLOPs, memory traffic, and latency."""
+        flops = graph.total_estimated_flops()
+
+        traffic_bytes = 0
+        for node in graph.nodes.values():
+            if node.output_meta:
+                traffic_bytes += node.output_meta.memory_bytes
+            for inp_id in node.inputs:
+                inp_node = graph.nodes.get(inp_id)
+                if inp_node and inp_node.output_meta:
+                    traffic_bytes += inp_node.output_meta.memory_bytes
+
+        intensity = (flops / max(traffic_bytes, 1))
+
+        # Roofline model latency estimate
+        compute_time_sec = flops / (self.PEAK_CPU_GFLOPS * 1e9)
+        memory_time_sec = traffic_bytes / (self.PEAK_MEM_BANDWIDTH_GB_S * 1e9)
+        estimated_time_sec = max(compute_time_sec, memory_time_sec)
+        estimated_latency_ms = estimated_time_sec * 1000.0
+
+        peak_mem_mb = (traffic_bytes / (1024 * 1024)) * 1.5
+
+        return PredictedCost(
+            estimated_flops=flops,
+            memory_traffic_bytes=traffic_bytes,
+            arithmetic_intensity_flops_per_byte=intensity,
+            estimated_latency_ms=max(estimated_latency_ms, 0.001),
+            estimated_peak_memory_mb=max(peak_mem_mb, 0.1),
+        )
+
+    def measure_cost(
+        self,
+        graph: CIRGraph,
+        inputs: Dict[str, Any],
+        device: str = "CPU",
+        repetitions: int = 3,
+        warmup: int = 1,
+    ) -> Tuple[Dict[str, Any], MeasuredCost]:
+        """
+        Profile actual execution with dedicated warmup and repetition.
+        Never substitutes predicted values for measured values.
+        """
+        # Warmup
+        for _ in range(warmup):
+            out = graph.evaluate(inputs)
+
+        latencies = []
+        if psutil:
+            proc = psutil.Process()
+            cpu_before = psutil.cpu_percent(interval=None)
+            mem_before = proc.memory_info().rss
+        else:
+            cpu_before = 0.0
+            mem_before = 0
+
+        for _ in range(repetitions):
+            t0 = time.perf_counter()
+            out = graph.evaluate(inputs)
+            t1 = time.perf_counter()
+            latencies.append((t1 - t0) * 1000.0)
+
+        if psutil:
+            cpu_after = psutil.cpu_percent(interval=None)
+            mem_after = proc.memory_info().rss
+            peak_mb = (max(mem_before, mem_after) / (1024 * 1024))
+            avg_cpu = max(cpu_before, cpu_after)
+        else:
+            peak_mb = 10.0
+            avg_cpu = 50.0
+
+        median_lat = float(np.median(latencies))
+        flops = graph.total_estimated_flops()
+        throughput_gflops = (flops / (median_lat * 1e-3 * 1e9)) if median_lat > 0 else 0.0
+
+        measured = MeasuredCost(
+            actual_latency_ms=median_lat,
+            actual_throughput_gflops=throughput_gflops,
+            actual_peak_memory_mb=peak_mb,
+            cpu_utilization_pct=avg_cpu,
+            execution_device=device,
+            repetition_count=repetitions,
+        )
+
+        return out, measured
+

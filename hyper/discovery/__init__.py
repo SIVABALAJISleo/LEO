@@ -1,247 +1,131 @@
 """
-hyper/discovery package
-=======================
-Universal Computational Transformation, Discovery & Equivalence Engine (UCTDE).
+hyper.discovery
+===============
+Unified Verified Computational Pathway Discovery Engine.
 """
 
-from hyper.discovery.hypotheses import EpistemicState, UniversalityLevel, ResearchHypothesis, TargetStatus
-from hyper.discovery.knowledge_graph import ComputationalKnowledgeGraph, NodeType, EdgeType
-from hyper.discovery.proof_engine import ProofDiscoveryEngine, ProofCertificate, ProofStatus
-from hyper.discovery.counterexample_engine import CounterexampleDiscoveryEngine, Counterexample, CounterexampleDatabase
-from hyper.discovery.universality_ladder import UniversalityLadder, UniversalityBoundaryEngine, BoundaryReport
-from hyper.discovery.meta_search import (
-    MetaSearchEngine,
-    SearchStrategyType,
-    FormalBarrierClassifier,
-    FormalBarrierType,
-    AdaptiveSearchScaler,
+from hyper.discovery.cir import (
+    CIRGraph,
+    CIRNode,
+    CIREdge,
+    CIRTensorMeta,
+    DataType,
+    OpType,
+    EdgeType,
 )
-from hyper.discovery.resource_transcendence import ResourceTranscendenceEngine, ResourceVector, TranscendenceVerdict
-from hyper.discovery.self_critique import SelfCritiqueEngine, SelfCritiqueReport
-from hyper.discovery.transformation_library import TransformationLibrary, TransformationRule
-from hyper.discovery.loop import UniversalDiscoveryLoop, DiscoveryExperimentResult
-from hyper.discovery.engine import UniversalComputationalDiscoveryEngine
-from hyper.discovery.capability_registry import CapabilityRegistry, CapabilityEntry, MaturityLevel, FeatureStatus
-from hyper.discovery.search_space_compiler import SearchSpaceCompiler, TransformationSearchSpace
-from hyper.discovery.counterfactual_engine import CounterfactualEngine, CounterfactualHypothesis, CounterfactualType, PathwayCompositionGraph
-from hyper.discovery.fairness_engine import BenchmarkFairnessEngine, FairnessReport, FairnessViolation
-from hyper.discovery.alphatensor_engine import AlphaTensorEngine, BilinearTensorProblem, TensorAlgorithmCandidate
-from hyper.discovery.alphaevolve_engine import AlphaEvolveEngine, ProgramIndividual, EvolutionaryRunResult
-from hyper.discovery.runtime_hook import RuntimeDiscoveryHook, RuntimeOpportunity, RuntimeObservation
-from hyper.discovery.discovery_experiments import DiscoveryExperimentSuite
-
-from hyper.discovery.capability_decomposer import GPUCapabilityDecomposer, CapabilityFamily, CapabilityDetail
-from hyper.discovery.workload_decomposer import WorkloadDecomposer, WorkloadDependencyGraph, WorkloadDecompositionResult
-from hyper.discovery.pathway_ir import (
-    PathwayIR,
-    TransformationStep,
-    ExecutionPlan,
-    ExecutionDevice,
-    MemoryPlan,
-    MemoryStrategy,
-    SchedulingPlan,
-    SchedulingStrategy,
-    VerificationPlan,
-    FallbackPlan,
-    PathwayCostEstimate,
+from hyper.discovery.contract import (
+    WorkloadContract,
+    VerificationMode,
+    ContractAuditResult,
+    InputDomainSpec,
 )
-from hyper.discovery.pathway_generator import PathwayGenerator
-from hyper.discovery.pathway_composer import PathwayComposer, CompositionInteractionResult
-from hyper.discovery.cost_model import PathwayCostModel, CostEvaluationResult, TimeBreakdown, ResourceProfile
-from hyper.discovery.checkpoint_engine import CheckpointEngine, DiscoveryCheckpoint, CheckpointMetadata
-from hyper.discovery.discovery_report import PathwayDiscoveryReport
-from hyper.discovery.destination_tracker import DestinationTracker, ParityMetrics
-from hyper.discovery.alphadev_engine import AlphaDevEngine, DiscoveredKernel, CompareSwapOp, KernelType
-from hyper.discovery.transformation_dsl import (
-    TransformationDSLEngine,
-    DSLTransformationRule,
-    TransformationFamilyType,
-    TransformationCostEstimate,
-    FailureMode,
+from hyper.discovery.search_space import (
+    CandidatePathway,
+    SearchSpaceCompiler,
+    TransformRule,
 )
-from hyper.discovery.sandbox import SecurePathwaySandbox, SandboxExecutionResult, ASTSecurityInspector, SecurityViolationType
-from hyper.discovery.verification_stack import FormalVerificationStack, FullVerificationStackReport, VerificationLevel
-from hyper.discovery.research_tracker import ResearchQuestionTracker, CoreHypothesis, HypothesisStatus
-from hyper.discovery.computational_bypass_engine import (
-    ComputationalBypassEngine,
-    BypassDomain,
-    BypassEvaluationResult,
-    ZeroCopyUnifiedMemoryBypass,
-    BitNetTernaryAdditiveBypass,
-    DynamicActivationSparsityBypass,
-    TemporalMotionVectorBypass,
-    AnalyticSDFSphereTracingBypass,
+from hyper.discovery.counterfactual import (
+    CounterfactualEngine,
+    CounterfactualAnalysisResult,
 )
-from hyper.discovery.workload_model import (
-    CanonicalWorkload,
-    ExtractedContract,
-    ContractExactnessType,
-    WorkloadPrecision,
-    WorkloadResourceConstraints,
-    ContractExtractor,
+from hyper.discovery.verifier import (
+    IndependentReferenceBackend,
+    DoubleExecutionVerifier,
+    VerificationRecord,
 )
-from hyper.discovery.necessary_work_analyzer import (
-    NecessaryWorkAnalyzer,
-    NecessaryWorkGraph,
-    OperationNode,
-    OperationNecessity,
+from hyper.discovery.search import (
+    SearchEngine,
+    SearchConfig,
+    SearchResult,
+    SearchStrategy,
+    SearchTraceEntry,
 )
-from hyper.discovery.theorem_engine import (
-    TheoremDiscoveryEngine,
-    TheoremStatement,
-    TheoremType,
-    TheoremStatus,
-    FormalProofCertificate,
+from hyper.discovery.anticheat import (
+    AntiCheatGate,
+    AntiCheatViolation,
 )
-from hyper.discovery.barrier_engine import (
-    BarrierEngine,
-    BarrierAnalysisReport,
-    BarrierClassification,
-    BarrierType,
-    HostHardwareModel,
+from hyper.discovery.adversarial import (
+    AdversarialWorkloadGenerator,
+    AdversarialWorkload,
+    WorkloadCategory,
+    AdversarialType,
 )
-from hyper.discovery.universality_gate import (
-    UniversalityGate,
-    UniversalityGateChecklist,
-    UniversalityAuditReport,
-    DiscoveryResultState,
+from hyper.discovery.cost_model import (
+    CostModel,
+    PredictedCost,
+    MeasuredCost,
+)
+from hyper.discovery.scheduler import (
+    ResourceAwareScheduler,
+    DeviceTarget,
+    ExecutionSchedule,
+    SchedulingDecision,
+)
+from hyper.discovery.proof import (
+    ProofGenerator,
+    ProofRecord,
+    PathwayExplainer,
+    HumanReadableExplanation,
+)
+from hyper.discovery.benchmarking import (
+    BenchmarkRunner,
+    BenchmarkStats,
+    ReproducibilityManifest,
+    NvidiaComparisonReport,
+    UniversalityScorecard,
+)
+from hyper.discovery.engine import (
+    VerifiedPathwayEngine,
+    EngineExecutionReport,
 )
 
 __all__ = [
-    "EpistemicState",
-    "UniversalityLevel",
-    "ResearchHypothesis",
-    "TargetStatus",
-    "ComputationalKnowledgeGraph",
-    "NodeType",
+    "CIRGraph",
+    "CIRNode",
+    "CIREdge",
+    "CIRTensorMeta",
+    "DataType",
+    "OpType",
     "EdgeType",
-    "ProofDiscoveryEngine",
-    "ProofCertificate",
-    "ProofStatus",
-    "CounterexampleDiscoveryEngine",
-    "Counterexample",
-    "CounterexampleDatabase",
-    "UniversalityLadder",
-    "UniversalityBoundaryEngine",
-    "BoundaryReport",
-    "MetaSearchEngine",
-    "SearchStrategyType",
-    "FormalBarrierClassifier",
-    "FormalBarrierType",
-    "AdaptiveSearchScaler",
-    "ResourceTranscendenceEngine",
-    "ResourceVector",
-    "TranscendenceVerdict",
-    "SelfCritiqueEngine",
-    "SelfCritiqueReport",
-    "TransformationLibrary",
-    "TransformationRule",
-    "UniversalDiscoveryLoop",
-    "DiscoveryExperimentResult",
-    "UniversalComputationalDiscoveryEngine",
-    "CapabilityRegistry",
-    "CapabilityEntry",
-    "MaturityLevel",
-    "FeatureStatus",
+    "WorkloadContract",
+    "VerificationMode",
+    "ContractAuditResult",
+    "InputDomainSpec",
+    "CandidatePathway",
     "SearchSpaceCompiler",
-    "TransformationSearchSpace",
+    "TransformRule",
     "CounterfactualEngine",
-    "CounterfactualHypothesis",
-    "CounterfactualType",
-    "PathwayCompositionGraph",
-    "BenchmarkFairnessEngine",
-    "FairnessReport",
-    "FairnessViolation",
-    "AlphaTensorEngine",
-    "BilinearTensorProblem",
-    "TensorAlgorithmCandidate",
-    "AlphaEvolveEngine",
-    "ProgramIndividual",
-    "EvolutionaryRunResult",
-    "RuntimeDiscoveryHook",
-    "RuntimeOpportunity",
-    "RuntimeObservation",
-    "DiscoveryExperimentSuite",
-    "GPUCapabilityDecomposer",
-    "CapabilityFamily",
-    "CapabilityDetail",
-    "WorkloadDecomposer",
-    "WorkloadDependencyGraph",
-    "WorkloadDecompositionResult",
-    "PathwayIR",
-    "TransformationStep",
-    "ExecutionPlan",
-    "ExecutionDevice",
-    "MemoryPlan",
-    "MemoryStrategy",
-    "SchedulingPlan",
-    "SchedulingStrategy",
-    "VerificationPlan",
-    "FallbackPlan",
-    "PathwayCostEstimate",
-    "PathwayGenerator",
-    "PathwayComposer",
-    "CompositionInteractionResult",
-    "PathwayCostModel",
-    "CostEvaluationResult",
-    "TimeBreakdown",
-    "ResourceProfile",
-    "CheckpointEngine",
-    "DiscoveryCheckpoint",
-    "CheckpointMetadata",
-    "PathwayDiscoveryReport",
-    "DestinationTracker",
-    "ParityMetrics",
-    "ControlledWorkloadBenchmark",
-    "AlphaDevEngine",
-    "DiscoveredKernel",
-    "CompareSwapOp",
-    "KernelType",
-    "TransformationDSLEngine",
-    "DSLTransformationRule",
-    "TransformationFamilyType",
-    "TransformationCostEstimate",
-    "FailureMode",
-    "SecurePathwaySandbox",
-    "SandboxExecutionResult",
-    "ASTSecurityInspector",
-    "SecurityViolationType",
-    "FormalVerificationStack",
-    "FullVerificationStackReport",
-    "VerificationLevel",
-    "ResearchQuestionTracker",
-    "CoreHypothesis",
-    "HypothesisStatus",
-    "ComputationalBypassEngine",
-    "BypassDomain",
-    "BypassEvaluationResult",
-    "ZeroCopyUnifiedMemoryBypass",
-    "BitNetTernaryAdditiveBypass",
-    "DynamicActivationSparsityBypass",
-    "TemporalMotionVectorBypass",
-    "AnalyticSDFSphereTracingBypass",
-    "CanonicalWorkload",
-    "ExtractedContract",
-    "ContractExactnessType",
-    "WorkloadPrecision",
-    "WorkloadResourceConstraints",
-    "ContractExtractor",
-    "NecessaryWorkAnalyzer",
-    "NecessaryWorkGraph",
-    "OperationNode",
-    "OperationNecessity",
-    "TheoremDiscoveryEngine",
-    "TheoremStatement",
-    "TheoremType",
-    "TheoremStatus",
-    "FormalProofCertificate",
-    "BarrierEngine",
-    "BarrierAnalysisReport",
-    "BarrierClassification",
-    "BarrierType",
-    "HostHardwareModel",
-    "UniversalityGate",
-    "UniversalityGateChecklist",
-    "UniversalityAuditReport",
-    "DiscoveryResultState",
+    "CounterfactualAnalysisResult",
+    "IndependentReferenceBackend",
+    "DoubleExecutionVerifier",
+    "VerificationRecord",
+    "SearchEngine",
+    "SearchConfig",
+    "SearchResult",
+    "SearchStrategy",
+    "SearchTraceEntry",
+    "AntiCheatGate",
+    "AntiCheatViolation",
+    "AdversarialWorkloadGenerator",
+    "AdversarialWorkload",
+    "WorkloadCategory",
+    "AdversarialType",
+    "CostModel",
+    "PredictedCost",
+    "MeasuredCost",
+    "ResourceAwareScheduler",
+    "DeviceTarget",
+    "ExecutionSchedule",
+    "SchedulingDecision",
+    "ProofGenerator",
+    "ProofRecord",
+    "PathwayExplainer",
+    "HumanReadableExplanation",
+    "BenchmarkRunner",
+    "BenchmarkStats",
+    "ReproducibilityManifest",
+    "NvidiaComparisonReport",
+    "UniversalityScorecard",
+    "VerifiedPathwayEngine",
+    "EngineExecutionReport",
 ]
