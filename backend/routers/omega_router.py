@@ -245,3 +245,25 @@ def evaluate_complexity_collapse(req: ComplexityCollapseRequest) -> Dict[str, An
         "conclusion": report.conclusion,
     }
 
+
+@router.get("/universal_closure")
+def get_universal_closure() -> Dict[str, Any]:
+    """Evaluates and returns the Universal Metamorphic Closure verdict (100% Contract Completeness)."""
+    from hyper_omega.universal_closure import UniversalWorkloadClosureEngine
+    engine = UniversalWorkloadClosureEngine()
+    verdict = engine.evaluate_universal_closure(num_samples=40)
+    return {
+        "universal_contract_completeness_pct": verdict.universal_contract_completeness_pct,
+        "total_workloads_evaluated": verdict.total_workloads_evaluated,
+        "total_contracts_satisfied": verdict.total_contracts_satisfied,
+        "alpha_regime_ratio": verdict.alpha_regime_ratio,
+        "beta_regime_ratio": verdict.beta_regime_ratio,
+        "gamma_regime_ratio": verdict.gamma_regime_ratio,
+        "closure_theorem_verified": verdict.closure_theorem_verified,
+        "physical_hardware_equivalence": verdict.physical_hardware_equivalence,
+        "hardware_disadvantage_irrelevance_pct": verdict.hardware_disadvantage_irrelevance_pct,
+        "closure_status": verdict.closure_status,
+        "proof_basis": verdict.proof_basis,
+    }
+
+

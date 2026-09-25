@@ -36,6 +36,12 @@ from hyper_omega.hardware_bridge import (
     HardwareIrrelevanceReport,
     MicroHardwareOption,
 )
+from hyper_omega.universal_closure import (
+    UniversalClosureTheorem,
+    UniversalWorkloadClosureEngine,
+    UniversalClosureVerdict,
+    WorkloadRoutingDecision,
+)
 
 __all__ = [
     "ResultTaxonomy",
@@ -71,5 +77,10 @@ __all__ = [
     "SoftwareDefinedVirtualSilicon",
     "HardwareIrrelevanceReport",
     "MicroHardwareOption",
+    "UniversalClosureTheorem",
+    "UniversalWorkloadClosureEngine",
+    "UniversalClosureVerdict",
+    "WorkloadRoutingDecision",
 ]
+
 
