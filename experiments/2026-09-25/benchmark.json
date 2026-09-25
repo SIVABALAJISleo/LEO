@@ -1,0 +1,222 @@
+[
+  {
+    "experiment_id": "Exp_A",
+    "workload": "Matrix Computation (Chained GEMM)",
+    "reference_time_ms": 0.2413999754935503,
+    "candidate_time_ms": 0.022500054910779,
+    "speedup": 10.728861616151164,
+    "stats": {
+      "repetitions": 2,
+      "warmup_runs": 2,
+      "median_ms": 0.013949931599199772,
+      "mean_ms": 0.013949931599199772,
+      "stddev_ms": 0.00015005934983491898,
+      "min_ms": 0.013799872249364853,
+      "max_ms": 0.01409999094903469,
+      "ci95_low_ms": 0.01204324677762003,
+      "ci95_high_ms": 0.015856616420779516,
+      "samples_ms": [
+        0.013799872249364853,
+        0.01409999094903469
+      ]
+    }
+  },
+  {
+    "experiment_id": "Exp_B",
+    "workload": "Convolution (2D Conv + ReLU Fusion)",
+    "reference_time_ms": 9.277600096538663,
+    "candidate_time_ms": 5.02910022623837,
+    "speedup": 1.8447832970467672,
+    "stats": {
+      "repetitions": 2,
+      "warmup_runs": 2,
+      "median_ms": 4.903850145637989,
+      "mean_ms": 4.903850145637989,
+      "stddev_ms": 0.001250067725777626,
+      "min_ms": 4.902600077912211,
+      "max_ms": 4.905100213363767,
+      "ci95_low_ms": 4.887966529180174,
+      "ci95_high_ms": 4.919733762095804,
+      "samples_ms": [
+        4.902600077912211,
+        4.905100213363767
+      ]
+    }
+  },
+  {
+    "experiment_id": "Exp_C",
+    "workload": "FFT / Spectral Decomposition",
+    "reference_time_ms": 0.7519000209867954,
+    "candidate_time_ms": 0.05639996379613876,
+    "speedup": 13.331569213494278,
+    "stats": {
+      "repetitions": 2,
+      "warmup_runs": 2,
+      "median_ms": 0.044899992644786835,
+      "mean_ms": 0.044899992644786835,
+      "stddev_ms": 0.000800006091594696,
+      "min_ms": 0.04409998655319214,
+      "max_ms": 0.04569999873638153,
+      "ci95_low_ms": 0.0347349514547977,
+      "ci95_high_ms": 0.05506503383477597,
+      "samples_ms": [
+        0.04569999873638153,
+        0.04409998655319214
+      ]
+    }
+  },
+  {
+    "experiment_id": "Exp_D",
+    "workload": "Graph Computation (Sparse Adjacency)",
+    "reference_time_ms": 0.5228999070823193,
+    "candidate_time_ms": 0.18610013648867607,
+    "speedup": 2.8097771283157384,
+    "stats": {
+      "repetitions": 2,
+      "warmup_runs": 2,
+      "median_ms": 0.1959499204531312,
+      "mean_ms": 0.1959499204531312,
+      "stddev_ms": 0.024850131012499332,
+      "min_ms": 0.17109978944063187,
+      "max_ms": 0.22080005146563053,
+      "ci95_low_ms": -0.11980093191244945,
+      "ci95_high_ms": 0.5117007728187118,
+      "samples_ms": [
+        0.17109978944063187,
+        0.22080005146563053
+      ]
+    }
+  },
+  {
+    "experiment_id": "Exp_E",
+    "workload": "Cryptographic Hash (SHA-256)",
+    "reference_time_ms": 0.11679995805025101,
+    "candidate_time_ms": 0.01619989052414894,
+    "speedup": 7.209922676708155,
+    "stats": {
+      "repetitions": 2,
+      "warmup_runs": 2,
+      "median_ms": 0.0071999384090304375,
+      "mean_ms": 0.0071999384090304375,
+      "stddev_ms": 0.000100000761449337,
+      "min_ms": 0.0070999376475811005,
+      "max_ms": 0.0072999391704797745,
+      "ci95_low_ms": 0.005929308260281796,
+      "ci95_high_ms": 0.00847056855777908,
+      "samples_ms": [
+        0.0070999376475811005,
+        0.0072999391704797745
+      ]
+    }
+  },
+  {
+    "experiment_id": "Exp_F",
+    "workload": "Scientific Numerical ODE",
+    "reference_time_ms": 0.542299821972847,
+    "candidate_time_ms": 0.02519995905458927,
+    "speedup": 21.51986917114004,
+    "stats": {
+      "repetitions": 2,
+      "warmup_runs": 2,
+      "median_ms": 0.02164999023079872,
+      "mean_ms": 0.02164999023079872,
+      "stddev_ms": 5.005858838558197e-05,
+      "min_ms": 0.02159993164241314,
+      "max_ms": 0.021700048819184303,
+      "ci95_low_ms": 0.02101393555796762,
+      "ci95_high_ms": 0.02228604490362982,
+      "samples_ms": [
+        0.021700048819184303,
+        0.02159993164241314
+      ]
+    }
+  },
+  {
+    "experiment_id": "Exp_G",
+    "workload": "ML Inference (Projection + Dead Code)",
+    "reference_time_ms": 0.3909000661224127,
+    "candidate_time_ms": 0.024900073185563087,
+    "speedup": 15.69875169479639,
+    "stats": {
+      "repetitions": 2,
+      "warmup_runs": 2,
+      "median_ms": 0.017900019884109497,
+      "mean_ms": 0.017900019884109497,
+      "stddev_ms": 0.000800006091594696,
+      "min_ms": 0.0171000137925148,
+      "max_ms": 0.018700025975704193,
+      "ci95_low_ms": 0.007734978694120365,
+      "ci95_high_ms": 0.02806506107409863,
+      "samples_ms": [
+        0.0171000137925148,
+        0.018700025975704193
+      ]
+    }
+  },
+  {
+    "experiment_id": "Exp_H",
+    "workload": "Irregular Memory Access (Gather)",
+    "reference_time_ms": 0.5025002174079418,
+    "candidate_time_ms": 0.256099971011281,
+    "speedup": 1.9621252412629404,
+    "stats": {
+      "repetitions": 2,
+      "warmup_runs": 2,
+      "median_ms": 0.21365005522966385,
+      "mean_ms": 0.21365005522966385,
+      "stddev_ms": 0.002949964255094528,
+      "min_ms": 0.21070009097456932,
+      "max_ms": 0.21660001948475838,
+      "ci95_low_ms": 0.1761672054400357,
+      "ci95_high_ms": 0.251132905019292,
+      "samples_ms": [
+        0.21660001948475838,
+        0.21070009097456932
+      ]
+    }
+  },
+  {
+    "experiment_id": "Exp_I",
+    "workload": "Memory-Bound (STREAM Vector Triad)",
+    "reference_time_ms": 0.3249999135732651,
+    "candidate_time_ms": 0.1159000676125288,
+    "speedup": 2.804139119743987,
+    "stats": {
+      "repetitions": 2,
+      "warmup_runs": 2,
+      "median_ms": 0.04659988917410374,
+      "mean_ms": 0.04659988917410374,
+      "stddev_ms": 0.000400003045797348,
+      "min_ms": 0.04619988612830639,
+      "max_ms": 0.046999892219901085,
+      "ci95_low_ms": 0.04151736857910917,
+      "ci95_high_ms": 0.051682409769098304,
+      "samples_ms": [
+        0.046999892219901085,
+        0.04619988612830639
+      ]
+    }
+  },
+  {
+    "experiment_id": "Exp_J",
+    "workload": "Compute-Bound (Polynomial Horner)",
+    "reference_time_ms": 0.4102999810129404,
+    "candidate_time_ms": 0.027399975806474686,
+    "speedup": 14.97446508387009,
+    "stats": {
+      "repetitions": 2,
+      "warmup_runs": 2,
+      "median_ms": 0.018450082279741764,
+      "mean_ms": 0.018450082279741764,
+      "stddev_ms": 0.00044994521886110306,
+      "min_ms": 0.01800013706088066,
+      "max_ms": 0.018900027498602867,
+      "ci95_low_ms": 0.012732986208829657,
+      "ci95_high_ms": 0.02416717835065387,
+      "samples_ms": [
+        0.01800013706088066,
+        0.018900027498602867
+      ]
+    }
+  }
+]

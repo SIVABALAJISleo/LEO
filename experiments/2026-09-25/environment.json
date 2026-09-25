@@ -1,0 +1,17 @@
+{
+  "manifest_id": "manif_9e84e9d14b",
+  "git_commit": "f046e1bf8998b88e7833f8951a155b99346cedaf",
+  "os_info": "Windows-11-10.0.26100-SP0",
+  "python_version": "3.13.5",
+  "cpu_model": "13th Gen Intel(R) Core(TM) i5-13420H",
+  "igpu_model": "Intel(R) UHD Graphics",
+  "ram_bytes": 16857817088,
+  "random_seed": 42,
+  "input_hash": "a5ac5466c197139161a997cd4599e00dc466ff83a51d51d7ebc7735c66dd4f8a",
+  "workload_id": "exp_a_chained_gemm",
+  "candidate_id": "cand_reassoc_a05fa543",
+  "verification_passed": true,
+  "parity_classification": "NUMERICAL_PARITY",
+  "search_strategy": "A_STAR",
+  "timestamp": 1790359184.0783923
+}

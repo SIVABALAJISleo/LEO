@@ -1,0 +1,2146 @@
+[
+  {
+    "experiment_id": "Exp_A",
+    "workload": "Matrix Computation (Chained GEMM)",
+    "candidates_explored": 3,
+    "candidates_rejected": 1,
+    "candidates_verified": 2,
+    "best_pathway": {
+      "candidate_id": "cand_reassoc_a05fa543",
+      "parent_id": "cir_255ca182da31",
+      "transformation_history": [
+        "Reassociated (A @ B) @ C -> A @ (B @ C), reducing FLOPs from 196608 to 32768."
+      ],
+      "mathematical_assumptions": [
+        "Associativity of matrix multiplication: (A B) C = A (B C)."
+      ],
+      "validity_conditions": [
+        "Intermediate product (A @ B) is not required elsewhere."
+      ],
+      "estimated_cost": 32768.0,
+      "verification_status": "PASSED",
+      "is_counterfactual": false,
+      "verification_metrics": {
+        "passed": true,
+        "mode": "NUMERIC_TOLERANCE",
+        "violations": [],
+        "is_bit_exact": false,
+        "is_numeric_exact": false,
+        "max_abs_error": 4.57763671875e-05,
+        "relative_error": 2.2340593633575345e-07,
+        "max_ulp_diff": 1536,
+        "ref_hash": "1f814ffe47068da87d23c07634956437948749e2e2f967ade2a5a0a4bf1906ab",
+        "cand_hash": "92be735f8e55fb83bf7a83047c92b558ec174a9f3763fb4c9db021351a70daef",
+        "runtime_ms": 0.022500054910779,
+        "memory_mb": 0.0,
+        "parity_classification": "NUMERICAL_PARITY"
+      },
+      "graph": {
+        "graph_id": "cir_0b957c046668",
+        "name": "exp_a_chained_gemm_copy",
+        "inputs": [
+          "in_A_6f03e3",
+          "in_B_d688b6",
+          "in_C_feddfa"
+        ],
+        "outputs": [
+          "op_result_6c7504"
+        ],
+        "metadata": {},
+        "nodes": {
+          "in_A_6f03e3": {
+            "node_id": "in_A_6f03e3",
+            "name": "A",
+            "op_type": "CUSTOM",
+            "inputs": [],
+            "attributes": {
+              "is_input": true
+            },
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                64,
+                16
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 4096
+            },
+            "estimated_flops": 0.0,
+            "side_effects": false
+          },
+          "in_B_d688b6": {
+            "node_id": "in_B_d688b6",
+            "name": "B",
+            "op_type": "CUSTOM",
+            "inputs": [],
+            "attributes": {
+              "is_input": true
+            },
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                16,
+                64
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 4096
+            },
+            "estimated_flops": 0.0,
+            "side_effects": false
+          },
+          "in_C_feddfa": {
+            "node_id": "in_C_feddfa",
+            "name": "C",
+            "op_type": "CUSTOM",
+            "inputs": [],
+            "attributes": {
+              "is_input": true
+            },
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                64,
+                8
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 2048
+            },
+            "estimated_flops": 0.0,
+            "side_effects": false
+          },
+          "op_bc_8860_7e6db0": {
+            "node_id": "op_bc_8860_7e6db0",
+            "name": "bc_8860",
+            "op_type": "MATMUL",
+            "inputs": [
+              "in_B_d688b6",
+              "in_C_feddfa"
+            ],
+            "attributes": {},
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                16,
+                8
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 512
+            },
+            "estimated_flops": 16384.0,
+            "side_effects": false
+          },
+          "op_result_6c7504": {
+            "node_id": "op_result_6c7504",
+            "name": "result",
+            "op_type": "MATMUL",
+            "inputs": [
+              "in_A_6f03e3",
+              "op_bc_8860_7e6db0"
+            ],
+            "attributes": {},
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                64,
+                8
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 2048
+            },
+            "estimated_flops": 16384.0,
+            "side_effects": false
+          }
+        },
+        "edges": [
+          {
+            "source_id": "in_B_d688b6",
+            "target_id": "op_bc_8860_7e6db0",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": {
+              "shape": [
+                16,
+                64
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 4096
+            }
+          },
+          {
+            "source_id": "in_C_feddfa",
+            "target_id": "op_bc_8860_7e6db0",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 1,
+            "tensor_meta": {
+              "shape": [
+                64,
+                8
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 2048
+            }
+          },
+          {
+            "source_id": "in_A_6f03e3",
+            "target_id": "op_result_6c7504",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": {
+              "shape": [
+                64,
+                16
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 4096
+            }
+          },
+          {
+            "source_id": "op_bc_8860_7e6db0",
+            "target_id": "op_result_6c7504",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 1,
+            "tensor_meta": {
+              "shape": [
+                16,
+                8
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 512
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "experiment_id": "Exp_B",
+    "workload": "Convolution (2D Conv + ReLU Fusion)",
+    "candidates_explored": 2,
+    "candidates_rejected": 1,
+    "candidates_verified": 1,
+    "best_pathway": {
+      "candidate_id": "cand_baseline_3b96dd51",
+      "parent_id": null,
+      "transformation_history": [
+        "Original trusted reference pathway."
+      ],
+      "mathematical_assumptions": [],
+      "validity_conditions": [],
+      "estimated_cost": 1569.0,
+      "verification_status": "PASSED",
+      "is_counterfactual": false,
+      "verification_metrics": {},
+      "graph": {
+        "graph_id": "cir_40e3cc2a383e",
+        "name": "exp_b_conv2d_fused_copy",
+        "inputs": [
+          "in_X_5490a9",
+          "in_W_b5929e",
+          "in_bias_d92695"
+        ],
+        "outputs": [
+          "op_result_9b5f62"
+        ],
+        "metadata": {},
+        "nodes": {
+          "in_X_5490a9": {
+            "node_id": "in_X_5490a9",
+            "name": "X",
+            "op_type": "CUSTOM",
+            "inputs": [],
+            "attributes": {
+              "is_input": true
+            },
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                32,
+                32
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 4096
+            },
+            "estimated_flops": 0.0,
+            "side_effects": false
+          },
+          "in_W_b5929e": {
+            "node_id": "in_W_b5929e",
+            "name": "W",
+            "op_type": "CUSTOM",
+            "inputs": [],
+            "attributes": {
+              "is_input": true
+            },
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                5,
+                5
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 100
+            },
+            "estimated_flops": 0.0,
+            "side_effects": false
+          },
+          "in_bias_d92695": {
+            "node_id": "in_bias_d92695",
+            "name": "bias",
+            "op_type": "CUSTOM",
+            "inputs": [],
+            "attributes": {
+              "is_input": true
+            },
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                28,
+                28
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 3136
+            },
+            "estimated_flops": 0.0,
+            "side_effects": false
+          },
+          "op_conv_out_41488c": {
+            "node_id": "op_conv_out_41488c",
+            "name": "conv_out",
+            "op_type": "CONV2D",
+            "inputs": [
+              "in_X_5490a9",
+              "in_W_b5929e"
+            ],
+            "attributes": {},
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                28,
+                28
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 3136
+            },
+            "estimated_flops": 1.0,
+            "side_effects": false
+          },
+          "op_add_out_e00a1e": {
+            "node_id": "op_add_out_e00a1e",
+            "name": "add_out",
+            "op_type": "ADD",
+            "inputs": [
+              "op_conv_out_41488c",
+              "in_bias_d92695"
+            ],
+            "attributes": {},
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                28,
+                28
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 3136
+            },
+            "estimated_flops": 784.0,
+            "side_effects": false
+          },
+          "op_result_9b5f62": {
+            "node_id": "op_result_9b5f62",
+            "name": "result",
+            "op_type": "RELU",
+            "inputs": [
+              "op_add_out_e00a1e"
+            ],
+            "attributes": {},
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                28,
+                28
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 3136
+            },
+            "estimated_flops": 784.0,
+            "side_effects": false
+          }
+        },
+        "edges": [
+          {
+            "source_id": "in_X_5490a9",
+            "target_id": "op_conv_out_41488c",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": {
+              "shape": [
+                32,
+                32
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 4096
+            }
+          },
+          {
+            "source_id": "in_W_b5929e",
+            "target_id": "op_conv_out_41488c",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 1,
+            "tensor_meta": {
+              "shape": [
+                5,
+                5
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 100
+            }
+          },
+          {
+            "source_id": "op_conv_out_41488c",
+            "target_id": "op_add_out_e00a1e",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": {
+              "shape": [
+                28,
+                28
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 3136
+            }
+          },
+          {
+            "source_id": "in_bias_d92695",
+            "target_id": "op_add_out_e00a1e",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 1,
+            "tensor_meta": {
+              "shape": [
+                28,
+                28
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 3136
+            }
+          },
+          {
+            "source_id": "op_add_out_e00a1e",
+            "target_id": "op_result_9b5f62",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": {
+              "shape": [
+                28,
+                28
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 3136
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "experiment_id": "Exp_C",
+    "workload": "FFT / Spectral Decomposition",
+    "candidates_explored": 4,
+    "candidates_rejected": 2,
+    "candidates_verified": 2,
+    "best_pathway": {
+      "candidate_id": "cand_dce_b75c7243",
+      "parent_id": "cir_ce3138cfbe60",
+      "transformation_history": [
+        "Dead-operation elimination removed 1 unreferenced nodes."
+      ],
+      "mathematical_assumptions": [
+        "Unreferenced operations have no downstream dataflow dependency."
+      ],
+      "validity_conditions": [
+        "Outputs of removed nodes are not required by contract."
+      ],
+      "estimated_cost": 46081.0,
+      "verification_status": "PASSED",
+      "is_counterfactual": false,
+      "verification_metrics": {
+        "passed": true,
+        "mode": "NUMERIC_TOLERANCE",
+        "violations": [],
+        "is_bit_exact": true,
+        "is_numeric_exact": true,
+        "max_abs_error": 0.0,
+        "relative_error": 0.0,
+        "max_ulp_diff": 0,
+        "ref_hash": "4b1b63dfa8ed2690ae1b4a2bf5ddfafe52056947edfc7f430063986a113a28a5",
+        "cand_hash": "4b1b63dfa8ed2690ae1b4a2bf5ddfafe52056947edfc7f430063986a113a28a5",
+        "runtime_ms": 0.05639996379613876,
+        "memory_mb": 0.0,
+        "parity_classification": "NUMERICAL_PARITY"
+      },
+      "graph": {
+        "graph_id": "cir_5f1f4a443e72",
+        "name": "exp_c_fft_spectral_copy",
+        "inputs": [
+          "in_signal_2dd557"
+        ],
+        "outputs": [
+          "op_result_bb0ebd"
+        ],
+        "metadata": {},
+        "nodes": {
+          "in_signal_2dd557": {
+            "node_id": "in_signal_2dd557",
+            "name": "signal",
+            "op_type": "CUSTOM",
+            "inputs": [],
+            "attributes": {
+              "is_input": true
+            },
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                512
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 2048
+            },
+            "estimated_flops": 0.0,
+            "side_effects": false
+          },
+          "op_spectral_repr_7e4e21": {
+            "node_id": "op_spectral_repr_7e4e21",
+            "name": "spectral_repr",
+            "op_type": "FFT",
+            "inputs": [
+              "in_signal_2dd557"
+            ],
+            "attributes": {},
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                512
+              ],
+              "dtype": "COMPLEX64",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 4096
+            },
+            "estimated_flops": 23040.0,
+            "side_effects": false
+          },
+          "op_recon_complex_78249c": {
+            "node_id": "op_recon_complex_78249c",
+            "name": "recon_complex",
+            "op_type": "IFFT",
+            "inputs": [
+              "op_spectral_repr_7e4e21"
+            ],
+            "attributes": {},
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                512
+              ],
+              "dtype": "COMPLEX64",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 4096
+            },
+            "estimated_flops": 23040.0,
+            "side_effects": false
+          },
+          "op_result_bb0ebd": {
+            "node_id": "op_result_bb0ebd",
+            "name": "result",
+            "op_type": "ABS",
+            "inputs": [
+              "op_recon_complex_78249c"
+            ],
+            "attributes": {},
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                512
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 2048
+            },
+            "estimated_flops": 1.0,
+            "side_effects": false
+          }
+        },
+        "edges": [
+          {
+            "source_id": "in_signal_2dd557",
+            "target_id": "op_spectral_repr_7e4e21",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": {
+              "shape": [
+                512
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 2048
+            }
+          },
+          {
+            "source_id": "op_spectral_repr_7e4e21",
+            "target_id": "op_recon_complex_78249c",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": {
+              "shape": [
+                512
+              ],
+              "dtype": "COMPLEX64",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 4096
+            }
+          },
+          {
+            "source_id": "op_recon_complex_78249c",
+            "target_id": "op_result_bb0ebd",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": {
+              "shape": [
+                512
+              ],
+              "dtype": "COMPLEX64",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 4096
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "experiment_id": "Exp_D",
+    "workload": "Graph Computation (Sparse Adjacency)",
+    "candidates_explored": 2,
+    "candidates_rejected": 1,
+    "candidates_verified": 1,
+    "best_pathway": {
+      "candidate_id": "cand_baseline_6494f180",
+      "parent_id": null,
+      "transformation_history": [
+        "Original trusted reference pathway."
+      ],
+      "mathematical_assumptions": [],
+      "validity_conditions": [],
+      "estimated_cost": 1048576.0,
+      "verification_status": "PASSED",
+      "is_counterfactual": false,
+      "verification_metrics": {},
+      "graph": {
+        "graph_id": "cir_34b60388a7b6",
+        "name": "exp_d_graph_adjacency_copy",
+        "inputs": [
+          "in_adj_e75a7a",
+          "in_features_7a57f2"
+        ],
+        "outputs": [
+          "op_result_61f6de"
+        ],
+        "metadata": {},
+        "nodes": {
+          "in_adj_e75a7a": {
+            "node_id": "in_adj_e75a7a",
+            "name": "adj",
+            "op_type": "CUSTOM",
+            "inputs": [],
+            "attributes": {
+              "is_input": true
+            },
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                128,
+                128
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 65536
+            },
+            "estimated_flops": 0.0,
+            "side_effects": false
+          },
+          "in_features_7a57f2": {
+            "node_id": "in_features_7a57f2",
+            "name": "features",
+            "op_type": "CUSTOM",
+            "inputs": [],
+            "attributes": {
+              "is_input": true
+            },
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                128,
+                32
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 16384
+            },
+            "estimated_flops": 0.0,
+            "side_effects": false
+          },
+          "op_result_61f6de": {
+            "node_id": "op_result_61f6de",
+            "name": "result",
+            "op_type": "MATMUL",
+            "inputs": [
+              "in_adj_e75a7a",
+              "in_features_7a57f2"
+            ],
+            "attributes": {},
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                128,
+                32
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 16384
+            },
+            "estimated_flops": 1048576.0,
+            "side_effects": false
+          }
+        },
+        "edges": [
+          {
+            "source_id": "in_adj_e75a7a",
+            "target_id": "op_result_61f6de",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": {
+              "shape": [
+                128,
+                128
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 65536
+            }
+          },
+          {
+            "source_id": "in_features_7a57f2",
+            "target_id": "op_result_61f6de",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 1,
+            "tensor_meta": {
+              "shape": [
+                128,
+                32
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 16384
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "experiment_id": "Exp_E",
+    "workload": "Cryptographic Hash (SHA-256)",
+    "candidates_explored": 2,
+    "candidates_rejected": 1,
+    "candidates_verified": 1,
+    "best_pathway": {
+      "candidate_id": "cand_baseline_5e641352",
+      "parent_id": null,
+      "transformation_history": [
+        "Original trusted reference pathway."
+      ],
+      "mathematical_assumptions": [],
+      "validity_conditions": [],
+      "estimated_cost": 1.0,
+      "verification_status": "PASSED",
+      "is_counterfactual": false,
+      "verification_metrics": {},
+      "graph": {
+        "graph_id": "cir_e978f0a9a19b",
+        "name": "exp_e_cryptographic_hash_copy",
+        "inputs": [
+          "in_block_bytes_61e432"
+        ],
+        "outputs": [
+          "op_result_f48bf4"
+        ],
+        "metadata": {},
+        "nodes": {
+          "in_block_bytes_61e432": {
+            "node_id": "in_block_bytes_61e432",
+            "name": "block_bytes",
+            "op_type": "CUSTOM",
+            "inputs": [],
+            "attributes": {
+              "is_input": true
+            },
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                64
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 256
+            },
+            "estimated_flops": 0.0,
+            "side_effects": false
+          },
+          "op_result_f48bf4": {
+            "node_id": "op_result_f48bf4",
+            "name": "result",
+            "op_type": "REDUCE_SUM",
+            "inputs": [
+              "in_block_bytes_61e432"
+            ],
+            "attributes": {},
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                32
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 128
+            },
+            "estimated_flops": 1.0,
+            "side_effects": false
+          }
+        },
+        "edges": [
+          {
+            "source_id": "in_block_bytes_61e432",
+            "target_id": "op_result_f48bf4",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": {
+              "shape": [
+                64
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 256
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "experiment_id": "Exp_F",
+    "workload": "Scientific Numerical ODE",
+    "candidates_explored": 4,
+    "candidates_rejected": 2,
+    "candidates_verified": 2,
+    "best_pathway": {
+      "candidate_id": "cand_cse_35c77f9d",
+      "parent_id": "cir_1d72c632acd5",
+      "transformation_history": [
+        "Common-subexpression elimination merged 1 duplicate nodes."
+      ],
+      "mathematical_assumptions": [
+        "Operator is purely functional and deterministic without side-effects."
+      ],
+      "validity_conditions": [
+        "Identical inputs to deterministic operator yield bit-identical outputs."
+      ],
+      "estimated_cost": 322.0,
+      "verification_status": "PASSED",
+      "is_counterfactual": false,
+      "verification_metrics": {
+        "passed": true,
+        "mode": "NUMERIC_EXACT",
+        "violations": [],
+        "is_bit_exact": true,
+        "is_numeric_exact": true,
+        "max_abs_error": 0.0,
+        "relative_error": 0.0,
+        "max_ulp_diff": 0,
+        "ref_hash": "e09a08b9162ee493f112e1c78e9107963c3a1d6745d82ba26880ea5e1be62a34",
+        "cand_hash": "e09a08b9162ee493f112e1c78e9107963c3a1d6745d82ba26880ea5e1be62a34",
+        "runtime_ms": 0.02519995905458927,
+        "memory_mb": 0.0,
+        "parity_classification": "BIT_EXACT_COMPUTE_PARITY"
+      },
+      "graph": {
+        "graph_id": "cir_8a94631ace2d",
+        "name": "exp_f_scientific_ode_copy_copy",
+        "inputs": [
+          "in_x_9bd17c",
+          "in_one_3b6f83"
+        ],
+        "outputs": [
+          "op_result_23bab3"
+        ],
+        "metadata": {},
+        "nodes": {
+          "in_x_9bd17c": {
+            "node_id": "in_x_9bd17c",
+            "name": "x",
+            "op_type": "CUSTOM",
+            "inputs": [],
+            "attributes": {
+              "is_input": true
+            },
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                64
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 256
+            },
+            "estimated_flops": 0.0,
+            "side_effects": false
+          },
+          "in_one_3b6f83": {
+            "node_id": "in_one_3b6f83",
+            "name": "one",
+            "op_type": "CUSTOM",
+            "inputs": [],
+            "attributes": {
+              "is_input": true
+            },
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                64
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 256
+            },
+            "estimated_flops": 0.0,
+            "side_effects": false
+          },
+          "op_x2_d3619b": {
+            "node_id": "op_x2_d3619b",
+            "name": "x2",
+            "op_type": "MUL",
+            "inputs": [
+              "in_x_9bd17c",
+              "in_x_9bd17c"
+            ],
+            "attributes": {},
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                64
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 256
+            },
+            "estimated_flops": 64.0,
+            "side_effects": false
+          },
+          "op_factor1_1ffe5d": {
+            "node_id": "op_factor1_1ffe5d",
+            "name": "factor1",
+            "op_type": "ADD",
+            "inputs": [
+              "op_x2_d3619b",
+              "in_one_3b6f83"
+            ],
+            "attributes": {},
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                64
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 256
+            },
+            "estimated_flops": 64.0,
+            "side_effects": false
+          },
+          "op_exp_x_fbc835": {
+            "node_id": "op_exp_x_fbc835",
+            "name": "exp_x",
+            "op_type": "EXP",
+            "inputs": [
+              "in_x_9bd17c"
+            ],
+            "attributes": {},
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                64
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 256
+            },
+            "estimated_flops": 1.0,
+            "side_effects": false
+          },
+          "op_abs_x_ad84df": {
+            "node_id": "op_abs_x_ad84df",
+            "name": "abs_x",
+            "op_type": "ABS",
+            "inputs": [
+              "in_x_9bd17c"
+            ],
+            "attributes": {},
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                64
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 256
+            },
+            "estimated_flops": 1.0,
+            "side_effects": false
+          },
+          "op_t1_88799a": {
+            "node_id": "op_t1_88799a",
+            "name": "t1",
+            "op_type": "MUL",
+            "inputs": [
+              "op_factor1_1ffe5d",
+              "op_exp_x_fbc835"
+            ],
+            "attributes": {},
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                64
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 256
+            },
+            "estimated_flops": 64.0,
+            "side_effects": false
+          },
+          "op_t2_b5b641": {
+            "node_id": "op_t2_b5b641",
+            "name": "t2",
+            "op_type": "MUL",
+            "inputs": [
+              "op_factor1_1ffe5d",
+              "op_abs_x_ad84df"
+            ],
+            "attributes": {},
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                64
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 256
+            },
+            "estimated_flops": 64.0,
+            "side_effects": false
+          },
+          "op_result_23bab3": {
+            "node_id": "op_result_23bab3",
+            "name": "result",
+            "op_type": "ADD",
+            "inputs": [
+              "op_t1_88799a",
+              "op_t2_b5b641"
+            ],
+            "attributes": {},
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                64
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 256
+            },
+            "estimated_flops": 64.0,
+            "side_effects": false
+          }
+        },
+        "edges": [
+          {
+            "source_id": "in_x_9bd17c",
+            "target_id": "op_x2_d3619b",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": null
+          },
+          {
+            "source_id": "in_x_9bd17c",
+            "target_id": "op_x2_d3619b",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": null
+          },
+          {
+            "source_id": "op_x2_d3619b",
+            "target_id": "op_factor1_1ffe5d",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": null
+          },
+          {
+            "source_id": "in_one_3b6f83",
+            "target_id": "op_factor1_1ffe5d",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": null
+          },
+          {
+            "source_id": "in_x_9bd17c",
+            "target_id": "op_x2_d3619b",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": null
+          },
+          {
+            "source_id": "in_x_9bd17c",
+            "target_id": "op_x2_d3619b",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": null
+          },
+          {
+            "source_id": "op_x2_d3619b",
+            "target_id": "op_factor1_1ffe5d",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": null
+          },
+          {
+            "source_id": "in_one_3b6f83",
+            "target_id": "op_factor1_1ffe5d",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": null
+          },
+          {
+            "source_id": "in_x_9bd17c",
+            "target_id": "op_exp_x_fbc835",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": null
+          },
+          {
+            "source_id": "in_x_9bd17c",
+            "target_id": "op_abs_x_ad84df",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": null
+          },
+          {
+            "source_id": "op_factor1_1ffe5d",
+            "target_id": "op_t1_88799a",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": null
+          },
+          {
+            "source_id": "op_exp_x_fbc835",
+            "target_id": "op_t1_88799a",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": null
+          },
+          {
+            "source_id": "op_factor1_1ffe5d",
+            "target_id": "op_t2_b5b641",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": null
+          },
+          {
+            "source_id": "op_abs_x_ad84df",
+            "target_id": "op_t2_b5b641",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": null
+          },
+          {
+            "source_id": "op_t1_88799a",
+            "target_id": "op_result_23bab3",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": null
+          },
+          {
+            "source_id": "op_t2_b5b641",
+            "target_id": "op_result_23bab3",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": null
+          }
+        ]
+      }
+    }
+  },
+  {
+    "experiment_id": "Exp_G",
+    "workload": "ML Inference (Projection + Dead Code)",
+    "candidates_explored": 8,
+    "candidates_rejected": 6,
+    "candidates_verified": 2,
+    "best_pathway": {
+      "candidate_id": "cand_fuse_gemm_add_97e1d4c6",
+      "parent_id": "cir_cc0bfb24321c",
+      "transformation_history": [
+        "Fused MATMUL 'proj' and ADD 'biased' into FUSED_GEMM_ADD."
+      ],
+      "mathematical_assumptions": [
+        "Associativity and distributivity of matrix addition."
+      ],
+      "validity_conditions": [
+        "Intermediate GEMM result not needed by external consumer."
+      ],
+      "estimated_cost": 56576.0,
+      "verification_status": "PASSED",
+      "is_counterfactual": false,
+      "verification_metrics": {
+        "passed": true,
+        "mode": "NUMERIC_EXACT",
+        "violations": [],
+        "is_bit_exact": true,
+        "is_numeric_exact": true,
+        "max_abs_error": 0.0,
+        "relative_error": 0.0,
+        "max_ulp_diff": 0,
+        "ref_hash": "9b474b4e8acf780d59526c8d6649417b0166bacc1f6a5f1db8d3981113687daa",
+        "cand_hash": "9b474b4e8acf780d59526c8d6649417b0166bacc1f6a5f1db8d3981113687daa",
+        "runtime_ms": 0.024900073185563087,
+        "memory_mb": 0.0,
+        "parity_classification": "BIT_EXACT_COMPUTE_PARITY"
+      },
+      "graph": {
+        "graph_id": "cir_a0b9a099e23f",
+        "name": "exp_g_ml_inference_copy",
+        "inputs": [
+          "in_x_6a31de",
+          "in_w_816021",
+          "in_b_9980a3"
+        ],
+        "outputs": [
+          "op_result_088a41"
+        ],
+        "metadata": {},
+        "nodes": {
+          "in_x_6a31de": {
+            "node_id": "in_x_6a31de",
+            "name": "x",
+            "op_type": "CUSTOM",
+            "inputs": [],
+            "attributes": {
+              "is_input": true
+            },
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                16,
+                64
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 4096
+            },
+            "estimated_flops": 0.0,
+            "side_effects": false
+          },
+          "in_w_816021": {
+            "node_id": "in_w_816021",
+            "name": "w",
+            "op_type": "CUSTOM",
+            "inputs": [],
+            "attributes": {
+              "is_input": true
+            },
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                64,
+                32
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 8192
+            },
+            "estimated_flops": 0.0,
+            "side_effects": false
+          },
+          "in_b_9980a3": {
+            "node_id": "in_b_9980a3",
+            "name": "b",
+            "op_type": "CUSTOM",
+            "inputs": [],
+            "attributes": {
+              "is_input": true
+            },
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                16,
+                32
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 2048
+            },
+            "estimated_flops": 0.0,
+            "side_effects": false
+          },
+          "op_result_088a41": {
+            "node_id": "op_result_088a41",
+            "name": "result",
+            "op_type": "RELU",
+            "inputs": [
+              "fused_gemm_add_f20982"
+            ],
+            "attributes": {},
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                16,
+                32
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 2048
+            },
+            "estimated_flops": 512.0,
+            "side_effects": false
+          },
+          "fused_gemm_add_f20982": {
+            "node_id": "fused_gemm_add_f20982",
+            "name": "fused_proj_biased",
+            "op_type": "FUSED_GEMM_ADD",
+            "inputs": [
+              "in_x_6a31de",
+              "in_w_816021",
+              "in_b_9980a3"
+            ],
+            "attributes": {},
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                16,
+                32
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 2048
+            },
+            "estimated_flops": 66048.0,
+            "side_effects": false
+          }
+        },
+        "edges": []
+      }
+    }
+  },
+  {
+    "experiment_id": "Exp_H",
+    "workload": "Irregular Memory Access (Gather)",
+    "candidates_explored": 2,
+    "candidates_rejected": 1,
+    "candidates_verified": 1,
+    "best_pathway": {
+      "candidate_id": "cand_baseline_719cea53",
+      "parent_id": null,
+      "transformation_history": [
+        "Original trusted reference pathway."
+      ],
+      "mathematical_assumptions": [],
+      "validity_conditions": [],
+      "estimated_cost": 1.0,
+      "verification_status": "PASSED",
+      "is_counterfactual": false,
+      "verification_metrics": {},
+      "graph": {
+        "graph_id": "cir_e9d66a89456d",
+        "name": "exp_h_irregular_gather_copy",
+        "inputs": [
+          "in_table_8407a5"
+        ],
+        "outputs": [
+          "op_result_221301"
+        ],
+        "metadata": {},
+        "nodes": {
+          "in_table_8407a5": {
+            "node_id": "in_table_8407a5",
+            "name": "table",
+            "op_type": "CUSTOM",
+            "inputs": [],
+            "attributes": {
+              "is_input": true
+            },
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                512,
+                16
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 32768
+            },
+            "estimated_flops": 0.0,
+            "side_effects": false
+          },
+          "op_result_221301": {
+            "node_id": "op_result_221301",
+            "name": "result",
+            "op_type": "REDUCE_SUM",
+            "inputs": [
+              "in_table_8407a5"
+            ],
+            "attributes": {},
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                64,
+                16
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 4096
+            },
+            "estimated_flops": 1.0,
+            "side_effects": false
+          }
+        },
+        "edges": [
+          {
+            "source_id": "in_table_8407a5",
+            "target_id": "op_result_221301",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": {
+              "shape": [
+                512,
+                16
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 32768
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "experiment_id": "Exp_I",
+    "workload": "Memory-Bound (STREAM Vector Triad)",
+    "candidates_explored": 2,
+    "candidates_rejected": 1,
+    "candidates_verified": 1,
+    "best_pathway": {
+      "candidate_id": "cand_baseline_e7f075e5",
+      "parent_id": null,
+      "transformation_history": [
+        "Original trusted reference pathway."
+      ],
+      "mathematical_assumptions": [],
+      "validity_conditions": [],
+      "estimated_cost": 131072.0,
+      "verification_status": "PASSED",
+      "is_counterfactual": false,
+      "verification_metrics": {},
+      "graph": {
+        "graph_id": "cir_8eae5986062e",
+        "name": "exp_i_stream_triad_copy",
+        "inputs": [
+          "in_A_378fbc",
+          "in_B_5d8d90",
+          "in_scalar_c95d64"
+        ],
+        "outputs": [
+          "op_result_603e5b"
+        ],
+        "metadata": {},
+        "nodes": {
+          "in_A_378fbc": {
+            "node_id": "in_A_378fbc",
+            "name": "A",
+            "op_type": "CUSTOM",
+            "inputs": [],
+            "attributes": {
+              "is_input": true
+            },
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                65536
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 262144
+            },
+            "estimated_flops": 0.0,
+            "side_effects": false
+          },
+          "in_B_5d8d90": {
+            "node_id": "in_B_5d8d90",
+            "name": "B",
+            "op_type": "CUSTOM",
+            "inputs": [],
+            "attributes": {
+              "is_input": true
+            },
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                65536
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 262144
+            },
+            "estimated_flops": 0.0,
+            "side_effects": false
+          },
+          "in_scalar_c95d64": {
+            "node_id": "in_scalar_c95d64",
+            "name": "scalar",
+            "op_type": "CUSTOM",
+            "inputs": [],
+            "attributes": {
+              "is_input": true
+            },
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                65536
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 262144
+            },
+            "estimated_flops": 0.0,
+            "side_effects": false
+          },
+          "op_scaled_4ef25e": {
+            "node_id": "op_scaled_4ef25e",
+            "name": "scaled",
+            "op_type": "MUL",
+            "inputs": [
+              "in_B_5d8d90",
+              "in_scalar_c95d64"
+            ],
+            "attributes": {},
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                65536
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 262144
+            },
+            "estimated_flops": 65536.0,
+            "side_effects": false
+          },
+          "op_result_603e5b": {
+            "node_id": "op_result_603e5b",
+            "name": "result",
+            "op_type": "ADD",
+            "inputs": [
+              "in_A_378fbc",
+              "op_scaled_4ef25e"
+            ],
+            "attributes": {},
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                65536
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 262144
+            },
+            "estimated_flops": 65536.0,
+            "side_effects": false
+          }
+        },
+        "edges": [
+          {
+            "source_id": "in_B_5d8d90",
+            "target_id": "op_scaled_4ef25e",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": {
+              "shape": [
+                65536
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 262144
+            }
+          },
+          {
+            "source_id": "in_scalar_c95d64",
+            "target_id": "op_scaled_4ef25e",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 1,
+            "tensor_meta": {
+              "shape": [
+                65536
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 262144
+            }
+          },
+          {
+            "source_id": "in_A_378fbc",
+            "target_id": "op_result_603e5b",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": {
+              "shape": [
+                65536
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 262144
+            }
+          },
+          {
+            "source_id": "op_scaled_4ef25e",
+            "target_id": "op_result_603e5b",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 1,
+            "tensor_meta": {
+              "shape": [
+                65536
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 262144
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "experiment_id": "Exp_J",
+    "workload": "Compute-Bound (Polynomial Horner)",
+    "candidates_explored": 2,
+    "candidates_rejected": 1,
+    "candidates_verified": 1,
+    "best_pathway": {
+      "candidate_id": "cand_baseline_03d7b47d",
+      "parent_id": null,
+      "transformation_history": [
+        "Original trusted reference pathway."
+      ],
+      "mathematical_assumptions": [],
+      "validity_conditions": [],
+      "estimated_cost": 5120.0,
+      "verification_status": "PASSED",
+      "is_counterfactual": false,
+      "verification_metrics": {},
+      "graph": {
+        "graph_id": "cir_bd855e236dfb",
+        "name": "exp_j_compute_polynomial_copy",
+        "inputs": [
+          "in_x_e74789",
+          "in_c0_4d4e3c",
+          "in_c1_0df5d4",
+          "in_c2_acc88b"
+        ],
+        "outputs": [
+          "op_result_4d8a98"
+        ],
+        "metadata": {},
+        "nodes": {
+          "in_x_e74789": {
+            "node_id": "in_x_e74789",
+            "name": "x",
+            "op_type": "CUSTOM",
+            "inputs": [],
+            "attributes": {
+              "is_input": true
+            },
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                1024
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 4096
+            },
+            "estimated_flops": 0.0,
+            "side_effects": false
+          },
+          "in_c0_4d4e3c": {
+            "node_id": "in_c0_4d4e3c",
+            "name": "c0",
+            "op_type": "CUSTOM",
+            "inputs": [],
+            "attributes": {
+              "is_input": true
+            },
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                1024
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 4096
+            },
+            "estimated_flops": 0.0,
+            "side_effects": false
+          },
+          "in_c1_0df5d4": {
+            "node_id": "in_c1_0df5d4",
+            "name": "c1",
+            "op_type": "CUSTOM",
+            "inputs": [],
+            "attributes": {
+              "is_input": true
+            },
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                1024
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 4096
+            },
+            "estimated_flops": 0.0,
+            "side_effects": false
+          },
+          "in_c2_acc88b": {
+            "node_id": "in_c2_acc88b",
+            "name": "c2",
+            "op_type": "CUSTOM",
+            "inputs": [],
+            "attributes": {
+              "is_input": true
+            },
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                1024
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 4096
+            },
+            "estimated_flops": 0.0,
+            "side_effects": false
+          },
+          "op_x2_a7a802": {
+            "node_id": "op_x2_a7a802",
+            "name": "x2",
+            "op_type": "MUL",
+            "inputs": [
+              "in_x_e74789",
+              "in_x_e74789"
+            ],
+            "attributes": {},
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                1024
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 4096
+            },
+            "estimated_flops": 1024.0,
+            "side_effects": false
+          },
+          "op_t1_6f5bd7": {
+            "node_id": "op_t1_6f5bd7",
+            "name": "t1",
+            "op_type": "MUL",
+            "inputs": [
+              "in_c1_0df5d4",
+              "in_x_e74789"
+            ],
+            "attributes": {},
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                1024
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 4096
+            },
+            "estimated_flops": 1024.0,
+            "side_effects": false
+          },
+          "op_t2_a244de": {
+            "node_id": "op_t2_a244de",
+            "name": "t2",
+            "op_type": "MUL",
+            "inputs": [
+              "in_c2_acc88b",
+              "op_x2_a7a802"
+            ],
+            "attributes": {},
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                1024
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 4096
+            },
+            "estimated_flops": 1024.0,
+            "side_effects": false
+          },
+          "op_sum1_d46050": {
+            "node_id": "op_sum1_d46050",
+            "name": "sum1",
+            "op_type": "ADD",
+            "inputs": [
+              "in_c0_4d4e3c",
+              "op_t1_6f5bd7"
+            ],
+            "attributes": {},
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                1024
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 4096
+            },
+            "estimated_flops": 1024.0,
+            "side_effects": false
+          },
+          "op_result_4d8a98": {
+            "node_id": "op_result_4d8a98",
+            "name": "result",
+            "op_type": "ADD",
+            "inputs": [
+              "op_sum1_d46050",
+              "op_t2_a244de"
+            ],
+            "attributes": {},
+            "constant_value": null,
+            "output_meta": {
+              "shape": [
+                1024
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 4096
+            },
+            "estimated_flops": 1024.0,
+            "side_effects": false
+          }
+        },
+        "edges": [
+          {
+            "source_id": "in_x_e74789",
+            "target_id": "op_x2_a7a802",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": {
+              "shape": [
+                1024
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 4096
+            }
+          },
+          {
+            "source_id": "in_x_e74789",
+            "target_id": "op_x2_a7a802",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 1,
+            "tensor_meta": {
+              "shape": [
+                1024
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 4096
+            }
+          },
+          {
+            "source_id": "in_c1_0df5d4",
+            "target_id": "op_t1_6f5bd7",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": {
+              "shape": [
+                1024
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 4096
+            }
+          },
+          {
+            "source_id": "in_x_e74789",
+            "target_id": "op_t1_6f5bd7",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 1,
+            "tensor_meta": {
+              "shape": [
+                1024
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 4096
+            }
+          },
+          {
+            "source_id": "in_c2_acc88b",
+            "target_id": "op_t2_a244de",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": {
+              "shape": [
+                1024
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 4096
+            }
+          },
+          {
+            "source_id": "op_x2_a7a802",
+            "target_id": "op_t2_a244de",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 1,
+            "tensor_meta": {
+              "shape": [
+                1024
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 4096
+            }
+          },
+          {
+            "source_id": "in_c0_4d4e3c",
+            "target_id": "op_sum1_d46050",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": {
+              "shape": [
+                1024
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 4096
+            }
+          },
+          {
+            "source_id": "op_t1_6f5bd7",
+            "target_id": "op_sum1_d46050",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 1,
+            "tensor_meta": {
+              "shape": [
+                1024
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 4096
+            }
+          },
+          {
+            "source_id": "op_sum1_d46050",
+            "target_id": "op_result_4d8a98",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 0,
+            "tensor_meta": {
+              "shape": [
+                1024
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 4096
+            }
+          },
+          {
+            "source_id": "op_t2_a244de",
+            "target_id": "op_result_4d8a98",
+            "edge_type": "DATA",
+            "source_output_idx": 0,
+            "target_input_idx": 1,
+            "tensor_meta": {
+              "shape": [
+                1024
+              ],
+              "dtype": "FP32",
+              "is_sparse": false,
+              "sparsity_ratio": 0.0,
+              "memory_bytes": 4096
+            }
+          }
+        ]
+      }
+    }
+  }
+]

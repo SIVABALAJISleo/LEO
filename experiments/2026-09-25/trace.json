@@ -1,0 +1,372 @@
+[
+  {
+    "experiment_id": "Exp_A",
+    "workload": "Matrix Computation (Chained GEMM)",
+    "trace": [
+      {
+        "step_index": 1,
+        "candidate_id": "cand_baseline_956912e1",
+        "parent_id": null,
+        "action": "VERIFIED_PASS",
+        "cost_score": 196608.0,
+        "correctness_score": 1.0,
+        "reason": "Baseline trusted reference established.",
+        "timestamp": 1790359183.9572475
+      },
+      {
+        "step_index": 2,
+        "candidate_id": "cand_reassoc_a05fa543",
+        "parent_id": "cir_255ca182da31",
+        "action": "VERIFIED_PASS",
+        "cost_score": 32768.0,
+        "correctness_score": 1.0,
+        "reason": "Passed independent verification (NUMERICAL_PARITY). Cost: 32768",
+        "timestamp": 1790359183.9586246
+      },
+      {
+        "step_index": 3,
+        "candidate_id": "cand_baseline_cir_255c",
+        "parent_id": null,
+        "action": "PRUNED_COST",
+        "cost_score": 196608.0,
+        "correctness_score": 0.0,
+        "reason": "Estimated cost 196608 >= current best 32768",
+        "timestamp": 1790359183.9586315
+      }
+    ]
+  },
+  {
+    "experiment_id": "Exp_B",
+    "workload": "Convolution (2D Conv + ReLU Fusion)",
+    "trace": [
+      {
+        "step_index": 1,
+        "candidate_id": "cand_baseline_3b96dd51",
+        "parent_id": null,
+        "action": "VERIFIED_PASS",
+        "cost_score": 1569.0,
+        "correctness_score": 1.0,
+        "reason": "Baseline trusted reference established.",
+        "timestamp": 1790359184.0937803
+      },
+      {
+        "step_index": 2,
+        "candidate_id": "cand_baseline_cir_4b0f",
+        "parent_id": null,
+        "action": "PRUNED_COST",
+        "cost_score": 1569.0,
+        "correctness_score": 0.0,
+        "reason": "Estimated cost 1569 >= current best 1569",
+        "timestamp": 1790359184.1052833
+      }
+    ]
+  },
+  {
+    "experiment_id": "Exp_C",
+    "workload": "FFT / Spectral Decomposition",
+    "trace": [
+      {
+        "step_index": 1,
+        "candidate_id": "cand_baseline_1ffaadec",
+        "parent_id": null,
+        "action": "VERIFIED_PASS",
+        "cost_score": 46082.0,
+        "correctness_score": 1.0,
+        "reason": "Baseline trusted reference established.",
+        "timestamp": 1790359184.2188413
+      },
+      {
+        "step_index": 2,
+        "candidate_id": "cand_dce_b75c7243",
+        "parent_id": "cir_ce3138cfbe60",
+        "action": "VERIFIED_PASS",
+        "cost_score": 46081.0,
+        "correctness_score": 1.0,
+        "reason": "Passed independent verification (NUMERICAL_PARITY). Cost: 46081",
+        "timestamp": 1790359184.2218676
+      },
+      {
+        "step_index": 3,
+        "candidate_id": "cand_cf_omit_26485852",
+        "parent_id": "cir_ce3138cfbe60",
+        "action": "PRUNED_COST",
+        "cost_score": 46081.0,
+        "correctness_score": 0.0,
+        "reason": "Estimated cost 46081 >= current best 46081",
+        "timestamp": 1790359184.2218745
+      },
+      {
+        "step_index": 4,
+        "candidate_id": "cand_baseline_cir_ce31",
+        "parent_id": null,
+        "action": "PRUNED_COST",
+        "cost_score": 46082.0,
+        "correctness_score": 0.0,
+        "reason": "Estimated cost 46082 >= current best 46081",
+        "timestamp": 1790359184.2218783
+      }
+    ]
+  },
+  {
+    "experiment_id": "Exp_D",
+    "workload": "Graph Computation (Sparse Adjacency)",
+    "trace": [
+      {
+        "step_index": 1,
+        "candidate_id": "cand_baseline_6494f180",
+        "parent_id": null,
+        "action": "VERIFIED_PASS",
+        "cost_score": 1048576.0,
+        "correctness_score": 1.0,
+        "reason": "Baseline trusted reference established.",
+        "timestamp": 1790359184.3862066
+      },
+      {
+        "step_index": 2,
+        "candidate_id": "cand_baseline_cir_4ae9",
+        "parent_id": null,
+        "action": "PRUNED_COST",
+        "cost_score": 1048576.0,
+        "correctness_score": 0.0,
+        "reason": "Estimated cost 1048576 >= current best 1048576",
+        "timestamp": 1790359184.3868423
+      }
+    ]
+  },
+  {
+    "experiment_id": "Exp_E",
+    "workload": "Cryptographic Hash (SHA-256)",
+    "trace": [
+      {
+        "step_index": 1,
+        "candidate_id": "cand_baseline_5e641352",
+        "parent_id": null,
+        "action": "VERIFIED_PASS",
+        "cost_score": 1.0,
+        "correctness_score": 1.0,
+        "reason": "Baseline trusted reference established.",
+        "timestamp": 1790359184.4890924
+      },
+      {
+        "step_index": 2,
+        "candidate_id": "cand_baseline_cir_929c",
+        "parent_id": null,
+        "action": "PRUNED_COST",
+        "cost_score": 1.0,
+        "correctness_score": 0.0,
+        "reason": "Estimated cost 1 >= current best 1",
+        "timestamp": 1790359184.4892647
+      }
+    ]
+  },
+  {
+    "experiment_id": "Exp_F",
+    "workload": "Scientific Numerical ODE",
+    "trace": [
+      {
+        "step_index": 1,
+        "candidate_id": "cand_baseline_eb4cf038",
+        "parent_id": null,
+        "action": "VERIFIED_PASS",
+        "cost_score": 450.0,
+        "correctness_score": 1.0,
+        "reason": "Baseline trusted reference established.",
+        "timestamp": 1790359184.581611
+      },
+      {
+        "step_index": 2,
+        "candidate_id": "cand_cse_35c77f9d",
+        "parent_id": "cir_1d72c632acd5",
+        "action": "VERIFIED_PASS",
+        "cost_score": 322.0,
+        "correctness_score": 1.0,
+        "reason": "Passed independent verification (BIT_EXACT_COMPUTE_PARITY). Cost: 322",
+        "timestamp": 1790359184.5891068
+      },
+      {
+        "step_index": 3,
+        "candidate_id": "cand_cse_51a863ea",
+        "parent_id": "cir_23d1ba75f7fa",
+        "action": "PRUNED_COST",
+        "cost_score": 386.0,
+        "correctness_score": 0.0,
+        "reason": "Estimated cost 386 >= current best 322",
+        "timestamp": 1790359184.5891125
+      },
+      {
+        "step_index": 4,
+        "candidate_id": "cand_baseline_cir_23d1",
+        "parent_id": null,
+        "action": "PRUNED_COST",
+        "cost_score": 450.0,
+        "correctness_score": 0.0,
+        "reason": "Estimated cost 450 >= current best 322",
+        "timestamp": 1790359184.5891159
+      }
+    ]
+  },
+  {
+    "experiment_id": "Exp_G",
+    "workload": "ML Inference (Projection + Dead Code)",
+    "trace": [
+      {
+        "step_index": 1,
+        "candidate_id": "cand_baseline_2677f499",
+        "parent_id": null,
+        "action": "VERIFIED_PASS",
+        "cost_score": 66562.0,
+        "correctness_score": 1.0,
+        "reason": "Baseline trusted reference established.",
+        "timestamp": 1790359184.6865761
+      },
+      {
+        "step_index": 2,
+        "candidate_id": "cand_fuse_gemm_add_97e1d4c6",
+        "parent_id": "cir_cc0bfb24321c",
+        "action": "VERIFIED_PASS",
+        "cost_score": 56576.0,
+        "correctness_score": 1.0,
+        "reason": "Passed independent verification (BIT_EXACT_COMPUTE_PARITY). Cost: 56576",
+        "timestamp": 1790359184.6900682
+      },
+      {
+        "step_index": 3,
+        "candidate_id": "cand_fuse_gemm_add_2efec01c",
+        "parent_id": "cir_0bb5c1bf92e5",
+        "action": "PRUNED_COST",
+        "cost_score": 56576.0,
+        "correctness_score": 0.0,
+        "reason": "Estimated cost 56576 >= current best 56576",
+        "timestamp": 1790359184.6900728
+      },
+      {
+        "step_index": 4,
+        "candidate_id": "cand_cf_omit_1411555e",
+        "parent_id": "cir_cc0bfb24321c",
+        "action": "PRUNED_COST",
+        "cost_score": 66048.0,
+        "correctness_score": 0.0,
+        "reason": "Estimated cost 66048 >= current best 56576",
+        "timestamp": 1790359184.6900752
+      },
+      {
+        "step_index": 5,
+        "candidate_id": "cand_dce_4419ebda",
+        "parent_id": "cir_cc0bfb24321c",
+        "action": "PRUNED_COST",
+        "cost_score": 66560.0,
+        "correctness_score": 0.0,
+        "reason": "Estimated cost 66560 >= current best 56576",
+        "timestamp": 1790359184.6900778
+      },
+      {
+        "step_index": 6,
+        "candidate_id": "cand_cf_omit_fe6c3fab",
+        "parent_id": "cir_cc0bfb24321c",
+        "action": "PRUNED_COST",
+        "cost_score": 66560.0,
+        "correctness_score": 0.0,
+        "reason": "Estimated cost 66560 >= current best 56576",
+        "timestamp": 1790359184.6900802
+      },
+      {
+        "step_index": 7,
+        "candidate_id": "cand_cf_omit_0cd82f0b",
+        "parent_id": "cir_cc0bfb24321c",
+        "action": "PRUNED_COST",
+        "cost_score": 66560.0,
+        "correctness_score": 0.0,
+        "reason": "Estimated cost 66560 >= current best 56576",
+        "timestamp": 1790359184.690082
+      },
+      {
+        "step_index": 8,
+        "candidate_id": "cand_baseline_cir_cc0b",
+        "parent_id": null,
+        "action": "PRUNED_COST",
+        "cost_score": 66562.0,
+        "correctness_score": 0.0,
+        "reason": "Estimated cost 66562 >= current best 56576",
+        "timestamp": 1790359184.690084
+      }
+    ]
+  },
+  {
+    "experiment_id": "Exp_H",
+    "workload": "Irregular Memory Access (Gather)",
+    "trace": [
+      {
+        "step_index": 1,
+        "candidate_id": "cand_baseline_719cea53",
+        "parent_id": null,
+        "action": "VERIFIED_PASS",
+        "cost_score": 1.0,
+        "correctness_score": 1.0,
+        "reason": "Baseline trusted reference established.",
+        "timestamp": 1790359184.8526962
+      },
+      {
+        "step_index": 2,
+        "candidate_id": "cand_baseline_cir_7edb",
+        "parent_id": null,
+        "action": "PRUNED_COST",
+        "cost_score": 1.0,
+        "correctness_score": 0.0,
+        "reason": "Estimated cost 1 >= current best 1",
+        "timestamp": 1790359184.8531713
+      }
+    ]
+  },
+  {
+    "experiment_id": "Exp_I",
+    "workload": "Memory-Bound (STREAM Vector Triad)",
+    "trace": [
+      {
+        "step_index": 1,
+        "candidate_id": "cand_baseline_e7f075e5",
+        "parent_id": null,
+        "action": "VERIFIED_PASS",
+        "cost_score": 131072.0,
+        "correctness_score": 1.0,
+        "reason": "Baseline trusted reference established.",
+        "timestamp": 1790359184.9563007
+      },
+      {
+        "step_index": 2,
+        "candidate_id": "cand_baseline_cir_f506",
+        "parent_id": null,
+        "action": "PRUNED_COST",
+        "cost_score": 131072.0,
+        "correctness_score": 0.0,
+        "reason": "Estimated cost 131072 >= current best 131072",
+        "timestamp": 1790359184.957006
+      }
+    ]
+  },
+  {
+    "experiment_id": "Exp_J",
+    "workload": "Compute-Bound (Polynomial Horner)",
+    "trace": [
+      {
+        "step_index": 1,
+        "candidate_id": "cand_baseline_03d7b47d",
+        "parent_id": null,
+        "action": "VERIFIED_PASS",
+        "cost_score": 5120.0,
+        "correctness_score": 1.0,
+        "reason": "Baseline trusted reference established.",
+        "timestamp": 1790359185.0542974
+      },
+      {
+        "step_index": 2,
+        "candidate_id": "cand_baseline_cir_4f2f",
+        "parent_id": null,
+        "action": "PRUNED_COST",
+        "cost_score": 5120.0,
+        "correctness_score": 0.0,
+        "reason": "Estimated cost 5120 >= current best 5120",
+        "timestamp": 1790359185.0563147
+      }
+    ]
+  }
+]

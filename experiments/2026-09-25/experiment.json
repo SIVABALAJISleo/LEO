@@ -1,0 +1,660 @@
+[
+  {
+    "experiment_id": "Exp_A",
+    "workload_name": "Matrix Computation (Chained GEMM)",
+    "description": "exp_a_chained_gemm",
+    "category": "Dense Linear Algebra",
+    "contract_mode": "NUMERIC_TOLERANCE",
+    "is_shortcut_found": true,
+    "status_message": "SHORTCUT_DISCOVERED",
+    "verification_passed": true,
+    "exactness_parity": "NUMERICAL_PARITY",
+    "hardware_parity": "NO_HARDWARE_PARITY",
+    "speedup": 10.728861616151164,
+    "reference_time_ms": 0.2413999754935503,
+    "candidate_time_ms": 0.022500054910779,
+    "eliminated_operations": 163840,
+    "memory_delta_mb": 0.0,
+    "search_trace_count": 3,
+    "proof_record": {
+      "workload_id": "exp_a_chained_gemm",
+      "candidate_id": "cand_reassoc_a05fa543",
+      "reference_hash": "1f814ffe47068da87d23c07634956437948749e2e2f967ade2a5a0a4bf1906ab",
+      "candidate_hash": "92be735f8e55fb83bf7a83047c92b558ec174a9f3763fb4c9db021351a70daef",
+      "exactness_mode": "NUMERIC_TOLERANCE",
+      "candidate_operations": 32768.0,
+      "reference_operations": 196608.0,
+      "candidate_runtime_ms": 0.022500054910779,
+      "reference_runtime_ms": 0.2413999754935503,
+      "speedup": 10.728861616151164,
+      "transformation_chain": [
+        "Reassociated (A @ B) @ C -> A @ (B @ C), reducing FLOPs from 196608 to 32768."
+      ],
+      "verification": "PASSED",
+      "independent_verification": "PASSED",
+      "parity_classification": "NUMERICAL_PARITY",
+      "explanation": {
+        "why_valid": "Candidate passed independent reference verification under contract mode 'NUMERIC_TOLERANCE'. Error metrics: max_abs=4.58e-05, relative_error=2.23e-07.",
+        "why_cheaper": "Computational operations reduced from 196608 to 32768 FLOPs (83.3% reduction) via: Reassociated (A @ B) @ C -> A @ (B @ C), reducing FLOPs from 196608 to 32768..",
+        "computation_eliminated": "Eliminated 163840 FLOPs of redundant or suboptimally ordered operations.",
+        "assumptions_used": [
+          "Associativity of matrix multiplication: (A B) C = A (B C)."
+        ],
+        "falsification_conditions": [
+          "Inputs outside specified domain bounds.",
+          "Non-associative numerical floating-point accumulation exceeding contract tolerance.",
+          "Contract mode escalated to BIT_EXACT when mathematical formulation involves floating-point reordering."
+        ]
+      },
+      "pathway_ascii_diff": "ORIGINAL PATHWAY (196608 FLOPs):\n  [AB: MATMUL] -> [result: MATMUL]\n\nDISCOVERED PATHWAY (32768 FLOPs):\n  [bc_8860: MATMUL] -> [result: MATMUL]\n",
+      "timestamp": 1790359183.960423
+    },
+    "benchmark_stats": {
+      "repetitions": 2,
+      "warmup_runs": 2,
+      "median_ms": 0.013949931599199772,
+      "mean_ms": 0.013949931599199772,
+      "stddev_ms": 0.00015005934983491898,
+      "min_ms": 0.013799872249364853,
+      "max_ms": 0.01409999094903469,
+      "ci95_low_ms": 0.01204324677762003,
+      "ci95_high_ms": 0.015856616420779516,
+      "samples_ms": [
+        0.013799872249364853,
+        0.01409999094903469
+      ]
+    },
+    "scientific_summary": "Workload A (Matrix Computation (Chained GEMM)): Discovered shortcut=True, Verification=PASSED, Exactness=NUMERICAL_PARITY, Speedup=10.73x."
+  },
+  {
+    "experiment_id": "Exp_B",
+    "workload_name": "Convolution (2D Conv + ReLU Fusion)",
+    "description": "exp_b_conv2d_fused",
+    "category": "Spatial Filtering",
+    "contract_mode": "NUMERIC_EXACT",
+    "is_shortcut_found": false,
+    "status_message": "NO_VERIFIED_SHORTCUT_FOUND",
+    "verification_passed": true,
+    "exactness_parity": "BIT_EXACT_COMPUTE_PARITY",
+    "hardware_parity": "NO_HARDWARE_PARITY",
+    "speedup": 1.8447832970467672,
+    "reference_time_ms": 9.277600096538663,
+    "candidate_time_ms": 5.02910022623837,
+    "eliminated_operations": 0,
+    "memory_delta_mb": 0.0,
+    "search_trace_count": 2,
+    "proof_record": {
+      "workload_id": "exp_b_conv2d_fused",
+      "candidate_id": "cand_baseline_3b96dd51",
+      "reference_hash": "0d4ca5f9a32c0f22c0d8a2f426f2aef154905c9568cced106cdc072c49dbe698",
+      "candidate_hash": "0d4ca5f9a32c0f22c0d8a2f426f2aef154905c9568cced106cdc072c49dbe698",
+      "exactness_mode": "NUMERIC_EXACT",
+      "candidate_operations": 1569.0,
+      "reference_operations": 1569.0,
+      "candidate_runtime_ms": 5.02910022623837,
+      "reference_runtime_ms": 9.277600096538663,
+      "speedup": 1.8447832970467672,
+      "transformation_chain": [
+        "Original trusted reference pathway."
+      ],
+      "verification": "PASSED",
+      "independent_verification": "PASSED",
+      "parity_classification": "BIT_EXACT_COMPUTE_PARITY",
+      "explanation": {
+        "why_valid": "Trusted baseline reference executed. Correctness is guaranteed by canonical definition.",
+        "why_cheaper": "No alternative shortcut was found that met all contract invariants at lower cost. Baseline cost retained.",
+        "computation_eliminated": "0 FLOPs eliminated. Full computation executed to guarantee exact contract satisfaction.",
+        "assumptions_used": [
+          "Canonical mathematical definition."
+        ],
+        "falsification_conditions": [
+          "None (trusted baseline)."
+        ]
+      },
+      "pathway_ascii_diff": "ORIGINAL PATHWAY (1569 FLOPs):\n  [conv_out: CONV2D] -> [add_out: ADD] -> [result: RELU]\n\nDISCOVERED PATHWAY (1569 FLOPs):\n  [conv_out: CONV2D] -> [add_out: ADD] -> [result: RELU]\n",
+      "timestamp": 1790359184.126377
+    },
+    "benchmark_stats": {
+      "repetitions": 2,
+      "warmup_runs": 2,
+      "median_ms": 4.903850145637989,
+      "mean_ms": 4.903850145637989,
+      "stddev_ms": 0.001250067725777626,
+      "min_ms": 4.902600077912211,
+      "max_ms": 4.905100213363767,
+      "ci95_low_ms": 4.887966529180174,
+      "ci95_high_ms": 4.919733762095804,
+      "samples_ms": [
+        4.902600077912211,
+        4.905100213363767
+      ]
+    },
+    "scientific_summary": "Workload B (Convolution (2D Conv + ReLU Fusion)): Discovered shortcut=False, Verification=PASSED, Exactness=BIT_EXACT_COMPUTE_PARITY, Speedup=1.84x."
+  },
+  {
+    "experiment_id": "Exp_C",
+    "workload_name": "FFT / Spectral Decomposition",
+    "description": "exp_c_fft_spectral",
+    "category": "Frequency Domain",
+    "contract_mode": "NUMERIC_TOLERANCE",
+    "is_shortcut_found": true,
+    "status_message": "SHORTCUT_DISCOVERED",
+    "verification_passed": true,
+    "exactness_parity": "NUMERICAL_PARITY",
+    "hardware_parity": "NO_HARDWARE_PARITY",
+    "speedup": 13.331569213494278,
+    "reference_time_ms": 0.7519000209867954,
+    "candidate_time_ms": 0.05639996379613876,
+    "eliminated_operations": 1,
+    "memory_delta_mb": 0.0,
+    "search_trace_count": 4,
+    "proof_record": {
+      "workload_id": "exp_c_fft_spectral",
+      "candidate_id": "cand_dce_b75c7243",
+      "reference_hash": "4b1b63dfa8ed2690ae1b4a2bf5ddfafe52056947edfc7f430063986a113a28a5",
+      "candidate_hash": "4b1b63dfa8ed2690ae1b4a2bf5ddfafe52056947edfc7f430063986a113a28a5",
+      "exactness_mode": "NUMERIC_TOLERANCE",
+      "candidate_operations": 46081.0,
+      "reference_operations": 46082.0,
+      "candidate_runtime_ms": 0.05639996379613876,
+      "reference_runtime_ms": 0.7519000209867954,
+      "speedup": 13.331569213494278,
+      "transformation_chain": [
+        "Dead-operation elimination removed 1 unreferenced nodes."
+      ],
+      "verification": "PASSED",
+      "independent_verification": "PASSED",
+      "parity_classification": "NUMERICAL_PARITY",
+      "explanation": {
+        "why_valid": "Candidate passed independent reference verification under contract mode 'NUMERIC_TOLERANCE'. Error metrics: max_abs=0.00e+00, relative_error=0.00e+00.",
+        "why_cheaper": "Computational operations reduced from 46082 to 46081 FLOPs (0.0% reduction) via: Dead-operation elimination removed 1 unreferenced nodes..",
+        "computation_eliminated": "Eliminated 1 FLOPs of redundant or suboptimally ordered operations.",
+        "assumptions_used": [
+          "Unreferenced operations have no downstream dataflow dependency."
+        ],
+        "falsification_conditions": [
+          "Inputs outside specified domain bounds.",
+          "Non-associative numerical floating-point accumulation exceeding contract tolerance.",
+          "Contract mode escalated to BIT_EXACT when mathematical formulation involves floating-point reordering."
+        ]
+      },
+      "pathway_ascii_diff": "ORIGINAL PATHWAY (46082 FLOPs):\n  [spectral_repr: FFT] -> [spectral_mag: ABS] -> [recon_complex: IFFT] -> [result: ABS]\n\nDISCOVERED PATHWAY (46081 FLOPs):\n  [spectral_repr: FFT] -> [recon_complex: IFFT] -> [result: ABS]\n",
+      "timestamp": 1790359184.223381
+    },
+    "benchmark_stats": {
+      "repetitions": 2,
+      "warmup_runs": 2,
+      "median_ms": 0.044899992644786835,
+      "mean_ms": 0.044899992644786835,
+      "stddev_ms": 0.000800006091594696,
+      "min_ms": 0.04409998655319214,
+      "max_ms": 0.04569999873638153,
+      "ci95_low_ms": 0.0347349514547977,
+      "ci95_high_ms": 0.05506503383477597,
+      "samples_ms": [
+        0.04569999873638153,
+        0.04409998655319214
+      ]
+    },
+    "scientific_summary": "Workload C (FFT / Spectral Decomposition): Discovered shortcut=True, Verification=PASSED, Exactness=NUMERICAL_PARITY, Speedup=13.33x."
+  },
+  {
+    "experiment_id": "Exp_D",
+    "workload_name": "Graph Computation (Sparse Adjacency)",
+    "description": "exp_d_graph_adjacency",
+    "category": "Sparse Graph Analytics",
+    "contract_mode": "NUMERIC_EXACT",
+    "is_shortcut_found": false,
+    "status_message": "NO_VERIFIED_SHORTCUT_FOUND",
+    "verification_passed": true,
+    "exactness_parity": "BIT_EXACT_COMPUTE_PARITY",
+    "hardware_parity": "NO_HARDWARE_PARITY",
+    "speedup": 2.8097771283157384,
+    "reference_time_ms": 0.5228999070823193,
+    "candidate_time_ms": 0.18610013648867607,
+    "eliminated_operations": 0,
+    "memory_delta_mb": 0.0,
+    "search_trace_count": 2,
+    "proof_record": {
+      "workload_id": "exp_d_graph_adjacency",
+      "candidate_id": "cand_baseline_6494f180",
+      "reference_hash": "12d5b838971b3dfce06eef3a500e9810e157b55a448be1ac4c894891d2cbc193",
+      "candidate_hash": "12d5b838971b3dfce06eef3a500e9810e157b55a448be1ac4c894891d2cbc193",
+      "exactness_mode": "NUMERIC_EXACT",
+      "candidate_operations": 1048576.0,
+      "reference_operations": 1048576.0,
+      "candidate_runtime_ms": 0.18610013648867607,
+      "reference_runtime_ms": 0.5228999070823193,
+      "speedup": 2.8097771283157384,
+      "transformation_chain": [
+        "Original trusted reference pathway."
+      ],
+      "verification": "PASSED",
+      "independent_verification": "PASSED",
+      "parity_classification": "BIT_EXACT_COMPUTE_PARITY",
+      "explanation": {
+        "why_valid": "Trusted baseline reference executed. Correctness is guaranteed by canonical definition.",
+        "why_cheaper": "No alternative shortcut was found that met all contract invariants at lower cost. Baseline cost retained.",
+        "computation_eliminated": "0 FLOPs eliminated. Full computation executed to guarantee exact contract satisfaction.",
+        "assumptions_used": [
+          "Canonical mathematical definition."
+        ],
+        "falsification_conditions": [
+          "None (trusted baseline)."
+        ]
+      },
+      "pathway_ascii_diff": "ORIGINAL PATHWAY (1048576 FLOPs):\n  [result: MATMUL]\n\nDISCOVERED PATHWAY (1048576 FLOPs):\n  [result: MATMUL]\n",
+      "timestamp": 1790359184.3901255
+    },
+    "benchmark_stats": {
+      "repetitions": 2,
+      "warmup_runs": 2,
+      "median_ms": 0.1959499204531312,
+      "mean_ms": 0.1959499204531312,
+      "stddev_ms": 0.024850131012499332,
+      "min_ms": 0.17109978944063187,
+      "max_ms": 0.22080005146563053,
+      "ci95_low_ms": -0.11980093191244945,
+      "ci95_high_ms": 0.5117007728187118,
+      "samples_ms": [
+        0.17109978944063187,
+        0.22080005146563053
+      ]
+    },
+    "scientific_summary": "Workload D (Graph Computation (Sparse Adjacency)): Discovered shortcut=False, Verification=PASSED, Exactness=BIT_EXACT_COMPUTE_PARITY, Speedup=2.81x."
+  },
+  {
+    "experiment_id": "Exp_E",
+    "workload_name": "Cryptographic Hash (SHA-256)",
+    "description": "exp_e_cryptographic_hash",
+    "category": "Cryptographic Integrity",
+    "contract_mode": "BIT_EXACT",
+    "is_shortcut_found": false,
+    "status_message": "NO_VERIFIED_SHORTCUT_FOUND",
+    "verification_passed": true,
+    "exactness_parity": "BIT_EXACT_COMPUTE_PARITY",
+    "hardware_parity": "NO_HARDWARE_PARITY",
+    "speedup": 7.209922676708155,
+    "reference_time_ms": 0.11679995805025101,
+    "candidate_time_ms": 0.01619989052414894,
+    "eliminated_operations": 0,
+    "memory_delta_mb": 0.0,
+    "search_trace_count": 2,
+    "proof_record": {
+      "workload_id": "exp_e_cryptographic_hash",
+      "candidate_id": "cand_baseline_5e641352",
+      "reference_hash": "ce6b480c620cd365f96caa49ecce626589514642d3ba27bfa9bdaacf2fd7462c",
+      "candidate_hash": "ce6b480c620cd365f96caa49ecce626589514642d3ba27bfa9bdaacf2fd7462c",
+      "exactness_mode": "BIT_EXACT",
+      "candidate_operations": 1.0,
+      "reference_operations": 1.0,
+      "candidate_runtime_ms": 0.01619989052414894,
+      "reference_runtime_ms": 0.11679995805025101,
+      "speedup": 7.209922676708155,
+      "transformation_chain": [
+        "Original trusted reference pathway."
+      ],
+      "verification": "PASSED",
+      "independent_verification": "PASSED",
+      "parity_classification": "BIT_EXACT_COMPUTE_PARITY",
+      "explanation": {
+        "why_valid": "Trusted baseline reference executed. Correctness is guaranteed by canonical definition.",
+        "why_cheaper": "No alternative shortcut was found that met all contract invariants at lower cost. Baseline cost retained.",
+        "computation_eliminated": "0 FLOPs eliminated. Full computation executed to guarantee exact contract satisfaction.",
+        "assumptions_used": [
+          "Canonical mathematical definition."
+        ],
+        "falsification_conditions": [
+          "None (trusted baseline)."
+        ]
+      },
+      "pathway_ascii_diff": "ORIGINAL PATHWAY (1 FLOPs):\n  [result: REDUCE_SUM]\n\nDISCOVERED PATHWAY (1 FLOPs):\n  [result: REDUCE_SUM]\n",
+      "timestamp": 1790359184.4906976
+    },
+    "benchmark_stats": {
+      "repetitions": 2,
+      "warmup_runs": 2,
+      "median_ms": 0.0071999384090304375,
+      "mean_ms": 0.0071999384090304375,
+      "stddev_ms": 0.000100000761449337,
+      "min_ms": 0.0070999376475811005,
+      "max_ms": 0.0072999391704797745,
+      "ci95_low_ms": 0.005929308260281796,
+      "ci95_high_ms": 0.00847056855777908,
+      "samples_ms": [
+        0.0070999376475811005,
+        0.0072999391704797745
+      ]
+    },
+    "scientific_summary": "Workload E (Cryptographic Hash (SHA-256)): Discovered shortcut=False, Verification=PASSED, Exactness=BIT_EXACT_COMPUTE_PARITY, Speedup=7.21x."
+  },
+  {
+    "experiment_id": "Exp_F",
+    "workload_name": "Scientific Numerical ODE",
+    "description": "exp_f_scientific_ode",
+    "category": "Differential Equations",
+    "contract_mode": "NUMERIC_EXACT",
+    "is_shortcut_found": true,
+    "status_message": "SHORTCUT_DISCOVERED",
+    "verification_passed": true,
+    "exactness_parity": "BIT_EXACT_COMPUTE_PARITY",
+    "hardware_parity": "NO_HARDWARE_PARITY",
+    "speedup": 21.51986917114004,
+    "reference_time_ms": 0.542299821972847,
+    "candidate_time_ms": 0.02519995905458927,
+    "eliminated_operations": 128,
+    "memory_delta_mb": 0.0,
+    "search_trace_count": 4,
+    "proof_record": {
+      "workload_id": "exp_f_scientific_ode",
+      "candidate_id": "cand_cse_35c77f9d",
+      "reference_hash": "e09a08b9162ee493f112e1c78e9107963c3a1d6745d82ba26880ea5e1be62a34",
+      "candidate_hash": "e09a08b9162ee493f112e1c78e9107963c3a1d6745d82ba26880ea5e1be62a34",
+      "exactness_mode": "NUMERIC_EXACT",
+      "candidate_operations": 322.0,
+      "reference_operations": 450.0,
+      "candidate_runtime_ms": 0.02519995905458927,
+      "reference_runtime_ms": 0.542299821972847,
+      "speedup": 21.51986917114004,
+      "transformation_chain": [
+        "Common-subexpression elimination merged 1 duplicate nodes."
+      ],
+      "verification": "PASSED",
+      "independent_verification": "PASSED",
+      "parity_classification": "BIT_EXACT_COMPUTE_PARITY",
+      "explanation": {
+        "why_valid": "Candidate passed independent reference verification under contract mode 'NUMERIC_EXACT'. Error metrics: max_abs=0.00e+00, relative_error=0.00e+00.",
+        "why_cheaper": "Computational operations reduced from 450 to 322 FLOPs (28.4% reduction) via: Common-subexpression elimination merged 1 duplicate nodes..",
+        "computation_eliminated": "Eliminated 128 FLOPs of redundant or suboptimally ordered operations.",
+        "assumptions_used": [
+          "Operator is purely functional and deterministic without side-effects."
+        ],
+        "falsification_conditions": [
+          "Inputs outside specified domain bounds.",
+          "Non-associative numerical floating-point accumulation exceeding contract tolerance.",
+          "Contract mode escalated to BIT_EXACT when mathematical formulation involves floating-point reordering."
+        ]
+      },
+      "pathway_ascii_diff": "ORIGINAL PATHWAY (450 FLOPs):\n  [x2: MUL] -> [factor1: ADD] -> [x2_dup: MUL] -> [factor2: ADD] -> [exp_x: EXP] -> [abs_x: ABS] -> [t1: MUL] -> [t2: MUL] -> [result: ADD]\n\nDISCOVERED PATHWAY (322 FLOPs):\n  [x2: MUL] -> [factor1: ADD] -> [exp_x: EXP] -> [abs_x: ABS] -> [t1: MUL] -> [t2: MUL] -> [result: ADD]\n",
+      "timestamp": 1790359184.5905666
+    },
+    "benchmark_stats": {
+      "repetitions": 2,
+      "warmup_runs": 2,
+      "median_ms": 0.02164999023079872,
+      "mean_ms": 0.02164999023079872,
+      "stddev_ms": 5.005858838558197e-05,
+      "min_ms": 0.02159993164241314,
+      "max_ms": 0.021700048819184303,
+      "ci95_low_ms": 0.02101393555796762,
+      "ci95_high_ms": 0.02228604490362982,
+      "samples_ms": [
+        0.021700048819184303,
+        0.02159993164241314
+      ]
+    },
+    "scientific_summary": "Workload F (Scientific Numerical ODE): Discovered shortcut=True, Verification=PASSED, Exactness=BIT_EXACT_COMPUTE_PARITY, Speedup=21.52x."
+  },
+  {
+    "experiment_id": "Exp_G",
+    "workload_name": "ML Inference (Projection + Dead Code)",
+    "description": "exp_g_ml_inference",
+    "category": "Neural Inference",
+    "contract_mode": "NUMERIC_EXACT",
+    "is_shortcut_found": true,
+    "status_message": "SHORTCUT_DISCOVERED",
+    "verification_passed": true,
+    "exactness_parity": "BIT_EXACT_COMPUTE_PARITY",
+    "hardware_parity": "NO_HARDWARE_PARITY",
+    "speedup": 15.69875169479639,
+    "reference_time_ms": 0.3909000661224127,
+    "candidate_time_ms": 0.024900073185563087,
+    "eliminated_operations": 9986,
+    "memory_delta_mb": 0.0,
+    "search_trace_count": 8,
+    "proof_record": {
+      "workload_id": "exp_g_ml_inference",
+      "candidate_id": "cand_fuse_gemm_add_97e1d4c6",
+      "reference_hash": "9b474b4e8acf780d59526c8d6649417b0166bacc1f6a5f1db8d3981113687daa",
+      "candidate_hash": "9b474b4e8acf780d59526c8d6649417b0166bacc1f6a5f1db8d3981113687daa",
+      "exactness_mode": "NUMERIC_EXACT",
+      "candidate_operations": 56576.0,
+      "reference_operations": 66562.0,
+      "candidate_runtime_ms": 0.024900073185563087,
+      "reference_runtime_ms": 0.3909000661224127,
+      "speedup": 15.69875169479639,
+      "transformation_chain": [
+        "Fused MATMUL 'proj' and ADD 'biased' into FUSED_GEMM_ADD."
+      ],
+      "verification": "PASSED",
+      "independent_verification": "PASSED",
+      "parity_classification": "BIT_EXACT_COMPUTE_PARITY",
+      "explanation": {
+        "why_valid": "Candidate passed independent reference verification under contract mode 'NUMERIC_EXACT'. Error metrics: max_abs=0.00e+00, relative_error=0.00e+00.",
+        "why_cheaper": "Computational operations reduced from 66562 to 56576 FLOPs (15.0% reduction) via: Fused MATMUL 'proj' and ADD 'biased' into FUSED_GEMM_ADD..",
+        "computation_eliminated": "Eliminated 9986 FLOPs of redundant or suboptimally ordered operations.",
+        "assumptions_used": [
+          "Associativity and distributivity of matrix addition."
+        ],
+        "falsification_conditions": [
+          "Inputs outside specified domain bounds.",
+          "Non-associative numerical floating-point accumulation exceeding contract tolerance.",
+          "Contract mode escalated to BIT_EXACT when mathematical formulation involves floating-point reordering."
+        ]
+      },
+      "pathway_ascii_diff": "ORIGINAL PATHWAY (66562 FLOPs):\n  [proj: MATMUL] -> [biased: ADD] -> [result: RELU] -> [dead_diagnostic: REDUCE_MEAN] -> [dead_exp: EXP]\n\nDISCOVERED PATHWAY (66560 FLOPs):\n  [result: RELU] -> [fused_proj_biased: FUSED_GEMM_ADD]\n",
+      "timestamp": 1790359184.6914012
+    },
+    "benchmark_stats": {
+      "repetitions": 2,
+      "warmup_runs": 2,
+      "median_ms": 0.017900019884109497,
+      "mean_ms": 0.017900019884109497,
+      "stddev_ms": 0.000800006091594696,
+      "min_ms": 0.0171000137925148,
+      "max_ms": 0.018700025975704193,
+      "ci95_low_ms": 0.007734978694120365,
+      "ci95_high_ms": 0.02806506107409863,
+      "samples_ms": [
+        0.0171000137925148,
+        0.018700025975704193
+      ]
+    },
+    "scientific_summary": "Workload G (ML Inference (Projection + Dead Code)): Discovered shortcut=True, Verification=PASSED, Exactness=BIT_EXACT_COMPUTE_PARITY, Speedup=15.70x."
+  },
+  {
+    "experiment_id": "Exp_H",
+    "workload_name": "Irregular Memory Access (Gather)",
+    "description": "exp_h_irregular_gather",
+    "category": "Memory Indirect",
+    "contract_mode": "BIT_EXACT",
+    "is_shortcut_found": false,
+    "status_message": "NO_VERIFIED_SHORTCUT_FOUND",
+    "verification_passed": true,
+    "exactness_parity": "BIT_EXACT_COMPUTE_PARITY",
+    "hardware_parity": "NO_HARDWARE_PARITY",
+    "speedup": 1.9621252412629404,
+    "reference_time_ms": 0.5025002174079418,
+    "candidate_time_ms": 0.256099971011281,
+    "eliminated_operations": 0,
+    "memory_delta_mb": 0.0,
+    "search_trace_count": 2,
+    "proof_record": {
+      "workload_id": "exp_h_irregular_gather",
+      "candidate_id": "cand_baseline_719cea53",
+      "reference_hash": "a7b8a7a0d40937aec87be9f38f2702989ce81d14abd63df05ddb31c1246685c3",
+      "candidate_hash": "a7b8a7a0d40937aec87be9f38f2702989ce81d14abd63df05ddb31c1246685c3",
+      "exactness_mode": "BIT_EXACT",
+      "candidate_operations": 1.0,
+      "reference_operations": 1.0,
+      "candidate_runtime_ms": 0.256099971011281,
+      "reference_runtime_ms": 0.5025002174079418,
+      "speedup": 1.9621252412629404,
+      "transformation_chain": [
+        "Original trusted reference pathway."
+      ],
+      "verification": "PASSED",
+      "independent_verification": "PASSED",
+      "parity_classification": "BIT_EXACT_COMPUTE_PARITY",
+      "explanation": {
+        "why_valid": "Trusted baseline reference executed. Correctness is guaranteed by canonical definition.",
+        "why_cheaper": "No alternative shortcut was found that met all contract invariants at lower cost. Baseline cost retained.",
+        "computation_eliminated": "0 FLOPs eliminated. Full computation executed to guarantee exact contract satisfaction.",
+        "assumptions_used": [
+          "Canonical mathematical definition."
+        ],
+        "falsification_conditions": [
+          "None (trusted baseline)."
+        ]
+      },
+      "pathway_ascii_diff": "ORIGINAL PATHWAY (1 FLOPs):\n  [result: REDUCE_SUM]\n\nDISCOVERED PATHWAY (1 FLOPs):\n  [result: REDUCE_SUM]\n",
+      "timestamp": 1790359184.8552437
+    },
+    "benchmark_stats": {
+      "repetitions": 2,
+      "warmup_runs": 2,
+      "median_ms": 0.21365005522966385,
+      "mean_ms": 0.21365005522966385,
+      "stddev_ms": 0.002949964255094528,
+      "min_ms": 0.21070009097456932,
+      "max_ms": 0.21660001948475838,
+      "ci95_low_ms": 0.1761672054400357,
+      "ci95_high_ms": 0.251132905019292,
+      "samples_ms": [
+        0.21660001948475838,
+        0.21070009097456932
+      ]
+    },
+    "scientific_summary": "Workload H (Irregular Memory Access (Gather)): Discovered shortcut=False, Verification=PASSED, Exactness=BIT_EXACT_COMPUTE_PARITY, Speedup=1.96x."
+  },
+  {
+    "experiment_id": "Exp_I",
+    "workload_name": "Memory-Bound (STREAM Vector Triad)",
+    "description": "exp_i_stream_triad",
+    "category": "Bandwidth Bound",
+    "contract_mode": "NUMERIC_EXACT",
+    "is_shortcut_found": false,
+    "status_message": "NO_VERIFIED_SHORTCUT_FOUND",
+    "verification_passed": true,
+    "exactness_parity": "BIT_EXACT_COMPUTE_PARITY",
+    "hardware_parity": "NO_HARDWARE_PARITY",
+    "speedup": 2.804139119743987,
+    "reference_time_ms": 0.3249999135732651,
+    "candidate_time_ms": 0.1159000676125288,
+    "eliminated_operations": 0,
+    "memory_delta_mb": 0.0,
+    "search_trace_count": 2,
+    "proof_record": {
+      "workload_id": "exp_i_stream_triad",
+      "candidate_id": "cand_baseline_e7f075e5",
+      "reference_hash": "193618d45e79132d11b507eb30fe32daac555adbad40d1011f6f41de50efa74f",
+      "candidate_hash": "193618d45e79132d11b507eb30fe32daac555adbad40d1011f6f41de50efa74f",
+      "exactness_mode": "NUMERIC_EXACT",
+      "candidate_operations": 131072.0,
+      "reference_operations": 131072.0,
+      "candidate_runtime_ms": 0.1159000676125288,
+      "reference_runtime_ms": 0.3249999135732651,
+      "speedup": 2.804139119743987,
+      "transformation_chain": [
+        "Original trusted reference pathway."
+      ],
+      "verification": "PASSED",
+      "independent_verification": "PASSED",
+      "parity_classification": "BIT_EXACT_COMPUTE_PARITY",
+      "explanation": {
+        "why_valid": "Trusted baseline reference executed. Correctness is guaranteed by canonical definition.",
+        "why_cheaper": "No alternative shortcut was found that met all contract invariants at lower cost. Baseline cost retained.",
+        "computation_eliminated": "0 FLOPs eliminated. Full computation executed to guarantee exact contract satisfaction.",
+        "assumptions_used": [
+          "Canonical mathematical definition."
+        ],
+        "falsification_conditions": [
+          "None (trusted baseline)."
+        ]
+      },
+      "pathway_ascii_diff": "ORIGINAL PATHWAY (131072 FLOPs):\n  [scaled: MUL] -> [result: ADD]\n\nDISCOVERED PATHWAY (131072 FLOPs):\n  [scaled: MUL] -> [result: ADD]\n",
+      "timestamp": 1790359184.9583447
+    },
+    "benchmark_stats": {
+      "repetitions": 2,
+      "warmup_runs": 2,
+      "median_ms": 0.04659988917410374,
+      "mean_ms": 0.04659988917410374,
+      "stddev_ms": 0.000400003045797348,
+      "min_ms": 0.04619988612830639,
+      "max_ms": 0.046999892219901085,
+      "ci95_low_ms": 0.04151736857910917,
+      "ci95_high_ms": 0.051682409769098304,
+      "samples_ms": [
+        0.046999892219901085,
+        0.04619988612830639
+      ]
+    },
+    "scientific_summary": "Workload I (Memory-Bound (STREAM Vector Triad)): Discovered shortcut=False, Verification=PASSED, Exactness=BIT_EXACT_COMPUTE_PARITY, Speedup=2.80x."
+  },
+  {
+    "experiment_id": "Exp_J",
+    "workload_name": "Compute-Bound (Polynomial Horner)",
+    "description": "exp_j_compute_polynomial",
+    "category": "Arithmetic Bound",
+    "contract_mode": "NUMERIC_EXACT",
+    "is_shortcut_found": false,
+    "status_message": "NO_VERIFIED_SHORTCUT_FOUND",
+    "verification_passed": true,
+    "exactness_parity": "BIT_EXACT_COMPUTE_PARITY",
+    "hardware_parity": "NO_HARDWARE_PARITY",
+    "speedup": 14.97446508387009,
+    "reference_time_ms": 0.4102999810129404,
+    "candidate_time_ms": 0.027399975806474686,
+    "eliminated_operations": 0,
+    "memory_delta_mb": 0.0,
+    "search_trace_count": 2,
+    "proof_record": {
+      "workload_id": "exp_j_compute_polynomial",
+      "candidate_id": "cand_baseline_03d7b47d",
+      "reference_hash": "7319bbaf7519dda57a829acbf3ab6cf73b7199b597b8cbe75067f10f48a61280",
+      "candidate_hash": "7319bbaf7519dda57a829acbf3ab6cf73b7199b597b8cbe75067f10f48a61280",
+      "exactness_mode": "NUMERIC_EXACT",
+      "candidate_operations": 5120.0,
+      "reference_operations": 5120.0,
+      "candidate_runtime_ms": 0.027399975806474686,
+      "reference_runtime_ms": 0.4102999810129404,
+      "speedup": 14.97446508387009,
+      "transformation_chain": [
+        "Original trusted reference pathway."
+      ],
+      "verification": "PASSED",
+      "independent_verification": "PASSED",
+      "parity_classification": "BIT_EXACT_COMPUTE_PARITY",
+      "explanation": {
+        "why_valid": "Trusted baseline reference executed. Correctness is guaranteed by canonical definition.",
+        "why_cheaper": "No alternative shortcut was found that met all contract invariants at lower cost. Baseline cost retained.",
+        "computation_eliminated": "0 FLOPs eliminated. Full computation executed to guarantee exact contract satisfaction.",
+        "assumptions_used": [
+          "Canonical mathematical definition."
+        ],
+        "falsification_conditions": [
+          "None (trusted baseline)."
+        ]
+      },
+      "pathway_ascii_diff": "ORIGINAL PATHWAY (5120 FLOPs):\n  [x2: MUL] -> [t1: MUL] -> [t2: MUL] -> [sum1: ADD] -> [result: ADD]\n\nDISCOVERED PATHWAY (5120 FLOPs):\n  [x2: MUL] -> [t1: MUL] -> [t2: MUL] -> [sum1: ADD] -> [result: ADD]\n",
+      "timestamp": 1790359185.0575805
+    },
+    "benchmark_stats": {
+      "repetitions": 2,
+      "warmup_runs": 2,
+      "median_ms": 0.018450082279741764,
+      "mean_ms": 0.018450082279741764,
+      "stddev_ms": 0.00044994521886110306,
+      "min_ms": 0.01800013706088066,
+      "max_ms": 0.018900027498602867,
+      "ci95_low_ms": 0.012732986208829657,
+      "ci95_high_ms": 0.02416717835065387,
+      "samples_ms": [
+        0.01800013706088066,
+        0.018900027498602867
+      ]
+    },
+    "scientific_summary": "Workload J (Compute-Bound (Polynomial Horner)): Discovered shortcut=False, Verification=PASSED, Exactness=BIT_EXACT_COMPUTE_PARITY, Speedup=14.97x."
+  }
+]
