@@ -48,7 +48,7 @@ CL_MAP_WRITE = (1 << 1)
 CL_QUEUE_PROFILING_ENABLE = (1 << 1)
 
 
-GEMM_KERNEL_SOURCE = b"""
+OPENCL_KERNEL_SOURCES = b"""
 __kernel void gemm_zero_copy(
     const int M, const int K, const int N,
     __global const float* A,
@@ -64,6 +64,29 @@ __kernel void gemm_zero_copy(
             sum += A[row * K + k] * B[k * N + col];
         }
         C[row * N + col] = sum;
+    }
+}
+
+__kernel void boolean_mask_zero_copy(
+    __global uint* target,
+    __global const uint* mask,
+    const int num_words)
+{
+    int id = get_global_id(0);
+    if (id < num_words) {
+        target[id] &= mask[id];
+    }
+}
+
+__kernel void vsa_xor_popcount_zero_copy(
+    __global const uint* a,
+    __global const uint* b,
+    __global uint* out_counts,
+    const int num_words)
+{
+    int id = get_global_id(0);
+    if (id < num_words) {
+        out_counts[id] = popcount(a[id] ^ b[id]);
     }
 }
 """
@@ -87,6 +110,8 @@ class OpenCLZeroCopyUVA:
         self.host_unified_memory = False
         self._program = None
         self._gemm_kernel = None
+        self._mask_kernel = None
+        self._vsa_kernel = None
         self._init_opencl()
 
     def _init_opencl(self):
@@ -149,13 +174,15 @@ class OpenCLZeroCopyUVA:
         if err_code.value != CL_SUCCESS:
             return
 
-        # Precompile GEMM kernel
+        # Precompile kernels
         try:
-            src_arr = (c_char_p * 1)(GEMM_KERNEL_SOURCE)
-            len_arr = (c_size_t * 1)(len(GEMM_KERNEL_SOURCE))
+            src_arr = (c_char_p * 1)(OPENCL_KERNEL_SOURCES)
+            len_arr = (c_size_t * 1)(len(OPENCL_KERNEL_SOURCES))
             self._program = self._cl.clCreateProgramWithSource(self._context, 1, src_arr, len_arr, byref(err_code))
             self._cl.clBuildProgram(self._program, 1, dev_arr, None, None, None)
             self._gemm_kernel = self._cl.clCreateKernel(self._program, b"gemm_zero_copy", byref(err_code))
+            self._mask_kernel = self._cl.clCreateKernel(self._program, b"boolean_mask_zero_copy", byref(err_code))
+            self._vsa_kernel = self._cl.clCreateKernel(self._program, b"vsa_xor_popcount_zero_copy", byref(err_code))
             if err_code.value == CL_SUCCESS:
                 self._initialized = True
         except Exception:
@@ -349,6 +376,171 @@ class OpenCLZeroCopyUVA:
             C = np.matmul(A, B)
             t_end = time.perf_counter_ns()
             return C, {
+                "backend": "CPU_FALLBACK_ON_ERROR",
+                "error": str(e),
+                "elapsed_ms": (t_end - t_start) / 1e6,
+                "copy_overhead_bytes": 0,
+                "is_zero_copy": False,
+            }
+
+    def execute_zero_copy_boolean_mask(
+        self,
+        target: np.ndarray,
+        mask: np.ndarray,
+    ) -> Tuple[np.ndarray, Dict[str, Any]]:
+        """
+        Executes in-place bitwise boolean AND mask on Intel UHD Graphics 48 EUs
+        using zero-copy pinned host memory. Zero PCIe bus copy overhead.
+        """
+        assert target.shape == mask.shape, f"Shape mismatch: {target.shape} vs {mask.shape}"
+        target_u32 = np.ascontiguousarray(target.view(np.uint32).ravel())
+        mask_u32 = np.ascontiguousarray(mask.view(np.uint32).ravel())
+        num_words = len(target_u32)
+        nbytes = num_words * 4
+
+        t_start = time.perf_counter_ns()
+
+        if not self._initialized or self._mask_kernel is None:
+            np.bitwise_and(target_u32, mask_u32, out=target_u32)
+            t_end = time.perf_counter_ns()
+            return target, {
+                "backend": "CPU_FALLBACK_NO_OPENCL",
+                "elapsed_ms": (t_end - t_start) / 1e6,
+                "copy_overhead_bytes": 0,
+                "is_zero_copy": False,
+            }
+
+        try:
+            mem_target, ptr_target = self.create_zero_copy_buffer(nbytes)
+            mem_mask, ptr_mask = self.create_zero_copy_buffer(nbytes)
+
+            ctypes.memmove(ptr_target, target_u32.ctypes.data, nbytes)
+            ctypes.memmove(ptr_mask, mask_u32.ctypes.data, nbytes)
+
+            self.unmap_buffer(mem_target, ptr_target)
+            self.unmap_buffer(mem_mask, ptr_mask)
+
+            c_words = c_int32(num_words)
+            arg_target = c_void_p(mem_target)
+            arg_mask = c_void_p(mem_mask)
+
+            self._cl.clSetKernelArg(self._mask_kernel, 0, ctypes.sizeof(c_void_p), byref(arg_target))
+            self._cl.clSetKernelArg(self._mask_kernel, 1, ctypes.sizeof(c_void_p), byref(arg_mask))
+            self._cl.clSetKernelArg(self._mask_kernel, 2, 4, byref(c_words))
+
+            global_size = (c_size_t * 1)(num_words)
+            self._cl.clEnqueueNDRangeKernel(self._queue, self._mask_kernel, 1, None, global_size, None, 0, None, None)
+            self._cl.clFinish(self._queue)
+
+            err = c_int32()
+            ptr_out = self._cl.clEnqueueMapBuffer(
+                self._queue, mem_target, 1, CL_MAP_READ, 0, nbytes, 0, None, None, byref(err)
+            )
+            ctypes.memmove(target.ctypes.data, ptr_out, nbytes)
+            self.unmap_buffer(mem_target, ptr_out)
+
+            self._cl.clReleaseMemObject(mem_target)
+            self._cl.clReleaseMemObject(mem_mask)
+
+            t_end = time.perf_counter_ns()
+            return target, {
+                "backend": "INTEL_UHD_OPENCL_ZERO_COPY",
+                "device": self.device_name,
+                "compute_units": self.compute_units,
+                "elapsed_ms": (t_end - t_start) / 1e6,
+                "copy_overhead_bytes": 0,
+                "is_zero_copy": True,
+            }
+        except Exception as e:
+            np.bitwise_and(target_u32, mask_u32, out=target_u32)
+            t_end = time.perf_counter_ns()
+            return target, {
+                "backend": "CPU_FALLBACK_ON_ERROR",
+                "error": str(e),
+                "elapsed_ms": (t_end - t_start) / 1e6,
+                "copy_overhead_bytes": 0,
+                "is_zero_copy": False,
+            }
+
+    def execute_zero_copy_vsa_popcount(
+        self,
+        a: np.ndarray,
+        b: np.ndarray,
+    ) -> Tuple[np.ndarray, Dict[str, Any]]:
+        """
+        Executes parallel XOR Popcount across hypervector words on Intel UHD Graphics 48 EUs.
+        """
+        assert a.shape == b.shape, f"Shape mismatch: {a.shape} vs {b.shape}"
+        a_u32 = np.ascontiguousarray(a.view(np.uint32).ravel())
+        b_u32 = np.ascontiguousarray(b.view(np.uint32).ravel())
+        num_words = len(a_u32)
+        nbytes = num_words * 4
+
+        t_start = time.perf_counter_ns()
+
+        if not self._initialized or self._vsa_kernel is None:
+            xor_res = np.bitwise_xor(a_u32, b_u32)
+            counts = np.array([int(v).bit_count() for v in xor_res], dtype=np.uint32)
+            t_end = time.perf_counter_ns()
+            return counts, {
+                "backend": "CPU_FALLBACK_NO_OPENCL",
+                "elapsed_ms": (t_end - t_start) / 1e6,
+                "copy_overhead_bytes": 0,
+                "is_zero_copy": False,
+            }
+
+        try:
+            mem_a, ptr_a = self.create_zero_copy_buffer(nbytes)
+            mem_b, ptr_b = self.create_zero_copy_buffer(nbytes)
+            mem_out, ptr_out = self.create_zero_copy_buffer(nbytes)
+
+            ctypes.memmove(ptr_a, a_u32.ctypes.data, nbytes)
+            ctypes.memmove(ptr_b, b_u32.ctypes.data, nbytes)
+
+            self.unmap_buffer(mem_a, ptr_a)
+            self.unmap_buffer(mem_b, ptr_b)
+            self.unmap_buffer(mem_out, ptr_out)
+
+            c_words = c_int32(num_words)
+            arg_a = c_void_p(mem_a)
+            arg_b = c_void_p(mem_b)
+            arg_out = c_void_p(mem_out)
+
+            self._cl.clSetKernelArg(self._vsa_kernel, 0, ctypes.sizeof(c_void_p), byref(arg_a))
+            self._cl.clSetKernelArg(self._vsa_kernel, 1, ctypes.sizeof(c_void_p), byref(arg_b))
+            self._cl.clSetKernelArg(self._vsa_kernel, 2, ctypes.sizeof(c_void_p), byref(arg_out))
+            self._cl.clSetKernelArg(self._vsa_kernel, 3, 4, byref(c_words))
+
+            global_size = (c_size_t * 1)(num_words)
+            self._cl.clEnqueueNDRangeKernel(self._queue, self._vsa_kernel, 1, None, global_size, None, 0, None, None)
+            self._cl.clFinish(self._queue)
+
+            err = c_int32()
+            ptr_res = self._cl.clEnqueueMapBuffer(
+                self._queue, mem_out, 1, CL_MAP_READ, 0, nbytes, 0, None, None, byref(err)
+            )
+            counts = np.empty(num_words, dtype=np.uint32)
+            ctypes.memmove(counts.ctypes.data, ptr_res, nbytes)
+            self.unmap_buffer(mem_out, ptr_res)
+
+            self._cl.clReleaseMemObject(mem_a)
+            self._cl.clReleaseMemObject(mem_b)
+            self._cl.clReleaseMemObject(mem_out)
+
+            t_end = time.perf_counter_ns()
+            return counts, {
+                "backend": "INTEL_UHD_OPENCL_ZERO_COPY",
+                "device": self.device_name,
+                "compute_units": self.compute_units,
+                "elapsed_ms": (t_end - t_start) / 1e6,
+                "copy_overhead_bytes": 0,
+                "is_zero_copy": True,
+            }
+        except Exception as e:
+            xor_res = np.bitwise_xor(a_u32, b_u32)
+            counts = np.array([int(v).bit_count() for v in xor_res], dtype=np.uint32)
+            t_end = time.perf_counter_ns()
+            return counts, {
                 "backend": "CPU_FALLBACK_ON_ERROR",
                 "error": str(e),
                 "elapsed_ms": (t_end - t_start) / 1e6,

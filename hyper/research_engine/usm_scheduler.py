@@ -161,6 +161,16 @@ class USMManager:
             )
             return
 
+        # Attempt hardware zero-copy dispatch on Intel UHD Graphics (48 EUs) via OpenCL SVM
+        try:
+            from hyper.extreme.opencl_uva import OpenCLZeroCopyUVA
+            uva = OpenCLZeroCopyUVA()
+            if uva.is_available:
+                uva.execute_zero_copy_boolean_mask(target_arr, mask_arr)
+                return
+        except Exception:
+            pass
+
         # Vectorized bitwise AND fallback
         np.bitwise_and(target_u32, mask_u32, out=target_u32)
 
