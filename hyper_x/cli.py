@@ -661,6 +661,7 @@ def main() -> None:
     p_benchmark.add_argument("workload_pos", nargs="?", default=None, help="Target workload name/ID")
     p_benchmark.add_argument("--workload", type=str, default="GEMM_STANDARD")
     p_benchmark.add_argument("--runs", type=int, default=5)
+    p_benchmark.add_argument("--repeats", type=int, default=None, help="Alias for --runs")
     p_benchmark.add_argument("--amortized", type=int, default=1000)
     p_benchmark.add_argument("--json", action="store_true", help="Output machine-readable JSON")
 

@@ -40,7 +40,7 @@
       "Numerical tolerance exceeded on ill-conditioned inputs"
     ],
     "proof_template": "Dual-path independent verification against textbook reference",
-    "verified_discoveries_count": 49
+    "verified_discoveries_count": 58
   },
   "FAST_FOURIER_CONVOLUTION": {
     "transformation_name": "FAST_FOURIER_CONVOLUTION",
@@ -72,13 +72,13 @@
       "SHA256_CRYPTO"
     ],
     "measured_benefit": {
-      "average_speedup": 53.38
+      "average_speedup": 6.45
     },
     "failure_modes": [
       "Numerical tolerance exceeded on ill-conditioned inputs"
     ],
     "proof_template": "Dual-path independent verification against textbook reference",
-    "verified_discoveries_count": 12
+    "verified_discoveries_count": 16
   },
   "SEMANTIC_L3_MEMOIZATION": {
     "transformation_name": "SEMANTIC_L3_MEMOIZATION",
@@ -89,13 +89,13 @@
       "SHA256_CRYPTO"
     ],
     "measured_benefit": {
-      "average_speedup": 95.47
+      "average_speedup": 103.29
     },
     "failure_modes": [
       "Numerical tolerance exceeded on ill-conditioned inputs"
     ],
     "proof_template": "Dual-path independent verification against textbook reference",
-    "verified_discoveries_count": 4
+    "verified_discoveries_count": 5
   },
   "OPERATOR_FUSION_AVX2": {
     "transformation_name": "OPERATOR_FUSION_AVX2",
@@ -109,12 +109,12 @@
       "ADVERSARIAL_HILBERT_STRESS"
     ],
     "measured_benefit": {
-      "average_speedup": 3.09
+      "average_speedup": 2.4
     },
     "failure_modes": [
       "Numerical tolerance exceeded on ill-conditioned inputs"
     ],
     "proof_template": "Dual-path independent verification against textbook reference",
-    "verified_discoveries_count": 7
+    "verified_discoveries_count": 8
   }
 }

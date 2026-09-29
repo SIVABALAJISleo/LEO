@@ -330,7 +330,7 @@ def cmd_verify(args: argparse.Namespace) -> None:
 def cmd_benchmark(args: argparse.Namespace) -> None:
     ensure_directories()
     workload_id = getattr(args, "workload", "GEMM_STANDARD") or "GEMM_STANDARD"
-    runs = getattr(args, "runs", 5) or 5
+    runs = getattr(args, "repeats", None) or getattr(args, "runs", 5) or 5
     amortized_n = getattr(args, "amortized", 1000) or 1000
     is_json = getattr(args, "json", False)
 
