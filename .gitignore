@@ -83,4 +83,9 @@ models/
 sie-main/
 agentic-awesome-skills-main/
 strix-main/
-scratch/
+scratch/
+
+# HYPER-Ω: Runtime-generated experiment artifacts and counterexamples
+# These are ephemeral proof/falsification outputs - NOT source code
+experiments/
+counterexamples/
