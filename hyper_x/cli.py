@@ -56,6 +56,10 @@ from hyper_x.wormhole_compiler import (
 )
 
 def cmd_audit(args: argparse.Namespace) -> None:
+    if getattr(args, "full", False):
+        from hyper.research_engine.master_pipeline import MasterResearchPipeline
+        MasterResearchPipeline.execute_full_audit()
+        return
     audit_file = Path("docs/hyper_x/REPOSITORY_ARCHITECTURE.md")
     if audit_file.exists():
         print(f"=== HYPER Repository Architecture Audit ({audit_file}) ===\n")
@@ -120,8 +124,12 @@ def cmd_wormhole(args: argparse.Namespace) -> None:
         print(f"{res.candidate_id:<25} | {res.speedup:>7.2f}x | {res.work_elimination*100:>8.1f}% | {str(res.verified):<8} | {res.cws_score:>8.1f}%")
 
 def cmd_discover(args: argparse.Namespace) -> None:
+    if getattr(args, "unknown_workload", False):
+        from hyper.research_engine.master_pipeline import MasterResearchPipeline
+        MasterResearchPipeline.execute_research(unknown_workload=True)
+        return
     disc = AlgorithmDiscoveryGrammar()
-    expr = args.expr or "U @ (V @ B)"
+    expr = getattr(args, "expr", "") or "U @ (V @ B)"
     cand = disc.propose_candidate(
         name="Low-Rank Subspace Chain",
         family="bilinear_decomposition",
@@ -275,37 +283,21 @@ def cmd_compile(args: argparse.Namespace) -> None:
         print(f"\nExplanation: {res['explanation']}")
 
 def cmd_research(args: argparse.Namespace) -> None:
-    workload = getattr(args, "workload", None) or getattr(args, "domain", "gemm")
-    iters = getattr(args, "iterations", None)
-    mode = getattr(args, "mode", "deep")
-    is_auto = getattr(args, "autonomous", False)
+    workload = getattr(args, "workload_pos", None) or getattr(args, "workload", None) or getattr(args, "domain", "GEMM_STANDARD")
+    blind_holdout = getattr(args, "blind_holdout", False)
+    unknown = getattr(args, "unknown_workload", False)
 
-    loop = AutonomousResearchLoop(time_budget_sec=60.0)
-    if is_auto:
-        loop.run_autonomous_pipeline(workload=workload, mode=mode, iterations=iters)
-        return
+    from hyper.research_engine.master_pipeline import MasterResearchPipeline
+    MasterResearchPipeline.execute_research(workload_id=workload, blind_holdout=blind_holdout, unknown_workload=unknown)
 
-    print(f"=== HYPER-X Autonomous Research Loop ({workload.upper()}) ===")
-    print(f"Running autonomous hypothesis discovery (Budget: {iters or 5} iterations)...\n")
-    if workload == "graphics":
-        report = loop.run_graphics_research(resolution=(128, 128))
-    else:
-        report = loop.run_gemm_research(M=128, K=128, N=128, structured=True, rank=16)
+def cmd_challenge(args: argparse.Namespace) -> None:
+    from hyper.research_engine.master_pipeline import MasterResearchPipeline
+    rounds = getattr(args, "rounds", 5)
+    MasterResearchPipeline.execute_self_challenge(rounds=rounds)
 
-    print(f"Session ID:             {report.session_id}")
-    print(f"Iterations Evaluated:   {report.iterations_run}")
-    print(f"Pareto Frontier Size:   {report.pareto_frontier_size}")
-    print(f"Total Failures Logged:  {report.total_failures_recorded}")
-    print(f"Work Elimination Won:   {report.work_elimination_achieved_pct:.1f}%")
-    print(f"Raw Speedup Won:        {report.raw_hardware_speedup:.2f}x")
-    print("\n--- Discovered Iterations ---")
-    for it in report.iterations:
-        status_sym = "[PASS]" if it.verified and it.falsification_survived else "[FAIL]"
-        print(f" {status_sym} Iteration {it.iteration_index}: {it.hypothesis}")
-        print(f"        Expression: {it.grammar_expression}")
-        print(f"        Work Elim: {it.work_elimination_pct:.1f}% | Speedup: {it.speedup:.2f}x | Error: {it.numerical_error:.2e}")
-        if it.self_rectification_notes:
-            print(f"        Note: {it.self_rectification_notes}")
+def cmd_validate(args: argparse.Namespace) -> None:
+    from hyper.research_engine.master_pipeline import MasterResearchPipeline
+    MasterResearchPipeline.execute_full_validation_and_reporting()
 
 def cmd_evolve(args: argparse.Namespace) -> None:
     from hyper_x.wormhole_compiler.evolution_engine import EvolutionEngine, EvolutionaryIndividual
@@ -593,7 +585,8 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="HYPER-X Master CLI")
     subparsers = parser.add_subparsers(dest="subcommand")
 
-    subparsers.add_parser("audit")
+    p_audit = subparsers.add_parser("audit")
+    p_audit.add_argument("--full", action="store_true", help="Execute complete forensic falsification audit")
     subparsers.add_parser("hardware")
     subparsers.add_parser("contract")
 
@@ -605,11 +598,14 @@ def main() -> None:
     p_compile.add_argument("--output-vector", action="store_true", help="Contract only requires vector projection")
 
     p_research = subparsers.add_parser("research")
-    p_research.add_argument("--workload", type=str, default="gemm", choices=["gemm", "graphics", "scientific", "rag"])
+    p_research.add_argument("workload_pos", nargs="?", default=None, help="Target workload name/ID")
+    p_research.add_argument("--workload", type=str, default=None)
     p_research.add_argument("--domain", type=str, default=None, help="Alias for --workload")
     p_research.add_argument("--mode", type=str, default="deep", choices=["quick", "standard", "deep", "research", "exhaustive"])
     p_research.add_argument("--iterations", type=int, default=None)
     p_research.add_argument("--autonomous", action="store_true", help="Execute complete 15-stage autonomous research loop and generate all artifacts")
+    p_research.add_argument("--blind-holdout", action="store_true", dest="blind_holdout", help="Execute with sealed blind holdout evaluation")
+    p_research.add_argument("--unknown-workload", action="store_true", dest="unknown_workload", help="Execute in unknown-workload mode without hints")
 
     p_evolve = subparsers.add_parser("evolve")
     p_evolve.add_argument("--population", type=int, default=8)
@@ -633,6 +629,7 @@ def main() -> None:
 
     p_discover = subparsers.add_parser("discover")
     p_discover.add_argument("--expr", type=str, default="")
+    p_discover.add_argument("--unknown-workload", action="store_true", dest="unknown_workload", help="Execute in unknown-workload mode")
 
     subparsers.add_parser("benchmark")
     subparsers.add_parser("verify")
@@ -680,6 +677,11 @@ def main() -> None:
     subparsers.add_parser("representation")
     subparsers.add_parser("algorithm-search")
 
+    p_challenge = subparsers.add_parser("challenge")
+    p_challenge.add_argument("--rounds", type=int, default=5, help="Number of adversarial challenge rounds")
+
+    subparsers.add_parser("validate")
+
     p_report = subparsers.add_parser("report")
     p_report.add_argument("--file", type=str, default=None)
 
@@ -709,6 +711,8 @@ def main() -> None:
         "contract": cmd_contract,
         "compile": cmd_compile,
         "research": cmd_research,
+        "challenge": cmd_challenge,
+        "validate": cmd_validate,
         "evolve": cmd_evolve,
         "algorithm-search": cmd_evolve,
         "reproduce": cmd_reproduce,

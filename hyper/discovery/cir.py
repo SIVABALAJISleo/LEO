@@ -689,3 +689,8 @@ class CIRGraph:
     @classmethod
     def from_json(cls, s: str) -> CIRGraph:
         return cls.from_dict(json.loads(s))
+
+    def get_hash(self) -> str:
+        """Deterministic cryptographic SHA-256 hash representing the graph."""
+        payload = json.dumps(self.to_dict(), sort_keys=True)
+        return hashlib.sha256(payload.encode("utf-8")).hexdigest()

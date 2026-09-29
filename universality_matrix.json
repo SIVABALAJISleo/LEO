@@ -1,0 +1,107 @@
+[
+  {
+    "workload_id": "GEMM_STANDARD",
+    "tested": true,
+    "verified": true,
+    "exact": false,
+    "speedup": 1.71
+  },
+  {
+    "workload_id": "CONV2D_STANDARD",
+    "tested": true,
+    "verified": true,
+    "exact": false,
+    "speedup": 93.64
+  },
+  {
+    "workload_id": "FFT_STANDARD",
+    "tested": true,
+    "verified": true,
+    "exact": false,
+    "speedup": 1.03
+  },
+  {
+    "workload_id": "REDUCTION_SUM",
+    "tested": true,
+    "verified": true,
+    "exact": false,
+    "speedup": 2.37
+  },
+  {
+    "workload_id": "SORT_STANDARD",
+    "tested": true,
+    "verified": true,
+    "exact": true,
+    "speedup": 1.07
+  },
+  {
+    "workload_id": "PAGERANK_GRAPH",
+    "tested": true,
+    "verified": true,
+    "exact": false,
+    "speedup": 0.98
+  },
+  {
+    "workload_id": "SHA256_CRYPTO",
+    "tested": true,
+    "verified": true,
+    "exact": true,
+    "speedup": 1.44
+  },
+  {
+    "workload_id": "NBODY_GRAVITATIONAL",
+    "tested": true,
+    "verified": true,
+    "exact": false,
+    "speedup": 0.98
+  },
+  {
+    "workload_id": "ML_MLP_INFERENCE",
+    "tested": true,
+    "verified": true,
+    "exact": false,
+    "speedup": 1.2
+  },
+  {
+    "workload_id": "ATTENTION_HEAD",
+    "tested": true,
+    "verified": true,
+    "exact": false,
+    "speedup": 3.39
+  },
+  {
+    "workload_id": "SOBEL_FILTER",
+    "tested": true,
+    "verified": true,
+    "exact": false,
+    "speedup": 1.02
+  },
+  {
+    "workload_id": "STREAMING_VECTOR_OPS",
+    "tested": true,
+    "verified": true,
+    "exact": true,
+    "speedup": 1.0
+  },
+  {
+    "workload_id": "MANDELBROT_FRACTAL",
+    "tested": true,
+    "verified": true,
+    "exact": true,
+    "speedup": 1.3
+  },
+  {
+    "workload_id": "SPMV_IRREGULAR_CSR",
+    "tested": true,
+    "verified": true,
+    "exact": false,
+    "speedup": 1.02
+  },
+  {
+    "workload_id": "ADVERSARIAL_HILBERT_STRESS",
+    "tested": true,
+    "verified": true,
+    "exact": false,
+    "speedup": 1.43
+  }
+]

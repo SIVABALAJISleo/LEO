@@ -24,23 +24,23 @@ from pydantic import BaseModel, Field
 
 class ParityMetrics(BaseModel):
     physical_hardware_equivalence: str = "NOT CLAIMED (PHYSICALLY_DISJOINT)"
-    hardware_disadvantage_irrelevance_pct: float = 100.0
-    dormant_silicon_unlocked_tops: float = 4.53
-    universal_contract_completeness_pct: float = 100.0
-    functional_capability_coverage_pct: float = 100.0
-    universal_workload_family_coverage_pct: float = 100.0
-    verified_workload_contract_coverage_pct: float = 100.0
-    exact_computational_parity_pct: float = 100.0
-    application_contract_coverage_pct: float = 100.0
-    application_contract_parity_pct: float = 100.0
-    measured_performance_parity_pct: float = 100.0
-    effective_memory_bandwidth_amplification_pct: float = 100.0
-    memory_parity_pct: float = 100.0
-    latency_parity_pct: float = 100.0
-    universal_parity_status: str = "100% UNIVERSAL APPLICATION CONTRACT COMPLETENESS ESTABLISHED"
-    universal_closure_status: str = "100% UNIVERSAL APPLICATION CONTRACT COMPLETENESS ESTABLISHED"
-    total_workloads_investigated: int = 25
-    total_pathways_verified: int = 25
+    hardware_disadvantage_irrelevance_pct: float = 0.0
+    dormant_silicon_unlocked_tops: float = 0.0
+    universal_contract_completeness_pct: float = 0.0
+    functional_capability_coverage_pct: float = 0.0
+    universal_workload_family_coverage_pct: float = 0.0
+    verified_workload_contract_coverage_pct: float = 0.0
+    exact_computational_parity_pct: float = 0.0
+    application_contract_coverage_pct: float = 0.0
+    application_contract_parity_pct: float = 0.0
+    measured_performance_parity_pct: float = 0.0
+    effective_memory_bandwidth_amplification_pct: float = 0.0
+    memory_parity_pct: float = 0.0
+    latency_parity_pct: float = 0.0
+    universal_parity_status: str = "UNPROVEN (AWAITING_VERIFICATION)"
+    universal_closure_status: str = "UNPROVEN (AWAITING_VERIFICATION)"
+    total_workloads_investigated: int = 0
+    total_pathways_verified: int = 0
     last_updated: float = Field(default_factory=time.time)
 
 

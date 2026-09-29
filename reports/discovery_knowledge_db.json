@@ -1,0 +1,562 @@
+[
+  {
+    "workload_domain": "GEMM_STANDARD",
+    "transformation": "SPARSE_THRESHOLD_DISPATCH",
+    "is_verified": true,
+    "measured_speedup": 1.2012580338908776,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790647107.5708296
+  },
+  {
+    "workload_domain": "SYNTHETIC_WORKLOAD_46X31X52",
+    "transformation": "CANONICAL_BASELINE",
+    "is_verified": false,
+    "measured_speedup": 58.6629711751663,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790647503.377695
+  },
+  {
+    "workload_domain": "GEMM_STANDARD",
+    "transformation": "STRASSEN_ALGEBRAIC_FACTORIZATION",
+    "is_verified": true,
+    "measured_speedup": 1.0510705600462336,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790647549.0011768
+  },
+  {
+    "workload_domain": "GEMM_STANDARD",
+    "transformation": "STRASSEN_ALGEBRAIC_FACTORIZATION",
+    "is_verified": true,
+    "measured_speedup": 1.1713255635020234,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790647855.3091838
+  },
+  {
+    "workload_domain": "CONV2D_STANDARD",
+    "transformation": "FAST_FOURIER_CONVOLUTION",
+    "is_verified": true,
+    "measured_speedup": 132.53453578348768,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790648275.9845245
+  },
+  {
+    "workload_domain": "GEMM_STANDARD",
+    "transformation": "CACHE_AWARE_L2_TILING",
+    "is_verified": true,
+    "measured_speedup": 1.3880682240756073,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790648302.887163
+  },
+  {
+    "workload_domain": "CONV2D_STANDARD",
+    "transformation": "FAST_FOURIER_CONVOLUTION",
+    "is_verified": true,
+    "measured_speedup": 126.78313708010246,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790648303.9647524
+  },
+  {
+    "workload_domain": "FFT_STANDARD",
+    "transformation": "OPERATOR_FUSION_AVX2",
+    "is_verified": true,
+    "measured_speedup": 1.0031068667775351,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790648314.9788957
+  },
+  {
+    "workload_domain": "REDUCTION_SUM",
+    "transformation": "CANONICAL_BASELINE",
+    "is_verified": true,
+    "measured_speedup": 1.1938032066901303,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790648315.1993744
+  },
+  {
+    "workload_domain": "SORT_STANDARD",
+    "transformation": "OPERATOR_FUSION_AVX2",
+    "is_verified": true,
+    "measured_speedup": 1.214281358619428,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790648315.2426898
+  },
+  {
+    "workload_domain": "PAGERANK_GRAPH",
+    "transformation": "OPERATOR_FUSION_AVX2",
+    "is_verified": true,
+    "measured_speedup": 1.0728976082519333,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790648315.5159087
+  },
+  {
+    "workload_domain": "SHA256_CRYPTO",
+    "transformation": "CANONICAL_BASELINE",
+    "is_verified": true,
+    "measured_speedup": 1.5789559676497018,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790648315.5583718
+  },
+  {
+    "workload_domain": "NBODY_GRAVITATIONAL",
+    "transformation": "CANONICAL_BASELINE",
+    "is_verified": false,
+    "measured_speedup": 0.9776442343567902,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790648388.5640237
+  },
+  {
+    "workload_domain": "ML_MLP_INFERENCE",
+    "transformation": "OPERATOR_FUSION_AVX2",
+    "is_verified": true,
+    "measured_speedup": 0.8547694255123389,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790648388.742901
+  },
+  {
+    "workload_domain": "ATTENTION_HEAD",
+    "transformation": "CANONICAL_BASELINE",
+    "is_verified": true,
+    "measured_speedup": 2.0000085130291914,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790648388.7933302
+  },
+  {
+    "workload_domain": "SOBEL_FILTER",
+    "transformation": "CANONICAL_BASELINE",
+    "is_verified": true,
+    "measured_speedup": 0.9667507435426715,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790648416.2774014
+  },
+  {
+    "workload_domain": "STREAMING_VECTOR_OPS",
+    "transformation": "OPERATOR_FUSION_AVX2",
+    "is_verified": true,
+    "measured_speedup": 1.328165797565447,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790648419.732353
+  },
+  {
+    "workload_domain": "MANDELBROT_FRACTAL",
+    "transformation": "OPERATOR_FUSION_AVX2",
+    "is_verified": true,
+    "measured_speedup": 1.0649008487823817,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790648421.3235736
+  },
+  {
+    "workload_domain": "SPMV_IRREGULAR_CSR",
+    "transformation": "CANONICAL_BASELINE",
+    "is_verified": true,
+    "measured_speedup": 1.0034273409559478,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790648549.8836489
+  },
+  {
+    "workload_domain": "GEMM_STANDARD",
+    "transformation": "OPERATOR_FUSION_AVX2",
+    "is_verified": true,
+    "measured_speedup": 1.9221860486987212,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790648588.4368856
+  },
+  {
+    "workload_domain": "ADVERSARIAL_HILBERT_STRESS",
+    "transformation": "CANONICAL_BASELINE",
+    "is_verified": true,
+    "measured_speedup": 2.0206428074218095,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790648651.3472507
+  },
+  {
+    "workload_domain": "GEMM_STANDARD",
+    "transformation": "CACHE_AWARE_L2_TILING",
+    "is_verified": true,
+    "measured_speedup": 1.5041917810811578,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790648688.3591552
+  },
+  {
+    "workload_domain": "CONV2D_STANDARD",
+    "transformation": "FAST_FOURIER_CONVOLUTION",
+    "is_verified": true,
+    "measured_speedup": 138.5108510798607,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790648689.5594258
+  },
+  {
+    "workload_domain": "FFT_STANDARD",
+    "transformation": "OPERATOR_FUSION_AVX2",
+    "is_verified": true,
+    "measured_speedup": 0.8903690811680904,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790648701.218386
+  },
+  {
+    "workload_domain": "REDUCTION_SUM",
+    "transformation": "OPERATOR_FUSION_AVX2",
+    "is_verified": true,
+    "measured_speedup": 1.6448001221405124,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790648701.4886327
+  },
+  {
+    "workload_domain": "SORT_STANDARD",
+    "transformation": "OPERATOR_FUSION_AVX2",
+    "is_verified": true,
+    "measured_speedup": 1.1379653966906687,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790648701.536032
+  },
+  {
+    "workload_domain": "PAGERANK_GRAPH",
+    "transformation": "CANONICAL_BASELINE",
+    "is_verified": true,
+    "measured_speedup": 1.036014762492588,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790648701.8232324
+  },
+  {
+    "workload_domain": "SHA256_CRYPTO",
+    "transformation": "CANONICAL_BASELINE",
+    "is_verified": true,
+    "measured_speedup": 3.333357971764358,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790648701.890347
+  },
+  {
+    "workload_domain": "NBODY_GRAVITATIONAL",
+    "transformation": "CANONICAL_BASELINE",
+    "is_verified": false,
+    "measured_speedup": 0.9471068493426368,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790648771.876174
+  },
+  {
+    "workload_domain": "ML_MLP_INFERENCE",
+    "transformation": "CANONICAL_BASELINE",
+    "is_verified": true,
+    "measured_speedup": 0.7010036518233239,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790648772.0229394
+  },
+  {
+    "workload_domain": "ATTENTION_HEAD",
+    "transformation": "CANONICAL_BASELINE",
+    "is_verified": true,
+    "measured_speedup": 1.4147036425711152,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790648772.0604773
+  },
+  {
+    "workload_domain": "SOBEL_FILTER",
+    "transformation": "OPERATOR_FUSION_AVX2",
+    "is_verified": true,
+    "measured_speedup": 1.0237272634331307,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790648798.857924
+  },
+  {
+    "workload_domain": "STREAMING_VECTOR_OPS",
+    "transformation": "OPERATOR_FUSION_AVX2",
+    "is_verified": true,
+    "measured_speedup": 0.9701349351500386,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790648802.2203193
+  },
+  {
+    "workload_domain": "MANDELBROT_FRACTAL",
+    "transformation": "OPERATOR_FUSION_AVX2",
+    "is_verified": true,
+    "measured_speedup": 1.033428931545922,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790648803.7593997
+  },
+  {
+    "workload_domain": "SPMV_IRREGULAR_CSR",
+    "transformation": "OPERATOR_FUSION_AVX2",
+    "is_verified": true,
+    "measured_speedup": 1.1406538390052947,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790648803.9264052
+  },
+  {
+    "workload_domain": "ADVERSARIAL_HILBERT_STRESS",
+    "transformation": "CANONICAL_BASELINE",
+    "is_verified": true,
+    "measured_speedup": 1.499972282277288,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790648803.996562
+  },
+  {
+    "workload_domain": "NBODY_GRAVITATIONAL",
+    "transformation": "CANONICAL_BASELINE",
+    "is_verified": true,
+    "measured_speedup": 0.9966731271906946,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790662150.3824594
+  },
+  {
+    "workload_domain": "GEMM_STANDARD",
+    "transformation": "CACHE_AWARE_L2_TILING",
+    "is_verified": true,
+    "measured_speedup": 1.7526235233540988,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790662168.698998
+  },
+  {
+    "workload_domain": "CONV2D_STANDARD",
+    "transformation": "FAST_FOURIER_CONVOLUTION",
+    "is_verified": true,
+    "measured_speedup": 126.84777032672963,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790662169.7638664
+  },
+  {
+    "workload_domain": "FFT_STANDARD",
+    "transformation": "CANONICAL_BASELINE",
+    "is_verified": true,
+    "measured_speedup": 1.0468386176891518,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790662179.5256
+  },
+  {
+    "workload_domain": "REDUCTION_SUM",
+    "transformation": "OPERATOR_FUSION_AVX2",
+    "is_verified": true,
+    "measured_speedup": 3.9565572644381297,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790662179.8588705
+  },
+  {
+    "workload_domain": "SORT_STANDARD",
+    "transformation": "CANONICAL_BASELINE",
+    "is_verified": true,
+    "measured_speedup": 1.1327813657815542,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790662179.9209542
+  },
+  {
+    "workload_domain": "PAGERANK_GRAPH",
+    "transformation": "OPERATOR_FUSION_AVX2",
+    "is_verified": true,
+    "measured_speedup": 1.9512243169652312,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790662180.1915312
+  },
+  {
+    "workload_domain": "SHA256_CRYPTO",
+    "transformation": "CANONICAL_BASELINE",
+    "is_verified": true,
+    "measured_speedup": 1.9375,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790662180.2895849
+  },
+  {
+    "workload_domain": "NBODY_GRAVITATIONAL",
+    "transformation": "OPERATOR_FUSION_AVX2",
+    "is_verified": true,
+    "measured_speedup": 1.011161087360828,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790662253.7451625
+  },
+  {
+    "workload_domain": "ML_MLP_INFERENCE",
+    "transformation": "OPERATOR_FUSION_AVX2",
+    "is_verified": true,
+    "measured_speedup": 0.9430967084589428,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790662253.913485
+  },
+  {
+    "workload_domain": "ATTENTION_HEAD",
+    "transformation": "CANONICAL_BASELINE",
+    "is_verified": true,
+    "measured_speedup": 0.8701500887883432,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790662253.946581
+  },
+  {
+    "workload_domain": "SOBEL_FILTER",
+    "transformation": "OPERATOR_FUSION_AVX2",
+    "is_verified": true,
+    "measured_speedup": 1.021473736438767,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790662284.6044714
+  },
+  {
+    "workload_domain": "STREAMING_VECTOR_OPS",
+    "transformation": "CANONICAL_BASELINE",
+    "is_verified": true,
+    "measured_speedup": 1.131315495771198,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790662287.817121
+  },
+  {
+    "workload_domain": "MANDELBROT_FRACTAL",
+    "transformation": "CANONICAL_BASELINE",
+    "is_verified": true,
+    "measured_speedup": 0.9978827000176299,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790662289.9825418
+  },
+  {
+    "workload_domain": "SPMV_IRREGULAR_CSR",
+    "transformation": "CANONICAL_BASELINE",
+    "is_verified": true,
+    "measured_speedup": 1.70348889053319,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790662290.5285516
+  },
+  {
+    "workload_domain": "ADVERSARIAL_HILBERT_STRESS",
+    "transformation": "CANONICAL_BASELINE",
+    "is_verified": true,
+    "measured_speedup": 1.2107263287480596,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790662290.7255447
+  },
+  {
+    "workload_domain": "GEMM_STANDARD",
+    "transformation": "OPERATOR_FUSION_AVX2",
+    "is_verified": true,
+    "measured_speedup": 1.4289020209675722,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790664474.6690094
+  },
+  {
+    "workload_domain": "GEMM_STANDARD",
+    "transformation": "CACHE_AWARE_L2_TILING",
+    "is_verified": true,
+    "measured_speedup": 1.7065103725643689,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790665149.7470725
+  },
+  {
+    "workload_domain": "CONV2D_STANDARD",
+    "transformation": "WINOGRAD_MINIMAL_FILTERING_F23",
+    "is_verified": true,
+    "measured_speedup": 93.63944417037288,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790665150.8111105
+  },
+  {
+    "workload_domain": "FFT_STANDARD",
+    "transformation": "OPERATOR_FUSION_AVX2",
+    "is_verified": true,
+    "measured_speedup": 1.033651346778155,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790665160.8020198
+  },
+  {
+    "workload_domain": "REDUCTION_SUM",
+    "transformation": "CANONICAL_BASELINE",
+    "is_verified": true,
+    "measured_speedup": 2.3727447216890596,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790665161.022788
+  },
+  {
+    "workload_domain": "SORT_STANDARD",
+    "transformation": "CANONICAL_BASELINE",
+    "is_verified": true,
+    "measured_speedup": 1.0674547082730592,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790665161.0506003
+  },
+  {
+    "workload_domain": "PAGERANK_GRAPH",
+    "transformation": "OPERATOR_FUSION_AVX2",
+    "is_verified": true,
+    "measured_speedup": 0.9788986499697528,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790665161.2754931
+  },
+  {
+    "workload_domain": "SHA256_CRYPTO",
+    "transformation": "CANONICAL_BASELINE",
+    "is_verified": true,
+    "measured_speedup": 1.4444636081407383,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790665161.3224716
+  },
+  {
+    "workload_domain": "NBODY_GRAVITATIONAL",
+    "transformation": "OPERATOR_FUSION_AVX2",
+    "is_verified": true,
+    "measured_speedup": 0.9819933651366975,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790665217.9187043
+  },
+  {
+    "workload_domain": "ML_MLP_INFERENCE",
+    "transformation": "OPERATOR_FUSION_AVX2",
+    "is_verified": true,
+    "measured_speedup": 1.2043433330516387,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790665218.0456862
+  },
+  {
+    "workload_domain": "ATTENTION_HEAD",
+    "transformation": "CANONICAL_BASELINE",
+    "is_verified": true,
+    "measured_speedup": 3.386927186927187,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790665218.0854208
+  },
+  {
+    "workload_domain": "SOBEL_FILTER",
+    "transformation": "OPERATOR_FUSION_AVX2",
+    "is_verified": true,
+    "measured_speedup": 1.0204865733241992,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790665241.6927652
+  },
+  {
+    "workload_domain": "STREAMING_VECTOR_OPS",
+    "transformation": "CANONICAL_BASELINE",
+    "is_verified": true,
+    "measured_speedup": 0.9997548850888366,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790665245.0195658
+  },
+  {
+    "workload_domain": "MANDELBROT_FRACTAL",
+    "transformation": "OPERATOR_FUSION_AVX2",
+    "is_verified": true,
+    "measured_speedup": 1.3007697078427733,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790665246.417999
+  },
+  {
+    "workload_domain": "SPMV_IRREGULAR_CSR",
+    "transformation": "OPERATOR_FUSION_AVX2",
+    "is_verified": true,
+    "measured_speedup": 1.0170316774276982,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790665246.5671191
+  },
+  {
+    "workload_domain": "ADVERSARIAL_HILBERT_STRESS",
+    "transformation": "CANONICAL_BASELINE",
+    "is_verified": true,
+    "measured_speedup": 1.4250705783055386,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790665246.5951703
+  },
+  {
+    "workload_domain": "GEMM_STANDARD",
+    "transformation": "CACHE_AWARE_L2_TILING",
+    "is_verified": true,
+    "measured_speedup": 1.6299216014832714,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790666227.3120666
+  },
+  {
+    "workload_domain": "ATTENTION_HEAD",
+    "transformation": "CANONICAL_BASELINE",
+    "is_verified": true,
+    "measured_speedup": 1.749998134370126,
+    "notes": "GENERALIZED: Passed all neighboring dimension tests",
+    "timestamp": 1790666256.4807794
+  }
+]

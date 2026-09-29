@@ -1,0 +1,79 @@
+"""
+tests/test_usm_scheduler.py
+===========================
+Unit tests for the Zero-Copy Heterogeneous USM Scheduler.
+Verifies unified shared memory allocation, hardware core pinning,
+and in-place iGPU boolean mask evaluation.
+"""
+
+import numpy as np
+import pytest
+
+from hyper.research_engine.usm_scheduler import USMManager
+from hyper.research_engine.resource_compiler import HeterogeneousResourceCompiler, ExecutionDevice
+
+
+def test_usm_allocate_and_free():
+    shape = (128, 128)
+    arr = USMManager.allocate_shared(shape, dtype=np.float32)
+    assert arr.shape == shape
+    assert arr.dtype == np.float32
+    # Modify data
+    arr[0, 0] = 42.0
+    assert arr[0, 0] == 42.0
+    USMManager.free_shared(arr)
+
+
+def test_usm_pinning_pcores_and_ecores():
+    # Pinning should execute safely without runtime exceptions
+    p_ok = USMManager.pin_to_pcores()
+    assert isinstance(p_ok, bool)
+    e_ok = USMManager.pin_to_ecores()
+    assert isinstance(e_ok, bool)
+
+
+def test_usm_zero_copy_masking():
+    # Create target buffer and mask buffer
+    target = np.array([0xFFFFFFFF, 0x12345678, 0xAAAAAAAA], dtype=np.uint32)
+    mask   = np.array([0x0000FFFF, 0x00000000, 0x55555555], dtype=np.uint32)
+
+    USMManager.apply_igpu_mask(target, mask)
+
+    expected = np.array([0x0000FFFF, 0x00000000, 0x00000000], dtype=np.uint32)
+    assert np.array_equal(target, expected)
+
+
+def test_usm_heterogeneous_resource_compiler_routing():
+    # Large multi-stage payload should be routed to HETEROGENEOUS_PIPELINE
+    plan = HeterogeneousResourceCompiler.compile_resource_plan(
+        total_flops=1e9,
+        input_bytes=4 * 1024 * 1024,
+        output_bytes=4 * 1024 * 1024,
+        is_fused_pipeline=True,
+    )
+    assert plan.selected_device in (
+        ExecutionDevice.HETEROGENEOUS_PIPELINE,
+        ExecutionDevice.INTEL_IGPU,
+    )
+    assert plan.dram_traffic_eliminated_pct > 0.0
+
+
+def test_usm_pipeline_overlap_measurement():
+    def compute_a():
+        s = 0
+        for i in range(10000):
+            s += i
+        return s
+
+    def compute_b():
+        s = 1
+        for i in range(1, 10000):
+            s ^= i
+        return s
+
+    res_a, res_b, overlap_ms = HeterogeneousResourceCompiler.execute_with_measured_overlap(
+        compute_a, compute_b
+    )
+    assert res_a == sum(range(10000))
+    assert isinstance(overlap_ms, float)
+    assert overlap_ms >= 0.0
