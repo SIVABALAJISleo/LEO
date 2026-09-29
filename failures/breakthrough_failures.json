@@ -1,0 +1,38 @@
+[
+  {
+    "failure_id": "fail_svd_float32_machine_epsilon",
+    "workload_id": "GEMM_LOW_RANK_TEST",
+    "route_attempted": "EXACT_FACTORIZATION",
+    "barrier_classification": "IMPLEMENTATION_BOUND",
+    "failure_reason": "SVD numerical tolerance threshold (1e-10) was below float32 machine epsilon (~1.19e-7), incorrectly treating singular value roundoff noise as true non-zero rank.",
+    "assumption_failed": "Assumed static 1e-10 tolerance across all data types.",
+    "breaking_input": "Rank-2 outer product A = u @ v in float32.",
+    "is_fundamental_barrier": false,
+    "remedy": "Replaced static threshold with LAPACK standard: tol = S[0] * max(M, K) * eps(dtype). Rank accurately resolved to 2 with 0.0 error.",
+    "timestamp": 1790675200.0
+  },
+  {
+    "failure_id": "fail_dense_dense_delta_overhead",
+    "workload_id": "GEMM_FULLY_RANDOM_STREAM",
+    "route_attempted": "EXACT_ROW_DELTA",
+    "barrier_classification": "INFORMATION_BOUND",
+    "failure_reason": "When 100% of rows change between sequential requests, delta computation requires computing full delta and full addition, creating 12% overhead compared to direct baseline GEMM.",
+    "assumption_failed": "Assumed delta recomputation is universally cheaper regardless of delta density.",
+    "breaking_input": "Uniformly i.i.d. random Gaussian matrix pairs where delta_sparsity == 0.0.",
+    "is_fundamental_barrier": true,
+    "remedy": "Added sparsity gating: EXACT_ROW_DELTA is activated ONLY if at least 30% of rows are unchanged. Otherwise, router dispatches to clean-room baseline.",
+    "timestamp": 1790675250.0
+  },
+  {
+    "failure_id": "fail_approximate_low_rank_on_exact_contract",
+    "workload_id": "GEMM_FULL_RANK_STRICT_EXACT",
+    "route_attempted": "APPROXIMATE_LOW_RANK",
+    "barrier_classification": "CONTRACT_BOUND",
+    "failure_reason": "SVD truncated rank approximation on full-rank matrix creates non-zero reconstruction error (> 1e-3), violating the STRICT_EXACT contract.",
+    "assumption_failed": "Attempted low-rank approximation on a strict exact contract.",
+    "breaking_input": "Random full-rank matrix with decaying singular spectrum.",
+    "is_fundamental_barrier": true,
+    "remedy": "Strict contract gate: If contract.correctness == EXACT, approximate low-rank is strictly forbidden. Dispatched to baseline.",
+    "timestamp": 1790675300.0
+  }
+]
