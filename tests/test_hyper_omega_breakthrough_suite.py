@@ -276,3 +276,38 @@ def test_reference_fallback(router):
     assert dec.exact is True
     ref = A @ B
     assert np.allclose(res, ref, atol=1e-4)
+
+
+# =============================================================================
+# 11. Workload Fingerprinter & Feature Extraction
+# =============================================================================
+def test_workload_fingerprinter():
+    from hyper_x.wormhole_compiler.workload_fingerprint import WorkloadFingerprinter
+    contract = MatrixMultiplicationAdapter.build_contract(M=64, K=64, N=64)
+    A = np.zeros((64, 64), dtype=np.float32)
+    A[32:, :] = 1.0  # 50% zero rows
+    fp = WorkloadFingerprinter.extract_fingerprint((A,), contract)
+    assert fp.shape == (64, 64)
+    assert fp.zero_rows_count == 32
+    assert fp.sparsity_ratio == 0.5
+    assert fp.dependency_structure == "DENSE_GEMM"
+
+
+# =============================================================================
+# 12. Speculative Breakthrough Router & Online Adaptation
+# =============================================================================
+def test_speculative_breakthrough_router():
+    from hyper_x.wormhole_compiler.speculative_router import SpeculativeBreakthroughRouter
+    spec_router = SpeculativeBreakthroughRouter()
+    contract = MatrixMultiplicationAdapter.build_contract(M=64, K=64, N=64, cache_policy=CachePolicy.COLD)
+
+    # Test 1: Zero-row matrix should trigger predicted EXACT_ZERO_ROW_PRUNE
+    A = np.random.randn(64, 64).astype(np.float32)
+    A[0:32, :] = 0.0
+    B = np.random.randn(64, 64).astype(np.float32)
+
+    res, report = spec_router.execute_speculative("gemm", (A, B), contract)
+    assert report.predicted_route == "EXACT_ZERO_ROW_PRUNE"
+    assert report.prediction_correct is True
+    assert report.prediction_accuracy > 0.0
+    assert report.work_elimination_ratio >= 0.50
