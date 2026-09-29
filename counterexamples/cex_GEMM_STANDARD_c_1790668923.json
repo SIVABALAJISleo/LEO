@@ -1,0 +1,11 @@
+{
+  "workload_id": "GEMM_STANDARD",
+  "candidate_id": "c",
+  "counterexample_category": "SCALED_MAGNITUDES",
+  "input_sample_hash": "a660a49ed0e1223f",
+  "max_absolute_error": 0.0001068115234375,
+  "relative_error": 0.0001068115234375,
+  "tolerance_threshold": 0.0001,
+  "failure_reason": "Measured diff 1.07e-04 exceeds contract epsilon 1.00e-04",
+  "timestamp": 1790668923.922407
+}

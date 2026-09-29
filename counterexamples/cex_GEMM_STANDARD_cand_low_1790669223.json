@@ -1,0 +1,11 @@
+{
+  "workload_id": "GEMM_STANDARD",
+  "candidate_id": "cand_lowrank_f48e93ec",
+  "counterexample_category": "DEGENERATE_RANK_1",
+  "input_sample_hash": "5552cfb0ba41efce",
+  "max_absolute_error": 0.5,
+  "relative_error": 0.5,
+  "tolerance_threshold": 0.001,
+  "failure_reason": "Measured diff 5.00e-01 exceeds contract epsilon 1.00e-03",
+  "timestamp": 1790669223.9902143
+}

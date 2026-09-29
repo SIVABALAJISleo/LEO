@@ -1,0 +1,48 @@
+{
+  "workload_id": "GEMM_STANDARD",
+  "description": "Dense matrix multiplication C = A @ B (128x128 FP32)",
+  "input_domain": {
+    "A": {
+      "shape": [
+        128,
+        128
+      ],
+      "dtype": "FP32"
+    },
+    "B": {
+      "shape": [
+        128,
+        128
+      ],
+      "dtype": "FP32"
+    }
+  },
+  "output_domain": {
+    "C": {
+      "shape": [
+        128,
+        128
+      ],
+      "dtype": "FP32"
+    }
+  },
+  "exactness_category": "NUMERICALLY_EQUIVALENT",
+  "exactness_mode": "NUMERIC_TOLERANCE",
+  "tolerance_epsilon": 0.001,
+  "precision_requirement": "FP32",
+  "ordering_requirements": "STRICT_ORDER",
+  "latency_limit_ms": 1000.0,
+  "time_constraints_ms": 1000.0,
+  "throughput_requirement": 1.0,
+  "memory_limit_bytes": 4294967296,
+  "memory_constraints_bytes": 4294967296,
+  "power_limit_watts": 45.0,
+  "hardware_limits": {
+    "max_threads": 12,
+    "use_igpu": true,
+    "allow_remote": false
+  },
+  "determinism_requirement": true,
+  "side_effect_requirement": false,
+  "contract_hash": "bd5bb4426a69c3b4871273f561b4ead6fa57e639e40fcdd52d98e5ebb53966a0"
+}

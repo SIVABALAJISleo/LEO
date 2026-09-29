@@ -824,3 +824,7 @@ class CIRGraph:
         payload = json.dumps(self.to_dict(), sort_keys=True)
         return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
+    def compute_content_hash(self) -> str:
+        """Alias for get_hash()."""
+        return self.get_hash()
+

@@ -1,0 +1,11 @@
+{
+  "workload_id": "GEMM_STANDARD",
+  "candidate_id": "cand_nan",
+  "counterexample_category": "CANCELLATION_CATACLYSM",
+  "input_sample_hash": "70b706d5b149a7e8",
+  "max_absolute_error": Infinity,
+  "relative_error": 1.0,
+  "tolerance_threshold": 0.0,
+  "failure_reason": "Output contains NaN or Inf",
+  "timestamp": 1790674202.5064635
+}

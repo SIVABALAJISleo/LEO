@@ -1,0 +1,33 @@
+{
+  "workload_id": "SHA256_CRYPTO",
+  "description": "FIPS 180-4 SHA-256 hash over 1 MB payload",
+  "input_domain": {
+    "data": {
+      "dtype": "BYTES"
+    }
+  },
+  "output_domain": {
+    "digest": {
+      "dtype": "HEX_STRING"
+    }
+  },
+  "exactness_category": "NUMERICALLY_EQUIVALENT",
+  "exactness_mode": "BIT_EXACT",
+  "tolerance_epsilon": 0.0,
+  "precision_requirement": "FP32",
+  "ordering_requirements": "STRICT_ORDER",
+  "latency_limit_ms": 1000.0,
+  "time_constraints_ms": 1000.0,
+  "throughput_requirement": 1.0,
+  "memory_limit_bytes": 4294967296,
+  "memory_constraints_bytes": 4294967296,
+  "power_limit_watts": 45.0,
+  "hardware_limits": {
+    "max_threads": 12,
+    "use_igpu": true,
+    "allow_remote": false
+  },
+  "determinism_requirement": true,
+  "side_effect_requirement": false,
+  "contract_hash": "b85c5bc477725b0505208e8151bfaed90762778b73e98d60d58e402ac6054d7a"
+}

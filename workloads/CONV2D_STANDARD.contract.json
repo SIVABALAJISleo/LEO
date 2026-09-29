@@ -1,0 +1,48 @@
+{
+  "workload_id": "CONV2D_STANDARD",
+  "description": "2D spatial convolution of 64x64 image with 5x5 filter",
+  "input_domain": {
+    "image": {
+      "shape": [
+        64,
+        64
+      ],
+      "dtype": "FP32"
+    },
+    "kernel": {
+      "shape": [
+        5,
+        5
+      ],
+      "dtype": "FP32"
+    }
+  },
+  "output_domain": {
+    "output": {
+      "shape": [
+        60,
+        60
+      ],
+      "dtype": "FP32"
+    }
+  },
+  "exactness_category": "NUMERICALLY_EQUIVALENT",
+  "exactness_mode": "NUMERIC_TOLERANCE",
+  "tolerance_epsilon": 0.001,
+  "precision_requirement": "FP32",
+  "ordering_requirements": "STRICT_ORDER",
+  "latency_limit_ms": 1000.0,
+  "time_constraints_ms": 1000.0,
+  "throughput_requirement": 1.0,
+  "memory_limit_bytes": 4294967296,
+  "memory_constraints_bytes": 4294967296,
+  "power_limit_watts": 45.0,
+  "hardware_limits": {
+    "max_threads": 12,
+    "use_igpu": true,
+    "allow_remote": false
+  },
+  "determinism_requirement": true,
+  "side_effect_requirement": false,
+  "contract_hash": "d99c27ac0ab587e973c8993e2c196bbef9846b87a64fa3d15aad73a0a256fa0d"
+}

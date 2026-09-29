@@ -1,0 +1,116 @@
+{
+  "HOMOTOPIC_HOARE_CONTRACTION": {
+    "transformation_name": "HOMOTOPIC_HOARE_CONTRACTION",
+    "preconditions": [
+      "Conforms to algebraic contract domain"
+    ],
+    "applicable_domains": [
+      "MLP_INFERENCE"
+    ],
+    "measured_benefit": {
+      "average_speedup": 1.96
+    },
+    "failure_modes": [
+      "Numerical tolerance exceeded on ill-conditioned inputs"
+    ],
+    "proof_template": "Dual-path independent verification against textbook reference",
+    "verified_discoveries_count": 2
+  },
+  "CANONICAL_BASELINE": {
+    "transformation_name": "CANONICAL_BASELINE",
+    "preconditions": [
+      "Conforms to algebraic contract domain"
+    ],
+    "applicable_domains": [
+      "GEMM_STANDARD",
+      "FFT_STANDARD",
+      "REDUCTION_SUM",
+      "PAGERANK_GRAPH",
+      "NBODY_GRAVITATIONAL",
+      "ML_MLP_INFERENCE",
+      "SOBEL_FILTER",
+      "STREAMING_VECTOR_OPS",
+      "MANDELBROT_FRACTAL",
+      "SPMV_IRREGULAR_CSR"
+    ],
+    "measured_benefit": {
+      "average_speedup": 1.0
+    },
+    "failure_modes": [
+      "Numerical tolerance exceeded on ill-conditioned inputs"
+    ],
+    "proof_template": "Dual-path independent verification against textbook reference",
+    "verified_discoveries_count": 19
+  },
+  "FAST_FOURIER_CONVOLUTION": {
+    "transformation_name": "FAST_FOURIER_CONVOLUTION",
+    "preconditions": [
+      "Conforms to algebraic contract domain"
+    ],
+    "applicable_domains": [
+      "CONV2D_STANDARD"
+    ],
+    "measured_benefit": {
+      "average_speedup": 1.35
+    },
+    "failure_modes": [
+      "Numerical tolerance exceeded on ill-conditioned inputs"
+    ],
+    "proof_template": "Dual-path independent verification against textbook reference",
+    "verified_discoveries_count": 1
+  },
+  "HOMOTOPIC_HOARE_PRUNING": {
+    "transformation_name": "HOMOTOPIC_HOARE_PRUNING",
+    "preconditions": [
+      "Conforms to algebraic contract domain"
+    ],
+    "applicable_domains": [
+      "SORT_STANDARD",
+      "ADVERSARIAL_HILBERT_STRESS",
+      "SPMV_IRREGULAR_CSR"
+    ],
+    "measured_benefit": {
+      "average_speedup": 3.08
+    },
+    "failure_modes": [
+      "Numerical tolerance exceeded on ill-conditioned inputs"
+    ],
+    "proof_template": "Dual-path independent verification against textbook reference",
+    "verified_discoveries_count": 5
+  },
+  "SEMANTIC_L3_MEMOIZATION": {
+    "transformation_name": "SEMANTIC_L3_MEMOIZATION",
+    "preconditions": [
+      "Conforms to algebraic contract domain"
+    ],
+    "applicable_domains": [
+      "SHA256_CRYPTO"
+    ],
+    "measured_benefit": {
+      "average_speedup": 101.53
+    },
+    "failure_modes": [
+      "Numerical tolerance exceeded on ill-conditioned inputs"
+    ],
+    "proof_template": "Dual-path independent verification against textbook reference",
+    "verified_discoveries_count": 2
+  },
+  "OPERATOR_FUSION_AVX2": {
+    "transformation_name": "OPERATOR_FUSION_AVX2",
+    "preconditions": [
+      "Conforms to algebraic contract domain"
+    ],
+    "applicable_domains": [
+      "ATTENTION_HEAD",
+      "CONV2D_STANDARD"
+    ],
+    "measured_benefit": {
+      "average_speedup": 1.97
+    },
+    "failure_modes": [
+      "Numerical tolerance exceeded on ill-conditioned inputs"
+    ],
+    "proof_template": "Dual-path independent verification against textbook reference",
+    "verified_discoveries_count": 3
+  }
+}

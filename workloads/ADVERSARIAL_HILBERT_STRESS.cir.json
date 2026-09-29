@@ -1,0 +1,17 @@
+{
+  "graph_id": "cir_5058fe618ffa",
+  "name": "ADVERSARIAL_HILBERT_STRESS",
+  "inputs": [],
+  "outputs": [],
+  "metadata": {},
+  "contract": null,
+  "resource_requirements": {
+    "peak_live_memory_bytes": 0,
+    "total_data_movement_bytes": 0,
+    "total_estimated_flops": 0,
+    "node_count": 0,
+    "edge_count": 0
+  },
+  "nodes": {},
+  "edges": []
+}

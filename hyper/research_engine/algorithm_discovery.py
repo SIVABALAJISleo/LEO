@@ -170,3 +170,31 @@ class AlgorithmDiscoveryEngine:
             f.write("### Limitations\n")
             for lim in record.limitations:
                 f.write(f"- {lim}\n")
+
+    @classmethod
+    def discover_for_workload(
+        cls,
+        contract: ComputationalContract,
+        budget: SearchBudgetLevel = SearchBudgetLevel.LEVEL_1_FAST,
+    ) -> AlgorithmDiscoveryRecord:
+        record, cand, proof = cls.discover_pathway(contract, budget)
+        if record is None:
+            record = AlgorithmDiscoveryRecord(
+                discovery_id=f"disc_{contract.workload_id.lower()}_{cand.candidate_id[:8]}",
+                workload_id=contract.workload_id,
+                original_algorithm=f"{contract.workload_id}_CANONICAL_REFERENCE",
+                discovered_algorithm=cand.candidate_id,
+                transformation_sequence=cand.transformation_history,
+                mathematical_transformation=" -> ".join(cand.transformation_history),
+                complexity_estimate_original="O(N^3)",
+                complexity_estimate_discovered="O(N^3)",
+                measured_speedup=1.0,
+                measured_memory_reduction=0.0,
+                verification_proof_hash=proof.proof_hash,
+                verification_status="FAILED",
+                exactness_category=contract.exactness_category.value,
+                is_research_candidate=False,
+                limitations=["Search budget exhausted before exact verified alternative found"],
+                discovery_cost_ms=1.0,
+            )
+        return record

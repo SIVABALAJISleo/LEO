@@ -1,0 +1,39 @@
+{
+  "workload_id": "STREAMING_VECTOR_OPS",
+  "description": "Memory-bandwidth limited sequential vector axpy operations (1,000,000 elements)",
+  "input_domain": {
+    "x": {
+      "shape": [
+        1000000
+      ],
+      "dtype": "FP32"
+    }
+  },
+  "output_domain": {
+    "y": {
+      "shape": [
+        1000000
+      ],
+      "dtype": "FP32"
+    }
+  },
+  "exactness_category": "NUMERICALLY_EQUIVALENT",
+  "exactness_mode": "BIT_EXACT",
+  "tolerance_epsilon": 0.0,
+  "precision_requirement": "FP32",
+  "ordering_requirements": "STRICT_ORDER",
+  "latency_limit_ms": 1000.0,
+  "time_constraints_ms": 1000.0,
+  "throughput_requirement": 1.0,
+  "memory_limit_bytes": 4294967296,
+  "memory_constraints_bytes": 4294967296,
+  "power_limit_watts": 45.0,
+  "hardware_limits": {
+    "max_threads": 12,
+    "use_igpu": true,
+    "allow_remote": false
+  },
+  "determinism_requirement": true,
+  "side_effect_requirement": false,
+  "contract_hash": "b17789f50d509d33aa089f62c0b380478a997d6201ea20c65cff07083535d97e"
+}

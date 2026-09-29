@@ -1,0 +1,54 @@
+{
+  "workload_id": "NBODY_GRAVITATIONAL",
+  "description": "Gravitational pairwise simulation step for 256 celestial bodies",
+  "input_domain": {
+    "positions": {
+      "shape": [
+        256,
+        3
+      ],
+      "dtype": "FP32"
+    },
+    "velocities": {
+      "shape": [
+        256,
+        3
+      ],
+      "dtype": "FP32"
+    },
+    "masses": {
+      "shape": [
+        256
+      ],
+      "dtype": "FP32"
+    }
+  },
+  "output_domain": {
+    "positions_next": {
+      "shape": [
+        256,
+        3
+      ],
+      "dtype": "FP32"
+    }
+  },
+  "exactness_category": "NUMERICALLY_EQUIVALENT",
+  "exactness_mode": "NUMERIC_TOLERANCE",
+  "tolerance_epsilon": 0.001,
+  "precision_requirement": "FP32",
+  "ordering_requirements": "STRICT_ORDER",
+  "latency_limit_ms": 1000.0,
+  "time_constraints_ms": 1000.0,
+  "throughput_requirement": 1.0,
+  "memory_limit_bytes": 4294967296,
+  "memory_constraints_bytes": 4294967296,
+  "power_limit_watts": 45.0,
+  "hardware_limits": {
+    "max_threads": 12,
+    "use_igpu": true,
+    "allow_remote": false
+  },
+  "determinism_requirement": true,
+  "side_effect_requirement": false,
+  "contract_hash": "96554eed906cc5036328d40ebf618b79ada963cb5742b1a664a62d94147ff635"
+}

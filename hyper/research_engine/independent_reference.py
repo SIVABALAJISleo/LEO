@@ -166,9 +166,18 @@ class IndependentReferenceEngine:
             z[mask] = z[mask] ** 2 + c_grid[mask]
         return out
 
-    @staticmethod
-    def execute_reference(workload_id: str, inputs: Dict[str, Any]) -> Any:
+    _dynamic_references: Dict[str, Callable[[Dict[str, Any]], Any]] = {}
+
+    @classmethod
+    def register_reference(cls, workload_id: str, fn: Callable[[Dict[str, Any]], Any]) -> None:
+        cls._dynamic_references[workload_id] = fn
+
+    @classmethod
+    def execute_reference(cls, workload_id: str, inputs: Dict[str, Any]) -> Any:
         """Dispatch helper for canonical reference execution."""
+        if workload_id in cls._dynamic_references:
+            return cls._dynamic_references[workload_id](inputs)
+
         w_id = workload_id.upper()
         if ("A" in inputs and "B" in inputs):
             return IndependentReferenceEngine.reference_matmul(inputs["A"], inputs["B"])

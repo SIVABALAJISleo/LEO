@@ -1,0 +1,86 @@
+{
+  "proof_version": "2.0-ULTRA-SONIC",
+  "timestamp": 1790674371.9670384,
+  "original_representation_hash": "5f00a575eaa9871d43b50fe60f347549aef01820f7a98fcbb0ea38b7d9da9001",
+  "candidate_representation_hash": "5f00a575eaa9871d43b50fe60f347549aef01820f7a98fcbb0ea38b7d9da9001",
+  "transformation_chain": [
+    "CANONICAL_BASELINE"
+  ],
+  "contract": {
+    "workload_id": "GEMM_STANDARD",
+    "description": "Dense matrix multiplication C = A @ B (128x128 FP32)",
+    "input_domain": {
+      "A": {
+        "shape": [
+          128,
+          128
+        ],
+        "dtype": "FP32"
+      },
+      "B": {
+        "shape": [
+          128,
+          128
+        ],
+        "dtype": "FP32"
+      }
+    },
+    "output_domain": {
+      "C": {
+        "shape": [
+          128,
+          128
+        ],
+        "dtype": "FP32"
+      }
+    },
+    "exactness_category": "NUMERICALLY_EQUIVALENT",
+    "exactness_mode": "NUMERIC_TOLERANCE",
+    "tolerance_epsilon": 0.001,
+    "precision_requirement": "FP32",
+    "ordering_requirements": "STRICT_ORDER",
+    "latency_limit_ms": 1000.0,
+    "time_constraints_ms": 1000.0,
+    "throughput_requirement": 1.0,
+    "memory_limit_bytes": 4294967296,
+    "memory_constraints_bytes": 4294967296,
+    "power_limit_watts": 45.0,
+    "hardware_limits": {
+      "max_threads": 12,
+      "use_igpu": true,
+      "allow_remote": false
+    },
+    "determinism_requirement": true,
+    "side_effect_requirement": false,
+    "contract_hash": "bd5bb4426a69c3b4871273f561b4ead6fa57e639e40fcdd52d98e5ebb53966a0"
+  },
+  "verification": {
+    "is_verified": true,
+    "exactness_mode": "NUMERIC_TOLERANCE",
+    "exactness_category": "NUMERICALLY_EQUIVALENT",
+    "verification_method": "UNIFIED_MULTI_STRATEGY_EQUIVALENCE",
+    "max_error": 0.0,
+    "l2_error": 0.0,
+    "tests_evaluated": 9,
+    "counterexamples_count": 0,
+    "assumptions_verified": true,
+    "strategies_evaluated": [
+      "INDEPENDENT_REFERENCE_DUAL_PATH",
+      "METAMORPHIC_PROPERTY_CHECK",
+      "ADVERSARIAL_COUNTEREXAMPLE_HUNTING",
+      "CONTRACT_EXACTNESS_COMPLIANCE"
+    ],
+    "proof_hash": "11a39b010fd4ffcd2c8127a65644475580e0770d4a327ef93d6c04e50bc3331d",
+    "timestamp": 1790674371.9666395
+  },
+  "resource_measurements": {
+    "latency_ms": 1.1,
+    "memory_traffic_bytes": 65536
+  },
+  "environment_info": {
+    "cpu": "Intel Core i5-12450H",
+    "igpu": "Intel UHD Graphics (48 EUs)",
+    "ram": "16 GB UMA",
+    "os": "Windows 11"
+  }
+}

@@ -54,6 +54,7 @@ from hyper_x.wormhole_compiler import (
     ObservableCompiler,
     CandidateRegistry,
 )
+from hyper.research_engine import cli_commands
 
 def cmd_audit(args: argparse.Namespace) -> None:
     if getattr(args, "full", False):
@@ -582,30 +583,112 @@ def cmd_observable(args: argparse.Namespace) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="HYPER-X Master CLI")
+    parser = argparse.ArgumentParser(description="LEO / HYPER — Universal Pathway Discovery & Exact Computation Engine")
     subparsers = parser.add_subparsers(dest="subcommand")
 
-    p_audit = subparsers.add_parser("audit")
+    # 1. hyper audit
+    p_audit = subparsers.add_parser("audit", help="Forensic audit of codebase, hardware compatibility, and anti-hardcoding checks")
     p_audit.add_argument("--full", action="store_true", help="Execute complete forensic falsification audit")
+    p_audit.add_argument("--json", action="store_true", help="Output machine-readable JSON")
+
+    # 2. hyper discover
+    p_discover = subparsers.add_parser("discover", help="Discover alternative exact computational pathways via Algorithm Discovery Engine")
+    p_discover.add_argument("workload_pos", nargs="?", default=None, help="Target workload name/ID")
+    p_discover.add_argument("--workload", type=str, default="GEMM_STANDARD", help="Workload ID (e.g. GEMM_STANDARD, CONV2D_STANDARD)")
+    p_discover.add_argument("--budget", type=str, default="fast", choices=["fast", "expanded", "deep", "massive", "research"])
+    p_discover.add_argument("--expr", type=str, default="")
+    p_discover.add_argument("--unknown-workload", action="store_true", dest="unknown_workload")
+    p_discover.add_argument("--json", action="store_true", help="Output machine-readable JSON")
+
+    # 3. hyper search
+    p_search = subparsers.add_parser("search", help="Search massive pathway space with anytime pruning and Pareto dominance")
+    p_search.add_argument("workload_pos", nargs="?", default=None, help="Target workload name/ID")
+    p_search.add_argument("--workload", type=str, default="GEMM_STANDARD")
+    p_search.add_argument("--budget", type=str, default="fast", choices=["fast", "expanded", "deep", "massive", "research"])
+    p_search.add_argument("--strategy", type=str, default="beam", choices=["beam", "best_first", "astar"])
+    p_search.add_argument("--json", action="store_true", help="Output machine-readable JSON")
+
+    # 4. hyper verify
+    p_verify = subparsers.add_parser("verify", help="Rigorous multi-strategy equivalence verification against independent reference")
+    p_verify.add_argument("workload_pos", nargs="?", default=None, help="Target workload name/ID")
+    p_verify.add_argument("--workload", type=str, default="GEMM_STANDARD")
+    p_verify.add_argument("--candidate", type=str, default=None)
+    p_verify.add_argument("--json", action="store_true", help="Output machine-readable JSON")
+
+    # 5. hyper benchmark
+    p_benchmark = subparsers.add_parser("benchmark", help="End-to-end benchmark with 7-component Total Cost Model and CPU/iGPU telemetry")
+    p_benchmark.add_argument("workload_pos", nargs="?", default=None, help="Target workload name/ID")
+    p_benchmark.add_argument("--workload", type=str, default="GEMM_STANDARD")
+    p_benchmark.add_argument("--runs", type=int, default=5)
+    p_benchmark.add_argument("--amortized", type=int, default=1000)
+    p_benchmark.add_argument("--json", action="store_true", help="Output machine-readable JSON")
+
+    # 6. hyper blind
+    p_blind = subparsers.add_parser("blind", help="Sealed blind workload evaluation where identity, hints, and answers are hidden")
+    p_blind.add_argument("--domain", type=str, default="all")
+    p_blind.add_argument("--rounds", type=int, default=5)
+    p_blind.add_argument("--json", action="store_true", help="Output machine-readable JSON")
+
+    # 7. hyper challenge
+    p_challenge = subparsers.add_parser("challenge", help="Autonomous adversarial challenge generating unseen workloads across 18 domains")
+    p_challenge.add_argument("--rounds", type=int, default=5)
+    p_challenge.add_argument("--categories", type=str, default="all")
+    p_challenge.add_argument("--json", action="store_true", help="Output machine-readable JSON")
+
+    # 8. hyper target-100
+    p_target_100 = subparsers.add_parser("target-100", help="Continuously maximize verified exact workload coverage across canonical suite")
+    p_target_100.add_argument("--iterations", type=int, default=1)
+    p_target_100.add_argument("--json", action="store_true", help="Output machine-readable JSON")
+    p_target_100_alias = subparsers.add_parser("target_100", help="Alias for target-100")
+    p_target_100_alias.add_argument("--iterations", type=int, default=1)
+    p_target_100_alias.add_argument("--json", action="store_true", help="Output machine-readable JSON")
+
+    # 9. hyper pathway
+    p_pathway = subparsers.add_parser("pathway", help="Inspect, visualize, and export candidate pathway tree with rejected branch diagnostics")
+    p_pathway.add_argument("workload_pos", nargs="?", default=None, help="Target workload name/ID")
+    p_pathway.add_argument("--workload", type=str, default="GEMM_STANDARD")
+    p_pathway.add_argument("--export", type=str, default=None)
+    p_pathway.add_argument("--json", action="store_true", help="Output machine-readable JSON")
+
+    # 10. hyper replay
+    p_replay = subparsers.add_parser("replay", help="Research-grade experiment replay and verification of numerical determinism")
+    p_replay.add_argument("--proof-file", type=str, default=None)
+    p_replay.add_argument("--experiment-id", type=str, default=None)
+    p_replay.add_argument("--candidate", type=str, default=None)
+    p_replay.add_argument("--json", action="store_true", help="Output machine-readable JSON")
+
+    # 11. hyper proof
+    p_proof = subparsers.add_parser("proof", help="Generate and audit proof-carrying computation artifact (pathway_proof.json)")
+    p_proof.add_argument("workload_pos", nargs="?", default=None, help="Target workload name/ID")
+    p_proof.add_argument("--workload", type=str, default="GEMM_STANDARD")
+    p_proof.add_argument("--out-dir", type=str, default="proofs")
+    p_proof.add_argument("--json", action="store_true", help="Output machine-readable JSON")
+
+    # 12. hyper report
+    p_report = subparsers.add_parser("report", help="Display or export comprehensive scientific research and final audit reports")
+    p_report.add_argument("--final", action="store_true", help="Display HYPER_FINAL_AUDIT.md")
+    p_report.add_argument("--file", type=str, default=None)
+    p_report.add_argument("--json", action="store_true", help="Output machine-readable JSON")
+
+    # Legacy & Auxiliary Subcommands
     subparsers.add_parser("hardware")
     subparsers.add_parser("contract")
-
     p_compile = subparsers.add_parser("compile")
     p_compile.add_argument("--dim", type=int, default=128)
     p_compile.add_argument("--rank", type=int, default=16)
     p_compile.add_argument("--tolerance", type=float, default=1e-3)
-    p_compile.add_argument("--unstructured", action="store_true", help="Use random unstructured dense matrix (triggers No-Free-Lunch fallback)")
-    p_compile.add_argument("--output-vector", action="store_true", help="Contract only requires vector projection")
+    p_compile.add_argument("--unstructured", action="store_true")
+    p_compile.add_argument("--output-vector", action="store_true")
 
     p_research = subparsers.add_parser("research")
-    p_research.add_argument("workload_pos", nargs="?", default=None, help="Target workload name/ID")
+    p_research.add_argument("workload_pos", nargs="?", default=None)
     p_research.add_argument("--workload", type=str, default=None)
-    p_research.add_argument("--domain", type=str, default=None, help="Alias for --workload")
+    p_research.add_argument("--domain", type=str, default=None)
     p_research.add_argument("--mode", type=str, default="deep", choices=["quick", "standard", "deep", "research", "exhaustive"])
     p_research.add_argument("--iterations", type=int, default=None)
-    p_research.add_argument("--autonomous", action="store_true", help="Execute complete 15-stage autonomous research loop and generate all artifacts")
-    p_research.add_argument("--blind-holdout", action="store_true", dest="blind_holdout", help="Execute with sealed blind holdout evaluation")
-    p_research.add_argument("--unknown-workload", action="store_true", dest="unknown_workload", help="Execute in unknown-workload mode without hints")
+    p_research.add_argument("--autonomous", action="store_true")
+    p_research.add_argument("--blind-holdout", action="store_true", dest="blind_holdout")
+    p_research.add_argument("--unknown-workload", action="store_true", dest="unknown_workload")
 
     p_evolve = subparsers.add_parser("evolve")
     p_evolve.add_argument("--population", type=int, default=8)
@@ -615,9 +698,8 @@ def main() -> None:
     p_reproduce.add_argument("--candidate", type=str, default="WORMHOLE_GEMM_DEFAULT")
 
     subparsers.add_parser("registry")
-
     p_explain = subparsers.add_parser("explain")
-    p_explain.add_argument("workload", type=str, nargs="?", default="GEMM", help="Workload name to explain")
+    p_explain.add_argument("workload", type=str, nargs="?", default="GEMM")
     p_explain.add_argument("--dim", type=int, default=128)
 
     p_analyze = subparsers.add_parser("analyze")
@@ -627,15 +709,8 @@ def main() -> None:
     p_wormhole.add_argument("--workload", type=str, default="GEMM")
     p_wormhole.add_argument("--dim", type=int, default=128)
 
-    p_discover = subparsers.add_parser("discover")
-    p_discover.add_argument("--expr", type=str, default="")
-    p_discover.add_argument("--unknown-workload", action="store_true", dest="unknown_workload", help="Execute in unknown-workload mode")
-
-    subparsers.add_parser("benchmark")
-    subparsers.add_parser("verify")
     subparsers.add_parser("falsify")
     subparsers.add_parser("holdout")
-
     p_comp = subparsers.add_parser("compare-nvidia")
     p_comp.add_argument("--domain", type=str, default="all")
 
@@ -648,23 +723,18 @@ def main() -> None:
     p_eliminate.add_argument("--workload", type=str, default="GEMM")
 
     subparsers.add_parser("inspect")
-
     p_certify = subparsers.add_parser("certify")
     p_certify.add_argument("--candidate", type=str, default="CAND_WORMHOLE_01")
-
     p_certificate = subparsers.add_parser("certificate")
     p_certificate.add_argument("--candidate", type=str, default="CAND_WORMHOLE_01")
 
     p_necessity = subparsers.add_parser("necessity")
     p_necessity.add_argument("--operation", type=str, default="dense_unstructured_gemm")
 
-    p_search = subparsers.add_parser("search")
-    p_search.add_argument("--workload", type=str, default="GEMM")
-
     p_univ_search = subparsers.add_parser("universal-search")
     p_univ_search.add_argument("--workload", type=str, default="GEMM")
     p_univ_search.add_argument("--dim", type=int, default=128)
-    p_univ_search.add_argument("--exact", action="store_true", help="Require exact contract")
+    p_univ_search.add_argument("--exact", action="store_true")
 
     subparsers.add_parser("coverage")
     subparsers.add_parser("dashboard")
@@ -676,73 +746,70 @@ def main() -> None:
     subparsers.add_parser("counterfactual")
     subparsers.add_parser("representation")
     subparsers.add_parser("algorithm-search")
-
-    p_challenge = subparsers.add_parser("challenge")
-    p_challenge.add_argument("--rounds", type=int, default=5, help="Number of adversarial challenge rounds")
-
     subparsers.add_parser("validate")
-
-    p_report = subparsers.add_parser("report")
-    p_report.add_argument("--file", type=str, default=None)
 
     args = parser.parse_args()
     if not args.subcommand:
         parser.print_help()
         sys.exit(0)
 
+    # Normalize positional workload if provided
+    if hasattr(args, "workload_pos") and args.workload_pos and not getattr(args, "workload", None):
+        args.workload = args.workload_pos
+    elif hasattr(args, "workload_pos") and args.workload_pos and getattr(args, "workload", None) == "GEMM_STANDARD":
+        args.workload = args.workload_pos
+
     def cmd_score_wrapper(a: argparse.Namespace) -> None:
         cmd_scorecard(a)
 
-    def cmd_report_wrapper(a: argparse.Namespace) -> None:
-        rf = getattr(a, "file", None)
-        report_file = Path(rf) if rf else Path("HYPER-X_DISCOVERY_REPORT.md")
-        if not report_file.exists():
-            report_file = Path("NVIDIA_TOTAL_PARITY_REPORT.md")
-        if report_file.exists():
-            with open(report_file, "r", encoding="utf-8") as f:
-                print(f.read())
-        else:
-            print("Report file not found. Run 'hyperx research --autonomous' to generate discovery report.")
-
     handlers = {
-        "audit": cmd_audit,
-        "inspect": cmd_audit,
+        # 12 Mandated Core Commands (Section 35)
+        "audit": cli_commands.cmd_audit,
+        "discover": cli_commands.cmd_discover,
+        "search": cli_commands.cmd_search,
+        "verify": cli_commands.cmd_verify,
+        "benchmark": cli_commands.cmd_benchmark,
+        "blind": cli_commands.cmd_blind,
+        "challenge": cli_commands.cmd_challenge,
+        "target-100": cli_commands.cmd_target_100,
+        "target_100": cli_commands.cmd_target_100,
+        "pathway": cli_commands.cmd_pathway,
+        "replay": cli_commands.cmd_replay,
+        "proof": cli_commands.cmd_proof,
+        "report": cli_commands.cmd_report,
+
+        # Supporting & Legacy Commands
+        "inspect": cli_commands.cmd_audit,
         "hardware": cmd_hardware,
         "contract": cmd_contract,
         "compile": cmd_compile,
         "research": cmd_research,
-        "challenge": cmd_challenge,
         "validate": cmd_validate,
         "evolve": cmd_evolve,
         "algorithm-search": cmd_evolve,
-        "reproduce": cmd_reproduce,
+        "reproduce": cli_commands.cmd_replay,
         "registry": cmd_registry,
         "explain": cmd_explain,
         "analyze": cmd_analyze,
         "wormhole": cmd_wormhole,
-        "discover": cmd_discover,
-        "representation": cmd_discover,
+        "representation": cli_commands.cmd_discover,
         "eliminate": cmd_eliminate,
         "counterfactual": cmd_eliminate,
         "certify": cmd_certify,
         "certificate": cmd_certify,
         "necessity": cmd_necessity,
-        "search": cmd_search,
         "universal-search": cmd_universal_search,
         "coverage": cmd_coverage,
         "dashboard": cmd_dashboard,
         "workload": cmd_workload,
         "observable": cmd_observable,
-        "benchmark": cmd_benchmark,
-        "verify": cmd_verify,
         "falsify": cmd_falsify,
-        "holdout": cmd_holdout,
+        "holdout": cli_commands.cmd_blind,
         "compare-nvidia": cmd_compare_nvidia,
         "scorecard": cmd_scorecard,
         "score": cmd_score_wrapper,
         "claims": cmd_claims,
         "provenance": cmd_provenance,
-        "report": cmd_report_wrapper,
     }
 
     handler = handlers.get(args.subcommand)
@@ -751,5 +818,7 @@ def main() -> None:
     else:
         parser.print_help()
 
+
 if __name__ == "__main__":
     main()
+

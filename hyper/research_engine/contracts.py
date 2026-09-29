@@ -172,17 +172,18 @@ class ComputationalContract:
             return self._compare_values(output, reference_output)
 
     def _compare_values(self, out: Any, ref: Any) -> Tuple[bool, str, float]:
-        if isinstance(ref, np.ndarray):
+        if isinstance(ref, np.ndarray) or isinstance(out, np.ndarray):
             out_arr = np.asarray(out)
-            if out_arr.shape != ref.shape:
-                return False, f"Shape mismatch {out_arr.shape} vs {ref.shape}", float("inf")
-            if not np.all(np.isfinite(out_arr)):
+            ref_arr = np.asarray(ref)
+            if out_arr.shape != ref_arr.shape:
+                return False, f"Shape mismatch {out_arr.shape} vs {ref_arr.shape}", float("inf")
+            if np.issubdtype(out_arr.dtype, np.floating) and not np.all(np.isfinite(out_arr)):
                 return False, "Output contains NaN or Inf", float("inf")
-            max_diff = float(np.max(np.abs(out_arr - ref)))
+            max_diff = float(np.max(np.abs(out_arr - ref_arr)))
             ok, msg = self.validate_exactness(self.exactness_category, max_diff)
             return ok, msg, max_diff
         elif isinstance(ref, (int, float, np.integer, np.floating)):
-            diff = float(abs(out - ref))
+            diff = float(abs(float(out) - float(ref)))
             ok, msg = self.validate_exactness(self.exactness_category, diff)
             return ok, msg, diff
         elif isinstance(ref, str):

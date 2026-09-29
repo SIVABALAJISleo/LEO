@@ -1,0 +1,11 @@
+{
+  "workload_id": "ADVERSARIAL_HILBERT_STRESS",
+  "candidate_id": "cand_memo_bddabacf",
+  "counterexample_category": "CANCELLATION_CATACLYSM",
+  "input_sample_hash": "165b5b39acabf257",
+  "max_absolute_error": 3.3864212036132812,
+  "relative_error": 3.3864212036132812,
+  "tolerance_threshold": 0.0001,
+  "failure_reason": "Measured diff 3.39e+00 exceeds contract epsilon 1.00e-04",
+  "timestamp": 1790670111.551037
+}

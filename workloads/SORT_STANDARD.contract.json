@@ -1,0 +1,39 @@
+{
+  "workload_id": "SORT_STANDARD",
+  "description": "Array element sorting (10,000 float32 elements)",
+  "input_domain": {
+    "x": {
+      "shape": [
+        10000
+      ],
+      "dtype": "FP32"
+    }
+  },
+  "output_domain": {
+    "output": {
+      "shape": [
+        10000
+      ],
+      "dtype": "FP32"
+    }
+  },
+  "exactness_category": "NUMERICALLY_EQUIVALENT",
+  "exactness_mode": "BIT_EXACT",
+  "tolerance_epsilon": 0.0,
+  "precision_requirement": "FP32",
+  "ordering_requirements": "STRICT_ORDER",
+  "latency_limit_ms": 1000.0,
+  "time_constraints_ms": 1000.0,
+  "throughput_requirement": 1.0,
+  "memory_limit_bytes": 4294967296,
+  "memory_constraints_bytes": 4294967296,
+  "power_limit_watts": 45.0,
+  "hardware_limits": {
+    "max_threads": 12,
+    "use_igpu": true,
+    "allow_remote": false
+  },
+  "determinism_requirement": true,
+  "side_effect_requirement": false,
+  "contract_hash": "7033b6b6eeaa63c789de52af5b9bfdcefccd54c0c157c458938537d7ed361d22"
+}

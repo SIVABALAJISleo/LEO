@@ -1,0 +1,48 @@
+{
+  "workload_id": "ML_MLP_INFERENCE",
+  "description": "Multi-layer perceptron forward inference (Dense -> ReLU -> Dense)",
+  "input_domain": {
+    "A": {
+      "shape": [
+        64,
+        128
+      ],
+      "dtype": "FP32"
+    },
+    "B": {
+      "shape": [
+        128,
+        64
+      ],
+      "dtype": "FP32"
+    }
+  },
+  "output_domain": {
+    "output": {
+      "shape": [
+        64,
+        64
+      ],
+      "dtype": "FP32"
+    }
+  },
+  "exactness_category": "NUMERICALLY_EQUIVALENT",
+  "exactness_mode": "NUMERIC_TOLERANCE",
+  "tolerance_epsilon": 0.001,
+  "precision_requirement": "FP32",
+  "ordering_requirements": "STRICT_ORDER",
+  "latency_limit_ms": 1000.0,
+  "time_constraints_ms": 1000.0,
+  "throughput_requirement": 1.0,
+  "memory_limit_bytes": 4294967296,
+  "memory_constraints_bytes": 4294967296,
+  "power_limit_watts": 45.0,
+  "hardware_limits": {
+    "max_threads": 12,
+    "use_igpu": true,
+    "allow_remote": false
+  },
+  "determinism_requirement": true,
+  "side_effect_requirement": false,
+  "contract_hash": "c86fa51007cd1e9ba50f2fd1f8f6e1639f82689d7853a6c6af9cc7da8a2ff2b6"
+}

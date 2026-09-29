@@ -1,0 +1,23 @@
+{
+  "discovery_id": "disc_gemm_standard_cand_can",
+  "workload_id": "GEMM_STANDARD",
+  "original_algorithm": "GEMM_STANDARD_CANONICAL_REFERENCE",
+  "discovered_algorithm": "cand_canonical_aa8acf6d",
+  "transformation_sequence": [
+    "CANONICAL_BASELINE"
+  ],
+  "mathematical_transformation": "CANONICAL_BASELINE",
+  "complexity_estimate_original": "O(N^3)",
+  "complexity_estimate_discovered": "O(N^3)",
+  "measured_speedup": 1.0,
+  "measured_memory_reduction": 0.0,
+  "verification_proof_hash": "7537dd56810047b4b7b7e1996b6d36937e23818b8940d81e143d67a570dce243",
+  "verification_status": "FAILED",
+  "exactness_category": "NUMERICALLY_EQUIVALENT",
+  "is_research_candidate": false,
+  "limitations": [
+    "Search budget exhausted before exact verified alternative found"
+  ],
+  "discovery_cost_ms": 1.0,
+  "timestamp": 1790674371.3307831
+}

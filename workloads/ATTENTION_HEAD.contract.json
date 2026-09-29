@@ -1,0 +1,59 @@
+{
+  "workload_id": "ATTENTION_HEAD",
+  "description": "Transformer Scaled Dot-Product Attention (Batch=1, Seq=32, HeadDim=64)",
+  "input_domain": {
+    "Q": {
+      "shape": [
+        1,
+        32,
+        64
+      ],
+      "dtype": "FP32"
+    },
+    "K": {
+      "shape": [
+        1,
+        32,
+        64
+      ],
+      "dtype": "FP32"
+    },
+    "V": {
+      "shape": [
+        1,
+        32,
+        64
+      ],
+      "dtype": "FP32"
+    }
+  },
+  "output_domain": {
+    "context": {
+      "shape": [
+        1,
+        32,
+        64
+      ],
+      "dtype": "FP32"
+    }
+  },
+  "exactness_category": "NUMERICALLY_EQUIVALENT",
+  "exactness_mode": "NUMERIC_TOLERANCE",
+  "tolerance_epsilon": 0.001,
+  "precision_requirement": "FP32",
+  "ordering_requirements": "STRICT_ORDER",
+  "latency_limit_ms": 1000.0,
+  "time_constraints_ms": 1000.0,
+  "throughput_requirement": 1.0,
+  "memory_limit_bytes": 4294967296,
+  "memory_constraints_bytes": 4294967296,
+  "power_limit_watts": 45.0,
+  "hardware_limits": {
+    "max_threads": 12,
+    "use_igpu": true,
+    "allow_remote": false
+  },
+  "determinism_requirement": true,
+  "side_effect_requirement": false,
+  "contract_hash": "b4c8d38c4731f675b36bd64acef068204ac949d93014d1817c823a3d6e78277b"
+}

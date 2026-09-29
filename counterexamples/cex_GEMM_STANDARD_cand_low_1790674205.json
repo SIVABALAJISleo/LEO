@@ -1,0 +1,11 @@
+{
+  "workload_id": "GEMM_STANDARD",
+  "candidate_id": "cand_lowrank_8d3cb200",
+  "counterexample_category": "CANCELLATION_CATACLYSM",
+  "input_sample_hash": "bbb4f35b5e9f1cea",
+  "max_absolute_error": 39.97618865966797,
+  "relative_error": 39.97618865966797,
+  "tolerance_threshold": 0.001,
+  "failure_reason": "Measured diff 4.00e+01 exceeds contract epsilon 1.00e-03",
+  "timestamp": 1790674205.009664
+}

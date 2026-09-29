@@ -1,0 +1,11 @@
+{
+  "workload_id": "GEMM_STANDARD",
+  "candidate_id": "cand_signed_bug",
+  "counterexample_category": "CANONICAL_SAMPLE",
+  "input_sample_hash": "20c41ac02cf23c70",
+  "max_absolute_error": 95.68096160888672,
+  "relative_error": 95.68096160888672,
+  "tolerance_threshold": 0.0001,
+  "failure_reason": "Claimed EXACT but measured non-zero difference 95.68096160888672",
+  "timestamp": 1790668591.5743492
+}

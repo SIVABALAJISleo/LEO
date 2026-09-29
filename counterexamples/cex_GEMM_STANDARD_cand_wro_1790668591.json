@@ -1,0 +1,11 @@
+{
+  "workload_id": "GEMM_STANDARD",
+  "candidate_id": "cand_wrong_dim",
+  "counterexample_category": "CANCELLATION_CATACLYSM",
+  "input_sample_hash": "22ee677aa1444371",
+  "max_absolute_error": Infinity,
+  "relative_error": 1.0,
+  "tolerance_threshold": 0.0,
+  "failure_reason": "Shape mismatch (32, 32) vs (128, 128)",
+  "timestamp": 1790668591.3362086
+}

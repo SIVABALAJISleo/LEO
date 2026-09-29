@@ -1,0 +1,41 @@
+{
+  "workload_id": "MANDELBROT_FRACTAL",
+  "description": "Compute-bound iterative divergence count over 128x128 complex grid",
+  "input_domain": {
+    "c_grid": {
+      "shape": [
+        128,
+        128
+      ],
+      "dtype": "COMPLEX64"
+    }
+  },
+  "output_domain": {
+    "iterations": {
+      "shape": [
+        128,
+        128
+      ],
+      "dtype": "INT32"
+    }
+  },
+  "exactness_category": "NUMERICALLY_EQUIVALENT",
+  "exactness_mode": "INTEGER_EXACT",
+  "tolerance_epsilon": 0.0,
+  "precision_requirement": "FP32",
+  "ordering_requirements": "STRICT_ORDER",
+  "latency_limit_ms": 1000.0,
+  "time_constraints_ms": 1000.0,
+  "throughput_requirement": 1.0,
+  "memory_limit_bytes": 4294967296,
+  "memory_constraints_bytes": 4294967296,
+  "power_limit_watts": 45.0,
+  "hardware_limits": {
+    "max_threads": 12,
+    "use_igpu": true,
+    "allow_remote": false
+  },
+  "determinism_requirement": true,
+  "side_effect_requirement": false,
+  "contract_hash": "1200784052e99aa543090b5133259d029de7919d768c094141428a501fb93423"
+}

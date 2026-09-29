@@ -1,0 +1,11 @@
+{
+  "workload_id": "GEMM_STANDARD",
+  "candidate_id": "cand_throw",
+  "counterexample_category": "CANCELLATION_CATACLYSM",
+  "input_sample_hash": "c792201a44b78117",
+  "max_absolute_error": Infinity,
+  "relative_error": 1.0,
+  "tolerance_threshold": 0.0,
+  "failure_reason": "Candidate exception during verification: Fatal memory access error",
+  "timestamp": 1790673416.4127347
+}

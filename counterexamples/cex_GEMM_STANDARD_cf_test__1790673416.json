@@ -1,0 +1,11 @@
+{
+  "workload_id": "GEMM_STANDARD",
+  "candidate_id": "cf_test_bad",
+  "counterexample_category": "CANCELLATION_CATACLYSM",
+  "input_sample_hash": "833dab0d8fa2b7cf",
+  "max_absolute_error": 45.83663558959961,
+  "relative_error": 45.83663558959961,
+  "tolerance_threshold": 0.0001,
+  "failure_reason": "Claimed EXACT but measured non-zero difference 45.83663558959961",
+  "timestamp": 1790673416.4846203
+}

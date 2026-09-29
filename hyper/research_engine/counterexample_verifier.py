@@ -110,12 +110,31 @@ class CounterexampleHunter:
         cases: List[Tuple[str, Dict[str, Any]]] = []
         w_id = contract.workload_id.upper()
 
-        # Load canonical base sample
+        # Load canonical base sample or synthesize from contract.input_domain
         from hyper.research_engine.workload_suite import Canonical15WorkloadSuite
         try:
             base_inputs = Canonical15WorkloadSuite.get_sample_inputs_for_workload(contract.workload_id)
         except Exception:
-            base_inputs = {"x": np.random.randn(64).astype(np.float32)}
+            base_inputs = {}
+
+        if not base_inputs or any(k not in base_inputs for k in contract.input_domain):
+            base_inputs = {}
+            for name, meta in contract.input_domain.items():
+                if isinstance(meta, dict):
+                    shape = tuple(meta.get("shape", [64]))
+                    dtype_str = str(meta.get("dtype", "FP32"))
+                    if "INT" in dtype_str:
+                        base_inputs[name] = np.random.randint(-100, 100, size=shape if shape else 1).astype(np.int32)
+                    elif "COMPLEX" in dtype_str:
+                        base_inputs[name] = (np.random.randn(*shape) + 1j * np.random.randn(*shape)).astype(np.complex64)
+                    elif "BYTES" in dtype_str:
+                        base_inputs[name] = b"sample_bytes_12345"
+                    else:
+                        base_inputs[name] = np.random.randn(*shape).astype(np.float32)
+                else:
+                    base_inputs[name] = np.random.randn(64).astype(np.float32)
+            if not base_inputs:
+                base_inputs = {"x": np.random.randn(64).astype(np.float32)}
 
         # 1. Base input
         cases.append(("CANONICAL_SAMPLE", base_inputs))

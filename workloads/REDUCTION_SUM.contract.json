@@ -1,0 +1,37 @@
+{
+  "workload_id": "REDUCTION_SUM",
+  "description": "High-throughput floating point sum reduction (100,000 elements)",
+  "input_domain": {
+    "x": {
+      "shape": [
+        100000
+      ],
+      "dtype": "FP32"
+    }
+  },
+  "output_domain": {
+    "scalar": {
+      "shape": [],
+      "dtype": "FP32"
+    }
+  },
+  "exactness_category": "NUMERICALLY_EQUIVALENT",
+  "exactness_mode": "NUMERIC_TOLERANCE",
+  "tolerance_epsilon": 0.01,
+  "precision_requirement": "FP32",
+  "ordering_requirements": "STRICT_ORDER",
+  "latency_limit_ms": 1000.0,
+  "time_constraints_ms": 1000.0,
+  "throughput_requirement": 1.0,
+  "memory_limit_bytes": 4294967296,
+  "memory_constraints_bytes": 4294967296,
+  "power_limit_watts": 45.0,
+  "hardware_limits": {
+    "max_threads": 12,
+    "use_igpu": true,
+    "allow_remote": false
+  },
+  "determinism_requirement": true,
+  "side_effect_requirement": false,
+  "contract_hash": "ca96c1d1d2d720bdc7fe875cbf0c5919f3683fe32ef67f71d9d4570b173b00e7"
+}
