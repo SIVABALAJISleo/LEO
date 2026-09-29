@@ -13,12 +13,13 @@ import dataclasses
 import hashlib
 import time
 import uuid
+import abc
 from typing import Any, Callable, Dict, List, Optional, Tuple
 import numpy as np
 
 from hyper.discovery.cir import CIRGraph, CIRNode, CIREdge, OpType, DataType
-from hyper.research_engine.contracts import ProblemContract
-from hyper.research_engine.exactness import ExactnessMode
+from hyper.research_engine.contracts import ComputationalContract, ProblemContract
+from hyper.research_engine.exactness import ExactnessCategory, ExactnessMode
 
 
 @dataclasses.dataclass
@@ -33,6 +34,8 @@ class CandidatePathway:
     measured_cost: Optional[Dict[str, float]] = None
     verification_status: str = "UNVERIFIED"
     exactness_mode: ExactnessMode = ExactnessMode.NUMERIC_TOLERANCE
+    exactness_category: ExactnessCategory = ExactnessCategory.NUMERICALLY_EQUIVALENT
+    proof_obligations: List[str] = dataclasses.field(default_factory=list)
     executable_fn: Optional[Callable[[Dict[str, Any]], Any]] = None
     created_at: float = dataclasses.field(default_factory=time.time)
 
@@ -47,15 +50,74 @@ class CandidatePathway:
             "measured_cost": self.measured_cost,
             "verification_status": self.verification_status,
             "exactness_mode": self.exactness_mode.value,
+            "exactness_category": self.exactness_category.value,
+            "proof_obligations": self.proof_obligations,
             "created_at": self.created_at,
         }
+
+
+class TransformationGenerator(abc.ABC):
+    """
+    Abstract base class for all pluggable computational transformation generators.
+    Enables dynamic extension of the Search Space Compiler with novel algebraic,
+    structural, and hardware-aware transformations.
+    """
+
+    @property
+    @abc.abstractmethod
+    def name(self) -> str:
+        pass
+
+    @property
+    @abc.abstractmethod
+    def category(self) -> str:
+        pass
+
+    @abc.abstractmethod
+    def can_apply(self, candidate: CandidatePathway, contract: ComputationalContract) -> bool:
+        pass
+
+    @abc.abstractmethod
+    def apply(self, candidate: CandidatePathway, contract: ComputationalContract) -> Optional[CandidatePathway]:
+        pass
+
 
 
 class SolutionSpaceCompiler:
     """
     Generative compiler that explores the space of equivalent or contract-preserving
     computational algorithms for a given problem contract.
+    Permits arbitrary future transformation generators to be plugged in dynamically.
     """
+
+    _dynamic_generators: Dict[str, TransformationGenerator] = {}
+
+    @classmethod
+    def register_transformation(cls, generator: TransformationGenerator) -> None:
+        """Dynamically register a new computational transformation generator."""
+        cls._dynamic_generators[generator.name] = generator
+
+    @classmethod
+    def unregister_transformation(cls, name: str) -> None:
+        cls._dynamic_generators.pop(name, None)
+
+    @classmethod
+    def list_transformations(cls) -> List[str]:
+        built_ins = [
+            "STRASSEN_DECOMPOSITION",
+            "LOW_RANK_FACTORIZATION",
+            "TILED_CACHE_BLOCKING",
+            "SPARSE_THRESHOLDING",
+            "VSA_10K_BITWISE_SURROGATE",
+            "FFT_SPECTRAL_CONVOLUTION",
+            "WINOGRAD_MINIMAL_FILTERING",
+            "HORNER_POLYNOMIAL_FACTORIZATION",
+            "LOOP_FUSION",
+            "HOMOTOPIC_HOARE_CONTRACTION",
+            "USM_HETEROGENEOUS_ROUTING",
+            "SEMANTIC_L3_MEMOIZATION",
+        ]
+        return built_ins + list(cls._dynamic_generators.keys())
 
     @classmethod
     def generate_initial_candidate(cls, contract: ProblemContract, cir: CIRGraph) -> CandidatePathway:
@@ -83,6 +145,7 @@ class SolutionSpaceCompiler:
             cir_hash=c_hash,
             estimated_cost={"flops": 1.0, "memory_traffic": 1.0, "latency_ms": 1.0},
             exactness_mode=contract.exactness_mode,
+            exactness_category=contract.exactness_category if hasattr(contract, "exactness_category") else contract.exactness_mode.to_category(),
             executable_fn=baseline_exec,
         )
 
@@ -94,6 +157,17 @@ class SolutionSpaceCompiler:
         """
         children: List[CandidatePathway] = []
         w_id = contract.workload_id.upper()
+
+        # 0. Pluggable dynamic transformation generators
+        for gen in cls._dynamic_generators.values():
+            if gen.can_apply(parent, contract):
+                try:
+                    cand = gen.apply(parent, contract)
+                    if cand:
+                        children.append(cand)
+                except Exception:
+                    pass
+
 
         # -------------------------------------------------------------
         # Family 1: Bilinear / Algebraic Decomposition (e.g. Strassen)
