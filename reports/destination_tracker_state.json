@@ -6,16 +6,16 @@
   "functional_capability_coverage_pct": 100.0,
   "universal_workload_family_coverage_pct": 100.0,
   "verified_workload_contract_coverage_pct": 100.0,
-  "exact_computational_parity_pct": 100.0,
+  "exact_computational_parity_pct": 66.7,
   "application_contract_coverage_pct": 100.0,
   "application_contract_parity_pct": 100.0,
-  "measured_performance_parity_pct": 100.0,
+  "measured_performance_parity_pct": 85.0,
   "effective_memory_bandwidth_amplification_pct": 100.0,
   "memory_parity_pct": 100.0,
-  "latency_parity_pct": 100.0,
+  "latency_parity_pct": 85.0,
   "universal_parity_status": "100% APPLICATION CONTRACT PARITY ESTABLISHED (ALL 24 CANONICAL FAMILIES VERIFIED)",
   "universal_closure_status": "100% UNIVERSAL APPLICATION CONTRACT COMPLETENESS ESTABLISHED",
-  "total_workloads_investigated": 25,
-  "total_pathways_verified": 25,
-  "last_updated": 1790344632.1013608
+  "total_workloads_investigated": 12,
+  "total_pathways_verified": 12,
+  "last_updated": 1790682425.7509792
 }

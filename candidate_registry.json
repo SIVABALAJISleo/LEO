@@ -62,9 +62,9 @@
     "exactness_class": "NUMERICALLY_EQUIVALENT",
     "correctness_result": "PASS",
     "work_elimination_pct": 0.0,
-    "throughput_ops_per_sec": 91.82,
+    "throughput_ops_per_sec": 79.36,
     "provenance": "MEASURED",
     "hardware": "Intel Core i5-12450H + UHD Graphics (48 EU)",
-    "last_verified_timestamp": 1789486671.719096
+    "last_verified_timestamp": 1790682424.2702155
   }
 ]

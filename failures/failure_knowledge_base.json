@@ -22,5 +22,41 @@
     "reason": "Exceeded error tolerance 1e-4",
     "counterexample_hash": null,
     "timestamp": 1790674204.4704373
+  },
+  {
+    "failure_id": "fail_9e398473",
+    "workload_id": "TEST_GEMM",
+    "transformation_sequence": [
+      "CANONICAL",
+      "BAD_TRUNCATION"
+    ],
+    "failure_category": "NUMERICAL_INSTABILITY",
+    "reason": "Exceeded error tolerance 1e-4",
+    "counterexample_hash": null,
+    "timestamp": 1790677978.5243502
+  },
+  {
+    "failure_id": "fail_702fc5d2",
+    "workload_id": "TEST_GEMM",
+    "transformation_sequence": [
+      "CANONICAL",
+      "BAD_TRUNCATION"
+    ],
+    "failure_category": "NUMERICAL_INSTABILITY",
+    "reason": "Exceeded error tolerance 1e-4",
+    "counterexample_hash": null,
+    "timestamp": 1790679277.918015
+  },
+  {
+    "failure_id": "fail_1a3f81d7",
+    "workload_id": "TEST_GEMM",
+    "transformation_sequence": [
+      "CANONICAL",
+      "BAD_TRUNCATION"
+    ],
+    "failure_category": "NUMERICAL_INSTABILITY",
+    "reason": "Exceeded error tolerance 1e-4",
+    "counterexample_hash": null,
+    "timestamp": 1790682145.1436706
   }
 ]
