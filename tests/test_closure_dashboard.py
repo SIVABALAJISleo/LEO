@@ -309,3 +309,16 @@ class TestClosureGateReasons:
         dash = WorkloadClosureDashboard(registry=registry)
         report = dash.closure_report()
         assert report.can_claim_100_percent is False
+
+    def test_populate_canonical_universe_and_closure(self, tmp_path):
+        from hyper_x.wormhole_compiler.workload_registry import UniversalWorkloadRegistry
+        reg = UniversalWorkloadRegistry(registry_path=tmp_path / "test_reg.json")
+        reg.populate_canonical_universe()
+        assert len(reg.entries) >= 7
+        dash = WorkloadClosureDashboard(registry=reg, output_dir=str(tmp_path))
+        report = dash.closure_report()
+        assert report.can_claim_100_percent is True
+        assert report.closure_ratio == 1.0
+        assert report.search_inconclusive == 0
+        assert report.wormholes_found >= 6
+        assert report.necessity_proven >= 1

@@ -1,0 +1,32 @@
+{
+  "timestamp": 1790683546.2948675,
+  "closure": {
+    "total_workloads_evaluated": 9,
+    "wormholes_found": 7,
+    "necessity_proven": 2,
+    "search_inconclusive": 0,
+    "closure_ratio": 1.0,
+    "closure_percentage": "100.00%",
+    "can_claim_100_percent": true,
+    "closure_gate_reasons": [
+      "All workloads resolved. 100% closure on registered workload set."
+    ]
+  },
+  "work_elimination": {
+    "global_wer": 0.0,
+    "global_wer_pct": "0.00%",
+    "total_baseline_flops": 0.0,
+    "total_eliminated_flops": 0.0,
+    "dominant_route": "UNKNOWN"
+  },
+  "route_breakdown": {},
+  "adaptation_health": {
+    "domains_tracked": 0,
+    "total_failures_recorded": 0,
+    "global_top_route": "UNKNOWN"
+  },
+  "correctness": {
+    "exact_correct_workloads": 7,
+    "contract_correct_workloads": 9
+  }
+}

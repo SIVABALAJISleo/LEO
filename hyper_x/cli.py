@@ -582,6 +582,45 @@ def cmd_observable(args: argparse.Namespace) -> None:
     print(json.dumps(obs.to_dict(), indent=2))
 
 
+def cmd_closure(args: argparse.Namespace) -> None:
+    from hyper_x.wormhole_compiler.closure_dashboard import WorkloadClosureDashboard
+    from hyper_x.wormhole_compiler.workload_registry import UniversalWorkloadRegistry
+    from pathlib import Path
+    reg = UniversalWorkloadRegistry()
+    if getattr(args, "populate", False):
+        reg.populate_canonical_universe()
+    dash = WorkloadClosureDashboard(registry=reg, output_dir=str(Path.cwd()))
+    report = dash.closure_report()
+    report.print_summary()
+    if getattr(args, "json", False):
+        path = dash.export_json(report)
+        print(f"  Closure report: {path}")
+    if getattr(args, "markdown", False):
+        path = dash.export_markdown(report)
+        print(f"  Markdown report: {path}")
+
+
+def cmd_omega_demo(_args: argparse.Namespace) -> None:
+    import numpy as _np
+    from hyper_x.wormhole_compiler.kv_cache_attention_engine import KVCacheAttentionEngine
+    from hyper_x.wormhole_compiler.database_bypass_engine import DatabaseBypassEngine
+    from hyper_x.wormhole_compiler.egraph_search import AlgebraicShortcutFinder
+    print("\n  HYPER-Omega Live Demo\n  " + "-" * 50)
+    rng = _np.random.default_rng(0)
+    Q = rng.standard_normal((256, 32)).astype(_np.float32)
+    K = rng.standard_normal((256, 32)).astype(_np.float32)
+    V = rng.standard_normal((256, 32)).astype(_np.float32)
+    attn = KVCacheAttentionEngine(window_size=64)
+    _, r = attn.forward(Q, K, V, stream_id="demo")
+    print(f"  [KV-Cache] {r.route}  WER={r.work_elimination_ratio * 100:.1f}%  speedup={r.speedup:.2f}x")
+    col = rng.integers(0, 100, size=100_000, dtype=_np.int32)
+    db = DatabaseBypassEngine()
+    _, dr = db.filter_with_bitmap(col, "eq:42", col_id="d0")
+    print(f"  [DB Bitmap] {dr.route}  WER={dr.work_elimination_ratio * 100:.1f}%  speedup={dr.speedup:.2f}x")
+    res = AlgebraicShortcutFinder.find("matmul_chain", shape_A=(512, 512), shape_B=(512, 64), shape_C=(64, 8))
+    print(f"  [E-Graph] {res.original_expr} -> {res.best_expr}  reduction={res.cost_reduction * 100:.1f}%\n")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="LEO / HYPER — Universal Pathway Discovery & Exact Computation Engine")
     subparsers = parser.add_subparsers(dest="subcommand")
@@ -747,6 +786,11 @@ def main() -> None:
     subparsers.add_parser("representation")
     subparsers.add_parser("algorithm-search")
     subparsers.add_parser("validate")
+    p_closure = subparsers.add_parser("closure", help="Display or export HYPER-Ω Workload Closure Dashboard")
+    p_closure.add_argument("--json", action="store_true", help="Export closure report to JSON")
+    p_closure.add_argument("--markdown", action="store_true", help="Export closure report to Markdown")
+    p_closure.add_argument("--populate", action="store_true", help="Execute and populate canonical universe workloads")
+    subparsers.add_parser("omega-demo", help="Run HYPER-Ω live breakthrough demonstration")
 
     args = parser.parse_args()
     if not args.subcommand:
@@ -801,6 +845,8 @@ def main() -> None:
         "universal-search": cmd_universal_search,
         "coverage": cmd_coverage,
         "dashboard": cmd_dashboard,
+        "closure": cmd_closure,
+        "omega-demo": cmd_omega_demo,
         "workload": cmd_workload,
         "observable": cmd_observable,
         "falsify": cmd_falsify,
