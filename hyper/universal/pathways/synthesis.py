@@ -61,6 +61,11 @@ class ProgramSynthesizer:
     @staticmethod
     def synthesize_reduction_pathway(operation: str = "sum") -> UniversalPathway:
         """Synthesizes an unrolled SIMD reduction function."""
+        # Validate operation to prevent code injection
+        allowed_operations = {"sum", "prod", "mean", "min", "max", "std", "var"}
+        if operation not in allowed_operations:
+            raise ValueError(f"Invalid or unsupported reduction operation: {operation}")
+
         code = f"""
 def synthesized_kernel(data):
     # Synthesized vectorized chunked accumulator

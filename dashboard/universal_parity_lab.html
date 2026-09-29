@@ -223,7 +223,7 @@
         max_candidates: parseInt(document.getElementById('candidatesInput').value),
       };
 
-      log.innerHTML += `<br>[INIT] Dispatched universal search for domain: ${payload.workload_domain}...`;
+      log.insertAdjacentHTML('beforeend', `<br>[INIT] Dispatched universal search for domain: ${payload.workload_domain}...`);
 
       try {
         const resp = await fetch('/api/v1/universal/search', {
@@ -255,15 +255,15 @@
           });
         }
 
-        log.innerHTML += `<br>[SUCCESS] Experiment ${data.experiment_id} complete. Verified Speedup: ${data.verified_speedup}x vs baseline.`;
+        log.insertAdjacentHTML('beforeend', `<br>[SUCCESS] Experiment ${data.experiment_id} complete. Verified Speedup: ${data.verified_speedup}x vs baseline.`);
         if (data.breakthrough && data.breakthrough.is_improvement) {
-          log.innerHTML += `<br>[BREAKTHROUGH] ${data.breakthrough.label} registered. Work reduction: ${data.breakthrough.work_reduction_pct}%.`;
+          log.insertAdjacentHTML('beforeend', `<br>[BREAKTHROUGH] ${data.breakthrough.label} registered. Work reduction: ${data.breakthrough.work_reduction_pct}%.`);
         }
         if (data.barrier_verdict && data.barrier_verdict.has_barrier) {
-          log.innerHTML += `<br>[BARRIER] Classified: ${data.barrier_verdict.barrier_type} - ${data.barrier_verdict.evidence}`;
+          log.insertAdjacentHTML('beforeend', `<br>[BARRIER] Classified: ${data.barrier_verdict.barrier_type} - ${data.barrier_verdict.evidence}`);
         }
       } catch (err) {
-        log.innerHTML += `<br>[ERROR] Failed: ${err.message}`;
+        log.insertAdjacentHTML('beforeend', `<br>[ERROR] Failed: ${err.message}`);
       } finally {
         btn.disabled = false;
         btn.innerText = 'Launch Universal Adaptive Search';
