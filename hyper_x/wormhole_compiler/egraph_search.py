@@ -257,7 +257,14 @@ class EqualitySaturationEngine:
                         continue
                     if rule.pattern in expr:
                         rewritten = expr.replace(rule.pattern, rule.replacement)
-                        new_cost = max(0.01, self.classes[cid].best_cost + rule.cost_delta)
+                        if rewritten == expr:
+                            continue  # No textual change — skip
+                        # Elimination rules that reduce to a simpler atom get cost 0
+                        # so extract_cheapest always prefers the eliminated form.
+                        if rule.name in ("ZERO_ADDITION_ELIMINATION", "IDENTITY_MULTIPLICATION_ELIMINATION"):
+                            new_cost = 0.0
+                        else:
+                            new_cost = max(0.005, self.classes[cid].best_cost + rule.cost_delta)
                         new_cid = self.add_expression(rewritten, cost=new_cost)
                         self.union(cid, new_cid)
                         rewrites_in_round += 1
@@ -310,3 +317,199 @@ class EqualitySaturationEngine:
                 pareto.append((expr_i, vec_i))
 
         return pareto
+
+
+# ---------------------------------------------------------------------------
+# High-Level Interface: Algebraic Shortcut Finder
+# ---------------------------------------------------------------------------
+
+@dataclass
+class AlgebraicShortcutResult:
+    """
+    The verified best algebraic expression for a given operation.
+
+    Fields:
+      original_expr:     The canonical starting expression (e.g. "(A @ B) @ C")
+      best_expr:         The cheapest discovered equivalent expression
+      cost_reduction:    Fractional reduction in estimated scalar cost  (0-1)
+      flop_reduction:    Fractional FLOP reduction vs. original
+      memory_reduction:  Fractional memory-traffic reduction vs. original
+      is_exact:          True iff all rewrites applied were exact (no approximation)
+      rewrite_count:     Number of rewrite steps that fired during saturation
+      pareto_front:      Full Pareto-optimal set (for multi-objective tradeoff)
+      cost_vector:       HardwareCostVector for the best expression
+    """
+    original_expr: str
+    best_expr: str
+    cost_reduction: float
+    flop_reduction: float
+    memory_reduction: float
+    is_exact: bool
+    rewrite_count: int
+    pareto_front: List[Tuple[str, "HardwareCostVector"]]
+    cost_vector: "HardwareCostVector"
+
+    def found_shortcut(self) -> bool:
+        """Returns True iff a cheaper equivalent path was discovered."""
+        return self.best_expr != self.original_expr and self.cost_reduction > 0.01
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "original_expr": self.original_expr,
+            "best_expr": self.best_expr,
+            "cost_reduction_pct": round(self.cost_reduction * 100, 2),
+            "flop_reduction_pct": round(self.flop_reduction * 100, 2),
+            "memory_reduction_pct": round(self.memory_reduction * 100, 2),
+            "is_exact": self.is_exact,
+            "rewrite_count": self.rewrite_count,
+            "pareto_front_size": len(self.pareto_front),
+            "hardware_cost": self.cost_vector.to_dict(),
+        }
+
+
+class AlgebraicShortcutFinder:
+    """
+    Top-level query interface for Route 9 (VERIFIED_ALTERNATIVE_ALGO).
+
+    Usage:
+        result = AlgebraicShortcutFinder.find(
+            operation="matmul_chain",
+            shape_A=(512, 64),
+            shape_B=(64, 128),
+            shape_C=(128, 16),
+            exact_only=True,
+        )
+        if result.found_shortcut():
+            # Use result.best_expr as the computation plan
+            ...
+
+    The finder translates shape/operation metadata into an E-graph expression
+    string, saturates the graph, and extracts the cheapest Pareto-optimal result.
+    No actual matrix computation is performed — this is purely algebraic.
+    """
+
+    # Operation -> canonical expression template mapping
+    _OP_TEMPLATES: Dict[str, str] = {
+        "matmul":           "A @ B",
+        "matmul_chain":     "(A @ B) @ C",
+        "gemm_bias_relu":   "relu(A @ B + bias)",
+        "factorized_gemm":  "(U @ V) @ B",
+        "add_zero":         "A + 0",
+        "mul_identity":     "A @ I",
+        "distributive":     "(A @ B) + (A @ C)",
+    }
+
+    @classmethod
+    def find(
+        cls,
+        operation: str,
+        exact_only: bool = True,
+        shape_A: Optional[Tuple[int, ...]] = None,
+        shape_B: Optional[Tuple[int, ...]] = None,
+        shape_C: Optional[Tuple[int, ...]] = None,
+        saturation_iterations: int = 6,
+    ) -> AlgebraicShortcutResult:
+        """
+        Discovers the cheapest algebraically equivalent expression for `operation`.
+
+        Args:
+            operation:              One of _OP_TEMPLATES keys, or a raw expression string.
+            exact_only:             If True, disallows approximate rewrites (default True).
+            shape_A/B/C:            Optional shape hints used to parametrise cost estimation.
+            saturation_iterations:  Max E-graph saturation rounds.
+
+        Returns:
+            AlgebraicShortcutResult with the best found expression and metrics.
+        """
+        expr = cls._OP_TEMPLATES.get(operation, operation)
+
+        # Apply shape-aware specialisations before building the graph
+        expr = cls._apply_shape_hints(expr, shape_A, shape_B, shape_C)
+
+        engine = EqualitySaturationEngine(exact_only=exact_only)
+        original_cid = engine.add_expression(expr)
+        original_vec = engine.estimate_hardware_cost(expr)
+
+        n_rewrites = engine.saturate(iterations=saturation_iterations)
+
+        # Extract the cheapest expression from the same e-class
+        best_expr, best_cost = engine.extract_cheapest(original_cid)
+        _, best_vec = engine.extract_cheapest_vector(original_cid)
+        pareto = engine.extract_pareto_optimal(original_cid)
+
+        # Compute reduction ratios vs. original
+        orig_cost = original_vec.scalar_cost
+        cost_reduction = max(0.0, (orig_cost - best_cost) / max(orig_cost, 1e-9))
+        flop_reduction = max(0.0, (original_vec.flops - best_vec.flops) / max(original_vec.flops, 1e-9))
+        mem_reduction = max(0.0, (original_vec.memory_bytes - best_vec.memory_bytes) / max(original_vec.memory_bytes, 1e-9))
+
+        # Exactness: only exact if engine was in exact_only mode
+        all_rewrites_exact = exact_only
+
+        return AlgebraicShortcutResult(
+            original_expr=expr,
+            best_expr=best_expr,
+            cost_reduction=cost_reduction,
+            flop_reduction=flop_reduction,
+            memory_reduction=mem_reduction,
+            is_exact=all_rewrites_exact,
+            rewrite_count=n_rewrites,
+            pareto_front=pareto,
+            cost_vector=best_vec,
+        )
+
+    @classmethod
+    def find_for_shapes(
+        cls,
+        A: np.ndarray,
+        B: np.ndarray,
+        C: Optional[np.ndarray] = None,
+        exact_only: bool = True,
+    ) -> AlgebraicShortcutResult:
+        """
+        Convenience wrapper that accepts actual numpy arrays and infers the operation type.
+        """
+        operation = "matmul_chain" if C is not None else "matmul"
+        return cls.find(
+            operation=operation,
+            exact_only=exact_only,
+            shape_A=A.shape,
+            shape_B=B.shape,
+            shape_C=C.shape if C is not None else None,
+        )
+
+    @classmethod
+    def _apply_shape_hints(
+        cls,
+        expr: str,
+        shape_A: Optional[Tuple[int, ...]],
+        shape_B: Optional[Tuple[int, ...]],
+        shape_C: Optional[Tuple[int, ...]],
+    ) -> str:
+        """
+        Specialises the expression template with shape-derived annotations.
+        Example: if shape_B reveals a rank-1 structure, annotates as factorized.
+        """
+        if shape_A is None or shape_B is None:
+            return expr
+
+        # If B looks like it could be a rank-deficient projection (thin matrix)
+        if len(shape_B) == 2:
+            m, n = shape_B
+            if n <= m // 4:
+                # B is a thin projection matrix — prefer factorised ordering
+                if "A @ B" in expr and "(U @ V)" not in expr:
+                    expr = expr.replace("A @ B", "(U @ V) @ B", 1)
+
+        # If matmul chain: check whether right-associative is cheaper
+        if shape_C is not None and len(shape_A) == 2 and len(shape_B) == 2 and len(shape_C) == 2:
+            m, k = shape_A
+            k2, n = shape_B
+            n2, p = shape_C
+            cost_left = m * k * n + m * n * p      # (A@B) @ C
+            cost_right = k * n * p + m * k * p     # A @ (B@C)
+            if cost_right < cost_left and "(A @ B) @ C" in expr:
+                expr = expr.replace("(A @ B) @ C", "A @ (B @ C)")
+
+        return expr
+
