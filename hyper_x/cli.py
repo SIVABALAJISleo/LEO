@@ -585,17 +585,19 @@ def cmd_observable(args: argparse.Namespace) -> None:
 def cmd_closure(args: argparse.Namespace) -> None:
     from hyper_x.wormhole_compiler.closure_dashboard import WorkloadClosureDashboard
     from hyper_x.wormhole_compiler.workload_registry import UniversalWorkloadRegistry
+    from hyper_x.wormhole_compiler.online_adaptation_engine import OnlineAdaptationEngine
     from pathlib import Path
     reg = UniversalWorkloadRegistry()
     if getattr(args, "populate", False):
         reg.populate_canonical_universe()
-    dash = WorkloadClosureDashboard(registry=reg, output_dir=str(Path.cwd()))
+    adapt = OnlineAdaptationEngine()
+    dash = WorkloadClosureDashboard(registry=reg, adaptation=adapt, output_dir=str(Path.cwd()))
     report = dash.closure_report()
     report.print_summary()
-    if getattr(args, "json", False):
+    if getattr(args, "json", False) or not (getattr(args, "json", False) or getattr(args, "markdown", False)):
         path = dash.export_json(report)
         print(f"  Closure report: {path}")
-    if getattr(args, "markdown", False):
+    if getattr(args, "markdown", False) or not (getattr(args, "json", False) or getattr(args, "markdown", False)):
         path = dash.export_markdown(report)
         print(f"  Markdown report: {path}")
 

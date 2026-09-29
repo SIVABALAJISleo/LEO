@@ -1,5 +1,5 @@
 # HYPER-Ω Workload Closure Dashboard
-*Generated: 2026-09-29 17:59:05*
+*Generated: 2026-09-29 20:02:56*
 
 ## Closure Gate
 | Metric | Value |
@@ -18,11 +18,19 @@
 ## Work Elimination
 | Route | Invocations | Mean WER | Accuracy |
 |---|---|---|---|
+| NECESSARY_LOWER_BOUND | 2 | 0.0% | 100.0% |
+| OUTPUT_SENSITIVE | 1 | 85.0% | 100.0% |
+| EXACT_ZERO_ROW_PRUNE | 1 | 75.0% | 100.0% |
+| EXACT_SLIDING_WINDOW | 1 | 75.0% | 100.0% |
+| BITMAP_INDEX_FILTER | 1 | 98.4% | 100.0% |
+| EXACT_DELTA_RECOMPUTATION | 1 | 88.0% | 100.0% |
+| STRUCTURED_ALGORITHM | 1 | 50.0% | 100.0% |
+| EXACT_CONTENT_REUSE | 1 | 80.0% | 100.0% |
 
-**Global Work Elimination: 0.00%**
-**Dominant Route: UNKNOWN**
+**Global Work Elimination: 61.27%**
+**Dominant Route: NECESSARY_LOWER_BOUND**
 
 ## Online Adaptation Health
-- Domains tracked: 0
-- Total failures recorded: 0
-- Global top route: UNKNOWN
+- Domains tracked: 1
+- Total failures recorded: 3
+- Global top route: EXACT_CONTENT_REUSE

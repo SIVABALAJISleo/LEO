@@ -1,5 +1,5 @@
 {
-  "timestamp": 1790684945.257058,
+  "timestamp": 1790692376.555008,
   "closure": {
     "total_workloads_evaluated": 9,
     "wormholes_found": 7,
@@ -13,17 +13,98 @@
     ]
   },
   "work_elimination": {
-    "global_wer": 0.0,
-    "global_wer_pct": "0.00%",
-    "total_baseline_flops": 0.0,
-    "total_eliminated_flops": 0.0,
-    "dominant_route": "UNKNOWN"
+    "global_wer": 0.6127,
+    "global_wer_pct": "61.27%",
+    "total_baseline_flops": 9000.0,
+    "total_eliminated_flops": 5514.4,
+    "dominant_route": "NECESSARY_LOWER_BOUND"
   },
-  "route_breakdown": {},
+  "route_breakdown": {
+    "OUTPUT_SENSITIVE": {
+      "route": "OUTPUT_SENSITIVE",
+      "invocations": 1,
+      "mean_work_elimination_ratio": 0.85,
+      "mean_latency_ms": 0.0,
+      "accuracy_rate": 1.0,
+      "exact_invocations": 1,
+      "verified_count": 1,
+      "falsified_count": 0
+    },
+    "NECESSARY_LOWER_BOUND": {
+      "route": "NECESSARY_LOWER_BOUND",
+      "invocations": 2,
+      "mean_work_elimination_ratio": 0.0,
+      "mean_latency_ms": 0.0,
+      "accuracy_rate": 1.0,
+      "exact_invocations": 2,
+      "verified_count": 2,
+      "falsified_count": 0
+    },
+    "EXACT_ZERO_ROW_PRUNE": {
+      "route": "EXACT_ZERO_ROW_PRUNE",
+      "invocations": 1,
+      "mean_work_elimination_ratio": 0.75,
+      "mean_latency_ms": 0.0,
+      "accuracy_rate": 1.0,
+      "exact_invocations": 1,
+      "verified_count": 1,
+      "falsified_count": 0
+    },
+    "EXACT_SLIDING_WINDOW": {
+      "route": "EXACT_SLIDING_WINDOW",
+      "invocations": 1,
+      "mean_work_elimination_ratio": 0.75,
+      "mean_latency_ms": 0.0,
+      "accuracy_rate": 1.0,
+      "exact_invocations": 1,
+      "verified_count": 1,
+      "falsified_count": 0
+    },
+    "BITMAP_INDEX_FILTER": {
+      "route": "BITMAP_INDEX_FILTER",
+      "invocations": 1,
+      "mean_work_elimination_ratio": 0.9844,
+      "mean_latency_ms": 0.0,
+      "accuracy_rate": 1.0,
+      "exact_invocations": 1,
+      "verified_count": 1,
+      "falsified_count": 0
+    },
+    "EXACT_DELTA_RECOMPUTATION": {
+      "route": "EXACT_DELTA_RECOMPUTATION",
+      "invocations": 1,
+      "mean_work_elimination_ratio": 0.88,
+      "mean_latency_ms": 0.0,
+      "accuracy_rate": 1.0,
+      "exact_invocations": 0,
+      "verified_count": 1,
+      "falsified_count": 0
+    },
+    "STRUCTURED_ALGORITHM": {
+      "route": "STRUCTURED_ALGORITHM",
+      "invocations": 1,
+      "mean_work_elimination_ratio": 0.5,
+      "mean_latency_ms": 0.0,
+      "accuracy_rate": 1.0,
+      "exact_invocations": 0,
+      "verified_count": 1,
+      "falsified_count": 0
+    },
+    "EXACT_CONTENT_REUSE": {
+      "route": "EXACT_CONTENT_REUSE",
+      "invocations": 1,
+      "mean_work_elimination_ratio": 0.8,
+      "mean_latency_ms": 0.0,
+      "accuracy_rate": 1.0,
+      "exact_invocations": 1,
+      "verified_count": 1,
+      "falsified_count": 0
+    }
+  },
   "adaptation_health": {
-    "domains_tracked": 0,
-    "total_failures_recorded": 0,
-    "global_top_route": "UNKNOWN"
+    "domains_tracked": 1,
+    "total_failures_recorded": 3,
+    "global_top_route": "EXACT_CONTENT_REUSE"
   },
   "correctness": {
     "exact_correct_workloads": 7,

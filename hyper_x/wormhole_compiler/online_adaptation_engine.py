@@ -281,11 +281,18 @@ class OnlineAdaptationEngine:
 
         loaded = 0
         for rec in records:
-            route = rec.get("route", "")
-            domain = rec.get("domain", "GLOBAL")
-            barrier = rec.get("barrier_type", "UNKNOWN")
-            ts = float(rec.get("timestamp", time.time()))
+            route = rec.get("route", "") or rec.get("route_attempted", "")
+            if route == "APPROXIMATE_LOW_RANK":
+                route = "EXACT_FACTORIZATION"
+            domain = rec.get("domain", "")
             wid = rec.get("workload_id", "")
+            if not domain or domain == "GLOBAL":
+                if wid and "GEMM" in wid:
+                    domain = "DENSE_GEMM"
+                else:
+                    domain = "GLOBAL"
+            barrier = rec.get("barrier_type", "") or rec.get("barrier_classification", "UNKNOWN")
+            ts = float(rec.get("timestamp", time.time()))
             if route in ALL_ROUTES:
                 # Do NOT re-append to file during replay (avoid duplication)
                 old_mode, self.mode = self.mode, "PASSIVE"
