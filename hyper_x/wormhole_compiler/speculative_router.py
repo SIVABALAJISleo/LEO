@@ -27,6 +27,7 @@ import numpy as np
 from hyper_x.wormhole_compiler.schemas import WorkloadContract, CorrectnessRequirement, CachePolicy
 from hyper_x.wormhole_compiler.workload_fingerprint import WorkloadFingerprint, WorkloadFingerprinter
 from hyper_x.wormhole_compiler.breakthrough_router import BreakthroughRouter, BreakthroughRouteDecision
+from hyper_x.wormhole_compiler.online_adaptation_engine import OnlineAdaptationEngine
 
 
 @dataclass
@@ -64,8 +65,13 @@ class SpeculativeBreakthroughRouter:
     Learned route predictor with speculative execution and zero-tolerance fallback guards.
     """
 
-    def __init__(self, base_router: Optional[BreakthroughRouter] = None):
+    def __init__(
+        self,
+        base_router: Optional[BreakthroughRouter] = None,
+        adaptation_engine: Optional[OnlineAdaptationEngine] = None,
+    ):
         self.router = base_router or BreakthroughRouter()
+        self.adaptation = adaptation_engine or OnlineAdaptationEngine(mode="ACTIVE")
         self.prediction_success_count = 0
         self.total_predictions = 0
         self.misprediction_penalties: Dict[str, int] = {}
@@ -77,8 +83,32 @@ class SpeculativeBreakthroughRouter:
         contract: WorkloadContract,
     ) -> str:
         """
-        Learned heuristic predictor mapping fingerprint features to the most promising route.
+        Two-stage predictor:
+          Stage 1 – Fingerprint heuristic (structural features)
+          Stage 2 – Adaptation override (Bayesian priors from live history)
+
+        Stage 2 overrides Stage 1 when the adaptation engine's top route for
+        the domain has significantly higher weight (delta > 0.20).
         """
+        domain = fingerprint.dependency_structure or "GLOBAL"
+
+        # ---- Stage 1: Fingerprint-driven heuristic ----
+        heuristic_route = self._fingerprint_heuristic(fingerprint, contract)
+
+        # ---- Stage 2: Adaptation engine override ----
+        weights = self.adaptation.get_route_weights(domain)
+        adaptation_top = self.adaptation.predict_route(domain)
+        heuristic_weight = weights.get(heuristic_route, 1.0)
+        adaptation_weight = weights.get(adaptation_top, 1.0)
+
+        if adaptation_weight - heuristic_weight > 0.20:
+            # Adaptation engine has significantly more confidence: override
+            return adaptation_top
+
+        return heuristic_route
+
+    def _fingerprint_heuristic(self, fingerprint: WorkloadFingerprint, contract: WorkloadContract) -> str:
+        """Original structural heuristic — pure fingerprint features."""
         # Rule 1: Output-Sensitive is paramount when output dimension is heavily restricted
         if fingerprint.output_dimension_ratio < 0.05 or contract.correctness == CorrectnessRequirement.TOP_K:
             return "OUTPUT_SENSITIVE"
@@ -107,7 +137,7 @@ class SpeculativeBreakthroughRouter:
         if fingerprint.dependency_structure == "TEMPORAL_STREAM":
             return "EXACT_RESIDUAL"
 
-        # Default fallback
+        # Default
         return "CPU_REFERENCE_FALLBACK"
 
     def execute_speculative(
@@ -134,18 +164,30 @@ class SpeculativeBreakthroughRouter:
         # Step 3: Execute through BreakthroughRouter
         result, decision = self.router.execute(operation, inputs, contract, config=config)
 
-        # Step 4: Evaluate prediction accuracy & adaptation
+        # Step 4: Evaluate prediction accuracy & online adaptation
         prediction_correct = (decision.route == predicted_route) or (
             predicted_route in ["EXACT_ZERO_ROW_PRUNE", "EXACT_ROW_DELTA"] and decision.route in ["EXACT_ZERO_ROW_PRUNE", "EXACT_ROW_DELTA", "EXACT_CONTENT_REUSE"]
         )
 
         fallback_invoked = (decision.route == "CPU_REFERENCE_FALLBACK" and predicted_route != "CPU_REFERENCE_FALLBACK")
 
+        domain = fingerprint.dependency_structure or "GLOBAL"
+
         if prediction_correct and decision.verification_status in ["PASSED", "VERIFIED"]:
             self.prediction_success_count += 1
             self.route_success_history[decision.route] = self.route_success_history.get(decision.route, 0) + 1
+            # Adaptation: record success to re-promote route
+            self.adaptation.record_success(route=decision.route, domain=domain)
         else:
             self.misprediction_penalties[predicted_route] = self.misprediction_penalties.get(predicted_route, 0) + 1
+            # Adaptation: record failure to down-weight the mispredicted route
+            barrier = "CONTRACT_BOUND" if decision.verification_status == "FALSIFIED" else "PERFORMANCE_BOUND"
+            self.adaptation.record_failure(
+                route=predicted_route,
+                domain=domain,
+                barrier_type=barrier,
+                workload_id=contract.workload_id,
+            )
 
         accuracy = float(self.prediction_success_count / max(1, self.total_predictions))
         net_gain = max(0.0, decision.baseline_work - decision.required_work)

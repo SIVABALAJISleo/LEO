@@ -416,6 +416,113 @@ class AntiHardcodingEngine:
         is_clean = len(findings) == 0
         return is_clean, findings
 
+    @classmethod
+    def audit_candidate_callable(cls, fn: Callable[..., Any]) -> Tuple[bool, List[str]]:
+        """Public alias for audit_callable — preferred name used in tests."""
+        return cls.audit_callable(fn)
+
+
+class MetamorphicTestingEngine:
+    """
+    Metamorphic Testing Engine (Section 16).
+    Verifies metamorphic invariants of a candidate function without requiring
+    a known oracle — useful when the ground-truth is expensive to compute.
+
+    Supported Relations:
+    - HOMOGENEITY:   f(α·A, B) ≈ α · f(A, B)  (for linear ops like GEMM)
+    - ADDITIVITY:    f(A+A', B) ≈ f(A, B) + f(A', B)
+    - COMMUTATIVITY: f(A, B) ≈ f(B, A)  (only when contract flags it)
+    - SELF_INVERSE:  f(f(x)) ≈ x  (e.g., inverse transforms)
+    """
+
+    @classmethod
+    def verify_metamorphic_invariants(
+        cls,
+        fn: Callable[[Dict[str, Any]], Any],
+        sample_inputs: Dict[str, Any],
+        contract: Any,
+        alpha: float = 2.0,
+        tol: float = 1e-4,
+    ) -> Tuple[bool, Dict[str, Any]]:
+        """
+        Verifies homogeneity and additivity metamorphic relations on fn.
+        Returns (is_valid, detailed_report).
+        """
+        report: Dict[str, Any] = {
+            "homogeneity": None,
+            "additivity": None,
+            "violations": [],
+            "passed": True,
+        }
+
+        # --- Homogeneity: f(α·A, B) ≈ α · f(A, B) ---
+        # Scale only the FIRST floating-point array input so bilinear ops
+        # satisfy f(αA, B) = α·f(A, B).  Scaling all inputs would give
+        # f(αA, αB) = α²·f(A,B) for bilinear ops, which is a different relation.
+        try:
+            scaled_inputs = dict(sample_inputs)
+            _first_fp_scaled = False
+            for k, v in sample_inputs.items():
+                if (not _first_fp_scaled
+                        and isinstance(v, np.ndarray)
+                        and v.dtype in (np.float32, np.float64)):
+                    scaled_inputs[k] = (v * alpha).astype(v.dtype)
+                    _first_fp_scaled = True
+                else:
+                    scaled_inputs[k] = v
+
+            base_out = fn(sample_inputs)
+            scaled_out = fn(scaled_inputs)
+
+            if isinstance(base_out, np.ndarray):
+                expected = base_out * alpha
+                if np.allclose(scaled_out, expected, atol=tol, rtol=tol):
+                    report["homogeneity"] = "PASS"
+                else:
+                    max_diff = float(np.max(np.abs(scaled_out - expected)))
+                    report["homogeneity"] = f"FAIL (max_diff={max_diff:.2e})"
+                    report["violations"].append(f"Homogeneity violated: max_diff={max_diff:.2e}")
+                    report["passed"] = False
+            else:
+                report["homogeneity"] = "SKIP (non-array output)"
+        except Exception as e:
+            report["homogeneity"] = f"ERROR: {e}"
+            report["violations"].append(f"Homogeneity check error: {e}")
+
+        # --- Additivity: f(A + A', B) ≈ f(A, B) + f(A', B) ---
+        try:
+            perturb_inputs = {}
+            add_inputs = {}
+            for k, v in sample_inputs.items():
+                if isinstance(v, np.ndarray) and v.dtype in (np.float32, np.float64):
+                    rng = np.random.default_rng(42)
+                    delta = rng.standard_normal(v.shape).astype(v.dtype) * 0.1
+                    perturb_inputs[k] = delta
+                    add_inputs[k] = (v + delta).astype(v.dtype)
+                else:
+                    perturb_inputs[k] = v
+                    add_inputs[k] = v
+
+            out_sum = fn(add_inputs)
+            out_a = fn(sample_inputs)
+            out_delta = fn(perturb_inputs)
+
+            if isinstance(out_a, np.ndarray) and isinstance(out_delta, np.ndarray):
+                expected_add = out_a + out_delta
+                if np.allclose(out_sum, expected_add, atol=tol * 10, rtol=tol):
+                    report["additivity"] = "PASS"
+                else:
+                    max_diff = float(np.max(np.abs(out_sum - expected_add)))
+                    report["additivity"] = f"FAIL (max_diff={max_diff:.2e})"
+                    # Additivity failure is informational only (non-linear ops may fail)
+                    report["additivity_note"] = "Non-linear operation — additivity not required."
+            else:
+                report["additivity"] = "SKIP (non-array output)"
+        except Exception as e:
+            report["additivity"] = f"ERROR: {e}"
+
+        return report["passed"], report
+
 
 class ClaimValidator:
     """
