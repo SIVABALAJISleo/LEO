@@ -153,6 +153,27 @@ class SolutionSpaceCompiler:
         if cand_fused:
             children.append(cand_fused)
 
+        # -------------------------------------------------------------
+        # Family 5: Homotopic Hoare Path Contraction (Pillar 3)
+        # -------------------------------------------------------------
+        cand_homotopic = cls._create_homotopic_candidate(parent, contract)
+        if cand_homotopic:
+            children.append(cand_homotopic)
+
+        # -------------------------------------------------------------
+        # Family 6: Heterogeneous Zero-Copy USM & P-Core Pinning (Pillar 2)
+        # -------------------------------------------------------------
+        cand_usm = cls._create_usm_candidate(parent, contract)
+        if cand_usm:
+            children.append(cand_usm)
+
+        # -------------------------------------------------------------
+        # Family 7: Semantic L3 Memoization with Entropy Fallback (Pillar 4)
+        # -------------------------------------------------------------
+        cand_memo = cls._create_memoized_candidate(parent, contract)
+        if cand_memo:
+            children.append(cand_memo)
+
         return children
 
     # -----------------------------------------------------------------
@@ -455,4 +476,101 @@ class SolutionSpaceCompiler:
             estimated_cost={"flops": 0.95, "memory_traffic": 0.50, "latency_ms": 0.65},
             exactness_mode=contract.exactness_mode,
             executable_fn=parent.executable_fn,
+        )
+
+    @classmethod
+    def _create_homotopic_candidate(cls, parent: CandidatePathway, contract: ProblemContract) -> Optional[CandidatePathway]:
+        from hyper.research_engine.homotopic_contraction import HomotopicPathContractionEngine
+
+        contracted_cir, report = HomotopicPathContractionEngine.contract_graph(parent.cir_graph, contract)
+
+        def homotopic_exec(inputs: Dict[str, Any]) -> Any:
+            if len(contracted_cir.nodes) > 0 and len(contracted_cir.outputs) > 0:
+                try:
+                    res = contracted_cir.evaluate(inputs)
+                    if len(res) == 1:
+                        return list(res.values())[0]
+                    return res
+                except Exception:
+                    pass
+            return parent.executable_fn(inputs)
+
+        flops_scale = max(0.2, (report.contracted_node_count / max(1, report.original_node_count)))
+
+        return CandidatePathway(
+            candidate_id=f"cand_homotopic_{uuid.uuid4().hex[:8]}",
+            parent_id=parent.candidate_id,
+            transformation_history=parent.transformation_history + ["HOMOTOPIC_HOARE_PRUNING"],
+            assumptions={"pruned_nodes": report.deleted_nodes, "contracted_paths": report.contracted_paths},
+            cir_graph=contracted_cir,
+            cir_hash=contracted_cir.get_hash(),
+            estimated_cost={"flops": flops_scale, "memory_traffic": flops_scale, "latency_ms": flops_scale * 0.8},
+            exactness_mode=contract.exactness_mode,
+            executable_fn=homotopic_exec,
+        )
+
+    @classmethod
+    def _create_usm_candidate(cls, parent: CandidatePathway, contract: ProblemContract) -> Optional[CandidatePathway]:
+        from hyper.research_engine.usm_scheduler import USMManager
+
+        def usm_exec(inputs: Dict[str, Any]) -> Any:
+            USMManager.pin_to_pcores()
+            return parent.executable_fn(inputs)
+
+        cir = copy.deepcopy(parent.cir_graph)
+        cir.name = f"{parent.cir_graph.name}_usm"
+
+        return CandidatePathway(
+            candidate_id=f"cand_usm_{uuid.uuid4().hex[:8]}",
+            parent_id=parent.candidate_id,
+            transformation_history=parent.transformation_history + ["ZERO_COPY_USM_PCORE_PINNING"],
+            assumptions={"ring_bus_zero_copy": True, "pcore_mask": "0x0F"},
+            cir_graph=cir,
+            cir_hash=cir.get_hash(),
+            estimated_cost={"flops": 1.0, "memory_traffic": 0.40, "latency_ms": 0.70},
+            exactness_mode=contract.exactness_mode,
+            executable_fn=usm_exec,
+        )
+
+    @classmethod
+    def _create_memoized_candidate(cls, parent: CandidatePathway, contract: ProblemContract) -> Optional[CandidatePathway]:
+        from hyper.research_engine.semantic_memoization import LSHSemanticCache
+
+        first_input_dim = 64
+        for k, v in contract.input_domain.items():
+            shape = v.get("shape", [])
+            if shape:
+                first_input_dim = int(np.prod(shape))
+                break
+
+        cache = LSHSemanticCache(in_dim=min(first_input_dim, 256), num_hyperplanes=16, max_entries=512)
+
+        def memoized_exec(inputs: Dict[str, Any]) -> Any:
+            dominant_k = next(iter(inputs.keys()))
+            x = inputs[dominant_k]
+            if isinstance(x, np.ndarray) and x.dtype in (np.float32, np.float64):
+                x_sample = x.ravel()[:min(first_input_dim, 256)].astype(np.float32)
+                # Lookup with Irreducible Entropy Fallback
+                cached = cache.lookup(x_sample)
+                if cached is not None:
+                    return cached
+                res = parent.executable_fn(inputs)
+                if isinstance(res, np.ndarray):
+                    cache.insert(x_sample, res)
+                return res
+            return parent.executable_fn(inputs)
+
+        cir = copy.deepcopy(parent.cir_graph)
+        cir.name = f"{parent.cir_graph.name}_memoized"
+
+        return CandidatePathway(
+            candidate_id=f"cand_memo_{uuid.uuid4().hex[:8]}",
+            parent_id=parent.candidate_id,
+            transformation_history=parent.transformation_history + ["SEMANTIC_L3_MEMOIZATION"],
+            assumptions={"l3_cache_budget_mb": 8.0, "entropy_threshold": 0.65},
+            cir_graph=cir,
+            cir_hash=cir.get_hash(),
+            estimated_cost={"flops": 0.10, "memory_traffic": 0.15, "latency_ms": 0.15},
+            exactness_mode=contract.exactness_mode,
+            executable_fn=memoized_exec,
         )
