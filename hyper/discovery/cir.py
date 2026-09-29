@@ -209,6 +209,16 @@ class CIRNode:
     estimated_flops: float = 0.0
     side_effects: bool = False
     custom_eval_fn: Optional[Callable[..., Any]] = None  # Local evaluation callback if custom
+    memory_access_pattern: str = "STREAMING"             # STREAMING, RANDOM, STRIDED, BLOCKED
+    parallelism_degree: int = 1
+    reuse_opportunities: List[str] = dataclasses.field(default_factory=list)
+    control_flow: Optional[str] = None                   # None, "LOOP", "BRANCH", "CONDITIONAL"
+    state_dependencies: List[str] = dataclasses.field(default_factory=list)
+    mathematical_properties: Dict[str, Any] = dataclasses.field(default_factory=dict)
+    precision_requirement: str = "FP32"
+    numerical_tolerance: float = 1e-4
+    determinism_requirement: bool = True
+    data_movement_bytes: int = 0
 
     def to_dict(self) -> Dict[str, Any]:
         # Handle numpy constant serialization
@@ -239,6 +249,16 @@ class CIRNode:
             "output_meta": self.output_meta.to_dict() if self.output_meta else None,
             "estimated_flops": self.estimated_flops,
             "side_effects": self.side_effects,
+            "memory_access_pattern": self.memory_access_pattern,
+            "parallelism_degree": self.parallelism_degree,
+            "reuse_opportunities": list(self.reuse_opportunities),
+            "control_flow": self.control_flow,
+            "state_dependencies": list(self.state_dependencies),
+            "mathematical_properties": copy.deepcopy(self.mathematical_properties),
+            "precision_requirement": self.precision_requirement,
+            "numerical_tolerance": self.numerical_tolerance,
+            "determinism_requirement": self.determinism_requirement,
+            "data_movement_bytes": self.data_movement_bytes,
         }
 
     @classmethod
@@ -257,7 +277,18 @@ class CIRNode:
             output_meta=CIRTensorMeta.from_dict(d["output_meta"]) if d.get("output_meta") else None,
             estimated_flops=float(d.get("estimated_flops", 0.0)),
             side_effects=bool(d.get("side_effects", False)),
+            memory_access_pattern=str(d.get("memory_access_pattern", "STREAMING")),
+            parallelism_degree=int(d.get("parallelism_degree", 1)),
+            reuse_opportunities=list(d.get("reuse_opportunities", [])),
+            control_flow=d.get("control_flow"),
+            state_dependencies=list(d.get("state_dependencies", [])),
+            mathematical_properties=dict(d.get("mathematical_properties", {})),
+            precision_requirement=str(d.get("precision_requirement", "FP32")),
+            numerical_tolerance=float(d.get("numerical_tolerance", 1e-4)),
+            determinism_requirement=bool(d.get("determinism_requirement", True)),
+            data_movement_bytes=int(d.get("data_movement_bytes", 0)),
         )
+
 
 
 class CIRGraph:
@@ -274,6 +305,9 @@ class CIRGraph:
         self.inputs: List[str] = []   # Node IDs acting as external inputs
         self.outputs: List[str] = []  # Node IDs designated as final outputs
         self.metadata: Dict[str, Any] = {}
+        self.contract: Optional[Dict[str, Any]] = None
+        self.resource_requirements: Dict[str, Any] = {}
+
 
     def add_input(self, name: str, shape: Tuple[int, ...], dtype: DataType = DataType.FP32) -> CIRNode:
         """Add an external input node."""
@@ -624,12 +658,24 @@ class CIRGraph:
                 estimated_flops=node.estimated_flops,
                 side_effects=node.side_effects,
                 custom_eval_fn=node.custom_eval_fn,
+                memory_access_pattern=node.memory_access_pattern,
+                parallelism_degree=node.parallelism_degree,
+                reuse_opportunities=list(node.reuse_opportunities),
+                control_flow=node.control_flow,
+                state_dependencies=list(node.state_dependencies),
+                mathematical_properties=copy.deepcopy(node.mathematical_properties),
+                precision_requirement=node.precision_requirement,
+                numerical_tolerance=node.numerical_tolerance,
+                determinism_requirement=node.determinism_requirement,
+                data_movement_bytes=node.data_movement_bytes,
             )
             new_g.nodes[nid] = new_node
         new_g.edges = [copy.deepcopy(e) for e in self.edges]
         new_g.inputs = list(self.inputs)
         new_g.outputs = list(self.outputs)
         new_g.metadata = copy.deepcopy(self.metadata)
+        new_g.contract = copy.deepcopy(self.contract)
+        new_g.resource_requirements = copy.deepcopy(self.resource_requirements)
         return new_g
 
     def eliminate_dead_nodes(self) -> int:
@@ -655,6 +701,85 @@ class CIRGraph:
         self.edges = [e for e in self.edges if e.source_id in self.nodes and e.target_id in self.nodes]
         return len(to_remove)
 
+    def bind_contract(self, contract: Any) -> None:
+        """Bind an explicit ComputationalContract or dict to this CIR graph."""
+        if hasattr(contract, "to_dict"):
+            self.contract = contract.to_dict()
+        elif isinstance(contract, dict):
+            self.contract = copy.deepcopy(contract)
+        else:
+            raise TypeError("contract must be a ComputationalContract or dict")
+
+    def calculate_total_data_movement(self) -> int:
+        """Calculates total tensor byte movement across inputs, outputs, and internal edges."""
+        total_bytes = 0
+        for edge in self.edges:
+            if edge.tensor_meta:
+                total_bytes += edge.tensor_meta.memory_bytes
+            else:
+                src = self.nodes.get(edge.source_id)
+                if src and src.output_meta:
+                    total_bytes += src.output_meta.memory_bytes
+        for out_id in self.outputs:
+            out_node = self.nodes.get(out_id)
+            if out_node and out_node.output_meta:
+                total_bytes += out_node.output_meta.memory_bytes
+        return total_bytes
+
+    def calculate_peak_live_memory(self) -> int:
+        """Calculates the peak memory consumption of live intermediate tensors along topological execution."""
+        topo = self.topological_sort()
+        consumer_counts: Dict[str, int] = {nid: 0 for nid in self.nodes}
+        for edge in self.edges:
+            consumer_counts[edge.source_id] = consumer_counts.get(edge.source_id, 0) + 1
+        for out_id in self.outputs:
+            consumer_counts[out_id] = consumer_counts.get(out_id, 0) + 1
+
+        current_live_bytes = 0
+        peak_live_bytes = 0
+
+        for nid in topo:
+            node = self.nodes.get(nid)
+            if not node or not node.output_meta:
+                continue
+            node_bytes = node.output_meta.memory_bytes
+            current_live_bytes += node_bytes
+            if current_live_bytes > peak_live_bytes:
+                peak_live_bytes = current_live_bytes
+
+            for inp_id in node.inputs:
+                if inp_id in consumer_counts:
+                    consumer_counts[inp_id] -= 1
+                    if consumer_counts[inp_id] <= 0:
+                        inp_node = self.nodes.get(inp_id)
+                        if inp_node and inp_node.output_meta:
+                            current_live_bytes -= inp_node.output_meta.memory_bytes
+
+        return peak_live_bytes
+
+    def export_workload_cir(self, filepath: str) -> None:
+        """Serializes CIR and its bound contract to a standalone workload.cir.json file."""
+        import os
+        parent = os.path.dirname(os.path.abspath(filepath))
+        if parent:
+            os.makedirs(parent, exist_ok=True)
+        self.resource_requirements = {
+            "peak_live_memory_bytes": self.calculate_peak_live_memory(),
+            "total_data_movement_bytes": self.calculate_total_data_movement(),
+            "total_estimated_flops": sum(n.estimated_flops for n in self.nodes.values()),
+            "node_count": len(self.nodes),
+            "edge_count": len(self.edges),
+        }
+        with open(filepath, "w", encoding="utf-8") as f:
+            f.write(self.to_json(indent=2))
+
+    @classmethod
+    def import_workload_cir(cls, filepath: str) -> CIRGraph:
+        """Loads and reconstructs a CIR graph and its bound contract from a workload.cir.json file."""
+        with open(filepath, "r", encoding="utf-8") as f:
+            s = f.read()
+        return cls.from_json(s)
+
     def to_dict(self) -> Dict[str, Any]:
         """Serialize complete CIR graph to JSON-compatible dictionary."""
         return {
@@ -663,6 +788,8 @@ class CIRGraph:
             "inputs": list(self.inputs),
             "outputs": list(self.outputs),
             "metadata": copy.deepcopy(self.metadata),
+            "contract": copy.deepcopy(self.contract),
+            "resource_requirements": copy.deepcopy(self.resource_requirements),
             "nodes": {nid: node.to_dict() for nid, node in self.nodes.items()},
             "edges": [edge.to_dict() for edge in self.edges],
         }
@@ -674,6 +801,8 @@ class CIRGraph:
         graph.inputs = list(d.get("inputs", []))
         graph.outputs = list(d.get("outputs", []))
         graph.metadata = dict(d.get("metadata", {}))
+        graph.contract = dict(d["contract"]) if d.get("contract") else None
+        graph.resource_requirements = dict(d.get("resource_requirements", {}))
 
         for nid, ndict in d.get("nodes", {}).items():
             graph.nodes[nid] = CIRNode.from_dict(ndict)
@@ -694,3 +823,4 @@ class CIRGraph:
         """Deterministic cryptographic SHA-256 hash representing the graph."""
         payload = json.dumps(self.to_dict(), sort_keys=True)
         return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
