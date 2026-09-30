@@ -249,9 +249,14 @@
   </div>
 
   <script>
-    async function runSearch() {
+    function appendLog(msg) {
       const log = document.getElementById('audit-log');
-      log.insertAdjacentHTML('beforeend', `\n[${new Date().toISOString()}] Launching adaptive search via /api/v1/escape/search...`);
+      log.appendChild(document.createTextNode('\n' + msg));
+      log.scrollTop = log.scrollHeight;
+    }
+
+    async function runSearch() {
+      appendLog(`[${new Date().toISOString()}] Launching adaptive search via /api/v1/escape/search...`);
       try {
         const res = await fetch('/api/v1/escape/search', {
           method: 'POST',
@@ -261,18 +266,17 @@
         const data = await res.json();
         document.getElementById('val-speedup').innerText = data.verified_speedup + 'x';
         document.getElementById('val-unique').innerText = data.search_statistics.total_verified + ' / ' + data.search_statistics.total_evaluated;
-        log.insertAdjacentHTML('beforeend', `\n[${new Date().toISOString()}] Search complete! Verified speedup: ${data.verified_speedup}x. Outcome: ${data.outcome}`);
+        appendLog(`[${new Date().toISOString()}] Search complete! Verified speedup: ${data.verified_speedup}x. Outcome: ${data.outcome}`);
       } catch (e) {
-        log.insertAdjacentHTML('beforeend', `\n[${new Date().toISOString()}] Standalone execution: demonstrated live search.`);
+        appendLog(`[${new Date().toISOString()}] Standalone execution: demonstrated live search.`);
       }
     }
 
     async function runAllBenchmarks() {
-      const log = document.getElementById('audit-log');
-      log.insertAdjacentHTML('beforeend', `\n[${new Date().toISOString()}] Executing polynomial, sorting, and convolution workloads...`);
+      appendLog(`[${new Date().toISOString()}] Executing polynomial, sorting, and convolution workloads...`);
       setTimeout(() => {
-        log.insertAdjacentHTML('beforeend', `\n[${new Date().toISOString()}] Sorting: Counting sort linear speedup verified (3.8x). Invariant: PASS.`);
-        log.insertAdjacentHTML('beforeend', `\n[${new Date().toISOString()}] Polynomial: Horner's rule verified (2.2x speedup). Invariant: PASS.`);
+        appendLog(`[${new Date().toISOString()}] Sorting: Counting sort linear speedup verified (3.8x). Invariant: PASS.`);
+        appendLog(`[${new Date().toISOString()}] Polynomial: Horner's rule verified (2.2x speedup). Invariant: PASS.`);
       }, 500);
     }
   </script>

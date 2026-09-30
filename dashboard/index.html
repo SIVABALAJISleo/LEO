@@ -551,6 +551,16 @@
         SYMBOLIC: "#06b6d4",
       };
 
+      function escapeHtml(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
       function updateRoutes(dist) {
         const total = Object.values(dist).reduce((a, b) => a + b, 1);
         const sorted = Object.entries(dist).sort((a, b) => b[1] - a[1]);
@@ -559,13 +569,15 @@
           .map(([name, count]) => {
             const pct = ((count / total) * 100).toFixed(1);
             const color = ROUTE_COLORS[name] || "#64748b";
+            const escName = escapeHtml(name);
+            const escCount = escapeHtml(count);
             return `
         <div class="route-row">
-          <span class="route-name">${name}</span>
+          <span class="route-name">${escName}</span>
           <div class="route-bar-wrap">
             <div class="route-bar" style="width:${pct}%;background:${color}"></div>
           </div>
-          <span class="route-count">${count}</span>
+          <span class="route-count">${escCount}</span>
         </div>`;
           })
           .join("");
