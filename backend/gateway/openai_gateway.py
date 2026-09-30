@@ -110,6 +110,33 @@ async def chat_completions(req: ChatCompletionRequest):
     }
     
     logger.info(f"[GATEWAY] Served client query via {resolved_by} in {response['x_leo_metadata']['latency_ms']}ms.")
+    
+    if req.stream:
+        from fastapi.responses import StreamingResponse
+        import json
+
+        async def sse_generator():
+            words = answer.split(" ")
+            for i, word in enumerate(words):
+                chunk_data = {
+                    "id": completion_id,
+                    "object": "chat.completion.chunk",
+                    "created": int(t0),
+                    "model": req.model,
+                    "choices": [
+                        {
+                            "index": 0,
+                            "delta": {"content": (word + " " if i < len(words) - 1 else word)},
+                            "finish_reason": None,
+                        }
+                    ],
+                }
+                yield f"data: {json.dumps(chunk_data)}\n\n"
+            yield f"data: {json.dumps({'id': completion_id, 'object': 'chat.completion.chunk', 'choices': [{'index': 0, 'delta': {}, 'finish_reason': 'stop'}]})}\n\n"
+            yield "data: [DONE]\n\n"
+
+        return StreamingResponse(sse_generator(), media_type="text/event-stream")
+
     return response
 
 

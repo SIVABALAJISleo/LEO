@@ -14,7 +14,7 @@
       "Numerical tolerance exceeded on ill-conditioned inputs"
     ],
     "proof_template": "Dual-path independent verification against textbook reference",
-    "verified_discoveries_count": 5
+    "verified_discoveries_count": 6
   },
   "CANONICAL_BASELINE": {
     "transformation_name": "CANONICAL_BASELINE",
@@ -40,7 +40,7 @@
       "Numerical tolerance exceeded on ill-conditioned inputs"
     ],
     "proof_template": "Dual-path independent verification against textbook reference",
-    "verified_discoveries_count": 58
+    "verified_discoveries_count": 68
   },
   "FAST_FOURIER_CONVOLUTION": {
     "transformation_name": "FAST_FOURIER_CONVOLUTION",
@@ -72,13 +72,13 @@
       "SHA256_CRYPTO"
     ],
     "measured_benefit": {
-      "average_speedup": 6.45
+      "average_speedup": 10.99
     },
     "failure_modes": [
       "Numerical tolerance exceeded on ill-conditioned inputs"
     ],
     "proof_template": "Dual-path independent verification against textbook reference",
-    "verified_discoveries_count": 16
+    "verified_discoveries_count": 20
   },
   "SEMANTIC_L3_MEMOIZATION": {
     "transformation_name": "SEMANTIC_L3_MEMOIZATION",
@@ -116,5 +116,22 @@
     ],
     "proof_template": "Dual-path independent verification against textbook reference",
     "verified_discoveries_count": 8
+  },
+  "WINOGRAD_MINIMAL_FILTERING_F23": {
+    "transformation_name": "WINOGRAD_MINIMAL_FILTERING_F23",
+    "preconditions": [
+      "Conforms to algebraic contract domain"
+    ],
+    "applicable_domains": [
+      "CONV2D_STANDARD"
+    ],
+    "measured_benefit": {
+      "average_speedup": 1.42
+    },
+    "failure_modes": [
+      "Numerical tolerance exceeded on ill-conditioned inputs"
+    ],
+    "proof_template": "Dual-path independent verification against textbook reference",
+    "verified_discoveries_count": 1
   }
 }

@@ -2298,5 +2298,105 @@
     "error_threshold": 0.001,
     "failure_classification": null,
     "timestamp": 1790735556.4384277
+  },
+  {
+    "candidate_id": "CAND_WORMHOLE_GEMM",
+    "workload_id": "GEMM_128x128x128",
+    "stress_test_name": "DIM_MICRO_4x4",
+    "passed": true,
+    "measured_error": 0.0,
+    "error_threshold": 0.001,
+    "failure_classification": null,
+    "timestamp": 1790745752.7581255
+  },
+  {
+    "candidate_id": "CAND_WORMHOLE_GEMM",
+    "workload_id": "GEMM_128x128x128",
+    "stress_test_name": "DIM_NON_SQUARE_37x129",
+    "passed": true,
+    "measured_error": 0.0,
+    "error_threshold": 0.001,
+    "failure_classification": null,
+    "timestamp": 1790745752.7585318
+  },
+  {
+    "candidate_id": "CAND_WORMHOLE_GEMM",
+    "workload_id": "GEMM_128x128x128",
+    "stress_test_name": "DIST_HEAVY_TAIL",
+    "passed": true,
+    "measured_error": 0.0,
+    "error_threshold": 0.001,
+    "failure_classification": null,
+    "timestamp": 1790745752.7587085
+  },
+  {
+    "candidate_id": "CAND_WORMHOLE_GEMM",
+    "workload_id": "GEMM_128x128x128",
+    "stress_test_name": "HIGH_DYNAMIC_RANGE",
+    "passed": true,
+    "measured_error": 0.0,
+    "error_threshold": 0.001,
+    "failure_classification": null,
+    "timestamp": 1790745752.7588096
+  },
+  {
+    "candidate_id": "CAND_WORMHOLE_GEMM",
+    "workload_id": "GEMM_128x128x128",
+    "stress_test_name": "SPARSE_IMPULSE",
+    "passed": true,
+    "measured_error": 0.0,
+    "error_threshold": 0.001,
+    "failure_classification": null,
+    "timestamp": 1790745752.7589345
+  },
+  {
+    "candidate_id": "CAND_WORMHOLE_GRAPHICS",
+    "workload_id": "GRAPHICS_128x128",
+    "stress_test_name": "DIM_MICRO_4x4",
+    "passed": true,
+    "measured_error": 0.0,
+    "error_threshold": 0.001,
+    "failure_classification": null,
+    "timestamp": 1790745753.1026485
+  },
+  {
+    "candidate_id": "CAND_WORMHOLE_GRAPHICS",
+    "workload_id": "GRAPHICS_128x128",
+    "stress_test_name": "DIM_NON_SQUARE_37x129",
+    "passed": true,
+    "measured_error": 0.0,
+    "error_threshold": 0.001,
+    "failure_classification": null,
+    "timestamp": 1790745753.1031797
+  },
+  {
+    "candidate_id": "CAND_WORMHOLE_GRAPHICS",
+    "workload_id": "GRAPHICS_128x128",
+    "stress_test_name": "DIST_HEAVY_TAIL",
+    "passed": true,
+    "measured_error": 0.0,
+    "error_threshold": 0.001,
+    "failure_classification": null,
+    "timestamp": 1790745753.1033587
+  },
+  {
+    "candidate_id": "CAND_WORMHOLE_GRAPHICS",
+    "workload_id": "GRAPHICS_128x128",
+    "stress_test_name": "HIGH_DYNAMIC_RANGE",
+    "passed": true,
+    "measured_error": 0.0,
+    "error_threshold": 0.001,
+    "failure_classification": null,
+    "timestamp": 1790745753.1034653
+  },
+  {
+    "candidate_id": "CAND_WORMHOLE_GRAPHICS",
+    "workload_id": "GRAPHICS_128x128",
+    "stress_test_name": "SPARSE_IMPULSE",
+    "passed": true,
+    "measured_error": 0.0,
+    "error_threshold": 0.001,
+    "failure_classification": null,
+    "timestamp": 1790745753.1035936
   }
 ]

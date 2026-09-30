@@ -1,9 +1,9 @@
 {
-  "certificate_id": "cert_7ad04b5fb1cd",
-  "timestamp": 1790682424.2702155,
+  "certificate_id": "cert_deee4141ad95",
+  "timestamp": 1790746185.847772,
   "workload_id": "pipeline_unit_test",
   "contract_hash": "b8790fb4eddb2b858750274c5db2f92de71a6fdd1110fad043a2e59d7cff1cdc",
-  "input_hash": "-6153248659152160239",
+  "input_hash": "3566830705493521892",
   "candidate_hash": "pathway_exact_reference",
   "reference_hash": "reference_blas_fp32",
   "hardware_fingerprint": "Intel Core i5-12450H + UHD Graphics (48 EU)",
@@ -17,9 +17,9 @@
   "predicted_work": 0.0,
   "reconstructed_work": 0.0,
   "verification_work": 0.0,
-  "latency": 12.6,
-  "throughput": 79.36,
-  "memory": 984.99,
+  "latency": 14.785,
+  "throughput": 67.64,
+  "memory": 419.68,
   "correctness": "PASS",
   "numerical_error": 0.0,
   "exact_status": "EXACT_MATCH",
@@ -39,10 +39,10 @@
   "adversarial_result": {},
   "holdout_result": {},
   "latency_samples_ms": [
-    12.6
+    14.785
   ],
-  "throughput_ops_per_sec": 79.36,
-  "memory_rss_mb": 984.99,
+  "throughput_ops_per_sec": 67.64,
+  "memory_rss_mb": 419.68,
   "work_reference_flops": 524288.0,
   "work_necessary_flops": 524288.0,
   "work_eliminated_ratio": 0.0,
@@ -50,5 +50,5 @@
   "provenance": "MEASURED",
   "fallback_status": "NONE",
   "verifier_version": "vNext-2.0",
-  "certificate_signature": "63f10a2824297b87cd6161d3726fd8131d3d7be5bf9060525c60e0af0e2814f7"
+  "certificate_signature": "88b4843a7c62295464da9c782cc59418d1f06c1a8b0d9e01abe14d59ede6b752"
 }

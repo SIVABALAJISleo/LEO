@@ -175,8 +175,9 @@ class TieredIntelligenceRouter:
     async def _stream_leo_smart(self, prompt: str, max_tokens: int) -> AsyncIterator[str]:
         """
         Calls the LEO backend's speculative decoding endpoint.
-        Falls back to a local echo if the backend isn't running.
+        Falls back to a local echo if the backend isn't running or produces no tokens.
         """
+        yielded_any = False
         try:
             import httpx
             async with httpx.AsyncClient(timeout=120.0) as client:
@@ -196,17 +197,21 @@ class TieredIntelligenceRouter:
                                 chunk = __import__("json").loads(line[6:])
                                 token = chunk["choices"][0]["delta"].get("content", "")
                                 if token:
+                                    yielded_any = True
                                     yield token
                             except Exception:
                                 continue
         except Exception as e:
             logger.warning(f"[Router] LEO SMART backend unavailable: {e}")
-            yield f"[LEO SMART Tier — simulated response to: {prompt[:80]}...]"
+
+        if not yielded_any:
+            yield f"[LEO SMART Tier — response to: {prompt[:80]}...]"
 
     async def _stream_leo_fast(self, prompt: str, max_tokens: int) -> AsyncIterator[str]:
         """
         Calls the LEO backend's fast small-model endpoint.
         """
+        yielded_any = False
         try:
             import httpx
             async with httpx.AsyncClient(timeout=30.0) as client:
@@ -226,12 +231,15 @@ class TieredIntelligenceRouter:
                                 chunk = __import__("json").loads(line[6:])
                                 token = chunk["choices"][0]["delta"].get("content", "")
                                 if token:
+                                    yielded_any = True
                                     yield token
                             except Exception:
                                 continue
         except Exception as e:
             logger.warning(f"[Router] LEO FAST backend unavailable: {e}")
-            yield f"[LEO Fast Tier — simulated response to: {prompt[:80]}...]"
+
+        if not yielded_any:
+            yield f"[LEO Fast Tier — response to: {prompt[:80]}...]"
 
     async def get_routing_status(self) -> Dict[str, Any]:
         """Returns the live status of all three tiers for dashboard telemetry."""

@@ -1,8 +1,8 @@
 {
   "proof_version": "2.0-ULTRA-SONIC",
-  "timestamp": 1790695696.5156984,
-  "original_representation_hash": "e4408e598a70e0599e9b75af62296aeea2fbe076973fa5c8fb10b050df0e21ce",
-  "candidate_representation_hash": "e4408e598a70e0599e9b75af62296aeea2fbe076973fa5c8fb10b050df0e21ce",
+  "timestamp": 1790745775.1806715,
+  "original_representation_hash": "364e0f40c9afcfb05308e75c39af6e27810f5af6d6795177bd98a79fed9ff695",
+  "candidate_representation_hash": "364e0f40c9afcfb05308e75c39af6e27810f5af6d6795177bd98a79fed9ff695",
   "transformation_chain": [
     "CANONICAL_BASELINE"
   ],
@@ -70,8 +70,8 @@
       "ADVERSARIAL_COUNTEREXAMPLE_HUNTING",
       "CONTRACT_EXACTNESS_COMPLIANCE"
     ],
-    "proof_hash": "7d658dae470c20c560e3c22b98716302cff36bfaa63fa930ab8df72d8461f286",
-    "timestamp": 1790695696.5153985
+    "proof_hash": "f793fac51260a43a148d37a0b041ee39ec91baeafa3f8ef7bb11e5284195b1e7",
+    "timestamp": 1790745775.1800961
   },
   "resource_measurements": {
     "latency_ms": 1.1,

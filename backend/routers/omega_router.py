@@ -267,3 +267,52 @@ def get_universal_closure() -> Dict[str, Any]:
     }
 
 
+# ── Section 75: Unified PCIE Collapse Endpoints ──────────────────────────────
+
+class CollapseDiscoverRequest(BaseModel):
+    workload_id: str = "matrix_vector_diagonal"
+    size: int = 64
+    contract_type: str = "EXACT_INTEGER"
+
+@router.post("/collapse/discover")
+def collapse_discover(req: CollapseDiscoverRequest) -> Dict[str, Any]:
+    """Searches for computational escapes and structural reduction."""
+    from hyper_omega.pcie import ProofCarryingComputationalEscapeEngine
+    from hyper_omega.contracts.models import WorkloadContract, ContractType
+    engine = ProofCarryingComputationalEscapeEngine()
+    c_type = getattr(ContractType, req.contract_type, ContractType.EXACT_INTEGER)
+    contract = WorkloadContract(contract_type=c_type)
+    
+    if "diagonal" in req.workload_id:
+        A = np.diag(np.arange(1, req.size + 1, dtype=np.float64))
+        x = np.ones(req.size, dtype=np.float64)
+    elif "rank1" in req.workload_id:
+        u = np.arange(1, req.size + 1, dtype=np.float64)
+        v = np.arange(req.size, 0, -1, dtype=np.float64)
+        A = np.outer(u, v)
+        x = np.ones(req.size, dtype=np.float64)
+    else:
+        A = np.random.randn(req.size, req.size)
+        x = np.random.randn(req.size)
+
+    res = engine.solve(req.workload_id, (A, x), contract=contract)
+    return res.to_dict()
+
+@router.post("/collapse/falsify")
+def collapse_falsify(req: CollapseDiscoverRequest) -> Dict[str, Any]:
+    """Runs self-falsification engine against declared workload."""
+    from hyper_omega.pcie import ProofCarryingComputationalEscapeEngine
+    engine = ProofCarryingComputationalEscapeEngine()
+    A = np.random.randn(req.size, req.size)
+    x = np.random.randn(req.size)
+    res = engine.solve("dense_random_noise", (A, x))
+    return {
+        "status": "falsification_complete",
+        "dispatch_path": res.dispatch_path,
+        "fallback_used": res.fallback_used,
+        "exactness": res.exactness,
+        "certificate": res.certificate.to_json_dict(),
+    }
+
+
+
