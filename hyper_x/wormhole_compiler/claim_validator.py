@@ -51,7 +51,7 @@ class ClaimValidator:
         """Audits a claim against required evidence standards."""
         st_lower = statement.lower()
 
-        # Check for prohibited hardware faking claims
+        # Check for prohibited hardware faking or unscientific universality claims
         if "gpu replaced" in st_lower or "100% nvidia replacement" in st_lower:
             return ClaimAuditResult(
                 statement=statement,
@@ -61,12 +61,50 @@ class ClaimValidator:
                 evidence_valid=False,
             )
 
+        if "universal optimization for all workloads" in st_lower or "all workloads can be optimized" in st_lower:
+            return ClaimAuditResult(
+                statement=statement,
+                dimension=dimension,
+                status=ClaimStatus.INVALID,
+                audit_notes="Prohibited statement: Optimization techniques have mathematical preconditions and cannot universally optimize arbitrary workloads.",
+                evidence_valid=False,
+            )
+
         if "measured power" in st_lower and evidence and evidence.get("sensor_available") is False:
             return ClaimAuditResult(
                 statement=statement,
                 dimension=dimension,
                 status=ClaimStatus.INVALID,
                 audit_notes="Prohibited statement: Nominal TDP power estimation cannot be labeled as measured power.",
+                evidence_valid=False,
+            )
+
+        # Baseline floor certification
+        if dimension == "BASELINE_FLOOR":
+            if evidence and (evidence.get("status") == "BASELINE_NEAR_PRACTICAL_FLOOR" or evidence.get("roofline_efficiency", 0.0) >= 0.65):
+                eff = evidence.get("roofline_efficiency", 0.0)
+                return ClaimAuditResult(
+                    statement=statement,
+                    dimension=dimension,
+                    status=ClaimStatus.VERIFIED,
+                    audit_notes=f"Verified: Baseline is near theoretical practical floor ({eff*100:.1f}% roofline efficiency). No further local algorithmic speedup mathematically expected.",
+                    evidence_valid=True,
+                )
+            return ClaimAuditResult(
+                statement=statement,
+                dimension=dimension,
+                status=ClaimStatus.QUALIFIED,
+                audit_notes="Baseline has remaining optimization slack.",
+                evidence_valid=True,
+            )
+
+        # Forced optimization detection
+        if evidence and evidence.get("applicability_rejected", False):
+            return ClaimAuditResult(
+                statement=statement,
+                dimension=dimension,
+                status=ClaimStatus.INVALID,
+                audit_notes="Rejected: Optimization technique mathematical preconditions are absent in workload. Cannot force optimization.",
                 evidence_valid=False,
             )
 

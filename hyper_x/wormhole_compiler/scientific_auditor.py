@@ -70,6 +70,9 @@ class ScientificAuditor:
         ("100% nvidia parity", "Misleading statement: raw physical silicon parity is 0.0%."),
         ("100% raw parity", "Raw silicon hardware cannot be duplicated by software."),
         ("infinite speedup", "Speedup is mathematically bounded by real execution time."),
+        ("all workloads can be optimized", "Mathematical optimization techniques require structural preconditions; random or unstructured workloads cannot be compressed."),
+        ("universal optimization", "No single optimization universally applies to arbitrary computational workloads."),
+        ("free speedup", "Work reductions must be mathematically proven and verified under strict contracts."),
     ]
 
     @classmethod
@@ -127,9 +130,27 @@ class ScientificAuditor:
                 remediation="Candidate cannot receive certified status.",
             ))
 
-        # 4. Target Hardware Mismatch
+        # 4. Forced Optimization Check (HYPER-Omega)
+        if provenance.get("applicability_rejected", False):
+            findings.append(AuditFinding(
+                severity="CRITICAL_VIOLATION",
+                category="FORCED_OPTIMIZATION",
+                description=f"Workload {workload_id} candidate attempted optimization when applicability preconditions were explicitly rejected.",
+                remediation="Respect applicability engine verdict: produce 'THIS OPTIMIZATION DOES NOT APPLY' conclusion.",
+            ))
+
+        # 5. Negative Control Check (HYPER-Omega)
+        if provenance.get("negative_control_passed") is False:
+            findings.append(AuditFinding(
+                severity="CRITICAL_VIOLATION",
+                category="NEGATIVE_CONTROL_FAILURE",
+                description=f"Workload {workload_id} failed negative control audit (falsely claimed speedup on unstructured null baseline).",
+                remediation="Candidate must produce zero speedup on incompressible/negative control workloads.",
+            ))
+
+        # 6. Target Hardware Mismatch
         target_cpu = provenance.get("cpu", "")
-        if "i5-12450H" not in target_cpu and "Intel" not in target_cpu:
+        if target_cpu and "i5-12450H" not in target_cpu and "Intel" not in target_cpu:
             findings.append(AuditFinding(
                 severity="WARNING",
                 category="TARGET_HARDWARE_MISMATCH",

@@ -185,3 +185,66 @@ def test_baseline_floor_detector_roofline():
     assert report_slow.status == "BASELINE_HAS_SIGNIFICANT_SLACK"
     assert report_slow.optimization_slack > 0.09
 
+def test_claim_validator_baseline_floor_and_forced_opt():
+    from hyper_x.wormhole_compiler.claim_validator import ClaimValidator, ClaimStatus
+
+    # 1. Baseline floor claim verification
+    res_floor = ClaimValidator.audit_claim(
+        statement="Current baseline is near practical floor",
+        dimension="BASELINE_FLOOR",
+        evidence={"status": "BASELINE_NEAR_PRACTICAL_FLOOR", "roofline_efficiency": 0.75}
+    )
+    assert res_floor.status == ClaimStatus.VERIFIED
+    assert res_floor.evidence_valid
+
+    # 2. Forced optimization claim rejection
+    res_forced = ClaimValidator.audit_claim(
+        statement="Claiming 10x speedup via low rank",
+        dimension="WORK_ELIMINATION",
+        evidence={"applicability_rejected": True, "proof_record_id": "PROOF_123"}
+    )
+    assert res_forced.status == ClaimStatus.INVALID
+    assert not res_forced.evidence_valid
+
+    # 3. Prohibited universality claim
+    res_universal = ClaimValidator.audit_claim(
+        statement="Universal optimization for all workloads",
+        dimension="WORK_ELIMINATION",
+        evidence={}
+    )
+    assert res_universal.status == ClaimStatus.INVALID
+
+def test_scientific_auditor_hyper_omega_checks():
+    from hyper_x.wormhole_compiler.scientific_auditor import ScientificAuditor
+
+    # Prohibited universality statement
+    findings = ScientificAuditor.audit_statement("This provides universal optimization across every workload.")
+    assert any(f.category == "IMPOSSIBLE_CLAIM" for f in findings)
+
+    # Forced optimization attempt in result record
+    audit_report = ScientificAuditor.audit_result_record(
+        workload_id="GEMM_RANDOM",
+        contract_mode="BOUNDED_APPROXIMATION",
+        numerical_error=1e-4,
+        holdout_passed=True,
+        provenance={"applicability_rejected": True},
+        is_simulated=False,
+        claimed_as_real_hardware=True
+    )
+    assert not audit_report.passed
+    assert any(f.category == "FORCED_OPTIMIZATION" for f in audit_report.findings)
+
+    # Negative control failure in result record
+    audit_neg = ScientificAuditor.audit_result_record(
+        workload_id="RANDOM_NOISE",
+        contract_mode="BOUNDED_APPROXIMATION",
+        numerical_error=1e-4,
+        holdout_passed=True,
+        provenance={"negative_control_passed": False},
+        is_simulated=False,
+        claimed_as_real_hardware=True
+    )
+    assert not audit_neg.passed
+    assert any(f.category == "NEGATIVE_CONTROL_FAILURE" for f in audit_neg.findings)
+
+
