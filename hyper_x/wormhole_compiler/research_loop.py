@@ -176,7 +176,15 @@ class AutonomousResearchLoop:
         # Baseline execution
         ref_out, ref_time_ms = MatrixMultiplicationAdapter.execute_reference(A, B)
         
-        floor_report = self.floor_detector.analyze('GEMM_A', 'numpy.dot', ref_time_ms, self.fingerprint.get('cpu_brand', 'UNKNOWN'), 'exact')
+        hw_scope = getattr(self.fingerprint, 'cpu_model', None) or (self.fingerprint.get('cpu_model', 'UNKNOWN') if isinstance(self.fingerprint, dict) else 'UNKNOWN')
+        floor_report = self.floor_detector.analyze(
+            'GEMM_A',
+            'numpy.dot',
+            ref_time_ms / 1000.0,
+            hw_scope,
+            getattr(contract, 'contract_id', 'contract_exact'),
+            workload=A
+        )
         if floor_report.status == 'BASELINE_NEAR_PRACTICAL_FLOOR':
             iterations.append(ResearchIteration(
                 iteration_index=0,
@@ -248,6 +256,16 @@ class AutonomousResearchLoop:
                 opt_type = 'LOW_RANK'
             elif 'SPARSE' in expr_str:
                 opt_type = 'THRESHOLD_SPARSITY'
+            elif 'TILED' in expr_str or 'REORDER' in expr_str:
+                opt_type = 'MEMORY_TILING'
+            elif 'OUTPUT_PROJECT' in expr_str:
+                opt_type = 'OUTPUT_SENSITIVE_PRUNING'
+            elif 'PRECISION' in expr_str or 'QUANT' in expr_str:
+                opt_type = 'PRECISION_REDUCTION'
+            elif 'REUSE' in expr_str:
+                opt_type = 'EXACT_REUSE'
+            elif 'DELTA' in expr_str:
+                opt_type = 'DELTA_COMPUTATION'
                 
             applicability = self.applicability_engine.evaluate(A, 'GEMM_A', contract, opt_type)
             if not applicability.applicable and opt_type != 'UNKNOWN':

@@ -40,8 +40,18 @@ class OptimizationApplicabilityEngine:
         
         if optimization == "LOW_RANK":
             return self._evaluate_low_rank(workload, contract)
-        elif optimization == "THRESHOLD_SPARSITY":
+        elif optimization in ["THRESHOLD_SPARSITY", "SPARSITY"]:
             return self._evaluate_threshold_sparsity(workload, contract)
+        elif optimization in ["EXACT_REUSE", "MEMOIZATION"]:
+            return self._evaluate_exact_reuse(workload, contract)
+        elif optimization in ["DELTA_COMPUTATION", "INCREMENTAL"]:
+            return self._evaluate_delta_computation(workload, contract)
+        elif optimization in ["PRECISION_REDUCTION", "QUANTIZATION"]:
+            return self._evaluate_precision_reduction(workload, contract)
+        elif optimization in ["OUTPUT_SENSITIVE_PRUNING", "OUTPUT_PROJECT"]:
+            return self._evaluate_output_sensitive_pruning(workload, contract)
+        elif optimization in ["MEMORY_TILING", "CACHE_BLOCKING"]:
+            return self._evaluate_memory_tiling(workload, contract)
         
         return ApplicabilityReport(
             optimization=optimization,
@@ -160,6 +170,205 @@ class OptimizationApplicabilityEngine:
             reason=f"{percentage_removed:.1f}% work eliminated, economically viable",
             recommended_action="DEPLOY",
             evidence={"percentage_removed": percentage_removed}
+        )
+
+    def _evaluate_exact_reuse(self, workload: Any, contract: Any) -> ApplicabilityReport:
+        cache_policy = getattr(contract, "cache_policy", None)
+        if cache_policy is not None:
+            policy_val = getattr(cache_policy, "value", str(cache_policy))
+            if policy_val in ["COLD", "CachePolicy.COLD"]:
+                return ApplicabilityReport(
+                    optimization="EXACT_REUSE",
+                    applicable=False,
+                    classification="CONTRACT_FORBIDS_REUSE",
+                    confidence=1.0,
+                    reason="Contract explicitly enforces COLD cache policy; memoization reuse is forbidden",
+                    recommended_action="REJECT",
+                    evidence={"cache_policy": policy_val}
+                )
+        
+        if getattr(contract, "deterministic", True) is False:
+            return ApplicabilityReport(
+                optimization="EXACT_REUSE",
+                applicable=False,
+                classification="NON_DETERMINISTIC_WORKLOAD",
+                confidence=1.0,
+                reason="Workload is non-deterministic; exact memoization cannot be safely reused",
+                recommended_action="REJECT"
+            )
+
+        if isinstance(workload, (list, tuple)) and len(workload) > 1:
+            hashes = set()
+            for item in workload:
+                if isinstance(item, np.ndarray):
+                    hashes.add(item.tobytes()[:256])
+                else:
+                    hashes.add(id(item))
+            unique_ratio = len(hashes) / len(workload)
+            if unique_ratio > 0.95:
+                return ApplicabilityReport(
+                    optimization="EXACT_REUSE",
+                    applicable=False,
+                    classification="ZERO_HIT_RATE_STREAMING",
+                    confidence=0.95,
+                    reason=f"Streaming inputs are 100% unique ({unique_ratio*100:.1f}% unique); cryptographic hashing overhead exceeds recomputation with ~0% hit rate",
+                    recommended_action="SKIP_AND_SEARCH_ALTERNATIVES",
+                    evidence={"unique_ratio": unique_ratio}
+                )
+        
+        return ApplicabilityReport(
+            optimization="EXACT_REUSE",
+            applicable=True,
+            classification="HIGH_REPETITION_POTENTIAL",
+            confidence=0.9,
+            reason="Workload contract permits memoization and repetition potential exists",
+            recommended_action="DEPLOY"
+        )
+
+    def _evaluate_delta_computation(self, workload: Any, contract: Any) -> ApplicabilityReport:
+        if isinstance(workload, (list, tuple)) and len(workload) >= 2:
+            prev, curr = workload[0], workload[1]
+            if isinstance(prev, np.ndarray) and isinstance(curr, np.ndarray) and prev.shape == curr.shape:
+                delta = curr - prev
+                tol = getattr(contract, "tolerance", 0.0)
+                active_elements = np.sum(np.abs(delta) > tol)
+                active_ratio = float(active_elements) / float(delta.size) if delta.size > 0 else 0.0
+                
+                if active_ratio > 0.70:
+                    return ApplicabilityReport(
+                        optimization="DELTA_COMPUTATION",
+                        applicable=False,
+                        classification="INSUFFICIENT_TEMPORAL_COHERENCE",
+                        confidence=0.95,
+                        reason=f"High delta entropy ({active_ratio*100:.1f}% active entries changed); delta tracking adds subtraction and indexing overhead without eliminating compute",
+                        recommended_action="REJECT",
+                        evidence={"active_ratio": active_ratio}
+                    )
+                
+                is_exact = getattr(contract, "tolerance", 0.0) == 0.0 or getattr(contract, "correctness_mode", "") in ["EXACT", "CorrectnessMode.EXACT"]
+                if is_exact and active_ratio > 0.30:
+                    return ApplicabilityReport(
+                        optimization="DELTA_COMPUTATION",
+                        applicable=False,
+                        classification="DRIFT_SENSITIVE_EXACT",
+                        confidence=0.90,
+                        reason="Under EXACT contract, accumulating delta state risks floating point drift requiring frequent recomputation checkpoints",
+                        recommended_action="REJECT",
+                        evidence={"active_ratio": active_ratio}
+                    )
+
+                return ApplicabilityReport(
+                    optimization="DELTA_COMPUTATION",
+                    applicable=True,
+                    classification="SPARSE_TEMPORAL_DELTA",
+                    confidence=0.95,
+                    reason=f"High temporal coherence ({active_ratio*100:.1f}% active changes); incremental delta computation is economically viable",
+                    recommended_action="DEPLOY",
+                    evidence={"active_ratio": active_ratio}
+                )
+        
+        return ApplicabilityReport(
+            optimization="DELTA_COMPUTATION",
+            applicable=False,
+            classification="STATIC_WORKLOAD_NO_TEMPORAL_DIMENSION",
+            confidence=0.90,
+            reason="Workload has no sequential temporal dimension; delta recomputation does not apply",
+            recommended_action="SKIP_AND_SEARCH_ALTERNATIVES"
+        )
+
+    def _evaluate_precision_reduction(self, workload: Any, contract: Any) -> ApplicabilityReport:
+        is_exact = getattr(contract, "tolerance", 0.0) == 0.0 or getattr(contract, "correctness_mode", "") in ["EXACT", "CorrectnessMode.EXACT"]
+        if is_exact:
+            return ApplicabilityReport(
+                optimization="PRECISION_REDUCTION",
+                applicable=False,
+                classification="CONTRACT_DEMANDS_EXACT_PRECISION",
+                confidence=1.0,
+                reason="Contract specifies EXACT mathematical output (zero tolerance); reducing precision is strictly prohibited by exactness firewall",
+                recommended_action="REJECT"
+            )
+
+        if isinstance(workload, np.ndarray) and workload.ndim == 2 and workload.size > 0:
+            try:
+                cond = float(np.linalg.cond(workload))
+                if cond > 1e4:
+                    return ApplicabilityReport(
+                        optimization="PRECISION_REDUCTION",
+                        applicable=False,
+                        classification="ILL_CONDITIONED_SPECTRUM",
+                        confidence=0.95,
+                        reason=f"Matrix is severely ill-conditioned (condition number {cond:.2e} > 1e4); precision truncation will cause catastrophic loss of precision",
+                        recommended_action="REJECT",
+                        evidence={"condition_number": cond}
+                    )
+            except Exception:
+                pass
+
+        return ApplicabilityReport(
+            optimization="PRECISION_REDUCTION",
+            applicable=True,
+            classification="WELL_CONDITIONED_NUMERICAL_SLACK",
+            confidence=0.90,
+            reason="Workload has sufficient numerical slack and is well-conditioned",
+            recommended_action="DEPLOY"
+        )
+
+    def _evaluate_output_sensitive_pruning(self, workload: Any, contract: Any) -> ApplicabilityReport:
+        observable = getattr(contract, "observable", "output_tensor")
+        preserve_shape = getattr(contract, "preserve_shape", True)
+        
+        if observable in ["output_tensor", "full_tensor", "dense_result"] and preserve_shape:
+            if not getattr(contract, "top_k", None) and not getattr(contract, "output_sparsity_mask", None):
+                return ApplicabilityReport(
+                    optimization="OUTPUT_SENSITIVE_PRUNING",
+                    applicable=False,
+                    classification="FULL_DENSE_OUTPUT_REQUIRED",
+                    confidence=0.95,
+                    reason="Contract demands complete dense output tensor; intermediate pruning violates output observable contract",
+                    recommended_action="REJECT"
+                )
+
+        return ApplicabilityReport(
+            optimization="OUTPUT_SENSITIVE_PRUNING",
+            applicable=True,
+            classification="PRUNABLE_OUTPUT_SUBSPACE",
+            confidence=0.90,
+            reason="Contract observable allows partial or output-sensitive evaluation",
+            recommended_action="DEPLOY"
+        )
+
+    def _evaluate_memory_tiling(self, workload: Any, contract: Any) -> ApplicabilityReport:
+        if isinstance(workload, np.ndarray):
+            nbytes = workload.nbytes
+            l1_size = 32 * 1024  # 32KB typical L1 per core
+            if nbytes <= l1_size:
+                return ApplicabilityReport(
+                    optimization="MEMORY_TILING",
+                    applicable=False,
+                    classification="FITS_IN_L1_CACHE",
+                    confidence=0.95,
+                    reason=f"Workload footprint ({nbytes} bytes) fits entirely within L1 cache ({l1_size} bytes); loop blocking/tiling adds control overhead without reducing cache misses",
+                    recommended_action="REJECT",
+                    evidence={"footprint_bytes": nbytes, "l1_size": l1_size}
+                )
+            
+            return ApplicabilityReport(
+                optimization="MEMORY_TILING",
+                applicable=True,
+                classification="CACHE_CAPACITY_EXCEEDED",
+                confidence=0.90,
+                reason=f"Workload footprint ({nbytes} bytes) exceeds L1 cache; memory tiling will improve spatial and temporal cache locality",
+                recommended_action="DEPLOY",
+                evidence={"footprint_bytes": nbytes}
+            )
+
+        return ApplicabilityReport(
+            optimization="MEMORY_TILING",
+            applicable=False,
+            classification="UNKNOWN_FOOTPRINT",
+            confidence=0.5,
+            reason="Workload has undefined memory footprint for cache tiling analysis",
+            recommended_action="SKIP_AND_SEARCH_ALTERNATIVES"
         )
         
     def record_failure(self, workload_name: str, optimization: str, reason: str, evidence: Dict[str, Any]):
