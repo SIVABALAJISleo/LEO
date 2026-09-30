@@ -50,6 +50,8 @@ from hyper_x.wormhole_compiler.schemas import (
 from hyper_x.wormhole_compiler.contract import ContractCompiler
 from hyper_x.wormhole_compiler.observable import ObservableCompiler
 from hyper_x.wormhole_compiler.compiler import WormholeCompiler
+from hyper_x.wormhole_compiler.optimization_applicability import OptimizationApplicabilityEngine
+from hyper_x.wormhole_compiler.baseline_floor_detector import BaselineFloorDetector, BaselineFloorReport
 from hyper_x.wormhole_compiler.candidate_registry import CandidateRegistry, FailureRecord
 from hyper_x.wormhole_compiler.domain_adapters import (
     MatrixMultiplicationAdapter,
@@ -136,6 +138,8 @@ class AutonomousResearchLoop:
         self.compiler = WormholeCompiler(time_budget_sec=time_budget_sec)
         self.fingerprint = HardwareFingerprint.detect()
         self.pareto_frontier: List[Dict[str, Any]] = []
+        self.applicability_engine = OptimizationApplicabilityEngine()
+        self.floor_detector = BaselineFloorDetector()
 
     def run_gemm_research(
         self,
@@ -171,6 +175,25 @@ class AutonomousResearchLoop:
 
         # Baseline execution
         ref_out, ref_time_ms = MatrixMultiplicationAdapter.execute_reference(A, B)
+        
+        floor_report = self.floor_detector.analyze('GEMM_A', 'numpy.dot', ref_time_ms, self.fingerprint.get('cpu_brand', 'UNKNOWN'), 'exact')
+        if floor_report.status == 'BASELINE_NEAR_PRACTICAL_FLOOR':
+            iterations.append(ResearchIteration(
+                iteration_index=0,
+                hypothesis='Baseline Evaluation',
+                target_operation='GEMM',
+                grammar_expression='NONE',
+                representation='DENSE',
+                verified=True,
+                falsification_survived=True,
+                numerical_error=0.0,
+                work_elimination_pct=0.0,
+                latency_ms=ref_time_ms,
+                speedup=1.0,
+                pareto_optimal=True,
+                self_rectification_notes='BASELINE_NEAR_PRACTICAL_FLOOR'
+            ))
+            # Continue search, but note it
 
         # Exploration hypotheses library
         candidate_hypotheses = [
@@ -219,7 +242,33 @@ class AutonomousResearchLoop:
             # 1. Observe: profile current traits
             traits = self.compiler.profile_workload(A)
 
-            # 2. Check if known failure
+            # 2. Check Optimization Applicability
+            opt_type = 'UNKNOWN'
+            if 'LOW_RANK' in expr_str:
+                opt_type = 'LOW_RANK'
+            elif 'SPARSE' in expr_str:
+                opt_type = 'THRESHOLD_SPARSITY'
+                
+            applicability = self.applicability_engine.evaluate(A, 'GEMM_A', contract, opt_type)
+            if not applicability.applicable and opt_type != 'UNKNOWN':
+                iterations.append(ResearchIteration(
+                    iteration_index=it_idx + 1,
+                    hypothesis=hyp_name,
+                    target_operation='GEMM',
+                    grammar_expression=expr_str,
+                    representation=rep_type,
+                    verified=False,
+                    falsification_survived=False,
+                    numerical_error=1.0,
+                    work_elimination_pct=0.0,
+                    latency_ms=ref_time_ms,
+                    speedup=1.0,
+                    pareto_optimal=False,
+                    self_rectification_notes=f'NOT_APPLICABLE: {applicability.reason}'
+                ))
+                continue
+
+            # 3. Check if known failure
             known_fail, fail_msg = self.compiler.registry.is_known_failure(expr_str, traits)
             if known_fail:
                 iterations.append(ResearchIteration(
