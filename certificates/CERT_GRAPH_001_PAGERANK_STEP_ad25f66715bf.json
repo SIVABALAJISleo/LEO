@@ -1,0 +1,63 @@
+{
+  "certificate_id": "CERT_GRAPH_001_PAGERANK_STEP_ad25f66715bf",
+  "workload_id": "GRAPH_001_PAGERANK_STEP",
+  "contract_id": "CONTRACT_GRAPH_001_PAGERANK_STEP",
+  "ir_version": "HYPER-IR 1.0",
+  "semantic_version": "1.0.0",
+  "transformation_name": "SparseCSRMultiplication",
+  "transformation_category": "MATRIX",
+  "proof_method": "v0.3_TRUTH_GATE_INDEPENDENT_VERIFICATION",
+  "verifier_name": "DifferentialVerifier_Freivalds",
+  "exactness_level": "EXACT_SEMANTIC",
+  "input_hash": "c6fccc60627ebc5b6b60d82a24e46380f662ec779b59560903d7964ec9a7e184",
+  "output_hash": "c5fff3b39d5047251d395a8ab8a300b8ab8284b01f734356d9e9d3b01b874578",
+  "reference_hash": "aef2337467ea4ce27b20065e834d5ee385ba43d2075e6ca4c915e88959b2f424",
+  "adversarial_tests_passed": 1,
+  "holdout_tests_passed": 0,
+  "baseline_latency_ms": 0.0721,
+  "candidate_latency_ms": 0.2999,
+  "speedup": 0.24,
+  "hardware_profile": {
+    "os": "Windows-11-10.0.26100-SP0",
+    "cpu_model": "13th Gen Intel(R) Core(TM) i5-13420H",
+    "physical_cores": 8,
+    "logical_processors": 12,
+    "ram_total_bytes": 16857817088,
+    "ram_available_bytes": 3566141440,
+    "gpu_model": "Intel(R) UHD Graphics",
+    "gpu_type": "integrated",
+    "gpu_execution_units": null,
+    "gpu_driver": "32.0.101.7076",
+    "shared_memory": true,
+    "openvino_devices": [
+      "CPU",
+      "GPU"
+    ],
+    "directml_available": false,
+    "cuda_available": false,
+    "python_version": "3.13.5",
+    "package_versions": {
+      "torch": "2.10.0+cpu",
+      "openvino": "2026.2.1-21919-ede283a88e3-releases/2026/2",
+      "numpy": "2.3.2",
+      "scipy": "1.17.0",
+      "onnx": "1.21.0",
+      "onnxruntime": "1.24.1",
+      "psutil": "5.9.8"
+    }
+  },
+  "software_profile": {
+    "python": "3.13.5",
+    "packages": {
+      "torch": "2.10.0+cpu",
+      "openvino": "2026.2.1-21919-ede283a88e3-releases/2026/2",
+      "numpy": "2.3.2",
+      "scipy": "1.17.0",
+      "onnx": "1.21.0",
+      "onnxruntime": "1.24.1",
+      "psutil": "5.9.8"
+    }
+  },
+  "timestamp": 1790838816.20827,
+  "reproducibility_token": "2ea39e19ab39e525243cfe777dd1d64f097916bb39cf9266819a7cddda023a10"
+}

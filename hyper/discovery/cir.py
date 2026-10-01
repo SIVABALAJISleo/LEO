@@ -595,8 +595,168 @@ class CIRGraph:
             y, f_val = args[0], args[1]
             dt = attrs.get("dt", 0.01)
             return y + dt * f_val
+        elif op_type == OpType.BATCH_MATMUL:
+            return np.matmul(args[0], args[1])
+        elif op_type == OpType.PERMUTE:
+            axes = attrs.get("axes", attrs.get("dims", None))
+            return np.transpose(args[0], axes=axes)
+        elif op_type == OpType.SLICING:
+            slices = attrs.get("slices")
+            if slices is not None:
+                return args[0][tuple(slices) if isinstance(slices, list) else slices]
+            axis = attrs.get("axis", 0)
+            start = attrs.get("start", 0)
+            end = attrs.get("end", None)
+            step = attrs.get("step", 1)
+            slc = [slice(None)] * args[0].ndim
+            slc[axis] = slice(start, end, step)
+            return args[0][tuple(slc)]
+        elif op_type == OpType.CONCAT:
+            axis = attrs.get("axis", 0)
+            return np.concatenate(args, axis=axis)
+        elif op_type == OpType.SPLIT:
+            axis = attrs.get("axis", 0)
+            split_idx = attrs.get("split_index", 0)
+            sections = attrs.get("sections", attrs.get("indices_or_sections", 2))
+            parts = np.split(args[0], sections, axis=axis)
+            return parts[split_idx] if isinstance(split_idx, int) and split_idx < len(parts) else parts[0]
+        elif op_type == OpType.REDUCE_MAX:
+            axis = attrs.get("axis", None)
+            keepdims = attrs.get("keepdims", False)
+            return np.max(args[0], axis=axis, keepdims=keepdims)
+        elif op_type == OpType.REDUCE_MIN:
+            axis = attrs.get("axis", None)
+            keepdims = attrs.get("keepdims", False)
+            return np.min(args[0], axis=axis, keepdims=keepdims)
+        elif op_type == OpType.REDUCE_NORM:
+            axis = attrs.get("axis", None)
+            keepdims = attrs.get("keepdims", False)
+            ord_val = attrs.get("ord", 2)
+            return np.linalg.norm(args[0], ord=ord_val, axis=axis, keepdims=keepdims)
+        elif op_type == OpType.CONV1D:
+            inp, weight = args[0], args[1]
+            bias = args[2] if len(args) > 2 else None
+            return self._conv1d_reference(inp, weight, bias, attrs)
+        elif op_type == OpType.CONV3D:
+            inp, weight = args[0], args[1]
+            bias = args[2] if len(args) > 2 else None
+            return self._conv3d_reference(inp, weight, bias, attrs)
+        elif op_type == OpType.FFT2D:
+            axes = attrs.get("axes", (-2, -1))
+            return np.fft.fft2(args[0], axes=axes)
+        elif op_type == OpType.IFFT2D:
+            axes = attrs.get("axes", (-2, -1))
+            return np.fft.ifft2(args[0], axes=axes)
+        elif op_type == OpType.SILU:
+            x = args[0]
+            return x / (1.0 + np.exp(-x))
+        elif op_type == OpType.SIGMOID:
+            x = args[0]
+            return 1.0 / (1.0 + np.exp(-x))
+        elif op_type == OpType.TANH:
+            return np.tanh(args[0])
+        elif op_type == OpType.SOFTMAX:
+            axis = attrs.get("axis", -1)
+            x = args[0]
+            shift_x = x - np.max(x, axis=axis, keepdims=True)
+            exps = np.exp(shift_x)
+            return exps / np.sum(exps, axis=axis, keepdims=True)
+        elif op_type == OpType.POW:
+            exponent = args[1] if len(args) > 1 else attrs.get("exponent", 2.0)
+            return np.power(args[0], exponent)
+        elif op_type == OpType.SCATTER_ADD:
+            target = args[0].copy()
+            indices = args[1].astype(np.int64)
+            updates = args[2]
+            np.add.at(target, indices, updates)
+            return target
+        elif op_type == OpType.GATHER:
+            params = args[0]
+            indices = args[1].astype(np.int64)
+            axis = attrs.get("axis", 0)
+            return np.take(params, indices, axis=axis)
+        elif op_type == OpType.CUSTOM:
+            return args[0]
         else:
             raise NotImplementedError(f"Interpreter for operator {op_type.value} is not implemented.")
+
+    def _conv1d_reference(self, x: np.ndarray, w: np.ndarray, b: Optional[np.ndarray], attrs: Dict[str, Any]) -> np.ndarray:
+        """Reference 1D Convolution for CIR verification."""
+        stride = attrs.get("stride", 1)
+        padding = attrs.get("padding", 0)
+        orig_ndim = x.ndim
+        if x.ndim == 1:
+            x = x[np.newaxis, np.newaxis, :]
+        elif x.ndim == 2:
+            x = x[np.newaxis, :, :]
+        if w.ndim == 1:
+            w = w[np.newaxis, np.newaxis, :]
+        elif w.ndim == 2:
+            w = w[:, np.newaxis, :]
+        N, C_in, L = x.shape
+        C_out, _, K = w.shape
+        if padding > 0:
+            x_padded = np.pad(x, ((0, 0), (0, 0), (padding, padding)), mode="constant")
+        else:
+            x_padded = x
+        L_out = (L + 2 * padding - K) // stride + 1
+        out = np.zeros((N, C_out, L_out), dtype=x.dtype)
+        for n in range(N):
+            for co in range(C_out):
+                for l in range(L_out):
+                    l_start = l * stride
+                    patch = x_padded[n, :, l_start : l_start + K]
+                    val = np.sum(patch * w[co])
+                    if b is not None:
+                        val += b[co]
+                    out[n, co, l] = val
+        if orig_ndim == 1:
+            return out[0, 0]
+        elif orig_ndim == 2:
+            return out[0]
+        return out
+
+    def _conv3d_reference(self, x: np.ndarray, w: np.ndarray, b: Optional[np.ndarray], attrs: Dict[str, Any]) -> np.ndarray:
+        """Reference 3D Convolution for CIR verification."""
+        stride = attrs.get("stride", 1)
+        padding = attrs.get("padding", 0)
+        orig_ndim = x.ndim
+        if x.ndim == 3:
+            x = x[np.newaxis, np.newaxis, :, :, :]
+        elif x.ndim == 4:
+            x = x[np.newaxis, :, :, :, :]
+        if w.ndim == 3:
+            w = w[np.newaxis, np.newaxis, :, :, :]
+        elif w.ndim == 4:
+            w = w[:, np.newaxis, :, :, :]
+        N, C_in, D, H, W = x.shape
+        C_out, _, KD, KH, KW = w.shape
+        if padding > 0:
+            x_padded = np.pad(x, ((0, 0), (0, 0), (padding, padding), (padding, padding), (padding, padding)), mode="constant")
+        else:
+            x_padded = x
+        D_out = (D + 2 * padding - KD) // stride + 1
+        H_out = (H + 2 * padding - KH) // stride + 1
+        W_out = (W + 2 * padding - KW) // stride + 1
+        out = np.zeros((N, C_out, D_out, H_out, W_out), dtype=x.dtype)
+        for n in range(N):
+            for co in range(C_out):
+                for d in range(D_out):
+                    for h in range(H_out):
+                        for wi in range(W_out):
+                            d_start = d * stride
+                            h_start = h * stride
+                            w_start = wi * stride
+                            patch = x_padded[n, :, d_start : d_start + KD, h_start : h_start + KH, w_start : w_start + KW]
+                            val = np.sum(patch * w[co])
+                            if b is not None:
+                                val += b[co]
+                            out[n, co, d, h, wi] = val
+        if orig_ndim == 3:
+            return out[0, 0]
+        elif orig_ndim == 4:
+            return out[0]
+        return out
 
     def _conv2d_reference(self, x: np.ndarray, w: np.ndarray, b: Optional[np.ndarray], attrs: Dict[str, Any]) -> np.ndarray:
         """Reference 2D Convolution for CIR verification."""

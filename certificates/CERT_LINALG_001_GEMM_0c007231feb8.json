@@ -1,0 +1,63 @@
+{
+  "certificate_id": "CERT_LINALG_001_GEMM_0c007231feb8",
+  "workload_id": "LINALG_001_GEMM",
+  "contract_id": "CONTRACT_DEFAULT",
+  "ir_version": "HYPER-IR 1.0",
+  "semantic_version": "1.0.0",
+  "transformation_name": "CpuVectorizedBLAS",
+  "transformation_category": "COMPILER",
+  "proof_method": "v0.3_TRUTH_GATE_INDEPENDENT_VERIFICATION",
+  "verifier_name": "DifferentialVerifier_Freivalds",
+  "exactness_level": "EXACT_SEMANTIC",
+  "input_hash": "70899e3e13c629a39ebb7b5a9591cd1035676bec3704cc0aad43ac8b056d3be4",
+  "output_hash": "0d2053208a7b6b211ef2e81332f2d0ba992b7622c81eaae83e7855d74c34e8c6",
+  "reference_hash": "0d2053208a7b6b211ef2e81332f2d0ba992b7622c81eaae83e7855d74c34e8c6",
+  "adversarial_tests_passed": 0,
+  "holdout_tests_passed": 0,
+  "baseline_latency_ms": 0.1815,
+  "candidate_latency_ms": 0.0224,
+  "speedup": 8.1,
+  "hardware_profile": {
+    "os": "Windows-11-10.0.26100-SP0",
+    "cpu_model": "13th Gen Intel(R) Core(TM) i5-13420H",
+    "physical_cores": 8,
+    "logical_processors": 12,
+    "ram_total_bytes": 16857817088,
+    "ram_available_bytes": 2162180096,
+    "gpu_model": "Intel(R) UHD Graphics",
+    "gpu_type": "integrated",
+    "gpu_execution_units": null,
+    "gpu_driver": "32.0.101.7076",
+    "shared_memory": true,
+    "openvino_devices": [
+      "CPU",
+      "GPU"
+    ],
+    "directml_available": false,
+    "cuda_available": false,
+    "python_version": "3.13.5",
+    "package_versions": {
+      "torch": "2.10.0+cpu",
+      "openvino": "2026.2.1-21919-ede283a88e3-releases/2026/2",
+      "numpy": "2.3.2",
+      "scipy": "1.17.0",
+      "onnx": "1.21.0",
+      "onnxruntime": "1.24.1",
+      "psutil": "5.9.8"
+    }
+  },
+  "software_profile": {
+    "python": "3.13.5",
+    "packages": {
+      "torch": "2.10.0+cpu",
+      "openvino": "2026.2.1-21919-ede283a88e3-releases/2026/2",
+      "numpy": "2.3.2",
+      "scipy": "1.17.0",
+      "onnx": "1.21.0",
+      "onnxruntime": "1.24.1",
+      "psutil": "5.9.8"
+    }
+  },
+  "timestamp": 1790857574.0029852,
+  "reproducibility_token": "bdff15218293d705f9ef341f9e01e1e7ad6378d0bbcf1d916ceccc48aec326de"
+}

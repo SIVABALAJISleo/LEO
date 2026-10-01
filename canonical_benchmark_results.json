@@ -1,0 +1,226 @@
+{
+  "timestamp": 1790847467.3290367,
+  "hardware_profile": {
+    "os": "Windows-11-10.0.26100-SP0",
+    "cpu_model": "13th Gen Intel(R) Core(TM) i5-13420H",
+    "physical_cores": 8,
+    "logical_processors": 12,
+    "ram_total_bytes": 16857817088,
+    "ram_available_bytes": 2686132224,
+    "gpu_model": "Intel(R) UHD Graphics",
+    "gpu_type": "integrated",
+    "gpu_execution_units": null,
+    "gpu_driver": "32.0.101.7076",
+    "shared_memory": true,
+    "openvino_devices": [
+      "CPU",
+      "GPU"
+    ],
+    "directml_available": false,
+    "cuda_available": false,
+    "python_version": "3.13.5",
+    "package_versions": {
+      "torch": "2.10.0+cpu",
+      "openvino": "2026.2.1-21919-ede283a88e3-releases/2026/2",
+      "numpy": "2.3.2",
+      "scipy": "1.17.0",
+      "onnx": "1.21.0",
+      "onnxruntime": "1.24.1",
+      "psutil": "5.9.8"
+    }
+  },
+  "coverage_metrics": {
+    "coverage_domain": "HYPER-IR v1.0 Supported Domain (Arithmetic, Linear Algebra, Convolutions, Reductions, Indexing)",
+    "represented_workloads": 8,
+    "exactly_executable_workloads": 8,
+    "proven_escape_workloads": 4,
+    "fallback_workloads": 4,
+    "unsupported_workloads": 0,
+    "rejected_workloads": 0,
+    "tested_workloads": 8,
+    "exact_semantic_coverage_pct": 100.0,
+    "exact_escape_coverage_pct": 50.0,
+    "fallback_rate_pct": 50.0,
+    "gate_100_eligible": true,
+    "rejection_details": [],
+    "unsupported_details": []
+  },
+  "workload_records": [
+    {
+      "workload_id": "ARITH_001_FMA",
+      "domain": "Arithmetic",
+      "description": "Fused Multiply-Add tensor vectorization (A * B + C)",
+      "outcome": "EXACT_FALLBACK",
+      "strategy_used": "EXACT_SEMANTIC_FALLBACK",
+      "exactness_level": "EXACT_SEMANTIC",
+      "verification_passed": true,
+      "backend_device": "CPU_OPTIMIZED_AVX2",
+      "speedup": 2.07,
+      "baseline_latency_ms": 0.4797,
+      "measured_candidate_latency_ms": 0.2319,
+      "latencies_ms": {
+        "min": 816.4507,
+        "p50": 818.0174,
+        "p95": 819.4274,
+        "max": 819.5841
+      },
+      "evidence_id": "EV_ARITH_001_FMA_FALLBACK_1790847422229",
+      "certificate_id": null,
+      "explanation": "No cheaper escape proven. Successfully executed under exact semantics via CPU_OPTIMIZED_AVX2."
+    },
+    {
+      "workload_id": "ARITH_002_REDUCE",
+      "domain": "Arithmetic",
+      "description": "Parallel 2D matrix sum reduction",
+      "outcome": "ESCAPE_FOUND",
+      "strategy_used": "CpuVectorizedBLAS",
+      "exactness_level": "EXACT_SEMANTIC",
+      "verification_passed": true,
+      "backend_device": "CPU/MEMORY",
+      "speedup": 2.17,
+      "baseline_latency_ms": 0.106,
+      "measured_candidate_latency_ms": 0.0488,
+      "latencies_ms": {
+        "min": 1327.4436,
+        "p50": 1333.6363,
+        "p95": 1339.2098,
+        "max": 1339.8291
+      },
+      "evidence_id": "EV_ARITH_002_REDUCE_CERT_ARITH_0",
+      "certificate_id": "CERT_ARITH_002_REDUCE_06ea2c423ea9",
+      "explanation": "Verified escape 'CpuVectorizedBLAS' achieved 2.17x speedup."
+    },
+    {
+      "workload_id": "LINALG_001_GEMM",
+      "domain": "Linear Algebra",
+      "description": "Dense 64x64 Matrix Multiplication",
+      "outcome": "ESCAPE_FOUND",
+      "strategy_used": "CpuVectorizedBLAS",
+      "exactness_level": "EXACT_SEMANTIC",
+      "verification_passed": true,
+      "backend_device": "CPU/MEMORY",
+      "speedup": 4.75,
+      "baseline_latency_ms": 0.094,
+      "measured_candidate_latency_ms": 0.0198,
+      "latencies_ms": {
+        "min": 1666.4645,
+        "p50": 2056.5125,
+        "p95": 2407.5557,
+        "max": 2446.5605
+      },
+      "evidence_id": "EV_LINALG_001_GEMM_CERT_LINALG_",
+      "certificate_id": "CERT_LINALG_001_GEMM_193250d5813f",
+      "explanation": "Verified escape 'CpuVectorizedBLAS' achieved 4.75x speedup."
+    },
+    {
+      "workload_id": "ML_001_ATTENTION_PROJ",
+      "domain": "Machine Learning",
+      "description": "Transformer Attention query-key projection (Q @ K.T)",
+      "outcome": "EXACT_FALLBACK",
+      "strategy_used": "EXACT_SEMANTIC_FALLBACK",
+      "exactness_level": "EXACT_SEMANTIC",
+      "verification_passed": true,
+      "backend_device": "CPU_OPTIMIZED_AVX2",
+      "speedup": 1.26,
+      "baseline_latency_ms": 0.1356,
+      "measured_candidate_latency_ms": 0.108,
+      "latencies_ms": {
+        "min": 759.844,
+        "p50": 809.181,
+        "p95": 853.5843,
+        "max": 858.518
+      },
+      "evidence_id": "EV_ML_001_ATTENTION_PROJ_FALLBACK_1790847435830",
+      "certificate_id": null,
+      "explanation": "No cheaper escape proven. Successfully executed under exact semantics via CPU_OPTIMIZED_AVX2."
+    },
+    {
+      "workload_id": "SCI_001_PDE_STENCIL",
+      "domain": "Scientific Computing",
+      "description": "Finite difference 5-point discrete Laplacian PDE stencil",
+      "outcome": "EXACT_FALLBACK",
+      "strategy_used": "EXACT_SEMANTIC_FALLBACK",
+      "exactness_level": "EXACT_SEMANTIC",
+      "verification_passed": true,
+      "backend_device": "CPU_OPTIMIZED_AVX2",
+      "speedup": 1.22,
+      "baseline_latency_ms": 7.6558,
+      "measured_candidate_latency_ms": 6.2818,
+      "latencies_ms": {
+        "min": 733.6042,
+        "p50": 744.7531,
+        "p95": 754.787,
+        "max": 755.9019
+      },
+      "evidence_id": "EV_SCI_001_PDE_STENCIL_FALLBACK_1790847442657",
+      "certificate_id": null,
+      "explanation": "No cheaper escape proven. Successfully executed under exact semantics via CPU_OPTIMIZED_AVX2."
+    },
+    {
+      "workload_id": "GFX_001_IMAGE_COMPOSITE",
+      "domain": "Graphics",
+      "description": "Real-time multi-layer visual raster compositing",
+      "outcome": "ESCAPE_FOUND",
+      "strategy_used": "CpuVectorizedBLAS",
+      "exactness_level": "EXACT_SEMANTIC",
+      "verification_passed": true,
+      "backend_device": "CPU/MEMORY",
+      "speedup": 3.52,
+      "baseline_latency_ms": 0.0556,
+      "measured_candidate_latency_ms": 0.0158,
+      "latencies_ms": {
+        "min": 5001.6966,
+        "p50": 5514.9271,
+        "p95": 5976.8346,
+        "max": 6028.1577
+      },
+      "evidence_id": "EV_GFX_001_IMAGE_COMPOSITE_CERT_GFX_001",
+      "certificate_id": "CERT_GFX_001_IMAGE_COMPOSITE_c5fc36b21ce6",
+      "explanation": "Verified escape 'CpuVectorizedBLAS' achieved 3.52x speedup."
+    },
+    {
+      "workload_id": "GRAPH_001_PAGERANK_STEP",
+      "domain": "Graph",
+      "description": "Sparse graph transition adjacency step for PageRank",
+      "outcome": "ESCAPE_FOUND",
+      "strategy_used": "CpuVectorizedBLAS",
+      "exactness_level": "EXACT_SEMANTIC",
+      "verification_passed": true,
+      "backend_device": "CPU/MEMORY",
+      "speedup": 5.91,
+      "baseline_latency_ms": 0.0715,
+      "measured_candidate_latency_ms": 0.0121,
+      "latencies_ms": {
+        "min": 1886.2792,
+        "p50": 2209.6241,
+        "p95": 2500.6345,
+        "max": 2532.969
+      },
+      "evidence_id": "EV_GRAPH_001_PAGERANK_STEP_CERT_GRAPH_0",
+      "certificate_id": "CERT_GRAPH_001_PAGERANK_STEP_b6d533ef554d",
+      "explanation": "Verified escape 'CpuVectorizedBLAS' achieved 5.91x speedup."
+    },
+    {
+      "workload_id": "DATA_001_SORT_TOPK",
+      "domain": "Data Processing",
+      "description": "Parallel order-statistic Top-K ranking",
+      "outcome": "EXACT_FALLBACK",
+      "strategy_used": "EXACT_SEMANTIC_FALLBACK",
+      "exactness_level": "EXACT_SEMANTIC",
+      "verification_passed": true,
+      "backend_device": "CPU_OPTIMIZED_AVX2",
+      "speedup": 2.97,
+      "baseline_latency_ms": 0.1098,
+      "measured_candidate_latency_ms": 0.037,
+      "latencies_ms": {
+        "min": 808.8795,
+        "p50": 920.3661,
+        "p95": 1020.704,
+        "max": 1031.8527
+      },
+      "evidence_id": "EV_DATA_001_SORT_TOPK_FALLBACK_1790847466520",
+      "certificate_id": null,
+      "explanation": "No cheaper escape proven. Successfully executed under exact semantics via CPU_OPTIMIZED_AVX2."
+    }
+  ]
+}

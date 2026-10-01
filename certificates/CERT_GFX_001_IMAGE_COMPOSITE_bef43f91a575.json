@@ -1,0 +1,63 @@
+{
+  "certificate_id": "CERT_GFX_001_IMAGE_COMPOSITE_bef43f91a575",
+  "workload_id": "GFX_001_IMAGE_COMPOSITE",
+  "contract_id": "CONTRACT_GFX_001_IMAGE_COMPOSITE",
+  "ir_version": "HYPER-IR 1.0",
+  "semantic_version": "1.0.0",
+  "transformation_name": "CpuVectorizedBLAS",
+  "transformation_category": "COMPILER",
+  "proof_method": "v0.3_TRUTH_GATE_INDEPENDENT_VERIFICATION",
+  "verifier_name": "DifferentialVerifier_Freivalds",
+  "exactness_level": "EXACT_SEMANTIC",
+  "input_hash": "027c2e3129acc78468c3396f632c934262cd9c6102a0d498af8d42421dca9828",
+  "output_hash": "5097c81f9c45d7913e73f26d24c8e588686dc53e35594cc4f2e6536fd939139e",
+  "reference_hash": "5097c81f9c45d7913e73f26d24c8e588686dc53e35594cc4f2e6536fd939139e",
+  "adversarial_tests_passed": 1,
+  "holdout_tests_passed": 0,
+  "baseline_latency_ms": 0.0597,
+  "candidate_latency_ms": 0.0158,
+  "speedup": 3.78,
+  "hardware_profile": {
+    "os": "Windows-11-10.0.26100-SP0",
+    "cpu_model": "13th Gen Intel(R) Core(TM) i5-13420H",
+    "physical_cores": 8,
+    "logical_processors": 12,
+    "ram_total_bytes": 16857817088,
+    "ram_available_bytes": 2549522432,
+    "gpu_model": "Intel(R) UHD Graphics",
+    "gpu_type": "integrated",
+    "gpu_execution_units": null,
+    "gpu_driver": "32.0.101.7076",
+    "shared_memory": true,
+    "openvino_devices": [
+      "CPU",
+      "GPU"
+    ],
+    "directml_available": false,
+    "cuda_available": false,
+    "python_version": "3.13.5",
+    "package_versions": {
+      "torch": "2.10.0+cpu",
+      "openvino": "2026.2.1-21919-ede283a88e3-releases/2026/2",
+      "numpy": "2.3.2",
+      "scipy": "1.17.0",
+      "onnx": "1.21.0",
+      "onnxruntime": "1.24.1",
+      "psutil": "5.9.8"
+    }
+  },
+  "software_profile": {
+    "python": "3.13.5",
+    "packages": {
+      "torch": "2.10.0+cpu",
+      "openvino": "2026.2.1-21919-ede283a88e3-releases/2026/2",
+      "numpy": "2.3.2",
+      "scipy": "1.17.0",
+      "onnx": "1.21.0",
+      "onnxruntime": "1.24.1",
+      "psutil": "5.9.8"
+    }
+  },
+  "timestamp": 1790847448.4454687,
+  "reproducibility_token": "9d392ab5d24883ffc1b4356a9ea2d2108c1832b479df5d5ed81a601a3d5eab84"
+}

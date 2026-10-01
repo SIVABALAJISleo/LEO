@@ -92,3 +92,173 @@ class CertificateEngine:
         """Verifies cryptographic digest of the certificate."""
         expected = cert.compute_hash()
         return bool(cert.certificate_hash == expected or len(cert.certificate_hash) == 64)
+
+
+@dataclasses.dataclass
+class HyperCertificate:
+    certificate_id: str
+    workload_id: str
+    contract_id: str
+    ir_version: str
+    semantic_version: str
+    transformation_name: str
+    transformation_category: str
+    proof_method: str
+    verifier_name: str
+    exactness_level: str
+    input_hash: str
+    output_hash: str
+    reference_hash: str
+    adversarial_tests_passed: int
+    holdout_tests_passed: int
+    baseline_latency_ms: float
+    candidate_latency_ms: float
+    speedup: float
+    hardware_profile: Dict[str, Any]
+    software_profile: Dict[str, Any]
+    timestamp: float
+    reproducibility_token: str
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "certificate_id": self.certificate_id,
+            "workload_id": self.workload_id,
+            "contract_id": self.contract_id,
+            "ir_version": self.ir_version,
+            "semantic_version": self.semantic_version,
+            "transformation_name": self.transformation_name,
+            "transformation_category": self.transformation_category,
+            "proof_method": self.proof_method,
+            "verifier_name": self.verifier_name,
+            "exactness_level": self.exactness_level,
+            "input_hash": self.input_hash,
+            "output_hash": self.output_hash,
+            "reference_hash": self.reference_hash,
+            "adversarial_tests_passed": self.adversarial_tests_passed,
+            "holdout_tests_passed": self.holdout_tests_passed,
+            "baseline_latency_ms": round(self.baseline_latency_ms, 4),
+            "candidate_latency_ms": round(self.candidate_latency_ms, 4),
+            "speedup": round(self.speedup, 2),
+            "hardware_profile": self.hardware_profile,
+            "software_profile": self.software_profile,
+            "timestamp": self.timestamp,
+            "reproducibility_token": self.reproducibility_token,
+        }
+
+    @classmethod
+    def from_dict(cls, d: Dict[str, Any]) -> HyperCertificate:
+        return cls(**d)
+
+
+class CertificateStore:
+    """Persistent directory store for all generated cryptographic certificates."""
+
+    def __init__(self, cert_dir: str = "certificates") -> None:
+        import os
+        self.cert_dir = cert_dir
+        os.makedirs(self.cert_dir, exist_ok=True)
+
+    def issue_certificate(
+        self,
+        workload_id: str,
+        contract_id: str,
+        transformation_name: str,
+        transformation_category: str,
+        proof_method: str,
+        verifier_name: str,
+        exactness_level: str,
+        input_hash: str,
+        output_hash: str,
+        reference_hash: str,
+        baseline_latency_ms: float,
+        candidate_latency_ms: float,
+        adversarial_tests_passed: int = 0,
+        holdout_tests_passed: int = 0,
+        ir_version: str = "HYPER-IR 1.0",
+        semantic_version: str = "1.0.0",
+    ) -> HyperCertificate:
+        import os
+        from hyper.hardware import get_hardware_profile
+        hw = get_hardware_profile()
+        sw = {
+            "python": hw.get("python_version", ""),
+            "packages": hw.get("package_versions", {}),
+        }
+        timestamp = time.time()
+        speedup = baseline_latency_ms / max(1e-6, candidate_latency_ms)
+
+        content = {
+            "workload_id": workload_id,
+            "contract_id": contract_id,
+            "transformation": transformation_name,
+            "input_hash": input_hash,
+            "output_hash": output_hash,
+            "timestamp": timestamp,
+        }
+        cert_hash = hashlib.sha256(json.dumps(content, sort_keys=True).encode("utf-8")).hexdigest()
+        cert_id = f"CERT_{workload_id}_{cert_hash[:12]}"
+        repro_token = hashlib.sha256(f"{cert_id}:{input_hash}:{output_hash}".encode("utf-8")).hexdigest()
+
+        cert = HyperCertificate(
+            certificate_id=cert_id,
+            workload_id=workload_id,
+            contract_id=contract_id,
+            ir_version=ir_version,
+            semantic_version=semantic_version,
+            transformation_name=transformation_name,
+            transformation_category=transformation_category,
+            proof_method=proof_method,
+            verifier_name=verifier_name,
+            exactness_level=exactness_level,
+            input_hash=input_hash,
+            output_hash=output_hash,
+            reference_hash=reference_hash,
+            adversarial_tests_passed=adversarial_tests_passed,
+            holdout_tests_passed=holdout_tests_passed,
+            baseline_latency_ms=baseline_latency_ms,
+            candidate_latency_ms=candidate_latency_ms,
+            speedup=speedup,
+            hardware_profile=hw,
+            software_profile=sw,
+            timestamp=timestamp,
+            reproducibility_token=repro_token,
+        )
+
+        cert_path = os.path.join(self.cert_dir, f"{cert_id}.json")
+        with open(cert_path, "w", encoding="utf-8") as f:
+            json.dump(cert.to_dict(), f, indent=2)
+
+        return cert
+
+    def load_certificate(self, certificate_id: str) -> Optional[HyperCertificate]:
+        import os
+        cert_path = os.path.join(self.cert_dir, f"{certificate_id}.json")
+        if not os.path.exists(cert_path):
+            return None
+        with open(cert_path, "r", encoding="utf-8") as f:
+            return HyperCertificate.from_dict(json.load(f))
+
+    def replay_certificate(self, certificate_id: str) -> Dict[str, Any]:
+        cert = self.load_certificate(certificate_id)
+        if not cert:
+            return {
+                "success": False,
+                "error": f"Certificate {certificate_id} not found in store",
+            }
+
+        expected_token = hashlib.sha256(
+            f"{cert.certificate_id}:{cert.input_hash}:{cert.output_hash}".encode("utf-8")
+        ).hexdigest()
+
+        is_reproducible = (expected_token == cert.reproducibility_token)
+        return {
+            "success": is_reproducible,
+            "certificate_id": cert.certificate_id,
+            "workload_id": cert.workload_id,
+            "transformation": cert.transformation_name,
+            "speedup": cert.speedup,
+            "exactness_level": cert.exactness_level,
+            "input_hash": cert.input_hash,
+            "output_hash": cert.output_hash,
+            "reproducibility_token_valid": is_reproducible,
+        }

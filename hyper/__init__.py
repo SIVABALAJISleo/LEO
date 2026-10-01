@@ -55,5 +55,31 @@ from .regression import RegressionDetector
 from .reporting import ScientificReportGenerator
 from .benchmark import MasterWorkloadSuite, run_master_benchmarks
 
+# Universal Exact Semantic Replacement Engine Canonical Architecture
+from .universal_ir import Opcode, UniversalOp, UniversalIRProgram
+from .semantics import DataType, TensorType, ExactnessLevel, VerificationVerdict
+from .executor import UniversalReferenceExecutor, UniversalExactExecutor
+from .verifier import DifferentialVerifier, UniversalTruthGate
+from .escape import UniversalSearchBrain, EscapeCandidate
+from .router import UniversalRouter, RouterResult, RouterOutcome
+from .coverage import CoverageEngine, LiveCoverageMetrics
+from .evidence import Evidence, EvidenceStatus, EvidenceLedger
+from .certificates import CertificateEngine, HyperCertificate, CertificateStore
+from .workloads import CanonicalWorkloadCorpus, CanonicalWorkload
+from .backends import CpuBackend, IntelUhdBackend
+from .frontends import (
+    FrontendRegistry,
+    CIRFrontend,
+    TensorGraphFrontend,
+    CUDALikeFrontend,
+    OpenCLFrontend,
+    SYCLFrontend,
+    SemanticNormalizer,
+    UnsupportedSemanticError,
+)
+from .semantics.aliasing import MemoryAliasAnalyzer, MemoryRegion, AliasVerdict
+from .semantics.control_flow import StructuredLoop, StructuredBranch, LoopKind
+from .escape.necessary_work import NecessaryWorkGraph, NodeNecessity
+
 __version__ = "10.0.0"
 

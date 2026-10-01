@@ -24,25 +24,39 @@ def compute_cache_key(
     hardware_backend: str = "CPU_AVX2",
     contract_repr: str = "default_contract",
     algorithm_version: str = "1.0",
+    compiler_version: str = "1.0.0",
+    semantic_version: str = "1.0.0",
+    layout: Optional[str] = None,
+    strides: Optional[Tuple[int, ...]] = None,
+    precision_mode: Optional[str] = None,
+    execution_config: Optional[Dict[str, Any]] = None,
 ) -> str:
     """
     Construct a complete cryptographic multi-state cache key incorporating all execution factors:
-    input hash, model hash, parameters, precision, random seed, software version,
-    hardware backend, contract version, algorithm version.
+    full input hash, shape, dtype, layout, stride, contract, algorithm version,
+    compiler version, semantic version, precision mode, relevant execution configuration.
+    Fulfills Section 5.1 & Section 55 requirements.
     """
     hasher = hashlib.sha256()
 
-    # 1. Input hash
+    # 1. Input hash & layout/stride
     if isinstance(input_data, np.ndarray):
         hasher.update(input_data.tobytes())
         hasher.update(str(input_data.shape).encode("utf-8"))
         hasher.update(str(input_data.dtype).encode("utf-8"))
+        hasher.update(str(input_data.strides).encode("utf-8"))
+        hasher.update(f"C={input_data.flags.c_contiguous},F={input_data.flags.f_contiguous}".encode("utf-8"))
     elif isinstance(input_data, (bytes, bytearray)):
         hasher.update(input_data)
     elif isinstance(input_data, (dict, list)):
         hasher.update(json.dumps(input_data, sort_keys=True).encode("utf-8"))
     else:
         hasher.update(str(input_data).encode("utf-8"))
+
+    if strides is not None:
+        hasher.update(f"strides={strides}".encode("utf-8"))
+    if layout is not None:
+        hasher.update(f"layout={layout}".encode("utf-8"))
 
     # 2. Model hash / identifier
     hasher.update(hashlib.sha256(model_identifier.encode("utf-8")).digest())
@@ -51,14 +65,17 @@ def compute_cache_key(
     norm_params = json.dumps(parameters or {}, sort_keys=True)
     hasher.update(norm_params.encode("utf-8"))
 
-    # 4. Precision
+    # 4. Precision & precision mode
     hasher.update(precision.lower().encode("utf-8"))
+    hasher.update(str(precision_mode or precision).lower().encode("utf-8"))
 
     # 5. Random seed
     hasher.update(str(random_seed if random_seed is not None else "NONE").encode("utf-8"))
 
-    # 6. Software version
+    # 6. Software version & compiler version & semantic version
     hasher.update(software_version.encode("utf-8"))
+    hasher.update(compiler_version.encode("utf-8"))
+    hasher.update(semantic_version.encode("utf-8"))
 
     # 7. Hardware backend
     hasher.update(hardware_backend.upper().encode("utf-8"))
@@ -68,6 +85,10 @@ def compute_cache_key(
 
     # 9. Algorithm version
     hasher.update(algorithm_version.encode("utf-8"))
+
+    # 10. Execution config
+    if execution_config:
+        hasher.update(json.dumps(execution_config, sort_keys=True).encode("utf-8"))
 
     return hasher.hexdigest()
 

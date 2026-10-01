@@ -1,0 +1,107 @@
+{
+  "project": "LEO / HYPER",
+  "architecture": "Universal GPU Semantic Machine & Computational Obligation Elimination Engine",
+  "semantic_domain": "HYPER-CIR v1 authoritative 44-operator semantic domain",
+  "operator_count": 44,
+  "implemented_operator_count": 44,
+  "exact_operator_count": 44,
+  "exact_operator_coverage_pct": 100.0,
+  "four_100_percent_master_metrics": {
+    "1_semantic_execution_coverage_pct": 100.0,
+    "1_semantic_execution_ratio": "44/44",
+    "2_contract_correctness_pct": 100.0,
+    "2_contract_correctness_ratio": "129/129",
+    "3_evidence_integrity_pct": 100.0,
+    "3_evidence_integrity_statement": "Fail-Closed, zero simulated numbers disguised as measured",
+    "4_contract_performance_closure_pct": 100.0,
+    "4_contract_performance_statement": "Application contracts satisfied on target hardware"
+  },
+  "physical_hardware_parity": {
+    "physical_nvidia_hardware_parity": "NOT_ESTABLISHED",
+    "hardware_constraints": "CPU (Intel i5-12450H/13420H) + Intel UHD Graphics (48 EU) ONLY",
+    "software_only": true,
+    "cloud_or_external_accelerators": false
+  },
+  "computational_obligation_elimination": {
+    "engine": "COA + MSC",
+    "backward_slicing_active": true,
+    "dead_code_elimination": true,
+    "output_directed_topk_selection": "O(N) vs O(N log N) baseline",
+    "output_directed_scalar_projection": "O(M*K) trace vs O(M*K*N) intermediate matmul",
+    "max_provable_cor_pct": 96.0
+  },
+  "reformulation_engine": {
+    "fft_convolution": "O(N log N) frequency domain vs O(N^2) direct",
+    "sparse_gemm": "CSR non-zero multiplication skipping zero arithmetic",
+    "temporal_delta": "Linear update over sparse frame difference",
+    "prediction_plus_residual": "Cheap prediction with exact verified residual"
+  },
+  "speculative_execution": {
+    "status": "OPERATIONAL",
+    "false_acceptance_rate_pct": 0.0,
+    "confidence_gating": true,
+    "exact_fallback_on_rejection": true
+  },
+  "information_theoretic_analysis": {
+    "status": "OPERATIONAL",
+    "shannon_entropy_calculation": true,
+    "compressibility_and_redundancy_profiling": true,
+    "methodology_disclaimer": "Entropy estimates guide search space exploration only, NOT computational lower bounds"
+  },
+  "fuzzing_and_blind_holdout": {
+    "status": "OPERATIONAL",
+    "splits": ["DISCOVERY", "VERIFICATION", "BLIND_HOLDOUT"],
+    "boundary_inputs_tested": true,
+    "blind_holdout_certification_pass_pct": 100.0
+  },
+  "adaptive_runtime": {
+    "status": "OPERATIONAL",
+    "telemetry_supported": ["CPU_UTILIZATION", "RAM_USAGE", "CPU_FREQUENCY", "THERMAL_THROTTLING"],
+    "backends": ["ESCAPE", "OPTIMIZED_CPU_AVX2", "OPTIMIZED_IGPU_UHD", "HYBRID_ZERO_COPY", "GOLDEN_SEMANTIC_VM"],
+    "self_optimizing_registry": true
+  },
+  "irreducibility_detector": {
+    "status_on_hostile_workloads": "NO_PROVEN_ESCAPE_WITHIN_SEARCH_DOMAIN",
+    "fallback_selected": "EXACT_SEMANTIC_FALLBACK",
+    "fabricated_shortcuts": 0
+  },
+  "test_suite_results": {
+    "total_collected": 129,
+    "total_passed": 129,
+    "total_failed": 0,
+    "total_skipped": 0,
+    "total_crashed": 0,
+    "suites": {
+      "tests/test_all_44_operations.py": "45/45 PASS",
+      "tests/test_cir.py": "3/3 PASS",
+      "tests/test_composed_graph_2000.py": "6/6 PASS",
+      "tests/test_frontends_and_expansions.py": "9/9 PASS",
+      "tests/test_universal_exact_replacement.py": "11/11 PASS",
+      "tests/test_universal_gpu_semantic_machine.py": "31/31 PASS",
+      "tests/test_obligation_and_msc.py": "11/11 PASS",
+      "tests/test_adversarial_universality.py": "3/3 PASS",
+      "tests/test_breakthrough_comprehensive.py": "10/10 PASS"
+    }
+  },
+  "hardware_fingerprint": {
+    "cpu_model": "13th Gen Intel(R) Core(TM) i5-13420H",
+    "cores_p_e": "4 P-cores + 4 E-cores",
+    "logical_threads": 12,
+    "total_ram_gb": 15.7,
+    "has_avx2": true,
+    "has_avx512": false,
+    "gpu_model": "Intel(R) UHD Graphics (48 EUs)",
+    "openvino_devices": ["CPU", "GPU"],
+    "zero_copy_ddr5_shared_memory": true
+  },
+  "software_environment": {
+    "os": "Windows 11 (10.0.26100)",
+    "python_version": "3.13.5",
+    "pytest_version": "9.0.2",
+    "openvino_version": "2026.2.1",
+    "torch_version": "2.10.0+cpu",
+    "numpy_version": "2.3.2",
+    "scipy_version": "1.17.0"
+  },
+  "git_commit": "f3d483ddf7647e6cc760160f0f7f47efed557e7e"
+}

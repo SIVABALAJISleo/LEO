@@ -1,0 +1,71 @@
+"""
+hyper/semantics/__init__.py
+===========================
+Authoritative Semantic Models for LEO/HYPER Universal IR.
+"""
+
+from hyper.semantics.types import (
+    DataType,
+    TensorType,
+    MemoryLayout,
+    MemorySpace,
+    ExactnessLevel,
+    VerificationVerdict,
+)
+from hyper.semantics.arithmetic import (
+    RoundingMode,
+    DenormalMode,
+    exact_int_add,
+    exact_int_sub,
+    exact_int_mul,
+    exact_int_div,
+    exact_int_rem,
+    exact_int_shl,
+    exact_int_shr_logical,
+    exact_int_shr_arithmetic,
+    exact_int_rol,
+    exact_int_ror,
+    exact_fp32_add,
+    exact_fp32_sub,
+    exact_fp32_mul,
+    exact_fp32_div,
+    exact_fp32_fma,
+    exact_fp32_sqrt,
+    exact_bf16_truncate,
+    bitcast_fp32_to_int32,
+    bitcast_int32_to_fp32,
+    float32_to_bits,
+    bits_to_float32,
+)
+
+__all__ = [
+    "DataType",
+    "TensorType",
+    "MemoryLayout",
+    "MemorySpace",
+    "ExactnessLevel",
+    "VerificationVerdict",
+    "RoundingMode",
+    "DenormalMode",
+    "exact_int_add",
+    "exact_int_sub",
+    "exact_int_mul",
+    "exact_int_div",
+    "exact_int_rem",
+    "exact_int_shl",
+    "exact_int_shr_logical",
+    "exact_int_shr_arithmetic",
+    "exact_int_rol",
+    "exact_int_ror",
+    "exact_fp32_add",
+    "exact_fp32_sub",
+    "exact_fp32_mul",
+    "exact_fp32_div",
+    "exact_fp32_fma",
+    "exact_fp32_sqrt",
+    "exact_bf16_truncate",
+    "bitcast_fp32_to_int32",
+    "bitcast_int32_to_fp32",
+    "float32_to_bits",
+    "bits_to_float32",
+]
