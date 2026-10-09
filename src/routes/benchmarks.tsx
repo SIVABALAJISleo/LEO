@@ -28,6 +28,8 @@ import { SseDiagnosticsLog } from "@/components/SseDiagnosticsLog";
 import { SseLiveIndicator } from "@/components/SseLiveIndicator";
 import { PermalinkButton } from "@/components/PermalinkButton";
 import { GeneratePdfReportButton } from "@/components/GeneratePdfReportButton";
+import { HyperParityDashboard } from "@/components/HyperParityDashboard";
+import { HyperGodmodeDashboard } from "@/components/HyperGodmodeDashboard";
 import { applyPermalinkState, readPermalinkFromUrl, clearPermalinkFromUrl } from "@/lib/permalink";
 
 import { useBackendHealth } from "@/lib/backend-health";
@@ -165,6 +167,12 @@ function BenchmarksPage() {
               ? "Refreshing metrics…"
               : "Live from your LEO runtime."}
       </p>
+
+      {/* HYPER-GODMODE Universal Pathway Engine & 100% Parity Dashboard */}
+      <div className="mt-8 space-y-8">
+        <HyperGodmodeDashboard />
+        <HyperParityDashboard />
+      </div>
 
       <div className="mt-16 grid gap-px bg-border md:grid-cols-2 lg:grid-cols-3">
         <Big label="Total requests" value={fmt(m.leo_total_requests)} />

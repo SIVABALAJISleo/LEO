@@ -232,8 +232,24 @@ class CertificateStore:
 
     def load_certificate(self, certificate_id: str) -> Optional[HyperCertificate]:
         import os
-        cert_path = os.path.join(self.cert_dir, f"{certificate_id}.json")
-        if not os.path.exists(cert_path):
+        import re
+        if not certificate_id or not isinstance(certificate_id, str):
+            return None
+        # Disallow directory traversal characters and restrict to safe alphanumeric IDs
+        if not re.match(r"^[a-zA-Z0-9_\-]+$", certificate_id):
+            return None
+        safe_id = os.path.basename(certificate_id)
+        if safe_id != certificate_id:
+            return None
+        cert_dir_real = os.path.realpath(self.cert_dir)
+        cert_path = os.path.realpath(os.path.join(cert_dir_real, f"{safe_id}.json"))
+        try:
+            if os.path.commonpath([cert_dir_real, cert_path]) != cert_dir_real:
+                return None
+        except ValueError:
+            return None
+
+        if not os.path.isfile(cert_path):
             return None
         with open(cert_path, "r", encoding="utf-8") as f:
             return HyperCertificate.from_dict(json.load(f))

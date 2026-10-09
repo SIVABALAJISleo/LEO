@@ -49,4 +49,4 @@ class UniversalSandbox:
             return False, None, elapsed_ms, f"Execution timed out after {t_limit:.1f}s"
         except Exception as e:
             elapsed_ms = (time.perf_counter() - t_start) * 1000.0
-            return False, None, elapsed_ms, f"Execution error: {type(e).__name__}: {str(e)}"
+            return False, None, elapsed_ms, f"Execution error: {type(e).__name__}"

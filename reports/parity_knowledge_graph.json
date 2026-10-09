@@ -1,0 +1,282 @@
+{
+  "total_nodes": 10,
+  "total_edges": 10,
+  "total_failures": 10,
+  "updated_at": 1791479989.2344234,
+  "nodes": [
+    {
+      "node_id": "FAIL_7221e506",
+      "node_type": "FAILURE",
+      "label": "Fail: CONTRACT_VIOLATION",
+      "properties": {
+        "lesson": "Candidate exceeded numerical error bound under current transformation set."
+      }
+    },
+    {
+      "node_id": "FAIL_27b28105",
+      "node_type": "FAILURE",
+      "label": "Fail: CONTRACT_VIOLATION",
+      "properties": {
+        "lesson": "Candidate exceeded numerical error bound under current transformation set."
+      }
+    },
+    {
+      "node_id": "FAIL_c62ed649",
+      "node_type": "FAILURE",
+      "label": "Fail: CONTRACT_VIOLATION",
+      "properties": {
+        "lesson": "Candidate exceeded numerical error bound under current transformation set."
+      }
+    },
+    {
+      "node_id": "FAIL_141c2f43",
+      "node_type": "FAILURE",
+      "label": "Fail: CONTRACT_VIOLATION",
+      "properties": {
+        "lesson": "Candidate exceeded numerical error bound under current transformation set."
+      }
+    },
+    {
+      "node_id": "FAIL_c5289e8b",
+      "node_type": "FAILURE",
+      "label": "Fail: CONTRACT_VIOLATION",
+      "properties": {
+        "lesson": "Candidate exceeded numerical error bound under current transformation set."
+      }
+    },
+    {
+      "node_id": "FAIL_f9824194",
+      "node_type": "FAILURE",
+      "label": "Fail: CONTRACT_VIOLATION",
+      "properties": {
+        "lesson": "Candidate exceeded numerical error bound under current transformation set."
+      }
+    },
+    {
+      "node_id": "FAIL_5d7415e7",
+      "node_type": "FAILURE",
+      "label": "Fail: CONTRACT_VIOLATION",
+      "properties": {
+        "lesson": "Candidate exceeded numerical error bound under current transformation set."
+      }
+    },
+    {
+      "node_id": "FAIL_0e127678",
+      "node_type": "FAILURE",
+      "label": "Fail: CONTRACT_VIOLATION",
+      "properties": {
+        "lesson": "Candidate exceeded numerical error bound under current transformation set."
+      }
+    },
+    {
+      "node_id": "FAIL_40199b0f",
+      "node_type": "FAILURE",
+      "label": "Fail: CONTRACT_VIOLATION",
+      "properties": {
+        "lesson": "Candidate exceeded numerical error bound under current transformation set."
+      }
+    },
+    {
+      "node_id": "FAIL_35a4f514",
+      "node_type": "FAILURE",
+      "label": "Fail: CONTRACT_VIOLATION",
+      "properties": {
+        "lesson": "Candidate exceeded numerical error bound under current transformation set."
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source_id": "PTH_70c4985645",
+      "target_id": "FAIL_7221e506",
+      "relationship": "PRODUCED_FAILURE",
+      "weight": 1.0
+    },
+    {
+      "source_id": "PTH_203ec01d05",
+      "target_id": "FAIL_27b28105",
+      "relationship": "PRODUCED_FAILURE",
+      "weight": 1.0
+    },
+    {
+      "source_id": "PTH_6aee0c76e7",
+      "target_id": "FAIL_c62ed649",
+      "relationship": "PRODUCED_FAILURE",
+      "weight": 1.0
+    },
+    {
+      "source_id": "PTH_92b2a46fa4",
+      "target_id": "FAIL_141c2f43",
+      "relationship": "PRODUCED_FAILURE",
+      "weight": 1.0
+    },
+    {
+      "source_id": "PTH_a1602ba45f",
+      "target_id": "FAIL_c5289e8b",
+      "relationship": "PRODUCED_FAILURE",
+      "weight": 1.0
+    },
+    {
+      "source_id": "PTH_e71293af8d",
+      "target_id": "FAIL_f9824194",
+      "relationship": "PRODUCED_FAILURE",
+      "weight": 1.0
+    },
+    {
+      "source_id": "PTH_e53a51ad99",
+      "target_id": "FAIL_5d7415e7",
+      "relationship": "PRODUCED_FAILURE",
+      "weight": 1.0
+    },
+    {
+      "source_id": "PTH_2be1c9dc8f",
+      "target_id": "FAIL_0e127678",
+      "relationship": "PRODUCED_FAILURE",
+      "weight": 1.0
+    },
+    {
+      "source_id": "PTH_d044571d2f",
+      "target_id": "FAIL_40199b0f",
+      "relationship": "PRODUCED_FAILURE",
+      "weight": 1.0
+    },
+    {
+      "source_id": "PTH_1a9b39a83a",
+      "target_id": "FAIL_35a4f514",
+      "relationship": "PRODUCED_FAILURE",
+      "weight": 1.0
+    }
+  ],
+  "failures": [
+    {
+      "failure_id": "FAIL_7221e506",
+      "pathway_id": "PTH_70c4985645",
+      "workload_id": "WLD_AI__MATRIX_MULTIPLICATION",
+      "failure_type": "CONTRACT_VIOLATION",
+      "counterexample": {},
+      "violated_contract": "DEFAULT_CONTRACT",
+      "performance_failure": false,
+      "correctness_failure": true,
+      "lesson": "Candidate exceeded numerical error bound under current transformation set.",
+      "future_constraints": [],
+      "timestamp": 1791478562.1266499
+    },
+    {
+      "failure_id": "FAIL_27b28105",
+      "pathway_id": "PTH_203ec01d05",
+      "workload_id": "WLD_SCI_PDE",
+      "failure_type": "CONTRACT_VIOLATION",
+      "counterexample": {},
+      "violated_contract": "DEFAULT_CONTRACT",
+      "performance_failure": false,
+      "correctness_failure": true,
+      "lesson": "Candidate exceeded numerical error bound under current transformation set.",
+      "future_constraints": [],
+      "timestamp": 1791478562.179278
+    },
+    {
+      "failure_id": "FAIL_c62ed649",
+      "pathway_id": "PTH_6aee0c76e7",
+      "workload_id": "WLD_AI__ATTENTION",
+      "failure_type": "CONTRACT_VIOLATION",
+      "counterexample": {},
+      "violated_contract": "DEFAULT_CONTRACT",
+      "performance_failure": false,
+      "correctness_failure": true,
+      "lesson": "Candidate exceeded numerical error bound under current transformation set.",
+      "future_constraints": [],
+      "timestamp": 1791478562.207295
+    },
+    {
+      "failure_id": "FAIL_141c2f43",
+      "pathway_id": "PTH_92b2a46fa4",
+      "workload_id": "WLD_IMA_CONVOLUTION_FILTERS",
+      "failure_type": "CONTRACT_VIOLATION",
+      "counterexample": {},
+      "violated_contract": "DEFAULT_CONTRACT",
+      "performance_failure": false,
+      "correctness_failure": true,
+      "lesson": "Candidate exceeded numerical error bound under current transformation set.",
+      "future_constraints": [],
+      "timestamp": 1791478562.263679
+    },
+    {
+      "failure_id": "FAIL_c5289e8b",
+      "pathway_id": "PTH_a1602ba45f",
+      "workload_id": "WLD_VID_FRAME_PROCESSING",
+      "failure_type": "CONTRACT_VIOLATION",
+      "counterexample": {},
+      "violated_contract": "DEFAULT_CONTRACT",
+      "performance_failure": false,
+      "correctness_failure": true,
+      "lesson": "Candidate exceeded numerical error bound under current transformation set.",
+      "future_constraints": [],
+      "timestamp": 1791478562.2851617
+    },
+    {
+      "failure_id": "FAIL_f9824194",
+      "pathway_id": "PTH_e71293af8d",
+      "workload_id": "WLD_COM_COMPRESSION_LOSSLESS",
+      "failure_type": "CONTRACT_VIOLATION",
+      "counterexample": {},
+      "violated_contract": "DEFAULT_CONTRACT",
+      "performance_failure": false,
+      "correctness_failure": true,
+      "lesson": "Candidate exceeded numerical error bound under current transformation set.",
+      "future_constraints": [],
+      "timestamp": 1791478562.308935
+    },
+    {
+      "failure_id": "FAIL_5d7415e7",
+      "pathway_id": "PTH_e53a51ad99",
+      "workload_id": "WLD_SCI_N_BODY",
+      "failure_type": "CONTRACT_VIOLATION",
+      "counterexample": {},
+      "violated_contract": "DEFAULT_CONTRACT",
+      "performance_failure": false,
+      "correctness_failure": true,
+      "lesson": "Candidate exceeded numerical error bound under current transformation set.",
+      "future_constraints": [],
+      "timestamp": 1791478562.37206
+    },
+    {
+      "failure_id": "FAIL_0e127678",
+      "pathway_id": "PTH_2be1c9dc8f",
+      "workload_id": "WLD_GRA_RASTERIZATION",
+      "failure_type": "CONTRACT_VIOLATION",
+      "counterexample": {},
+      "violated_contract": "DEFAULT_CONTRACT",
+      "performance_failure": false,
+      "correctness_failure": true,
+      "lesson": "Candidate exceeded numerical error bound under current transformation set.",
+      "future_constraints": [],
+      "timestamp": 1791478562.436322
+    },
+    {
+      "failure_id": "FAIL_40199b0f",
+      "pathway_id": "PTH_d044571d2f",
+      "workload_id": "WLD_AI__MATRIX_MULTIPLICATION",
+      "failure_type": "CONTRACT_VIOLATION",
+      "counterexample": {},
+      "violated_contract": "DEFAULT_CONTRACT",
+      "performance_failure": false,
+      "correctness_failure": true,
+      "lesson": "Candidate exceeded numerical error bound under current transformation set.",
+      "future_constraints": [],
+      "timestamp": 1791479705.9831605
+    },
+    {
+      "failure_id": "FAIL_35a4f514",
+      "pathway_id": "PTH_1a9b39a83a",
+      "workload_id": "WLD_AI__MATRIX_MULTIPLICATION",
+      "failure_type": "CONTRACT_VIOLATION",
+      "counterexample": {},
+      "violated_contract": "DEFAULT_CONTRACT",
+      "performance_failure": false,
+      "correctness_failure": true,
+      "lesson": "Candidate exceeded numerical error bound under current transformation set.",
+      "future_constraints": [],
+      "timestamp": 1791479989.2335439
+    }
+  ]
+}

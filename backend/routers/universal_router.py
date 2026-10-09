@@ -76,27 +76,34 @@ class SynthesizeRequest(BaseModel):
 @router.post("/search")
 async def universal_search(req: UniversalSearchRequest) -> Dict[str, Any]:
     """Runs the full universal adaptive discovery and verification pipeline."""
-    dom = req.workload_domain.upper()
+    try:
+        dom = req.workload_domain.upper()
 
-    if dom == "POLYNOMIAL":
-        wl, c = UniversalWorkloadSuite.get_polynomial_workload(degree=10, num_points=req.dimension)
-    elif dom == "SORTING":
-        wl, c = UniversalWorkloadSuite.get_sorting_workload(N=req.dimension, key_max=500)
-    elif dom == "MATRIX":
-        wl, c = UniversalWorkloadSuite.get_matrix_workload(dim=min(req.dimension, 128))
-    elif dom == "ADVERSARIAL_NOISE":
-        wl, c = AdversarialWorkloadGenerator.get_incompressible_noise_workload(size=req.dimension)
-    else:
-        wl, c = UniversalWorkloadSuite.generate_unseen_workload()
+        if dom == "POLYNOMIAL":
+            wl, c = UniversalWorkloadSuite.get_polynomial_workload(degree=10, num_points=req.dimension)
+        elif dom == "SORTING":
+            wl, c = UniversalWorkloadSuite.get_sorting_workload(N=req.dimension, key_max=500)
+        elif dom == "MATRIX":
+            wl, c = UniversalWorkloadSuite.get_matrix_workload(dim=min(req.dimension, 128))
+        elif dom == "ADVERSARIAL_NOISE":
+            wl, c = AdversarialWorkloadGenerator.get_incompressible_noise_workload(size=req.dimension)
+        else:
+            wl, c = UniversalWorkloadSuite.generate_unseen_workload()
 
-    res = _engine.run_universal_pipeline(
-        workload_target=wl,
-        sample_input=wl.sample_input,
-        contract=c,
-        max_candidates=req.max_candidates,
-        max_time_seconds=req.max_time_seconds,
-    )
-    return _sanitize_for_json(res)
+        res = _engine.run_universal_pipeline(
+            workload_target=wl,
+            sample_input=wl.sample_input,
+            contract=c,
+            max_candidates=req.max_candidates,
+            max_time_seconds=req.max_time_seconds,
+        )
+        return _sanitize_for_json(res)
+    except HTTPException:
+        raise
+    except Exception:
+        import logging
+        logging.getLogger(__name__).exception("Universal pipeline execution failed")
+        raise HTTPException(status_code=500, detail="Internal server error during universal search")
 
 
 @router.post("/analyze")

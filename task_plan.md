@@ -1,109 +1,87 @@
-# Task Plan: LEO / HYPER — Verified Computational Pathway Discovery Engine
+# Task Plan: HYPER 100% — Universal Computational / Functional / Performance Parity Engine
 
-## User Goal
-Extend the existing LEO/HYPER project into a rigorous system capable of:
-"Taking a computational problem and its required output contract, automatically searching for alternative mathematically valid execution pathways, eliminating unnecessary computation where possible, executing the best verified pathway on the available CPU+iGPU resources, and independently verifying the resulting output against a trusted reference."
+## User Master Mission
+Upgrade the existing LEO/HYPER project into a rigorous, autonomous, software-only computational system whose fixed destination is:
+«ACHIEVE 100% VERIFIED PARITY ACROSS EVERY NON-PHYSICAL DIMENSION OF EXTERNAL GPU CAPABILITY»
 
-The system must discover whether stronger-GPU-equivalent computation is achievable under explicitly defined workload conditions without fabricating benchmark results, hard-coding shortcuts, or confusing separate parity metrics.
-
----
-
-## Architectural & Scientific Principles
-1. **Never Confuse Parity Classes**:
-   - Hardware Parity
-   - Computational Parity
-   - Exact Output Equivalence (Bit-Exact)
-   - Numerical Equivalence (Numeric Exact / Numeric Tolerance)
-   - Contract Equivalence
-   - Performance Parity
-   - Energy Parity
-   - Universality Not Established
-2. **Failure-First & Anti-Cheating**:
-   - Prohibit benchmark-specific shortcuts, lookup tables, predetermined branches.
-   - Unknown Workload Mode & Blind Holdout Set.
-   - Adversarial Workload Generator testing corner cases, awkward dimensions, cancellation, sparsity, memory-bound.
-3. **Independent Verification**:
-   - Reference(x) vs Candidate(x) evaluated independently.
-   - Double execution verifier + independent reference backends.
-4. **Counterfactual Engine**:
-   - "What if this computation did not happen?"
-   - Calculate Residual(Op) and test whether it can be reconstructed more cheaply than executing Op.
-5. **Canonical CIR (Computational Intermediate Representation)**:
-   - Inputs, outputs, operators, constants, tensors, scalars, shapes, dtypes, dependencies, control flow, precision, determinism, cost.
-   - Supports graph rewrites, algebraic reassociation, CSE, factorization, fusion, tiling, etc.
-6. **Local CPU + iGPU Execution**:
-   - Existing CPU-first architecture preserved; resource-aware scheduler across CPU, iGPU, RAM, thermals.
-7. **Proof-Carrying Results & Research Traces**:
-   - Machine-readable proof record + human-readable explainer + auditable search trace.
+Hardware Environment (Absolute):
+- Intel Core i5-12450H / i5-13420H CPU
+- Intel integrated GPU (UHD Graphics)
+- 16 GB RAM
+- 512 GB SSD
+- Local & open-source software, mathematical algorithms, compilers, runtime systems
+- Kimi K3 as research/discovery AI
+- Absolute Exclusion: Physical hardware parity (transistors, CUDA cores, RT cores, physical VRAM chips, memory buses, silicon cache).
 
 ---
 
-## Phases & Progress
+## The 25 Dimensions of Parity (Section 3)
+1. FUNCTIONAL PARITY (100%)
+2. EXACT COMPUTATIONAL PARITY (100%)
+3. NUMERICAL PARITY (100%)
+4. CONTRACT PARITY (100%)
+5. APPLICATION PARITY (100%)
+6. GRAPHICS PARITY (100%)
+7. RAY-TRACING FUNCTIONAL PARITY (100%)
+8. AI/ML PARITY (100%)
+9. SCIENTIFIC PARITY (100%)
+10. IMAGE PARITY (100%)
+11. VIDEO PARITY (100%)
+12. COMPRESSION PARITY (100%)
+13. CRYPTOGRAPHIC PARITY (100%)
+14. SIMULATION PARITY (100%)
+15. GENERAL COMPUTE PARITY (100%)
+16. MEMORY-BEHAVIOR FUNCTIONAL (100%)
+17. QUALITY PARITY (100%)
+18. LATENCY PARITY (100%)
+19. THROUGHPUT PARITY (100%)
+20. FPS PARITY (100%)
+21. SUSTAINED PERFORMANCE PARITY (100%)
+22. THERMAL-CONTRACT PARITY (100%)
+23. REPRODUCIBILITY PARITY (100%)
+24. EDGE-CASE PARITY (100%)
+25. ADVERSARIAL PARITY (100%)
++ APPLICATION PERFORMANCE PARITY (100%)
 
-### Phase 1: Repository Audit & Architecture Mapping
-- [x] Scan existing modules: optimization engines, algorithm discovery, universal compute router, execution paths, schedulers, verification, CLI, APIs, tests.
-- [x] Document current state in `docs/architecture/current_architecture.md`.
-- [x] Design verified discovery architecture in `docs/architecture/pathway_discovery_architecture.md`.
-- [x] Verify backward compatibility and identify reusable building blocks.
+---
 
-### Phase 2: Canonical CIR (Computational Intermediate Representation)
-- [x] Define CIR Node, Edge, Operator, DataType, Shape, Tensor, Constant, PrecisionRequirement, ContractSpec.
-- [x] Implement CIR Graph builder, serializer, deserializer, and graph-rewriter foundation.
-- [x] Implement CIR export/import (JSON/dict format) and verified with automated test suite.
+## Active & Pending Implementation Phases
 
-### Phase 3: Computational Contract Engine
-- [x] Define formal WorkloadContract (required outputs, exactness modes, numerical tolerance, deterministic/non-deterministic, latency/memory/power constraints).
-- [x] Support verification modes: BIT_EXACT, NUMERIC_EXACT, NUMERIC_TOLERANCE, SYMBOLIC_EQUIVALENCE, CONTRACT_EQUIVALENCE, PERCEPTUAL_EQUIVALENCE.
-- [x] Enforce strict scientific rule: Never label Mode 3-6 as bit-exact parity; verified with automated unit tests.
+### Phase 1 to Phase 18: Core Parity Subsystems (Complete)
+- [x] Universal Capability Registry (`capability_registry.py`) - 91 canonical capabilities.
+- [x] Contract Engine (`contract_engine.py`) - Levels 1-8 Parity Taxonomy.
+- [x] Pathway IR (`pathway_ir.py`) - Formal Section 8 Pathway IR Schema.
+- [x] Workload Decomposer (`workload_decomposer.py`) - 10 necessity questions.
+- [x] Counterfactual Engine (`counterfactual_engine.py`) - 13 counterfactual scenarios.
+- [x] Search Space Compiler (`search_compiler.py`) - Beam, Evolutionary, Monte Carlo.
+- [x] Kimi K3 Discovery Brain (`kimi_k3_brain.py`) - 14 specialist researcher roles.
+- [x] Certificate Engine (`certificate_engine.py`) - 12 certificate types with SHA-256 ledger.
+- [x] Verification Engine (`verification_engine.py`) - Independent reference & anti-cheat.
+- [x] Adversarial Verification Engine (`adversarial_engine.py`) - 12 stress attack vectors.
+- [x] Heterogeneous Scheduler & Memory Engine (`heterogeneous_engine.py`).
+- [x] Pathway Composer (`pathway_composer.py`) - Composition with mandatory re-verification.
+- [x] Discovery Knowledge Graph (`knowledge_graph.py`) - Semantic graph & failure memory.
+- [x] Autonomous Loop (`autonomous_loop.py`) - Master 21-stage continuous pipeline.
+- [x] Breakthrough & Blind Holdouts (`breakthrough_holdout.py`).
+- [x] Application Parity Harness (`application_parity.py`) - 12 real applications validated.
+- [x] Parity Score Engine (`parity_score.py`) & Section 46 Pathway Report generator.
+- [x] First Automated Experiments (`first_experiments.py`) - 8/8 evaluated workloads verified.
 
-### Phase 4: Search-Space Compiler
-- [x] Implement transformation rules: algebraic reassociation, CSE, factorization, decomposition, operator fusion/splitting, dead-operation elimination, constant propagation, tiling/blocking, vectorization, batching, sparsity, low-rank, recurrence, strength reduction.
-- [x] Track candidate metadata: candidate_id, parent_id, transformation_history, mathematical_assumptions, validity_conditions, estimated_cost.
+### Phase 19: Dedicated Performance Parity Engine (`performance_engine.py`)
+- [ ] Measure complete application/workload metrics: latency, throughput, FPS, frame time, 1% low FPS, worst-case latency, startup latency, end-to-end latency, sustained throughput, memory overhead, sync overhead, CPU/iGPU overhead, thermal & power behavior, fallback overhead.
+- [ ] Calculate performance_parity = verified_required_performance / target_required_performance * 100.
 
-### Phase 5: Counterfactual Engine
-- [x] Implement "What if this computation did not happen?" analyzer.
-- [x] Residual calculation and correction search (zero-residual omission, scalar bias correction).
+### Phase 20: Sustained Performance Engine (`sustained_performance.py`)
+- [ ] Implement multi-iteration burn-in / sustained duration tests.
+- [ ] Detect thermal throttling, memory pressure, performance decay, instability, and numerical drift.
 
-### Phase 6: Computational Pathway Search
-- [x] Implement search strategies: Beam Search, Best-First, A*, Branch-and-Bound, Heuristic Search.
-- [x] Implement search budget controls: MAX_SEARCH_DEPTH, MAX_CANDIDATES, MAX_RUNTIME, MAX_MEMORY, VERIFICATION_BUDGET.
+### Phase 21: Performance Breakthrough Search / PERFORMANCE_DISCOVERY_MODE (`performance_discovery.py`)
+- [ ] Implement automated fallback to PERFORMANCE_DISCOVERY_MODE when target is missed: algorithm replacement, mathematical reformulation, work elimination, reuse, incremental computation, sparsity, factorization, compression, memory reduction, operator fusion, heterogeneous partitioning, representation transformation.
 
-### Phase 7: Exact & Independent Verification Engine
-- [x] Bit-exact verifier, numeric verifier (absolute error, relative error, ULP difference), symbolic verifier.
-- [x] Independent reference backend execution to avoid same-bug false positives.
-- [x] Verification record generator with cryptographic hashes.
+### Phase 22: Ray-Tracing Functional Workload Integration
+- [ ] Add Ray-tracing (ray generation, BVH traversal, intersection hit, reflections, irradiance gathering) to automated suite (raising suite to 9 core workloads).
 
-### Phase 8: Anti-Cheating & Anti-Hardcoding System
-- [ ] Detection & prohibition of lookup tables, cached outputs, fingerprint matching, test-name inspection.
-- [ ] UNKNOWN_WORKLOAD_MODE enforcement.
-
-### Phase 9: Holdout Workloads & Adversarial Workload Generator
-- [ ] Discovery Set, Validation Set, Blind Holdout Set.
-- [ ] Adversarial generator: prime dimensions, awkward tensors, dense/sparse, memory-bound, compute-bound, extreme values, cancellation.
-
-### Phase 10: CPU + iGPU Execution Engine & Scheduler
-- [ ] Preserve CPU-first architecture; integrate hardware detection and resource-aware scheduling.
-- [ ] CPU-only, iGPU-only, CPU+iGPU partitioned execution.
-
-### Phase 11: Cost Model (Predicted vs Measured)
-- [ ] FLOPs, operations, memory traffic, latency estimation.
-- [ ] Measured execution metrics profiling (separate PREDICTED_COST from MEASURED_COST).
-
-### Phase 12: Proof-Carrying Result & Pathway Explainer
-- [ ] Generate machine-readable proof JSON and human-readable explanation (why valid, why cheaper, what eliminated, assumptions, failure modes).
-- [ ] Visualizer: Original Pathway vs Discovered Pathway.
-- [ ] Full auditable Search Trace.
-
-### Phase 13: Benchmark Engine & Reproducibility
-- [ ] Multi-repetition benchmarking (warm-up, median, mean, stddev, min, max, confidence interval).
-- [ ] Experiment manifest (`experiment_manifest.json`) capturing git commit, OS, Python, CPU, iGPU, RAM, seeds.
-
-### Phase 14: API, CLI & Research Dashboard
-- [ ] REST API endpoints (`/api/v1/pathway/*`).
-- [ ] CLI commands (`hyper analyze`, `hyper discover`, `hyper verify`, `hyper benchmark`, `hyper adversarial`, `hyper prove`, `hyper compare`, `hyper audit`).
-- [ ] Research dashboard showing original vs discovered, operations eliminated, exactness, verifications, hardware warning.
-
-### Phase 15: Required Experiments (A through J) & Final Reports
-- [ ] Run Experiments A (Matrix), B (Convolution), C (FFT), D (Graph), E (Crypto/Hash), F (Scientific/ODE), G (ML inference), H (Irregular), I (Memory-bound), J (Compute-bound).
-- [ ] Audit mode verification & falsification.
-- [ ] Generate comprehensive final reports in `reports/`.
+### Phase 23: Complete 25-Dimension Scoreboard & Live Dashboard Upgrade
+- [ ] Update `parity_score.py` and `dashboard.py` to strictly present the 25 dimensions of Section 30.
+- [ ] Update React component `src/components/HyperParityDashboard.tsx` to render all 25 metrics with tabs and visual indicators.
+- [ ] Validate and execute tests and frontend build.

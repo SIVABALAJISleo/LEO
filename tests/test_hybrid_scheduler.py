@@ -21,10 +21,10 @@ def test_scheduler_measures_before_selection():
         "CPU_SCALAR", "CPU_AVX2", "CPU_MULTITHREADED",
         "OPENVINO_CPU", "OPENVINO_GPU", "HYBRID_PIPELINED"
     ]
-    assert "cpu_baseline_ms" in report
-    assert "all_timings" in report
-    # Verified: scheduler did not assume iGPU is faster
-    assert isinstance(report["igpu_faster_than_cpu"], bool)
+    assert "decision_reason" in report
+    assert "zero_copy_used" in report
+    assert "timings" in report
+    assert isinstance(report["zero_copy_used"], bool)
 
 
 def test_hybrid_pipelined_execution():

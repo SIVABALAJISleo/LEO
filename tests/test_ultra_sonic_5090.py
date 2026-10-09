@@ -367,8 +367,33 @@ def test_authoritative_pipeline_full_chain():
 
 # 18. Parity Dashboard & RTX 5090 Index
 def test_parity_dashboard_rtx5090_index():
-    dash = ParityDashboard()
-    scores_data = dash.compute_scores()
+    import json
+    import tempfile
+    import os
+    
+    with tempfile.NamedTemporaryFile("w", delete=False, suffix=".json") as f:
+        json.dump([
+            {
+                "exactness_class": "EXACT",
+                "correctness_result": "PASS",
+                "output_hash": "abc",
+                "reference_hash": "abc",
+                "numerical_metrics": {"passed": True},
+                "latency": 100.0,
+                "work_eliminated_ratio": 1.0,
+                "cache_state": "CACHE_HIT",
+                "verifier_version": "1.0",
+                "holdout_status": "PASS",
+                "memory_rss_mb": 1024.0
+            }
+        ], f)
+        temp_name = f.name
+        
+    try:
+        dash = ParityDashboard(ledger_path=temp_name)
+        scores_data = dash.compute_scores()
+    finally:
+        os.remove(temp_name)
 
     scores = scores_data.get("scores", {})
     assert "RTX5090_EQUIVALENCE_INDEX" in scores

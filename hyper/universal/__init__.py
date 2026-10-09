@@ -113,10 +113,12 @@ class UniversalComputationalParityEngine:
                 base_timings.append((time.perf_counter_ns() - t_base_0) / 1_000_000.0)
             base_elapsed_ms = float(np.median(base_timings))
         except Exception as e:
+            import logging
+            logging.getLogger(__name__).warning("Baseline reference execution failed: %s", type(e).__name__)
             return {
                 "experiment_id": experiment_id,
                 "status": "EXECUTION_FAILURE",
-                "error": f"Failed to execute trusted baseline reference: {str(e)}",
+                "error": "Failed to execute trusted baseline reference",
             }
 
         # Estimate theoretical FLOPs & bytes for RTX reference comparator

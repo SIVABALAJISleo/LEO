@@ -1,0 +1,182 @@
+{
+  "total_certificates": 11,
+  "updated_at": 1791570144.2847602,
+  "certificates": [
+    {
+      "id": "CERT_76d6d9f1b9",
+      "type": "EXACT_EQUIVALENCE",
+      "original": "Baseline",
+      "replacement": "Optimized",
+      "assumptions": [
+        "None"
+      ],
+      "proof": "Identical algebra",
+      "tests": 10,
+      "adversarial_tests": 5,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "6c8284b378055c4ee24db4be567072b9b838ae11aab6cddc548bd4c0c1f567e1",
+      "timestamp": 1791479022.5072846
+    },
+    {
+      "id": "CERT_7a5feabaf6",
+      "type": "EXACT_EQUIVALENCE",
+      "original": "Baseline",
+      "replacement": "Optimized",
+      "assumptions": [
+        "None"
+      ],
+      "proof": "Identical algebra",
+      "tests": 10,
+      "adversarial_tests": 5,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "493c1b51c7c6926a8544b2ea4446c8023aa51caa86b11b19f40d1f4e872e5339",
+      "timestamp": 1791480705.2716355
+    },
+    {
+      "id": "CERT_56e4decc59",
+      "type": "EXACT_EQUIVALENCE",
+      "original": "Baseline",
+      "replacement": "Optimized",
+      "assumptions": [
+        "None"
+      ],
+      "proof": "Identical algebra",
+      "tests": 10,
+      "adversarial_tests": 5,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "b9d4ba3d4d9334c0b5a5879b83d3c1c08425c1da66360071388d1d5a3532f3ed",
+      "timestamp": 1791480810.999744
+    },
+    {
+      "id": "CERT_7ae74ab649",
+      "type": "EXACT_EQUIVALENCE",
+      "original": "Baseline",
+      "replacement": "Optimized",
+      "assumptions": [
+        "None"
+      ],
+      "proof": "Identical algebra",
+      "tests": 10,
+      "adversarial_tests": 5,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "29cad85283a5d03d4111e005fbbf276e52bd03e7691986a1aa4be6dc0e5a3893",
+      "timestamp": 1791480855.8490076
+    },
+    {
+      "id": "CERT_e12e4cc400",
+      "type": "EXACT_EQUIVALENCE",
+      "original": "Baseline",
+      "replacement": "Optimized",
+      "assumptions": [
+        "None"
+      ],
+      "proof": "Identical algebra",
+      "tests": 10,
+      "adversarial_tests": 5,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "3cdd3fd59e281e484e8aa93820597f23fa342ff6e5bdfd5bdc104a0175461e40",
+      "timestamp": 1791567071.2454438
+    },
+    {
+      "id": "CERT_32f888e287",
+      "type": "EXACT_EQUIVALENCE",
+      "original": "Baseline",
+      "replacement": "Optimized",
+      "assumptions": [
+        "None"
+      ],
+      "proof": "Identical algebra",
+      "tests": 10,
+      "adversarial_tests": 5,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "2d93db3f59f7b563096e3cd9a11bd628e34ae4d88fe8d81c19d348394a71d4cc",
+      "timestamp": 1791567174.704305
+    },
+    {
+      "id": "CERT_dba1088eba",
+      "type": "EXACT_EQUIVALENCE",
+      "original": "Baseline",
+      "replacement": "Optimized",
+      "assumptions": [
+        "None"
+      ],
+      "proof": "Identical algebra",
+      "tests": 10,
+      "adversarial_tests": 5,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "261969678687bf6718331bf415b176aa545d9a03061bb02000ed57da7222ca5f",
+      "timestamp": 1791567806.7178085
+    },
+    {
+      "id": "CERT_039eb02c79",
+      "type": "EXACT_EQUIVALENCE",
+      "original": "Baseline",
+      "replacement": "Optimized",
+      "assumptions": [
+        "None"
+      ],
+      "proof": "Identical algebra",
+      "tests": 10,
+      "adversarial_tests": 5,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "b53fbfb6dc4e158aedd75e271672afb7c87bcb136c86c3368291d8483f9b31fb",
+      "timestamp": 1791568682.2469752
+    },
+    {
+      "id": "CERT_335f5a1f64",
+      "type": "EXACT_EQUIVALENCE",
+      "original": "Baseline",
+      "replacement": "Optimized",
+      "assumptions": [
+        "None"
+      ],
+      "proof": "Identical algebra",
+      "tests": 10,
+      "adversarial_tests": 5,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "2a7f40b00e63eaee0d14d13b5aac094458b5d1050d3d0594fb99cd9fe4e81a9f",
+      "timestamp": 1791568837.7910454
+    },
+    {
+      "id": "CERT_6944ccb7aa",
+      "type": "EXACT_EQUIVALENCE",
+      "original": "Baseline",
+      "replacement": "Optimized",
+      "assumptions": [
+        "None"
+      ],
+      "proof": "Identical algebra",
+      "tests": 10,
+      "adversarial_tests": 5,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "0460cb72a370291350b41be4055561a58aea83885d8ca77642ec7b062438b432",
+      "timestamp": 1791569737.649856
+    },
+    {
+      "id": "CERT_117826d1fd",
+      "type": "EXACT_EQUIVALENCE",
+      "original": "Baseline",
+      "replacement": "Optimized",
+      "assumptions": [
+        "None"
+      ],
+      "proof": "Identical algebra",
+      "tests": 10,
+      "adversarial_tests": 5,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "d069f4028e24a3542aeb786e06f11e7b4e1d2ce623d216ea9919f9199e57175f",
+      "timestamp": 1791570144.2841992
+    }
+  ]
+}

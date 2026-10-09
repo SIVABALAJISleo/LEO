@@ -1,11 +1,11 @@
 {
   "workload_id": "GEMM_STANDARD",
-  "total_nodes": 15,
-  "total_edges": 14,
+  "total_nodes": 14,
+  "total_edges": 13,
   "verified_count": 13,
   "nodes": {
-    "cand_canonical_b5504aa5": {
-      "candidate_id": "cand_canonical_b5504aa5",
+    "cand_canonical_cb9ce26c": {
+      "candidate_id": "cand_canonical_cb9ce26c",
       "parent_id": null,
       "transformation": "CANONICAL_BASELINE",
       "cost": {
@@ -16,27 +16,27 @@
       "resource_usage": {
         "peak_ram": 16777216
       },
-      "cir_hash": "6daf2c89cd9ef2accab2d71ac5047911e2110f5c90edb584ebf35d365fbbe126",
-      "created_at": 1790745774.5210612
+      "cir_hash": "dea445f4beb2be70b69830b0e5a2a63e819b4aae98061fcb323abd5cb8675bc4",
+      "created_at": 1791569906.834639
     },
-    "cand_strassen_44d20abb": {
-      "candidate_id": "cand_strassen_44d20abb",
-      "parent_id": "cand_canonical_b5504aa5",
+    "cand_strassen_4f9a18c4": {
+      "candidate_id": "cand_strassen_4f9a18c4",
+      "parent_id": "cand_canonical_cb9ce26c",
       "transformation": "STRASSEN_ALGEBRAIC_FACTORIZATION",
       "cost": {
-        "latency_ms": 2.9112,
+        "latency_ms": 2.2907,
         "flops": 875000.0
       },
       "verification_status": "VERIFIED",
       "resource_usage": {
         "peak_ram": 25165824
       },
-      "cir_hash": "b6c1cf47e4de764891c518e189a90a688553a32e9602823b8fd45c0390ead9d3",
-      "created_at": 1790745774.5334542
+      "cir_hash": "880aa89a29adbb9ea1cb13dff8dd7a20ed3fc485a08c167b1e9aeda3393cec51",
+      "created_at": 1791569906.8431773
     },
-    "cand_lowrank_1a8dbf3d": {
-      "candidate_id": "cand_lowrank_1a8dbf3d",
-      "parent_id": "cand_canonical_b5504aa5",
+    "cand_lowrank_35250cc1": {
+      "candidate_id": "cand_lowrank_35250cc1",
+      "parent_id": "cand_canonical_cb9ce26c",
       "transformation": "LOW_RANK_SVD_FACTORIZATION",
       "cost": {
         "latency_ms": 999.0,
@@ -46,259 +46,239 @@
       "resource_usage": {
         "peak_ram": 0.0
       },
-      "cir_hash": "0397323c3e30480887a69e8aca4f2968ce5f012cfaeb80b23d361e1700915e1e",
-      "created_at": 1790745774.6781135
+      "cir_hash": "24365d492680fb6962807367ef2465dc73d575059f1a57825b5a2fb123597bba",
+      "created_at": 1791569906.9468942
     },
-    "cand_tiled_92be4308": {
-      "candidate_id": "cand_tiled_92be4308",
-      "parent_id": "cand_canonical_b5504aa5",
+    "cand_tiled_4b87ed4e": {
+      "candidate_id": "cand_tiled_4b87ed4e",
+      "parent_id": "cand_canonical_cb9ce26c",
       "transformation": "CACHE_AWARE_L2_TILING",
       "cost": {
-        "latency_ms": 3.8447,
+        "latency_ms": 2.2852,
         "flops": 1000000.0
       },
       "verification_status": "VERIFIED",
       "resource_usage": {
         "peak_ram": 25165824
       },
-      "cir_hash": "7d36b0d4b48ad7cc5518824d0236e3876d374f84a124da1bf472120339c939ab",
-      "created_at": 1790745774.69193
+      "cir_hash": "64c6efef8d6f644757103c426dadd4481aac8ab8be3cff180a1f0acb549bc221",
+      "created_at": 1791569906.9558048
     },
-    "cand_sparse_0a99dfe6": {
-      "candidate_id": "cand_sparse_0a99dfe6",
-      "parent_id": "cand_canonical_b5504aa5",
+    "cand_sparse_458b7ee2": {
+      "candidate_id": "cand_sparse_458b7ee2",
+      "parent_id": "cand_canonical_cb9ce26c",
       "transformation": "SPARSE_THRESHOLD_DISPATCH",
       "cost": {
-        "latency_ms": 2.9888,
+        "latency_ms": 2.434,
         "flops": 600000.0
       },
       "verification_status": "VERIFIED",
       "resource_usage": {
         "peak_ram": 25165824
       },
-      "cir_hash": "5ce1e0bbf67a22ab30eac48dba8d1768eb475c8a185d28b40a119e80187b9a87",
-      "created_at": 1790745774.7038822
+      "cir_hash": "71bc7378f1c68e434f1f5700ee2400e5ef2d341423debe09cf631250f83a6db8",
+      "created_at": 1791569906.9647717
     },
-    "cand_vsa_6d2f6970": {
-      "candidate_id": "cand_vsa_6d2f6970",
-      "parent_id": "cand_canonical_b5504aa5",
+    "cand_vsa_6b317b27": {
+      "candidate_id": "cand_vsa_6b317b27",
+      "parent_id": "cand_canonical_cb9ce26c",
       "transformation": "VECTOR_SYMBOLIC_HYPERDIMENSIONAL_SURROGATE",
       "cost": {
-        "latency_ms": 3.6768,
+        "latency_ms": 2.8645,
         "flops": 50000.0
       },
       "verification_status": "VERIFIED",
       "resource_usage": {
         "peak_ram": 25165824
       },
-      "cir_hash": "0590fc3db59a63777a073e07d654a9891d322c89738f35ba82e455a6f15ddfa5",
-      "created_at": 1790745774.7152677
+      "cir_hash": "42ba714294cb300fc932ae0816671d64e1f894ae0534f084f8dfeb25a97981ee",
+      "created_at": 1791569906.9743192
     },
-    "cand_fused_e990a85d": {
-      "candidate_id": "cand_fused_e990a85d",
-      "parent_id": "cand_canonical_b5504aa5",
+    "cand_fused_0674c328": {
+      "candidate_id": "cand_fused_0674c328",
+      "parent_id": "cand_canonical_cb9ce26c",
       "transformation": "OPERATOR_FUSION_AVX2",
       "cost": {
-        "latency_ms": 5.05,
+        "latency_ms": 2.279,
         "flops": 950000.0
       },
       "verification_status": "VERIFIED",
       "resource_usage": {
         "peak_ram": 25165824
       },
-      "cir_hash": "a77149b330c7de345eef818ee2bed74799d892fdba5e4edc4112616ec954f969",
-      "created_at": 1790745774.7298512
+      "cir_hash": "2065c41215e0713ba82c6c6da10ab6732c76da05493b085ad1251b18665ff5ca",
+      "created_at": 1791569906.9827275
     },
-    "cand_homotopic_758d1f6f": {
-      "candidate_id": "cand_homotopic_758d1f6f",
-      "parent_id": "cand_canonical_b5504aa5",
+    "cand_homotopic_09e3f335": {
+      "candidate_id": "cand_homotopic_09e3f335",
+      "parent_id": "cand_canonical_cb9ce26c",
       "transformation": "HOMOTOPIC_HOARE_PRUNING",
       "cost": {
-        "latency_ms": 4.4339,
+        "latency_ms": 2.2774,
         "flops": 200000.0
       },
       "verification_status": "VERIFIED",
       "resource_usage": {
         "peak_ram": 25165824
       },
-      "cir_hash": "6daf2c89cd9ef2accab2d71ac5047911e2110f5c90edb584ebf35d365fbbe126",
-      "created_at": 1790745774.742951
+      "cir_hash": "dea445f4beb2be70b69830b0e5a2a63e819b4aae98061fcb323abd5cb8675bc4",
+      "created_at": 1791569906.9907866
     },
-    "cand_usm_464821f4": {
-      "candidate_id": "cand_usm_464821f4",
-      "parent_id": "cand_canonical_b5504aa5",
+    "cand_usm_d52db026": {
+      "candidate_id": "cand_usm_d52db026",
+      "parent_id": "cand_canonical_cb9ce26c",
       "transformation": "ZERO_COPY_USM_PCORE_PINNING",
       "cost": {
-        "latency_ms": 5.7076,
+        "latency_ms": 3.1087,
         "flops": 1000000.0
       },
       "verification_status": "VERIFIED",
       "resource_usage": {
         "peak_ram": 25165824
       },
-      "cir_hash": "627b15d77cb4a0ce67c9bc4aa7bdfd4e721002683dec8273b2ea841287eca6e5",
-      "created_at": 1790745774.7706926
+      "cir_hash": "b244915ce82a0c7d43b3dfab62a8b6fb402c4d802c9a855a98fd55a458a66639",
+      "created_at": 1791569907.0036986
     },
-    "cand_memo_ce0bc177": {
-      "candidate_id": "cand_memo_ce0bc177",
-      "parent_id": "cand_canonical_b5504aa5",
+    "cand_memo_a36b9734": {
+      "candidate_id": "cand_memo_a36b9734",
+      "parent_id": "cand_canonical_cb9ce26c",
       "transformation": "SEMANTIC_L3_MEMOIZATION",
       "cost": {
-        "latency_ms": 5.7629,
+        "latency_ms": 2.4677,
         "flops": 100000.0
       },
       "verification_status": "VERIFIED",
       "resource_usage": {
         "peak_ram": 25165824
       },
-      "cir_hash": "95bf13be8ba6ced74bb8509187939eefd12c30cc7c5501bc9ecdfd5d2dff2563",
-      "created_at": 1790745774.7937832
+      "cir_hash": "0c0ee1cc89f174e660d95b342e67ca8913ae6afed89067f59a7f2f761424a56b",
+      "created_at": 1791569907.014094
     },
-    "cand_strassen_36cd2422": {
-      "candidate_id": "cand_strassen_36cd2422",
-      "parent_id": "cand_strassen_44d20abb",
+    "cand_strassen_eff3de22": {
+      "candidate_id": "cand_strassen_eff3de22",
+      "parent_id": "cand_homotopic_09e3f335",
       "transformation": "STRASSEN_ALGEBRAIC_FACTORIZATION",
       "cost": {
-        "latency_ms": 3.3522,
+        "latency_ms": 2.1809,
         "flops": 875000.0
       },
       "verification_status": "VERIFIED",
       "resource_usage": {
         "peak_ram": 25165824
       },
-      "cir_hash": "9f7c36445446f3e68a2f2345442fd1d7352786ef71e9c5c5d54826df0b518bfb",
-      "created_at": 1790745774.8101652
+      "cir_hash": "880aa89a29adbb9ea1cb13dff8dd7a20ed3fc485a08c167b1e9aeda3393cec51",
+      "created_at": 1791569907.0225866
     },
-    "cand_lowrank_3cff325f": {
-      "candidate_id": "cand_lowrank_3cff325f",
-      "parent_id": "cand_strassen_44d20abb",
-      "transformation": "LOW_RANK_SVD_FACTORIZATION",
-      "cost": {
-        "latency_ms": 999.0,
-        "flops": 0.0
-      },
-      "verification_status": "FAILED",
-      "resource_usage": {
-        "peak_ram": 0.0
-      },
-      "cir_hash": "299b9d8747bf1747962fa9cbf41db0080796e35e5a2fcfe93f6bd92d282ae450",
-      "created_at": 1790745774.984096
-    },
-    "cand_tiled_12403cb1": {
-      "candidate_id": "cand_tiled_12403cb1",
-      "parent_id": "cand_strassen_44d20abb",
+    "cand_tiled_e80422c5": {
+      "candidate_id": "cand_tiled_e80422c5",
+      "parent_id": "cand_homotopic_09e3f335",
       "transformation": "CACHE_AWARE_L2_TILING",
       "cost": {
-        "latency_ms": 5.049,
+        "latency_ms": 2.23,
         "flops": 1000000.0
       },
       "verification_status": "VERIFIED",
       "resource_usage": {
         "peak_ram": 25165824
       },
-      "cir_hash": "ec8f0800698c89d01055ea1b20218040fd9cf4353a4d44b85e564dfcf42ce467",
-      "created_at": 1790745775.0019732
+      "cir_hash": "64c6efef8d6f644757103c426dadd4481aac8ab8be3cff180a1f0acb549bc221",
+      "created_at": 1791569907.0303648
     },
-    "cand_sparse_2f836c6c": {
-      "candidate_id": "cand_sparse_2f836c6c",
-      "parent_id": "cand_strassen_44d20abb",
+    "cand_sparse_51ebb375": {
+      "candidate_id": "cand_sparse_51ebb375",
+      "parent_id": "cand_homotopic_09e3f335",
       "transformation": "SPARSE_THRESHOLD_DISPATCH",
       "cost": {
-        "latency_ms": 4.4164,
+        "latency_ms": 2.2529,
         "flops": 600000.0
       },
       "verification_status": "VERIFIED",
       "resource_usage": {
         "peak_ram": 25165824
       },
-      "cir_hash": "52dd4570a5010d7d5ee14f1ac69b36d98aeb60ac55f3fee8fce6fe87fb7750d9",
-      "created_at": 1790745775.019372
+      "cir_hash": "71bc7378f1c68e434f1f5700ee2400e5ef2d341423debe09cf631250f83a6db8",
+      "created_at": 1791569907.0383751
     },
-    "cand_vsa_b078ee7b": {
-      "candidate_id": "cand_vsa_b078ee7b",
-      "parent_id": "cand_strassen_44d20abb",
+    "cand_vsa_0ba7b9e5": {
+      "candidate_id": "cand_vsa_0ba7b9e5",
+      "parent_id": "cand_homotopic_09e3f335",
       "transformation": "VECTOR_SYMBOLIC_HYPERDIMENSIONAL_SURROGATE",
       "cost": {
-        "latency_ms": 3.3683,
+        "latency_ms": 2.1478,
         "flops": 50000.0
       },
       "verification_status": "VERIFIED",
       "resource_usage": {
         "peak_ram": 25165824
       },
-      "cir_hash": "da60e65be90d370af79c59b7bb949e530d73fc2fb3994fff75e75ab51ed6a788",
-      "created_at": 1790745775.0347948
+      "cir_hash": "42ba714294cb300fc932ae0816671d64e1f894ae0534f084f8dfeb25a97981ee",
+      "created_at": 1791569907.0458584
     }
   },
   "edges": [
     {
-      "from": "cand_canonical_b5504aa5",
-      "to": "cand_strassen_44d20abb",
+      "from": "cand_canonical_cb9ce26c",
+      "to": "cand_strassen_4f9a18c4",
       "transformation": "STRASSEN_ALGEBRAIC_FACTORIZATION"
     },
     {
-      "from": "cand_canonical_b5504aa5",
-      "to": "cand_lowrank_1a8dbf3d",
+      "from": "cand_canonical_cb9ce26c",
+      "to": "cand_lowrank_35250cc1",
       "transformation": "LOW_RANK_SVD_FACTORIZATION"
     },
     {
-      "from": "cand_canonical_b5504aa5",
-      "to": "cand_tiled_92be4308",
+      "from": "cand_canonical_cb9ce26c",
+      "to": "cand_tiled_4b87ed4e",
       "transformation": "CACHE_AWARE_L2_TILING"
     },
     {
-      "from": "cand_canonical_b5504aa5",
-      "to": "cand_sparse_0a99dfe6",
+      "from": "cand_canonical_cb9ce26c",
+      "to": "cand_sparse_458b7ee2",
       "transformation": "SPARSE_THRESHOLD_DISPATCH"
     },
     {
-      "from": "cand_canonical_b5504aa5",
-      "to": "cand_vsa_6d2f6970",
+      "from": "cand_canonical_cb9ce26c",
+      "to": "cand_vsa_6b317b27",
       "transformation": "VECTOR_SYMBOLIC_HYPERDIMENSIONAL_SURROGATE"
     },
     {
-      "from": "cand_canonical_b5504aa5",
-      "to": "cand_fused_e990a85d",
+      "from": "cand_canonical_cb9ce26c",
+      "to": "cand_fused_0674c328",
       "transformation": "OPERATOR_FUSION_AVX2"
     },
     {
-      "from": "cand_canonical_b5504aa5",
-      "to": "cand_homotopic_758d1f6f",
+      "from": "cand_canonical_cb9ce26c",
+      "to": "cand_homotopic_09e3f335",
       "transformation": "HOMOTOPIC_HOARE_PRUNING"
     },
     {
-      "from": "cand_canonical_b5504aa5",
-      "to": "cand_usm_464821f4",
+      "from": "cand_canonical_cb9ce26c",
+      "to": "cand_usm_d52db026",
       "transformation": "ZERO_COPY_USM_PCORE_PINNING"
     },
     {
-      "from": "cand_canonical_b5504aa5",
-      "to": "cand_memo_ce0bc177",
+      "from": "cand_canonical_cb9ce26c",
+      "to": "cand_memo_a36b9734",
       "transformation": "SEMANTIC_L3_MEMOIZATION"
     },
     {
-      "from": "cand_strassen_44d20abb",
-      "to": "cand_strassen_36cd2422",
+      "from": "cand_homotopic_09e3f335",
+      "to": "cand_strassen_eff3de22",
       "transformation": "STRASSEN_ALGEBRAIC_FACTORIZATION"
     },
     {
-      "from": "cand_strassen_44d20abb",
-      "to": "cand_lowrank_3cff325f",
-      "transformation": "LOW_RANK_SVD_FACTORIZATION"
-    },
-    {
-      "from": "cand_strassen_44d20abb",
-      "to": "cand_tiled_12403cb1",
+      "from": "cand_homotopic_09e3f335",
+      "to": "cand_tiled_e80422c5",
       "transformation": "CACHE_AWARE_L2_TILING"
     },
     {
-      "from": "cand_strassen_44d20abb",
-      "to": "cand_sparse_2f836c6c",
+      "from": "cand_homotopic_09e3f335",
+      "to": "cand_sparse_51ebb375",
       "transformation": "SPARSE_THRESHOLD_DISPATCH"
     },
     {
-      "from": "cand_strassen_44d20abb",
-      "to": "cand_vsa_b078ee7b",
+      "from": "cand_homotopic_09e3f335",
+      "to": "cand_vsa_0ba7b9e5",
       "transformation": "VECTOR_SYMBOLIC_HYPERDIMENSIONAL_SURROGATE"
     }
   ]

@@ -6,7 +6,7 @@ python-multipart>=0.0.32
 aiofiles>=24.1.0
 
 # ── Authentication & Cryptography ─────────────────────────── #
-passlib[bcrypt]>=1.7.4.post1
+passlib[bcrypt]>=1.7.4
 bcrypt>=4.2.1
 PyJWT>=2.13.0
 cryptography>=49.0.0

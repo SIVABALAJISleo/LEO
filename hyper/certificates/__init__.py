@@ -1,7 +1,5 @@
 """
 hyper/certificates/__init__.py
-==============================
-Cryptographic Certificate and Replay Package for LEO/HYPER.
 """
 
 from .certificate_engine import (
@@ -9,9 +7,19 @@ from .certificate_engine import (
     HyperCertificate,
     CertificateStore,
 )
+from .godmode_certifier import (
+    CertificationVerdict,
+    CertificationCriteriaCheck,
+    GodmodeCertificate,
+    GodmodeCertificationEngine,
+)
 
 __all__ = [
     "CertificateEngine",
     "HyperCertificate",
     "CertificateStore",
+    "CertificationVerdict",
+    "CertificationCriteriaCheck",
+    "GodmodeCertificate",
+    "GodmodeCertificationEngine",
 ]

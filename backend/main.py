@@ -78,6 +78,18 @@ app.include_router(benchmark_router)
 from backend.routers.systems import router as systems_router
 app.include_router(systems_router)
 
+try:
+    from hyper.parity_engine.dashboard import router as parity_dashboard_router
+    app.include_router(parity_dashboard_router)
+except Exception as e:
+    logger.warning(f"Failed to load parity dashboard router: {e}")
+
+try:
+    from hyper.godmode.dashboard import router as godmode_dashboard_router
+    app.include_router(godmode_dashboard_router)
+except Exception as e:
+    logger.warning(f"Failed to load godmode dashboard router: {e}")
+
 # Compatibility router for TestMemoryAPI endpoints in tests
 from fastapi import APIRouter
 compat_router = APIRouter(prefix="/api/v1/systems", tags=["Systems Compat"])

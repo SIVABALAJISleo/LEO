@@ -76,10 +76,20 @@ def synthesized_kernel(data):
         if not is_safe:
             raise ValueError(f"Synthesized code failed safety check: {reasons}")
 
-        # Compile in restricted namespace
-        local_ns: Dict[str, Any] = {}
-        exec(code, {"np": np, "__builtins__": {"float": float, "isinstance": isinstance, "range": range, "len": len}}, local_ns)
-        kernel_fn = local_ns["synthesized_kernel"]
+        OP_MAP = {
+            "sum": np.sum,
+            "prod": np.prod,
+            "mean": np.mean,
+            "min": np.min,
+            "max": np.max,
+            "std": np.std,
+            "var": np.var,
+        }
+        op_func = OP_MAP[operation]
+
+        def kernel_fn(data):
+            arr = np.asarray(data)
+            return float(op_func(arr))
 
         pid = f"PATH-SYNTH-{int(time.time()*1000)%1000000:06d}"
         chain = ["GRAMMAR_BASED_SYNTHESIS", "AST_SAFETY_VALIDATION", "CHUNKED_VECTOR_ACCUMULATOR"]
