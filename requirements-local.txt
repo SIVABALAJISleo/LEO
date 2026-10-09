@@ -5,7 +5,7 @@
 
 # ── Intel OpenVINO ────────────────────────────────────────── #
 --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
-llama-cpp-python==0.3.30
+llama-cpp-python>=0.3.30
 
 --extra-index-url https://download.pytorch.org/whl/cpu
 torch>=2.0.0
@@ -13,8 +13,8 @@ peft>=0.10
 faiss-cpu>=1.7.4
 numba>=0.59.0
 pyopencl>=2024.1
-openvino==2024.4
-openvino-genai==2024.4
+openvino>=2024.4
+openvino-genai>=2024.4
 
 # ── Computer Vision ───────────────────────────────────────── #
 opencv-python-headless>=4.9.0
