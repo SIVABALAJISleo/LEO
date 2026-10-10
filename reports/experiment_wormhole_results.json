@@ -2,10 +2,7 @@
   {
     "algorithm": "1_FULL_RECOMPUTATION",
     "path_type": "EXACT_FRESH",
-    "problem_size": [
-      64,
-      64
-    ],
+    "problem_size": [64, 64],
     "input_digest": "na...",
     "warmup_count": 3,
     "measurement_count": 10,
@@ -31,10 +28,7 @@
   {
     "algorithm": "2_EXACT_CACHE",
     "path_type": "EXACT_REUSED",
-    "problem_size": [
-      64,
-      64
-    ],
+    "problem_size": [64, 64],
     "input_digest": "na...",
     "warmup_count": 3,
     "measurement_count": 10,
@@ -60,10 +54,7 @@
   {
     "algorithm": "3_EXACT_RESIDUAL",
     "path_type": "EXACT_RESIDUAL",
-    "problem_size": [
-      64,
-      64
-    ],
+    "problem_size": [64, 64],
     "input_digest": "na...",
     "warmup_count": 3,
     "measurement_count": 10,
@@ -89,10 +80,7 @@
   {
     "algorithm": "4_SPARSE_EXACT",
     "path_type": "SPARSE_EXACT",
-    "problem_size": [
-      64,
-      64
-    ],
+    "problem_size": [64, 64],
     "input_digest": "na...",
     "warmup_count": 3,
     "measurement_count": 10,
@@ -118,10 +106,7 @@
   {
     "algorithm": "5_LOW_RANK_APPROX",
     "path_type": "APPROXIMATE",
-    "problem_size": [
-      64,
-      64
-    ],
+    "problem_size": [64, 64],
     "input_digest": "na...",
     "warmup_count": 3,
     "measurement_count": 10,
@@ -147,10 +132,7 @@
   {
     "algorithm": "6_TEMPORAL_REUSE",
     "path_type": "EXACT_RESIDUAL",
-    "problem_size": [
-      64,
-      64
-    ],
+    "problem_size": [64, 64],
     "input_digest": "na...",
     "warmup_count": 3,
     "measurement_count": 10,
@@ -176,10 +158,7 @@
   {
     "algorithm": "1_FULL_RECOMPUTATION",
     "path_type": "EXACT_FRESH",
-    "problem_size": [
-      128,
-      128
-    ],
+    "problem_size": [128, 128],
     "input_digest": "na...",
     "warmup_count": 3,
     "measurement_count": 10,
@@ -205,10 +184,7 @@
   {
     "algorithm": "2_EXACT_CACHE",
     "path_type": "EXACT_REUSED",
-    "problem_size": [
-      128,
-      128
-    ],
+    "problem_size": [128, 128],
     "input_digest": "na...",
     "warmup_count": 3,
     "measurement_count": 10,
@@ -234,10 +210,7 @@
   {
     "algorithm": "3_EXACT_RESIDUAL",
     "path_type": "EXACT_RESIDUAL",
-    "problem_size": [
-      128,
-      128
-    ],
+    "problem_size": [128, 128],
     "input_digest": "na...",
     "warmup_count": 3,
     "measurement_count": 10,
@@ -263,10 +236,7 @@
   {
     "algorithm": "4_SPARSE_EXACT",
     "path_type": "SPARSE_EXACT",
-    "problem_size": [
-      128,
-      128
-    ],
+    "problem_size": [128, 128],
     "input_digest": "na...",
     "warmup_count": 3,
     "measurement_count": 10,
@@ -292,10 +262,7 @@
   {
     "algorithm": "5_LOW_RANK_APPROX",
     "path_type": "APPROXIMATE",
-    "problem_size": [
-      128,
-      128
-    ],
+    "problem_size": [128, 128],
     "input_digest": "na...",
     "warmup_count": 3,
     "measurement_count": 10,
@@ -321,10 +288,7 @@
   {
     "algorithm": "6_TEMPORAL_REUSE",
     "path_type": "EXACT_RESIDUAL",
-    "problem_size": [
-      128,
-      128
-    ],
+    "problem_size": [128, 128],
     "input_digest": "na...",
     "warmup_count": 3,
     "measurement_count": 10,
@@ -350,10 +314,7 @@
   {
     "algorithm": "1_FULL_RECOMPUTATION",
     "path_type": "EXACT_FRESH",
-    "problem_size": [
-      256,
-      256
-    ],
+    "problem_size": [256, 256],
     "input_digest": "na...",
     "warmup_count": 3,
     "measurement_count": 10,
@@ -379,10 +340,7 @@
   {
     "algorithm": "2_EXACT_CACHE",
     "path_type": "EXACT_REUSED",
-    "problem_size": [
-      256,
-      256
-    ],
+    "problem_size": [256, 256],
     "input_digest": "na...",
     "warmup_count": 3,
     "measurement_count": 10,
@@ -408,10 +366,7 @@
   {
     "algorithm": "3_EXACT_RESIDUAL",
     "path_type": "EXACT_RESIDUAL",
-    "problem_size": [
-      256,
-      256
-    ],
+    "problem_size": [256, 256],
     "input_digest": "na...",
     "warmup_count": 3,
     "measurement_count": 10,
@@ -437,10 +392,7 @@
   {
     "algorithm": "4_SPARSE_EXACT",
     "path_type": "SPARSE_EXACT",
-    "problem_size": [
-      256,
-      256
-    ],
+    "problem_size": [256, 256],
     "input_digest": "na...",
     "warmup_count": 3,
     "measurement_count": 10,
@@ -466,10 +418,7 @@
   {
     "algorithm": "5_LOW_RANK_APPROX",
     "path_type": "APPROXIMATE",
-    "problem_size": [
-      256,
-      256
-    ],
+    "problem_size": [256, 256],
     "input_digest": "na...",
     "warmup_count": 3,
     "measurement_count": 10,
@@ -495,10 +444,7 @@
   {
     "algorithm": "6_TEMPORAL_REUSE",
     "path_type": "EXACT_RESIDUAL",
-    "problem_size": [
-      256,
-      256
-    ],
+    "problem_size": [256, 256],
     "input_digest": "na...",
     "warmup_count": 3,
     "measurement_count": 10,
@@ -524,10 +470,7 @@
   {
     "algorithm": "1_FULL_RECOMPUTATION",
     "path_type": "EXACT_FRESH",
-    "problem_size": [
-      512,
-      512
-    ],
+    "problem_size": [512, 512],
     "input_digest": "na...",
     "warmup_count": 3,
     "measurement_count": 10,
@@ -553,10 +496,7 @@
   {
     "algorithm": "2_EXACT_CACHE",
     "path_type": "EXACT_REUSED",
-    "problem_size": [
-      512,
-      512
-    ],
+    "problem_size": [512, 512],
     "input_digest": "na...",
     "warmup_count": 3,
     "measurement_count": 10,
@@ -582,10 +522,7 @@
   {
     "algorithm": "3_EXACT_RESIDUAL",
     "path_type": "EXACT_RESIDUAL",
-    "problem_size": [
-      512,
-      512
-    ],
+    "problem_size": [512, 512],
     "input_digest": "na...",
     "warmup_count": 3,
     "measurement_count": 10,
@@ -611,10 +548,7 @@
   {
     "algorithm": "4_SPARSE_EXACT",
     "path_type": "SPARSE_EXACT",
-    "problem_size": [
-      512,
-      512
-    ],
+    "problem_size": [512, 512],
     "input_digest": "na...",
     "warmup_count": 3,
     "measurement_count": 10,
@@ -640,10 +574,7 @@
   {
     "algorithm": "5_LOW_RANK_APPROX",
     "path_type": "APPROXIMATE",
-    "problem_size": [
-      512,
-      512
-    ],
+    "problem_size": [512, 512],
     "input_digest": "na...",
     "warmup_count": 3,
     "measurement_count": 10,
@@ -669,10 +600,7 @@
   {
     "algorithm": "6_TEMPORAL_REUSE",
     "path_type": "EXACT_RESIDUAL",
-    "problem_size": [
-      512,
-      512
-    ],
+    "problem_size": [512, 512],
     "input_digest": "na...",
     "warmup_count": 3,
     "measurement_count": 10,

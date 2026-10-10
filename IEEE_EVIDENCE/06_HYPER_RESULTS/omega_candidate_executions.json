@@ -85,10 +85,7 @@
     "duel_candidates_evaluated": 3,
     "survived_candidates": 1,
     "counterexamples_stored": 1,
-    "minimal_counterexample_shape": [
-      2,
-      2
-    ],
+    "minimal_counterexample_shape": [2, 2],
     "derived_negative_constraints": 1,
     "scientific_truth_enforced": true
   }

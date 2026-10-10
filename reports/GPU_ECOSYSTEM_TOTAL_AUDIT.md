@@ -4,7 +4,7 @@
 **Universal Mission**: Total Software-Defined External-GPU Ecosystem Replacement  
 **Hardware Substrate**: Fixed Intel Core i5-12450H (8 Cores: 4P+4E, 12 Threads) + Intel UHD Graphics (48 EUs) + 16 GB Unified Memory  
 **Audit Date**: September 2026  
-**Auditor**: Principal Systems Architect & Scientific Auditor  
+**Auditor**: Principal Systems Architect & Scientific Auditor
 
 ---
 
@@ -13,7 +13,9 @@
 Project **Total GPU Omega** expands HYPER from an isolated compute kernel accelerator into a **complete universal software-defined GPU ecosystem**. The target is not to simulate 21,760 silicon transistors, but to satisfy the **useful, observable, and contract-defined capabilities** normally delegated to discrete graphics accelerators.
 
 ### Complete Ecosystem Coverage:
+
 Across all 15 operational GPU domains:
+
 1. **COMPUTE**: Universal dense/sparse GEMM, 3D spectral FFT, parallel reduction, and tensor contractions.
 2. **AI & MACHINE LEARNING**: Lossless speculative decoding, attention pruning, paged KV-cache prefix memoization, and symmetric INT8 quantization.
 3. **GRAPHICS**: Tiled SIMD software rasterization, depth/stencil testing, vertex projection, and dynamic mesh LOD coarsening.

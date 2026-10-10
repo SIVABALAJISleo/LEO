@@ -1,10 +1,13 @@
 # HYPER Information Sufficiency Engine
 
 ## 1. Overview
+
 The Information Sufficiency Engine answers the foundational question of Minimum Verified Computation:
+
 > **"What information is actually required by the user's contract, and what can be safely ignored or derived?"**
 
 Conventional computing computes all elements of an intermediate tensor or state array blindly. The Information Sufficiency Engine traces output dependencies backwards from the user-facing contract to identify:
+
 1. **Required Outputs**: The subset of outputs inspected by downstream consumers.
 2. **Output Sensitivity**: The Jacobian $\frac{\partial \text{Output}}{\partial \text{Input}}$ identifying elements whose variations fall below the contract's error tolerance $\epsilon$.
 3. **Discardable Dimensions**: Unused channels, zero-padded margins, and high-frequency noise.

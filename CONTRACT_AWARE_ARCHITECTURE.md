@@ -87,9 +87,10 @@ Outputs telemetry to `CONTRACT_AWARE_RESULTS.json`.
 
 ## 7. Contract-Aware Sieve Architecture (CASA) Protocol
 
-The **Contract-Aware Sieve Architecture (CASA)** operates under the principle of the *"Leaf bypassing the Refinery"*, deploying mathematical algorithms that render missing discrete GPU hardware irrelevant.
+The **Contract-Aware Sieve Architecture (CASA)** operates under the principle of the _"Leaf bypassing the Refinery"_, deploying mathematical algorithms that render missing discrete GPU hardware irrelevant.
 
 ### Four Architectural Transformation Phases
+
 1. **Phase 1: Arithmetic Dematerialization (T-MAC Bypass)**
    - 1.58-bit ternary weights $W \in \{-1, 0, +1\}$.
    - Precomputed Lookup Tables (LUT) vectorized with AVX2 on P-cores.
@@ -108,7 +109,7 @@ The **Contract-Aware Sieve Architecture (CASA)** operates under the principle of
    - L3-bound SimHash LSH replaces dense spatial searches with $O(1)$ Hamming distance bucketing.
 
 ### Verification Command
+
 ```bash
 python -m pytest tests/test_casa_protocol.py -v
 ```
-

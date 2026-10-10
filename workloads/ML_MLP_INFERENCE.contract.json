@@ -3,26 +3,17 @@
   "description": "Multi-layer perceptron forward inference (Dense -> ReLU -> Dense)",
   "input_domain": {
     "A": {
-      "shape": [
-        64,
-        128
-      ],
+      "shape": [64, 128],
       "dtype": "FP32"
     },
     "B": {
-      "shape": [
-        128,
-        64
-      ],
+      "shape": [128, 64],
       "dtype": "FP32"
     }
   },
   "output_domain": {
     "output": {
-      "shape": [
-        64,
-        64
-      ],
+      "shape": [64, 64],
       "dtype": "FP32"
     }
   },

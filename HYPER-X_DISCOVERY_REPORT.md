@@ -5,17 +5,20 @@
 **Workload**: `GEMM` (GEMM_128x128x128)  
 **Search Mode**: `DEEP`  
 **Target Hardware**: Intel Core i5-12450H | Intel integrated UHD Graphics | 16 GB RAM  
-**Software Constraint**: 100% Software-Only. Zero Discrete GPUs. Zero Cloud Accelerators.  
+**Software Constraint**: 100% Software-Only. Zero Discrete GPUs. Zero Cloud Accelerators.
 
 ---
 
 ## 1. Executive Summary & Mission
+
 The central principle of the HYPER-X Wormhole Compiler is:
+
 > **DO NOT COMPUTE WHAT DOES NOT NEED TO BE COMPUTED.**
 
 Instead of attempting to magically transform an Intel i5-12450H CPU and integrated UHD Graphics into an RTX-class physical discrete GPU (which is physically impossible under silicon scaling laws), HYPER-X searches for **computational wormholes**: alternative mathematical pathways that satisfy the exact application contract while eliminating unnecessary computation.
 
 In this autonomous research run:
+
 - **Work Elimination Achieved**: **70.0%** mathematical FLOP reduction.
 - **Measured Raw Hardware Speedup**: **0.19x** over canonical BLAS execution.
 - **Continuous Research Parity**: **75.15%** across all 30 scientific dimensions.
@@ -26,6 +29,7 @@ In this autonomous research run:
 ---
 
 ## 2. Dynamic Hardware Fingerprint
+
 - **Host Processor**: 13th Gen Intel(R) Core(TM) i5-13420H (8 physical cores / 12 threads)
 - **Host / Target iGPU**: Intel(R) UHD Graphics (iGPU) (48 EUs, OpenCL/LevelZero)
 - **Vector Instruction Sets**: AVX2, FMA, SSE4.2, VNNI, AVX_VNNI
@@ -36,6 +40,7 @@ In this autonomous research run:
 ---
 
 ## 3. Workload Contract & Observable IR
+
 - **Workload Domain**: `matrix_multiply`
 - **Dimensions / Shape**: 128x128x128 Dense Matrix Multiply
 - **Precision**: `float32`
@@ -47,9 +52,10 @@ In this autonomous research run:
 ---
 
 ## 4. Information Boundary & Counterfactual Validation
+
 - **Total Dependency Nodes in Canonical Graph**: 4
 - **Classification Summary**:
-{
+  {
   "ESSENTIAL": 3,
   "REDUNDANT": 0,
   "PREDICTABLE": 0,
@@ -57,13 +63,14 @@ In this autonomous research run:
   "APPROXIMABLE": 1,
   "RECONSTRUCTABLE": 0,
   "UNKNOWN": 0
-}
+  }
 - **Counterfactual Certificate**: `CERT_CF_396635b5`
 - **Validation Rule**: `REMOVE -> TEST -> FALSIFY -> ACCEPT/REJECT`. UNKNOWN operations are never deleted without proof.
 
 ---
 
 ## 5. Discovered Representation & Algorithm Genome
+
 - **Winning Algorithm**: `Hypothesis-2: Low-Rank with Adaptive Residual Correction`
 - **Grammar Expression**: `LOW_RANK_DECOMPOSE >> MATMUL >> RESIDUAL_CORRECTION`
 - **Representation Type**: `FACTORED`
@@ -73,31 +80,34 @@ In this autonomous research run:
 ---
 
 ## 6. Multi-Objective Evolutionary Search (Pareto Frontier)
+
 Search explored 5 candidate variants over 3 generations:
 
-| Iteration | Hypothesis | Grammar Expression | Work Elim | Speedup | Numerical Error | Status |
-|:---|:---|:---|:---:|:---:|:---:|:---:|
-| 1 | Hypothesis-1: Naive Truncated  | `LOW_RANK_DECOMPOSE >> MATMUL` | 85.0% | 0.02x | 7.67e-01 | REJECTED |
-| 2 | Hypothesis-2: Low-Rank with Ad | `LOW_RANK_DECOMPOSE >> MATMUL >> RES` | 70.0% | 0.27x | 5.00e-07 | VERIFIED |
-| 3 | Hypothesis-3: Sparse Condition | `SPARSE_TRANSFORM >> MATMUL` | 40.0% | 0.57x | 2.99e-06 | VERIFIED |
-| 4 | Hypothesis-4: Block-Tiled Mort | `MORTON_REORDER >> BLAS_TILED_MATMUL` | 0.0% | 1.40x | 3.50e-07 | VERIFIED |
-| 5 | Hypothesis-5: Output Projected | `OUTPUT_PROJECT >> MATMUL` | 0.0% | 1.50x | 3.50e-07 | VERIFIED |
+| Iteration | Hypothesis                     | Grammar Expression                    | Work Elim | Speedup | Numerical Error |  Status  |
+| :-------- | :----------------------------- | :------------------------------------ | :-------: | :-----: | :-------------: | :------: |
+| 1         | Hypothesis-1: Naive Truncated  | `LOW_RANK_DECOMPOSE >> MATMUL`        |   85.0%   |  0.02x  |    7.67e-01     | REJECTED |
+| 2         | Hypothesis-2: Low-Rank with Ad | `LOW_RANK_DECOMPOSE >> MATMUL >> RES` |   70.0%   |  0.27x  |    5.00e-07     | VERIFIED |
+| 3         | Hypothesis-3: Sparse Condition | `SPARSE_TRANSFORM >> MATMUL`          |   40.0%   |  0.57x  |    2.99e-06     | VERIFIED |
+| 4         | Hypothesis-4: Block-Tiled Mort | `MORTON_REORDER >> BLAS_TILED_MATMUL` |   0.0%    |  1.40x  |    3.50e-07     | VERIFIED |
+| 5         | Hypothesis-5: Output Projected | `OUTPUT_PROJECT >> MATMUL`            |   0.0%    |  1.50x  |    3.50e-07     | VERIFIED |
 
 ---
 
 ## 7. Execution Benchmark (CPU + Intel iGPU Fabric)
+
 Measurements taken on Intel Core i5 with Intel UHD integrated GPU:
 
-| Metric | Reference Baseline | Wormhole Candidate | Delta / Speedup |
-|:---|:---:|:---:|:---:|
-| **Cold-Start Latency** | 0.259 ms | 1.333 ms | **0.19x faster** |
-| **Warm Cache Latency** | 0.205 ms | 1.133 ms | **0.18x faster** |
-| **Mathematical FLOPs** | Canonical $O(N^3)$ | Subspace $O(r N^2)$ | **70.0% eliminated** |
-| **Execution Partition** | CPU Single Thread | 50% iGPU USM / 50% CPU AVX2 | Heterogeneous Co-execution |
+| Metric                  | Reference Baseline |     Wormhole Candidate      |      Delta / Speedup       |
+| :---------------------- | :----------------: | :-------------------------: | :------------------------: |
+| **Cold-Start Latency**  |      0.259 ms      |          1.333 ms           |      **0.19x faster**      |
+| **Warm Cache Latency**  |      0.205 ms      |          1.133 ms           |      **0.18x faster**      |
+| **Mathematical FLOPs**  | Canonical $O(N^3)$ |     Subspace $O(r N^2)$     |    **70.0% eliminated**    |
+| **Execution Partition** | CPU Single Thread  | 50% iGPU USM / 50% CPU AVX2 | Heterogeneous Co-execution |
 
 ---
 
 ## 8. Multi-Tier Verification Evidence
+
 - **Tier 1 Bitwise Exactness**: Bitwise variation within IEEE 754 reassociation limits.
 - **Tier 2 Numerical Error**: Relative Frobenius norm error = `4.80e-07` <= `1.00e-03` (**PASSED**).
 - **Tier 3 Freivalds Probabilistic Proof**: 15 independent rounds with random Boolean projection vectors.
@@ -108,7 +118,9 @@ Measurements taken on Intel Core i5 with Intel UHD integrated GPU:
 ---
 
 ## 9. Adversarial Falsification Battery
+
 The candidate was subjected to the Scientific Falsification Battery:
+
 - **Pathological Condition Numbers**: Conditioned matrices with singular value decay tested -> **SURVIVED**.
 - **Extreme Numerical Scales**: Tested values at $10^{-8}$ and $10^{8}$ -> **SURVIVED**.
 - **Zero & Sparse Dominance**: Matrix with 95% zeros tested -> **SURVIVED**.
@@ -117,6 +129,7 @@ The candidate was subjected to the Scientific Falsification Battery:
 ---
 
 ## 10. Blind Holdout Anti-Overfitting Validation
+
 - **Sealed Workload**: `SEALED_HOLDOUT_GEMM`
 - **Sealed Output Hash**: Output hidden from candidate generator during search.
 - **Static Leakage Audit**: **PASSED** (Zero hardcoded benchmarks, zero memorization).
@@ -157,16 +170,20 @@ Application Contract Parity:      PASS (96.0% satisfied)
 ---
 
 ## 12. Cataloged Failure Knowledge Base
+
 The search engine persisted 1 dead-end pathways to avoid future repeated exploration:
+
 - **[NUMERICAL]** `LOW_RANK_DECOMPOSE >> MATMUL`: Failed Freivalds check (error 7.67e-01 > tolerance 1.00e-03).
 
 ---
 
 ## 13. Cryptographic Provenance & Replay
+
 - **Workload Hash**: `13994aa300f8b374`
 - **Candidate Hash**: `WORMHOLE_GEMM_RESEARCH_AUTO_bad2ea37`
 - **Provenance Certificate ID**: `CERT_CF_396635b5`
 - **Replay Command**: `python -m hyper_x.cli reproduce --candidate WORMHOLE_GEMM_RESEARCH_AUTO_bad2ea37`
 
 ---
-*Report automatically generated by HYPER-X Wormhole Compiler Autonomous Research Engine.*
+
+_Report automatically generated by HYPER-X Wormhole Compiler Autonomous Research Engine._

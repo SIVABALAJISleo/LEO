@@ -3,37 +3,21 @@
   "description": "Transformer Scaled Dot-Product Attention (Batch=1, Seq=32, HeadDim=64)",
   "input_domain": {
     "Q": {
-      "shape": [
-        1,
-        32,
-        64
-      ],
+      "shape": [1, 32, 64],
       "dtype": "FP32"
     },
     "K": {
-      "shape": [
-        1,
-        32,
-        64
-      ],
+      "shape": [1, 32, 64],
       "dtype": "FP32"
     },
     "V": {
-      "shape": [
-        1,
-        32,
-        64
-      ],
+      "shape": [1, 32, 64],
       "dtype": "FP32"
     }
   },
   "output_domain": {
     "context": {
-      "shape": [
-        1,
-        32,
-        64
-      ],
+      "shape": [1, 32, 64],
       "dtype": "FP32"
     }
   },

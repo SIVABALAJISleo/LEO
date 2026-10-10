@@ -1,6 +1,7 @@
 # LEO / HYPER-Ω
 
 ## External-GPU-Equivalent Computational Pathway Engine
+
 ### Necessary-Work & Computational-Escape Architecture
 
 > **"Change the path. Preserve the result."**  
@@ -12,6 +13,7 @@
 ---
 
 ### Four Independent Parity Tracks
+
 1. **Track 1: Raw Hardware Parity** — `NO_HARDWARE_PARITY`. Software cannot physically fabricate CUDA cores or GDDR7 bandwidth.
 2. **Track 2: Same-Computation Parity** — Evaluates whether candidate executes identical mathematical graphs and kernels.
 3. **Track 3: Reduced-Computation / Exact Parity** — Discovers verified computational wormholes reducing FLOPs and DRAM traffic.
@@ -20,16 +22,18 @@
 ---
 
 ### Canonical Experiments & Live Measured Results
+
 All experiments execute live on physical hardware and issue cryptographically sealed SHA-256 work certificates:
 
-| Workload ID | Domain | Equivalence Mode | Candidate Latency | Error / Quality | Status |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **`HYPER_OMEGA_001`** | Dense Linear Algebra ($512 \times 512$ FP32) | NUMERICALLY_EQUIVALENT | **2.31 ms** | $0.00\text{e}+00$ max abs error | **VERIFIED PASS** |
-| **`HYPER_OMEGA_GRAPHICS_001`** | Real-Time Dynamic Scene Reprojection | PERCEPTUAL_EQUIVALENT | **58.12 ms** | **69.14 dB PSNR, 1.0000 SSIM** | **VERIFIED PASS** |
-| **`HYPER_OMEGA_LLM_001`** | Speculative Autoregressive Logit Step | NUMERICALLY_EQUIVALENT | **9.06 ms** | $0.00\text{e}+00$ max abs error | **VERIFIED PASS** |
-| **`HYPER_OMEGA_SCIENCE_001`** | Toroidal Heat Diffusion PDE Stencil | NUMERICALLY_EQUIVALENT | **2.11 ms** | $0.00\text{e}+00$ error ($5.68\times$ speedup) | **VERIFIED PASS** |
+| Workload ID                    | Domain                                       | Equivalence Mode       | Candidate Latency | Error / Quality                                | Status            |
+| :----------------------------- | :------------------------------------------- | :--------------------- | :---------------- | :--------------------------------------------- | :---------------- |
+| **`HYPER_OMEGA_001`**          | Dense Linear Algebra ($512 \times 512$ FP32) | NUMERICALLY_EQUIVALENT | **2.31 ms**       | $0.00\text{e}+00$ max abs error                | **VERIFIED PASS** |
+| **`HYPER_OMEGA_GRAPHICS_001`** | Real-Time Dynamic Scene Reprojection         | PERCEPTUAL_EQUIVALENT  | **58.12 ms**      | **69.14 dB PSNR, 1.0000 SSIM**                 | **VERIFIED PASS** |
+| **`HYPER_OMEGA_LLM_001`**      | Speculative Autoregressive Logit Step        | NUMERICALLY_EQUIVALENT | **9.06 ms**       | $0.00\text{e}+00$ max abs error                | **VERIFIED PASS** |
+| **`HYPER_OMEGA_SCIENCE_001`**  | Toroidal Heat Diffusion PDE Stencil          | NUMERICALLY_EQUIVALENT | **2.11 ms**       | $0.00\text{e}+00$ error ($5.68\times$ speedup) | **VERIFIED PASS** |
 
 **Universal Reproduction**:
+
 ```powershell
 python scripts/reproduce_experiment.py HYPER_OMEGA_001
 ```
@@ -37,6 +41,7 @@ python scripts/reproduce_experiment.py HYPER_OMEGA_001
 ---
 
 ### Authoritative Architecture & Scientific Documentation
+
 - **Master Implementation Report**: [HYPER_OMEGA_IMPLEMENTATION_REPORT.md](file:///c:/Users/sivab/OneDrive/Documents/HYPER/HYPER_OMEGA_IMPLEMENTATION_REPORT.md)
 - **Repository Forensic Audit**: [docs/HYPER_OMEGA_REPOSITORY_AUDIT.md](file:///c:/Users/sivab/OneDrive/Documents/HYPER/docs/HYPER_OMEGA_REPOSITORY_AUDIT.md)
 - **Claim vs Evidence Matrix**: [docs/CLAIM_EVIDENCE_MATRIX.md](file:///c:/Users/sivab/OneDrive/Documents/HYPER/docs/CLAIM_EVIDENCE_MATRIX.md)
@@ -58,21 +63,21 @@ python scripts/reproduce_experiment.py HYPER_OMEGA_001
 
 **Hardware target:**
 
-* Intel Core i5-12450H
-* 8 cores / 12 threads
-* Intel integrated UHD graphics
-* 16 GB RAM
-* 512 GB SSD
-* Windows 11
+- Intel Core i5-12450H
+- 8 cores / 12 threads
+- Intel integrated UHD graphics
+- 16 GB RAM
+- 512 GB SSD
+- Windows 11
 
 **Hardware constraint:**
 
-* No dedicated GPU
-* No external accelerator
-* No FPGA
-* No ASIC
-* No paid cloud GPU
-* No hardware modification
+- No dedicated GPU
+- No external accelerator
+- No FPGA
+- No ASIC
+- No paid cloud GPU
+- No hardware modification
 
 ---
 
@@ -148,26 +153,26 @@ HYPER is a collection and orchestration layer for computational elimination tech
 
 Major research areas include:
 
-* exact memoization and cache reuse
-* dependency-aware reuse
-* incremental computation
-* residual computation
-* common-subexpression elimination
-* algebraic reformulation
-* low-rank approximation
-* sparse computation
-* compressed representations
-* mixed/adaptive precision
-* prediction
-* speculative execution
-* temporal reuse
-* reconstruction
-* heterogeneous CPU+iGPU execution
-* communication avoidance
-* kernel fusion
-* memory movement reduction
-* application-aware verification
-* adversarial benchmark validation
+- exact memoization and cache reuse
+- dependency-aware reuse
+- incremental computation
+- residual computation
+- common-subexpression elimination
+- algebraic reformulation
+- low-rank approximation
+- sparse computation
+- compressed representations
+- mixed/adaptive precision
+- prediction
+- speculative execution
+- temporal reuse
+- reconstruction
+- heterogeneous CPU+iGPU execution
+- communication avoidance
+- kernel fusion
+- memory movement reduction
+- application-aware verification
+- adversarial benchmark validation
 
 The repository contains multiple generations and experimental implementations of these concepts, including the `hyper100` and `HYPER_v6_BREAKTHROUGH` workstreams.
 
@@ -177,13 +182,13 @@ The repository contains multiple generations and experimental implementations of
 
 HYPER does **not** create:
 
-* CUDA cores
-* Tensor Cores
-* RT Cores
-* dedicated VRAM
-* NVIDIA memory bandwidth
-* NVIDIA hardware instructions
-* datacenter-class hardware throughput
+- CUDA cores
+- Tensor Cores
+- RT Cores
+- dedicated VRAM
+- NVIDIA memory bandwidth
+- NVIDIA hardware instructions
+- datacenter-class hardware throughput
 
 HYPER does not claim to physically transform an i5-12450H into an RTX 5090, H100, or equivalent hardware.
 
@@ -211,10 +216,10 @@ Physical compute capability.
 
 Examples:
 
-* FLOPS
-* memory bandwidth
-* dedicated accelerator resources
-* specialized GPU hardware
+- FLOPS
+- memory bandwidth
+- dedicated accelerator resources
+- specialized GPU hardware
 
 HYPER does **not** claim software can reproduce this hardware.
 
@@ -234,10 +239,10 @@ This may permit a lower-cost formulation where the application contract allows i
 
 The required output is delivered with the required:
 
-* correctness
-* quality
-* latency
-* throughput
+- correctness
+- quality
+- latency
+- throughput
 
 This is the most important practical target for HYPER.
 
@@ -383,13 +388,13 @@ where `a` is a candidate execution strategy.
 
 The cost function may incorporate:
 
-* latency
-* energy
-* memory
-* verification cost
-* fallback risk
-* CPU utilization
-* iGPU utilization
+- latency
+- energy
+- memory
+- verification cost
+- fallback risk
+- CPU utilization
+- iGPU utilization
 
 The implementation must use measurements where available rather than treating theoretical peak specifications as measured performance.
 
@@ -453,12 +458,12 @@ where mathematically valid.
 
 Potential targets include:
 
-* matrices
-* images
-* video
-* simulations
-* repeated ML operations
-* dynamic application state
+- matrices
+- images
+- video
+- simulations
+- repeated ML operations
+- dynamic application state
 
 ---
 
@@ -498,16 +503,16 @@ HYPER investigates exact or conditional mathematical transformations that reduce
 
 Examples include:
 
-* Woodbury identity
-* Sherman-Morrison
-* block matrix methods
-* factorization
-* separable transforms
-* FFT-based formulations
-* Winograd-style transforms
-* structured matrix methods
-* incremental linear algebra
-* divide-and-conquer formulations
+- Woodbury identity
+- Sherman-Morrison
+- block matrix methods
+- factorization
+- separable transforms
+- FFT-based formulations
+- Winograd-style transforms
+- structured matrix methods
+- incremental linear algebra
+- divide-and-conquer formulations
 
 Each transformation must document:
 
@@ -527,13 +532,13 @@ verification strategy
 
 HYPER analyzes whether workloads contain:
 
-* exact zeros
-* near-zero values
-* block sparsity
-* temporal sparsity
-* spatial sparsity
-* structured sparsity
-* activation sparsity
+- exact zeros
+- near-zero values
+- block sparsity
+- temporal sparsity
+- spatial sparsity
+- structured sparsity
+- activation sparsity
 
 Approximate zeros are not treated as exact zeros unless the contract and error analysis justify the transformation.
 
@@ -543,15 +548,15 @@ Approximate zeros are not treated as exact zeros unless the contract and error a
 
 HYPER investigates:
 
-* SVD
-* truncated SVD
-* randomized SVD
-* QR
-* CUR
-* Nyström
-* tensor decompositions
-* tensor-train representations
-* structured matrix factorization
+- SVD
+- truncated SVD
+- randomized SVD
+- QR
+- CUR
+- Nyström
+- tensor decompositions
+- tensor-train representations
+- structured matrix factorization
 
 The key question is not:
 
@@ -571,12 +576,12 @@ Can it be compressed enough to reduce computation while still satisfying the app
 
 Potential execution modes include:
 
-* FP32
-* FP16
-* BF16 where supported
-* INT8
-* INT4
-* ternary/binary techniques where appropriate
+- FP32
+- FP16
+- BF16 where supported
+- INT8
+- INT4
+- ternary/binary techniques where appropriate
 
 Precision reduction must always be classified correctly.
 
@@ -656,27 +661,27 @@ HYPER is designed to use both available compute resources where beneficial.
 
 Best suited to:
 
-* dependency analysis
-* graph traversal
-* control-heavy operations
-* sparse bookkeeping
-* compression
-* decompression
-* verification
-* irregular workloads
-* exact fallback
-* SIMD workloads
+- dependency analysis
+- graph traversal
+- control-heavy operations
+- sparse bookkeeping
+- compression
+- decompression
+- verification
+- irregular workloads
+- exact fallback
+- SIMD workloads
 
 ## Intel UHD
 
 Potentially suited to:
 
-* regular dense kernels
-* tiled arithmetic
-* image-space operations
-* parallel reconstruction
-* regular reductions
-* suitable compute workloads
+- regular dense kernels
+- tiled arithmetic
+- image-space operations
+- parallel reconstruction
+- regular reductions
+- suitable compute workloads
 
 The runtime must not assume the iGPU is always faster.
 
@@ -723,17 +728,17 @@ HYPER treats memory traffic as an important source of overhead.
 
 Research areas include:
 
-* buffer reuse
-* memory pooling
-* lazy materialization
-* tiled layouts
-* cache locality
-* zero-copy where supported
-* reduced serialization
-* reduced CPU↔GPU movement
-* communication avoidance
-* kernel fusion
-* intermediate elimination
+- buffer reuse
+- memory pooling
+- lazy materialization
+- tiled layouts
+- cache locality
+- zero-copy where supported
+- reduced serialization
+- reduced CPU↔GPU movement
+- communication avoidance
+- kernel fusion
+- intermediate elimination
 
 The objective is:
 
@@ -858,12 +863,12 @@ adversarial input
 
 The system must detect:
 
-* hidden precomputation
-* lookup-table cheating
-* fixed benchmark answers
-* benchmark-specific shortcuts
-* workload substitution
-* cache contamination
+- hidden precomputation
+- lookup-table cheating
+- fixed benchmark answers
+- benchmark-specific shortcuts
+- workload substitution
+- cache contamination
 
 ---
 
@@ -940,12 +945,12 @@ HYPER comparisons should distinguish actual hardware capabilities from applicati
 
 Modern NVIDIA systems provide specialized resources including:
 
-* massive parallel compute
-* high memory bandwidth
-* Tensor acceleration
-* ray-tracing hardware
-* dedicated memory subsystems
-* specialized execution pipelines
+- massive parallel compute
+- high memory bandwidth
+- Tensor acceleration
+- ray-tracing hardware
+- dedicated memory subsystems
+- specialized execution pipelines
 
 HYPER does not attempt to reproduce those resources.
 
@@ -1005,34 +1010,34 @@ Current application-oriented research includes:
 
 Investigate:
 
-* temporal reuse
-* adaptive sampling
-* image-space reconstruction
-* visibility reuse
-* selective recomputation
-* CPU preprocessing
-* UHD reconstruction
+- temporal reuse
+- adaptive sampling
+- image-space reconstruction
+- visibility reuse
+- selective recomputation
+- CPU preprocessing
+- UHD reconstruction
 
 ## Unreal Engine
 
 Investigate:
 
-* visibility reuse
-* adaptive resolution
-* temporal information
-* selective rendering
-* post-processing reduction
-* residual computation
+- visibility reuse
+- adaptive resolution
+- temporal information
+- selective rendering
+- post-processing reduction
+- residual computation
 
 ## Unity
 
 Investigate:
 
-* sparse state updates
-* particle locality
-* temporal coherence
-* selective particle update
-* CPU/UHD partitioning
+- sparse state updates
+- particle locality
+- temporal coherence
+- selective particle update
+- CPU/UHD partitioning
 
 These are research targets, not claims that the complete engines are already replaced.
 
@@ -1070,24 +1075,24 @@ The accounting must prevent double counting.
 
 Depending on workload, HYPER records:
 
-* latency
-* throughput
-* FPS
-* FLOPs where meaningful
-* executed operations
-* eliminated operations
-* memory usage
-* CPU utilization
-* iGPU utilization
-* transfer time
-* synchronization time
-* thermal behavior
-* power/energy where measurable
-* correctness
-* numerical error
-* perceptual quality
-* fallback rate
-* cache hit rate
+- latency
+- throughput
+- FPS
+- FLOPs where meaningful
+- executed operations
+- eliminated operations
+- memory usage
+- CPU utilization
+- iGPU utilization
+- transfer time
+- synchronization time
+- thermal behavior
+- power/energy where measurable
+- correctness
+- numerical error
+- perceptual quality
+- fallback rate
+- cache hit rate
 
 Unmeasured values must remain explicitly marked as unmeasured.
 
@@ -1263,60 +1268,60 @@ Its failure is recorded as research evidence.
 
 ## Phase 1 — Correctness Foundation
 
-* exact cache semantics
-* contract schema
-* verification interface
-* execution certificates
-* benchmark provenance
+- exact cache semantics
+- contract schema
+- verification interface
+- execution certificates
+- benchmark provenance
 
 ## Phase 2 — Work Elimination
 
-* dependency graph
-* reuse
-* common-subexpression elimination
-* incremental computation
-* residual computation
+- dependency graph
+- reuse
+- common-subexpression elimination
+- incremental computation
+- residual computation
 
 ## Phase 3 — Mathematical Reduction
 
-* reformulation
-* low-rank
-* sparse execution
-* structured computation
-* complexity reduction
+- reformulation
+- low-rank
+- sparse execution
+- structured computation
+- complexity reduction
 
 ## Phase 4 — Approximate Execution
 
-* adaptive precision
-* prediction
-* speculative execution
-* reconstruction
-* application-level quality contracts
+- adaptive precision
+- prediction
+- speculative execution
+- reconstruction
+- application-level quality contracts
 
 ## Phase 5 — Heterogeneous Runtime
 
-* CPU calibration
-* Intel UHD calibration
-* hybrid scheduling
-* transfer minimization
-* kernel fusion
+- CPU calibration
+- Intel UHD calibration
+- hybrid scheduling
+- transfer minimization
+- kernel fusion
 
 ## Phase 6 — Application Integration
 
-* numerical workloads
-* image/video workloads
-* rendering workloads
-* simulation workloads
-* ML workloads
+- numerical workloads
+- image/video workloads
+- rendering workloads
+- simulation workloads
+- ML workloads
 
 ## Phase 7 — Scientific Validation
 
-* blind holdouts
-* adversarial workloads
-* contamination tests
-* long-duration benchmarks
-* regression testing
-* reproducibility
+- blind holdouts
+- adversarial workloads
+- contamination tests
+- long-duration benchmarks
+- regression testing
+- reproducibility
 
 ---
 
@@ -1419,16 +1424,16 @@ Always check the module's documentation and benchmark status before treating it 
 
 Useful contributions should prioritize:
 
-* measurable improvements
-* correctness
-* reproducibility
-* algorithmic complexity reduction
-* memory reduction
-* data-movement reduction
-* CPU+iGPU utilization
-* verification
-* adversarial testing
-* benchmark quality
+- measurable improvements
+- correctness
+- reproducibility
+- algorithmic complexity reduction
+- memory reduction
+- data-movement reduction
+- CPU+iGPU utilization
+- verification
+- adversarial testing
+- benchmark quality
 
 Avoid contributions that merely inflate benchmark numbers without preserving the workload contract.
 

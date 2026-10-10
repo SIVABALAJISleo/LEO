@@ -3,19 +3,13 @@
   "description": "Spatial gradient edge detection over 128x128 grayscale image",
   "input_domain": {
     "image": {
-      "shape": [
-        128,
-        128
-      ],
+      "shape": [128, 128],
       "dtype": "FP32"
     }
   },
   "output_domain": {
     "gradient": {
-      "shape": [
-        126,
-        126
-      ],
+      "shape": [126, 126],
       "dtype": "FP32"
     }
   },

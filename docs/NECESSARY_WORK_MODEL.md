@@ -1,6 +1,7 @@
 # HYPER-Ω Necessary-Work Model & Mathematical Abstraction
 
 ## 1. Formal Definition
+
 In classical brute-force computing, a system executes all operations dictated by an unoptimized reference implementation $R(x)$.
 In HYPER-Ω, we model computation not as an imperative sequence of instructions to execute, but as an **information-theoretic mapping from inputs $x$ to a declared observable output $O(x)$ under contract $C$**.
 
@@ -12,6 +13,7 @@ $$V^* = \{ v \in V \mid \text{Influence}(v, O) = \text{TRUE} \land \text{Reusabl
 ---
 
 ## 2. Node Classification Taxonomy
+
 Every computational node in the `NecessaryWorkGraph` is classified into one of 8 mutually exclusive states:
 
 1. **`REQUIRED`**: Operations whose mathematical results directly and irreducibly determine the value of the declared observable $O(x)$.
@@ -26,11 +28,13 @@ Every computational node in the `NecessaryWorkGraph` is classified into one of 8
 ---
 
 ## 3. Verified Work Elimination Metric
+
 The primary scientific metric of HYPER-Ω is **Verified Work Elimination (VWE)**, defined independently from wall-clock speedup:
 
 $$\text{VWE} = 1.0 - \frac{\sum_{v \in V^*} \text{FLOPs}(v)}{\sum_{v \in V} \text{FLOPs}(v)}$$
 
 ### Distinction Between Work Elimination and Speedup
+
 - **Work Elimination** measures the algorithmic and informational reduction in mathematical operations.
 - **Speedup** ($\frac{\text{Latency}_{\text{ref}}}{\text{Latency}_{\text{cand}}}$) measures execution time. A candidate may achieve 75% work elimination with only 2x speedup due to memory bus bottlenecks, or achieve 3x speedup with 0% work elimination due to better cache tiling and SIMD vectorization.
 - HYPER-Ω tracks and reports both metrics independently without conflation.

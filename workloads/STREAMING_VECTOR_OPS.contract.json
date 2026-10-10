@@ -3,17 +3,13 @@
   "description": "Memory-bandwidth limited sequential vector axpy operations (1,000,000 elements)",
   "input_domain": {
     "x": {
-      "shape": [
-        1000000
-      ],
+      "shape": [1000000],
       "dtype": "FP32"
     }
   },
   "output_domain": {
     "y": {
-      "shape": [
-        1000000
-      ],
+      "shape": [1000000],
       "dtype": "FP32"
     }
   },

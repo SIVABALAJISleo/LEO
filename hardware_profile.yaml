@@ -4,8 +4,8 @@ threads: 12
 p_cores: 4
 e_cores: 4
 instruction_sets:
-- AVX2
-- FMA
+  - AVX2
+  - FMA
 has_avx512: false
 igpu_model: Intel UHD Graphics (12th Gen)
 igpu_eus: 48
@@ -24,7 +24,7 @@ os: Windows 11 (10.0.26100)
 driver: unknown
 runtime: Python 3.13.5
 timestamp: 1789839245.5520082
-formatted_timestamp: '2026-09-19T17:34:05Z'
+formatted_timestamp: "2026-09-19T17:34:05Z"
 constraints:
   discrete_gpu: NONE
   raw_hardware_parity: NOT_ACHIEVED

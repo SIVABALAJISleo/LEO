@@ -1,4 +1,5 @@
 # HYPER Rigorous Hardware Benchmark Protocol
+
 **Target Machine**: Intel Core i5-12450H (8 Cores, 12 Threads, AVX2/FMA, 16 GB RAM, Windows 11).
 **Integrated Graphics**: Intel UHD Graphics (48 EUs, shared system RAM).
 
@@ -44,6 +45,7 @@
 ## 4. Endurance & Thermal Throttling Testing
 
 To verify that optimizations sustain real-time performance without memory leaks or thermal throttling:
+
 1. **1-Minute Quick Endurance**: Verifies garbage collection stability and absence of buffer leaks.
 2. **10-Minute Sustained Load**: Monitors CPU frequency scaling and thermal throttling on the laptop cooling solution.
 3. **30-Minute & 60-Minute Stress Runs**: For production continuous compilation workflows.

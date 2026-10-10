@@ -1,4 +1,5 @@
 # HYPER / LEO — Deterministic Exact-Compute & Parity (DECP)
+
 **Document Version:** 2.0.0 (Ultra-Sonic Master Engineering)
 
 ---
@@ -8,12 +9,14 @@
 HYPER-DECP enforces strict separation between two independent verification tracks:
 
 ### TRACK A — SAME COMPUTATION
-- **Core Question:** *"Did the CPU/iGPU execute the exact declared computational specification and produce bit-identical results to the reference?"*
+
+- **Core Question:** _"Did the CPU/iGPU execute the exact declared computational specification and produce bit-identical results to the reference?"_
 - **Required Metric:** Cryptographic output SHA-256 digest match ($H(\text{cand}) == H(\text{ref})$).
 - **Target Workloads:** Discrete sorting, exact graph search, cryptographic operations, exact numerical solvers.
 
 ### TRACK B — DIFFERENT COMPUTATION
-- **Core Question:** *"Did HYPER discover a mathematically or contract-valid alternative pathway that requires significantly less work?"*
+
+- **Core Question:** _"Did HYPER discover a mathematically or contract-valid alternative pathway that requires significantly less work?"_
 - **Required Metric:** Invariant preservation within declared error bounds ($\epsilon_{\text{rel}}$, $\epsilon_{\text{abs}}$, $\text{SSIM}$).
 - **Target Workloads:** Low-rank GEMM, block-sparse attention, speculative decoding, temporal scene reconstruction.
 

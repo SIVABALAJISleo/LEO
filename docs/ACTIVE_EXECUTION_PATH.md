@@ -57,6 +57,7 @@ A module is strictly classified as **`ACTIVE_PRODUCTION`** if and only if it is 
 ---
 
 ## 2. Invariant Rules for Active Execution
+
 1. **Zero Unverified Output**: No shortcut result is permitted to bypass the fail-closed verifier.
 2. **Deterministic Provenance**: Every generated output captures full SHA-256 hashes of input tensors, contract definitions, candidate code revisions, and hardware fingerprints.
 3. **Transparent Fallback**: When an approximation fails numerical or adversarial testing, fallback to the exact reference is executed transparently and recorded in `evidence_ledger.json`.

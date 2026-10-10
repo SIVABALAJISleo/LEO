@@ -2,14 +2,16 @@
 
 **Commit**: Current working tree  
 **Target Hardware**: Intel Core i5-12450H (Fingerprinted as 13th Gen Intel Core i5-13420H, 4P + 4E cores, 12 threads, AVX2, FMA) + Intel UHD Graphics (48 EUs), 15.7 GB RAM, Windows 11.  
-**Philosophy**: Reject silicon imitation. Ask: *"What information does the application actually require for its observable?"* and discover the cheapest verified computational path.
+**Philosophy**: Reject silicon imitation. Ask: _"What information does the application actually require for its observable?"_ and discover the cheapest verified computational path.
 
 ---
 
 ## 1. Accomplished Architecture & Forensic Audit
 
 ### Phase 0 & Phase 1: Architectural Truth & Conflict Resolution
+
 Formal documentation establishing the single authoritative component for every capability, mapping legacy paths, and cataloging all engines:
+
 - [UNIFIED_ARCHITECTURE.md](file:///c:/Users/sivab/OneDrive/Documents/HYPER/docs/UNIFIED_ARCHITECTURE.md): Complete 21-step computational escape search sequence and subsystem interaction diagram.
 - [LEGACY_INTEGRATION_MAP.md](file:///c:/Users/sivab/OneDrive/Documents/HYPER/docs/LEGACY_INTEGRATION_MAP.md): Granular classification of all legacy components (`KEEP`, `INTEGRATE`, `REFACTOR`, `DEPRECATE`, `ARCHIVE`).
 - [AUTHORITATIVE_COMPONENTS.md](file:///c:/Users/sivab/OneDrive/Documents/HYPER/docs/AUTHORITATIVE_COMPONENTS.md): Single source of truth for component ownership and execution order.
@@ -83,6 +85,7 @@ Formal documentation establishing the single authoritative component for every c
 ## 5. Generated Authoritative Reports & Certificates
 
 ### Reports in `reports/`:
+
 - [SYSTEM_STATUS.md](file:///c:/Users/sivab/OneDrive/Documents/HYPER/reports/SYSTEM_STATUS.md)
 - [ARCHITECTURE.md](file:///c:/Users/sivab/OneDrive/Documents/HYPER/reports/ARCHITECTURE.md)
 - [COVERAGE.md](file:///c:/Users/sivab/OneDrive/Documents/HYPER/reports/COVERAGE.md)
@@ -98,6 +101,7 @@ Formal documentation establishing the single authoritative component for every c
 - [DISCOVERY_FRONTIER.md](file:///c:/Users/sivab/OneDrive/Documents/HYPER/reports/DISCOVERY_FRONTIER.md)
 
 ### Cryptographic Certificates in `certificates/`:
+
 - [CERT_WORMHOLE_01.json](file:///c:/Users/sivab/OneDrive/Documents/HYPER/certificates/CERT_WORMHOLE_01.json) (Realtime 720p Filter Spatio-temporal Delta, 3.89x speedup, 99.7% WE)
 - [CERT_WORMHOLE_02.json](file:///c:/Users/sivab/OneDrive/Documents/HYPER/certificates/CERT_WORMHOLE_02.json) (PDE Poisson 256 Multigrid Residual, 2.28x speedup, 72.5% WE)
 - [CERT_NECESSITY_01.json](file:///c:/Users/sivab/OneDrive/Documents/HYPER/certificates/CERT_NECESSITY_01.json) (Dense Gaussian Exact GEMM Marchenko-Pastur Full Rank Indispensability)

@@ -3,11 +3,7 @@
   "operation_id": "intermediate_dense_gemm",
   "workload_id": "GEMM_128x128",
   "observable": "output_tensor",
-  "dependency_path": [
-    "input_A",
-    "input_B",
-    "final_observable"
-  ],
+  "dependency_path": ["input_A", "input_B", "final_observable"],
   "elimination_attempt": "low_rank_factorization_rank_16",
   "test_inputs_count": 8,
   "counterexamples": [],

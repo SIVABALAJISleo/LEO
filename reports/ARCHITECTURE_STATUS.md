@@ -3,7 +3,7 @@
 **System**: LEO / HYPER Ultra-Sonic Software-Defined Parallel Compute Fabric  
 **Target Hardware**: Intel Core i5-12450H (8 Cores: 4P + 4E, 12 Threads) | Intel UHD Graphics (48 EUs) | 16 GB Unified RAM | Windows 11  
 **Audit Date**: September 2026  
-**Auditor**: Principal Systems Architect & Scientific Auditor  
+**Auditor**: Principal Systems Architect & Scientific Auditor
 
 ---
 
@@ -11,26 +11,26 @@
 
 A complete static and runtime inventory was conducted across the codebase. All modules are classified according to operational provenance, isolation boundaries, and production readiness:
 
-| Subsystem / Path | Module Count | Operational Status | Evidence Class | Purpose |
-|---|---|---|---|---|
-| `hyper_x/compute_fabric/` | 7 modules | **ACTIVE_PRODUCTION** | MEASURED | Software-defined parallel compute fabric, virtual worker multiplexing, DAG scheduler |
-| `hyper_x/contract_ir/` | 3 modules | **ACTIVE_PRODUCTION** | MEASURED | 22-attribute formal contract parser, numerical & perceptual invariant specifications |
-| `hyper_x/information_boundary/` | 3 modules | **ACTIVE_PRODUCTION** | MEASURED | 6-way information partition, sufficient statistics, relevance analyzer |
-| `hyper_x/necessary_work/` (`hyper_x/necessity/`) | 4 modules | **ACTIVE_PRODUCTION** | MEASURED | Necessary-work compiler, FLOPs ledger, irreducible work boundary |
-| `hyper_x/pathway_search/` | 3 modules | **ACTIVE_PRODUCTION** | MEASURED | 14-point cryptographic reuse, delta memoization, candidate pathway generation |
-| `hyper_x/discovery/` | 3 modules | **ACTIVE_PRODUCTION** | MEASURED | E-graph equality saturation, symbolic rewrites, algorithm discovery lifecycle |
-| `hyper_x/representations/` | 3 modules | **ACTIVE_PRODUCTION** | MEASURED | Adaptive representation engine (dense, block-sparse, low-rank SVD, int8, factored) |
-| `hyper_x/prediction/` | 3 modules | **ACTIVE_PRODUCTION** | MEASURED | Speculative execution, autoregressive prediction, bounded verification |
-| `hyper_x/reconstruction/` | 3 modules | **ACTIVE_PRODUCTION** | MEASURED | Temporal, spatial, and residual reconstruction for graphics and tensor states |
-| `hyper_x/decp/` | 4 modules | **ACTIVE_PRODUCTION** | MEASURED | Deterministic Exact-Compute & Parity (Track A vs Track B), SHA-256 manifests |
-| `hyper_x/verification/` | 3 modules | **ACTIVE_PRODUCTION** | MEASURED | Fail-closed verifier, numerical error conjunction, Freivalds randomized checks |
-| `hyper_x/rtx5090/` | 4 modules | **ACTIVE_PRODUCTION** | MEASURED & REF | RTX 5090 16-workload comparison engine, real-time gap engine, bottleneck loop |
-| `hyper_x/certificates/` | 3 modules | **ACTIVE_PRODUCTION** | MEASURED | Tamper-evident cryptographic SHA-256 certificates with ledger append-only audit |
-| `hyper_x/memory/` | 2 modules | **ACTIVE_PRODUCTION** | MEASURED | 16 GB unified RAM boundary manager, eviction policies, fragmentation guards |
-| `hyper_x/fallback/` | 2 modules | **ACTIVE_PRODUCTION** | MEASURED | Deterministic fallback ladder to standard BLAS/CPU kernels upon constraint failure |
-| `hyper_x/pipeline.py` | 1 orchestrator | **ACTIVE_PRODUCTION** | MEASURED | Unbranching linear master execution pipeline executing the complete contract chain |
-| `hyper_ares/`, `leo/experimental/` | 12 modules | **ACTIVE_RESEARCH** | EXPERIMENTAL | Historical exploratory kernels, T-MAC research, and prototyping modules |
-| `benchmarks/legacy/` | 8 files | **ARCHIVED / BENCHMARK_ONLY**| SIMULATED | Quarantined legacy benchmarks; excluded from certified production claims |
+| Subsystem / Path                                 | Module Count   | Operational Status            | Evidence Class | Purpose                                                                              |
+| ------------------------------------------------ | -------------- | ----------------------------- | -------------- | ------------------------------------------------------------------------------------ |
+| `hyper_x/compute_fabric/`                        | 7 modules      | **ACTIVE_PRODUCTION**         | MEASURED       | Software-defined parallel compute fabric, virtual worker multiplexing, DAG scheduler |
+| `hyper_x/contract_ir/`                           | 3 modules      | **ACTIVE_PRODUCTION**         | MEASURED       | 22-attribute formal contract parser, numerical & perceptual invariant specifications |
+| `hyper_x/information_boundary/`                  | 3 modules      | **ACTIVE_PRODUCTION**         | MEASURED       | 6-way information partition, sufficient statistics, relevance analyzer               |
+| `hyper_x/necessary_work/` (`hyper_x/necessity/`) | 4 modules      | **ACTIVE_PRODUCTION**         | MEASURED       | Necessary-work compiler, FLOPs ledger, irreducible work boundary                     |
+| `hyper_x/pathway_search/`                        | 3 modules      | **ACTIVE_PRODUCTION**         | MEASURED       | 14-point cryptographic reuse, delta memoization, candidate pathway generation        |
+| `hyper_x/discovery/`                             | 3 modules      | **ACTIVE_PRODUCTION**         | MEASURED       | E-graph equality saturation, symbolic rewrites, algorithm discovery lifecycle        |
+| `hyper_x/representations/`                       | 3 modules      | **ACTIVE_PRODUCTION**         | MEASURED       | Adaptive representation engine (dense, block-sparse, low-rank SVD, int8, factored)   |
+| `hyper_x/prediction/`                            | 3 modules      | **ACTIVE_PRODUCTION**         | MEASURED       | Speculative execution, autoregressive prediction, bounded verification               |
+| `hyper_x/reconstruction/`                        | 3 modules      | **ACTIVE_PRODUCTION**         | MEASURED       | Temporal, spatial, and residual reconstruction for graphics and tensor states        |
+| `hyper_x/decp/`                                  | 4 modules      | **ACTIVE_PRODUCTION**         | MEASURED       | Deterministic Exact-Compute & Parity (Track A vs Track B), SHA-256 manifests         |
+| `hyper_x/verification/`                          | 3 modules      | **ACTIVE_PRODUCTION**         | MEASURED       | Fail-closed verifier, numerical error conjunction, Freivalds randomized checks       |
+| `hyper_x/rtx5090/`                               | 4 modules      | **ACTIVE_PRODUCTION**         | MEASURED & REF | RTX 5090 16-workload comparison engine, real-time gap engine, bottleneck loop        |
+| `hyper_x/certificates/`                          | 3 modules      | **ACTIVE_PRODUCTION**         | MEASURED       | Tamper-evident cryptographic SHA-256 certificates with ledger append-only audit      |
+| `hyper_x/memory/`                                | 2 modules      | **ACTIVE_PRODUCTION**         | MEASURED       | 16 GB unified RAM boundary manager, eviction policies, fragmentation guards          |
+| `hyper_x/fallback/`                              | 2 modules      | **ACTIVE_PRODUCTION**         | MEASURED       | Deterministic fallback ladder to standard BLAS/CPU kernels upon constraint failure   |
+| `hyper_x/pipeline.py`                            | 1 orchestrator | **ACTIVE_PRODUCTION**         | MEASURED       | Unbranching linear master execution pipeline executing the complete contract chain   |
+| `hyper_ares/`, `leo/experimental/`               | 12 modules     | **ACTIVE_RESEARCH**           | EXPERIMENTAL   | Historical exploratory kernels, T-MAC research, and prototyping modules              |
+| `benchmarks/legacy/`                             | 8 files        | **ARCHIVED / BENCHMARK_ONLY** | SIMULATED      | Quarantined legacy benchmarks; excluded from certified production claims             |
 
 ---
 

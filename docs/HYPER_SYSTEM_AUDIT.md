@@ -1,4 +1,5 @@
 # HYPER/LEO System Architecture & Scientific Audit
+
 **Target Machine**: Intel Core i5-12450H (8C/12T, AVX2/FMA, 16 GB RAM) + Intel Integrated UHD Graphics (48 EUs, software-accessible).
 **Environment**: Windows 11, Python 3.13.5 (64-bit), NumPy 2.2.3, SciPy 1.15.2.
 **Mission**: Transform HYPER into a Universal Necessary-Work Compiler & Computational Wormhole Discovery Engine without hardware faking or simulation-based claims.
@@ -88,14 +89,14 @@ The repository currently exhibits a three-tier evolutionary structure reflecting
 
 ## 4. DUPLICATE COMPONENTS
 
-| Purpose | Component 1 | Component 2 | Component 3 | Action Required |
-|---|---|---|---|---|
-| **Contract Definition** | `hyper_x/wormhole_compiler/contract.py` | `hyper_cco/contract.py` | `hyper_x/strict/contracts.py` | Unify into canonical `contract_ir.py` |
-| **Scorecard Evaluation** | `hyper_x/wormhole_compiler/parity_gates.py` | `hyper_cco/scorecard.py` | `hyper_x/strict/scorecard.py` | Unify into `parity_gates.py` & `claim_validator.py` |
-| **Verification** | `hyper_x/wormhole_compiler/verifier.py` | `hyper_cco/verifier.py` | `hyper_x/strict/verifier.py` | Integrate into universal `MultiVerifierSystem` |
-| **Residual Engine** | `hyper_x/wormhole_compiler/patterns.py` | `hyper_cco/residual_engine.py` | - | Canonicalize in `hyper_x/wormhole_compiler/residual_engine.py` |
-| **Low-Rank Engine** | `hyper_x/wormhole_compiler/patterns.py` | `hyper_cco/low_rank_engine.py` | - | Expose uniformly through `representation_inventor.py` |
-| **Sparsity Engine** | `hyper_x/wormhole_compiler/patterns.py` | `hyper_cco/sparsity_engine.py` | - | Expose uniformly in `sparse_work_elimination.py` |
+| Purpose                  | Component 1                                 | Component 2                    | Component 3                   | Action Required                                                |
+| ------------------------ | ------------------------------------------- | ------------------------------ | ----------------------------- | -------------------------------------------------------------- |
+| **Contract Definition**  | `hyper_x/wormhole_compiler/contract.py`     | `hyper_cco/contract.py`        | `hyper_x/strict/contracts.py` | Unify into canonical `contract_ir.py`                          |
+| **Scorecard Evaluation** | `hyper_x/wormhole_compiler/parity_gates.py` | `hyper_cco/scorecard.py`       | `hyper_x/strict/scorecard.py` | Unify into `parity_gates.py` & `claim_validator.py`            |
+| **Verification**         | `hyper_x/wormhole_compiler/verifier.py`     | `hyper_cco/verifier.py`        | `hyper_x/strict/verifier.py`  | Integrate into universal `MultiVerifierSystem`                 |
+| **Residual Engine**      | `hyper_x/wormhole_compiler/patterns.py`     | `hyper_cco/residual_engine.py` | -                             | Canonicalize in `hyper_x/wormhole_compiler/residual_engine.py` |
+| **Low-Rank Engine**      | `hyper_x/wormhole_compiler/patterns.py`     | `hyper_cco/low_rank_engine.py` | -                             | Expose uniformly through `representation_inventor.py`          |
+| **Sparsity Engine**      | `hyper_x/wormhole_compiler/patterns.py`     | `hyper_cco/sparsity_engine.py` | -                             | Expose uniformly in `sparse_work_elimination.py`               |
 
 ---
 

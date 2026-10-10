@@ -2,7 +2,7 @@
 
 **Standard**: IEEE 754 / ISO-IEC 25010 Empirical Scientific Verification  
 **Hardware Target**: Lenovo IdeaPad Slim 3 15IAH8 · Intel Core i5-12450H (8 physical cores: 4P+4E, 12 threads) · Intel UHD Graphics (48 EUs) · 16 GB Unified System RAM  
-**Software Target**: Local Windows 11 · Python 3.13 · OpenCL 3.0 NEO · AVX2 SIMD · Zero Cloud Offload · Zero dGPU  
+**Software Target**: Local Windows 11 · Python 3.13 · OpenCL 3.0 NEO · AVX2 SIMD · Zero Cloud Offload · Zero dGPU
 
 ---
 

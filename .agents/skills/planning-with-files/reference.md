@@ -9,11 +9,13 @@ This skill is based on context engineering principles from Manus, the AI agent c
 > "KV-cache hit rate is THE single most important metric for production AI agents."
 
 **Statistics:**
+
 - ~100:1 input-to-output token ratio
 - Cached tokens: $0.30/MTok vs Uncached: $3/MTok
 - 10x cost difference!
 
 **Implementation:**
+
 - Keep prompt prefixes STABLE (single-token change invalidates cache)
 - NO timestamps in system prompts
 - Make context APPEND-ONLY with deterministic serialization
@@ -29,12 +31,14 @@ Don't dynamically remove tools (breaks KV-cache). Use logit masking instead.
 > "Markdown is my 'working memory' on disk."
 
 **The Formula:**
+
 ```
 Context Window = RAM (volatile, limited)
 Filesystem = Disk (persistent, unlimited)
 ```
 
 **Compression Must Be Restorable:**
+
 - Keep URLs even if web content is dropped
 - Keep file paths when dropping document contents
 - Never lose the pointer to full data
@@ -58,6 +62,7 @@ End of context: [Recently read task_plan.md - gets ATTENTION!]
 > "Leave the wrong turns in the context."
 
 **Why:**
+
 - Failed actions with stack traces let model implicitly update beliefs
 - Reduces mistake repetition
 - Error recovery is "one of the clearest signals of TRUE agentic behavior"
@@ -69,6 +74,7 @@ End of context: [Recently read task_plan.md - gets ATTENTION!]
 **Problem:** Repetitive action-observation pairs cause drift and hallucination.
 
 **Solution:** Introduce controlled variation:
+
 - Vary phrasings slightly
 - Don't copy-paste patterns blindly
 - Recalibrate on repetitive tasks
@@ -82,6 +88,7 @@ Based on Lance Martin's analysis of Manus architecture.
 ### Strategy 1: Context Reduction
 
 **Compaction:**
+
 ```
 Tool calls have TWO representations:
 ├── FULL: Raw tool content (stored in filesystem)
@@ -93,6 +100,7 @@ RULES:
 ```
 
 **Summarization:**
+
 - Applied when compaction reaches diminishing returns
 - Generated using full tool results
 - Creates standardized summary objects
@@ -100,6 +108,7 @@ RULES:
 ### Strategy 2: Context Isolation (Multi-Agent)
 
 **Architecture:**
+
 ```
 ┌─────────────────────────────────┐
 │         PLANNER AGENT           │
@@ -120,6 +129,7 @@ RULES:
 ### Strategy 3: Context Offloading
 
 **Tool Design:**
+
 - Use <20 atomic functions total
 - Store full results in filesystem, not context
 - Use `glob` and `grep` for searching
@@ -167,12 +177,12 @@ Manus operates in a continuous 7-step loop:
 
 ## File Types Manus Creates
 
-| File | Purpose | When Created | When Updated |
-|------|---------|--------------|--------------|
-| `task_plan.md` | Phase tracking, progress | Task start | After completing phases |
-| `findings.md` | Discoveries, decisions | After ANY discovery | After viewing images/PDFs |
-| `progress.md` | Session log, what's done | At breakpoints | Throughout session |
-| Code files | Implementation | Before execution | After errors |
+| File           | Purpose                  | When Created        | When Updated              |
+| -------------- | ------------------------ | ------------------- | ------------------------- |
+| `task_plan.md` | Phase tracking, progress | Task start          | After completing phases   |
+| `findings.md`  | Discoveries, decisions   | After ANY discovery | After viewing images/PDFs |
+| `progress.md`  | Session log, what's done | At breakpoints      | Throughout session        |
+| Code files     | Implementation           | Before execution    | After errors              |
 
 ---
 
@@ -188,13 +198,13 @@ Manus operates in a continuous 7-step loop:
 
 ## Manus Statistics
 
-| Metric | Value |
-|--------|-------|
-| Average tool calls per task | ~50 |
-| Input-to-output token ratio | 100:1 |
-| Acquisition price | $2 billion |
-| Time to $100M revenue | 8 months |
-| Framework refactors since launch | 5 times |
+| Metric                           | Value      |
+| -------------------------------- | ---------- |
+| Average tool calls per task      | ~50        |
+| Input-to-output token ratio      | 100:1      |
+| Acquisition price                | $2 billion |
+| Time to $100M revenue            | 8 months   |
+| Framework refactors since launch | 5 times    |
 
 ---
 

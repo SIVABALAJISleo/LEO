@@ -1,6 +1,7 @@
 # HYPER Research Mode & CLI Specification
 
 ## 1. Overview
+
 HYPER Research Mode allows developers and auditors to explore new workloads, synthesize novel algorithms, verify stability against adversarial attacks, and benchmark execution directly from the command line.
 
 ---

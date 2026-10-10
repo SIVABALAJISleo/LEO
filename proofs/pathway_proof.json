@@ -3,34 +3,23 @@
   "timestamp": 1791569907.1307158,
   "original_representation_hash": "b142326bd834a1e2ad60ccc04eb9928536d02a0f80ae736e652f5cd2348c9843",
   "candidate_representation_hash": "b142326bd834a1e2ad60ccc04eb9928536d02a0f80ae736e652f5cd2348c9843",
-  "transformation_chain": [
-    "CANONICAL_BASELINE"
-  ],
+  "transformation_chain": ["CANONICAL_BASELINE"],
   "contract": {
     "workload_id": "GEMM_STANDARD",
     "description": "Dense matrix multiplication C = A @ B (128x128 FP32)",
     "input_domain": {
       "A": {
-        "shape": [
-          128,
-          128
-        ],
+        "shape": [128, 128],
         "dtype": "FP32"
       },
       "B": {
-        "shape": [
-          128,
-          128
-        ],
+        "shape": [128, 128],
         "dtype": "FP32"
       }
     },
     "output_domain": {
       "C": {
-        "shape": [
-          128,
-          128
-        ],
+        "shape": [128, 128],
         "dtype": "FP32"
       }
     },

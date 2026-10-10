@@ -31,7 +31,7 @@ INPUT ──► Contract & Observables ──► Causal Graph ──► Counterf
 3. **Causal Dependency Graph (`dependency_graph.py`)**:
    Performs backward dataflow reachability from required observables, classifying every intermediate tensor into `INDISPENSABLE`, `CONDITIONALLY_REQUIRED`, `REDUNDANT`, `REUSABLE`, or `UNOBSERVED`.
 4. **Counterfactual Mutation Engine (`counterfactual.py`)**:
-   Generates hypotheses for costly operations: *What if omitted? What if predicted? What if coarse + residual?*
+   Generates hypotheses for costly operations: _What if omitted? What if predicted? What if coarse + residual?_
 5. **Multi-Representation Space (`representation_space.py`)**:
    Projects tensors into alternative domains: Dense, Sparse CSR, Factored Low-Rank, FFT Spectral, Chebyshev/LUT, Ternary Bitnet.
 6. **E-Graph Equality Saturation (`egraph_search.py`)**:
@@ -61,6 +61,7 @@ INPUT ──► Contract & Observables ──► Causal Graph ──► Counterf
 ## 3. The "No-Free-Lunch" Discipline
 
 A foundational mandate of the HYPER-X architecture is scientific honesty:
+
 - **No Exploitable Structure $\implies$ Zero Wormhole**:
   If an input matrix is unstructured, full-rank, and high-entropy, any truncated approximation violates the numerical contract tolerance.
 - The compiler explicitly prints:

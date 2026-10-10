@@ -1,4 +1,5 @@
 # HYPER / LEO — Claim Integrity & Scientific Audit Standard
+
 **Document Version:** 2.0.0 (Ultra-Sonic Master Engineering)
 
 ---

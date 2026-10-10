@@ -1,5 +1,7 @@
 # CONTRACT-AWARE OPTIMIZATION ENGINE (CAOE) — MASTER TECHNICAL REPORT
+
 ## Target: 100% Contract Parity | 75-80% Exact Parity | 85% App Performance
+
 ### Hardware: Intel Core i5-12450H (8 Cores: 4P+4E, 12 Threads) + Intel UHD Graphics (48 EUs) | Software-Only
 
 ---
@@ -9,11 +11,14 @@
 Traditional edge AI acceleration attempts to force weak commodity hardware to compute identical exact FP32/FP64 FLOPS as server-grade GPUs (e.g. RTX 5090 / H100), running head-first into the thermal, silicon, and memory-bandwidth walls (51.2 GB/s DDR5 bus vs 1,790 GB/s GDDR7).
 
 The **Contract-Aware Optimization Engine (CAOE)** shifts the question:
-> **OLD**: *"How can an i5-12450H compute the exact same 1600 TFLOPS of FP32 as an RTX 5090?"*  
-> **NEW**: *"What numerical, perceptual, or functional result does the application ACTUALLY require? Deliver that 100%, fast."*
+
+> **OLD**: _"How can an i5-12450H compute the exact same 1600 TFLOPS of FP32 as an RTX 5090?"_  
+> **NEW**: _"What numerical, perceptual, or functional result does the application ACTUALLY require? Deliver that 100%, fast."_
 
 ### The Wormhole Equation
+
 Most end-user applications demand:
+
 - **50–100 GFLOPS** of precision-negotiated computation (FP16/INT8).
 - **500 GFLOPS equivalent** of deterministic memoization/caching.
 - **50 GFLOPS equivalent** of structural/temporal sparsity bypasses.
@@ -44,12 +49,12 @@ backend/caoe/
 
 Measured directly on the **Lenovo IdeaPad Slim 3 · Intel Core i5-12450H + Intel UHD Graphics (48 EUs)**:
 
-| Workload | Input Dimension | Stated Contract | Median Latency | Contract Parity % | Strategy Selected |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **`dense_gemm_f32`** | $256 \times 256$ | $\text{rel\_error} < 0.5\%$ | **130.45 ms** | **100.0% PASS** | FP16/INT8 Quantized LUT |
-| **`fft_1d`** | $N = 4096$ | $\text{rel\_error} < 10^{-10}$ | **4.56 ms** | **100.0% PASS** | Strict Exact Preservation |
-| **`rendering_frame`** | $128 \times 128$ | $\text{SSIM} > 0.99$ | **4.59 ms** | **100.0% PASS** | Temporal Subregion Tile |
-| **`ml_inference_batch`**| $64 \times 256$ | Top-5 Accuracy $\ge 95\%$ | **5.58 ms** | **100.0% PASS** | FP16 Token Projection |
+| Workload                 | Input Dimension  | Stated Contract                | Median Latency | Contract Parity % | Strategy Selected         |
+| :----------------------- | :--------------- | :----------------------------- | :------------- | :---------------- | :------------------------ |
+| **`dense_gemm_f32`**     | $256 \times 256$ | $\text{rel\_error} < 0.5\%$    | **130.45 ms**  | **100.0% PASS**   | FP16/INT8 Quantized LUT   |
+| **`fft_1d`**             | $N = 4096$       | $\text{rel\_error} < 10^{-10}$ | **4.56 ms**    | **100.0% PASS**   | Strict Exact Preservation |
+| **`rendering_frame`**    | $128 \times 128$ | $\text{SSIM} > 0.99$           | **4.59 ms**    | **100.0% PASS**   | Temporal Subregion Tile   |
+| **`ml_inference_batch`** | $64 \times 256$  | Top-5 Accuracy $\ge 95\%$      | **5.58 ms**    | **100.0% PASS**   | FP16 Token Projection     |
 
 ---
 
@@ -75,6 +80,7 @@ Every claim in CAOE was subjected to adversarial verification under the 5-point 
 ## 5. Telemetry Parity Summary
 
 Aggregated live metrics across 44 recorded runs in `reports/caoe_telemetry.jsonl`:
+
 - **Contract Parity**: **`100.0%`** (100% of outputs satisfy the declared application contract)
 - **Exact Parity**: **`100.0%`** (Numerical accuracy relative to verified fallback bounds)
 - **Average Speedup**: **`15.7x`** (Across mixed cached and precision-negotiated workloads)

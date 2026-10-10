@@ -67,9 +67,7 @@
             "measurement_reproducibility": true,
             "dimension_generalized": true
           },
-          "warnings": [
-            "Observed error 1.00e+00 exceeded contract tolerance 1.00e-05."
-          ],
+          "warnings": ["Observed error 1.00e+00 exceeded contract tolerance 1.00e-05."],
           "verdict": "POTENTIAL_CONTAMINATION_DETECTED",
           "timestamp": 0.0
         },
@@ -79,9 +77,7 @@
           "is_universal_theorem": false,
           "satisfying_workloads": [],
           "violating_workloads": [],
-          "applicability_conditions": [
-            "All tested inputs in target domain"
-          ],
+          "applicability_conditions": ["All tested inputs in target domain"],
           "boundary_separation_property": "No known violating workloads detected in explored space",
           "rationales": [
             "Evaluated 0 satisfying and 0 violating workloads.",
@@ -149,9 +145,7 @@
             "measurement_reproducibility": true,
             "dimension_generalized": true
           },
-          "warnings": [
-            "Observed error 1.00e+00 exceeded contract tolerance 0.00e+00."
-          ],
+          "warnings": ["Observed error 1.00e+00 exceeded contract tolerance 0.00e+00."],
           "verdict": "POTENTIAL_CONTAMINATION_DETECTED",
           "timestamp": 0.0
         },
@@ -161,9 +155,7 @@
           "is_universal_theorem": false,
           "satisfying_workloads": [],
           "violating_workloads": [],
-          "applicability_conditions": [
-            "All tested inputs in target domain"
-          ],
+          "applicability_conditions": ["All tested inputs in target domain"],
           "boundary_separation_property": "No known violating workloads detected in explored space",
           "rationales": [
             "Evaluated 0 satisfying and 0 violating workloads.",

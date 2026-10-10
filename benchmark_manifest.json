@@ -11,10 +11,7 @@
     {
       "id": "gemm_dense_512",
       "domain": "DENSE_LINEAR_ALGEBRA",
-      "shape": [
-        512,
-        512
-      ],
+      "shape": [512, 512],
       "contract": "NUMERICALLY_EQUIVALENT",
       "tolerance": 0.0001,
       "target_latency_ms": 15.0
@@ -22,10 +19,7 @@
     {
       "id": "gemm_rank16_512",
       "domain": "DENSE_LINEAR_ALGEBRA",
-      "shape": [
-        512,
-        512
-      ],
+      "shape": [512, 512],
       "rank": 16,
       "contract": "BOUNDED_APPROXIMATION",
       "tolerance": 0.01,

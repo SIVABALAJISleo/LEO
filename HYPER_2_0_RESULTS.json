@@ -7,11 +7,7 @@
     "physical_cores": 8,
     "logical_processors": 12,
     "system_ram_gb": 15.7,
-    "simd_capabilities": [
-      "AVX2",
-      "FMA",
-      "VNNI"
-    ],
+    "simd_capabilities": ["AVX2", "FMA", "VNNI"],
     "has_intel_igpu": true,
     "igpu_name": "Intel(R) UHD Graphics (iGPU)",
     "igpu_execution_units": 48,
@@ -222,7 +218,7 @@
       "work_avoided_pct": 95.5,
       "verified": true,
       "metric": "Relative L2 Norm Error",
-      "error": 7.149305361053848e-07
+      "error": 7.149305361053848e-7
     },
     {
       "id": 2,

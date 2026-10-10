@@ -2,7 +2,7 @@
 
 **Module Reference:** `hyper.benchmark.master_benchmark`  
 **Output Target:** `HYPER_100_RESULTS.json`  
-**Standard:** Phase 13 & 14 Ground-Truth Measurement Standard  
+**Standard:** Phase 13 & 14 Ground-Truth Measurement Standard
 
 ---
 

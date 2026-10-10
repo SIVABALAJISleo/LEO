@@ -1,6 +1,7 @@
 # HYPER Verification & Safety Architecture
 
 ## 1. Principle of Independent Verification
+
 The optimizer and the verifier are logically decoupled. The verifier has zero knowledge of which heuristic or approximation was selected by the optimizer; it only checks whether the resulting output satisfies the formal contract.
 
 ---

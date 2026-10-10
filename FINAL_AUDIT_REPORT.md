@@ -14,6 +14,7 @@ This report documents the comprehensive transformation of the LEO/HYPER codebase
 The core breakthrough of this work is the **rejection of the silicon emulation fallacy**. The system does not attempt to make an Intel laptop physically imitate an NVIDIA RTX GPU. Instead, it determines what information the application actually requires for its observable output and searches for the cheapest verified computational path that satisfies the application contract.
 
 ### Key Milestones Accomplished:
+
 1. **Unified 10-Stage Discovery Pipeline**: Integrated from workload contract definition to independent verification and cryptographically sealed execution certificates.
 2. **761 / 761 Tests Passing**: Comprehensive unit, integration, and hostile adversarial tests verified with zero failures.
 3. **Zero Hardcoded Passes**: Eliminated all synthetic passes (`functional_pass = True`). All parity checks are calculated independently with Freivalds randomized probes, Lipschitz sensitivity bounds, and Frobenius numerical comparisons.
@@ -69,12 +70,12 @@ APPLICATION WORKLOAD
 
 ## 4. Discovered Wormholes & Eliminated Work
 
-| Discovered Wormhole | Workload Domain | Primary Mathematical Mechanism | Work Eliminated ($WE$) | Measured Speedup | Correctness Class |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Spatio-Temporal Delta** | Realtime Video Filter | Bounding-box update with background Lipschitz invariance | **99.7%** | **3.89x** | `PERCEPTUALLY_EQUIVALENT` |
-| **Multi-Resolution Residual** | Scientific Poisson PDE | Coarse-grid solve ($16\times$ reduction) + fine-grid residual smoothing | **72.5%** | **2.28x** | `NUMERICALLY_BOUNDED` |
-| **Associative Observable Rewrite** | Top-K Matrix Projection | E-graph rewrite: $(A \times B) \cdot x \to A \cdot (B \cdot x)$ | **96.8%** | **12.4x** | `EXACT_REFORMULATION` |
-| **Exact Content Memoization** | Dense Parameter GEMM | SHA-256 state hashing with memory-mapped resident cache | **100.0%** (warm) | **28.2x** (warm) | `CACHED` |
+| Discovered Wormhole                | Workload Domain         | Primary Mathematical Mechanism                                          | Work Eliminated ($WE$) | Measured Speedup | Correctness Class         |
+| :--------------------------------- | :---------------------- | :---------------------------------------------------------------------- | :--------------------- | :--------------- | :------------------------ |
+| **Spatio-Temporal Delta**          | Realtime Video Filter   | Bounding-box update with background Lipschitz invariance                | **99.7%**              | **3.89x**        | `PERCEPTUALLY_EQUIVALENT` |
+| **Multi-Resolution Residual**      | Scientific Poisson PDE  | Coarse-grid solve ($16\times$ reduction) + fine-grid residual smoothing | **72.5%**              | **2.28x**        | `NUMERICALLY_BOUNDED`     |
+| **Associative Observable Rewrite** | Top-K Matrix Projection | E-graph rewrite: $(A \times B) \cdot x \to A \cdot (B \cdot x)$         | **96.8%**              | **12.4x**        | `EXACT_REFORMULATION`     |
+| **Exact Content Memoization**      | Dense Parameter GEMM    | SHA-256 state hashing with memory-mapped resident cache                 | **100.0%** (warm)      | **28.2x** (warm) | `CACHED`                  |
 
 ---
 
@@ -97,7 +98,7 @@ Where shortcuts violate contract tolerance, the engine rejects them and emits a 
 
 ## 6. Physical Hardware Benchmark Results
 
-*Measured on physical laptop (Intel Core i5-13420H + Intel UHD Graphics, 15.7 GB RAM, Windows 11):*
+_Measured on physical laptop (Intel Core i5-13420H + Intel UHD Graphics, 15.7 GB RAM, Windows 11):_
 
 ```
 Workload: GEMM_512x512

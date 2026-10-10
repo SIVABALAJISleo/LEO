@@ -1,4 +1,5 @@
 # HYPER Computational Wormhole Discovery Methodology
+
 **Framework**: Counterfactual-Guided Autonomous Algorithm Discovery & Equality Saturation.
 
 ---
@@ -74,6 +75,7 @@ The discovery engine operates as a continuous, self-rectifying scientific loop:
 ## 3. Role of LLMs in the Discovery Engine
 
 When an LLM (local or cloud) is connected to the engine:
+
 1. **Hypothesis Generation Only**: The LLM proposes candidate mathematical transformations, novel representations, and domain-inspired decomposition strategies.
 2. **ZERO Authority Over Correctness**: An LLM is NEVER permitted to declare `PASS`, `VERIFIED`, or `CORRECT`.
 3. **Formal Verification Gate**:
@@ -87,6 +89,7 @@ When an LLM (local or cloud) is connected to the engine:
 ## 4. Counterexample-Guided Inductive Synthesis (CEGIS)
 
 When an optimization fails during adversarial stress testing:
+
 1. The failing input $(A_{\text{bad}}, B_{\text{bad}})$ and the mathematical invariant violated are packaged into a `CounterexampleRecord`.
 2. The failure signature is indexed in `CandidateRegistry.failure_knowledge_base`.
 3. Future synthesis iterations query the registry:

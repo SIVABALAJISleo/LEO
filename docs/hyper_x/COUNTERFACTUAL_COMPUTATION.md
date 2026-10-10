@@ -5,7 +5,8 @@
 In standard compiler analysis, program statements are taken as essential: if the programmer writes $C = A \times B$, the compiler must compute all $M \times K \times N$ scalar multiply-accumulate operations.
 
 **Counterfactual Computation** asks the inverse question:
-> *"What happens to the final observable output if this operation is omitted, approximated, predicted, or replaced?"*
+
+> _"What happens to the final observable output if this operation is omitted, approximated, predicted, or replaced?"_
 
 For every intermediate node $v$ in the Information Dependency Graph, the compiler constructs a counterfactual mutation $\tilde{v}$ and measures its impact on the contract satisfaction function $\Phi(Y)$:
 

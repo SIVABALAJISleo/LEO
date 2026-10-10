@@ -1,6 +1,7 @@
 # HYPER Memory & Dataflow Engine
 
 ## 1. Memory as Primary Cost
+
 On the i5-12450H, system memory bandwidth is physically bounded to **51.2 GB/s**. By contrast, an NVIDIA RTX 4090 possesses **1,008 GB/s** (20x higher). Consequently, algorithmic optimization on commodity laptop silicon must treat memory movement as the primary bottleneck:
 
 $$\text{Time} \approx \max\left( \frac{\text{FLOPs}}{\text{Peak GFLOPS}}, \frac{\text{Bytes Read} + \text{Bytes Written}}{\text{Memory Bandwidth (51.2 GB/s)}} \right)$$

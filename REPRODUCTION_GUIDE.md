@@ -7,6 +7,7 @@ This guide specifies the exact protocol to reproduce all benchmarks, hostile tes
 ## 1. Target Hardware & Reference Platform
 
 The target hardware specification for all primary benchmark claims is:
+
 - **Model**: Lenovo IdeaPad Slim 3 15IAH8
 - **Processor**: Intel Core i5-12450H (8 physical cores: 4 Performance cores + 4 Efficient cores, 12 logical threads, max turbo 4.40 GHz)
 - **Integrated Graphics**: Intel UHD Graphics for 12th Gen Intel Processors (48 Execution Units, up to 1.20 GHz)
@@ -15,7 +16,7 @@ The target hardware specification for all primary benchmark claims is:
 - **Operating System**: Microsoft Windows 11 64-bit
 - **Discrete GPU**: `NONE` (Strict 100% Software-Only Constraint)
 
-*Note on Development Host Environment*:
+_Note on Development Host Environment_:
 When executed on non-target machines (e.g., 13th Gen Intel Core i5-13420H), the benchmark suite automatically detects the mismatch and explicitly tags all results with `MEASURED_NON_TARGET` in accordance with the 8-class scientific evidence taxonomy.
 
 ---
@@ -23,11 +24,14 @@ When executed on non-target machines (e.g., 13th Gen Intel Core i5-13420H), the 
 ## 2. Prerequisites & Dependency Setup
 
 ### Required Runtimes
+
 - **Python**: Python 3.10, 3.11, 3.12, or 3.13 (64-bit on Windows)
 - **C/C++ Build Tools**: MSVC or MinGW (optional for precompiled C extensions; pure Python / NumPy / SciPy fallbacks are active)
 
 ### Installation
+
 In PowerShell or CMD:
+
 ```powershell
 # Clone repository
 git clone https://github.com/SIVABALAJISleo/LEO.git
@@ -46,12 +50,15 @@ To run the complete validation, hostile falsification battery, and 30-repetition
 ```cmd
 reproduce_clean.bat
 ```
+
 or in PowerShell:
+
 ```powershell
 python reproduce_clean.py
 ```
 
 ### What this command executes:
+
 1. **Hardware Provenance Probe**: Inspects CPU architecture, core counts, RAM, and OpenVINO iGPU runtime.
 2. **Hostile Falsification Battery (15 Tests)**:
    - Anti-truncation verification (short candidates must fail).
@@ -91,6 +98,7 @@ python reproduce_clean.py
 ## 4. Verification of Generated Artifacts
 
 After execution, verify that the following files exist in `benchmark_results/` and repository root:
+
 - `PARITY_BOUNDARY_CERTIFICATE.md`: Master boundary specification and 13-field evidence certificate.
 - `benchmark_results/parity_boundary_certificate.json`: Machine-readable evidence ledger certificate with SHA-256 digest.
 - `benchmark_results/raw_trials.json`: Uncompressed ledger containing all 33 iterations per workload.
@@ -109,5 +117,4 @@ After execution, verify that the following files exist in `benchmark_results/` a
 - [x] **Anti-Truncation Rule**: Candidate size $< \text{baseline size}$ causes immediate `FAIL`.
 - [x] **Feasible-Set Parity**: **100.0%** verified across the declared feasible workload domain ($\sum w_i = 1.00$).
 - [x] **Decoupled Silicon Parity**: **0.0%** raw hardware parity reported honestly (physical silicon absence).
-- [x] **Defensive Boundary Statement**: *"100% verified contract/application parity across the defined feasible workload domain. Raw hardware parity and parity for excluded workloads remain outside the claim."*
-
+- [x] **Defensive Boundary Statement**: _"100% verified contract/application parity across the defined feasible workload domain. Raw hardware parity and parity for excluded workloads remain outside the claim."_

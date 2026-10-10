@@ -3,6 +3,7 @@
 HYPER 3.0 was implemented directly in the LEO / HYPER repository as a high-performance Python package (`hyper_v3/`) backed by NumPy, SciPy, PyTorch CPU, OpenVINO, and FastAPI.
 
 ## Codebase Organization
+
 - `hyper_v3/frontend/`: Contract compiler and program observer.
 - `hyper_v3/ir/`: Universal computation graph IR.
 - `hyper_v3/intelligence/`: 9-dimensional intelligence suite.

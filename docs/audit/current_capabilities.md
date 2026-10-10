@@ -12,12 +12,14 @@
 HYPER possesses a rich suite of verified computational algorithms, intermediate representations, and verification mechanisms executing directly on local laptop silicon:
 
 ### A. Graph Representation and Execution (CIR)
+
 - **Topological Evaluation**: Fully functional topological DAG execution in `hyper/discovery/cir.py`. Correctly schedules and evaluates multi-input, multi-output tensor pipelines using NumPy.
 - **Dead-Code & Dead-Node Elimination**: Automates graph pruning of unreachable operations prior to dispatch.
 - **Cryptographic Graph Hashing**: Every CIR graph produces a deterministic SHA-256 hash representing its topological structure, operator sequence, constant payloads, and output contracts.
 - **Round-Trip Serialization**: Lossless JSON export and import for repeatable experiment provenance.
 
 ### B. Algorithmic Transformations & Factorizations
+
 - **Bilinear Tensor Factorization (AlphaTensor Engine)**:
   - Formulates matrix multiplication `<n, m, k>` as a 3D target tensor $T \in \mathbb{R}^{I \times J \times K}$.
   - Canonical Strassen $\langle 2, 2, 2 \rangle$ factorization ($R=7$ scalar multiplications instead of 8) verified with exact tensor residual $\|T - T_{\text{cand}}\| = 0$.
@@ -32,6 +34,7 @@ HYPER possesses a rich suite of verified computational algorithms, intermediate 
   - Algorithmic rewriting of dense polynomial evaluations into Horner's form, reducing operation count from $O(N^2)$ to $O(N)$.
 
 ### C. Multi-Tier Independent Verification
+
 - **Freivalds Randomized Verification**: Probabilistic verification of $A \cdot B = C$ via random projection $r \in \{-1, 1\}^n$:
   $$A (B r) - C r \stackrel{?}{=} 0$$
   Runs in $O(n^2)$ time with failure probability $\le 2^{-k}$ over $k$ rounds.
@@ -39,6 +42,7 @@ HYPER possesses a rich suite of verified computational algorithms, intermediate 
 - **Automated Anti-Hardcoding Checks**: Static and runtime inspection for banned function lookups, precomputed output caching, and benchmark-name branching.
 
 ### D. Hardware-Aware Measurement & Profiling
+
 - **Silicon Fingerprinting**: `HardwareFingerprint.detect()` measures CPU core topology (physical P-cores, E-cores, logical threads), AVX2/FMA vector instruction support, RAM capacity, and GPU driver capabilities without hardcoded lookups.
 - **Empirical Timing**: Microsecond-resolution monotonic timers (`time.perf_counter`) measuring actual execution times across multiple warmup and measured runs.
 - **Process Memory Tracking**: Direct measurement of process RSS memory footprint via system APIs.
@@ -48,6 +52,7 @@ HYPER possesses a rich suite of verified computational algorithms, intermediate 
 ## 2. Test Suite Validation Status
 
 The automated regression harness validates repository functionality across 200+ test modules:
+
 - Total tests executed: 1,183
 - Total tests passing: 1,183 (100% of collected tests)
 - Total tests failing: 0

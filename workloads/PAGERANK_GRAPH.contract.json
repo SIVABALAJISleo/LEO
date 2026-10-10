@@ -3,18 +3,13 @@
   "description": "Iterative PageRank over 128-node directed adjacency graph",
   "input_domain": {
     "adj_matrix": {
-      "shape": [
-        128,
-        128
-      ],
+      "shape": [128, 128],
       "dtype": "FP32"
     }
   },
   "output_domain": {
     "scores": {
-      "shape": [
-        128
-      ],
+      "shape": [128],
       "dtype": "FP32"
     }
   },

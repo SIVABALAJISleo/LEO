@@ -75,8 +75,8 @@
       "latency_p99_ms": 3.603,
       "latency_min_ms": 2.915,
       "speedup": 2.09,
-      "numerical_error_abs": 2.3e-06,
-      "numerical_error_rel": 4.1e-06,
+      "numerical_error_abs": 2.3e-6,
+      "numerical_error_rel": 4.1e-6,
       "quality_metric": "Freivalds O(n^2) Randomized Matrix Verification: PASS",
       "correctness_status": "PASS",
       "hostile_test_verified": true,
@@ -89,7 +89,7 @@
       "contract_class": "NUMERICALLY_EQUIVALENT",
       "contract_requirements": {
         "rel_tol": 0.0001,
-        "abs_tol": 1e-05,
+        "abs_tol": 1e-5,
         "max_latency_ms": 10.0,
         "determinism": 1.0
       },

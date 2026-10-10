@@ -1,4 +1,5 @@
 # HYPER / LEO — Universal Necessity Map
+
 **Document Version:** 2.0.0 (Ultra-Sonic Master Engineering)
 
 ---
@@ -42,11 +43,11 @@ WORKLOAD
 
 ## 2. Domain-Specific Necessity Profiles
 
-| Domain | Necessary Work % | Eliminable Work % | Primary Software Pathway | Fallback Mechanism |
-| :--- | :--- | :--- | :--- | :--- |
-| **Exact Retrieval / RAG** | 0.0% | 100.0% | Cryptographic Exact Reuse (SHA-256) | Re-compute Embeddings |
-| **Rank-Deficient GEMM** | 5.0% – 15.0% | 85.0% – 95.0% | Truncated SVD / Low-Rank Projection | Canonical BLAS FP32 |
-| **LLM Token Generation** | 40.0% – 60.0% | 40.0% – 60.0% | Speculative Draft + Bipartite ToMe | Autoregressive Full Layer |
-| **Interactive Rendering** | 8.0% – 20.0% | 80.0% – 92.0% | Temporal Reprojection + CAS Bilateral | Full-Resolution Path Trace |
-| **Video Transcoding** | 100.0% | 0.0% | Intel QuickSync Fixed-Function QSV | Software AV1 CPU Slicing |
-| **Random White Noise** | 100.0% | 0.0% | Irreducible Dense FP32 | Exact BLAS |
+| Domain                    | Necessary Work % | Eliminable Work % | Primary Software Pathway              | Fallback Mechanism         |
+| :------------------------ | :--------------- | :---------------- | :------------------------------------ | :------------------------- |
+| **Exact Retrieval / RAG** | 0.0%             | 100.0%            | Cryptographic Exact Reuse (SHA-256)   | Re-compute Embeddings      |
+| **Rank-Deficient GEMM**   | 5.0% – 15.0%     | 85.0% – 95.0%     | Truncated SVD / Low-Rank Projection   | Canonical BLAS FP32        |
+| **LLM Token Generation**  | 40.0% – 60.0%    | 40.0% – 60.0%     | Speculative Draft + Bipartite ToMe    | Autoregressive Full Layer  |
+| **Interactive Rendering** | 8.0% – 20.0%     | 80.0% – 92.0%     | Temporal Reprojection + CAS Bilateral | Full-Resolution Path Trace |
+| **Video Transcoding**     | 100.0%           | 0.0%              | Intel QuickSync Fixed-Function QSV    | Software AV1 CPU Slicing   |
+| **Random White Noise**    | 100.0%           | 0.0%              | Irreducible Dense FP32                | Exact BLAS                 |

@@ -12,37 +12,39 @@
 The LEO/HYPER codebase is a multi-generational numerical optimization, execution routing, and algorithm discovery research platform. It integrates Python backends, high-performance CPU execution routines, iGPU hardware acceleration (OpenVINO, DirectML, GNA, Level-Zero/OneDNN), REST/FastAPI backends, CLI tools, and a React + Vite + TanStack frontend dashboard.
 
 ### Core Directory Breakdown
-| Directory | File Count | Purpose & Existing Capabilities |
-| :--- | :--- | :--- |
-| `hyper/` | 376 | Core algorithms, hardware profiling, ablation engines, adversarial suites, Kimi K3 brain, algorithm reformulation. |
-| `hyper_x/` | 348 | Algorithmic escape search, contract miner, e-graph rewrite engine, heterogeneous orchestrator, independent verifiers, falsification loops. |
-| `hyper_omega/` | 39 | Multi-agent reasoning (Breakthrough agent, Falsification agent, Duel protocol), counterexample database, escape engine. |
-| `hyper_cco/` | 44 | Computational Contract Optimization: algebraic engine, application parity engine, cheapest valid path, CSE engine, incremental engine, coverage engine. |
-| `hyper_universal/` | 23 | Adaptive orchestrator, claim gate, necessary work analyzer, reference provenance, verification fortress. |
-| `hyper_runtime/` | 133 | Adaptive precision, Albert weight sharing, GaLore/BitNet, GNA neural accelerator, iGPU orchestrator, LUT oneDNN inference, sparse attention. |
-| `backend/` | 563 | FastAPI application (`backend/main.py`, `backend/server.py`), analytics (avoidance tracker, cache analytics, cost monitor, telemetry), answers cache, auth, routing. |
-| `contracts/` | 4 | Formal contract IR (`contract_ir.py`), error budgeting (`error_budget.py`), perceptual saturation curves (`perceptual_saturation.py`). |
-| `universal_compute_router/` | 9 | Universal Compute Router (UCR): adaptive dispatch, hardware detection, Intel optimal execution, meta compiler, router logic. |
-| `algorithm_discovery/` | 4 | Complexity transformer, evolutionary loops, candidate generator. |
-| `execution/` | 7 | Execution governor, GPU hijack/interceptors, reasoning loops, swarm grid. |
-| `optimization/` | 1 | LEO Alchemy numerical acceleration engine (`leo_alchemy.py`). |
-| `predictors/` | 3 | Predictive reality, state engine, Markov/temporal state estimation. |
-| `cache/` | 2 | Universal multi-level cache hub (`cache_hub.py`). |
-| `benchmarks/` | 39 | Benchmark suites (matrix, attention, speculative LLM, graphics, int4 vs fp32, holdout audits). |
-| `tests/` | 229 | Unit, integration, chaos, and adversarial test suites (`test_api.py`, `test_adaptive_execution.py`, `test_anti_cheat_provenance.py`, etc.). |
-| `src/` | 141 | React/Vite/TanStack frontend: diagnostic dashboards, benchmark runners, comparison views, system monitors. |
-| `cli/` | 1 | Command-line interface (`hyper_cli.py`). |
-| `spectral/` | 5 | Sparse FFT (`sfft.py`), compressed sensing FFT, linear attention, signal routing. |
-| `physics/` | 4 | Barnes-Hut n-body solver (`barnes_hut.py`), Fast Multipole Method (`fmm_solver.py`), causal simulation. |
-| `render/` | 6 | Software raytracing, FSR upscaling, OIDN denoising, multi-fidelity renderer. |
-| `rag/` | 7 | Local RAG vector indexing, embedding, query routing, retrieval. |
-| `.github/workflows/` | 5 | CI/CD automation: `ci-cd.yml`, `ci.yml`, `codeql.yml`, `security.yml`, Dependabot. |
+
+| Directory                   | File Count | Purpose & Existing Capabilities                                                                                                                                      |
+| :-------------------------- | :--------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `hyper/`                    | 376        | Core algorithms, hardware profiling, ablation engines, adversarial suites, Kimi K3 brain, algorithm reformulation.                                                   |
+| `hyper_x/`                  | 348        | Algorithmic escape search, contract miner, e-graph rewrite engine, heterogeneous orchestrator, independent verifiers, falsification loops.                           |
+| `hyper_omega/`              | 39         | Multi-agent reasoning (Breakthrough agent, Falsification agent, Duel protocol), counterexample database, escape engine.                                              |
+| `hyper_cco/`                | 44         | Computational Contract Optimization: algebraic engine, application parity engine, cheapest valid path, CSE engine, incremental engine, coverage engine.              |
+| `hyper_universal/`          | 23         | Adaptive orchestrator, claim gate, necessary work analyzer, reference provenance, verification fortress.                                                             |
+| `hyper_runtime/`            | 133        | Adaptive precision, Albert weight sharing, GaLore/BitNet, GNA neural accelerator, iGPU orchestrator, LUT oneDNN inference, sparse attention.                         |
+| `backend/`                  | 563        | FastAPI application (`backend/main.py`, `backend/server.py`), analytics (avoidance tracker, cache analytics, cost monitor, telemetry), answers cache, auth, routing. |
+| `contracts/`                | 4          | Formal contract IR (`contract_ir.py`), error budgeting (`error_budget.py`), perceptual saturation curves (`perceptual_saturation.py`).                               |
+| `universal_compute_router/` | 9          | Universal Compute Router (UCR): adaptive dispatch, hardware detection, Intel optimal execution, meta compiler, router logic.                                         |
+| `algorithm_discovery/`      | 4          | Complexity transformer, evolutionary loops, candidate generator.                                                                                                     |
+| `execution/`                | 7          | Execution governor, GPU hijack/interceptors, reasoning loops, swarm grid.                                                                                            |
+| `optimization/`             | 1          | LEO Alchemy numerical acceleration engine (`leo_alchemy.py`).                                                                                                        |
+| `predictors/`               | 3          | Predictive reality, state engine, Markov/temporal state estimation.                                                                                                  |
+| `cache/`                    | 2          | Universal multi-level cache hub (`cache_hub.py`).                                                                                                                    |
+| `benchmarks/`               | 39         | Benchmark suites (matrix, attention, speculative LLM, graphics, int4 vs fp32, holdout audits).                                                                       |
+| `tests/`                    | 229        | Unit, integration, chaos, and adversarial test suites (`test_api.py`, `test_adaptive_execution.py`, `test_anti_cheat_provenance.py`, etc.).                          |
+| `src/`                      | 141        | React/Vite/TanStack frontend: diagnostic dashboards, benchmark runners, comparison views, system monitors.                                                           |
+| `cli/`                      | 1          | Command-line interface (`hyper_cli.py`).                                                                                                                             |
+| `spectral/`                 | 5          | Sparse FFT (`sfft.py`), compressed sensing FFT, linear attention, signal routing.                                                                                    |
+| `physics/`                  | 4          | Barnes-Hut n-body solver (`barnes_hut.py`), Fast Multipole Method (`fmm_solver.py`), causal simulation.                                                              |
+| `render/`                   | 6          | Software raytracing, FSR upscaling, OIDN denoising, multi-fidelity renderer.                                                                                         |
+| `rag/`                      | 7          | Local RAG vector indexing, embedding, query routing, retrieval.                                                                                                      |
+| `.github/workflows/`        | 5          | CI/CD automation: `ci-cd.yml`, `ci.yml`, `codeql.yml`, `security.yml`, Dependabot.                                                                                   |
 
 ---
 
 ## 2. Inventory of Subsystems by Master Prompt Category
 
 ### A. Optimization Engines
+
 1. **`hyper_cco/` (Computational Contract Optimization)**:
    - `algebraic_engine.py`: Symbolic and numeric algebraic restructuring.
    - `cse_engine.py`: Common Subexpression Elimination across computational DAGs.
@@ -53,6 +55,7 @@ The LEO/HYPER codebase is a multi-generational numerical optimization, execution
 4. **`hyper_runtime/sparse_attention.py` & `adaptive_precision.py`**: Dynamic precision switching (FP32 -> FP16 -> INT8/Ternary) and block-sparse attention masks.
 
 ### B. Algorithm Discovery Systems
+
 1. **`algorithm_discovery/`**:
    - `complexity_transformer.py`: Asymptotic complexity reduction transformations (e.g., $O(N^3) \to O(N^{\log_2 7})$ or FFT-based convolutions).
    - `evolutionary_loop.py`: Genetic mutation and crossover of computational pathways.
@@ -63,6 +66,7 @@ The LEO/HYPER codebase is a multi-generational numerical optimization, execution
 3. **`hyper_x/algorithmic_escape_search.py`**: Search for alternative formulations that bypass compute bottlenecks.
 
 ### C. Universal Compute Routers (UCR)
+
 1. **`universal_compute_router/`**:
    - `orchestrator.py`: Central dispatch coordinating CPU, iGPU, and fallback execution.
    - `adaptive_dispatch.py`: Real-time dispatch choosing backend based on input size, memory locality, and device queues.
@@ -70,6 +74,7 @@ The LEO/HYPER codebase is a multi-generational numerical optimization, execution
    - `router_logic.py`: Heuristic and cost-based routing rules.
 
 ### D. Benchmark Workers & Harnesses
+
 1. **`benchmarks/`**:
    - `cel_experiment_1_matrix.py`: Matrix multiplication benchmark harness.
    - `cel_experiment_2_speculative_llm.py`: Speculative decoding benchmark.
@@ -81,6 +86,7 @@ The LEO/HYPER codebase is a multi-generational numerical optimization, execution
    - `gemm_truth_experiment.py`: Ground-truth reference comparison.
 
 ### E. Verification Systems
+
 1. **`hyper_x/`**:
    - `equivalence_verifier.py`: Verifies numeric and algebraic equivalence between candidate and reference.
    - `independent_verifier.py`: Independent validation harness to prevent same-bug false positives.
@@ -89,58 +95,70 @@ The LEO/HYPER codebase is a multi-generational numerical optimization, execution
 3. **`contracts/contract_ir.py`**: The formal contract validator ensuring error tolerances, latency, and memory bounds are respected.
 
 ### F. Schedulers & Governors
+
 1. **`execution/execution.py`**: Worker pool and task scheduling.
 2. **`hyper_runtime/hyper_fabric_orchestrator.py`**: Heterogeneous pipeline scheduler coordinating concurrent execution across CPU cores and iGPU EUs.
 3. **`leo/cgfp_frame_governor.py`**: Frame-time budget governor for real-time applications.
 
 ### G. Predictors & State Estimators
+
 1. **`predictors/predictive_reality.py`**: Temporal prediction of next state from history.
 2. **`hyper_runtime/predictive_dreamer_v3.py`**: Speculative state precomputation.
 
 ### H. Caching & Reuse Systems
+
 1. **`cache/cache_hub.py`**: Unified memory, disk, and tensor cache with LRU/LFU eviction.
 2. **`hyper_cco/exact_cache.py`**: Bit-exact content-addressed cache keyed by input tensor hash and contract ID.
 3. **`backend/answers/canonical_store.py`**: Deduplication and delta-store for repeated query payloads.
 
 ### I. CPU Execution Paths
+
 1. **NumPy / SciPy BLAS/LAPACK**: MKL / OpenBLAS optimized routines.
 2. **PyTorch CPU Backend**: Vectorized C++ kernels with AVX2/AVX-512 support.
 3. **OpenVINO CPU Plugin**: High-throughput multi-threaded inference targeting Intel hybrid architecture (P-cores + E-cores).
 4. **Pure Python Fallback**: Reference implementations ensuring maximum portability and testability.
 
 ### J. iGPU Execution Paths
+
 1. **OpenVINO GPU Plugin**: Compiled kernels targeting Intel UHD Graphics (Gen12 / Xe LP architecture).
 2. **DirectML (ONNX Runtime / PyTorch DirectML)**: Direct3D 12 compute shaders for Windows iGPU acceleration.
 3. **OneDNN / Level-Zero**: Low-level Intel compute runtime integration.
 
 ### K. Mathematical Workers
+
 1. **`spectral/`**: Fast Fourier Transform, Sparse FFT, Wavelet transforms.
 2. **`physics/`**: Barnes-Hut gravitational/electrostatic tree codes, FMM.
 3. **`hyper_x/info_boundary.py`**: Information-theoretic limits and Shannon entropy calculators.
 
 ### L. ML Workers & Inference Engines
+
 1. **`hyper_runtime/inference_loop.py`**: Quantized transformer inference loop.
 2. **`hyper_runtime/galore_bitnet_trainer.py`**: 1.58-bit ternary neural network execution.
 3. **`hyper_runtime/albert_weight_sharing.py`**: Cross-layer parameter sharing for low-memory execution.
 
 ### M. RAG Components
+
 1. **`rag/`**:
    - `composer.py`, `embed.py`, `index.py`, `query.py`, `retriever.py`: Local embedding and vector retrieval pipeline (FAISS / ChromaDB).
 
 ### N. Telemetry & Analytics
+
 1. **`backend/analytics/telemetry_collector.py`**: System metrics, CPU/iGPU utilization, thermals, memory usage.
 2. **`core/analytics/`**: Historical query patterns and performance regressions.
 
 ### O. Dashboard & Visualization
+
 1. **Frontend (`src/`)**: Modern React + TanStack Router + Tailwind CSS web interface:
    - System resource monitor, benchmark comparison, backend status switchers, error budget graphs.
 2. **`competitiveness_dashboard.html` / `falsification_suite.html`**: Standalone HTML/JS reporting dashboards.
 
 ### P. APIs & CLI
+
 1. **`backend/main.py` & `backend/server.py`**: FastAPI server exposing endpoints for workloads, benchmarks, status, auth, and analytics.
 2. **`cli/hyper_cli.py`**: Command-line tool for benchmark execution, profiling, and verification.
 
 ### Q. Tests, Docker, CI/CD
+
 1. **`tests/`**: 229 test files covering API, algorithms, adversarial regression, anti-cheating, contract verification, and mathematical transforms.
 2. **Docker**: `Dockerfile`, `Dockerfile.backend`, `Dockerfile.frontend`, `docker-compose.yml`.
 3. **CI/CD**: GitHub Actions workflows in `.github/workflows/` validating security, formatting, and unit tests.

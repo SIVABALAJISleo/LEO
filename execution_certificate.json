@@ -38,9 +38,7 @@
   "numerical_metrics": {},
   "adversarial_result": {},
   "holdout_result": {},
-  "latency_samples_ms": [
-    18.76
-  ],
+  "latency_samples_ms": [18.76],
   "throughput_ops_per_sec": 53.31,
   "memory_rss_mb": 466.95,
   "work_reference_flops": 524288.0,

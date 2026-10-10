@@ -9,8 +9,8 @@
     "speedup_igpu_vs_cpu": 0.11,
     "speedup_hybrid_vs_cpu": 0.16,
     "max_abs_error_cpu": 0.0,
-    "max_abs_error_igpu": 2.288818359375e-05,
-    "max_abs_error_hybrid": 2.288818359375e-05,
+    "max_abs_error_igpu": 2.288818359375e-5,
+    "max_abs_error_hybrid": 2.288818359375e-5,
     "notes": "Balanced heterogeneous split: 60% CPU (P/E cores) + 40% Intel UHD (48 EUs)"
   },
   {
@@ -23,8 +23,8 @@
     "speedup_igpu_vs_cpu": 0.07,
     "speedup_hybrid_vs_cpu": 0.3,
     "max_abs_error_cpu": 0.0,
-    "max_abs_error_igpu": 5.7220458984375e-05,
-    "max_abs_error_hybrid": 5.7220458984375e-05,
+    "max_abs_error_igpu": 5.7220458984375e-5,
+    "max_abs_error_hybrid": 5.7220458984375e-5,
     "notes": "Balanced heterogeneous split: 60% CPU (P/E cores) + 40% Intel UHD (48 EUs)"
   },
   {
@@ -37,8 +37,8 @@
     "speedup_igpu_vs_cpu": 0.04,
     "speedup_hybrid_vs_cpu": 0.19,
     "max_abs_error_cpu": 0.0,
-    "max_abs_error_igpu": 9.918212890625e-05,
-    "max_abs_error_hybrid": 8.392333984375e-05,
+    "max_abs_error_igpu": 9.918212890625e-5,
+    "max_abs_error_hybrid": 8.392333984375e-5,
     "notes": "Balanced heterogeneous split: 60% CPU (P/E cores) + 40% Intel UHD (48 EUs)"
   },
   {

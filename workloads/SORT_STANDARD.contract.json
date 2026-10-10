@@ -3,17 +3,13 @@
   "description": "Array element sorting (10,000 float32 elements)",
   "input_domain": {
     "x": {
-      "shape": [
-        10000
-      ],
+      "shape": [10000],
       "dtype": "FP32"
     }
   },
   "output_domain": {
     "output": {
-      "shape": [
-        10000
-      ],
+      "shape": [10000],
       "dtype": "FP32"
     }
   },

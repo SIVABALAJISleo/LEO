@@ -1,4 +1,5 @@
 # HYPER Scientific Claim Policy & Verification Protocol
+
 **Standard of Rigor**: Uncompromising Scientific Truthfulness. Zero Tolerance for Fabrication or Hardware Faking.
 
 ---
@@ -17,13 +18,13 @@
 
 The Automated Scientific Auditor (`scientific_auditor.py`) scans all code, commit messages, telemetry, certificates, and documentation. Any occurrence of the following patterns results in an automatic audit failure:
 
-| Prohibited Statement | Scientific Violation | Mandatory Remediation |
-|---|---|---|
-| *"GPU replaced"* | Violates hardware reality. Software does not replace hardware. | Replace with: *"Eliminated X% of GPU-advantaged work under declared contract."* |
-| *"100% NVIDIA parity"* | Conflates application outcome with silicon equivalence. | State exact metric: *"100% Application Contract Parity over feasible set."* |
-| *"HYPER beats RTX 5090"* | False hardware equivalence. | Report measured latency and GADR/HAE work elimination on target workload. |
-| *"Measured Power"* (without RAPL/sensors) | Analytical estimation passed off as sensor data. | Label strictly as `ESTIMATED_POWER` or `UNKNOWN`. |
-| Hardcoded `functional_pass = True` | Circular verification without execution evidence. | Replace with 9-layer `UniversalFunctionalVerifier`. |
+| Prohibited Statement                      | Scientific Violation                                           | Mandatory Remediation                                                           |
+| ----------------------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| _"GPU replaced"_                          | Violates hardware reality. Software does not replace hardware. | Replace with: _"Eliminated X% of GPU-advantaged work under declared contract."_ |
+| _"100% NVIDIA parity"_                    | Conflates application outcome with silicon equivalence.        | State exact metric: _"100% Application Contract Parity over feasible set."_     |
+| _"HYPER beats RTX 5090"_                  | False hardware equivalence.                                    | Report measured latency and GADR/HAE work elimination on target workload.       |
+| _"Measured Power"_ (without RAPL/sensors) | Analytical estimation passed off as sensor data.               | Label strictly as `ESTIMATED_POWER` or `UNKNOWN`.                               |
+| Hardcoded `functional_pass = True`        | Circular verification without execution evidence.              | Replace with 9-layer `UniversalFunctionalVerifier`.                             |
 
 ---
 
@@ -50,8 +51,8 @@ Every claim, certificate, and performance result must be classified into its ver
 
 When authoring research results, adhere strictly to evidence-based terminology:
 
-- **UNACCEPTABLE**: *"HYPER achieves 10x speedup over GPU."*
-- **ACCEPTABLE**: *"For workload GEMM (128x128) under BOUNDED_APPROXIMATION contract (tolerance=1e-3), HYPER discovered a rank-8 factorization reducing necessary FLOPs by 87.5% with an effective speedup of 1.4x on Intel Core i5-12450H."*
+- **UNACCEPTABLE**: _"HYPER achieves 10x speedup over GPU."_
+- **ACCEPTABLE**: _"For workload GEMM (128x128) under BOUNDED_APPROXIMATION contract (tolerance=1e-3), HYPER discovered a rank-8 factorization reducing necessary FLOPs by 87.5% with an effective speedup of 1.4x on Intel Core i5-12450H."_
 
-- **UNACCEPTABLE**: *"All workloads closed at 100%."*
-- **ACCEPTABLE**: *"Universal Workload Closure reached 100% across the evaluated registry: 8 workloads achieved verified wormholes, 2 workloads were proven to reach information-theoretic lower bounds, with 0 inconclusive searches."*
+- **UNACCEPTABLE**: _"All workloads closed at 100%."_
+- **ACCEPTABLE**: _"Universal Workload Closure reached 100% across the evaluated registry: 8 workloads achieved verified wormholes, 2 workloads were proven to reach information-theoretic lower bounds, with 0 inconclusive searches."_

@@ -3,26 +3,17 @@
   "description": "Extremely ill-conditioned Hilbert matrix multiplication designed to break approximations",
   "input_domain": {
     "A": {
-      "shape": [
-        32,
-        32
-      ],
+      "shape": [32, 32],
       "dtype": "FP32"
     },
     "B": {
-      "shape": [
-        32,
-        32
-      ],
+      "shape": [32, 32],
       "dtype": "FP32"
     }
   },
   "output_domain": {
     "C": {
-      "shape": [
-        32,
-        32
-      ],
+      "shape": [32, 32],
       "dtype": "FP32"
     }
   },

@@ -3,26 +3,17 @@
   "description": "Dense matrix multiplication C = A @ B (128x128 FP32)",
   "input_domain": {
     "A": {
-      "shape": [
-        128,
-        128
-      ],
+      "shape": [128, 128],
       "dtype": "FP32"
     },
     "B": {
-      "shape": [
-        128,
-        128
-      ],
+      "shape": [128, 128],
       "dtype": "FP32"
     }
   },
   "output_domain": {
     "C": {
-      "shape": [
-        128,
-        128
-      ],
+      "shape": [128, 128],
       "dtype": "FP32"
     }
   },

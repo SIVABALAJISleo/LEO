@@ -3,17 +3,13 @@
   "description": "1D Discrete Fast Fourier Transform (1024 points)",
   "input_domain": {
     "x": {
-      "shape": [
-        1024
-      ],
+      "shape": [1024],
       "dtype": "COMPLEX64"
     }
   },
   "output_domain": {
     "output": {
-      "shape": [
-        1024
-      ],
+      "shape": [1024],
       "dtype": "COMPLEX64"
     }
   },

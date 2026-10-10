@@ -62,12 +62,13 @@ test('succeeds on the third attempt', async () => {
     return 'success';
   };
 
-  const result = await retryOperation(operation);
+const result = await retryOperation(operation);
 
-  expect(result).toBe('success');
-  expect(attempts).toBe(3);
+expect(result).toBe('success');
+expect(attempts).toBe(3);
 });
-```
+
+````
 Clear name, tests real behavior, one thing
 </Good>
 
@@ -81,11 +82,13 @@ test('retry works', async () => {
   await retryOperation(mock);
   expect(mock).toHaveBeenCalledTimes(3);
 });
-```
+````
+
 Vague name, tests mock not code
 </Bad>
 
 **Requirements:**
+
 - One behavior
 - Clear name
 - Real code (no mocks unless unavoidable)
@@ -99,6 +102,7 @@ npm test path/to/test.test.ts
 ```
 
 Confirm:
+
 - Test fails (not errors)
 - Failure message is expected
 - Fails because feature missing (not typos)
@@ -154,6 +158,7 @@ npm test path/to/test.test.ts
 ```
 
 Confirm:
+
 - Test passes
 - Other tests still pass
 - Output pristine (no errors, warnings)
@@ -165,6 +170,7 @@ Confirm:
 ### REFACTOR - Clean Up
 
 After green only:
+
 - Remove duplication
 - Improve names
 - Extract helpers
@@ -177,11 +183,11 @@ Next failing test for next feature.
 
 ## Good Tests
 
-| Quality | Good | Bad |
-|---------|------|-----|
-| **Minimal** | One thing. "and" in name? Split it. | `test('validates email and domain and whitespace')` |
-| **Clear** | Name describes behavior | `test('test1')` |
-| **Shows intent** | Demonstrates desired API | Obscures what code should do |
+| Quality          | Good                                | Bad                                                 |
+| ---------------- | ----------------------------------- | --------------------------------------------------- |
+| **Minimal**      | One thing. "and" in name? Split it. | `test('validates email and domain and whitespace')` |
+| **Clear**        | Name describes behavior             | `test('test1')`                                     |
+| **Shows intent** | Demonstrates desired API            | Obscures what code should do                        |
 
 ## Why order matters
 
@@ -194,30 +200,34 @@ If a failure is caused by a missing import, unavailable service or bad fixture, 
 **Bug:** Empty email accepted
 
 **RED**
+
 ```typescript
-test('rejects empty email', async () => {
-  const result = await submitForm({ email: '' });
-  expect(result.error).toBe('Email required');
+test("rejects empty email", async () => {
+  const result = await submitForm({ email: "" });
+  expect(result.error).toBe("Email required");
 });
 ```
 
 **Verify RED**
+
 ```bash
 $ npm test
 FAIL: expected 'Email required', got undefined
 ```
 
 **GREEN**
+
 ```typescript
 function submitForm(data: FormData) {
   if (!data.email?.trim()) {
-    return { error: 'Email required' };
+    return { error: "Email required" };
   }
   // ...
 }
 ```
 
 **Verify GREEN**
+
 ```bash
 $ npm test
 PASS
@@ -243,12 +253,12 @@ Record any unmet check and its consequence. Do not erase work or claim an unobse
 
 ## When Stuck
 
-| Problem | Solution |
-|---------|----------|
+| Problem                | Solution                                                             |
+| ---------------------- | -------------------------------------------------------------------- |
 | Don't know how to test | Write wished-for API. Write assertion first. Ask your human partner. |
-| Test too complicated | Design too complicated. Simplify interface. |
-| Must mock everything | Code too coupled. Use dependency injection. |
-| Test setup huge | Extract helpers. Still complex? Simplify design. |
+| Test too complicated   | Design too complicated. Simplify interface.                          |
+| Must mock everything   | Code too coupled. Use dependency injection.                          |
+| Test setup huge        | Extract helpers. Still complex? Simplify design.                     |
 
 ## Debugging Integration
 
@@ -259,6 +269,7 @@ Prefer a reproducible regression for a bug fix; use another explicit verifier wh
 ## Testing Anti-Patterns
 
 When adding mocks or test utilities, read @testing-anti-patterns.md to avoid common pitfalls:
+
 - Testing mock behavior instead of real behavior
 - Adding test-only methods to production classes
 - Mocking without understanding dependencies

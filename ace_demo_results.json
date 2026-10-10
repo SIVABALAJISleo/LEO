@@ -15,7 +15,7 @@
       "input_hash": "3124e9d48d7b5d8d"
     },
     "baseline_ms": 6.32070004940033,
-    "rel_err": 3.653869669051346e-07
+    "rel_err": 3.653869669051346e-7
   },
   {
     "case": "sparse_97pct",
@@ -33,7 +33,7 @@
       "input_hash": "68740d2ebb3465dc"
     },
     "baseline_ms": 2.5671999901533127,
-    "rel_err": 8.991565891847131e-08
+    "rel_err": 8.991565891847131e-8
   },
   {
     "case": "ternary",
@@ -51,7 +51,7 @@
       "input_hash": "4bd8bd89c06b3631"
     },
     "baseline_ms": 4.063799977302551,
-    "rel_err": 3.0998563715911587e-07
+    "rel_err": 3.0998563715911587e-7
   },
   {
     "case": "fullrank_noise",

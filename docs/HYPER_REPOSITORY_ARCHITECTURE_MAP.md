@@ -1,4 +1,5 @@
 # HYPER / LEO Repository Architecture Map
+
 **Document Version**: 2.0.0 (Forensic Audit & Full Systems Inventory)  
 **Target Platform**: Intel Core i5-12450H (8C/12T, AVX2/FMA) + Intel UHD Graphics (48 EUs), 16 GB RAM, Windows 11.
 
@@ -25,6 +26,7 @@ The repository is organized into three generations of engine design:
 ### 2.1 Compiler & IR Subsystems
 
 #### `hyper_x.wormhole_compiler.contract_ir`
+
 - **Purpose**: Unified Contract IR defining 7 correctness modes (`EXACT`, `EXACT_REFORMULATION`, `NUMERICALLY_EQUIVALENT`, `BOUNDED_APPROXIMATION`, `PERCEPTUAL_APPROXIMATION`, `PREDICTIVE`, `CONTRACT`).
 - **Dependencies**: Python standard library (`enum`, `dataclasses`).
 - **Inputs**: Workload specifications, tolerance, latency SLO, memory limits, cache policy.
@@ -32,6 +34,7 @@ The repository is organized into three generations of engine design:
 - **Status**: Production Ready. Scientific Validity: 100%. No duplication. Fully integrated.
 
 #### `hyper_x.wormhole_compiler.observable_compiler`
+
 - **Purpose**: Extracts application observables (`ObservableIR`) across Dense Tensor, Graphics, AI Tokens, Databases, and Scientific fields.
 - **Dependencies**: `numpy`.
 - **Inputs**: High-level application output tensor/request.
@@ -39,6 +42,7 @@ The repository is organized into three generations of engine design:
 - **Status**: Production Ready. Scientific Validity: 100%. Fully integrated.
 
 #### `hyper_x.wormhole_compiler.information_boundary`
+
 - **Purpose**: Backward causal slicing classifying nodes into `REQUIRED`, `POTENTIALLY_REQUIRED`, `PROVABLY_UNNECESSARY`, `UNKNOWN`.
 - **Dependencies**: `dependency_graph.py`, `schemas.py`, `numpy`.
 - **Inputs**: Dependency graph, observable node, sensitivity data.
@@ -46,6 +50,7 @@ The repository is organized into three generations of engine design:
 - **Status**: Production Ready. Enforces rule: `UNKNOWN` is never treated as unnecessary.
 
 #### `hyper_x.wormhole_compiler.necessary_work_compiler`
+
 - **Purpose**: Central compiler constructing $G_N = (V_N, E_N)$ and searching for $\min \text{Cost}(G')$ subject to observable equivalence.
 - **Dependencies**: `contract_ir`, `observable_compiler`, `information_boundary`, `counterfactual_elimination`, `necessity_certificate`, `patterns`.
 - **Inputs**: Input tensors/program, workload contract, observable IR.
@@ -57,6 +62,7 @@ The repository is organized into three generations of engine design:
 ### 2.2 Algorithmic Transformation & Synthesis Subsystems
 
 #### `hyper_x.wormhole_compiler.counterfactual_elimination`
+
 - **Purpose**: Executes $G$ vs $(G - \text{op})$ and subjects candidates to 8 adversarial stress suites (zeros, subnormals, extreme scaling, ill-conditioning, distribution shifts).
 - **Dependencies**: `counterexample.py`, `numpy`.
 - **Inputs**: Baseline callable, ablated callable, nominal inputs, contract.
@@ -64,6 +70,7 @@ The repository is organized into three generations of engine design:
 - **Status**: Production Ready. Prevents invalid removals.
 
 #### `hyper_x.wormhole_compiler.egraph_search`
+
 - **Purpose**: Equality saturation over mathematical expression spaces with multi-attribute cost extraction (FLOPs, memory, transfer).
 - **Dependencies**: Standard library.
 - **Inputs**: AST canonical expression strings.
@@ -71,6 +78,7 @@ The repository is organized into three generations of engine design:
 - **Status**: Production Ready.
 
 #### `hyper_x.wormhole_compiler.representation_inventor`
+
 - **Purpose**: Synthesizes hybrid representations (e.g. Block-Tiled Low-Rank + Sparse Residual, Spatio-Temporal Delta Event).
 - **Dependencies**: `schemas.py`, `numpy`.
 - **Inputs**: Workload context, tensor traits.
@@ -78,6 +86,7 @@ The repository is organized into three generations of engine design:
 - **Status**: Production Ready.
 
 #### `hyper_cco.exact_cache` & `hyper_cco.incremental_engine`
+
 - **Purpose**: Content-addressable memoization, deterministic hash caching, and temporal delta recomputation.
 - **Dependencies**: `sqlite3`, `hashlib`, `numpy`.
 - **Inputs**: Tensors, state hashes.
@@ -89,6 +98,7 @@ The repository is organized into three generations of engine design:
 ### 2.3 Heterogeneous Execution & Memory Movement
 
 #### `hyper_x.wormhole_compiler.hybrid_scheduler`
+
 - **Purpose**: Empirical latency-directed partitioner between CPU (AVX2/FMA) and Intel UHD (48 EUs).
 - **Dependencies**: Micro-architectural parameters for Core i5-12450H + UHD.
 - **Inputs**: FLOP count, input/output byte traffic, control-flow regularity.
@@ -96,6 +106,7 @@ The repository is organized into three generations of engine design:
 - **Status**: Production Ready. Avoids dispatching small workloads to iGPU when transfer cost exceeds compute time.
 
 #### `hyper_x.wormhole_compiler.memory_movement_optimizer`
+
 - **Purpose**: Tracks byte movement, eliminates redundant buffer allocations, and utilizes unified memory zero-copy shared buffers.
 - **Dependencies**: `numpy`.
 - **Inputs**: Input, intermediate, and output tensor shapes.
@@ -103,6 +114,7 @@ The repository is organized into three generations of engine design:
 - **Status**: Production Ready.
 
 #### `core_ai.kernels.bitnet_avx2.cpp` & `ternary_avx2.cpp`
+
 - **Purpose**: AVX2 C++ SIMD kernels for ternary and 1.58-bit quantized matrix operations.
 - **Dependencies**: Intel C++ Compiler / MSVC with `/arch:AVX2`.
 - **Status**: High performance C++ implementations; falls back to pure NumPy if uncompiled.
@@ -112,6 +124,7 @@ The repository is organized into three generations of engine design:
 ### 2.4 Verification, Falsification & Scientific Audit
 
 #### `hyper_x.wormhole_compiler.functional_verifier`
+
 - **Purpose**: Universal 9-layer functional verifier (Exact, Shape, Dtype, Determinism, Frobenius Numerical, Semantic, Metamorphic, Adversarial, Holdout).
 - **Dependencies**: `numpy`.
 - **Inputs**: Candidate function, reference function, sample inputs, contract, observable.
@@ -119,6 +132,7 @@ The repository is organized into three generations of engine design:
 - **Status**: Production Ready.
 
 #### `hyper_x.wormhole_compiler.parity_gates`
+
 - **Purpose**: Evaluates 8 independent conjunct parity gates and computes overall conjunctive pass.
 - **Dependencies**: `schemas.py`, `numpy`.
 - **Inputs**: Contract, candidate/ref latency, numerical error, memory, holdout, provenance.
@@ -126,6 +140,7 @@ The repository is organized into three generations of engine design:
 - **Status**: Audited and secured (hardcoded `functional_pass = True` removed).
 
 #### `hyper_x.wormhole_compiler.scientific_auditor`
+
 - **Purpose**: Automated audit engine detecting prohibited statements ("GPU replaced", "100% silicon parity"), simulation confusion, hidden approximations, and AST constants.
 - **Dependencies**: `re`, standard library.
 - **Inputs**: Statements, result records, AST source strings.
@@ -133,6 +148,7 @@ The repository is organized into three generations of engine design:
 - **Status**: Production Ready.
 
 #### `hyper_x.wormhole_compiler.workload_registry`
+
 - **Purpose**: Global workload database tracking outcomes (`WORMHOLE_FOUND`, `NECESSARY_COMPUTATION_PROVEN`, `SEARCH_INCONCLUSIVE`) and calculating objective Workload Closure.
 - **Dependencies**: `pathlib`, `json`.
 - **Inputs**: Registered benchmark entries.

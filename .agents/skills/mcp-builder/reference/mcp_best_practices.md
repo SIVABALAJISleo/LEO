@@ -6,25 +6,30 @@ check negotiated revisions and installed SDK documentation for other clients.
 ## Quick Reference
 
 ### Server Naming
+
 - **Python**: `{service}_mcp` (e.g., `slack_mcp`)
 - **Node/TypeScript**: `{service}-mcp-server` (e.g., `slack-mcp-server`)
 
 ### Tool Naming
+
 - Use snake_case with service prefix
 - Format: `{service}_{action}_{resource}`
 - Example: `slack_send_message`, `github_create_issue`
 
 ### Response Formats
+
 - Support both JSON and Markdown formats
 - JSON for programmatic processing
 - Markdown for human readability
 
 ### Pagination
+
 - Always respect `limit` parameter
 - Return `has_more`, `next_offset`, `total_count`
 - Default to 20-50 items
 
 ### Transport
+
 - **Streamable HTTP**: For remote servers, multi-client scenarios
 - **stdio**: For local integrations, command-line tools
 - Avoid SSE (deprecated in favor of streamable HTTP)
@@ -36,9 +41,11 @@ check negotiated revisions and installed SDK documentation for other clients.
 Follow these standardized naming patterns:
 
 **Python**: Use format `{service}_mcp` (lowercase with underscores)
+
 - Examples: `slack_mcp`, `github_mcp`, `jira_mcp`
 
 **Node/TypeScript**: Use format `{service}-mcp-server` (lowercase with hyphens)
+
 - Examples: `slack-mcp-server`, `github-mcp-server`, `jira-mcp-server`
 
 The name should be general, descriptive of the service being integrated, easy to infer from the task description, and without version numbers.
@@ -70,12 +77,14 @@ The name should be general, descriptive of the service being integrated, easy to
 Choose the minimal formats the client actually needs; avoid a parameter when one format suffices:
 
 ### JSON Format (`response_format="json"`)
+
 - Machine-readable structured data
 - Include only authorized fields needed by the task
 - Consistent field names and types
 - Use for programmatic processing
 
 ### Markdown Format (`response_format="markdown"`, typically default)
+
 - Human-readable formatted text
 - Use headers, lists, and formatting for clarity
 - Convert timestamps to human-readable format
@@ -95,6 +104,7 @@ For tools that list resources:
 - **Default to reasonable limits**: 20-50 items is typical
 
 Example pagination response:
+
 ```json
 {
   "total": 150,
@@ -115,12 +125,14 @@ Example pagination response:
 **Best for**: Remote servers, web services, multi-client scenarios
 
 **Characteristics**:
+
 - Bidirectional communication over HTTP
 - Supports multiple simultaneous clients
 - Can be deployed as a web service
 - Enables server-to-client notifications
 
 **Use when**:
+
 - Serving multiple clients simultaneously
 - Deploying as a cloud service
 - Integration with web applications
@@ -130,11 +142,13 @@ Example pagination response:
 **Best for**: Local integrations, command-line tools
 
 **Characteristics**:
+
 - Standard input/output stream communication
 - Simple setup, no network configuration needed
 - Runs as a subprocess of the client
 
 **Use when**:
+
 - Building tools for local development environments
 - Integrating with desktop applications
 - Single-user, single-session scenarios
@@ -143,12 +157,12 @@ Example pagination response:
 
 ### Transport Selection
 
-| Criterion | stdio | Streamable HTTP |
-|-----------|-------|-----------------|
-| **Deployment** | Local | Remote |
-| **Clients** | Single | Multiple |
-| **Complexity** | Low | Medium |
-| **Notifications** | Supported | Supported |
+| Criterion         | stdio     | Streamable HTTP |
+| ----------------- | --------- | --------------- |
+| **Deployment**    | Local     | Remote          |
+| **Clients**       | Single    | Multiple        |
+| **Complexity**    | Low       | Medium          |
+| **Notifications** | Supported | Supported       |
 
 ---
 
@@ -157,11 +171,13 @@ Example pagination response:
 ### Authentication and Authorization
 
 **OAuth 2.1**:
+
 - Follow the negotiated MCP authorization specification and provider flow; TLS certificates do not establish token audience or user permissions
 - Validate access tokens before processing requests
 - Only accept tokens specifically intended for your server
 
 **API Keys**:
+
 - Store API keys in environment variables, never in code
 - Validate keys on server startup
 - Provide clear error messages when authentication fails
@@ -184,6 +200,7 @@ Example pagination response:
 ### DNS Rebinding Protection
 
 For streamable HTTP servers running locally:
+
 - Enable DNS rebinding protection
 - Validate the `Origin` header on all incoming connections
 - Bind to `127.0.0.1` rather than `0.0.0.0`
@@ -194,12 +211,12 @@ For streamable HTTP servers running locally:
 
 Provide annotations to help clients understand tool behavior:
 
-| Annotation | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `readOnlyHint` | boolean | false | Tool does not modify its environment |
-| `destructiveHint` | boolean | true | Tool may perform destructive updates |
-| `idempotentHint` | boolean | false | Repeated calls with same args have no additional effect |
-| `openWorldHint` | boolean | true | Tool interacts with external entities |
+| Annotation        | Type    | Default | Description                                             |
+| ----------------- | ------- | ------- | ------------------------------------------------------- |
+| `readOnlyHint`    | boolean | false   | Tool does not modify its environment                    |
+| `destructiveHint` | boolean | true    | Tool may perform destructive updates                    |
+| `idempotentHint`  | boolean | false   | Repeated calls with same args have no additional effect |
+| `openWorldHint`   | boolean | true    | Tool interacts with external entities                   |
 
 **Important**: Annotations are hints, not security guarantees. Clients should not make security-critical decisions based solely on annotations.
 
@@ -214,6 +231,7 @@ Provide annotations to help clients understand tool behavior:
 - Clean up resources properly on errors
 
 Example error handling:
+
 ```typescript
 try {
   const result = performOperation();
@@ -221,10 +239,12 @@ try {
 } catch (error) {
   return {
     isError: true,
-    content: [{
-      type: "text",
-      text: "Operation failed. Check the permitted inputs or retry according to the documented policy."
-    }]
+    content: [
+      {
+        type: "text",
+        text: "Operation failed. Check the permitted inputs or retry according to the documented policy.",
+      },
+    ],
   };
 }
 ```

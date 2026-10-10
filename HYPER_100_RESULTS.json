@@ -7,10 +7,7 @@
       "experiment_id": "EXP_1789478092_13th_Gen_Intel(R)_Core(TM)_i5-13420H",
       "timestamp_utc": "2026-09-15T13:14:52.753127+00:00",
       "workload": "Dense GEMM (256x256)",
-      "input_shape": [
-        256,
-        256
-      ],
+      "input_shape": [256, 256],
       "dtype": "float32",
       "path_class": "NUMERICALLY_APPROXIMATE",
       "backend": "CPU_AVX2",
@@ -26,10 +23,7 @@
         "gpu_execution_units": null,
         "gpu_driver": "32.0.101.7076",
         "shared_memory": true,
-        "openvino_devices": [
-          "CPU",
-          "GPU"
-        ],
+        "openvino_devices": ["CPU", "GPU"],
         "directml_available": false,
         "cuda_available": false,
         "python_version": "3.13.5",
@@ -75,8 +69,8 @@
       "power_w": null,
       "output_metrics": {
         "max_abs_error": 0.0003695487976074219,
-        "relative_error": 7.013883518106067e-07,
-        "rmse": 4.6418080648917044e-05,
+        "relative_error": 7.013883518106067e-7,
+        "rmse": 4.6418080648917044e-5,
         "psnr": null,
         "ssim": null
       },
@@ -114,10 +108,7 @@
       "experiment_id": "EXP_1789478092_13th_Gen_Intel(R)_Core(TM)_i5-13420H",
       "timestamp_utc": "2026-09-15T13:14:52.753127+00:00",
       "workload": "Tensor Attention / GEMV (128x128)",
-      "input_shape": [
-        128,
-        128
-      ],
+      "input_shape": [128, 128],
       "dtype": "float32",
       "path_class": "NUMERICALLY_APPROXIMATE",
       "backend": "CPU_AVX2",
@@ -133,10 +124,7 @@
         "gpu_execution_units": null,
         "gpu_driver": "32.0.101.7076",
         "shared_memory": true,
-        "openvino_devices": [
-          "CPU",
-          "GPU"
-        ],
+        "openvino_devices": ["CPU", "GPU"],
         "directml_available": false,
         "cuda_available": false,
         "python_version": "3.13.5",
@@ -221,9 +209,7 @@
       "experiment_id": "EXP_1789478092_13th_Gen_Intel(R)_Core(TM)_i5-13420H",
       "timestamp_utc": "2026-09-15T13:14:52.753127+00:00",
       "workload": "Spectral Sparse FFT (1024-pt)",
-      "input_shape": [
-        1024
-      ],
+      "input_shape": [1024],
       "dtype": "complex64",
       "path_class": "REDUCED_WORK",
       "backend": "CPU_AVX2",
@@ -239,10 +225,7 @@
         "gpu_execution_units": null,
         "gpu_driver": "32.0.101.7076",
         "shared_memory": true,
-        "openvino_devices": [
-          "CPU",
-          "GPU"
-        ],
+        "openvino_devices": ["CPU", "GPU"],
         "directml_available": false,
         "cuda_available": false,
         "python_version": "3.13.5",
@@ -288,7 +271,7 @@
       "power_w": null,
       "output_metrics": {
         "max_abs_error": 0.0007805501227267087,
-        "relative_error": 9.846086328400302e-06,
+        "relative_error": 9.846086328400302e-6,
         "rmse": 0.00013367489273068792,
         "psnr": null,
         "ssim": null
@@ -310,10 +293,7 @@
       "experiment_id": "EXP_1789478092_13th_Gen_Intel(R)_Core(TM)_i5-13420H",
       "timestamp_utc": "2026-09-15T13:14:52.753127+00:00",
       "workload": "Sparse Matmul (512x512, 90% sparse)",
-      "input_shape": [
-        512,
-        512
-      ],
+      "input_shape": [512, 512],
       "dtype": "float32",
       "path_class": "EXACT",
       "backend": "CPU_MULTITHREADED",
@@ -329,10 +309,7 @@
         "gpu_execution_units": null,
         "gpu_driver": "32.0.101.7076",
         "shared_memory": true,
-        "openvino_devices": [
-          "CPU",
-          "GPU"
-        ],
+        "openvino_devices": ["CPU", "GPU"],
         "directml_available": false,
         "cuda_available": false,
         "python_version": "3.13.5",
@@ -377,9 +354,9 @@
       "temperature_c": null,
       "power_w": null,
       "output_metrics": {
-        "max_abs_error": 1.1444091796875e-05,
-        "relative_error": 1.4510325657771446e-07,
-        "rmse": 1.0414812752589702e-06,
+        "max_abs_error": 1.1444091796875e-5,
+        "relative_error": 1.4510325657771446e-7,
+        "rmse": 1.0414812752589702e-6,
         "psnr": null,
         "ssim": null
       },

@@ -1,6 +1,7 @@
 # 🧠 HYPER 2.0: Autonomous Computation Compiler & Heterogeneous Execution Engine Architecture
 
 ## 1. Executive Summary & Scientific Axioms
+
 HYPER 2.0 operates under the core scientific premise: **Hardware execution bounds are determined by the unavoidable mathematical necessity of the application contract, not by brute-force floating-point iterations.**
 
 HYPER 2.0 transforms traditional hardware-bound executions on commodity Intel Core i5 + Intel UHD Graphics systems into contract-satisfying, structure-exploiting, heterogeneous pipelines.
@@ -29,6 +30,7 @@ graph TD
 ## 2. Mathematical Formalism & Verification
 
 ### A. Dual-Track Operational Segregation
+
 1. **Track A (Exact Hardware Replacement)**:
    - Evaluates mathematically uncompressible workloads ($\epsilon = 0$).
    - Direct physical silicon throughput comparison against dedicated desktop GPUs.
@@ -41,8 +43,10 @@ graph TD
    - Result: 15/15 workloads achieve 100% contract compliance with 95.6% average work avoided.
 
 ### B. Freivalds Randomized Matrix Verification
+
 Given matrices $A \in \mathbb{R}^{M \times K}$, $B \in \mathbb{R}^{K \times N}$, and computed product $C \in \mathbb{R}^{M \times N}$, Freivalds verification chooses $k$ independent random binary vectors $r \in \{0, 1\}^N$ and tests:
 $$\|A(Br) - Cr\|_2 \le \epsilon \cdot \|A(Br)\|_2$$
+
 - Time Complexity: $O(k \cdot N^2)$ instead of brute-force $O(N^3)$.
 - Probability of undetected error: $\le 2^{-k}$.
 
@@ -51,12 +55,15 @@ $$\|A(Br) - Cr\|_2 \le \epsilon \cdot \|A(Br)\|_2$$
 ## 3. Subsystem Architecture
 
 ### 1. `hyper_v2/compiler/`
+
 - **`contract_compiler.py`**: Immutable contract parsing, hashing, and parameter validation.
 - **`intermediate_representation.py`**: Node, Edge, Tensor, and Device-placement DAG representation.
 - **`graph_optimizer.py`**: In-register fusion, algebraic simplification, and dead-code elimination.
 
 ### 2. `hyper_v2/analysis/`
+
 15-Point Computational Necessity Engine:
+
 1. Result Reuse (Exact cache hit)
 2. Intermediate Reuse (Common subexpressions)
 3. Temporal Redundancy (Frame-to-frame coherence)
@@ -74,6 +81,7 @@ $$\|A(Br) - Cr\|_2 \le \epsilon \cdot \|A(Br)\|_2$$
 15. Transfer Elimination (Zero-copy unified system memory)
 
 ### 3. `hyper_v2/execution/`
+
 - **`device_manager.py`**: Auto-detects Intel Core i5 P-Cores, E-Cores, AVX2/VNNI, and Intel UHD Graphics OpenVINO execution units.
 - **`cpu_backend.py`**: AVX2 SIMD multi-threaded worker pools.
 - **`igpu_backend.py`**: OpenVINO integrated graphics execution engine.
@@ -81,7 +89,9 @@ $$\|A(Br) - Cr\|_2 \le \epsilon \cdot \|A(Br)\|_2$$
 - **`scheduler.py`**: Asynchronous dispatch router.
 
 ### 4. `hyper_v2/strategies/fallback_ladder.py`
+
 8-Level Robustness Ladder:
+
 - **Level 0**: $O(1)$ Semantic Lattice Reuse
 - **Level 1**: Dead-Code Elimination & Fused SIMD
 - **Level 2**: Randomized SVD Low-Rank & BitNet Factorization
@@ -97,6 +107,7 @@ $$\|A(Br) - Cr\|_2 \le \epsilon \cdot \|A(Br)\|_2$$
 ## 4. API Endpoints & CLI
 
 ### FastAPI Router (`/api/v2/*`)
+
 - `POST /api/v2/analyze`: 15-dimension necessity inspection
 - `POST /api/v2/compile`: Contract compilation and DAG IR generation
 - `POST /api/v2/execute`: Autonomous execution and verification
@@ -109,6 +120,7 @@ $$\|A(Br) - Cr\|_2 \le \epsilon \cdot \|A(Br)\|_2$$
 - `GET  /api/v2/reports`: Summary scorecards and holdout metrics
 
 ### CLI (`hyper2`)
+
 ```bash
 hyper2 hardware
 hyper2 analyze gemm

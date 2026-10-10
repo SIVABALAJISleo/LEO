@@ -1,10 +1,11 @@
 # HYPER MVC-DAR: Autonomous Minimum Verified Computation & Dynamic Algorithmic Reconfiguration on Heterogeneous Edge Hardware
 
 ### Complete Academic & Engineering Research Monograph
+
 **Version:** 4.0.0-PROD  
 **Target Hardware Architecture:** Intel Core i5-12450H (4P + 4E Cores, 12 Threads) · Intel UHD Graphics Xe (48 EUs, 384 ALUs) · 16 GB Unified Memory  
 **Classification:** Systems Architecture, Algorithmic Reformulation & Heterogeneous Edge Acceleration  
-**Status:** 100% Application/Contract Parity Verified · Zero Hardware Modification Required  
+**Status:** 100% Application/Contract Parity Verified · Zero Hardware Modification Required
 
 ---
 
@@ -15,6 +16,7 @@ Modern deep learning, scientific simulation, and interactive 3D rendering archit
 This monograph presents **HYPER MVC-DAR**, an autonomous software-only execution paradigm combining **Minimum Verified Computation (MVC)** and **Dynamic Algorithmic Reconfiguration (DAR)**. Rather than forcing constrained silicon to brute-force $O(N^3)$ floating-point arithmetic, HYPER reformulates the computational objective into a constrained optimization problem: finding the mathematically minimal compute graph that strictly satisfies a multi-dimensional contract (numerical error bounds $\epsilon$, perceptual threshold $Q_{\min}$, and latency service level objectives $L_{\max}$).
 
 We detail:
+
 1. The **22-step autonomous loop** governing workload inspection, information sufficiency, and strategy discovery.
 2. The **10 Unseen Software-Only Acceleration Mechanisms** delivering a geometric mean speedup of **19.69×** with a verified **100.0% Contract Compliance Rate**.
 3. The **Spatial & Shader Subsumption Architecture** that completely eliminates 3D volumetric raymarching bottlenecks on 48 EU integrated GPUs, converting a 7 FPS slide-show in Extreme mode into a permanent **55–60 FPS** fluid execution with zero thermal throttling.
@@ -28,14 +30,14 @@ All claims and metrics in HYPER MVC-DAR are evaluated on verified physical host 
 
 ### 1.1 Host Hardware Inventory
 
-| Component | Physical Hardware Specification | Measured Real-World Capability |
-| :--- | :--- | :--- |
-| **CPU** | Intel Core i5-12450H (Alder Lake, Intel 7 process) | 4 Performance Cores @ up to 4.40 GHz<br>4 Efficient Cores @ up to 3.30 GHz<br>8 Physical Cores / 12 Hardware Threads |
-| **CPU Instruction Sets** | AVX2, FMA3, Intel DL Boost (VNNI) | 108.35 GFLOPS measured AVX2 FP32 GEMM throughput |
-| **Integrated GPU (iGPU)** | Intel UHD Graphics (Alder Lake-P 48 EUs) | 48 Execution Units (384 ALUs) @ up to 1.20 GHz<br>Measured 1.84 TOPS INT8 / 1.23 TFLOPS FP32 |
-| **Compute APIs** | Vulkan 1.3, OpenVINO 2026.2, OpenCL, DirectML | Fully active OpenVINO GPU and Vulkan runtime backends |
-| **System Memory** | 16 GB Unified DDR4/DDR5 System RAM | Measured streaming copy bandwidth: **17.34 GB/s** |
-| **Thermal Profile** | 45W Base TDP (Laptop Enclosure) | Thermal throttling boundary: $95^\circ\text{C}$ (mitigated by MVC) |
+| Component                 | Physical Hardware Specification                    | Measured Real-World Capability                                                                                       |
+| :------------------------ | :------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------- |
+| **CPU**                   | Intel Core i5-12450H (Alder Lake, Intel 7 process) | 4 Performance Cores @ up to 4.40 GHz<br>4 Efficient Cores @ up to 3.30 GHz<br>8 Physical Cores / 12 Hardware Threads |
+| **CPU Instruction Sets**  | AVX2, FMA3, Intel DL Boost (VNNI)                  | 108.35 GFLOPS measured AVX2 FP32 GEMM throughput                                                                     |
+| **Integrated GPU (iGPU)** | Intel UHD Graphics (Alder Lake-P 48 EUs)           | 48 Execution Units (384 ALUs) @ up to 1.20 GHz<br>Measured 1.84 TOPS INT8 / 1.23 TFLOPS FP32                         |
+| **Compute APIs**          | Vulkan 1.3, OpenVINO 2026.2, OpenCL, DirectML      | Fully active OpenVINO GPU and Vulkan runtime backends                                                                |
+| **System Memory**         | 16 GB Unified DDR4/DDR5 System RAM                 | Measured streaming copy bandwidth: **17.34 GB/s**                                                                    |
+| **Thermal Profile**       | 45W Base TDP (Laptop Enclosure)                    | Thermal throttling boundary: $95^\circ\text{C}$ (mitigated by MVC)                                                   |
 
 ### 1.2 The Three Dimensions of Parity
 
@@ -79,8 +81,9 @@ Standard software engines optimize for peak hardware throughput ($\max \text{TFL
 $$\min_{\mathcal{S} \in \Sigma} \left( C_{\text{compute}}(\mathcal{S}) + C_{\text{memory}}(\mathcal{S}) + C_{\text{transfer}}(\mathcal{S}) + C_{\text{sync}}(\mathcal{S}) + C_{\text{launch}}(\mathcal{S}) + C_{\text{verifier}}(\mathcal{S}) \right)$$
 
 Subject to the multi-dimensional contract $\mathcal{C}$:
-$$\text{Contract}(\mathcal{S}) = 
-\begin{cases} 
+
+$$ \text{Contract}(\mathcal{S}) =
+\begin{cases}
 \text{Error}(\mathcal{S}, \mathcal{S}_{\text{ref}}) \le \epsilon_{\text{bound}} \\
 \text{Quality}(\mathcal{S}, \mathcal{S}_{\text{ref}}) \ge Q_{\min} \quad (\text{e.g., SSIM} \ge 0.95) \\
 \text{Latency}(\mathcal{S}) \le L_{\text{SLO}} \\
@@ -271,7 +274,7 @@ The following table presents real-hardware empirical measurements gathered acros
 
 ### 5.1 The VolumeShader Extreme Mode Bottleneck
 
-The VolumeShader benchmark ([volumeshaderbm.com](https://volumeshaderbm.com/start/)) is an industry-standard WebGL stress benchmark rendering a dynamic 3D fractal Mandelbulb using raymarching. 
+The VolumeShader benchmark ([volumeshaderbm.com](https://volumeshaderbm.com/start/)) is an industry-standard WebGL stress benchmark rendering a dynamic 3D fractal Mandelbulb using raymarching.
 
 Prior to HYPER Subsumption, executing this benchmark on an Intel Core i5-12450H laptop with Intel UHD Graphics (48 EUs) resulted in catastrophic frame degradation across preset modes:
 - **Simple Mode:** 60 FPS (Acceptable)
@@ -453,7 +456,7 @@ pytest tests/test_hyper_mvc_dar_core.py tests/test_unseen_features.py tests/test
 ### 9.1 Philosophy: Photosynthesis vs. The Refinery
 Traditional computational acceleration attempts to build a faster "refinery": feeding massive floating-point arithmetic into wider SIMD units, consuming more power, generating heat, and inevitably triggering thermal throttling on constrained laptop silicon (e.g. Intel Core i5-12450H + UHD 48EU).
 
-The **Universal Computation Subsumption Protocol (UCSP)** abandons the refinery paradigm. Nature does not refine petroleum to harness solar energy; a leaf utilizes **photosynthesis**, directly rearranging ambient, low-energy molecular representations into high-energy carbohydrates without geological heat or pressure. 
+The **Universal Computation Subsumption Protocol (UCSP)** abandons the refinery paradigm. Nature does not refine petroleum to harness solar energy; a leaf utilizes **photosynthesis**, directly rearranging ambient, low-energy molecular representations into high-energy carbohydrates without geological heat or pressure.
 
 UCSP applies this exact principle to computational execution:
 1. **Representational Rearrangement:** Instead of multiplying high-precision matrices with billions of ALU cycles, compute is transformed into **memory lookups**, **texture fetches**, or **probabilistically verified certificates**.
@@ -555,3 +558,4 @@ By treating hardware execution not as fixed brute-force arithmetic, but as a dyn
 
 All systems remain fully implemented, reproducible, and verifiable in the repository.
 
+$$

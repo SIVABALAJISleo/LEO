@@ -148,7 +148,7 @@
       "metric_name": "median_latency_ms",
       "metric_value": 71.03925,
       "error_abs": 0.02093632,
-      "error_rel": 1.673e-05
+      "error_rel": 1.673e-5
     },
     "verification_status": "PASS",
     "fallback_status": "FALLBACK_NOT_NEEDED",

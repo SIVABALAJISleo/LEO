@@ -9,6 +9,7 @@
 ## 1. Failed Hypotheses Registry
 
 ### Failed Hypothesis 01: Low-Rank SVD Approximation on Uniform Dense Random GEMM
+
 - **Hypothesis**: Any $N \times N$ dense matrix product can be accelerated by factoring $A \approx U_k \Sigma_k V_k^T$ with rank $k = N / 4$.
 - **Target Workload**: `DENSE_GAUSSIAN_512x512` ($A, B \sim \mathcal{N}(0, 1)$).
 - **Test Result**: **FALSIFIED**.
@@ -19,6 +20,7 @@
 ---
 
 ### Failed Hypothesis 02: Speculative Token Recycling on Unstructured Dialogue Shifts
+
 - **Hypothesis**: Speculative draft verification can reuse KV-cache activations from previous unrelated conversational turns.
 - **Target Workload**: Multi-turn dialogue with topic switches.
 - **Test Result**: **FALSIFIED**.
@@ -29,6 +31,7 @@
 ---
 
 ### Failed Hypothesis 03: Global Sub-Sampling on High-Frequency Texture Rendering
+
 - **Hypothesis**: Frame rendering can always be accelerated by 50% spatial sub-sampling followed by bilateral upscaling.
 - **Target Workload**: Procedural foliage and high-frequency wireframe meshes.
 - **Test Result**: **FALSIFIED**.
@@ -39,6 +42,7 @@
 ---
 
 ### Failed Hypothesis 04: Asynchronous iGPU Offloading for Sub-1ms Micro-Kernels
+
 - **Hypothesis**: Dispatching matrix operations to Intel UHD graphics will always outperform CPU AVX2 execution.
 - **Target Workload**: $64 \times 64$ float32 GEMM.
 - **Test Result**: **FALSIFIED**.
@@ -51,6 +55,7 @@
 ## 2. Meta-Learning from Failure Catalog
 
 Cataloging these 4 fundamental failure categories has enhanced the search engine's efficiency:
+
 1. **Spectral Guard**: Pre-checks singular value decay before attempting low-rank decomposition.
 2. **Entropy Guard**: Pre-checks contextual similarity before reusing cached state.
 3. **Nyquist Guard**: Pre-checks high-frequency spatial gradients before applying resolution decimation.

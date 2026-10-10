@@ -1,6 +1,7 @@
 # HYPER-Ω Benchmark Integrity & Anti-Fraud Specification
 
 ## 1. Zero-Cheating Policy
+
 HYPER-Ω enforces an automated anti-cheating system via `BenchmarkIntegrityGuard`.
 Any benchmark harness, candidate function, or measurement run that exhibits fraudulent patterns is automatically flagged as **`INVALID`**.
 
@@ -37,6 +38,8 @@ The following patterns trigger immediate disqualification:
 ---
 
 ## 3. Automated Inspection Mechanism
+
 The `BenchmarkIntegrityGuard` performs two distinct audit passes:
+
 - **Static Inspection**: Uses Python AST and regex inspects source code of candidate callables for suspicious patterns.
 - **Dynamic Telemetry Inspection**: Validates that latency is non-zero, raw clock measurements exist, and claimed work elimination percentages fall strictly in $[0.0, 100.0]$.

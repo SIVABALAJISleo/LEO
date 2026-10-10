@@ -11,7 +11,7 @@
     "optimized_flops": 270794752,
     "flops_eliminated_ratio": 0.0,
     "memory_traffic_reduction_ratio": 0.667,
-    "error_or_quality_score": 1e-05,
+    "error_or_quality_score": 1e-5,
     "contract_bound": 0.0001,
     "contract_compliant": true,
     "effective_parity_percent": 100.0

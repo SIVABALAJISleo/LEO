@@ -21,9 +21,18 @@
       get: () => _levels,
       set: (val) => {
         if (val) {
-          if (val.standard) { val.standard.iterations = 2; val.standard.steps = 220; }
-          if (val.advanced) { val.advanced.iterations = 2; val.advanced.steps = 220; }
-          if (val.extreme)  { val.extreme.iterations = 2;  val.extreme.steps = 220; }
+          if (val.standard) {
+            val.standard.iterations = 2;
+            val.standard.steps = 220;
+          }
+          if (val.advanced) {
+            val.advanced.iterations = 2;
+            val.advanced.steps = 220;
+          }
+          if (val.extreme) {
+            val.extreme.iterations = 2;
+            val.extreme.steps = 220;
+          }
           _levels = val;
         }
       },
@@ -38,8 +47,14 @@
     proto.shaderSource = function (shader, src) {
       let opt = src;
       if (typeof opt === "string") {
-        opt = opt.replace(/for\s*\(\s*int\s+k\s*=\s*2\s*;\s*k\s*<\s*[^;]+;\s*k\+\+\s*\)/gi, "for (int k = 2; k < 220; k++)");
-        opt = opt.replace(/for\s*\(\s*int\s+i\s*=\s*0\s*;\s*i\s*<\s*\d+\s*;\s*i\+\+\s*\)/gi, "for (int i = 0; i < 2; i++)");
+        opt = opt.replace(
+          /for\s*\(\s*int\s+k\s*=\s*2\s*;\s*k\s*<\s*[^;]+;\s*k\+\+\s*\)/gi,
+          "for (int k = 2; k < 220; k++)",
+        );
+        opt = opt.replace(
+          /for\s*\(\s*int\s+i\s*=\s*0\s*;\s*i\s*<\s*\d+\s*;\s*i\+\+\s*\)/gi,
+          "for (int i = 0; i < 2; i++)",
+        );
         opt = opt.replace(/\bhighp\b/g, "mediump");
       }
       return origShaderSource.call(this, shader, opt);
@@ -64,8 +79,10 @@
 
   const originalSetAttribute = HTMLCanvasElement.prototype.setAttribute;
   HTMLCanvasElement.prototype.setAttribute = function (name, value) {
-    if (name && name.toLowerCase() === "width") return originalSetAttribute.call(this, name, TARGET_W);
-    if (name && name.toLowerCase() === "height") return originalSetAttribute.call(this, name, TARGET_H);
+    if (name && name.toLowerCase() === "width")
+      return originalSetAttribute.call(this, name, TARGET_W);
+    if (name && name.toLowerCase() === "height")
+      return originalSetAttribute.call(this, name, TARGET_H);
     return originalSetAttribute.call(this, name, value);
   };
 
@@ -89,8 +106,14 @@
     const context = originalGetContext.call(this, type, attributes);
     if (context && (type.includes("webgl") || type.includes("experimental"))) {
       try {
-        Object.defineProperty(context, "drawingBufferWidth", { get: () => TARGET_W, configurable: true });
-        Object.defineProperty(context, "drawingBufferHeight", { get: () => TARGET_H, configurable: true });
+        Object.defineProperty(context, "drawingBufferWidth", {
+          get: () => TARGET_W,
+          configurable: true,
+        });
+        Object.defineProperty(context, "drawingBufferHeight", {
+          get: () => TARGET_H,
+          configurable: true,
+        });
       } catch (e) {}
     }
     return context;
@@ -98,7 +121,8 @@
 
   // 5. Force CSS to stretch micro-buffer to fullscreen smoothly
   const style = document.createElement("style");
-  style.innerHTML = "canvas, #canvas, .canvas { width: 100% !important; height: 100% !important; display: block !important; image-rendering: auto !important; }";
+  style.innerHTML =
+    "canvas, #canvas, .canvas { width: 100% !important; height: 100% !important; display: block !important; image-rendering: auto !important; }";
   if (document.head) document.head.appendChild(style);
   else document.documentElement.appendChild(style);
 
@@ -137,5 +161,7 @@
     }
   }, 40);
 
-  console.log("⚡ [LEO] 55-60 FPS Mandatory Lock Active across Simple, Standard, Advanced & Extreme.");
+  console.log(
+    "⚡ [LEO] 55-60 FPS Mandatory Lock Active across Simple, Standard, Advanced & Extreme.",
+  );
 })();

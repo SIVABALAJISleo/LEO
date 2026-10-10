@@ -3,16 +3,18 @@
 **Document**: `docs/architecture/pathway_discovery_architecture.md`  
 **Status**: APPROVED & ACTIVE  
 **Engine**: LEO / HYPER — Verified Computational Pathway Discovery Engine  
-**Hardware Target**: Dynamic Local Topology (Intel Core i5-13420H P+E hybrid CPU, Intel UHD iGPU, 16 GB DDR5/LPDDR5 RAM)  
+**Hardware Target**: Dynamic Local Topology (Intel Core i5-13420H P+E hybrid CPU, Intel UHD iGPU, 16 GB DDR5/LPDDR5 RAM)
 
 ---
 
 ## 1. System Mission & Foundational Philosophy
 
 The primary mission of the upgraded HYPER engine is to:
-> *"Take a computational problem and its required output contract, automatically search for alternative mathematically valid execution pathways, eliminate unnecessary computation where possible, execute the best verified pathway on the available CPU+iGPU resources, and independently verify the resulting output against a trusted reference."*
+
+> _"Take a computational problem and its required output contract, automatically search for alternative mathematically valid execution pathways, eliminate unnecessary computation where possible, execute the best verified pathway on the available CPU+iGPU resources, and independently verify the resulting output against a trusted reference."_
 
 ### The Scientific Truth Imperative
+
 1. **Never Confuse Parity Classes**: The system strictly separates:
    - **Hardware Parity**: Strictly false on commodity hardware. CPU+iGPU never creates dedicated GPU hardware.
    - **Computational Parity**: Whether equivalent mathematical operations are computed.
@@ -78,6 +80,7 @@ The primary mission of the upgraded HYPER engine is to:
 ## 3. Subsystem Architecture Specifications
 
 ### Subsystem 1: Canonical CIR (Computational Intermediate Representation)
+
 - **Data Model**:
   - `CIRGraph`: Directed acyclic graph containing nodes, edges, inputs, outputs, attributes, and contracts.
   - `CIRNode`: Represents operations (`OpType`: `MATMUL`, `CONV2D`, `FFT`, `RELU`, `ADD`, `REDUCE_SUM`, `TRANSPOSE`, `SLICING`, `CUSTOM`), tensors, or constants.
@@ -88,6 +91,7 @@ The primary mission of the upgraded HYPER engine is to:
   - Preserves metadata: `candidate_id`, `parent_id`, `transformation_history`, `mathematical_assumptions`.
 
 ### Subsystem 2: Formal Workload Contract Engine
+
 - **Verification Modes**:
   1. `BIT_EXACT`: Byte-for-byte or exact binary identity (`hash(cand) == hash(ref)`).
   2. `NUMERIC_EXACT`: Floating point zero delta within machine precision ($\Delta = 0.0$ or $|cand - ref| \le 1 \text{ ULP}$).
@@ -102,6 +106,7 @@ The primary mission of the upgraded HYPER engine is to:
   - `DeterminismConstraint`: Whether identical inputs must produce bit-reproducible outputs.
 
 ### Subsystem 3: Search-Space Compiler
+
 - **Transformation Families**:
   - **Algebraic**: Reassociation $((A B) C \to A (B C))$, distributivity, inverse propagation.
   - **Redundancy Elimination**: Common subexpression elimination (CSE), dead-operation elimination, constant folding.
@@ -111,6 +116,7 @@ The primary mission of the upgraded HYPER engine is to:
   - **Sparsity & Symmetry**: Exploitation of diagonal/banded/symmetric structures.
 
 ### Subsystem 4: Counterfactual Engine
+
 - **Core Operation**:
   1. For candidate operation $O_k$ in the computational graph:
   2. Compute graph without $O_k$: $G' = G \setminus \{O_k\}$.
@@ -119,6 +125,7 @@ The primary mission of the upgraded HYPER engine is to:
   5. If valid correction found satisfying contract: generate alternative pathway $G' \cup \{C\}$.
 
 ### Subsystem 5: Computational Pathway Search
+
 - **Search Algorithms**:
   - **A\* / Best-First Search**: Priority queue ranked by estimated cost $f(c) = g(c) + h(c)$.
   - **Beam Search**: Retains top-$K$ promising candidate frontiers at each search depth.
@@ -130,12 +137,14 @@ The primary mission of the upgraded HYPER engine is to:
   - `verification_budget`: Maximum number of full executions allowed.
 
 ### Subsystem 6: Exact Verification & Independent Reference
+
 - **Independent Verification Backend**:
   - Reference execution executes in an isolated context using pure standard libraries (e.g., direct NumPy/SciPy/SymPy gold implementation).
   - Candidate execution runs via optimized compiled kernels.
   - **Double Execution Verifier**: Evaluates output hashes, maximum absolute difference, relative Frobenius error, and bitwise ULP differences.
 
 ### Subsystem 7: Anti-Cheating & Anti-Hardcoding Layer
+
 - **Prohibited Patterns**:
   - Static lookup tables indexed by input features.
   - Branching on test suite names (`__file__`, `pytest`, benchmark strings).
@@ -146,6 +155,7 @@ The primary mission of the upgraded HYPER engine is to:
   - `UNKNOWN_WORKLOAD_MODE`: Strips all names and descriptions, passing only raw mathematical problem, input tensors, and contract.
 
 ### Subsystem 8: Adversarial Holdout & Workload Generator
+
 - **Three-Tier Workload Split**:
   - **Discovery Set**: Used to discover transformation rules and train heuristics.
   - **Validation Set**: Standard evaluation set.
@@ -157,12 +167,14 @@ The primary mission of the upgraded HYPER engine is to:
   - Dense vs ultra-sparse (99.9% zeros), memory-bound streaming vs compute-bound arithmetic.
 
 ### Subsystem 9: Resource-Aware CPU + iGPU Execution Engine
+
 - **Hardware Integration**:
   - CPU: Multi-core threading with thread-pool affinity, SIMD vectorization.
   - iGPU: Intel UHD Graphics via OpenVINO GPU plugin and Level-Zero / DirectML.
   - Dynamic Partitioning: Computes work partition ratio $\alpha \in [0, 1]$ based on measured throughput and transfer latency across shared RAM.
 
 ### Subsystem 10: Cost Model (Predicted vs Measured)
+
 - **Predicted Cost**:
   - Theoretical FLOPs.
   - Memory traffic bytes (arithmetic intensity $\text{FLOPs} / \text{Byte}$).
@@ -173,6 +185,7 @@ The primary mission of the upgraded HYPER engine is to:
   - Realized arithmetic throughput (GFLOP/s).
 
 ### Subsystem 11: Proof-Carrying Result & Explainer
+
 - **Proof Artifact**: Machine-readable JSON including SHA-256 hashes of inputs, reference outputs, candidate outputs, transformation history, and verification metrics.
 - **Human-Readable Explainer**:
   - What computation was eliminated?
@@ -182,6 +195,7 @@ The primary mission of the upgraded HYPER engine is to:
 - **Pathway Visualizer**: ASCII and structural graph comparison (Original vs Discovered).
 
 ### Subsystem 12: Benchmark Engine & Manifest Reproducibility
+
 - **Statistical Rigor**:
   - Dedicated warmup iterations isolated from timed runs.
   - Minimum $N \ge 10$ repetitions.
@@ -193,6 +207,7 @@ The primary mission of the upgraded HYPER engine is to:
 ## 4. Integration into HYPER Directory Structure
 
 To maintain 100% backward compatibility and seamless reuse of existing assets:
+
 - All core engine components will reside in `hyper/discovery/`:
   - `cir.py`: Canonical CIR graph, nodes, edges, serialization.
   - `contract.py`: Formal WorkloadContract engine and verification modes.

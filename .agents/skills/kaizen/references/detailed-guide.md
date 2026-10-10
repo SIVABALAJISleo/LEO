@@ -8,7 +8,6 @@ Small improvements, continuously. Error-proof by design. Follow what works. Buil
 
 **Core principle:** Many small improvements beat one big change. Prevent errors at design time, not with fixes.
 
-
 ## The Four Pillars
 
 ### 1. Continuous Improvement (Kaizen)
@@ -513,9 +512,9 @@ interface LogTransport {
   write(level: LogLevel, message: string, meta?: LogMetadata): Promise<void>;
 }
 
-class ConsoleTransport implements LogTransport { /_... _/ }
-class FileTransport implements LogTransport { /_ ... _/ }
-class RemoteTransport implements LogTransport { /_ ..._/ }
+class ConsoleTransport implements LogTransport { /_... */ }
+class FileTransport implements LogTransport { /* ... */ }
+class RemoteTransport implements LogTransport { /* ..._/ }
 
 class Logger {
 private transports: LogTransport[] = [];
@@ -577,8 +576,8 @@ abstract class BaseCRUDService<T> {
   abstract delete(id: string): Promise<void>;
 }
 
-class GenericRepository<T> { /_300 lines _/ }
-class QueryBuilder<T> { /_ 200 lines_/ }
+class GenericRepository<T> { /_300 lines */ }
+class QueryBuilder<T> { /* 200 lines_/ }
 // ... building entire ORM for single table
 
 ````
@@ -660,7 +659,6 @@ Complex solution for unmeasured problem
 - Prefer duplication over wrong abstraction
 - Refactor when pattern clear
 
-
 ## Integration with Commands
 
 The Kaizen skill guides how you work. The commands provide structured analysis:
@@ -672,7 +670,6 @@ The Kaizen skill guides how you work. The commands provide structured analysis:
 - **`/analyse`**: Smart method selection (Gemba/VSM/Muda)
 
 Use commands for structured problem-solving. Apply skill for day-to-day development.
-
 
 ## Red Flags
 
@@ -699,7 +696,6 @@ Use commands for structured problem-solving. Apply skill for day-to-day developm
 - "We might need this someday"
 - Building frameworks before using them
 - Optimizing without measuring
-
 
 ## Remember
 

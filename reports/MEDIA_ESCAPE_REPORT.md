@@ -2,13 +2,14 @@
 
 **System**: LEO / HYPER — Omega Research Mode  
 **Hardware Substrate**: Lenovo IdeaPad Slim 3 15IAH8 (Intel Core i5-12450H / i5-13420H + Intel UHD Graphics + Intel QuickSync Video Engine + 16 GB RAM)  
-**Standard**: Omega Research Mode Part 23 (Temporal Redundancy, Spatial Filtering, Residual Motion Encoding)  
+**Standard**: Omega Research Mode Part 23 (Temporal Redundancy, Spatial Filtering, Residual Motion Encoding)
 
 ---
 
 ## 1. Domain Scope
 
 The Media Escape Engine addresses high-throughput image and video processing:
+
 - 4K/1080p Video Encoding & Decoding (H.264, H.265/HEVC, AV1).
 - High-Quality Spatial Upscaling & Bicubic/Lanczos Interpolation.
 - Bilateral and Wavelet Denoising.
@@ -38,14 +39,15 @@ The Media Escape Engine addresses high-throughput image and video processing:
 
 Tested on 1080p and 4K media benchmarks:
 
-| Workload | Naive CPU Baseline | HYPER Media Escape | Speedup | Output Quality | Status |
-|---|---|---|---|---|---|
-| **4K Video Decode (H.265, 60 FPS)** | $48.2\text{ ms/frame}$ (dropped frames) | **$7.8\text{ ms/frame}$** (QuickSync + Tile Skip) | **$6.18\times$** | Bit-Exact (Lossless) | `EXACT` |
-| **Bilateral Image Denoise ($2048 \times 2048$)** | $145.0\text{ ms}$ | **$18.4\text{ ms}$** (Bilateral Grid Slicing) | **$7.88\times$** | PSNR $\ge 42.0\text{ dB}$ | `CONTRACT_EQUIVALENCE` |
-| **Audio STFT Spectral Reconstruction** | $4.8\text{ ms}$ | **$0.85\text{ ms}$** (Sparse DCT Residuals) | **$5.65\times$** | PESQ $\ge 4.4$ | `CONTRACT_EQUIVALENCE` |
-| **Spatial 4x Upscaling (Lanczos)** | $38.5\text{ ms}$ | **$9.2\text{ ms}$** (Tiled SIMD AVX2 Separable) | **$4.18\times$** | SSIM $\ge 0.995$ | `CONTRACT_EQUIVALENCE` |
+| Workload                                         | Naive CPU Baseline                      | HYPER Media Escape                                | Speedup          | Output Quality            | Status                 |
+| ------------------------------------------------ | --------------------------------------- | ------------------------------------------------- | ---------------- | ------------------------- | ---------------------- |
+| **4K Video Decode (H.265, 60 FPS)**              | $48.2\text{ ms/frame}$ (dropped frames) | **$7.8\text{ ms/frame}$** (QuickSync + Tile Skip) | **$6.18\times$** | Bit-Exact (Lossless)      | `EXACT`                |
+| **Bilateral Image Denoise ($2048 \times 2048$)** | $145.0\text{ ms}$                       | **$18.4\text{ ms}$** (Bilateral Grid Slicing)     | **$7.88\times$** | PSNR $\ge 42.0\text{ dB}$ | `CONTRACT_EQUIVALENCE` |
+| **Audio STFT Spectral Reconstruction**           | $4.8\text{ ms}$                         | **$0.85\text{ ms}$** (Sparse DCT Residuals)       | **$5.65\times$** | PESQ $\ge 4.4$            | `CONTRACT_EQUIVALENCE` |
+| **Spatial 4x Upscaling (Lanczos)**               | $38.5\text{ ms}$                        | **$9.2\text{ ms}$** (Tiled SIMD AVX2 Separable)   | **$4.18\times$** | SSIM $\ge 0.995$          | `CONTRACT_EQUIVALENCE` |
 
 ---
 
 ## 4. Scientific Conclusion
+
 Media processing achieves external GPU-class performance on the Core i5 laptop by eliminating spatial and temporal redundancy prior to executing transform mathematics. Bit-exact decoding remains 100% compliant with codec specifications.

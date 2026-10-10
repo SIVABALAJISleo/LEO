@@ -5,13 +5,7 @@
   "cpu_cores_logical": 12,
   "p_cores": 4,
   "e_cores": 4,
-  "isa_extensions": [
-    "AVX2",
-    "FMA",
-    "SSE4.2",
-    "VNNI",
-    "AVX_VNNI"
-  ],
+  "isa_extensions": ["AVX2", "FMA", "SSE4.2", "VNNI", "AVX_VNNI"],
   "ram_total_gb": 15.7,
   "igpu_vendor": "Intel Corporation",
   "igpu_model": "Intel(R) UHD Graphics (iGPU)",

@@ -7,7 +7,9 @@ In accordance with Section 3 of the Master Evolution Protocol, every existing mo
 ## 1. Module Taxonomy
 
 ### A. ACTIVE_PRODUCTION
+
 Directly reachable from the authoritative pipeline. Enforces strict contract verification, fail-closed checking, and measurable performance on Intel Core i5-12450H + UHD Graphics.
+
 - `hyper_x/pipeline.py`: Master Authoritative Pipeline
 - `hyper_x/contract_ir/`: Formal Contract IR & Parser
 - `hyper_x/information_boundary/`: Information Boundary Engine
@@ -25,7 +27,9 @@ Directly reachable from the authoritative pipeline. Enforces strict contract ver
 ---
 
 ### B. ACTIVE_RESEARCH
+
 Actively maintained scientific exploration engines that feed candidate proposals to `pathway_search`:
+
 - `ace_engine.py`: Adaptive Compute Eliminator with Freivalds stochastic certificates
 - `hyper_runtime/token_merging/`: Bipartite Token Merging with weighted drift invariance
 - `hyper_runtime/sparse_attention.py`: Block-Sparse Attention ($O(N \log N)$)
@@ -36,7 +40,9 @@ Actively maintained scientific exploration engines that feed candidate proposals
 ---
 
 ### C. EXPERIMENTAL
+
 Advanced prototypes undergoing empirical validation:
+
 - `hyper_ares/`: Algorithmic Reformulation & Structure Detection
 - `hyper_cel/`: Controlled Compute Unit Prototypes
 - `hyper_mvc_dar/`: Model-View-Controller Decomposition & Ladder Architecture
@@ -45,7 +51,9 @@ Advanced prototypes undergoing empirical validation:
 ---
 
 ### D. BENCHMARK_ONLY
+
 Harnesses, manifests, and automated profiling scripts designed strictly for benchmarking on physical host silicon:
+
 - `benchmarks/benchmark_int4_vs_fp32.py`
 - `hyper_x/benchmark/harness.py`
 - `tests/test_performance_regression.py`
@@ -56,7 +64,9 @@ Harnesses, manifests, and automated profiling scripts designed strictly for benc
 ---
 
 ### E. LEGACY
+
 Pre-vNext implementations retained for regression checking and backwards compatibility:
+
 - `hyper100/`: Early 100-workload benchmark suites
 - `leo_engine.py`, `leo_runtime.py`: Early monolithic execution loops
 - `chimera/`: Early heuristic search prototypes
@@ -64,19 +74,25 @@ Pre-vNext implementations retained for regression checking and backwards compati
 ---
 
 ### F. UNSAFE_FOR_PARITY_CLAIMS
+
 Modules that must NEVER be used to assert hardware or exact computational parity:
+
 - Mock engines or simulations using synthetic sleeps (`time.sleep`)
 - Hardcoded constant speedup assertions
 
 ---
 
 ### G. ARCHIVED
+
 Superseded historical checkpoints preserved for Git history integrity:
+
 - `archive_engines/`
 - `.bak` files and one-off conversion scripts
 
 ---
 
 ### H. SIMULATION_ONLY
+
 Emulators used solely when physical acceleration devices or target models are unavailable:
+
 - DirectML mock fallbacks when running without Windows D3D12 drivers

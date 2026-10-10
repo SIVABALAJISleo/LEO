@@ -25,12 +25,14 @@ In the HYPER-GODMODE architecture, performance, correctness, and compatibility a
 ---
 
 ### Dimension A: Physical Hardware Parity (Out of Scope)
+
 - **Definition:** Fabricating or physically possessing equivalent hardware transistors, dedicated GPU cores (CUDA / Tensor / RT cores), physical VRAM chips (GDDR6 / HBM), memory buses, memory clock frequencies, or physical thermal dissipation mechanisms.
 - **System Policy:** **NEVER CLAIMED**. The project is 100% software-only, executing on fixed commodity hardware (Intel Core i5-12450H CPU + Intel UHD integrated graphics). We do not claim to physically transform CPU silicon into discrete GPUs.
 
 ---
 
 ### Dimension B: Exact Computational Parity
+
 - **Definition:** The optimized pathway produces outputs that are bitwise identical or mathematically equivalent (within exact algebraic bounds, e.g., $\Delta = 0.0$ for integers and symbolic operations, or machine $\epsilon$ for floating-point reassociations) to the reference ground truth.
 - **Verification Requirement:**
   - Double execution ground-truth comparison.
@@ -40,6 +42,7 @@ In the HYPER-GODMODE architecture, performance, correctness, and compatibility a
 ---
 
 ### Dimension C: Application & Contract Parity
+
 - **Definition:** The optimized software system satisfies 100% of the externally observable functional contract required by target applications (e.g., Blender, Unreal, PyTorch, ONNX, WebGPU, OpenCV, FFmpeg).
 - **Invariants:**
   - Input and output schemas match the application's contract.
@@ -49,6 +52,7 @@ In the HYPER-GODMODE architecture, performance, correctness, and compatibility a
 ---
 
 ### Dimension D: Performance Parity
+
 - **Definition:** For an admitted workload contract, the measured wall-clock execution time (latency) or operation rate (throughput/FPS) on the fixed local hardware matches or exceeds the reference baseline.
 - **Formula:**
   $$\text{Speedup} = \frac{T_{\text{reference}}}{T_{\text{candidate}}} \ge 1.00$$
@@ -60,6 +64,7 @@ In the HYPER-GODMODE architecture, performance, correctness, and compatibility a
 ---
 
 ### Dimension E: Approximate or Perceptual Parity
+
 - **Definition:** For workloads where the declared contract explicitly permits bounded lossy representation (such as INT8/FP8 neural quantization, lossy image compression, or ray tracing reconstruction), the candidate produces outputs within strict, verifiable perceptual bounds.
 - **Permitted Bounds:**
   - Peak Signal-to-Noise Ratio: $\text{PSNR} \ge 40.0\text{ dB}$.

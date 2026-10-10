@@ -1,6 +1,6 @@
 # REPRODUCIBILITY GUIDE FOR LEO/HYPER
 
-**Target Environment:** Local Python 3.10+ / 3.13 on Intel Core i5 + Windows 11  
+**Target Environment:** Local Python 3.10+ / 3.13 on Intel Core i5 + Windows 11
 
 ---
 
@@ -23,6 +23,7 @@ python -m hyper.cli hardware-profile
 ```
 
 Expected JSON output confirms:
+
 - Detected CPU model and core count
 - Total and available RAM
 - Intel UHD Graphics GPU model

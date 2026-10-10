@@ -1,5 +1,7 @@
 # HYPER Universal Necessary-Work Compiler & Computational Wormhole Architecture
+
 **Target Hardware Constraints**:
+
 - CPU: Intel Core i5-12450H (8 Cores, 12 Threads, AVX2/FMA, 16 GB RAM)
 - GPU: Intel Integrated UHD Graphics (48 EUs, shared unified memory)
 - Paradigm: Software-only execution; zero discrete GPU accelerators; zero CUDA/Tensor/RT silicon.
@@ -9,9 +11,10 @@
 ## 1. Executive Summary & Core Paradigm
 
 The fundamental mission of HYPER is not to emulate hardware:
-> **DO NOT ASK**: *"How can an i5 + Intel UHD perform the same brute-force computation as a powerful NVIDIA GPU?"*
+
+> **DO NOT ASK**: _"How can an i5 + Intel UHD perform the same brute-force computation as a powerful NVIDIA GPU?"_
 >
-> **ASK**: *"What is the minimum computation and information required to produce the required observable, and can an alternative algorithmic path eliminate the work that gives the GPU its advantage?"*
+> **ASK**: _"What is the minimum computation and information required to produce the required observable, and can an alternative algorithmic path eliminate the work that gives the GPU its advantage?"_
 
 A workload is formally represented as an operation dependency graph:
 $$G = (V, E)$$
@@ -75,7 +78,9 @@ Under NO circumstances is the contract downgraded (e.g. from `EXACT` to `APPROXI
 ## 3. Component Details & Formal Specifications
 
 ### 3.1 Universal Contract IR (`contract_ir.py`)
+
 Encapsulates all correctness boundaries, invariants, and constraints:
+
 - `EXACT`: Identical elementwise results, zero tolerance, exact preservation of shape, dtype, and semantics.
 - `EXACT_REFORMULATION`: Mathematically identical forms with lower algebraic complexity (e.g., $(A \times B) \times x \to A \times (B \times x)$ reducing complexity from $\mathcal{O}(N^3)$ to $\mathcal{O}(N^2)$).
 - `NUMERICALLY_EQUIVALENT`: Guaranteed error bound $\| \hat{Y} - Y \| \le \epsilon$.
@@ -85,21 +90,27 @@ Encapsulates all correctness boundaries, invariants, and constraints:
 - `CONTRACT`: Domain-specific contract satisfaction.
 
 ### 3.2 Observable Compiler (`observable_compiler.py`)
+
 Separates internal scratchpad state from externally observable requirements:
+
 - **Graphics**: Visible pixels after occlusion and frustum culling.
 - **AI/LLM**: Sampled token IDs / Top-$K$ logits, not dense full-vocabulary logit matrices.
 - **Databases**: Projected and limited rows returned to the user.
 - **Scientific**: Conserved macroscopic observables and spatial integrals.
 
 ### 3.3 Causal Information Boundary (`information_boundary.py`)
+
 Every node in the dependency graph is classified into one of four causal states:
+
 - `REQUIRED`: Affects the observable directly or transitively.
 - `POTENTIALLY_REQUIRED`: Affects the observable conditionally or under branching.
 - `PROVABLY_UNNECESSARY`: Mathematically proven to have zero sensitivity to the observable.
 - `UNKNOWN`: Causal path cannot be determined. **Rule: Never treat UNKNOWN as unnecessary.**
 
 ### 3.4 Counterfactual Elimination Engine (`counterfactual_elimination.py`)
+
 For every candidate removable operation:
+
 1. Baseline execution: $Y_{\text{ref}} = G(X)$.
 2. Ablated execution: $Y_{\text{cand}} = (G - \text{op})(X)$.
 3. Multi-distribution attack battery:
@@ -112,7 +123,9 @@ For every candidate removable operation:
 4. If candidate fails: capture formal `Counterexample` and store in Knowledge Base.
 
 ### 3.5 Heterogeneous CPU + Intel UHD Scheduler (`hybrid_scheduler.py`)
+
 Leverages the physical CPU and integrated GPU:
+
 - **CPU (Intel Core i5-12450H)**: High single-thread clock, AVX2/FMA vector units, branch-heavy control, compilation, e-graph exploration, verification checks.
 - **iGPU (Intel UHD Graphics, 48 EUs)**: Data-parallel dense passes, image filtering, batch candidate evaluations.
 - **Scheduling Metric**: Evaluates whether $T_{\text{CPU}} \le T_{\text{UHD transfer}} + T_{\text{UHD compute}} + T_{\text{launch}}$. Never assumes GPU is always faster.

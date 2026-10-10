@@ -3,7 +3,7 @@
 **Project**: LEO / HYPER — Project Omega (Universal Software-Defined Computational Ecosystem)  
 **Host Hardware**: Lenovo IdeaPad Slim 3 15IAH8 (Intel Core i5-12450H / i5-13420H, 8 Cores / 12 Threads, 16 GB RAM, Intel UHD Graphics 48 EUs, Windows 11)  
 **Audit Standard**: Omega Research Mode Part 66 ("FINAL_VERDICT.md must contain: PROVEN, PARTIALLY_PROVEN, UNPROVEN, FALSIFIED, UNKNOWN. Never automatically print: 100%.")  
-**Audit Date**: September 2026  
+**Audit Date**: September 2026
 
 ---
 
@@ -33,7 +33,9 @@ Across the declared target external-GPU capability suite (16 core workloads enco
 ## 2. Category Classifications
 
 ### A. PROVEN (10 Workloads)
+
 These workloads satisfy 100% of their contract observables on the fixed laptop substrate with latency, throughput, or accuracy comparable to or exceeding reference external GPUs through computational elimination, mathematical reformulation, and exact reuse:
+
 1. **Linear Algebra (`gemm_1024x1024`)**: **PROVEN**. $87.5\%$ work eliminated via Low-Rank SVD ($r=32$); verified by Freivalds probe ($\tau_{rel} \le 10^{-3}$); latency $0.41\text{ ms}$ vs $0.32\text{ ms}$ on 5090 ($0.78\times$).
 2. **AI Prefix & RAG Retrieval (`rag_exact_memo`)**: **PROVEN**. $100.0\%$ compute eliminated via 14-point SHA-256 state key; latency $0.001\text{ ms}$ vs $0.45\text{ ms}$ on 5090 ($450\times$).
 3. **Image Enhancement (`bilateral_grid`)**: **PROVEN**. $72.0\%$ work eliminated via bilateral grid downsampling; PSNR $\ge 42.0\text{ dB}$; latency $0.85\text{ ms}$ vs $0.65\text{ ms}$ ($0.77\times$).
@@ -48,7 +50,9 @@ These workloads satisfy 100% of their contract observables on the fixed laptop s
 ---
 
 ### B. PARTIALLY_PROVEN (6 Workloads)
+
 These workloads execute with zero numerical errors and satisfy contract correctness, but remain throughput-limited by the physical gap between $51.2\text{ GB/s}$ DDR host memory and $1,792\text{ GB/s}$ GDDR7 memory:
+
 1. **General Compute (`vector_dot_10M`)**: **PARTIALLY_PROVEN**. $0.081\times$ speed ratio ($1.85\text{ ms}$ vs $0.15\text{ ms}$). Memory-bandwidth bound vector reduction.
 2. **Vision AI (`vit_image_embed`)**: **PARTIALLY_PROVEN**. $0.385\times$ speed ratio ($3.12\text{ ms}$ vs $1.20\text{ ms}$). Dense multi-head attention streaming.
 3. **Autoregressive LLM (`qwen_1.5b_token`)**: **PARTIALLY_PROVEN**. $0.245\times$ speed ratio ($18.40\text{ ms}$ vs $4.50\text{ ms}$). Multi-gigabyte parameter bandwidth.
@@ -59,13 +63,16 @@ These workloads execute with zero numerical errors and satisfy contract correctn
 ---
 
 ### C. FALSIFIED (0 Workloads in Promoted Production)
+
 All shortcuts failing adversarial stress or blind holdout were caught by the fail-closed verifier and rejected prior to promotion:
-- *Historical Candidate 1*: Dense matrix memorization without general SVD was tested against blind holdouts, exhibited a $99\%$ generalization gap, and was **FALSIFIED & REJECTED**.
-- *Historical Candidate 2*: Low-rank factorization forced onto uniform random white noise exceeded error bounds by $680\times$ and was **FALSIFIED & REJECTED**.
+
+- _Historical Candidate 1_: Dense matrix memorization without general SVD was tested against blind holdouts, exhibited a $99\%$ generalization gap, and was **FALSIFIED & REJECTED**.
+- _Historical Candidate 2_: Low-rank factorization forced onto uniform random white noise exceeded error bounds by $680\times$ and was **FALSIFIED & REJECTED**.
 
 ---
 
 ### D. UNPROVEN & UNKNOWN (0 Workloads)
+
 Every declared capability in the target matrix has been executed, measured, and verified on host hardware. Zero ungrounded or unmeasured assertions remain.
 
 ---

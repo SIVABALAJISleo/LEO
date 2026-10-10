@@ -23,22 +23,23 @@
 
 Every execution path in the runtime is explicitly categorized into one of eight formal classes:
 
-| Class | Definition | Error Bound | Local Status |
-| :--- | :--- | :--- | :--- |
-| **`EXACT`** | Unmodified or bitwise identical numerical execution on CPU/iGPU. | $E = 0.0$ | **Implemented & Measured** |
-| **`CACHED`** | Content-addressed lookup keyed on multi-state cryptographic hash. | $E = 0.0$ | **Implemented & Measured** |
-| **`REDUCED_WORK`** | Mathematically provable reduction (e.g. linear delta updates, sparse skip). | $E \le \epsilon_{\text{contract}}$ | **Implemented & Measured** |
+| Class                         | Definition                                                                   | Error Bound                        | Local Status               |
+| :---------------------------- | :--------------------------------------------------------------------------- | :--------------------------------- | :------------------------- |
+| **`EXACT`**                   | Unmodified or bitwise identical numerical execution on CPU/iGPU.             | $E = 0.0$                          | **Implemented & Measured** |
+| **`CACHED`**                  | Content-addressed lookup keyed on multi-state cryptographic hash.            | $E = 0.0$                          | **Implemented & Measured** |
+| **`REDUCED_WORK`**            | Mathematically provable reduction (e.g. linear delta updates, sparse skip).  | $E \le \epsilon_{\text{contract}}$ | **Implemented & Measured** |
 | **`NUMERICALLY_APPROXIMATE`** | Bounded precision reduction (FP16, INT8, ternary) or low-rank factorization. | $E \le \epsilon_{\text{contract}}$ | **Implemented & Measured** |
-| **`PERCEPTUAL`** | Vision/audio compression bounded by SSIM/PSNR thresholds. | $\text{SSIM} \ge \tau$ | **Implemented & Measured** |
-| **`PREDICTIVE`** | Autoregressive or extrapolative prediction verified against contract. | $E \le \epsilon_{\text{contract}}$ | **Implemented & Measured** |
-| **`SYNTHETIC`** | Emulated demonstration or simulated data stream. | N/A | **Deprecated / Isolated** |
-| **`EXTERNAL_REFERENCE`** | External hardware data (e.g. RTX 5090, Hopper H100) cited for comparison. | External | **Explicitly Labeled** |
+| **`PERCEPTUAL`**              | Vision/audio compression bounded by SSIM/PSNR thresholds.                    | $\text{SSIM} \ge \tau$             | **Implemented & Measured** |
+| **`PREDICTIVE`**              | Autoregressive or extrapolative prediction verified against contract.        | $E \le \epsilon_{\text{contract}}$ | **Implemented & Measured** |
+| **`SYNTHETIC`**               | Emulated demonstration or simulated data stream.                             | N/A                                | **Deprecated / Isolated**  |
+| **`EXTERNAL_REFERENCE`**      | External hardware data (e.g. RTX 5090, Hopper H100) cited for comparison.    | External                           | **Explicitly Labeled**     |
 
 ---
 
 ## 3. Explicit Inventory: What Is and Is Not Measured
 
 ### What Is Implemented and Measured
+
 - Dynamic hardware profiling (`python -m hyper.cli hardware-profile`) detecting true CPU cores, RAM, and OpenVINO devices.
 - Multi-state cryptographic cache (`hyper.cache.exact_cache`) with separated hit/miss and lookup latency telemetry.
 - Overhead-aware sparsity analysis comparing $T_{\text{threshold}} + T_{\text{sparse}} + T_{\text{verify}} < T_{\text{dense}}$.
@@ -49,6 +50,7 @@ Every execution path in the runtime is explicitly categorized into one of eight 
 - Multi-domain verification: Exact numerical, Freivalds probabilistic checking ($A(Br) = Cr$), PSNR/SSIM perceptual metrics, and retrieval recall/MRR.
 
 ### What Is Not Implemented or Not Supported on Host Hardware
+
 - **Hardware CUDA Execution**: Host possesses Intel UHD integrated graphics; CUDA and TensorRT are unavailable.
 - **Dedicated High-Bandwidth VRAM**: Host shares DDR4/DDR5 system memory (~40–60 GB/s bandwidth) across CPU and iGPU.
 - **Unverified Parity Claims**: Any claim of "100% parity achieved across all hardware" is rejected as unscientific.

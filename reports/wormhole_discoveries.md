@@ -9,6 +9,7 @@
 ## 1. Catalog of Verified Wormholes
 
 ### Wormhole 01: Spatio-Temporal Sparse Event Delta (`Realtime_720p_Filter`)
+
 - **Original Path**: Full re-computation of every pixel ($1280 \times 720 = 921,600$ pixels) across every incoming frame ($O(H \cdot W \cdot K^2)$).
 - **Discovered Wormhole**: Temporal differencing with background Lipschitz stability. When camera or lighting delta is confined to a local region (e.g. an animated avatar or cursor), only changed bounding regions $\mathcal{B}_t$ are evaluated:
   $$Y_t(x, y) = Y_{t-1}(x, y) + \Delta Y_t(x, y) \cdot \mathbb{I}[(x, y) \in \mathcal{B}_t]$$
@@ -24,6 +25,7 @@
 ---
 
 ### Wormhole 02: Multi-Resolution Residual Correction (`PDE_Poisson_256`)
+
 - **Original Path**: 100 full-resolution Jacobi/Gauss-Seidel relaxation iterations on a $256 \times 256$ grid ($O(N^2 \cdot \text{iters})$).
 - **Discovered Wormhole**: 7-Mode Multi-Resolution Residual. Low-frequency error components are solved on a coarsened $64 \times 64$ grid ($16\times$ fewer cells) and interpolated via bilinear prolongator, requiring only 5 fine-grid smoothing passes:
   $$u_{\text{fine}} \approx \mathcal{I}_{\text{coarse}}^{\text{fine}}\left( u_{\text{coarse}} \right) + \mathcal{R}_{\text{residual}}$$
@@ -39,6 +41,7 @@
 ---
 
 ### Wormhole 03: Downstream Observable Associative Reduction (`TopK_Projection_GEMM`)
+
 - **Original Path**: Compute dense matrix product $C = A \times B$ ($O(M \cdot K \cdot N)$), followed by vector dot product $y = C \cdot x$ or top-$k$ projection ($O(M \cdot N)$).
 - **Discovered Wormhole**: Algebraic associativity rewrite discovered by e-graph equality saturation:
   $$y = (A \times B) \cdot x \implies y = A \cdot (B \cdot x)$$
@@ -53,6 +56,7 @@
 ---
 
 ### Wormhole 04: Content-Addressable Exact Memoization (`GEMM_512x512`)
+
 - **Original Path**: Re-executing identical parameter matrix multiplications across inference steps.
 - **Discovered Wormhole**: Cryptographic SHA-256 state hashing with memory-mapped resident caches.
 - **Original Cost**: $2.26\text{ ms}$.
@@ -68,9 +72,9 @@
 
 ## 2. Wormhole Quantitative Summary Table
 
-| Wormhole ID | Primary Mechanism | Original Cost | Candidate Cost | Work Elimination ($WE$) | Speedup | Correctness Class |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **WH-01** | Spatio-Temporal Delta | 5.58 ms | 1.43 ms | 99.7% | **3.89x** | `PERCEPTUALLY_EQUIVALENT` |
-| **WH-02** | Multi-Resolution Residual | 2.20 ms | 0.96 ms | 72.5% | **2.28x** | `NUMERICALLY_BOUNDED` |
-| **WH-03** | Associative Observable Reduction | 0.85 ms | 0.07 ms | 96.8% | **12.4x** | `EXACT_REFORMULATION` |
-| **WH-04** | Exact Content Memoization | 2.26 ms | 0.08 ms | 100.0% | **28.2x** | `CACHED` |
+| Wormhole ID | Primary Mechanism                | Original Cost | Candidate Cost | Work Elimination ($WE$) | Speedup   | Correctness Class         |
+| :---------- | :------------------------------- | :------------ | :------------- | :---------------------- | :-------- | :------------------------ |
+| **WH-01**   | Spatio-Temporal Delta            | 5.58 ms       | 1.43 ms        | 99.7%                   | **3.89x** | `PERCEPTUALLY_EQUIVALENT` |
+| **WH-02**   | Multi-Resolution Residual        | 2.20 ms       | 0.96 ms        | 72.5%                   | **2.28x** | `NUMERICALLY_BOUNDED`     |
+| **WH-03**   | Associative Observable Reduction | 0.85 ms       | 0.07 ms        | 96.8%                   | **12.4x** | `EXACT_REFORMULATION`     |
+| **WH-04**   | Exact Content Memoization        | 2.26 ms       | 0.08 ms        | 100.0%                  | **28.2x** | `CACHED`                  |

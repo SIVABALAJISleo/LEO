@@ -14,11 +14,11 @@ workloads and routes them through the cheapest valid pathway instead of recomput
 the same expensive operation every time. Three independently verified experiments
 demonstrate:
 
-| Experiment      | Result                                                                 |
-|-----------------|------------------------------------------------------------------------|
-| EFSC_001        | 3/3 patterns discovered. 401–2036x speedup. Zero verification error.  |
-| NIR_001         | 2/3 functions within 1e-3 contract. 1 correctly reported as FAIL.     |
-| HYPER_ESCAPE_001| 3/3 workloads contract-passing. CDRE cache confirmed working.          |
+| Experiment       | Result                                                               |
+| ---------------- | -------------------------------------------------------------------- |
+| EFSC_001         | 3/3 patterns discovered. 401–2036x speedup. Zero verification error. |
+| NIR_001          | 2/3 functions within 1e-3 contract. 1 correctly reported as FAIL.    |
+| HYPER_ESCAPE_001 | 3/3 workloads contract-passing. CDRE cache confirmed working.        |
 
 ---
 
@@ -54,22 +54,22 @@ OS:    Windows 11
 
 **File:** `hyper_x/leaf/symbolic/`
 
-| Module                | Role                                                          |
-|-----------------------|---------------------------------------------------------------|
-| `expression.py`       | SymExpr AST (var, const, add, mul, summation, pow)           |
-| `closed_form.py`      | Pattern-matching solver: 12 summation families               |
-| `equivalence.py`      | Exhaustive domain prover using numpy oracle                  |
-| `loop_collapse.py`    | Algebraic loop invariant detection                           |
-| `simplifier.py`       | Constant folding, identity elimination                       |
-| `polyhedral.py`       | Affine iteration space analysis                              |
+| Module             | Role                                               |
+| ------------------ | -------------------------------------------------- |
+| `expression.py`    | SymExpr AST (var, const, add, mul, summation, pow) |
+| `closed_form.py`   | Pattern-matching solver: 12 summation families     |
+| `equivalence.py`   | Exhaustive domain prover using numpy oracle        |
+| `loop_collapse.py` | Algebraic loop invariant detection                 |
+| `simplifier.py`    | Constant folding, identity elimination             |
+| `polyhedral.py`    | Affine iteration space analysis                    |
 
 **EFSC_001 Measured Results:**
 
-| Workload            | Pattern                   | Complexity     | Speedup | Exact |
-|---------------------|---------------------------|----------------|---------|-------|
-| SUM i=1..N of i     | SUMMATION_ARITHMETIC_SERIES | O(N) → O(1)  | 523x    | YES   |
-| SUM i=1..N of i²   | SUMMATION_SQUARES         | O(N) → O(1)   | 401x    | YES   |
-| SUM i=1..N of 7    | SUMMATION_CONSTANT        | O(N) → O(1)   | 2036x   | YES   |
+| Workload         | Pattern                     | Complexity  | Speedup | Exact |
+| ---------------- | --------------------------- | ----------- | ------- | ----- |
+| SUM i=1..N of i  | SUMMATION_ARITHMETIC_SERIES | O(N) → O(1) | 523x    | YES   |
+| SUM i=1..N of i² | SUMMATION_SQUARES           | O(N) → O(1) | 401x    | YES   |
+| SUM i=1..N of 7  | SUMMATION_CONSTANT          | O(N) → O(1) | 2036x   | YES   |
 
 All three: **max_verification_error = 0.00e+00** (integer arithmetic, perfectly exact).
 
@@ -81,11 +81,11 @@ LUT-based approximation with linear interpolation. 4096-sample uniform tables.
 
 **NIR_001 Measured Results (CONTRACT_TOL = 1e-3):**
 
-| Function    | Max Abs Error | Mean Abs Error | Contract | Result |
-|-------------|---------------|----------------|----------|--------|
-| sin(x)      | 3.58e-07      | 1.29e-07       | 1.00e-03 | PASS   |
-| exp(-x²)   | 6.56e-07      | 1.07e-07       | 1.00e-03 | PASS   |
-| 1/x         | 5.01e-01      | 4.83e-04       | 1.00e-03 | FAIL   |
+| Function | Max Abs Error | Mean Abs Error | Contract | Result |
+| -------- | ------------- | -------------- | -------- | ------ |
+| sin(x)   | 3.58e-07      | 1.29e-07       | 1.00e-03 | PASS   |
+| exp(-x²) | 6.56e-07      | 1.07e-07       | 1.00e-03 | PASS   |
+| 1/x      | 5.01e-01      | 4.83e-04       | 1.00e-03 | FAIL   |
 
 > `1/x` fails because the function diverges sharply near x=0.01 and uniform LUT
 > cannot represent it accurately in that region with 4096 points. This is the
@@ -99,6 +99,7 @@ SHA-256 structural hashing of workloads. Cache hit delivers identical result wit
 O(1) lookup, eliminating all computation for repeated inputs.
 
 **Confirmed Working** (HYPER_ESCAPE_001 W3):
+
 - W3 first call: `CPU_BLAS_NORM` pathway, computed.
 - W3 second call: `CDRE_CACHE` hit, 0.002 ms, zero error, exact replay.
 
@@ -141,29 +142,29 @@ O(1) lookup, eliminating all computation for repeated inputs.
 
 11 adversarial tests, all pass:
 
-| ID | Test                          | Attacks                                    |
-|----|-------------------------------|--------------------------------------------|
-| 1  | Dense random matrix           | No structure → must fall back honestly     |
-| 2  | High-rank                     | Rank = N, no low-rank escape               |
-| 3  | Ill-conditioned               | κ ≈ 1e12, numerical precision boundary     |
-| 4  | Cache collision               | Different data, same-sized arrays          |
-| 5  | Precomputation overhead       | N=1, where escape is slower than compute   |
-| 6  | Distribution shift            | Train on uniform, test on bimodal          |
-| 7  | Graphics pipeline             | render_mesh correctness verification       |
-| 8  | Temporal drift                | Streaming distribution shift over time     |
-| 9  | Holdout generalization        | Unseen test domain, no overfitting         |
-| 10 | Symbolic oracle separation    | Verifier must use numpy, not candidate     |
-| 11 | Anti-self-verification        | Candidate cannot verify itself             |
+| ID  | Test                       | Attacks                                  |
+| --- | -------------------------- | ---------------------------------------- |
+| 1   | Dense random matrix        | No structure → must fall back honestly   |
+| 2   | High-rank                  | Rank = N, no low-rank escape             |
+| 3   | Ill-conditioned            | κ ≈ 1e12, numerical precision boundary   |
+| 4   | Cache collision            | Different data, same-sized arrays        |
+| 5   | Precomputation overhead    | N=1, where escape is slower than compute |
+| 6   | Distribution shift         | Train on uniform, test on bimodal        |
+| 7   | Graphics pipeline          | render_mesh correctness verification     |
+| 8   | Temporal drift             | Streaming distribution shift over time   |
+| 9   | Holdout generalization     | Unseen test domain, no overfitting       |
+| 10  | Symbolic oracle separation | Verifier must use numpy, not candidate   |
+| 11  | Anti-self-verification     | Candidate cannot verify itself           |
 
 ---
 
 ## 6. HYPER_ESCAPE_001 Full-Stack Results
 
-| WL | Workload                    | Pathway           | Ref (ms) | Escaped (ms) | Speedup | Contract |
-|----|-----------------------------|-------------------|----------|--------------|---------|----------|
-| W1 | Batch trace sum (100×32×32) | EFSC_VECTORIZED   | 0.342    | 0.053        | 6.5×    | PASS     |
-| W2 | Polynomial eval (10k pts)   | EFSC_HORNER       | 0.182    | 0.191        | 1.0×    | PASS     |
-| W3 | L2 norm, CDRE cache hit     | CDRE_CACHE        | 0.003    | 0.002        | 1.2×    | PASS     |
+| WL  | Workload                    | Pathway         | Ref (ms) | Escaped (ms) | Speedup | Contract |
+| --- | --------------------------- | --------------- | -------- | ------------ | ------- | -------- |
+| W1  | Batch trace sum (100×32×32) | EFSC_VECTORIZED | 0.342    | 0.053        | 6.5×    | PASS     |
+| W2  | Polynomial eval (10k pts)   | EFSC_HORNER     | 0.182    | 0.191        | 1.0×    | PASS     |
+| W3  | L2 norm, CDRE cache hit     | CDRE_CACHE      | 0.003    | 0.002        | 1.2×    | PASS     |
 
 **Mean speedup: 2.88×. Max speedup: 6.47×. All 3 contracts met.**
 
@@ -179,11 +180,11 @@ O(1) lookup, eliminating all computation for repeated inputs.
 > A CCR of 1000× means the candidate performs 1/1000th of the work of the reference.
 > CCR is a theoretical upper bound; wall-clock speedup is always measured independently.
 
-| Experiment | CCR (theoretical) | Measured speedup |
-|------------|-------------------|------------------|
-| EFSC SUM_i | 1000×             | 523×             |
-| EFSC SUM_i²| 1000×             | 401×             |
-| EFSC SUM_7 | 1000×             | 2036×            |
+| Experiment  | CCR (theoretical) | Measured speedup |
+| ----------- | ----------------- | ---------------- |
+| EFSC SUM_i  | 1000×             | 523×             |
+| EFSC SUM_i² | 1000×             | 401×             |
+| EFSC SUM_7  | 1000×             | 2036×            |
 
 The gap between CCR and measured speedup is due to Python interpreter overhead.
 The closed form expression itself is O(1) and takes ~25µs, dominated by loop overhead.
@@ -192,13 +193,13 @@ The closed form expression itself is O(1) and takes ~25µs, dominated by loop ov
 
 ## 8. What Remains Unmeasured (Honest Acknowledgment)
 
-| Claim                              | Status                                            |
-|------------------------------------|---------------------------------------------------|
-| iGPU OpenCL speedup vs CPU         | Not benchmarked on this run (no suitable kernel)  |
-| TBIQS vs FP32 accuracy tradeoff    | Documented but not end-to-end profiled            |
-| Affinity scheduler CPU isolation   | Verified core pinning; perf delta measured as ~5% |
-| NIR 1/x approximation              | Correctly reported as contract FAIL               |
-| "RTX 5090 parity"                  | Not claimed. Hardware is Intel UHD. Period.       |
+| Claim                            | Status                                            |
+| -------------------------------- | ------------------------------------------------- |
+| iGPU OpenCL speedup vs CPU       | Not benchmarked on this run (no suitable kernel)  |
+| TBIQS vs FP32 accuracy tradeoff  | Documented but not end-to-end profiled            |
+| Affinity scheduler CPU isolation | Verified core pinning; perf delta measured as ~5% |
+| NIR 1/x approximation            | Correctly reported as contract FAIL               |
+| "RTX 5090 parity"                | Not claimed. Hardware is Intel UHD. Period.       |
 
 ---
 
@@ -301,8 +302,8 @@ The LEAF Computational Escape Engine successfully demonstrates:
 5. **Adversarial robustness** — 11/11 hostile tests pass. The system cannot be
    tricked into claiming parity where none exists.
 
-**The philosophy is validated:** *Don't compute more. Discover what needs less.*
+**The philosophy is validated:** _Don't compute more. Discover what needs less._
 
 ---
 
-*Report generated: 2026-09-15 | Hardware: i5-12450H + Intel UHD 48EU | OS: Windows 11*
+_Report generated: 2026-09-15 | Hardware: i5-12450H + Intel UHD 48EU | OS: Windows 11_

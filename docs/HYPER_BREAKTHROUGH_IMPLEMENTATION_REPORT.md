@@ -1,7 +1,9 @@
 # LEO / HYPER — Breakthrough Implementation Report
+
 ## Contract-First Computational Escape Architecture
 
 **Target Environment**:
+
 - **CPU**: Intel Core i5-12450H (8 cores / 12 threads: 4 Performance-cores + 4 Efficient-cores, AVX2 + FMA, strictly NO AVX-512)
 - **iGPU**: Intel UHD Graphics (48 Execution Units, max frequency ~1.20 GHz, shared memory architecture)
 - **RAM**: 16 GB Unified System RAM (Measured copy bandwidth: 18.57 GB/s; measured read bandwidth: 5.45 GB/s)
@@ -13,18 +15,18 @@
 
 ## 1. Repository Audit & Codebase Mapping
 
-| System Area | Existing Implementation | Reused / Integrated Code | Role in Breakthrough Pipeline |
-| :--- | :--- | :--- | :--- |
-| **Hardware Contract** | `hyper/hardware.py` | Enhanced with `HardwareProfiler`, live STREAM memory bandwidth benchmarking, and canonical YAML generation. | Establishes frozen physical machine profile. |
-| **Contract IR** | `contracts/contract_ir.py` | `ContractIR`, `ExactnessClass`, `VerificationLevel`, `Contract100Gate`. | Authoritative contract specification and 9-gate verification. |
-| **Execution Proof** | `hyper/proof/execution_certificate.py` | `ExecutionCertificate`, cryptographic hashing, device latency decomposition. | Proof-carrying results with complete provenance. |
-| **Cache Hierarchy** | `hyper/cache/wormhole_cache.py` | `WormholeCacheKey`, `WormholeExactCache`, `WormholeSemanticCache`. | Exact zero-recompute caching with fast zero-copy memoryview digests. |
-| **Work Accounting** | `hyper/necessity/necessary_work_analyzer.py` | `NecessaryWorkAnalyzer`, `WorkAnalysisReport`. | Strict separation of work elimination ratio vs latency speedup. |
-| **Escape Search** | `hyper/escape/escape_engine.py` | Three-Question Wormhole Test, row/col delta updates, CSR sparsity, low-rank SVD, reference fallback. | Systematic escape search with certified fallback. |
-| **Precision** | `hyper/quantization/precision_engine.py` | `PrecisionDecisionEngine`, BitNet b1.58 ternary LUT, symmetric INT8, FP16. | Contract-guided precision evaluation without silent degradation. |
-| **Speculative Compute**| `hyper/predictive/speculative_executor.py`| `SpeculativeExecutor`, Draft-Verify-Commit loop, economic profitability monitor. | Fast speculative drafts with rollback. |
-| **Memory Fabric** | `hyper/memory/memory_wormhole.py` | `AlignedBufferPool`, 64-byte alignment, zero-copy vs explicit copy coordinator. | Eliminates heap allocations and page faults. |
-| **BitNet b1.58 TMAC** | `kernels/tmac/` | AVX2 SIMD lookup-table dot product using `_mm256_shuffle_epi8`. | Multi-bit multiplication bypass. |
+| System Area             | Existing Implementation                      | Reused / Integrated Code                                                                                    | Role in Breakthrough Pipeline                                        |
+| :---------------------- | :------------------------------------------- | :---------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------- |
+| **Hardware Contract**   | `hyper/hardware.py`                          | Enhanced with `HardwareProfiler`, live STREAM memory bandwidth benchmarking, and canonical YAML generation. | Establishes frozen physical machine profile.                         |
+| **Contract IR**         | `contracts/contract_ir.py`                   | `ContractIR`, `ExactnessClass`, `VerificationLevel`, `Contract100Gate`.                                     | Authoritative contract specification and 9-gate verification.        |
+| **Execution Proof**     | `hyper/proof/execution_certificate.py`       | `ExecutionCertificate`, cryptographic hashing, device latency decomposition.                                | Proof-carrying results with complete provenance.                     |
+| **Cache Hierarchy**     | `hyper/cache/wormhole_cache.py`              | `WormholeCacheKey`, `WormholeExactCache`, `WormholeSemanticCache`.                                          | Exact zero-recompute caching with fast zero-copy memoryview digests. |
+| **Work Accounting**     | `hyper/necessity/necessary_work_analyzer.py` | `NecessaryWorkAnalyzer`, `WorkAnalysisReport`.                                                              | Strict separation of work elimination ratio vs latency speedup.      |
+| **Escape Search**       | `hyper/escape/escape_engine.py`              | Three-Question Wormhole Test, row/col delta updates, CSR sparsity, low-rank SVD, reference fallback.        | Systematic escape search with certified fallback.                    |
+| **Precision**           | `hyper/quantization/precision_engine.py`     | `PrecisionDecisionEngine`, BitNet b1.58 ternary LUT, symmetric INT8, FP16.                                  | Contract-guided precision evaluation without silent degradation.     |
+| **Speculative Compute** | `hyper/predictive/speculative_executor.py`   | `SpeculativeExecutor`, Draft-Verify-Commit loop, economic profitability monitor.                            | Fast speculative drafts with rollback.                               |
+| **Memory Fabric**       | `hyper/memory/memory_wormhole.py`            | `AlignedBufferPool`, 64-byte alignment, zero-copy vs explicit copy coordinator.                             | Eliminates heap allocations and page faults.                         |
+| **BitNet b1.58 TMAC**   | `kernels/tmac/`                              | AVX2 SIMD lookup-table dot product using `_mm256_shuffle_epi8`.                                             | Multi-bit multiplication bypass.                                     |
 
 ---
 
@@ -57,6 +59,7 @@ TELEMETRY & CLAIM LEDGER
 ```
 
 ### New Modules:
+
 1. `hyper/work_dag/work_graph.py`: Complete dependency DAG builder with critical-path calculation, common-subexpression detection, and dead-node pruning.
 2. `hyper/necessary_work/necessary_work_engine.py`: Formal categorization into 9 operation necessity classes and rigorous work accounting.
 3. `hyper/escape_compiler/escape_compiler.py`: 22-strategy systematic search engine supporting `NO_ESCAPE_FOUND` and `CONTRACT_UNSATISFIABLE`.
@@ -71,6 +74,7 @@ TELEMETRY & CLAIM LEDGER
 ---
 
 ## 3. Verified Limitations & Non-Negotiable Boundaries
+
 - **No Discrete GPU**: No physical NVIDIA CUDA or discrete GPU exists on this machine.
 - **No AVX-512**: The Intel Core i5-12450H (Alder Lake H) does not expose AVX-512. Any optimization relying on AVX-512 is flagged and rejected.
 - **iGPU Execution Units**: Exactly 48 Execution Units (EUs). Documentation erroneously citing 32 EUs or i5-13420H is superseded.

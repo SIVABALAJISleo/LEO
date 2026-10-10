@@ -1,6 +1,7 @@
 # HYPER: Minimum Verified Computation (MVC) Architecture
 
 ## 1. The MVC Philosophy
+
 In conventional high-performance computing, the primary goal is often:
 $$\max \text{GFLOPs} \quad \text{or} \quad \max \text{Hardware Utilization}$$
 
@@ -58,7 +59,9 @@ APPLICATION WORKLOAD
 ---
 
 ## 3. Seven-Term Total Work Breakdown
+
 The work function evaluates real-world overheads beyond simple FLOP counts:
+
 1. $W_{\text{arithmetic}}$: Raw floating-point and integer instructions.
 2. $W_{\text{memory}}$: Bytes transferred across L1, L2, L3, and host DRAM.
 3. $W_{\text{transfer}}$: Host-to-device and device-to-host transfers (zero under Intel USM).

@@ -2,7 +2,7 @@
 
 **System**: LEO / HYPER — Omega Research Mode  
 **Hardware Substrate**: Lenovo IdeaPad Slim 3 15IAH8 (Intel Core i5-12450H / i5-13420H, 8 Cores / 12 Threads, 16 GB RAM, Intel UHD Graphics 48 EUs, Windows 11)  
-**Standard**: Omega Research Mode Parts 10, 45, 63 (Computational Compression Ratio & Escape Scoring)  
+**Standard**: Omega Research Mode Parts 10, 45, 63 (Computational Compression Ratio & Escape Scoring)
 
 ---
 
@@ -15,6 +15,7 @@ $$\text{CCR} = \frac{W_{\text{reference\_necessary}}}{W_{\text{HYPER\_necessary}
 Where $W_{\text{reference\_necessary}}$ is the minimal necessary work required by the standard brute-force algorithm, and $W_{\text{HYPER\_necessary}}$ is the work executed by the reformulating HYPER pathway.
 
 ### Multi-Dimensional Compression Tracking:
+
 1. **Algorithmic Compression**: Reduction in asymptotic complexity (e.g. $O(N^3) \to O(N^2 r)$ via low-rank SVD).
 2. **Data Compression**: Reduced precision storage and computation (e.g. FP32 to INT8/INT4/BitNet).
 3. **Memory-Traffic Compression**: Eliminating redundant DRAM round-trips via block kernel fusion.
@@ -27,13 +28,13 @@ Where $W_{\text{reference\_necessary}}$ is the minimal necessary work required b
 
 All measurements recorded directly on host Intel Core i5 + Intel UHD:
 
-| Workload Domain | Workload ID | Reference Work (FLOPs) | HYPER Executed Work (FLOPs) | Measured CCR | Compression Mechanism | Verified Parity Tier |
-|---|---|---|---|---|---|---|
-| **Dense Linear Algebra** | `gemm_1024_r32` | $2.15 \times 10^9$ | $0.27 \times 10^9$ | **$7.96\times$** | Associative Low-Rank SVD | `CONTRACT_EQUIVALENCE` |
-| **Attention / LLM** | `attn_2048_sparse` | $16.78 \times 10^9$ | $2.51 \times 10^9$ | **$6.68\times$** | Block Sparse Token Masking | `CONTRACT_EQUIVALENCE` |
-| **Spectral / Signal** | `fft_3d_sparse` | $1.25 \times 10^9$ | $0.50 \times 10^9$ | **$2.50\times$** | Sub-Nyquist Sparse FFT | `CONTRACT_EQUIVALENCE` |
-| **Exact Memoized RAG** | `rag_exact_memo` | $1.20 \times 10^9$ | $0.00$ | **$\infty$** | 14-Factor Exact Cache | `EXACT_REDUCED_COMPUTATION` |
-| **High-Entropy Noise** | `dense_random_gemm`| $0.27 \times 10^9$ | $0.27 \times 10^9$ | **$1.00\times$** | Irreducible Remainder | `SAME_COMPUTATION` |
+| Workload Domain          | Workload ID         | Reference Work (FLOPs) | HYPER Executed Work (FLOPs) | Measured CCR     | Compression Mechanism      | Verified Parity Tier        |
+| ------------------------ | ------------------- | ---------------------- | --------------------------- | ---------------- | -------------------------- | --------------------------- |
+| **Dense Linear Algebra** | `gemm_1024_r32`     | $2.15 \times 10^9$     | $0.27 \times 10^9$          | **$7.96\times$** | Associative Low-Rank SVD   | `CONTRACT_EQUIVALENCE`      |
+| **Attention / LLM**      | `attn_2048_sparse`  | $16.78 \times 10^9$    | $2.51 \times 10^9$          | **$6.68\times$** | Block Sparse Token Masking | `CONTRACT_EQUIVALENCE`      |
+| **Spectral / Signal**    | `fft_3d_sparse`     | $1.25 \times 10^9$     | $0.50 \times 10^9$          | **$2.50\times$** | Sub-Nyquist Sparse FFT     | `CONTRACT_EQUIVALENCE`      |
+| **Exact Memoized RAG**   | `rag_exact_memo`    | $1.20 \times 10^9$     | $0.00$                      | **$\infty$**     | 14-Factor Exact Cache      | `EXACT_REDUCED_COMPUTATION` |
+| **High-Entropy Noise**   | `dense_random_gemm` | $0.27 \times 10^9$     | $0.27 \times 10^9$          | **$1.00\times$** | Irreducible Remainder      | `SAME_COMPUTATION`          |
 
 ---
 
@@ -52,6 +53,7 @@ $$\text{CES} = w_1 S_{\text{correct}} + w_2 S_{\text{contract}} + w_3 S_{\text{w
 ```
 
 No candidate is promoted unless:
+
 1. $S_{\text{correct}} = 1.0$ (Strict Mathematical / Contract Compliance)
 2. $S_{\text{gen}} \ge 0.85$ (Robust performance across blind holdout datasets)
 

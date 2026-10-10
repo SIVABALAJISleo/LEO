@@ -74,7 +74,7 @@ async function measure(page, route) {
         const entries = entryList.getEntries();
         if (entries.length > 0) {
           const entry = entries[entries.length - 1];
-          window.__vitals.INP = entry.duration ?? (entry.processingEnd - entry.startTime);
+          window.__vitals.INP = entry.duration ?? entry.processingEnd - entry.startTime;
         }
       }).observe({ type: "first-input", buffered: true });
     } catch {

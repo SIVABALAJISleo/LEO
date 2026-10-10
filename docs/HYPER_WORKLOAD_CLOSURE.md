@@ -1,4 +1,5 @@
 # Universal Workload Closure & Impossibility Boundaries
+
 **Engine**: HYPER Necessary-Work Compiler & Universal Workload Registry.
 **Target Machine**: Intel Core i5-12450H (AVX2/FMA) + Intel UHD Graphics (48 EUs).
 
@@ -27,6 +28,7 @@ A workload compiler cannot claim victory simply by optimizing easy microbenchmar
    The current search budget, grammar depth, and e-graph saturation could neither find a verified shortcut nor prove necessity.
 
 ### Formal Closure Definition
+
 $$\text{Universal Workload Closure} = \frac{N_{\text{wormhole}} + N_{\text{necessity\_proven}}}{N_{\text{total\_evaluated}}}$$
 
 **100% Closure is achieved ONLY when**:
@@ -39,6 +41,7 @@ $$N_{\text{inconclusive}} = 0 \quad \text{and} \quad \text{ProvenanceCoverage} =
 A failed optimization is not wasted work. In classical compilers, if a pass fails to optimize a loop, it silently emits the original code and provides no scientific insight.
 
 In HYPER, when an optimization attempt fails:
+
 1. The falsification engine generates and preserves a formal `Counterexample`.
 2. The causal necessity engine evaluates whether a known computational lower bound applies:
    - **Communication Lower Bound**: $\Omega(N^3 / \sqrt{M})$ memory traffic for dense matrix multiplication.
@@ -52,17 +55,17 @@ In HYPER, when an optimization attempt fails:
 
 The following table documents the evaluated benchmark universe on the physical target hardware (Intel Core i5-12450H + Intel UHD):
 
-| Workload ID | Domain | Contract Mode | Observable | Outcome | Necessary FLOPs | Work Elim. | GADR | HAE | Status |
-|---|---|---|---|---|---|---|---|---|---|
-| `GEMM_VEC_PROJ_64` | Linear Algebra | `EXACT_REFORMULATION` | Vector Projection $(AB)x$ | `WORMHOLE_FOUND` | $8.19 \times 10^3$ | **$98.4\%$** | $0.016$ | **$0.984$** | CERTIFIED |
-| `GEMM_LOW_RANK_128` | Linear Algebra | `BOUNDED_APPROX` | Output Tensor ($\epsilon=10^{-3}$) | `WORMHOLE_FOUND` | $5.24 \times 10^5$ | **$87.5\%$** | $0.125$ | **$0.875$** | CERTIFIED |
-| `GEMM_SPARSE_CSR_64` | Linear Algebra | `BOUNDED_APPROX` | Output Tensor ($S=65\%$) | `WORMHOLE_FOUND` | $1.83 \times 10^5$ | **$65.0\%$** | $0.350$ | **$0.650$** | CERTIFIED |
-| `DENSE_GAUSS_EXACT` | Linear Algebra | `EXACT` | Full Tensor ($\epsilon=0.0$) | `NECESSARY_PROVEN` | $5.24 \times 10^5$ | **$0.0\%$** | $1.000$ | **$0.000$** | CERTIFIED |
-| `GFX_TEMPORAL_1080P` | Graphics / Vision | `PERCEPTUAL_APPROX` | Visible Pixels ($\text{SSIM}\ge 0.94$) | `WORMHOLE_FOUND` | $1.20 \times 10^7$ | **$82.0\%$** | $0.180$ | **$0.820$** | CERTIFIED |
-| `AI_TOPK_BEAM_32K` | AI Inference | `EXACT_REFORMULATION` | Top-$5$ Logits / Tokens | `WORMHOLE_FOUND` | $4.80 \times 10^5$ | **$93.2\%$** | $0.068$ | **$0.932$** | CERTIFIED |
-| `STENCIL_DIFF_512` | Scientific HPC | `NUMERICALLY_EQUIV` | Temperature Field ($\epsilon=10^{-4}$) | `WORMHOLE_FOUND` | $2.62 \times 10^6$ | **$75.0\%$** | $0.250$ | **$0.750$** | CERTIFIED |
-| `DB_FILTER_SCAN_1M` | Database Engine | `EXACT_REFORMULATION` | Filtered Top-$100$ Rows | `WORMHOLE_FOUND` | $1.00 \times 10^6$ | **$99.0\%$** | $0.010$ | **$0.990$** | CERTIFIED |
-| `RANDOM_ENTROPY_HASH`| Cryptography | `EXACT` | Hash Digest | `NECESSARY_PROVEN` | $6.40 \times 10^4$ | **$0.0\%$** | $1.000$ | **$0.000$** | CERTIFIED |
+| Workload ID           | Domain            | Contract Mode         | Observable                             | Outcome            | Necessary FLOPs    | Work Elim.   | GADR    | HAE         | Status    |
+| --------------------- | ----------------- | --------------------- | -------------------------------------- | ------------------ | ------------------ | ------------ | ------- | ----------- | --------- |
+| `GEMM_VEC_PROJ_64`    | Linear Algebra    | `EXACT_REFORMULATION` | Vector Projection $(AB)x$              | `WORMHOLE_FOUND`   | $8.19 \times 10^3$ | **$98.4\%$** | $0.016$ | **$0.984$** | CERTIFIED |
+| `GEMM_LOW_RANK_128`   | Linear Algebra    | `BOUNDED_APPROX`      | Output Tensor ($\epsilon=10^{-3}$)     | `WORMHOLE_FOUND`   | $5.24 \times 10^5$ | **$87.5\%$** | $0.125$ | **$0.875$** | CERTIFIED |
+| `GEMM_SPARSE_CSR_64`  | Linear Algebra    | `BOUNDED_APPROX`      | Output Tensor ($S=65\%$)               | `WORMHOLE_FOUND`   | $1.83 \times 10^5$ | **$65.0\%$** | $0.350$ | **$0.650$** | CERTIFIED |
+| `DENSE_GAUSS_EXACT`   | Linear Algebra    | `EXACT`               | Full Tensor ($\epsilon=0.0$)           | `NECESSARY_PROVEN` | $5.24 \times 10^5$ | **$0.0\%$**  | $1.000$ | **$0.000$** | CERTIFIED |
+| `GFX_TEMPORAL_1080P`  | Graphics / Vision | `PERCEPTUAL_APPROX`   | Visible Pixels ($\text{SSIM}\ge 0.94$) | `WORMHOLE_FOUND`   | $1.20 \times 10^7$ | **$82.0\%$** | $0.180$ | **$0.820$** | CERTIFIED |
+| `AI_TOPK_BEAM_32K`    | AI Inference      | `EXACT_REFORMULATION` | Top-$5$ Logits / Tokens                | `WORMHOLE_FOUND`   | $4.80 \times 10^5$ | **$93.2\%$** | $0.068$ | **$0.932$** | CERTIFIED |
+| `STENCIL_DIFF_512`    | Scientific HPC    | `NUMERICALLY_EQUIV`   | Temperature Field ($\epsilon=10^{-4}$) | `WORMHOLE_FOUND`   | $2.62 \times 10^6$ | **$75.0\%$** | $0.250$ | **$0.750$** | CERTIFIED |
+| `DB_FILTER_SCAN_1M`   | Database Engine   | `EXACT_REFORMULATION` | Filtered Top-$100$ Rows                | `WORMHOLE_FOUND`   | $1.00 \times 10^6$ | **$99.0\%$** | $0.010$ | **$0.990$** | CERTIFIED |
+| `RANDOM_ENTROPY_HASH` | Cryptography      | `EXACT`               | Hash Digest                            | `NECESSARY_PROVEN` | $6.40 \times 10^4$ | **$0.0\%$**  | $1.000$ | **$0.000$** | CERTIFIED |
 
 ---
 
@@ -86,5 +89,6 @@ The following table documents the evaluated benchmark universe on the physical t
   }
 }
 ```
+
 Notice that the 100% score measures **Workload Closure over the Evaluated Domain**, NOT raw NVIDIA silicon duplication.
 Every workload was resolved to a verified wormhole or a proven lower bound.

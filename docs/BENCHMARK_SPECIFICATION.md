@@ -1,7 +1,9 @@
 # HYPER / LEO Benchmark Specification & Reproduction Protocol
 
 ## 1. Frozen Benchmark Manifest Protocol
+
 To ensure 100% scientific reproducibility and prevent benchmark gaming:
+
 1. **Separation of Cold, Warm, and Cached**:
    - **Cold Start**: Measured on the very first invocation with unloaded caches and uncompiled kernels.
    - **Warm Steady-State**: Measured over repetitions 5 through 50 with steady-state thermal behavior.
@@ -18,7 +20,9 @@ To ensure 100% scientific reproducibility and prevent benchmark gaming:
 ---
 
 ## 2. Benchmark Artifact Outputs
+
 Every automated benchmark execution produces:
+
 - `benchmark_manifest.json`: Machine-readable specification of all workloads, seeds, and hardware configurations.
 - `int4_vs_fp32_benchmark.json`: Real measurements of quantized vs floating-point operations.
 - `speculative_decoding_benchmark.json`: Measured parallel verification overhead ratios.

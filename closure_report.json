@@ -8,9 +8,7 @@
     "closure_ratio": 1.0,
     "closure_percentage": "100.00%",
     "can_claim_100_percent": true,
-    "closure_gate_reasons": [
-      "All workloads resolved. 100% closure on registered workload set."
-    ]
+    "closure_gate_reasons": ["All workloads resolved. 100% closure on registered workload set."]
   },
   "work_elimination": {
     "global_wer": 0.6127,

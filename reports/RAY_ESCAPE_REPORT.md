@@ -2,7 +2,7 @@
 
 **System**: LEO / HYPER — Omega Research Mode  
 **Hardware Substrate**: Lenovo IdeaPad Slim 3 15IAH8 (Intel Core i5-12450H / i5-13420H + Intel UHD Graphics 48 EUs + 16 GB RAM)  
-**Standard**: Omega Research Mode Part 22 (Ray Accounting, Visibility Caching, Selective BVH Traversal)  
+**Standard**: Omega Research Mode Part 22 (Ray Accounting, Visibility Caching, Selective BVH Traversal)
 
 ---
 
@@ -13,6 +13,7 @@ Hardware ray tracing on modern external GPUs (such as RTX 4090 / RTX 5090) relie
 The target machine possesses **zero dedicated ray-tracing hardware**. Attempting to trace 1–4 rays per pixel naively across CPU/iGPU leads to frame latencies exceeding $1,000\text{ ms}$ (unusable).
 
 The **Ray Escape Engine** reformulates the ray tracing problem:
+
 > **"Do not cast rays blindly into empty space. Trace sparse pilot rays, cache visibility fields, reuse spatio-temporal light transport, and reconstruct radiance."**
 
 ---
@@ -25,13 +26,13 @@ $$\text{Rays}_{\text{requested}} = \text{Rays}_{\text{executed}} + \text{Rays}_{
 
 Empirical measurements on a $1920 \times 1080$ scene ($2.07\text{ million}$ primary rays + shadow/reflection rays):
 
-| Ray Category | Count per Frame | Percentage | Mechanism |
-|---|---|---|---|
-| **Rays Requested** | $6,220,800$ | $100.0\%$ | 1 primary + 1 shadow + 1 indirect bounce per pixel |
-| **Rays Eliminated** | $3,483,648$ | **$56.0\%$** | Frustum culling, occluded shadow zones, sub-threshold radiance contributions |
-| **Rays Reused** | $1,617,408$ | **$26.0\%$** | Spatio-temporal radiance cache hits from previous frames |
-| **Rays Reconstructed** | $746,496$ | **$12.0\%$** | Bilateral guided filtering / edge-preserving spatial reconstruction |
-| **Rays Executed** | $373,248$ | **$6.0\%$** | Real physical BVH traversal on CPU AVX2 + Intel UHD |
+| Ray Category           | Count per Frame | Percentage   | Mechanism                                                                    |
+| ---------------------- | --------------- | ------------ | ---------------------------------------------------------------------------- |
+| **Rays Requested**     | $6,220,800$     | $100.0\%$    | 1 primary + 1 shadow + 1 indirect bounce per pixel                           |
+| **Rays Eliminated**    | $3,483,648$     | **$56.0\%$** | Frustum culling, occluded shadow zones, sub-threshold radiance contributions |
+| **Rays Reused**        | $1,617,408$     | **$26.0\%$** | Spatio-temporal radiance cache hits from previous frames                     |
+| **Rays Reconstructed** | $746,496$       | **$12.0\%$** | Bilateral guided filtering / edge-preserving spatial reconstruction          |
+| **Rays Executed**      | $373,248$       | **$6.0\%$**  | Real physical BVH traversal on CPU AVX2 + Intel UHD                          |
 
 **Total Ray Computation Reduction**: **$94.0\%$ of brute-force rays eliminated or reconstructed**.
 

@@ -1,4 +1,5 @@
 # HYPER-Ω: Contract-First Computational Elimination & Breakthrough Report
+
 ## Project LEO / HYPER-Ω: Formal Research Audit & Scientific Validation
 
 **Document ID:** `REP-HYPER-OMEGA-BREAKTHROUGH-2026-09`  
@@ -13,10 +14,12 @@
 HYPER-Ω transforms the optimization paradigm from brute-force hardware scaling into **Contract-First Computational Elimination**.
 
 Instead of asking:
-> *"How can a laptop's Core i5-12450H perform the same 1,000,000 units of floating-point arithmetic as an RTX 5090?"*
+
+> _"How can a laptop's Core i5-12450H perform the same 1,000,000 units of floating-point arithmetic as an RTX 5090?"_
 
 HYPER-Ω asks:
-> *"Does the application contract actually require all 1,000,000 units of work?"*
+
+> _"Does the application contract actually require all 1,000,000 units of work?"_
 
 By deploying formal information boundary analysis, exact content reuse, incremental delta updates, structural zero pruning, output-sensitive partial selection, and low-rank factorization, HYPER-Ω proves that in structured computational domains, between **25.0% and 99.0%** of dense arithmetic can be mathematically eliminated while preserving exact contract parity ($Y_{\text{HYPER}} == Y_{\text{ref}}$).
 
@@ -42,19 +45,19 @@ UNIVERSAL_PARITY:           NOT_ESTABLISHED
 
 The central decision layer (`hyper_x/wormhole_compiler/breakthrough_router.py`) evaluates candidate pathways in strict priority order:
 
-| Route Identifier | Elimination Mechanism | Measured Work Elimination Ratio | Verification Status | Exactness Mode |
-| :--- | :--- | :---: | :---: | :---: |
-| **`EXACT_CONTENT_REUSE`** | SHA-256 byte-level memoization | **$100.0\%$** | `VERIFIED` | `EXACT` |
-| **`EXACT_CACHE`** | Cold/warm cache separation with provenance | **$100.0\%$** | `VERIFIED` | `EXACT` |
-| **`EXACT_ZERO_PRUNING`** | Zero-row, zero-col, zero-block skipping ($\text{threshold} = 0$) | **$50.0\% - 75.0\%$** | `PASSED` | `EXACT` |
-| **`EXACT_SPARSE`** | CSR traversal for tensors with sparsity $> 70\%$ | **$70.0\% - 90.0\%$** | `PASSED` | `EXACT` |
-| **`EXACT_ROW_DELTA`** | $(A + \Delta A)B = AB + \Delta AB$ for sequential deltas | **$80.0\% - 95.0\%$** | `PASSED` | `EXACT` |
-| **`EXACT_RESIDUAL`** | High-confidence base predictor + sparse residual | **$65.0\% - 85.0\%$** | `PASSED` | `EXACT` |
-| **`OUTPUT_SENSITIVE`** | Min-heap & Cauchy-Schwarz bound pruning ($O(N \log k)$) | **$95.0\% - 99.0\%$** | `PASSED` | `EXACT` |
-| **`EXACT_FACTORIZATION`**| Outer product / collinear factorization ($A = UV$) | **$80.0\% - 94.0\%$** | `PASSED` | `EXACT` |
-| **`TEMPORAL_COHERENCE`** | Block-level frame change detection and state reuse | **$75.0\% - 90.0\%$** | `PASSED` | `EXACT` |
-| **`CPU_IGPU_EXECUTION`** | Intel UHD Graphics USM zero-copy work split | $0.0\%$ (Compute offload) | `VERIFIED` | `EXACT` |
-| **`REFERENCE_FALLBACK`** | Decoupled clean-room reference execution | $0.0\%$ (Baseline) | `VERIFIED` | `EXACT` |
+| Route Identifier          | Elimination Mechanism                                            | Measured Work Elimination Ratio | Verification Status | Exactness Mode |
+| :------------------------ | :--------------------------------------------------------------- | :-----------------------------: | :-----------------: | :------------: |
+| **`EXACT_CONTENT_REUSE`** | SHA-256 byte-level memoization                                   |          **$100.0\%$**          |     `VERIFIED`      |    `EXACT`     |
+| **`EXACT_CACHE`**         | Cold/warm cache separation with provenance                       |          **$100.0\%$**          |     `VERIFIED`      |    `EXACT`     |
+| **`EXACT_ZERO_PRUNING`**  | Zero-row, zero-col, zero-block skipping ($\text{threshold} = 0$) |      **$50.0\% - 75.0\%$**      |      `PASSED`       |    `EXACT`     |
+| **`EXACT_SPARSE`**        | CSR traversal for tensors with sparsity $> 70\%$                 |      **$70.0\% - 90.0\%$**      |      `PASSED`       |    `EXACT`     |
+| **`EXACT_ROW_DELTA`**     | $(A + \Delta A)B = AB + \Delta AB$ for sequential deltas         |      **$80.0\% - 95.0\%$**      |      `PASSED`       |    `EXACT`     |
+| **`EXACT_RESIDUAL`**      | High-confidence base predictor + sparse residual                 |      **$65.0\% - 85.0\%$**      |      `PASSED`       |    `EXACT`     |
+| **`OUTPUT_SENSITIVE`**    | Min-heap & Cauchy-Schwarz bound pruning ($O(N \log k)$)          |      **$95.0\% - 99.0\%$**      |      `PASSED`       |    `EXACT`     |
+| **`EXACT_FACTORIZATION`** | Outer product / collinear factorization ($A = UV$)               |      **$80.0\% - 94.0\%$**      |      `PASSED`       |    `EXACT`     |
+| **`TEMPORAL_COHERENCE`**  | Block-level frame change detection and state reuse               |      **$75.0\% - 90.0\%$**      |      `PASSED`       |    `EXACT`     |
+| **`CPU_IGPU_EXECUTION`**  | Intel UHD Graphics USM zero-copy work split                      |    $0.0\%$ (Compute offload)    |     `VERIFIED`      |    `EXACT`     |
+| **`REFERENCE_FALLBACK`**  | Decoupled clean-room reference execution                         |       $0.0\%$ (Baseline)        |     `VERIFIED`      |    `EXACT`     |
 
 ---
 
@@ -63,6 +66,7 @@ The central decision layer (`hyper_x/wormhole_compiler/breakthrough_router.py`) 
 Tested on the Intel Core i5-12450H CPU + Intel UHD Graphics iGPU:
 
 ### 4.1 Dense Matrix Multiplication (`MatrixMultiplicationAdapter`)
+
 - **Baseline Work:** $2 \cdot 64^3 = 524,288$ FLOPs
 - **With 50% Zero Rows:** Route dispatched to `EXACT_ZERO_ROW_PRUNE`.
   - Executed work: $262,144$ FLOPs ($50.0\%$ work elimination).
@@ -72,6 +76,7 @@ Tested on the Intel Core i5-12450H CPU + Intel UHD Graphics iGPU:
   - Speedup: $2.4\times$ over full recalculation.
 
 ### 4.2 Output-Sensitive Top-K (`OutputSensitiveTopKAdapter`)
+
 - **Workload:** $M = 256$, $K = 64$, $k = 5$.
 - **Baseline:** Compute all 256 dot products, sort all 256 scores ($O(M \log M)$).
 - **HYPER-Ω Route:** `OUTPUT_SENSITIVE` via min-heap partial partition.
@@ -81,17 +86,20 @@ Tested on the Intel Core i5-12450H CPU + Intel UHD Graphics iGPU:
   - Exact match: Bitwise identical top-5 indices and values.
 
 ### 4.3 Temporal Graphics Denoising (`GraphicsTemporalAdapter`)
+
 - **Workload:** $128 \times 128$ sequential frame stream with 75% static background.
 - **HYPER-Ω Route:** `TEMPORAL_COHERENCE` with block-level change detection.
   - Work eliminated: $75.0\%$.
   - Quality metric: $1.0$ (Zero error on unchanged regions).
 
 ### 4.4 Scientific PDE Stencil (`ScientificStencilAdapter`)
+
 - **Workload:** $64 \times 64$ 2D diffusion grid over 10 time steps.
 - **HYPER-Ω Route:** Residual-guarded step propagation.
   - Verification: 100% numerically equivalent within contract tolerance ($10^{-4}$).
 
 ### 4.5 RAG Embedding Retrieval (`RAGEmbeddingRetrievalAdapter`)
+
 - **Workload:** 10,000 documents $\times$ 384 dimensions, Top-5 cosine retrieval.
 - **HYPER-Ω Route:** `OUTPUT_SENSITIVE` Cauchy-Schwarz upper-bound pruning.
   - Vector dot products avoided: $91.2\%$.
@@ -102,6 +110,7 @@ Tested on the Intel Core i5-12450H CPU + Intel UHD Graphics iGPU:
 ## 5. Anti-Simulation & Physical RTX 5090 Probe
 
 In strict accordance with Section 31:
+
 - `hyper_x/rtx5090/live_probe.py` physically queries the host operating system.
 - On the host machine (Intel Core i5-12450H with Intel UHD Graphics), the probe reports:
   ```json
@@ -128,6 +137,7 @@ python reproduce_experiment.py --experiment exp_gemm_standard_0fce099d --json
 ```
 
 All 12 core breakthrough regression tests pass:
+
 ```text
 tests/test_hyper_omega_breakthrough_suite.py ............ [100%]
 12 passed, 1 warning in 3.77s

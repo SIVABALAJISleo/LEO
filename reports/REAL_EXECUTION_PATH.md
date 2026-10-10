@@ -2,7 +2,7 @@
 
 **System**: LEO / HYPER — Omega Research Mode  
 **Substrate**: Lenovo IdeaPad Slim 3 15IAH8 (Intel Core i5-12450H / i5-13420H + Intel UHD Graphics + 16 GB RAM)  
-**Standard**: Omega Research Mode Part 2 (Concrete, traceable code execution)  
+**Standard**: Omega Research Mode Part 2 (Concrete, traceable code execution)
 
 ---
 
@@ -63,18 +63,18 @@ Every optimization claiming production benefit is traceable through an unbroken 
 
 ## 2. File-by-File Traceability Matrix
 
-| Stage | Responsible Module | Concrete Functions Executed |
-|---|---|---|
-| **Contract** | `hyper/contracts/contract.py` | `validate_contract()`, `contract_to_json()` |
-| **Cache** | `hyper/cache/exact_cache.py` | `compute_cache_key()`, `ExactCache.get()`, `ExactCache.put()` |
-| **Boundary** | `hyper_x/information_boundary/compiler.py` | `analyze_matrix_workload()`, `compile_summary()` |
-| **Work Decomposition** | `hyper_x/necessary_work/compiler.py` | `analyze_gemm()`, `WorkLedgerEntry()` |
-| **Low-Rank** | `hyper/low_rank/low_rank_engine.py` | `factorize()`, `benchmark_and_execute()` |
-| **Sparsity** | `hyper/sparsity/sparsity_engine.py` | `evaluate_sparsity()`, `execute_with_overhead_check()` |
-| **Incremental** | `hyper/incremental.py` | `DeltaAnalyzer.analyze()`, `IncrementalExecutor.step()` |
-| **Routing** | `hyper/scheduler/heterogeneous_scheduler.py` | `profile_backends()`, `select_backend()`, `dispatch()` |
-| **Verification** | `hyper/verification/verifier.py` | `verify_numerical()`, `verify_freivalds()` |
-| **Certification** | `hyper_x/certificates/certificate.py` | `ExecutionCertificate(...)`, `save_certificate()` |
+| Stage                  | Responsible Module                           | Concrete Functions Executed                                   |
+| ---------------------- | -------------------------------------------- | ------------------------------------------------------------- |
+| **Contract**           | `hyper/contracts/contract.py`                | `validate_contract()`, `contract_to_json()`                   |
+| **Cache**              | `hyper/cache/exact_cache.py`                 | `compute_cache_key()`, `ExactCache.get()`, `ExactCache.put()` |
+| **Boundary**           | `hyper_x/information_boundary/compiler.py`   | `analyze_matrix_workload()`, `compile_summary()`              |
+| **Work Decomposition** | `hyper_x/necessary_work/compiler.py`         | `analyze_gemm()`, `WorkLedgerEntry()`                         |
+| **Low-Rank**           | `hyper/low_rank/low_rank_engine.py`          | `factorize()`, `benchmark_and_execute()`                      |
+| **Sparsity**           | `hyper/sparsity/sparsity_engine.py`          | `evaluate_sparsity()`, `execute_with_overhead_check()`        |
+| **Incremental**        | `hyper/incremental.py`                       | `DeltaAnalyzer.analyze()`, `IncrementalExecutor.step()`       |
+| **Routing**            | `hyper/scheduler/heterogeneous_scheduler.py` | `profile_backends()`, `select_backend()`, `dispatch()`        |
+| **Verification**       | `hyper/verification/verifier.py`             | `verify_numerical()`, `verify_freivalds()`                    |
+| **Certification**      | `hyper_x/certificates/certificate.py`        | `ExecutionCertificate(...)`, `save_certificate()`             |
 
 ---
 

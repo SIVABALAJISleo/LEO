@@ -7,7 +7,7 @@
     "factored_median_ms": 0.1194,
     "dense_baseline_ms": 0.4728,
     "speedup": 3.96,
-    "max_abs_error": 9.918212890625e-05,
+    "max_abs_error": 9.918212890625e-5,
     "parity_status": "EXACT_PARITY",
     "break_even": true
   },

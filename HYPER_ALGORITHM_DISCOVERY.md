@@ -1,6 +1,7 @@
 # HYPER Algorithm Discovery & Strategy Search
 
 ## 1. Beyond Fixed Heuristics
+
 Static optimization passes only apply known code transformations. HYPER Algorithm Discovery treats computational strategy as an evolving genome:
 
 ```json
@@ -11,8 +12,8 @@ Static optimization passes only apply known code transformations. HYPER Algorith
   "tiling": [64, 64, 32],
   "fusion": ["MatmulBiasAdd", "GELUActivation"],
   "memory_plan": "ZeroCopy_SharedPool",
-  "cpu_ratio": 0.70,
-  "igpu_ratio": 0.30,
+  "cpu_ratio": 0.7,
+  "igpu_ratio": 0.3,
   "sampling": "Sobol_LowDiscrepancy",
   "verification": "Freivalds_Randomized"
 }
@@ -42,6 +43,7 @@ graph TD
 ## 3. Multi-Objective Pareto Optimization
 
 HYPER maintains a Pareto frontier across 6 non-fungible metrics:
+
 1. **Latency** (ms to solution)
 2. **Quality / Error** (PSNR, SSIM, relative residual)
 3. **Total Work Done** (FLOPs + memory bytes)

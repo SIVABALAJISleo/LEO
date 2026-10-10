@@ -4,10 +4,7 @@
   "verified_workloads": 2,
   "exact_workload_coverage": 1.0,
   "hardware_parity": "NOT CLAIMED (PHYSICALLY_DISJOINT)",
-  "domains_tested": [
-    "MATHEMATICS",
-    "LINEAR_ALGEBRA"
-  ],
+  "domains_tested": ["MATHEMATICS", "LINEAR_ALGEBRA"],
   "workloads": [
     {
       "workload_id": "UNSEEN_MATHEMATICS_3be4dc",

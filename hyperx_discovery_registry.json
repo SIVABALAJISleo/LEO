@@ -8,7 +8,7 @@
       "target_operation": "matrix_multiply",
       "contract_hash": "b2b01d6d40b575af",
       "correctness_class": "NUMERICAL_TOLERANCE",
-      "numerical_error": 4.8e-07,
+      "numerical_error": 4.8e-7,
       "latency_ms": 1.333299995167181,
       "throughput": 750.0187531873584,
       "memory_mb": 0.0625,
@@ -26,15 +26,13 @@
     },
     {
       "candidate_id": "WORMHOLE_GEMM_RESEARCH_AUTO_bad2ea37",
-      "parent_ids": [
-        "ROOT_CANONICAL"
-      ],
+      "parent_ids": ["ROOT_CANONICAL"],
       "grammar_expression": "LOW_RANK_DECOMPOSE >> MATMUL >> RESIDUAL_CORRECTION",
       "representation": "FACTORED",
       "target_operation": "matrix_multiply",
       "contract_hash": "b2b01d6d40b575af",
       "correctness_class": "NUMERICAL_TOLERANCE",
-      "numerical_error": 4.8e-07,
+      "numerical_error": 4.8e-7,
       "latency_ms": 1.333,
       "throughput": 750.1875468867217,
       "memory_mb": 12.5,

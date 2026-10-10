@@ -12,7 +12,7 @@
   "latency_ms": 74.07085000000001,
   "throughput": 0.0,
   "error_abs": 0.020936323329806328,
-  "error_rel": 1.673447695793584e-05,
+  "error_rel": 1.673447695793584e-5,
   "quality_metrics": {},
   "device": "CPU_AVX2_THREADED",
   "cache_hit": false,

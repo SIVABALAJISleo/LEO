@@ -1,7 +1,9 @@
 # HYPER Work Ledger & Reduction Accounting
 
 ## 1. Accounting Without Double-Counting
+
 The Work Ledger records authentic avoided work without conflating incomparable metrics. Every entry separates:
+
 - **Baseline Operations vs Actual Operations**: Measured in scalar FLOPs.
 - **Baseline Bytes vs Actual Bytes**: Measured in bytes transferred from RAM.
 - **Baseline Samples vs Actual Samples**: Measured in Monte Carlo paths or ray samples.
@@ -36,6 +38,7 @@ The Work Ledger records authentic avoided work without conflating incomparable m
 ## 3. Work Avoidance Taxonomy
 
 Work elimination is broken down into 8 distinct categories:
+
 1. **Mathematical Simplification**: Symbolic cancellation of algebraic terms.
 2. **Algorithmic Reduction**: Asymptotic reduction from $O(N^2)$ to $O(N \log N)$ or $O(N)$.
 3. **Information Pruning**: Omitting uninspected outputs or unobservable frequencies.

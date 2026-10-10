@@ -23,10 +23,7 @@
       "gpu_execution_units": null,
       "gpu_driver": "32.0.101.7076",
       "shared_memory": true,
-      "openvino_devices": [
-        "CPU",
-        "GPU"
-      ],
+      "openvino_devices": ["CPU", "GPU"],
       "directml_available": false,
       "cuda_available": false,
       "python_version": "3.13.5",
@@ -101,9 +98,7 @@
     "numerical_metrics": {},
     "adversarial_result": {},
     "holdout_result": {},
-    "latency_samples_ms": [
-      18.76
-    ],
+    "latency_samples_ms": [18.76],
     "throughput_ops_per_sec": 53.31,
     "memory_rss_mb": 466.95,
     "work_reference_flops": 524288.0,

@@ -1,7 +1,9 @@
 # HYPER: CPU + Intel iGPU Heterogeneous Computational Fabric
 
 ## 1. Unified Hardware Target
+
 HYPER targets the user's host hardware environment:
+
 - **Host CPU**: 13th Gen Intel(R) Core(TM) i5-13420H
   - 8 physical cores: 4 Performance cores (P-cores) + 4 Efficient cores (E-cores)
   - 12 logical execution threads
@@ -15,6 +17,7 @@ HYPER targets the user's host hardware environment:
 ---
 
 ## 2. Dynamic Workload Partitioning
+
 The heterogeneous scheduler continuously profiles kernel characteristics to determine optimal device placement:
 
 ```mermaid
@@ -31,5 +34,6 @@ graph TD
 ---
 
 ## 3. Zero-Copy Memory via Unified Shared Memory (USM)
+
 On discrete GPU systems, host-to-device transfers across PCIe saturate bandwidth and inject latency.
 On Intel integrated systems, the CPU and iGPU share physical DRAM. HYPER leverages page-aligned zero-copy pointers, eliminating redundant duplicate buffers and achieving zero transfer overhead.

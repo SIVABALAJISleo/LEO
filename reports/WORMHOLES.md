@@ -9,6 +9,7 @@
 ## 1. Verified Discoveries
 
 ### Wormhole 1: Spatio-Temporal Delta Bounding Boxes (`Realtime_720p_Filter`)
+
 - **Domain**: Graphics Viewport / Video Post-Processing
 - **Mechanism**: Calculates temporal differencing against prior frame. Recomputes only active bounding box $\mathcal{B}_t$ while applying Lipschitz invariant to static background.
 - **Measured Speedup**: **$3.89\times$** ($5.58\text{ ms} \to 1.43\text{ ms}$)
@@ -17,6 +18,7 @@
 - **Correctness Class**: `PERCEPTUALLY_EQUIVALENT`
 
 ### Wormhole 2: Multi-Grid Residual Smoothing (`PDE_Poisson_256`)
+
 - **Domain**: Scientific Simulation / Elliptic PDEs
 - **Mechanism**: Coarse-grid restriction ($16\times$ cell decimation) with prolongation and 5-point residual smoothing.
 - **Measured Speedup**: **$2.28\times$** ($2.20\text{ ms} \to 0.96\text{ ms}$)
@@ -25,6 +27,7 @@
 - **Correctness Class**: `NUMERICALLY_BOUNDED` ($\text{Rel Error} = 6.10 \times 10^{-3} \le 10^{-2}$)
 
 ### Wormhole 3: Associative Output Projection (`Output_Projection_GEMM`)
+
 - **Domain**: Linear Algebra / Deep Learning Projections
 - **Mechanism**: E-graph rewrite: $y = (A \times B) \cdot x \to A \cdot (B \cdot x)$
 - **Complexity Collapse**: From $O(N^3)$ to $O(2 N^2)$.
@@ -34,6 +37,7 @@
 - **Correctness Class**: `EXACT_REFORMULATION`
 
 ### Wormhole 4: Exact Content Memoization (`GEMM_512x512`)
+
 - **Domain**: Linear Algebra
 - **Mechanism**: SHA-256 state hashing with memory-mapped resident caches.
 - **Measured Speedup**: **$28.2\times$** on repeat ($2.26\text{ ms} \to 0.08\text{ ms}$)

@@ -1,6 +1,7 @@
 # HYPER 3.0: Comprehensive System Map & Architectural Inventory
 
 ## 1. Executive Summary & Inventory
+
 This document serves as the formal architectural map and inventory of existing systems in the LEO / HYPER codebase before commencing the implementation of **HYPER 3.0: Autonomous Computation Intelligence Engine**.
 
 ---
@@ -8,11 +9,13 @@ This document serves as the formal architectural map and inventory of existing s
 ## 2. Inventory of Existing HYPER Generations
 
 ### 2.1 HYPER 1.x Legacy & Breakthrough Subsystems
+
 - **Engines**: `CENTURION_ENGINE.py`, `chimera_engine.py`, `leo_v8_engine.py`, `leo_hebe_engine.py`, `leo_plenoptic_engine.py`, `leo_prt_continuous_cache_experiment.py`, `leo_quantum_kan_lut_engine.py`.
 - **Bypass Modules**: `LEO_BYPASS.py`, `LEO_THERMAL_BYPASS.py`, `leo_cryo_bypass.py`, `leo_singularity_bypass.py`, `leo_unified_bypass.py`.
 - **Legacy Reports**: `TRI_METRIC_AUDIT_REPORT.md`, `SUBSUMPTION_RESULTS.csv`, `CONTRACT_AUDIT_REPORT.md`, `BLIND_HOLDOUT_AUDIT_REPORT.md`.
 
 ### 2.2 HYPER 2.0 Subsystems (`hyper_v2/`)
+
 - **Compiler**: `contract_compiler.py`, `intermediate_representation.py`, `graph_builder.py`, `graph_optimizer.py`.
 - **Analysis**: `necessity_analyzer.py` (15-point criteria), `redundancy_analyzer.py`, `structure_analyzer.py`, `sparsity_analyzer.py`, `reuse_analyzer.py`.
 - **Reformulation**: `exact_reformulation.py`, `low_rank.py`, `sparse_reformulation.py`.
@@ -25,6 +28,7 @@ This document serves as the formal architectural map and inventory of existing s
 ---
 
 ## 3. Hardware Architecture & Detection
+
 - **Target Platform**: Windows 11 AMD64 (Host: 13th Gen Intel(R) Core(TM) i5-13420H, 8 Cores: 4P + 4E, 12 Threads, 16GB RAM).
 - **iGPU**: Intel(R) UHD Graphics (iGPU) via OpenVINO 2026 runtime.
 - **CPU Capabilities**: AVX2, FMA, OpenMP, MKL/BLAS vectorization via NumPy/PyTorch CPU.
@@ -32,6 +36,7 @@ This document serves as the formal architectural map and inventory of existing s
 ---
 
 ## 4. Gaps to Bridge for HYPER 3.0
+
 1. **Autonomous Discovery vs Manual Rules**: HYPER 2.0 has modular analyzers, but HYPER 3.0 requires an end-to-end loop: `OBSERVE -> UNDERSTAND -> MODEL -> PROVE -> TRANSFORM -> SEARCH -> EXECUTE -> VERIFY -> LEARN -> IMPROVE`.
 2. **Universal Computation IR**: Richer DAG with typed operation nodes, FLOPs, memory footprints, exactness classes, and dependency propagation.
 3. **Formal Proof & Exactness Certificates**: Autonomous generation of certificates classifying transformations into `BITWISE_EXACT`, `NUMERICALLY_EQUIVALENT`, `MATHEMATICALLY_EQUIVALENT`, `CONTRACT_EQUIVALENT`, `APPROXIMATE`, or `PREDICTIVE`.
@@ -48,6 +53,7 @@ This document serves as the formal architectural map and inventory of existing s
 ---
 
 ## 5. Integration Plan & Module De-duplication
+
 - Maintain `hyper_v2/` as immutable baseline.
 - Structure `hyper_v3/` cleanly with isolated subpackages (`frontend`, `ir`, `intelligence`, `proof`, `transforms`, `search`, `runtime`, `memory`, `verification`, `learning`, `workloads`, `benchmark`, `telemetry`, `audit`, `dashboard`, `cli`).
 - Provide unified API router `backend/routers/hyper_v3_api.py` and CLI `bin/hyper3`.

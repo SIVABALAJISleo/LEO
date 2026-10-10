@@ -19,6 +19,7 @@ All benchmarks for the LEO Compute-Budget Elimination Engine (CBE) are conducted
 ## 2. Benchmark Suites & Measurement Invariants
 
 ### 2.1 Suites
+
 1. **`leo cbe inspect`**: Probes CPU, memory, iGPU EUs, USM support, and runtime status.
 2. **`leo cbe validate`**: Executes structural correctness invariants, visual quality contracts, and adversarial stress tests (camera teleportation, strobe lighting, subpixel geometry).
 3. **`leo cbe benchmark --suite full`**: Runs all 8 compute tiers across repeated warm iterations, reporting average latency, FPS, CER, SSIM, and PSNR.
@@ -26,6 +27,7 @@ All benchmarks for the LEO Compute-Budget Elimination Engine (CBE) are conducted
 5. **`leo cbe ablation`**: Quantifies the isolated contribution of each algorithmic subsystem (adaptive resolution, temporal reuse, CAS sharpening).
 
 ### 2.2 Measurement Rules
+
 - **Wall-Clock High-Resolution Timers**: Timings must use Python's `time.perf_counter()` or OS high-resolution counters.
 - **Warmup Iteration Required**: The first iteration compiles JIT shaders and OpenVINO OpenCL kernels. A mandatory warmup pass occurs before benchmark timing begins.
 - **No Double Counting**: Net CER accounts for all computational steps:

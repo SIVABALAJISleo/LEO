@@ -2,7 +2,7 @@
 
 **System**: LEO / HYPER — Omega Research Mode  
 **Scope**: Synthesis of Algorithms, Numerical Linear Algebra, Compiler Optimization, and Information Theory across Five Decades (1980s – Present)  
-**Standard**: Omega Research Mode Parts 59 & 60 (Cross-Disciplinary Scientific Integration)  
+**Standard**: Omega Research Mode Parts 59 & 60 (Cross-Disciplinary Scientific Integration)
 
 ---
 
@@ -43,21 +43,26 @@ HYPER does not invent computational shortcuts out of a vacuum. It synthesizes ri
 Across 450+ automated search cycles on host hardware, the system made six primary algorithmic discoveries:
 
 ### Discovery 1: Associativity Reformulation on Tall-and-Skinny Intermediate Projections
+
 - **Principle**: In neural network projection chains $Y = A \times (B \times C)$ where $B \in \mathbb{R}^{K \times r}$ with $r \ll K$, evaluating $(A \times B) \times C$ reduces total FLOPs from $2 N K M$ to $2 N r (K + M)$.
 - **Empirical Speedup**: **$7.8\times – 12.4\times$** on projection dimensions $N=1024, K=1024, r=32$.
 - **Error**: Bit-exact within standard IEEE float32 associative rounding error ($\tau_{rel} \le 10^{-6}$).
 
 ### Discovery 2: Measured Overhead Gating Prevents the "Sparse Penalty"
-- **Principle**: Classical sparse algorithms often run *slower* than dense BLAS on modern CPUs due to pointer chasing and non-contiguous memory accesses unless sparsity exceeds $80\%$.
+
+- **Principle**: Classical sparse algorithms often run _slower_ than dense BLAS on modern CPUs due to pointer chasing and non-contiguous memory accesses unless sparsity exceeds $80\%$.
 - **HYPER Discovery**: Gating sparse conversion by $T_{\text{thresh}} + T_{\text{sparse}} + T_{\text{verify}} < T_{\text{dense}}$ guarantees that sparse paths are strictly executed when beneficial, preventing catastrophic 2x regressions on moderately sparse matrices ($40\% – 60\%$).
 
 ### Discovery 3: Subspace Skipping in BVH Traversal
+
 - **Principle**: In real-time ray tracing, $70\%$ of rays contribute negligible radiance to the camera. Projecting screen-space luminance gradients backwards through the BVH allows entire sub-trees to be skipped with zero perceptual artifact (SSIM $\ge 0.985$).
 
 ### Discovery 4: Radix-Tree Prefix Memoization for Conversational RAG
+
 - **Principle**: Multi-turn LLM and RAG queries share identical system prompts, document contexts, and historical conversation turns. Hashing the prefix token IDs allows the entire prefill phase to be completed in $O(1)$ memory lookup, reducing TTFT by $92\%$.
 
 ---
 
 ## 3. Scientific Synthesis
+
 The breakthrough of LEO/HYPER is not the invention of a single miraculous trick, but the **orchestrated composition of classical numerical theorems and modern compiler techniques into an autonomous fail-closed runtime**.

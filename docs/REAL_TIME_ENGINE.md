@@ -1,4 +1,5 @@
 # HYPER / LEO — Real-Time Adaptive Computation Engine
+
 **Document Version:** 2.0.0 (Ultra-Sonic Master Engineering)
 
 ---
@@ -31,4 +32,5 @@ UPDATE ONLINE REGISTRY FOR SUBSEQUENT REQUESTS
 ```
 
 ### Self-Improving Knowledge Retention
+
 When a shortcut candidate fails, the failure mode and conditions are logged to `hyperx_failure_knowledge.json`. The engine avoids repeating invalid hypotheses under matching environmental parameters.

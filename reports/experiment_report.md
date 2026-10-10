@@ -2,29 +2,31 @@
 
 **Evaluation Date:** 2026-09-25  
 **Host Platform:** Intel64 Family 6 Model 186 Stepping 2, GenuineIntel | Windows 11  
-**Execution Engine:** HYPER Verified Computational Pathway Discovery Engine  
+**Execution Engine:** HYPER Verified Computational Pathway Discovery Engine
 
 ## 1. Objective
+
 To systematically test whether mathematically valid alternative computational pathways can be discovered, executed on local CPU+iGPU hardware, and independently verified against formal contracts across 10 distinct domain workloads.
 
 ## 2. Experimental Results Summary
 
-| ID | Workload | Domain | Contract Mode | Status | Verification | Exactness Parity | Speedup | Ops Eliminated |
-|---|---|---|---|---|---|---|---|---|
-| Exp_A | Matrix Computation (Chained GEMM) | Dense Linear Algebra | NUMERIC_TOLERANCE | SHORTCUT_DISCOVERED | PASS | NUMERICAL_PARITY | 10.73x | 163840 |
-| Exp_B | Convolution (2D Conv + ReLU Fusion) | Spatial Filtering | NUMERIC_EXACT | NO_VERIFIED_SHORTCUT_FOUND | PASS | BIT_EXACT_COMPUTE_PARITY | 1.84x | 0 |
-| Exp_C | FFT / Spectral Decomposition | Frequency Domain | NUMERIC_TOLERANCE | SHORTCUT_DISCOVERED | PASS | NUMERICAL_PARITY | 13.33x | 1 |
-| Exp_D | Graph Computation (Sparse Adjacency) | Sparse Graph Analytics | NUMERIC_EXACT | NO_VERIFIED_SHORTCUT_FOUND | PASS | BIT_EXACT_COMPUTE_PARITY | 2.81x | 0 |
-| Exp_E | Cryptographic Hash (SHA-256) | Cryptographic Integrity | BIT_EXACT | NO_VERIFIED_SHORTCUT_FOUND | PASS | BIT_EXACT_COMPUTE_PARITY | 7.21x | 0 |
-| Exp_F | Scientific Numerical ODE | Differential Equations | NUMERIC_EXACT | SHORTCUT_DISCOVERED | PASS | BIT_EXACT_COMPUTE_PARITY | 21.52x | 128 |
-| Exp_G | ML Inference (Projection + Dead Code) | Neural Inference | NUMERIC_EXACT | SHORTCUT_DISCOVERED | PASS | BIT_EXACT_COMPUTE_PARITY | 15.70x | 9986 |
-| Exp_H | Irregular Memory Access (Gather) | Memory Indirect | BIT_EXACT | NO_VERIFIED_SHORTCUT_FOUND | PASS | BIT_EXACT_COMPUTE_PARITY | 1.96x | 0 |
-| Exp_I | Memory-Bound (STREAM Vector Triad) | Bandwidth Bound | NUMERIC_EXACT | NO_VERIFIED_SHORTCUT_FOUND | PASS | BIT_EXACT_COMPUTE_PARITY | 2.80x | 0 |
-| Exp_J | Compute-Bound (Polynomial Horner) | Arithmetic Bound | NUMERIC_EXACT | NO_VERIFIED_SHORTCUT_FOUND | PASS | BIT_EXACT_COMPUTE_PARITY | 14.97x | 0 |
+| ID    | Workload                              | Domain                  | Contract Mode     | Status                     | Verification | Exactness Parity         | Speedup | Ops Eliminated |
+| ----- | ------------------------------------- | ----------------------- | ----------------- | -------------------------- | ------------ | ------------------------ | ------- | -------------- |
+| Exp_A | Matrix Computation (Chained GEMM)     | Dense Linear Algebra    | NUMERIC_TOLERANCE | SHORTCUT_DISCOVERED        | PASS         | NUMERICAL_PARITY         | 10.73x  | 163840         |
+| Exp_B | Convolution (2D Conv + ReLU Fusion)   | Spatial Filtering       | NUMERIC_EXACT     | NO_VERIFIED_SHORTCUT_FOUND | PASS         | BIT_EXACT_COMPUTE_PARITY | 1.84x   | 0              |
+| Exp_C | FFT / Spectral Decomposition          | Frequency Domain        | NUMERIC_TOLERANCE | SHORTCUT_DISCOVERED        | PASS         | NUMERICAL_PARITY         | 13.33x  | 1              |
+| Exp_D | Graph Computation (Sparse Adjacency)  | Sparse Graph Analytics  | NUMERIC_EXACT     | NO_VERIFIED_SHORTCUT_FOUND | PASS         | BIT_EXACT_COMPUTE_PARITY | 2.81x   | 0              |
+| Exp_E | Cryptographic Hash (SHA-256)          | Cryptographic Integrity | BIT_EXACT         | NO_VERIFIED_SHORTCUT_FOUND | PASS         | BIT_EXACT_COMPUTE_PARITY | 7.21x   | 0              |
+| Exp_F | Scientific Numerical ODE              | Differential Equations  | NUMERIC_EXACT     | SHORTCUT_DISCOVERED        | PASS         | BIT_EXACT_COMPUTE_PARITY | 21.52x  | 128            |
+| Exp_G | ML Inference (Projection + Dead Code) | Neural Inference        | NUMERIC_EXACT     | SHORTCUT_DISCOVERED        | PASS         | BIT_EXACT_COMPUTE_PARITY | 15.70x  | 9986           |
+| Exp_H | Irregular Memory Access (Gather)      | Memory Indirect         | BIT_EXACT         | NO_VERIFIED_SHORTCUT_FOUND | PASS         | BIT_EXACT_COMPUTE_PARITY | 1.96x   | 0              |
+| Exp_I | Memory-Bound (STREAM Vector Triad)    | Bandwidth Bound         | NUMERIC_EXACT     | NO_VERIFIED_SHORTCUT_FOUND | PASS         | BIT_EXACT_COMPUTE_PARITY | 2.80x   | 0              |
+| Exp_J | Compute-Bound (Polynomial Horner)     | Arithmetic Bound        | NUMERIC_EXACT     | NO_VERIFIED_SHORTCUT_FOUND | PASS         | BIT_EXACT_COMPUTE_PARITY | 14.97x  | 0              |
 
 ## 3. Workload Details & Search Findings
 
 ### Exp_A: Matrix Computation (Chained GEMM)
+
 - **Category:** Dense Linear Algebra
 - **Contract Verification Mode:** `NUMERIC_TOLERANCE`
 - **Reference Runtime:** 0.2414 ms
@@ -44,6 +46,7 @@ DISCOVERED PATHWAY (32768 FLOPs):
 ```
 
 ### Exp_B: Convolution (2D Conv + ReLU Fusion)
+
 - **Category:** Spatial Filtering
 - **Contract Verification Mode:** `NUMERIC_EXACT`
 - **Reference Runtime:** 9.2776 ms
@@ -63,6 +66,7 @@ DISCOVERED PATHWAY (1569 FLOPs):
 ```
 
 ### Exp_C: FFT / Spectral Decomposition
+
 - **Category:** Frequency Domain
 - **Contract Verification Mode:** `NUMERIC_TOLERANCE`
 - **Reference Runtime:** 0.7519 ms
@@ -82,6 +86,7 @@ DISCOVERED PATHWAY (46081 FLOPs):
 ```
 
 ### Exp_D: Graph Computation (Sparse Adjacency)
+
 - **Category:** Sparse Graph Analytics
 - **Contract Verification Mode:** `NUMERIC_EXACT`
 - **Reference Runtime:** 0.5229 ms
@@ -101,6 +106,7 @@ DISCOVERED PATHWAY (1048576 FLOPs):
 ```
 
 ### Exp_E: Cryptographic Hash (SHA-256)
+
 - **Category:** Cryptographic Integrity
 - **Contract Verification Mode:** `BIT_EXACT`
 - **Reference Runtime:** 0.1168 ms
@@ -120,6 +126,7 @@ DISCOVERED PATHWAY (1 FLOPs):
 ```
 
 ### Exp_F: Scientific Numerical ODE
+
 - **Category:** Differential Equations
 - **Contract Verification Mode:** `NUMERIC_EXACT`
 - **Reference Runtime:** 0.5423 ms
@@ -139,6 +146,7 @@ DISCOVERED PATHWAY (322 FLOPs):
 ```
 
 ### Exp_G: ML Inference (Projection + Dead Code)
+
 - **Category:** Neural Inference
 - **Contract Verification Mode:** `NUMERIC_EXACT`
 - **Reference Runtime:** 0.3909 ms
@@ -158,6 +166,7 @@ DISCOVERED PATHWAY (66560 FLOPs):
 ```
 
 ### Exp_H: Irregular Memory Access (Gather)
+
 - **Category:** Memory Indirect
 - **Contract Verification Mode:** `BIT_EXACT`
 - **Reference Runtime:** 0.5025 ms
@@ -177,6 +186,7 @@ DISCOVERED PATHWAY (1 FLOPs):
 ```
 
 ### Exp_I: Memory-Bound (STREAM Vector Triad)
+
 - **Category:** Bandwidth Bound
 - **Contract Verification Mode:** `NUMERIC_EXACT`
 - **Reference Runtime:** 0.3250 ms
@@ -196,6 +206,7 @@ DISCOVERED PATHWAY (131072 FLOPs):
 ```
 
 ### Exp_J: Compute-Bound (Polynomial Horner)
+
 - **Category:** Arithmetic Bound
 - **Contract Verification Mode:** `NUMERIC_EXACT`
 - **Reference Runtime:** 0.4103 ms
@@ -215,4 +226,5 @@ DISCOVERED PATHWAY (5120 FLOPs):
 ```
 
 ## 4. Conclusion
+
 The experiment demonstrates that algebraic reassociation, operator fusion, dead-code elimination, and sparsity exploitation can produce verified computational speedups on local CPU+iGPU hardware. Crucially, where transformations are mathematically impossible (such as in Cryptographic SHA-256), the failure-first engine rigorously rejects shortcuts and safely preserves trusted baseline execution.

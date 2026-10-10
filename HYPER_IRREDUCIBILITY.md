@@ -1,6 +1,7 @@
 # HYPER Irreducibility Engine & Formal Certificates
 
 ## 1. Scientific Honesty & The Limits of Physics
+
 When an algorithm cannot be optimized further, HYPER does not output a generic "optimization failed" error. Instead, it generates a **Formal Irreducibility Certificate** proving why the remaining computation is mathematically or physically unavoidable.
 
 ---

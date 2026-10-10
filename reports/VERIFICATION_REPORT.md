@@ -2,7 +2,7 @@
 
 **Subsystem**: Authoritative Fail-Closed Verifier (`hyper_x/verification/`)  
 **Principles**: Candidate-Coupled Testing | Dual Conjunction Error Bounds | Freivalds Randomized Testing  
-**Status**: OPERATIONAL & FAIL-CLOSED  
+**Status**: OPERATIONAL & FAIL-CLOSED
 
 ---
 
@@ -15,7 +15,7 @@ Under the Project Omega engineering rules, claiming work is verified without con
 3. **Candidate Coupling**: The exact binary candidate measured for latency is identically the candidate verified for numerical correctness. Never benchmark candidate $A$ and verify candidate $B$.
 4. **Dual Conjunction Bound**: For numerical contracts, a candidate passes if and only if **BOTH** the absolute error and relative error bounds are satisfied:
 
-$$\text{Verdict} = \begin{cases} 
+$$ \text{Verdict} = \begin{cases}
 \text{PASS} & \text{if } \max_{i,j} |y_{ij} - \hat{y}_{ij}| \le \tau_{\text{abs}} \quad \land \quad \frac{\max_{i,j} |y_{ij} - \hat{y}_{ij}|}{\max_{i,j} |y_{ij}| + \epsilon} \le \tau_{\text{rel}} \\
 \text{FAIL} & \text{otherwise}
 \end{cases}$$
@@ -24,7 +24,7 @@ $$\text{Verdict} = \begin{cases}
 
 ## 2. Freivalds Randomized Verification Core
 
-For matrix multiplication candidates ($C \approx A \times B$), verifying $C = A \times B$ naively requires $O(N^3)$ operations, which would destroy the latency advantage of the optimization.  
+For matrix multiplication candidates ($C \approx A \times B$), verifying $C = A \times B$ naively requires $O(N^3)$ operations, which would destroy the latency advantage of the optimization.
 HYPER integrates **Freivalds' Randomized Algorithm**:
 
 1. Sample a random vector $r \in \{-1, +1\}^N$.
@@ -55,3 +55,4 @@ When a candidate fails verification (as demonstrated in row 4 with ill-condition
 2. Dispatches reference CPU AVX2 kernel.
 3. Certificate logs `final_status="FALLBACK"` and provenance as `MEASURED`.
 4. Result returned satisfies the contract with zero silent corruption.
+$$

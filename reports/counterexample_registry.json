@@ -236,7 +236,7 @@
     "counterexample_category": "CANCELLATION_SENSITIVE",
     "input_sample_hash": "912e0ce5ebf6c0a4",
     "max_absolute_error": 0.25,
-    "relative_error": 1.400931255042477e-07,
+    "relative_error": 1.400931255042477e-7,
     "tolerance_threshold": 0.001,
     "failure_reason": "Error 2.50e-01 exceeded allowed tolerance 1.00e-03",
     "timestamp": 1790647065.6257014
@@ -599,7 +599,7 @@
     "counterexample_category": "CANCELLATION_SENSITIVE",
     "input_sample_hash": "37a2a3c43905dd65",
     "max_absolute_error": 0.25,
-    "relative_error": 1.8539939014724605e-07,
+    "relative_error": 1.8539939014724605e-7,
     "tolerance_threshold": 0.001,
     "failure_reason": "Error 2.50e-01 exceeded allowed tolerance 1.00e-03",
     "timestamp": 1790647107.4133532
@@ -5285,7 +5285,7 @@
     "counterexample_category": "CANCELLATION_SENSITIVE",
     "input_sample_hash": "2317fe2403756329",
     "max_absolute_error": 1.453125,
-    "relative_error": 4.3605763387813345e-07,
+    "relative_error": 4.3605763387813345e-7,
     "tolerance_threshold": 0.001,
     "failure_reason": "Error 1.45e+00 exceeded allowed tolerance 1.00e-03",
     "timestamp": 1790647544.915236
@@ -5307,7 +5307,7 @@
     "counterexample_category": "CANCELLATION_SENSITIVE",
     "input_sample_hash": "0f65fd90b01000cf",
     "max_absolute_error": 1.5,
-    "relative_error": 3.951846226813448e-07,
+    "relative_error": 3.951846226813448e-7,
     "tolerance_threshold": 0.001,
     "failure_reason": "Error 1.50e+00 exceeded allowed tolerance 1.00e-03",
     "timestamp": 1790647545.0422668
@@ -5472,7 +5472,7 @@
     "counterexample_category": "CANCELLATION_SENSITIVE",
     "input_sample_hash": "8126684a9a54bc6a",
     "max_absolute_error": 0.875,
-    "relative_error": 3.246710178148843e-07,
+    "relative_error": 3.246710178148843e-7,
     "tolerance_threshold": 0.001,
     "failure_reason": "Error 8.75e-01 exceeded allowed tolerance 1.00e-03",
     "timestamp": 1790647545.5719244
@@ -5516,7 +5516,7 @@
     "counterexample_category": "CANCELLATION_SENSITIVE",
     "input_sample_hash": "9ec7223678db2665",
     "max_absolute_error": 1.625,
-    "relative_error": 4.6333379500387884e-07,
+    "relative_error": 4.6333379500387884e-7,
     "tolerance_threshold": 0.001,
     "failure_reason": "Error 1.62e+00 exceeded allowed tolerance 1.00e-03",
     "timestamp": 1790647545.86111
@@ -5538,7 +5538,7 @@
     "counterexample_category": "CANCELLATION_SENSITIVE",
     "input_sample_hash": "a7e9ac27027df303",
     "max_absolute_error": 1.0,
-    "relative_error": 3.064565569866311e-07,
+    "relative_error": 3.064565569866311e-7,
     "tolerance_threshold": 0.001,
     "failure_reason": "Error 1.00e+00 exceeded allowed tolerance 1.00e-03",
     "timestamp": 1790647545.9670663
@@ -5571,7 +5571,7 @@
     "counterexample_category": "CANCELLATION_SENSITIVE",
     "input_sample_hash": "cdc265f07e1e6d1e",
     "max_absolute_error": 1.0,
-    "relative_error": 2.8432371932955615e-07,
+    "relative_error": 2.8432371932955615e-7,
     "tolerance_threshold": 0.001,
     "failure_reason": "Error 1.00e+00 exceeded allowed tolerance 1.00e-03",
     "timestamp": 1790647546.1696162
@@ -5593,7 +5593,7 @@
     "counterexample_category": "CANCELLATION_SENSITIVE",
     "input_sample_hash": "92adc0c3ff043373",
     "max_absolute_error": 1.0,
-    "relative_error": 2.950408428726799e-07,
+    "relative_error": 2.950408428726799e-7,
     "tolerance_threshold": 0.001,
     "failure_reason": "Error 1.00e+00 exceeded allowed tolerance 1.00e-03",
     "timestamp": 1790647546.261018
@@ -5626,7 +5626,7 @@
     "counterexample_category": "CANCELLATION_SENSITIVE",
     "input_sample_hash": "ae477d8147d7fa3d",
     "max_absolute_error": 1.25,
-    "relative_error": 3.7137042967410163e-07,
+    "relative_error": 3.7137042967410163e-7,
     "tolerance_threshold": 0.001,
     "failure_reason": "Error 1.25e+00 exceeded allowed tolerance 1.00e-03",
     "timestamp": 1790647546.478629
@@ -5648,7 +5648,7 @@
     "counterexample_category": "CANCELLATION_SENSITIVE",
     "input_sample_hash": "3ae23970f5f53ccf",
     "max_absolute_error": 2.25,
-    "relative_error": 6.544590183580117e-07,
+    "relative_error": 6.544590183580117e-7,
     "tolerance_threshold": 0.001,
     "failure_reason": "Error 2.25e+00 exceeded allowed tolerance 1.00e-03",
     "timestamp": 1790647546.579332
@@ -5747,7 +5747,7 @@
     "counterexample_category": "CANCELLATION_SENSITIVE",
     "input_sample_hash": "e9f15f579f5cca84",
     "max_absolute_error": 0.89453125,
-    "relative_error": 2.2831748779392775e-07,
+    "relative_error": 2.2831748779392775e-7,
     "tolerance_threshold": 0.001,
     "failure_reason": "Error 8.95e-01 exceeded allowed tolerance 1.00e-03",
     "timestamp": 1790647547.0376153
@@ -5769,7 +5769,7 @@
     "counterexample_category": "CANCELLATION_SENSITIVE",
     "input_sample_hash": "0756292736bd887a",
     "max_absolute_error": 0.75,
-    "relative_error": 2.8376087584496893e-07,
+    "relative_error": 2.8376087584496893e-7,
     "tolerance_threshold": 0.001,
     "failure_reason": "Error 7.50e-01 exceeded allowed tolerance 1.00e-03",
     "timestamp": 1790647547.1578398
@@ -5802,7 +5802,7 @@
     "counterexample_category": "CANCELLATION_SENSITIVE",
     "input_sample_hash": "ae8635926fa73792",
     "max_absolute_error": 1.25,
-    "relative_error": 3.668845594064982e-07,
+    "relative_error": 3.668845594064982e-7,
     "tolerance_threshold": 0.001,
     "failure_reason": "Error 1.25e+00 exceeded allowed tolerance 1.00e-03",
     "timestamp": 1790647547.3607476
@@ -5846,7 +5846,7 @@
     "counterexample_category": "CANCELLATION_SENSITIVE",
     "input_sample_hash": "7b6a7a3334e4d7b9",
     "max_absolute_error": 1.5,
-    "relative_error": 4.1799723313698146e-07,
+    "relative_error": 4.1799723313698146e-7,
     "tolerance_threshold": 0.001,
     "failure_reason": "Error 1.50e+00 exceeded allowed tolerance 1.00e-03",
     "timestamp": 1790647547.710359
@@ -5868,7 +5868,7 @@
     "counterexample_category": "CANCELLATION_SENSITIVE",
     "input_sample_hash": "8cd159a884f066ca",
     "max_absolute_error": 1.0,
-    "relative_error": 3.2246019067715995e-07,
+    "relative_error": 3.2246019067715995e-7,
     "tolerance_threshold": 0.001,
     "failure_reason": "Error 1.00e+00 exceeded allowed tolerance 1.00e-03",
     "timestamp": 1790647547.8154793
@@ -5901,7 +5901,7 @@
     "counterexample_category": "CANCELLATION_SENSITIVE",
     "input_sample_hash": "529106d0af2c66e4",
     "max_absolute_error": 1.5,
-    "relative_error": 3.328817976682296e-07,
+    "relative_error": 3.328817976682296e-7,
     "tolerance_threshold": 0.001,
     "failure_reason": "Error 1.50e+00 exceeded allowed tolerance 1.00e-03",
     "timestamp": 1790647548.0455267
@@ -5923,7 +5923,7 @@
     "counterexample_category": "CANCELLATION_SENSITIVE",
     "input_sample_hash": "c1e772536c4f851c",
     "max_absolute_error": 0.875,
-    "relative_error": 2.399355930604594e-07,
+    "relative_error": 2.399355930604594e-7,
     "tolerance_threshold": 0.001,
     "failure_reason": "Error 8.75e-01 exceeded allowed tolerance 1.00e-03",
     "timestamp": 1790647548.1509619
@@ -5956,7 +5956,7 @@
     "counterexample_category": "CANCELLATION_SENSITIVE",
     "input_sample_hash": "4f6a3701bdb7408a",
     "max_absolute_error": 1.75,
-    "relative_error": 6.314364231471964e-07,
+    "relative_error": 6.314364231471964e-7,
     "tolerance_threshold": 0.001,
     "failure_reason": "Error 1.75e+00 exceeded allowed tolerance 1.00e-03",
     "timestamp": 1790647548.3789558
@@ -5978,7 +5978,7 @@
     "counterexample_category": "CANCELLATION_SENSITIVE",
     "input_sample_hash": "1b11862e974eebf7",
     "max_absolute_error": 1.5,
-    "relative_error": 5.671873604187355e-07,
+    "relative_error": 5.671873604187355e-7,
     "tolerance_threshold": 0.001,
     "failure_reason": "Error 1.50e+00 exceeded allowed tolerance 1.00e-03",
     "timestamp": 1790647548.4848845
@@ -6011,7 +6011,7 @@
     "counterexample_category": "CANCELLATION_SENSITIVE",
     "input_sample_hash": "121fc83e27299910",
     "max_absolute_error": 1.5,
-    "relative_error": 4.844964761360049e-07,
+    "relative_error": 4.844964761360049e-7,
     "tolerance_threshold": 0.001,
     "failure_reason": "Error 1.50e+00 exceeded allowed tolerance 1.00e-03",
     "timestamp": 1790647548.7452343
@@ -6033,7 +6033,7 @@
     "counterexample_category": "CANCELLATION_SENSITIVE",
     "input_sample_hash": "53aa50443606a74a",
     "max_absolute_error": 1.0,
-    "relative_error": 3.168611481178527e-07,
+    "relative_error": 3.168611481178527e-7,
     "tolerance_threshold": 0.001,
     "failure_reason": "Error 1.00e+00 exceeded allowed tolerance 1.00e-03",
     "timestamp": 1790647548.8454597

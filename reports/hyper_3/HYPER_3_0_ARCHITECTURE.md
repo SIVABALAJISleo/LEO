@@ -1,6 +1,7 @@
 # HYPER 3.0: Architecture & Technical Specification
 
 ## 1. System Architecture
+
 HYPER 3.0 implements a 10-stage autonomous cycle:
 `OBSERVE -> UNDERSTAND -> MODEL -> PROVE -> TRANSFORM -> SEARCH -> EXECUTE -> VERIFY -> LEARN -> IMPROVE`
 
@@ -19,6 +20,7 @@ graph TD
 ```
 
 ## 2. Core Modules
+
 - **`hyper_v3.frontend`**: Contract Parser, Program Observer, Workload Loader.
 - **`hyper_v3.ir`**: Universal DAG computation IR tracking FLOPs, memory reads/writes, dependencies.
 - **`hyper_v3.intelligence`**: 9 dimensions of computational intelligence (Necessity, Redundancy, Structure, Sparsity, Reuse, Information, Complexity, Dependency, Bottleneck).

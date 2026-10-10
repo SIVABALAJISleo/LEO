@@ -1,4 +1,5 @@
 # HYPER / LEO — Computation Elimination Framework
+
 **Document Version:** 2.0.0 (Ultra-Sonic Master Engineering)
 
 ---
@@ -10,6 +11,7 @@ Computation Elimination in HYPER operates by finding alternative transformation 
 $$\text{Work Elimination Ratio} = 1 - \frac{W_{\text{necessary}} + W_{\text{verification}}}{W_{\text{original}}}$$
 
 Where:
+
 - $W_{\text{original}}$: Dense, brute-force FLOP count (e.g., $2MNK$ for dense GEMM).
 - $W_{\text{necessary}}$: Minimum operations required to reconstruct observable within error tolerance $\epsilon$.
 - $W_{\text{verification}}$: Sub-linear verification overhead (e.g., Freivalds $O(N^2)$ vs $O(N^3)$ GEMM).
@@ -19,6 +21,7 @@ Where:
 ## 2. The 15 Transformation Operators
 
 The Necessary-Work Compiler implements 15 distinct operations:
+
 1. `DELETE`: Eliminates operations whose outputs have zero causal influence on the target observable.
 2. `REUSE`: Retrieves exact cryptographic matches with zero required computation ($W = 0$).
 3. `MERGE`: Combines adjacent operations into a single kernel pass (e.g., Conv+ReLU+BatchNorm).

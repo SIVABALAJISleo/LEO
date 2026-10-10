@@ -1,6 +1,7 @@
 # HYPER-Ω Experimentation & Reproducibility Guide
 
 ## 1. Universal Reproduction Command
+
 Any canonical HYPER-Ω experiment can be executed and independently verified with a single CLI invocation:
 
 ```powershell
@@ -8,6 +9,7 @@ python scripts/reproduce_experiment.py <WORKLOAD_ID>
 ```
 
 ### Supported Workload IDs:
+
 1. **`HYPER_OMEGA_001`** (Dense Linear Algebra GEMM)
 2. **`HYPER_OMEGA_GRAPHICS_001`** (Temporal Scene Reprojection & Color Clamping)
 3. **`HYPER_OMEGA_LLM_001`** (Speculative Autoregressive Logit Step)
@@ -16,7 +18,9 @@ python scripts/reproduce_experiment.py <WORKLOAD_ID>
 ---
 
 ## 2. Expected Output Format
+
 Every experiment run reports:
+
 1. Input and Output SHA-256 Hashes
 2. Verification Verdict: `PASS`, `FAIL`, `UNKNOWN`, `INVALID`
 3. Adversarial Falsification Verdict
@@ -26,7 +30,7 @@ Every experiment run reports:
 
 ```
 =======================================================
-           REPRODUCIBILITY SUMMARY REPORT            
+           REPRODUCIBILITY SUMMARY REPORT
 =======================================================
 Workload ID:           HYPER_OMEGA_001
 Overall Status:        VERIFIED
@@ -45,10 +49,12 @@ FINAL VERDICT: PASS
 ---
 
 ## 3. Running the Automated Test Suite
+
 To verify all HYPER-Ω core modules and end-to-end pipelines:
 
 ```powershell
 python -m pytest tests/test_hyper_omega_complete.py -v
 python -m pytest tests/test_hyper_core_expanded.py -v
 ```
+
 All tests are automated, deterministic, and execute without external network dependencies.

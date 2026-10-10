@@ -28,11 +28,7 @@
     "version": "0.2"
   },
   "runtimes": {
-    "available_devices": [
-      "CPU",
-      "GPU.0",
-      "GPU.0 (Vulkan)"
-    ],
+    "available_devices": ["CPU", "GPU.0", "GPU.0 (Vulkan)"],
     "selected_device": "GPU.0",
     "reason": "Auto-detected Intel integrated GPU support via OpenVINO Core runtime."
   },

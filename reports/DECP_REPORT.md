@@ -3,7 +3,7 @@
 **Subsystem**: Deterministic Exact-Compute & Parity (`hyper_x/decp/`)  
 **Engine**: `DECPEngine`, `FrozenExecutionManifest`  
 **Target Hardware**: Intel Core i5-12450H (AVX2/FMA) + Intel UHD Graphics  
-**Status**: OPERATIONAL & CRYPTOGRAPHICALLY SECURE  
+**Status**: OPERATIONAL & CRYPTOGRAPHICALLY SECURE
 
 ---
 
@@ -64,13 +64,13 @@ Every deterministic run records a 20-parameter immutable manifest hashed with SH
 
 Across declared numerical benchmark suites:
 
-| Benchmark Workload | Track | Candidate Output SHA-256 (Prefix) | Reference Output SHA-256 (Prefix) | Bit-Exact Parity | Contract Parity | Absolute Error | Relative Error | Status |
-|---|---|---|---|---|---|---|---|---|
-| Vector Dot Product ($10^7$) | Track A | `9f86d081884c7d65` | `9f86d081884c7d65` | **$100.0\%$** | **$100.0\%$** | $0.000$ | $0.000$ | **EXACT_MATCH** |
-| Dense FP32 GEMM ($256 \times 256$) | Track A | `e4d909c290d0fb1c` | `e4d909c290d0fb1c` | **$100.0\%$** | **$100.0\%$** | $0.000$ | $0.000$ | **EXACT_MATCH** |
-| Low-Rank SVD ($256 \times 256, r=16$) | Track B | `7b23f019a8421c0e` | `e4d909c290d0fb1c` | $0.0\%$ (Different Math) | **$100.0\%$** | $4.18 \times 10^{-4}$ | $2.85 \times 10^{-4}$ | **CONTRACT_SATISFIED** |
-| Sparse GEMM ($70\%$ Sparsity) | Track B | `3c81e902df5514aa` | `2a10b48f98c7e112` | $0.0\%$ (Different Math) | **$100.0\%$** | $8.12 \times 10^{-5}$ | $5.90 \times 10^{-5}$ | **CONTRACT_SATISFIED** |
-| Exact Cache Hit | Track A | `5e884898da280471` | `5e884898da280471` | **$100.0\%$** | **$100.0\%$** | $0.000$ | $0.000$ | **EXACT_MATCH** |
+| Benchmark Workload                    | Track   | Candidate Output SHA-256 (Prefix) | Reference Output SHA-256 (Prefix) | Bit-Exact Parity         | Contract Parity | Absolute Error        | Relative Error        | Status                 |
+| ------------------------------------- | ------- | --------------------------------- | --------------------------------- | ------------------------ | --------------- | --------------------- | --------------------- | ---------------------- |
+| Vector Dot Product ($10^7$)           | Track A | `9f86d081884c7d65`                | `9f86d081884c7d65`                | **$100.0\%$**            | **$100.0\%$**   | $0.000$               | $0.000$               | **EXACT_MATCH**        |
+| Dense FP32 GEMM ($256 \times 256$)    | Track A | `e4d909c290d0fb1c`                | `e4d909c290d0fb1c`                | **$100.0\%$**            | **$100.0\%$**   | $0.000$               | $0.000$               | **EXACT_MATCH**        |
+| Low-Rank SVD ($256 \times 256, r=16$) | Track B | `7b23f019a8421c0e`                | `e4d909c290d0fb1c`                | $0.0\%$ (Different Math) | **$100.0\%$**   | $4.18 \times 10^{-4}$ | $2.85 \times 10^{-4}$ | **CONTRACT_SATISFIED** |
+| Sparse GEMM ($70\%$ Sparsity)         | Track B | `3c81e902df5514aa`                | `2a10b48f98c7e112`                | $0.0\%$ (Different Math) | **$100.0\%$**   | $8.12 \times 10^{-5}$ | $5.90 \times 10^{-5}$ | **CONTRACT_SATISFIED** |
+| Exact Cache Hit                       | Track A | `5e884898da280471`                | `5e884898da280471`                | **$100.0\%$**            | **$100.0\%$**   | $0.000$               | $0.000$               | **EXACT_MATCH**        |
 
 ---
 

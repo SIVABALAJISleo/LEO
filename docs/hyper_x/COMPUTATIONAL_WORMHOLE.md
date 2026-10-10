@@ -2,7 +2,7 @@
 
 **Date**: 2026-09-07  
 **Project**: LEO × HYPER  
-**Author**: Principal Systems Architect, Compiler & Algorithmic Research Team  
+**Author**: Principal Systems Architect, Compiler & Algorithmic Research Team
 
 ---
 
@@ -22,7 +22,7 @@ In a constrained environment (e.g. an Intel Core i5 with integrated UHD graphics
 
 The **Computational Wormhole Principle** replaces blind reproduction with information-theoretic analysis:
 
-$$\begin{aligned}
+$$ \begin{aligned}
 \text{Input} &\longrightarrow \text{Identify Required Information } \mathcal{I}^* \\
              &\longrightarrow \text{Eliminate Dispensable Computation } \mathcal{C} \setminus \mathcal{C}^* \\
              &\longrightarrow \text{Transform Mathematical Representation } \mathcal{R} \\
@@ -68,3 +68,4 @@ A computational shortcut is only valid if it survives adversarial falsification:
 - If a shortcut fails under ill-conditioned or high-entropy inputs, it is demoted to a workload-specific heuristic.
 - If physical hardware lacks dedicated acceleration (e.g. RT Cores, NVLink), the system explicitly records `physical_hardware_parity = false`.
 - The system maintains zero fabricated results and welcomes `FAIL` whenever evidence does not support parity.
+$$

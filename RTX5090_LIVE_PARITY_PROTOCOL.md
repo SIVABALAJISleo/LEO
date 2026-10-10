@@ -1,4 +1,5 @@
 # RTX 5090 Live Parity & Scientific Benchmarking Protocol
+
 ## Project LEO / HYPER-Ω: Rigorous Hardware Evaluation Standard
 
 **Document ID:** `PROTO-HYPER-RTX5090-PARITY-v1.0`  
@@ -11,6 +12,7 @@
 ## 1. Absolute Scientific Integrity Mandates
 
 ### 1.1 The Anti-Simulation Rule (Section 31)
+
 1. **NEVER simulate an RTX 5090:** Under no circumstances may theoretical mathematical models, throughput scaling formulas, or clock multipliers be presented as measured RTX 5090 execution latencies.
 2. **NEVER use NVIDIA specifications as runtime timings:** Datasheet values (e.g. "3300 TFLOPS FP4", "104 TFLOPS FP32") are marketing/theoretical limits, not measured wall-clock kernel durations on real inputs.
 3. **NEVER invent or fabricate GPU measurements:** If an experiment was not physically dispatched to and executed on an actual RTX 5090 PCIe board, it must be marked as `UNAVAILABLE`.
@@ -28,19 +30,19 @@
 
 The system strictly refuses to collapse heterogeneous benchmarks into a single misleading "100% Parity" number. All reporting must delineate:
 
-| Metric Category | Definition | Unit / Permitted Values |
-| :--- | :--- | :--- |
-| **A. RAW HARDWARE PARITY** | Direct silicon compute capacity ratio ($\text{FLOPs}_{\text{laptop}} / \text{FLOPs}_{5090}$) | `NOT_ESTABLISHED` (Physically disjoint) |
-| **B. EXACT COMPUTATIONAL PARITY** | Mathematical identity of outputs: $Y_{\text{HYPER}} == Y_{\text{ref}}$ | `100.0%` (Bitwise exact or bounded $\epsilon$) |
-| **C. CONTRACT / APPLICATION PARITY**| Satisfaction of user-specified constraints (latency SLO, quality, bounds) | Percentage of contracts satisfied |
-| **D. APPLICATION PERFORMANCE PARITY**| End-to-end task completion parity within application deadline | Measured wall-clock ratio |
-| **E. WORK ELIMINATION** | Reduction in necessary operations ($1 - \text{Work}_{\text{opt}} / \text{Work}_{\text{base}}$) | Measured Percentage ($0.0\% - 99.9\%$) |
-| **F. MEMORY REDUCTION** | Bytes transferred / allocated compared to baseline | Measured bytes and ratio |
-| **G. ENERGY EFFICIENCY** | Joules consumed per completed task | Joules (package power $\times$ time) |
-| **H. TOTAL END-TO-END LATENCY** | Wall-clock time from call to final result delivery | Milliseconds (ms) |
-| **I. VERIFICATION COST** | Time and work spent validating candidates against reference | Milliseconds (ms) |
-| **J. DISCOVERY COST** | Time spent searching the candidate space | Milliseconds (ms) / Seconds (s) |
-| **K. AMORTIZED COST** | Total cost distributed over $N$ repeated invocations | $(C_{\text{discovery}} + C_{\text{verify}}) / N + C_{\text{exec}}$ |
+| Metric Category                       | Definition                                                                                     | Unit / Permitted Values                                            |
+| :------------------------------------ | :--------------------------------------------------------------------------------------------- | :----------------------------------------------------------------- |
+| **A. RAW HARDWARE PARITY**            | Direct silicon compute capacity ratio ($\text{FLOPs}_{\text{laptop}} / \text{FLOPs}_{5090}$)   | `NOT_ESTABLISHED` (Physically disjoint)                            |
+| **B. EXACT COMPUTATIONAL PARITY**     | Mathematical identity of outputs: $Y_{\text{HYPER}} == Y_{\text{ref}}$                         | `100.0%` (Bitwise exact or bounded $\epsilon$)                     |
+| **C. CONTRACT / APPLICATION PARITY**  | Satisfaction of user-specified constraints (latency SLO, quality, bounds)                      | Percentage of contracts satisfied                                  |
+| **D. APPLICATION PERFORMANCE PARITY** | End-to-end task completion parity within application deadline                                  | Measured wall-clock ratio                                          |
+| **E. WORK ELIMINATION**               | Reduction in necessary operations ($1 - \text{Work}_{\text{opt}} / \text{Work}_{\text{base}}$) | Measured Percentage ($0.0\% - 99.9\%$)                             |
+| **F. MEMORY REDUCTION**               | Bytes transferred / allocated compared to baseline                                             | Measured bytes and ratio                                           |
+| **G. ENERGY EFFICIENCY**              | Joules consumed per completed task                                                             | Joules (package power $\times$ time)                               |
+| **H. TOTAL END-TO-END LATENCY**       | Wall-clock time from call to final result delivery                                             | Milliseconds (ms)                                                  |
+| **I. VERIFICATION COST**              | Time and work spent validating candidates against reference                                    | Milliseconds (ms)                                                  |
+| **J. DISCOVERY COST**                 | Time spent searching the candidate space                                                       | Milliseconds (ms) / Seconds (s)                                    |
+| **K. AMORTIZED COST**                 | Total cost distributed over $N$ repeated invocations                                           | $(C_{\text{discovery}} + C_{\text{verify}}) / N + C_{\text{exec}}$ |
 
 ---
 

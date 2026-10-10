@@ -1,4 +1,5 @@
 # LEO / HYPER Ω — Universal Scientific Integrity & Anti-Cheating Policy
+
 **Document ID:** `docs/UNIVERSAL_NO_CHEATING_POLICY.md`  
 **Standard:** Constitutional System Constraint  
 **Applicability:** Universal across all modules, benchmarks, discoveries, and claims
@@ -28,14 +29,14 @@ The following practices are **STRICTLY PROHIBITED** and will cause immediate can
 
 Every benchmark, candidate evaluation, and baseline run MUST explicitly declare its execution cache regime:
 
-| Cache Regime | Definition | Allowable Comparison Baseline |
-| :--- | :--- | :--- |
-| **`COLD`** | All caches flushed, memory cold, JIT un-warmed, zero precomputation. | **Must ONLY be compared against COLD reference.** |
-| **`WARM`** | System caches warm, JIT compiled, memory resident, but input dynamic. | **Must ONLY be compared against WARM reference.** |
-| **`CACHED`** | Repeated exact input retrieved from memory lookup. | **Must declare lookup overhead and memory footprint.** |
-| **`MEMOIZED`** | Partial intermediate sub-problem reuse. | **Must account for table lookup and hash latency.** |
-| **`PRECOMPUTED`** | Output or lookup table computed prior to timing start. | **Must account for offline preparation time and RAM storage.** |
-| **`INCREMENTAL`** | Output updated from prior frame/state using delta propagation. | **Must declare dependency on previous frame state.** |
+| Cache Regime      | Definition                                                            | Allowable Comparison Baseline                                  |
+| :---------------- | :-------------------------------------------------------------------- | :------------------------------------------------------------- |
+| **`COLD`**        | All caches flushed, memory cold, JIT un-warmed, zero precomputation.  | **Must ONLY be compared against COLD reference.**              |
+| **`WARM`**        | System caches warm, JIT compiled, memory resident, but input dynamic. | **Must ONLY be compared against WARM reference.**              |
+| **`CACHED`**      | Repeated exact input retrieved from memory lookup.                    | **Must declare lookup overhead and memory footprint.**         |
+| **`MEMOIZED`**    | Partial intermediate sub-problem reuse.                               | **Must account for table lookup and hash latency.**            |
+| **`PRECOMPUTED`** | Output or lookup table computed prior to timing start.                | **Must account for offline preparation time and RAM storage.** |
+| **`INCREMENTAL`** | Output updated from prior frame/state using delta propagation.        | **Must declare dependency on previous frame state.**           |
 
 ---
 

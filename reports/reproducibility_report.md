@@ -1,6 +1,7 @@
 # Reproducibility Manifest & Environment Verification Report
 
 ## 1. Host Execution Environment
+
 - **Operating System:** Windows-11-10.0.26100-SP0
 - **Python Version:** 3.13.5
 - **CPU:** 13th Gen Intel(R) Core(TM) i5-13420H
@@ -9,11 +10,14 @@
 - **Git Commit / Version:** f046e1bf8998b88e7833f8951a155b99346cedaf
 
 ## 2. Software Stack Versions
+
 - **NumPy:** 2.3.2
 - **Platform Architecture:** AMD64
 
 ## 3. Execution Commands to Reproduce
+
 To re-run the entire benchmark suite and verify output hashes independently:
+
 ```bash
 # Run discovery CLI in research mode
 python -m hyper.cli discover exp_a_chained_gemm --research
@@ -26,6 +30,7 @@ python -m pytest tests/test_cir.py tests/test_contract.py tests/test_search_and_
 ```
 
 ## 4. Verification Checksums
+
 - **Exp_A (Matrix Computation (Chained GEMM)):** Candidate Hash `92be735f8e55fb83bf7a83047c92b558ec174a9f3763fb4c9db021351a70daef` | Reference Hash `1f814ffe47068da87d23c07634956437948749e2e2f967ade2a5a0a4bf1906ab`
 - **Exp_B (Convolution (2D Conv + ReLU Fusion)):** Candidate Hash `0d4ca5f9a32c0f22c0d8a2f426f2aef154905c9568cced106cdc072c49dbe698` | Reference Hash `0d4ca5f9a32c0f22c0d8a2f426f2aef154905c9568cced106cdc072c49dbe698`
 - **Exp_C (FFT / Spectral Decomposition):** Candidate Hash `4b1b63dfa8ed2690ae1b4a2bf5ddfafe52056947edfc7f430063986a113a28a5` | Reference Hash `4b1b63dfa8ed2690ae1b4a2bf5ddfafe52056947edfc7f430063986a113a28a5`

@@ -1,4 +1,5 @@
 # HYPER / LEO — Deterministic Degradation Fallback Ladder
+
 **Document Version:** 2.0.0 (Ultra-Sonic Master Engineering)
 
 ---
@@ -27,4 +28,5 @@ If an optimization shortcut fails verification, HYPER guarantees application res
 ```
 
 ### Invariant
+
 Every fallback execution is explicitly recorded in `ExecutionCertificate.fallback_status = "FALLBACK_EXECUTED"`. Failures are never disguised as shortcut successes.

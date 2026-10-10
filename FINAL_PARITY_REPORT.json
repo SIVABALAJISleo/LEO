@@ -1,9 +1,7 @@
 {
   "status": "NOT_VERIFIED",
   "gate_passed": false,
-  "gate_reasons": [
-    "Exact-compute parity is 26.7% (target: 100.0%)"
-  ],
+  "gate_reasons": ["Exact-compute parity is 26.7% (target: 100.0%)"],
   "parity_matrix": {
     "hardware_parity_pct": 0.0,
     "exact_compute_parity_pct": 26.7,

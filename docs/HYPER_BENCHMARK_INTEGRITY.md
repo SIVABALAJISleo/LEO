@@ -36,9 +36,11 @@ To maintain absolute scientific rigor, the HYPER platform enforces strict rules 
 The verification engine (`hyper/hyper100_parity/verification_engine.py`) and test suite execute four layers of defensive auditing on every candidate:
 
 ### Layer 1: Sub-Microsecond Zero-Latency Check
+
 Any non-trivial kernel (e.g., $1024 \times 1024$ GEMM or $256 \times 256$ spatial convolution) executing in $< 0.1 \mu\text{s}$ is audited for omitted execution or unexecuted loops.
 
 ### Layer 2: Input Mutation Sensitivity Audit
+
 ```python
 mutated_input = sample_input.copy()
 mutated_input.flat[0] += 10.0
@@ -52,12 +54,14 @@ if np.array_equal(out_orig, out_mutated):
 ```
 
 ### Layer 3: Freivalds Randomized Matrix Verification
+
 For matrix operations $A \in \mathbb{R}^{m \times k}, B \in \mathbb{R}^{k \times n}, C \in \mathbb{R}^{m \times n}$:
 Instead of expensive $O(n^3)$ double execution, Freivalds algorithm generates Rademacher random vectors $r \in \{-1, +1\}^n$ and tests:
 $$A \cdot (B \cdot r) - C \cdot r \stackrel{?}{=} 0$$
 Running $k=10$ independent iterations bounds the error probability to $P(\text{False Positive}) \le 2^{-10} < 0.00098$.
 
 ### Layer 4: Blind Holdout Validation
+
 Candidates that pass known benchmark inputs must immediately be tested against randomly generated unseen inputs and adversarial distributions (zeros, checkerboard sparsity, ill-conditioned matrices, and Cauchy heavy-tailed noise).
 
 ---
@@ -65,6 +69,7 @@ Candidates that pass known benchmark inputs must immediately be tested against r
 ## 4. Raw Evidence & Provenance Storage
 
 Every benchmark trial outputs an immutable provenance record containing:
+
 - Workload ID and canonical contract version.
 - Exact hardware topology fingerprint (CPU model, P/E-core count, RAM, OS build).
 - Input dataset SHA-256 hash.

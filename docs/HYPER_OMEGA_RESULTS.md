@@ -2,6 +2,7 @@
 
 **Execution Date**: September 16, 2026  
 **Hardware Environment**:
+
 - **CPU**: Intel(R) Core(TM) i5-12450H (4 P-cores + 4 E-cores, 12 logical threads, 12MB L3 Smart Cache)
 - **iGPU**: Intel(R) UHD Graphics (Official Spec: 48 EUs, OpenCL 3.0 NEO)
 - **RAM**: 16.0 GB Unified System Memory (LPDDR5, ~52 GB/s physical memory bandwidth)
@@ -11,18 +12,19 @@
 
 ## 1. Canonical Benchmark Matrix
 
-| Experiment ID | Workload Domain | Equivalence Mode | Measured Candidate Latency | Reference Baseline Latency | Relative Error | PSNR / SSIM | Adversarial Falsification | Holdout Status | Cryptographic Certificate Status |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **HYPER_OMEGA_001** | Dense GEMM (512x512 FP32) | NUMERICALLY_EQUIVALENT | **3.18 ms** | 0.15 ms (RTX 5090 target) | **0.00e+00** | N/A | **PASS** (3/3) | **PASS** (3/3) | **VERIFIED** |
-| **HYPER_OMEGA_GRAPHICS_001** | Dynamic Scene Temporal Reprojection | PERCEPTUAL_EQUIVALENT | **58.12 ms** | 16.6 ms (60 FPS raster) | N/A | **69.14 dB / 1.0000** | **PASS** | **PASS** | **VERIFIED** |
-| **HYPER_OMEGA_LLM_001** | Autoregressive Speculative Verification | NUMERICALLY_EQUIVALENT | **9.06 ms** | 1.20 ms (Target step) | **0.00e+00** | N/A | **PASS** | **PASS** | **VERIFIED** |
-| **HYPER_OMEGA_SCIENCE_001** | Multigrid Toroidal Diffusion PDE | NUMERICALLY_EQUIVALENT | **2.11 ms** | 12.00 ms (Dense roll) | **0.00e+00** | N/A | **PASS** | **PASS** | **VERIFIED** |
+| Experiment ID                | Workload Domain                         | Equivalence Mode       | Measured Candidate Latency | Reference Baseline Latency | Relative Error | PSNR / SSIM           | Adversarial Falsification | Holdout Status | Cryptographic Certificate Status |
+| :--------------------------- | :-------------------------------------- | :--------------------- | :------------------------- | :------------------------- | :------------- | :-------------------- | :------------------------ | :------------- | :------------------------------- |
+| **HYPER_OMEGA_001**          | Dense GEMM (512x512 FP32)               | NUMERICALLY_EQUIVALENT | **3.18 ms**                | 0.15 ms (RTX 5090 target)  | **0.00e+00**   | N/A                   | **PASS** (3/3)            | **PASS** (3/3) | **VERIFIED**                     |
+| **HYPER_OMEGA_GRAPHICS_001** | Dynamic Scene Temporal Reprojection     | PERCEPTUAL_EQUIVALENT  | **58.12 ms**               | 16.6 ms (60 FPS raster)    | N/A            | **69.14 dB / 1.0000** | **PASS**                  | **PASS**       | **VERIFIED**                     |
+| **HYPER_OMEGA_LLM_001**      | Autoregressive Speculative Verification | NUMERICALLY_EQUIVALENT | **9.06 ms**                | 1.20 ms (Target step)      | **0.00e+00**   | N/A                   | **PASS**                  | **PASS**       | **VERIFIED**                     |
+| **HYPER_OMEGA_SCIENCE_001**  | Multigrid Toroidal Diffusion PDE        | NUMERICALLY_EQUIVALENT | **2.11 ms**                | 12.00 ms (Dense roll)      | **0.00e+00**   | N/A                   | **PASS**                  | **PASS**       | **VERIFIED**                     |
 
 ---
 
 ## 2. Cryptographic Certificate Records
 
 ### HYPER_OMEGA_001 (Dense Linear Algebra)
+
 ```json
 {
   "experiment_id": "EXP_HYPER_OMEGA_001_GEMM_1758035430",
@@ -40,6 +42,7 @@
 ```
 
 ### HYPER_OMEGA_GRAPHICS_001 (Real-Time Graphics)
+
 ```json
 {
   "experiment_id": "EXP_HYPER_OMEGA_GRAPHICS_001_1758035610",
@@ -48,13 +51,14 @@
   "status": "VERIFIED",
   "verification_result": "PASS",
   "psnr_db": 69.14,
-  "ssim": 1.0000,
+  "ssim": 1.0,
   "candidate_latency_ms": 58.124,
   "certificate_hash": "15fdd0de685ffc6512d8ed5bbfdaf4e0a34be23cab3b6e6417ddef0ecb53bcd4"
 }
 ```
 
 ### HYPER_OMEGA_LLM_001 (Language Modeling Inference)
+
 ```json
 {
   "experiment_id": "EXP_HYPER_OMEGA_LLM_001_1758035720",
@@ -69,6 +73,7 @@
 ```
 
 ### HYPER_OMEGA_SCIENCE_001 (Scientific PDE Stencil)
+
 ```json
 {
   "experiment_id": "EXP_HYPER_OMEGA_SCIENCE_001_1758035790",
@@ -86,7 +91,9 @@
 ---
 
 ## 3. Scientific Falsification Notes & Counterexamples
+
 During execution of `HYPER_OMEGA_SCIENCE_001` with an unpadded interior slice stencil, the verifier detected a relative error of `1.77e-01`, triggering an automatic **FAIL** verdict. The system:
+
 1. Immediately refused to label the candidate as `PASS`.
 2. Emitted `Overall Status: FAILED`.
 3. Registered the failure in `CounterexampleRegistry` under `FailureClass.EQUIVALENCE_FAILURE`.

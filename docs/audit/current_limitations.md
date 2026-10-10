@@ -2,7 +2,7 @@
 
 **Generated Date**: 2026-09-29  
 **Auditor**: Forensic Systems & Research-Code Auditor  
-**Standard**: Scientific Honesty & Fail-Closed Falsification  
+**Standard**: Scientific Honesty & Fail-Closed Falsification
 
 ---
 
@@ -21,10 +21,12 @@ An exhaustive forensic audit of the HYPER / LEO codebase reveals several critica
 ## 2. Detailed Technical Breakdown
 
 ### Limitation 1: Algorithmic Domain Bounds
+
 - **Arbitrary Dense Tensors**: Without structural assumptions (such as low rank, sparsity, periodicity, or mathematical decomposition), generic unstructured dense matrix multiplication has a known algebraic lower bound ($O(N^{2.37...})$). A laptop CPU cannot match a 500W discrete GPU on dense uncacheable GEMM purely via software tricks.
 - **Irreducible Entropy**: Workloads involving cryptographic hashing (e.g. SHA-256) or pseudorandom number generation cannot have intermediate states eliminated without violating exact output contracts.
 
 ### Limitation 2: Verification Rigor & Exactness Modes
+
 - Previously, numerical tolerance matching ($\|y - \hat{y}\| < 10^{-3}$) was occasionally misreported as "exact compute".
 - Formal exactness modes must be strictly disaggregated:
   - `BIT_EXACT`
@@ -36,6 +38,7 @@ An exhaustive forensic audit of the HYPER / LEO codebase reveals several critica
   - `PERCEPTUAL_EQUIVALENCE`
 
 ### Limitation 3: Legacy State Hardcoding
+
 - Default field values in `destination_tracker.py` were previously initialized to `100.0` and `"100% UNIVERSAL APPLICATION CONTRACT COMPLETENESS ESTABLISHED"` before any benchmark was actually executed. This was corrected to `0.0` and `"UNPROVEN (AWAITING_VERIFICATION)"`.
 
 ---
@@ -43,6 +46,7 @@ An exhaustive forensic audit of the HYPER / LEO codebase reveals several critica
 ## 3. Required Engineering Remediations
 
 To eliminate these limitations and achieve genuine, scientifically verified research parity:
+
 1. Implement independent dual-path reference execution with diverse algorithmic baselines.
 2. Implement an open-ended, generative solution-space compiler driven by formal CIR transformations.
 3. Implement total cost accounting encompassing `Discovery + Compilation + Verification + Execution`.

@@ -10,6 +10,7 @@
 ## 1. Scientific Integrity Policy & Explicit Hardware Disclaimer
 
 LEO/HYPER **does not** create:
+
 - Physical NVIDIA CUDA cores, Tensor Cores, or RT Cores;
 - Physical GDDR7 VRAM or hardware memory bandwidth;
 - Physical NVIDIA streaming multiprocessors or hardware instructions.
@@ -20,13 +21,13 @@ Any comparison to NVIDIA RTX 5090 hardware is strictly an **`EXTERNAL_REFERENCE`
 
 ## 2. Target Silicon vs. External Reference Comparison
 
-| Dimension | Target Local Host Machine | External Reference: NVIDIA RTX 5090 | Ratio / Classification |
-| :--- | :--- | :--- | :--- |
-| **Silicon Package** | Intel Core i5 Mobile + Intel UHD Graphics | NVIDIA Blackwell GB202 Flagship | Heterogeneous Mobile vs. Flagship Desktop |
-| **Compute Units** | 8 Cores (4P + 4E) + 48 Execution Units | 21,760 CUDA Cores + 680 Tensor Cores | `RAW_HARDWARE_PARITY: ~1.85%` |
-| **Memory Subsystem** | 16 GB Shared System DDR4/DDR5 | 32 GB Dedicated GDDR7 (1,792 GB/s) | Shared host RAM vs. Dedicated VRAM |
-| **Thermal Envelope** | ~45W Package TDP | 600W Board TDP | 13.3x lower power envelope |
-| **Execution Paradigm** | Contract-driven Computation Elimination | Brute-force dense parallel arithmetic | Algorithmic reduction vs. Hardware scaling |
+| Dimension              | Target Local Host Machine                 | External Reference: NVIDIA RTX 5090   | Ratio / Classification                     |
+| :--------------------- | :---------------------------------------- | :------------------------------------ | :----------------------------------------- |
+| **Silicon Package**    | Intel Core i5 Mobile + Intel UHD Graphics | NVIDIA Blackwell GB202 Flagship       | Heterogeneous Mobile vs. Flagship Desktop  |
+| **Compute Units**      | 8 Cores (4P + 4E) + 48 Execution Units    | 21,760 CUDA Cores + 680 Tensor Cores  | `RAW_HARDWARE_PARITY: ~1.85%`              |
+| **Memory Subsystem**   | 16 GB Shared System DDR4/DDR5             | 32 GB Dedicated GDDR7 (1,792 GB/s)    | Shared host RAM vs. Dedicated VRAM         |
+| **Thermal Envelope**   | ~45W Package TDP                          | 600W Board TDP                        | 13.3x lower power envelope                 |
+| **Execution Paradigm** | Contract-driven Computation Elimination   | Brute-force dense parallel arithmetic | Algorithmic reduction vs. Hardware scaling |
 
 ---
 

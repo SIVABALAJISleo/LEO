@@ -1,6 +1,21 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Activity, Cpu, ShieldCheck, Flame, Layers, CheckCircle2, AlertTriangle, ArrowUpRight, Zap, RefreshCw, Eye, Dna, GitFork, Compass } from "lucide-react";
+import {
+  Activity,
+  Cpu,
+  ShieldCheck,
+  Flame,
+  Layers,
+  CheckCircle2,
+  AlertTriangle,
+  ArrowUpRight,
+  Zap,
+  RefreshCw,
+  Eye,
+  Dna,
+  GitFork,
+  Compass,
+} from "lucide-react";
 
 export type GodmodeMetricsData = {
   pathways_generated: number;
@@ -50,7 +65,7 @@ const defaultGodmodeMetrics: GodmodeMetricsData = {
   pathways_survived: 18,
   pathways_rejected: 24,
   search_generations: 5,
-  search_space_coverage_pct: 4.10,
+  search_space_coverage_pct: 4.1,
 
   exact_passes: 18,
   exact_failures: 0,
@@ -71,7 +86,8 @@ const defaultGodmodeMetrics: GodmodeMetricsData = {
   reconstructed_work_pct: 28.1,
   executed_work_pct: 32.6,
 
-  physical_hardware_boundary: "Intel Core i5-12450H CPU + UHD iGPU (Zero dGPU, Zero External Compute)",
+  physical_hardware_boundary:
+    "Intel Core i5-12450H CPU + UHD iGPU (Zero dGPU, Zero External Compute)",
   literal_physical_parity: "PHYSICAL_SILICON_EXCLUDED (Transistors & CUDA cores NOT fabricated)",
   observable_resource_equivalence_pct: 100.0,
 
@@ -87,9 +103,15 @@ const defaultGodmodeMetrics: GodmodeMetricsData = {
 };
 
 export const HyperGodmodeDashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<"overview" | "mirror" | "experiments" | "elimination">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "mirror" | "experiments" | "elimination">(
+    "overview",
+  );
 
-  const { data: metrics = defaultGodmodeMetrics, refetch, isFetching } = useQuery<GodmodeMetricsData>({
+  const {
+    data: metrics = defaultGodmodeMetrics,
+    refetch,
+    isFetching,
+  } = useQuery<GodmodeMetricsData>({
     queryKey: ["hyper-godmode-metrics"],
     queryFn: async () => {
       try {
@@ -119,7 +141,8 @@ export const HyperGodmodeDashboard: React.FC = () => {
               </span>
             </div>
             <p className="mt-1 text-sm text-muted-foreground">
-              Inverse Computation, Information Sufficiency, Counterfactual Optimization & Observable GPU Equivalence Engine
+              Inverse Computation, Information Sufficiency, Counterfactual Optimization & Observable
+              GPU Equivalence Engine
             </p>
           </div>
 
@@ -215,7 +238,9 @@ export const HyperGodmodeDashboard: React.FC = () => {
               <div className="mt-1 text-lg font-black text-emerald-400">
                 {metrics.certification_verdict}
               </div>
-              <div className="mt-2 text-xs text-muted-foreground">All 13 section 26 criteria satisfied</div>
+              <div className="mt-2 text-xs text-muted-foreground">
+                All 13 section 26 criteria satisfied
+              </div>
             </div>
 
             <div className="rounded-xl border border-border/40 bg-card/60 p-4 backdrop-blur-md">
@@ -223,7 +248,9 @@ export const HyperGodmodeDashboard: React.FC = () => {
               <div className="mt-1 text-2xl font-black text-cyan-400">
                 {metrics.average_hyper_latency_ms.toFixed(2)} ms
               </div>
-              <div className="mt-2 text-xs text-muted-foreground">Target limit: {metrics.average_target_latency_ms.toFixed(2)} ms</div>
+              <div className="mt-2 text-xs text-muted-foreground">
+                Target limit: {metrics.average_target_latency_ms.toFixed(2)} ms
+              </div>
             </div>
 
             <div className="rounded-xl border border-border/40 bg-card/60 p-4 backdrop-blur-md">
@@ -231,7 +258,9 @@ export const HyperGodmodeDashboard: React.FC = () => {
               <div className="mt-1 text-2xl font-black text-emerald-400">
                 {metrics.eliminated_work_pct.toFixed(2)}%
               </div>
-              <div className="mt-2 text-xs text-muted-foreground">Mathematically unnecessary computation pruned</div>
+              <div className="mt-2 text-xs text-muted-foreground">
+                Mathematically unnecessary computation pruned
+              </div>
             </div>
 
             <div className="rounded-xl border border-border/40 bg-card/60 p-4 backdrop-blur-md">
@@ -239,7 +268,9 @@ export const HyperGodmodeDashboard: React.FC = () => {
               <div className="mt-1 text-2xl font-black text-amber-400">
                 {metrics.average_fps.toFixed(1)} FPS
               </div>
-              <div className="mt-2 text-xs text-muted-foreground">1% Low Tail: {metrics.one_percent_low_fps.toFixed(1)} FPS</div>
+              <div className="mt-2 text-xs text-muted-foreground">
+                1% Low Tail: {metrics.one_percent_low_fps.toFixed(1)} FPS
+              </div>
             </div>
           </div>
 
@@ -251,23 +282,33 @@ export const HyperGodmodeDashboard: React.FC = () => {
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3 text-center">
               <div className="rounded-lg border border-emerald-500/30 bg-emerald-950/20 p-2.5">
                 <div className="text-xs text-emerald-400 font-semibold">MEASURED</div>
-                <div className="text-xl font-bold text-emerald-300 mt-1">{metrics.evidence_measured_count}</div>
+                <div className="text-xl font-bold text-emerald-300 mt-1">
+                  {metrics.evidence_measured_count}
+                </div>
               </div>
               <div className="rounded-lg border border-cyan-500/30 bg-cyan-950/20 p-2.5">
                 <div className="text-xs text-cyan-400 font-semibold">PROVEN</div>
-                <div className="text-xl font-bold text-cyan-300 mt-1">{metrics.evidence_proven_count}</div>
+                <div className="text-xl font-bold text-cyan-300 mt-1">
+                  {metrics.evidence_proven_count}
+                </div>
               </div>
               <div className="rounded-lg border border-blue-500/30 bg-blue-950/20 p-2.5">
                 <div className="text-xs text-blue-400 font-semibold">DERIVED</div>
-                <div className="text-xl font-bold text-blue-300 mt-1">{metrics.evidence_derived_count}</div>
+                <div className="text-xl font-bold text-blue-300 mt-1">
+                  {metrics.evidence_derived_count}
+                </div>
               </div>
               <div className="rounded-lg border border-amber-500/30 bg-amber-950/20 p-2.5">
                 <div className="text-xs text-amber-400 font-semibold">ESTIMATED</div>
-                <div className="text-xl font-bold text-amber-300 mt-1">{metrics.evidence_estimated_count}</div>
+                <div className="text-xl font-bold text-amber-300 mt-1">
+                  {metrics.evidence_estimated_count}
+                </div>
               </div>
               <div className="rounded-lg border border-red-500/30 bg-red-950/20 p-2.5">
                 <div className="text-xs text-red-400 font-semibold">UNVERIFIED</div>
-                <div className="text-xl font-bold text-red-300 mt-1">{metrics.evidence_unverified_count}</div>
+                <div className="text-xl font-bold text-red-300 mt-1">
+                  {metrics.evidence_unverified_count}
+                </div>
               </div>
             </div>
           </div>
@@ -301,28 +342,38 @@ export const HyperGodmodeDashboard: React.FC = () => {
                   <td className="py-3 px-3 font-bold text-foreground">Tensor Cores</td>
                   <td className="py-3 px-3 text-muted-foreground">FP16 Systolic Matrix Array</td>
                   <td className="py-3 px-3 text-cyan-300">Intel i5-12450H AVX2 (256-bit SIMD)</td>
-                  <td className="py-3 px-3 text-muted-foreground">Cache-blocked tiling + algebraic reassociation</td>
+                  <td className="py-3 px-3 text-muted-foreground">
+                    Cache-blocked tiling + algebraic reassociation
+                  </td>
                   <td className="py-3 px-3 font-semibold text-emerald-400">VERIFIED</td>
                 </tr>
                 <tr>
                   <td className="py-3 px-3 font-bold text-foreground">RT Cores</td>
                   <td className="py-3 px-3 text-muted-foreground">BVH Traversal Hardware</td>
                   <td className="py-3 px-3 text-cyan-300">Intel 4P + 4E Cores Threading</td>
-                  <td className="py-3 px-3 text-muted-foreground">Hierarchical slab pruning + temporal hit accumulation</td>
+                  <td className="py-3 px-3 text-muted-foreground">
+                    Hierarchical slab pruning + temporal hit accumulation
+                  </td>
                   <td className="py-3 px-3 font-semibold text-emerald-400">VERIFIED</td>
                 </tr>
                 <tr>
                   <td className="py-3 px-3 font-bold text-foreground">Rasterizer / ROPs</td>
-                  <td className="py-3 px-3 text-muted-foreground">Fixed-function Early-Z & Blending</td>
+                  <td className="py-3 px-3 text-muted-foreground">
+                    Fixed-function Early-Z & Blending
+                  </td>
                   <td className="py-3 px-3 text-cyan-300">Intel UHD iGPU (32 EUs)</td>
-                  <td className="py-3 px-3 text-muted-foreground">Hierarchical quad Z-tile rejection</td>
+                  <td className="py-3 px-3 text-muted-foreground">
+                    Hierarchical quad Z-tile rejection
+                  </td>
                   <td className="py-3 px-3 font-semibold text-emerald-400">VERIFIED</td>
                 </tr>
                 <tr>
                   <td className="py-3 px-3 font-bold text-foreground">GDDR6 VRAM</td>
                   <td className="py-3 px-3 text-muted-foreground">500-1000 GB/s Bus</td>
                   <td className="py-3 px-3 text-cyan-300">16 GB Unified System RAM</td>
-                  <td className="py-3 px-3 text-muted-foreground">Zero-Copy shared memory + locality prefetch</td>
+                  <td className="py-3 px-3 text-muted-foreground">
+                    Zero-Copy shared memory + locality prefetch
+                  </td>
                   <td className="py-3 px-3 font-semibold text-emerald-400">VERIFIED</td>
                 </tr>
               </tbody>
@@ -335,8 +386,12 @@ export const HyperGodmodeDashboard: React.FC = () => {
       {activeTab === "experiments" && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="rounded-xl border border-border/40 bg-card/60 p-4">
-            <h4 className="font-bold text-sm text-foreground mb-1">Experiment 1: Matrix Multiplication</h4>
-            <p className="text-xs text-muted-foreground mb-3">Contiguous cache-aligned AVX2 vs Strassen decomposition</p>
+            <h4 className="font-bold text-sm text-foreground mb-1">
+              Experiment 1: Matrix Multiplication
+            </h4>
+            <p className="text-xs text-muted-foreground mb-3">
+              Contiguous cache-aligned AVX2 vs Strassen decomposition
+            </p>
             <div className="flex justify-between text-xs py-1 border-b border-border/20">
               <span className="text-muted-foreground">Measured Speedup</span>
               <span className="font-bold text-emerald-400">2.17x</span>
@@ -352,8 +407,12 @@ export const HyperGodmodeDashboard: React.FC = () => {
           </div>
 
           <div className="rounded-xl border border-border/40 bg-card/60 p-4">
-            <h4 className="font-bold text-sm text-foreground mb-1">Experiment 2: Scientific Stencil</h4>
-            <p className="text-xs text-muted-foreground mb-3">Separable 1D Laplacian passes + active-set propagation</p>
+            <h4 className="font-bold text-sm text-foreground mb-1">
+              Experiment 2: Scientific Stencil
+            </h4>
+            <p className="text-xs text-muted-foreground mb-3">
+              Separable 1D Laplacian passes + active-set propagation
+            </p>
             <div className="flex justify-between text-xs py-1 border-b border-border/20">
               <span className="text-muted-foreground">Measured Speedup</span>
               <span className="font-bold text-emerald-400">2.01x</span>
@@ -369,8 +428,12 @@ export const HyperGodmodeDashboard: React.FC = () => {
           </div>
 
           <div className="rounded-xl border border-border/40 bg-card/60 p-4">
-            <h4 className="font-bold text-sm text-foreground mb-1">Experiment 3: Graphics Temporal Reconstruction</h4>
-            <p className="text-xs text-muted-foreground mb-3">Dirty-region bounding box update + history reprojection</p>
+            <h4 className="font-bold text-sm text-foreground mb-1">
+              Experiment 3: Graphics Temporal Reconstruction
+            </h4>
+            <p className="text-xs text-muted-foreground mb-3">
+              Dirty-region bounding box update + history reprojection
+            </p>
             <div className="flex justify-between text-xs py-1 border-b border-border/20">
               <span className="text-muted-foreground">Measured Speedup</span>
               <span className="font-bold text-emerald-400">2.45x</span>
@@ -386,8 +449,12 @@ export const HyperGodmodeDashboard: React.FC = () => {
           </div>
 
           <div className="rounded-xl border border-border/40 bg-card/60 p-4">
-            <h4 className="font-bold text-sm text-foreground mb-1">Experiment 4: ML Fused Attention</h4>
-            <p className="text-xs text-muted-foreground mb-3">Online stable softmax register fusion + tiled projection</p>
+            <h4 className="font-bold text-sm text-foreground mb-1">
+              Experiment 4: ML Fused Attention
+            </h4>
+            <p className="text-xs text-muted-foreground mb-3">
+              Online stable softmax register fusion + tiled projection
+            </p>
             <div className="flex justify-between text-xs py-1 border-b border-border/20">
               <span className="text-muted-foreground">Measured Speedup</span>
               <span className="font-bold text-emerald-400">1.85x</span>
@@ -414,30 +481,45 @@ export const HyperGodmodeDashboard: React.FC = () => {
             <div>
               <div className="flex justify-between text-xs mb-1">
                 <span className="text-muted-foreground">Mathematically Eliminated Work</span>
-                <span className="font-bold text-emerald-400">{metrics.eliminated_work_pct.toFixed(1)}%</span>
+                <span className="font-bold text-emerald-400">
+                  {metrics.eliminated_work_pct.toFixed(1)}%
+                </span>
               </div>
               <div className="w-full bg-border/40 h-2 rounded-full overflow-hidden">
-                <div className="bg-emerald-500 h-full rounded-full" style={{ width: `${metrics.eliminated_work_pct}%` }} />
+                <div
+                  className="bg-emerald-500 h-full rounded-full"
+                  style={{ width: `${metrics.eliminated_work_pct}%` }}
+                />
               </div>
             </div>
 
             <div>
               <div className="flex justify-between text-xs mb-1">
                 <span className="text-muted-foreground">Temporally Reused Work</span>
-                <span className="font-bold text-cyan-400">{metrics.reused_work_pct.toFixed(1)}%</span>
+                <span className="font-bold text-cyan-400">
+                  {metrics.reused_work_pct.toFixed(1)}%
+                </span>
               </div>
               <div className="w-full bg-border/40 h-2 rounded-full overflow-hidden">
-                <div className="bg-cyan-500 h-full rounded-full" style={{ width: `${metrics.reused_work_pct}%` }} />
+                <div
+                  className="bg-cyan-500 h-full rounded-full"
+                  style={{ width: `${metrics.reused_work_pct}%` }}
+                />
               </div>
             </div>
 
             <div>
               <div className="flex justify-between text-xs mb-1">
                 <span className="text-muted-foreground">Reconstructed Information</span>
-                <span className="font-bold text-blue-400">{metrics.reconstructed_work_pct.toFixed(1)}%</span>
+                <span className="font-bold text-blue-400">
+                  {metrics.reconstructed_work_pct.toFixed(1)}%
+                </span>
               </div>
               <div className="w-full bg-border/40 h-2 rounded-full overflow-hidden">
-                <div className="bg-blue-500 h-full rounded-full" style={{ width: `${metrics.reconstructed_work_pct}%` }} />
+                <div
+                  className="bg-blue-500 h-full rounded-full"
+                  style={{ width: `${metrics.reconstructed_work_pct}%` }}
+                />
               </div>
             </div>
           </div>

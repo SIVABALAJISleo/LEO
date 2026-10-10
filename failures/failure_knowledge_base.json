@@ -2,10 +2,7 @@
   {
     "failure_id": "fail_94fdbb47",
     "workload_id": "TEST_GEMM",
-    "transformation_sequence": [
-      "CANONICAL",
-      "BAD_TRUNCATION"
-    ],
+    "transformation_sequence": ["CANONICAL", "BAD_TRUNCATION"],
     "failure_category": "NUMERICAL_INSTABILITY",
     "reason": "Exceeded error tolerance 1e-4",
     "counterexample_hash": null,
@@ -14,10 +11,7 @@
   {
     "failure_id": "fail_8f64a1d5",
     "workload_id": "TEST_GEMM",
-    "transformation_sequence": [
-      "CANONICAL",
-      "BAD_TRUNCATION"
-    ],
+    "transformation_sequence": ["CANONICAL", "BAD_TRUNCATION"],
     "failure_category": "NUMERICAL_INSTABILITY",
     "reason": "Exceeded error tolerance 1e-4",
     "counterexample_hash": null,
@@ -26,10 +20,7 @@
   {
     "failure_id": "fail_9e398473",
     "workload_id": "TEST_GEMM",
-    "transformation_sequence": [
-      "CANONICAL",
-      "BAD_TRUNCATION"
-    ],
+    "transformation_sequence": ["CANONICAL", "BAD_TRUNCATION"],
     "failure_category": "NUMERICAL_INSTABILITY",
     "reason": "Exceeded error tolerance 1e-4",
     "counterexample_hash": null,
@@ -38,10 +29,7 @@
   {
     "failure_id": "fail_702fc5d2",
     "workload_id": "TEST_GEMM",
-    "transformation_sequence": [
-      "CANONICAL",
-      "BAD_TRUNCATION"
-    ],
+    "transformation_sequence": ["CANONICAL", "BAD_TRUNCATION"],
     "failure_category": "NUMERICAL_INSTABILITY",
     "reason": "Exceeded error tolerance 1e-4",
     "counterexample_hash": null,
@@ -50,10 +38,7 @@
   {
     "failure_id": "fail_1a3f81d7",
     "workload_id": "TEST_GEMM",
-    "transformation_sequence": [
-      "CANONICAL",
-      "BAD_TRUNCATION"
-    ],
+    "transformation_sequence": ["CANONICAL", "BAD_TRUNCATION"],
     "failure_category": "NUMERICAL_INSTABILITY",
     "reason": "Exceeded error tolerance 1e-4",
     "counterexample_hash": null,
@@ -62,10 +47,7 @@
   {
     "failure_id": "fail_34638a14",
     "workload_id": "TEST_GEMM",
-    "transformation_sequence": [
-      "CANONICAL",
-      "BAD_TRUNCATION"
-    ],
+    "transformation_sequence": ["CANONICAL", "BAD_TRUNCATION"],
     "failure_category": "NUMERICAL_INSTABILITY",
     "reason": "Exceeded error tolerance 1e-4",
     "counterexample_hash": null,
@@ -74,10 +56,7 @@
   {
     "failure_id": "fail_634e63a0",
     "workload_id": "TEST_GEMM",
-    "transformation_sequence": [
-      "CANONICAL",
-      "BAD_TRUNCATION"
-    ],
+    "transformation_sequence": ["CANONICAL", "BAD_TRUNCATION"],
     "failure_category": "NUMERICAL_INSTABILITY",
     "reason": "Exceeded error tolerance 1e-4",
     "counterexample_hash": null,

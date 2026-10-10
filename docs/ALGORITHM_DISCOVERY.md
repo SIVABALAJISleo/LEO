@@ -1,4 +1,5 @@
 # HYPER / LEO — Falsification-Driven Algorithm Discovery
+
 **Document Version:** 2.0.0 (Ultra-Sonic Master Engineering)
 
 ---
@@ -33,4 +34,5 @@ HYPER upgrades algorithm optimization into a rigorous falsification-driven searc
 ```
 
 ### Golden Rule
+
 **A candidate is NEVER promoted based solely on predicted performance.** It must execute physically and survive every falsification stage.

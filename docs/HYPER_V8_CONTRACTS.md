@@ -2,7 +2,7 @@
 
 ## 1. Principle of Explicit Application Contracts
 
-In HYPER v8, **no optimization runs without an explicit contract**. 
+In HYPER v8, **no optimization runs without an explicit contract**.
 An optimization that produces incorrect results, even if 1000x faster, has a value of negative infinity.
 
 ### Contract Types
@@ -34,6 +34,7 @@ An optimization that produces incorrect results, even if 1000x faster, has a val
 ## 2. Execution Provenance & Certificates
 
 Every result produced by HYPER v8 carries an immutable `ExecutionCertificate`:
+
 ```json
 {
   "path_type": "EXACT_RESIDUAL",

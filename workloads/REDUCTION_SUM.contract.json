@@ -3,9 +3,7 @@
   "description": "High-throughput floating point sum reduction (100,000 elements)",
   "input_domain": {
     "x": {
-      "shape": [
-        100000
-      ],
+      "shape": [100000],
       "dtype": "FP32"
     }
   },

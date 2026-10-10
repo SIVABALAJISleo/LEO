@@ -3,32 +3,21 @@
   "description": "Gravitational pairwise simulation step for 256 celestial bodies",
   "input_domain": {
     "positions": {
-      "shape": [
-        256,
-        3
-      ],
+      "shape": [256, 3],
       "dtype": "FP32"
     },
     "velocities": {
-      "shape": [
-        256,
-        3
-      ],
+      "shape": [256, 3],
       "dtype": "FP32"
     },
     "masses": {
-      "shape": [
-        256
-      ],
+      "shape": [256],
       "dtype": "FP32"
     }
   },
   "output_domain": {
     "positions_next": {
-      "shape": [
-        256,
-        3
-      ],
+      "shape": [256, 3],
       "dtype": "FP32"
     }
   },

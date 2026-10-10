@@ -1,10 +1,12 @@
 # Task Plan: HYPER 100% — Universal Computational / Functional / Performance Parity Engine
 
 ## User Master Mission
+
 Upgrade the existing LEO/HYPER project into a rigorous, autonomous, software-only computational system whose fixed destination is:
 «ACHIEVE 100% VERIFIED PARITY ACROSS EVERY NON-PHYSICAL DIMENSION OF EXTERNAL GPU CAPABILITY»
 
 Hardware Environment (Absolute):
+
 - Intel Core i5-12450H / i5-13420H CPU
 - Intel integrated GPU (UHD Graphics)
 - 16 GB RAM
@@ -16,6 +18,7 @@ Hardware Environment (Absolute):
 ---
 
 ## The 25 Dimensions of Parity (Section 3)
+
 1. FUNCTIONAL PARITY (100%)
 2. EXACT COMPUTATIONAL PARITY (100%)
 3. NUMERICAL PARITY (100%)
@@ -41,13 +44,15 @@ Hardware Environment (Absolute):
 23. REPRODUCIBILITY PARITY (100%)
 24. EDGE-CASE PARITY (100%)
 25. ADVERSARIAL PARITY (100%)
-+ APPLICATION PERFORMANCE PARITY (100%)
+
+- APPLICATION PERFORMANCE PARITY (100%)
 
 ---
 
 ## Active & Pending Implementation Phases
 
 ### Phase 1 to Phase 18: Core Parity Subsystems (Complete)
+
 - [x] Universal Capability Registry (`capability_registry.py`) - 91 canonical capabilities.
 - [x] Contract Engine (`contract_engine.py`) - Levels 1-8 Parity Taxonomy.
 - [x] Pathway IR (`pathway_ir.py`) - Formal Section 8 Pathway IR Schema.
@@ -68,20 +73,25 @@ Hardware Environment (Absolute):
 - [x] First Automated Experiments (`first_experiments.py`) - 8/8 evaluated workloads verified.
 
 ### Phase 19: Dedicated Performance Parity Engine (`performance_engine.py`)
+
 - [ ] Measure complete application/workload metrics: latency, throughput, FPS, frame time, 1% low FPS, worst-case latency, startup latency, end-to-end latency, sustained throughput, memory overhead, sync overhead, CPU/iGPU overhead, thermal & power behavior, fallback overhead.
 - [ ] Calculate performance_parity = verified_required_performance / target_required_performance * 100.
 
 ### Phase 20: Sustained Performance Engine (`sustained_performance.py`)
+
 - [ ] Implement multi-iteration burn-in / sustained duration tests.
 - [ ] Detect thermal throttling, memory pressure, performance decay, instability, and numerical drift.
 
 ### Phase 21: Performance Breakthrough Search / PERFORMANCE_DISCOVERY_MODE (`performance_discovery.py`)
+
 - [ ] Implement automated fallback to PERFORMANCE_DISCOVERY_MODE when target is missed: algorithm replacement, mathematical reformulation, work elimination, reuse, incremental computation, sparsity, factorization, compression, memory reduction, operator fusion, heterogeneous partitioning, representation transformation.
 
 ### Phase 22: Ray-Tracing Functional Workload Integration
+
 - [ ] Add Ray-tracing (ray generation, BVH traversal, intersection hit, reflections, irradiance gathering) to automated suite (raising suite to 9 core workloads).
 
 ### Phase 23: Complete 25-Dimension Scoreboard & Live Dashboard Upgrade
+
 - [ ] Update `parity_score.py` and `dashboard.py` to strictly present the 25 dimensions of Section 30.
 - [ ] Update React component `src/components/HyperParityDashboard.tsx` to render all 25 metrics with tabs and visual indicators.
 - [ ] Validate and execute tests and frontend build.

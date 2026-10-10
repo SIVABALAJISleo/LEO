@@ -1,4 +1,5 @@
 # HYPER / LEO — Ultra-Sonic System Architecture
+
 **Document Version:** 2.0.0 (Ultra-Sonic Master Engineering)
 
 ---
@@ -6,12 +7,15 @@
 ## 1. Core Architectural Principle
 
 HYPER transforms the traditional systems question:
-> *"How do we execute this brute-force workload faster on available hardware?"*
+
+> _"How do we execute this brute-force workload faster on available hardware?"_
 
 into the fundamental mathematical question:
-> *"What is the minimum valid computation required to satisfy the requested observable under the declared contract?"*
+
+> _"What is the minimum valid computation required to satisfy the requested observable under the declared contract?"_
 
 ### Hardware Constraint
+
 - **Target CPU:** Intel Core i5-12450H (8 Cores, 12 Threads: 4 Performance-cores + 4 Efficient-cores, AVX2).
 - **Target iGPU:** Intel UHD Graphics (48 Execution Units).
 - **Target RAM:** 16 GB Unified System RAM (45W Package Envelope).
@@ -22,6 +26,7 @@ into the fundamental mathematical question:
 ## 2. Linear Execution Pipeline
 
 HYPER enforces a single authoritative pipeline:
+
 1. **Contract Parser & Observable Identifier** (`hyper_x/contract_ir/`): Declares typed constraints across 7 correctness modes.
 2. **Information Boundary Engine** (`hyper_x/information_boundary/`): SVD spectral decay & 6-way information partitioning.
 3. **Necessary-Work Compiler** (`hyper_x/necessity/`): Formal DAG operations & FLOP ledger ($1 - \frac{\text{Necessary}}{\text{Original}}$).

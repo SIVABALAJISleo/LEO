@@ -1,7 +1,7 @@
 # LEO/HYPER CORRECTNESS AND VERIFICATION MODEL
 
 **Module Reference:** `hyper.verification.verifier`  
-**Standard:** Phase 12 Multi-Domain Verification Standard  
+**Standard:** Phase 12 Multi-Domain Verification Standard
 
 ---
 
@@ -32,6 +32,7 @@ LEO/HYPER establishes five formal verification layers tailored to distinct numer
 ## 2. Mathematical Formulations
 
 ### 2.1 Numerical Distance
+
 - **Maximum Absolute Error**:
   $$\max |y_{\text{approx}} - y_{\text{exact}}|$$
 - **Relative Error**:
@@ -40,7 +41,9 @@ LEO/HYPER establishes five formal verification layers tailored to distinct numer
   $$\text{RMSE} = \sqrt{\frac{1}{N} \sum_{i=1}^N (y_i - \hat{y}_i)^2}$$
 
 ### 2.2 Freivalds Probabilistic Matrix Product Verification
+
 For matrix product verification $A B \stackrel{?}{=} C$:
+
 1. Sample random vector $r \in \{-1, +1\}^N$.
 2. Compute $v_1 = A(Br)$ and $v_2 = Cr$ in $O(N^2)$ time.
 3. Check relative residual:
@@ -50,6 +53,7 @@ For matrix product verification $A B \stackrel{?}{=} C$:
 5. **Scientific Caveat**: Freivalds is a probabilistic guarantee, not a deterministic proof. For $k=5$, $\Pr(\text{undetected error}) \le 0.03125$.
 
 ### 2.3 Perceptual Quality (SSIM & PSNR)
+
 - **PSNR**:
   $$\text{PSNR} = 20 \log_{10} \left( \frac{\text{MAX}_I}{\sqrt{\text{MSE}}} \right)$$
 - **SSIM**:

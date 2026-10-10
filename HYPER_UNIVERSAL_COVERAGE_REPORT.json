@@ -57,7 +57,13 @@
   "adaptive_runtime": {
     "status": "OPERATIONAL",
     "telemetry_supported": ["CPU_UTILIZATION", "RAM_USAGE", "CPU_FREQUENCY", "THERMAL_THROTTLING"],
-    "backends": ["ESCAPE", "OPTIMIZED_CPU_AVX2", "OPTIMIZED_IGPU_UHD", "HYBRID_ZERO_COPY", "GOLDEN_SEMANTIC_VM"],
+    "backends": [
+      "ESCAPE",
+      "OPTIMIZED_CPU_AVX2",
+      "OPTIMIZED_IGPU_UHD",
+      "HYBRID_ZERO_COPY",
+      "GOLDEN_SEMANTIC_VM"
+    ],
     "self_optimizing_registry": true
   },
   "irreducibility_detector": {

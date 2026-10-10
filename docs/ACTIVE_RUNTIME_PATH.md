@@ -1,4 +1,5 @@
 # HYPER / LEO — Authoritative Active Runtime Path
+
 **Document Version:** 2.0.0 (Ultra-Sonic Master Engineering)
 
 ---

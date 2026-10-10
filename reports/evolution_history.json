@@ -13,12 +13,7 @@
     {
       "generation": 1,
       "fitness": 0.54,
-      "weaknesses": [
-        "low_avoidance",
-        "high_latency",
-        "low_throughput",
-        "low_density"
-      ],
+      "weaknesses": ["low_avoidance", "high_latency", "low_throughput", "low_density"],
       "mutations": {
         "confidence_floor": 0.603,
         "max_spec_tokens": 8,
@@ -28,20 +23,13 @@
         "dreamer_depth": 6
       },
       "curriculum_level": "basic",
-      "active_classes": [
-        "cacheable"
-      ],
+      "active_classes": ["cacheable"],
       "timestamp": 1791570116.7043715
     },
     {
       "generation": 2,
       "fitness": 0.54,
-      "weaknesses": [
-        "low_avoidance",
-        "high_latency",
-        "low_throughput",
-        "low_density"
-      ],
+      "weaknesses": ["low_avoidance", "high_latency", "low_throughput", "low_density"],
       "mutations": {
         "confidence_floor": 0.5343,
         "max_spec_tokens": 8,
@@ -51,9 +39,7 @@
         "dreamer_depth": 7
       },
       "curriculum_level": "basic",
-      "active_classes": [
-        "cacheable"
-      ],
+      "active_classes": ["cacheable"],
       "timestamp": 1791570116.7085173
     }
   ]

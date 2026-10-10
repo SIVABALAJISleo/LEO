@@ -10,12 +10,12 @@ A benchmark without strict execution discipline is an illusion. The HYPER benchm
 
 Every benchmark execution must explicitly declare and control its cache state:
 
-| Cache State | Definition | Measurement Discipline |
-| :--- | :--- | :--- |
-| **`COLD`** | All CPU caches flushed, zero memory buffers pre-allocated, OS file caches purged. | Measures raw latency including allocation and cold instruction fetching. |
-| **`WARM`** | Instruction caches primed, memory pages mapped, JIT compiled (if applicable). | Measures steady-state repetitive computational throughput. |
-| **`CACHED`** | Prior results or intermediate lookup tables available in RAM. | Permitted ONLY when the workload contract explicitly permits caching. |
-| **`INCREMENTAL`**| Only updated state or deltas processed relative to prior frame $t-1$. | Permitted for streaming, video, and animation workloads. |
+| Cache State       | Definition                                                                        | Measurement Discipline                                                   |
+| :---------------- | :-------------------------------------------------------------------------------- | :----------------------------------------------------------------------- |
+| **`COLD`**        | All CPU caches flushed, zero memory buffers pre-allocated, OS file caches purged. | Measures raw latency including allocation and cold instruction fetching. |
+| **`WARM`**        | Instruction caches primed, memory pages mapped, JIT compiled (if applicable).     | Measures steady-state repetitive computational throughput.               |
+| **`CACHED`**      | Prior results or intermediate lookup tables available in RAM.                     | Permitted ONLY when the workload contract explicitly permits caching.    |
+| **`INCREMENTAL`** | Only updated state or deltas processed relative to prior frame $t-1$.             | Permitted for streaming, video, and animation workloads.                 |
 
 **Strict Rule**: Never compare a `CACHED` candidate pathway against a `COLD` baseline. Doing so immediately triggers an `INVALID_COMPARISON` benchmark violation.
 

@@ -6,7 +6,7 @@
 **Memory**: 16 GB DDR4/LPDDR5 System RAM  
 **Operating System**: Windows 11 64-bit  
 **Date**: September 2026  
-**Auditor**: Principal Systems Architect & Formal Verification Scientist  
+**Auditor**: Principal Systems Architect & Formal Verification Scientist
 
 ---
 
@@ -15,6 +15,7 @@
 The LEO / HYPER platform is designed to achieve **Application-Contract Parity** and **Exact Computational Parity** on strictly constrained commodity consumer hardware (Intel Core i5-12450H CPU + integrated UHD Graphics) without relying on discrete NVIDIA GPUs, cloud computation, or artificial benchmark manipulation.
 
 ### The Four Parity Boundaries
+
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
 │ Level A: RAW HARDWARE PARITY                                           │
@@ -40,6 +41,7 @@ The LEO / HYPER platform is designed to achieve **Application-Contract Parity** 
 ## 2. Complete Repository Inventory & Subsystem Mapping
 
 ### 2.1 Backend Core (`backend/`)
+
 - `backend/main.py`: FastAPI root entrypoint with security middlewares (Payload size, Rate limit, Security headers, CORS).
 - `backend/core/leo_orchestrator.py`: 12-layer semantic compute cascade with FAISS vector caching, Intent routing, Neural-to-Classical crystallization, RAG synthesis, and local execution.
 - `backend/gateway/openai_gateway.py`: OpenAI-compatible drop-in API gateway (`/v1/chat/completions`, `/v1/embeddings`) with LEO telemetry injection.
@@ -47,6 +49,7 @@ The LEO / HYPER platform is designed to achieve **Application-Contract Parity** 
 - `backend/routers/`: 25+ specialized routers (omega, hyper_v2, hyper_v3, hyper_mvc_dar, escape_engine, scoreboard, governor, auth, memory).
 
 ### 2.2 HYPER Ω / Universal Engine (`hyper_omega/` & `hyper_universal/`)
+
 - `hyper_omega/escape_engine/`: 7 counterfactual escape classes (Elimination, Substitution, Reuse, Compression, Prediction+Correction, Representation Escape, Algorithmic Escape).
 - `hyper_omega/search_space_compiler/`: AST parsing, e-graph pattern matching, and search space compilation.
 - `hyper_omega/algorithm_discovery/`: Symbolic algorithm generator and genetic evolution engine.
@@ -57,6 +60,7 @@ The LEO / HYPER platform is designed to achieve **Application-Contract Parity** 
 - `hyper_universal/verification_fortress.py`: Strict sandbox isolation preventing reference contamination during benchmarks.
 
 ### 2.3 Frontend UI (`src/`)
+
 - TanStack Start + React 19 + Vite architecture.
 - Modular routes for Chat, Benchmarks, Analytics, Telemetry, and Settings.
 - Real-time SSE / REST integration with `http://localhost:8005`.
@@ -65,13 +69,13 @@ The LEO / HYPER platform is designed to achieve **Application-Contract Parity** 
 
 ## 3. Scientific Vulnerability & Anti-Cheating Analysis
 
-| Vulnerability Category | Risk Description | Remediation in HYPER Ω |
-| :--- | :--- | :--- |
-| **Benchmark Contamination** | Reference function executed inside the benchmark loop, inflating speedups. | Strict 3-phase isolation: Precompute reference → Benchmark candidate → Independent differential verification. |
-| **Cache Hijacking** | Prior run results reused on fresh random inputs without full provenance hash. | Cache keys cryptographically bound to input hash, contract hash, code hash, and hardware profile. |
-| **High-Entropy Hallucination** | System attempting to claim 100% collapse on full-rank random dense noise. | Dense high-entropy workloads fail closed to `NO_PROVEN_ESCAPE` and canonical fallback. |
-| **Lossy Approximation Masquerading as Exact** | Truncated SVD or low-bit quantization claimed as "Exact Parity". | Strict categorical taxonomy: `PROVEN_EXACT` vs `PROVEN_APPROXIMATE` vs `CANONICAL_FALLBACK`. |
-| **Hardware Equivalence False Claims** | Claiming i5-12450H equals RTX 4090 in raw FLOPs. | Raw hardware parity explicitly marked `NOT ACHIEVED`; only contract/application parity evaluated. |
+| Vulnerability Category                        | Risk Description                                                              | Remediation in HYPER Ω                                                                                        |
+| :-------------------------------------------- | :---------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------ |
+| **Benchmark Contamination**                   | Reference function executed inside the benchmark loop, inflating speedups.    | Strict 3-phase isolation: Precompute reference → Benchmark candidate → Independent differential verification. |
+| **Cache Hijacking**                           | Prior run results reused on fresh random inputs without full provenance hash. | Cache keys cryptographically bound to input hash, contract hash, code hash, and hardware profile.             |
+| **High-Entropy Hallucination**                | System attempting to claim 100% collapse on full-rank random dense noise.     | Dense high-entropy workloads fail closed to `NO_PROVEN_ESCAPE` and canonical fallback.                        |
+| **Lossy Approximation Masquerading as Exact** | Truncated SVD or low-bit quantization claimed as "Exact Parity".              | Strict categorical taxonomy: `PROVEN_EXACT` vs `PROVEN_APPROXIMATE` vs `CANONICAL_FALLBACK`.                  |
+| **Hardware Equivalence False Claims**         | Claiming i5-12450H equals RTX 4090 in raw FLOPs.                              | Raw hardware parity explicitly marked `NOT ACHIEVED`; only contract/application parity evaluated.             |
 
 ---
 

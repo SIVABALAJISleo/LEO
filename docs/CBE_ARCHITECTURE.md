@@ -26,6 +26,7 @@ graph TD
 ```
 
 ### Layer Breakdown:
+
 1. **State & Temporal Foundation (`cbe/state/`)**:
    - `ObjectState`: Tracks 3D position, velocity, orientation, scale, material ID, and 64-bit BLAKE2b state hashes.
    - `SceneState`: Aggregates camera state (LookAt, projection, sub-pixel jitter), lights, and object graphs.

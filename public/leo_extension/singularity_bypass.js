@@ -118,8 +118,14 @@
     const ctx = origGetContext.call(this, type, ...args);
     if (ctx && (type.includes("webgl") || type === "experimental-webgl")) {
       try {
-        Object.defineProperty(ctx, "drawingBufferWidth", { get: () => TARGET_W, configurable: true });
-        Object.defineProperty(ctx, "drawingBufferHeight", { get: () => TARGET_H, configurable: true });
+        Object.defineProperty(ctx, "drawingBufferWidth", {
+          get: () => TARGET_W,
+          configurable: true,
+        });
+        Object.defineProperty(ctx, "drawingBufferHeight", {
+          get: () => TARGET_H,
+          configurable: true,
+        });
       } catch (e) {}
     }
     return ctx;

@@ -3,6 +3,7 @@
 ## 1. Heterogeneous Silicon Topology
 
 Target System: **Lenovo IdeaPad Slim 3 15IAH8**
+
 - **CPU:** Intel Core i5-12450H (Alder Lake-H)
   - 4 Golden Cove Performance Cores (8 threads, AVX2, FMA3, 4.4 GHz max turbo)
   - 4 Gracemont Efficient Cores (4 threads, high energy-efficiency, 3.3 GHz max turbo)

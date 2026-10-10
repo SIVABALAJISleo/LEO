@@ -12,6 +12,7 @@
 This initial audit establishes the forensic baseline for the HYPER repository (`github.com/SIVABALAJISleo/LEO`), analyzing existing execution engines, benchmark harnesses, telemetry systems, API endpoints, and frontend dashboards prior to implementing the **HYPER-GODMODE Ω∞ Universal Performance Parity Engine**.
 
 ### Fixed Hardware Environment (Verified at Runtime)
+
 - **Host Processor:** Intel Core i5-12450H (Alder Lake Architecture)
 - **Physical Topology:** 8 Physical Cores:
   - 4 Performance Cores (Golden Cove) with Hyper-Threading (8 threads)
@@ -44,6 +45,7 @@ The repository consists of 107 subdirectories and 482 files at root level, conta
 ## 3. Package Manifests & Dependency Audit
 
 ### Python (`requirements.txt`)
+
 - **Web & API:** `fastapi>=0.115.0`, `uvicorn>=0.39.0`, `pydantic>=2.12.5`
 - **Numerical & Scientific:** `numpy>=2.2.6`, `scipy>=1.14`, `numba>=0.61.2`, `pyopencl>=2024.1`
 - **Machine Learning & Inference:** `torch` (CPU), `onnxruntime`, `openvino`, `sentence-transformers`, `faiss-cpu`, `llama-cpp-python`
@@ -51,6 +53,7 @@ The repository consists of 107 subdirectories and 482 files at root level, conta
 - **System Telemetry:** `psutil>=7.2.2`, `py-cpuinfo>=9.0.0`, `prometheus-client`
 
 ### Frontend (`package.json`)
+
 - **Core Framework:** React 19, TypeScript 5.8, Vite 6, TanStack Query 5, TanStack Router
 - **UI Components:** Radix UI primitives, Lucide React icons, TailwindCSS
 
@@ -60,16 +63,17 @@ The repository consists of 107 subdirectories and 482 files at root level, conta
 
 The primary API entrypoint is `backend/main.py`. Key router registrations include:
 
-| Route Prefix | Router Module | Purpose | Status |
-| :--- | :--- | :--- | :--- |
-| `/api/v1/hyper100` | `hyper.hyper100_parity.dashboard` | Section 48 Experiment & Taxonomy Matrix | Fully Verified & Integrated |
-| `/api/v1/hyper/godmode` | `hyper.godmode.dashboard` | Godmode Scoreboard & Resource Mirror | Fully Verified & Integrated |
-| `/api/v1/hyper/parity` | `hyper.parity_engine.dashboard` | Parity Scorecard & Verification Status | Active |
-| `/api/v1/omega` | `backend.routers.omega_router` | HYPER Ω Counterfactual Escape & Proofs | Active |
-| `/api/v1/systems` | `backend.routers.systems` | CPU/Memory Status & Telemetry | Active |
-| `/api/v1/benchmark` | `backend.routers.benchmark` | General benchmark runner | Active |
+| Route Prefix            | Router Module                     | Purpose                                 | Status                      |
+| :---------------------- | :-------------------------------- | :-------------------------------------- | :-------------------------- |
+| `/api/v1/hyper100`      | `hyper.hyper100_parity.dashboard` | Section 48 Experiment & Taxonomy Matrix | Fully Verified & Integrated |
+| `/api/v1/hyper/godmode` | `hyper.godmode.dashboard`         | Godmode Scoreboard & Resource Mirror    | Fully Verified & Integrated |
+| `/api/v1/hyper/parity`  | `hyper.parity_engine.dashboard`   | Parity Scorecard & Verification Status  | Active                      |
+| `/api/v1/omega`         | `backend.routers.omega_router`    | HYPER Ω Counterfactual Escape & Proofs  | Active                      |
+| `/api/v1/systems`       | `backend.routers.systems`         | CPU/Memory Status & Telemetry           | Active                      |
+| `/api/v1/benchmark`     | `backend.routers.benchmark`       | General benchmark runner                | Active                      |
 
 ### Workload Execution Flow
+
 ```mermaid
 graph TD
     A[Workload Submission via API/CLI] --> B[Performance Contract Extractor]
@@ -105,13 +109,13 @@ A critical audit item is distinguishing between **Real Measurements**, **Simulat
 1. **Bottleneck 1: Memory Footprint & Bandwidth in Large Workloads**:
    - Intel UHD Graphics shares the 16 GB system memory with the CPU over shared memory channels.
    - Operations that allocate large intermediate arrays cause unnecessary memory bus contention.
-   - *Target Solution:* In-place buffer pools, chunked tile streaming, and TinyStories-style memory management.
+   - _Target Solution:_ In-place buffer pools, chunked tile streaming, and TinyStories-style memory management.
 2. **Bottleneck 2: Asymmetric Core Scheduling (P-Cores vs E-Cores)**:
    - Untuned thread pools randomly dispatch latency-critical threads to low-clock Efficiency Cores (Gracemont).
-   - *Target Solution:* Core affinity tagging directing compute-heavy vector tasks to the 4 Performance Cores (8 threads) and background tasks to the 4 Efficiency Cores.
+   - _Target Solution:_ Core affinity tagging directing compute-heavy vector tasks to the 4 Performance Cores (8 threads) and background tasks to the 4 Efficiency Cores.
 3. **Bottleneck 3: Redundant Mathematical Calculations**:
    - Matrix, vision, and N-body workloads frequently recompute symmetric, constant, or dead operations.
-   - *Target Solution:* Symmetric upper-triangular reduction, separable rank-1 filter decomposition, and algebraic shortcuts.
+   - _Target Solution:_ Symmetric upper-triangular reduction, separable rank-1 filter decomposition, and algebraic shortcuts.
 4. **Bottleneck 4: Anti-Cheat & Verification False Positives**:
    - Verification probes must be robust against input plateaus and low-rank degeneracy without adding excessive runtime overhead.
 

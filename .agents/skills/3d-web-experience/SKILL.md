@@ -54,14 +54,16 @@ Choosing the right 3D approach
 ## 3D Stack Selection
 
 ### Options Comparison
-| Tool | Best For | Learning Curve | Control |
-|------|----------|----------------|---------|
-| Spline | Quick prototypes, designers | Low | Medium |
-| React Three Fiber | React apps, complex scenes | Medium | High |
-| Three.js vanilla | Max control, non-React | High | Maximum |
-| Babylon.js | Games, heavy 3D | High | Maximum |
+
+| Tool              | Best For                    | Learning Curve | Control |
+| ----------------- | --------------------------- | -------------- | ------- |
+| Spline            | Quick prototypes, designers | Low            | Medium  |
+| React Three Fiber | React apps, complex scenes  | Medium         | High    |
+| Three.js vanilla  | Max control, non-React      | High           | Maximum |
+| Babylon.js        | Games, heavy 3D             | High           | Maximum |
 
 ### Decision Tree
+
 ```
 Need quick 3D element?
 └── Yes → Spline
@@ -77,23 +79,23 @@ Need max performance/control?
 ```
 
 ### Spline (Fastest Start)
+
 ```jsx
-import Spline from '@splinetool/react-spline';
+import Spline from "@splinetool/react-spline";
 
 export default function Scene() {
-  return (
-    <Spline scene="https://prod.spline.design/xxx/scene.splinecode" />
-  );
+  return <Spline scene="https://prod.spline.design/xxx/scene.splinecode" />;
 }
 ```
 
 ### React Three Fiber
+
 ```jsx
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, useGLTF } from '@react-three/drei';
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls, useGLTF } from "@react-three/drei";
 
 function Model() {
-  const { scene } = useGLTF('/model.glb');
+  const { scene } = useGLTF("/model.glb");
   return <primitive object={scene} />;
 }
 
@@ -117,14 +119,16 @@ Getting models web-ready
 ## 3D Model Pipeline
 
 ### Format Selection
-| Format | Use Case | Size |
-|--------|----------|------|
-| GLB/GLTF | Standard web 3D | Smallest |
-| FBX | From 3D software | Large |
-| OBJ | Simple meshes | Medium |
-| USDZ | Apple AR | Medium |
+
+| Format   | Use Case         | Size     |
+| -------- | ---------------- | -------- |
+| GLB/GLTF | Standard web 3D  | Smallest |
+| FBX      | From 3D software | Large    |
+| OBJ      | Simple meshes    | Medium   |
+| USDZ     | Apple AR         | Medium   |
 
 ### Optimization Pipeline
+
 ```
 1. Model in Blender/etc
 2. Reduce poly count (< 100K for web)
@@ -135,6 +139,7 @@ Getting models web-ready
 ```
 
 ### GLTF Compression
+
 ```bash
 # Install gltf-transform
 npm install -g @gltf-transform/cli
@@ -146,9 +151,10 @@ gltf-transform optimize input.glb output.glb \
 ```
 
 ### Loading in R3F
+
 ```jsx
-import { useGLTF, useProgress, Html } from '@react-three/drei';
-import { Suspense } from 'react';
+import { useGLTF, useProgress, Html } from "@react-three/drei";
+import { Suspense } from "react";
 
 function Loader() {
   const { progress } = useProgress();
@@ -175,9 +181,10 @@ export default function Scene() {
 ## Scroll-Driven 3D
 
 ### R3F + Scroll Controls
+
 ```jsx
-import { ScrollControls, useScroll } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
+import { ScrollControls, useScroll } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
 
 function RotatingModel() {
   const scroll = useScroll();
@@ -203,13 +210,14 @@ export default function Scene() {
 ```
 
 ### GSAP + Three.js
+
 ```javascript
-import gsap from 'gsap';
-import ScrollTrigger from 'gsap/ScrollTrigger';
+import gsap from "gsap";
+import ScrollTrigger from "gsap/ScrollTrigger";
 
 gsap.to(camera.position, {
   scrollTrigger: {
-    trigger: '.section',
+    trigger: ".section",
     scrub: true,
   },
   z: 5,
@@ -218,6 +226,7 @@ gsap.to(camera.position, {
 ```
 
 ### Common Scroll Effects
+
 - Camera movement through scene
 - Model rotation on scroll
 - Reveal/hide elements
@@ -233,13 +242,15 @@ Keeping 3D fast
 ## 3D Performance
 
 ### Performance Targets
-| Device | Target FPS | Max Triangles |
-|--------|------------|---------------|
-| Desktop | 60fps | 500K |
-| Mobile | 30-60fps | 100K |
-| Low-end | 30fps | 50K |
+
+| Device  | Target FPS | Max Triangles |
+| ------- | ---------- | ------------- |
+| Desktop | 60fps      | 500K          |
+| Mobile  | 30-60fps   | 100K          |
+| Low-end | 30fps      | 50K           |
 
 ### Quick Wins
+
 ```jsx
 // 1. Use instances for repeated objects
 import { Instances, Instance } from '@react-three/drei';
@@ -256,6 +267,7 @@ const Model = lazy(() => import('./Model'));
 ```
 
 ### Mobile Detection
+
 ```jsx
 const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
 
@@ -266,6 +278,7 @@ const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
 ```
 
 ### Fallback Strategy
+
 ```jsx
 function Scene() {
   const [webGLSupported, setWebGLSupported] = useState(true);
@@ -364,6 +377,7 @@ Workflow:
 Works well with: `scroll-experience`, `interactive-portfolio`, `frontend`, `landing-page-design`
 
 ## When to Use
+
 - User mentions or implies: 3D website
 - User mentions or implies: three.js
 - User mentions or implies: WebGL
@@ -373,6 +387,7 @@ Works well with: `scroll-experience`, `interactive-portfolio`, `frontend`, `land
 - User mentions or implies: product configurator
 
 ## Limitations
+
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

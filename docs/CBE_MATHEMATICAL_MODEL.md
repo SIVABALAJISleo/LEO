@@ -6,7 +6,7 @@ The central thesis of the Compute-Budget Elimination Engine is to cast frame gen
 
 $$\min_{\mathbf{a} \in \mathcal{A}} \quad C_{\text{total}}(\mathbf{a}) = C_{\text{render}}(\mathbf{a}) + C_{\text{prediction}}(\mathbf{a}) + C_{\text{reconstruction}}(\mathbf{a}) + C_{\text{memory}}(\mathbf{a}) + C_{\text{control}}(\mathbf{a})$$
 
-$$\text{subject to} \quad \begin{cases}
+$$ \text{subject to} \quad \begin{cases}
 \mathcal{Q}(I_{\text{output}}, I_{\text{reference}}) \ge Q_{\text{target}} & (\text{Visual Quality Constraint: e.g. SSIM} \ge 0.90) \\
 \mathcal{L}(I_{\text{output}}) \le L_{\text{target}} & (\text{Latency Constraint: e.g.} \le 16.67\text{ ms for 60 FPS}) \\
 \mathcal{S}(I_{\text{output}}, I_{t-1}) \le S_{\text{target}} & (\text{Temporal Stability Constraint: Flicker} \le 0.03) \\
@@ -108,3 +108,4 @@ $$m_{\text{min}} = \min(C, T, B, L, R), \quad m_{\text{max}} = \max(C, T, B, L, 
 $$\text{amp} = \frac{\min(m_{\text{min}}, 1.0 - m_{\text{max}})}{\max(m_{\text{max}}, 10^{-4})}$$
 $$w = -\sqrt{\text{clamp}(\text{amp}, 0, 1)} \cdot (\sigma_{\text{sharp}} \cdot 0.1875)$$
 $$I_{\text{sharp}} = \frac{C + w(T + B + L + R)}{1 + 4w}$$
+$$

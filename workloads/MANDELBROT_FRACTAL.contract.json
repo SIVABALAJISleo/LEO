@@ -3,19 +3,13 @@
   "description": "Compute-bound iterative divergence count over 128x128 complex grid",
   "input_domain": {
     "c_grid": {
-      "shape": [
-        128,
-        128
-      ],
+      "shape": [128, 128],
       "dtype": "COMPLEX64"
     }
   },
   "output_domain": {
     "iterations": {
-      "shape": [
-        128,
-        128
-      ],
+      "shape": [128, 128],
       "dtype": "INT32"
     }
   },

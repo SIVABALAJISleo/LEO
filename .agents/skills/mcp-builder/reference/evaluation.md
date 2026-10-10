@@ -14,6 +14,7 @@ This document provides guidance on creating comprehensive evaluations for MCP se
 ## Quick Reference
 
 ### Evaluation Requirements
+
 - Create 10 human-readable questions
 - Questions must be READ-ONLY, INDEPENDENT, NON-DESTRUCTIVE
 - Each question requires multiple tool calls (potentially dozens)
@@ -21,6 +22,7 @@ This document provides guidance on creating comprehensive evaluations for MCP se
 - Answers must be STABLE (won't change over time)
 
 ### Output Format
+
 ```xml
 <evaluation>
    <qa_pair>
@@ -39,6 +41,7 @@ One measure of usefulness is how these implementations (input/output schemas, do
 ## Evaluation Overview
 
 Create 10 human-readable questions requiring ONLY READ-ONLY, INDEPENDENT, NON-DESTRUCTIVE, and IDEMPOTENT operations to answer. Each question should be:
+
 - Realistic
 - Clear and concise
 - Unambiguous
@@ -181,6 +184,7 @@ Create 10 human-readable questions requiring ONLY READ-ONLY, INDEPENDENT, NON-DE
 ### Step 1: Documentation Inspection
 
 Read the documentation of the target API to understand:
+
 - Available endpoints and functionality
 - If ambiguity exists, fetch additional information from the web
 - Parallelize this step AS MUCH AS POSSIBLE
@@ -189,6 +193,7 @@ Read the documentation of the target API to understand:
 ### Step 2: Tool Inspection
 
 List the tools available in the MCP server:
+
 - Inspect the MCP server directly
 - Understand input/output schemas, docstrings, and descriptions
 - WITHOUT calling the tools themselves at this stage
@@ -196,6 +201,7 @@ List the tools available in the MCP server:
 ### Step 3: Developing Understanding
 
 Repeat steps 1 & 2 until you have a good understanding:
+
 - Iterate multiple times
 - Think about the kinds of tasks you want to create
 - Refine your understanding
@@ -205,6 +211,7 @@ Repeat steps 1 & 2 until you have a good understanding:
 ### Step 4: Read-Only Content Inspection
 
 After understanding the API and tools, USE the MCP server tools:
+
 - Inspect content using READ-ONLY and NON-DESTRUCTIVE operations ONLY
 - Goal: identify specific content (e.g., users, channels, messages, projects, tasks) for creating realistic questions
 - Should NOT call any tools that modify state
@@ -219,6 +226,7 @@ After understanding the API and tools, USE the MCP server tools:
 ### Step 5: Task Generation
 
 After inspecting the content, create 10 human-readable questions:
+
 - An LLM should be able to answer these with the MCP server
 - Follow all question and answer guidelines above
 
@@ -252,6 +260,7 @@ Each QA pair consists of a question and an answer. The output should be an XML f
 ### Good Questions
 
 **Example 1: Multi-hop question requiring deep exploration (GitHub MCP)**
+
 ```xml
 <qa_pair>
    <question>Find the repository that was archived in Q3 2023 and had previously been the most forked project in the organization. What was the primary programming language used in that repository?</question>
@@ -260,6 +269,7 @@ Each QA pair consists of a question and an answer. The output should be an XML f
 ```
 
 This question is good because:
+
 - Requires multiple searches to find archived repositories
 - Needs to identify which had the most forks before archival
 - Requires examining repository details for the language
@@ -267,6 +277,7 @@ This question is good because:
 - Based on historical data pinned to a recorded snapshot
 
 **Example 2: Requires understanding context without keyword matching (Project Management MCP)**
+
 ```xml
 <qa_pair>
    <question>Locate the initiative focused on improving customer onboarding that was completed in late 2023. The project lead created a retrospective document after completion. What was the lead's role title at that time?</question>
@@ -275,6 +286,7 @@ This question is good because:
 ```
 
 This question is good because:
+
 - Doesn't use specific project name ("initiative focused on improving customer onboarding")
 - Requires finding completed projects from specific timeframe
 - Needs to identify the project lead and their role
@@ -283,6 +295,7 @@ This question is good because:
 - Based on completed work whose source snapshot must still be pinned
 
 **Example 3: Complex aggregation requiring multiple steps (Issue Tracker MCP)**
+
 ```xml
 <qa_pair>
    <question>Among all bugs reported in January 2024 that were marked as critical priority, which assignee resolved the highest percentage of their assigned bugs within 48 hours? Provide the assignee's username.</question>
@@ -291,6 +304,7 @@ This question is good because:
 ```
 
 This question is good because:
+
 - Requires filtering bugs by date, priority, and status
 - Needs to group by assignee and calculate resolution rates
 - Requires understanding timestamps to determine 48-hour windows
@@ -299,6 +313,7 @@ This question is good because:
 - Based on historical data from specific time period
 
 **Example 4: Requires synthesis across multiple data types (CRM MCP)**
+
 ```xml
 <qa_pair>
    <question>Find the account that upgraded from the Starter to Enterprise plan in Q4 2023 and had the highest annual contract value. What industry does this account operate in?</question>
@@ -307,6 +322,7 @@ This question is good because:
 ```
 
 This question is good because:
+
 - Requires understanding subscription tier changes
 - Needs to identify upgrade events in specific timeframe
 - Requires comparing contract values
@@ -317,6 +333,7 @@ This question is good because:
 ### Poor Questions
 
 **Example 1: Answer changes over time**
+
 ```xml
 <qa_pair>
    <question>How many open issues are currently assigned to the engineering team?</question>
@@ -325,11 +342,13 @@ This question is good because:
 ```
 
 This question is poor because:
+
 - The answer will change as issues are created, closed, or reassigned
 - Not based on stable/stationary data
 - Relies on "current state" which is dynamic
 
 **Example 2: Too easy with keyword search**
+
 ```xml
 <qa_pair>
    <question>Find the pull request with title "Add authentication feature" and tell me who created it.</question>
@@ -338,11 +357,13 @@ This question is poor because:
 ```
 
 This question is poor because:
+
 - Can be solved with a straightforward keyword search for exact title
 - Doesn't require deep exploration or understanding
 - No synthesis or analysis needed
 
 **Example 3: Ambiguous answer format**
+
 ```xml
 <qa_pair>
    <question>List all the repositories that have Python as their primary language.</question>
@@ -351,6 +372,7 @@ This question is poor because:
 ```
 
 This question is poor because:
+
 - Answer is a list that could be returned in any order
 - Difficult to verify with direct string comparison
 - LLM might format differently (JSON array, comma-separated, newline-separated)

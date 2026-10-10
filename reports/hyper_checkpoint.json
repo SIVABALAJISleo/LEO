@@ -137,7 +137,7 @@
       "reference_result": "Verified valid output (shape: (64, 64))",
       "candidate_result": "Verified valid output (shape: (64, 64))",
       "exactness": "NUMERICALLY_EQUIVALENT",
-      "numerical_error": 2.384185791015625e-07,
+      "numerical_error": 2.384185791015625e-7,
       "quality": 0.999999990737528,
       "latency": {
         "reference_ms": 27.0601,
@@ -257,7 +257,7 @@
       "reference_result": "Verified valid output (shape: scalar)",
       "candidate_result": "Verified valid output (shape: scalar)",
       "exactness": "NUMERICALLY_EQUIVALENT",
-      "numerical_error": 2.86102294921875e-06,
+      "numerical_error": 2.86102294921875e-6,
       "quality": 0.9999999798192769,
       "latency": {
         "reference_ms": 1.8115,

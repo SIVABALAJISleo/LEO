@@ -13,6 +13,7 @@ The goal of LEO / HYPER is to build a scientifically rigorous, software-only, CP
 The system does **NOT** attempt to physically imitate an NVIDIA GPU.
 
 Instead, the system answers:
+
 > **"What computation does the application actually need to produce the required observable?"**
 
 Once identified, it systematically searches for the cheapest verified computational pathway that satisfies the declared application contract.
@@ -66,11 +67,13 @@ FUTURE SEARCH
 ## 3. Subsystem Detailed Specifications
 
 ### Stage 1: Contract Definition (`ContractIR`)
+
 - **Location**: `hyper_cco/contract.py`
 - **Specification**: Formal dataclass encapsulating input domain, output domain, observable specification, tolerance bounds (absolute, relative, Frobenius, SSIM, perceptual), latency SLO, memory ceiling, and determinism requirements.
 - **Rule**: Strict monotonicity. Workload contracts can never be silently downgraded from `EXACT_EQUIVALENT` to an approximate class.
 
 ### Stage 2: Observable Compiler (`ObservableCompiler`)
+
 - **Location**: `hyper_cco/observable_compiler.py` & `hyper_x/wormhole_compiler/observable_compiler.py`
 - **Specification**: Analyzes what downstream components consume. For example:
   - Full matrix multiplication $C = A \times B$ where only `top_k(C)` is needed.
@@ -78,20 +81,24 @@ FUTURE SEARCH
   - 4096-token LLM generation where only the first 50 tokens are processed by the caller.
 
 ### Stage 3: Information Boundary Analyzer (`InformationBoundaryAnalyzer`)
+
 - **Location**: `hyper_cco/information_boundary.py` & `hyper_x/info_boundary/compiler.py`
 - **Specification**: Backward causal slicing on the computational DAG. Classifies nodes into:
   `REQUIRED`, `CONDITIONALLY_REQUIRED`, `REDUNDANT`, `REUSABLE`, `PREDICTABLE`, `APPROXIMABLE`, `UNKNOWN`.
 - **Invariant**: `UNKNOWN` is NEVER classified as unnecessary.
 
 ### Stage 4: Necessary-Work Compiler & Proof Elimination (`NecessaryWorkCompiler`)
+
 - **Location**: `hyper_cco/proof_elimination.py`
 - **Specification**: Produces a necessary sub-graph $G_N \subseteq G$. Every removed operation generates a `RegionEliminationCertificate` containing the boundary condition, residual bound, and SHA-256 integrity seal.
 
 ### Stage 5: Counterfactual Elimination Engine (`CounterfactualEliminationEngine`)
+
 - **Location**: `hyper_cco/counterfactual.py`
 - **Specification**: Tests hypothetical removal ($G \setminus \{v\}$). Evaluates output perturbation against the Lipschitz sensitivity bound $\Delta y \le L \cdot \|\Delta x\| \le \varepsilon / \text{margin}$. Employs a mandatory safety margin $\ge 1.5$ and 10% randomized physical verification sampling.
 
 ### Stage 6: Sufficient Representation Discovery (`RepresentationInventor`)
+
 - **Location**: `hyper_cco/semantic_compression.py` & `hyper_x/representations/`
 - **Specification**: Discovers low-cost sufficient representations:
   - Sparse (CSR/COO, structural zeros)
@@ -101,14 +108,17 @@ FUTURE SEARCH
   - Latent / Sufficient Statistics
 
 ### Stage 7: Algebraic Reformulation Engine (`EGraphRewriteEngine`)
+
 - **Location**: `hyper_x/rewrite/egraph.py` & `hyper_cco/contract_compiler.py`
 - **Specification**: Equality saturation on e-graphs using algebraic equivalences (associativity, distributivity, common subexpression elimination, operator fusion, loop tiling).
 
 ### Stage 8: Evolutionary Algorithm Discovery (`AlgorithmGenome`)
+
 - **Location**: `hyper_cco/algorithm_genome.py` & `algorithm_discovery/`
 - **Specification**: Mutates computation topologies, memory schedules, and tiling factors. Selects candidates based on multi-objective Pareto fitness: $\text{Correctness} \times \text{Contract} / (\text{Latency} + \text{MemoryMovement})$.
 
 ### Stage 9: Hardware-Aware Execution Fabric & Empirical Scheduler
+
 - **Location**: `hyper_cco/thermal_scheduler.py` & `hyper_x/hardware/`
 - **Specification**: Calibrated execution on the Intel Core i5-12450H:
   - P-Cores: Latency-critical, branchy, irregular workloads.
@@ -117,10 +127,12 @@ FUTURE SEARCH
   - Multi-objective loss: $J = \alpha \cdot \text{latency} + \beta \cdot \text{energy} + \gamma \cdot \text{thermal} + \delta \cdot \text{fallback} + \varepsilon \cdot \text{mem}$.
 
 ### Stage 10: Independent Verifier & Adversarial Fuzzing
+
 - **Location**: `hyper_cco/adversarial_fuzzer.py` & `hyper_x/wormhole_compiler/functional_verifier.py`
 - **Specification**: Strict architectural isolation. The optimizer NEVER evaluates itself. Verifier runs on independent numeric paths with 13 hostile test suites (NaNs, subnormals, rank-deficient matrices, lighting shocks, token distribution shifts).
 
 ### Stage 11: Blind Holdout & Anti-Cheat Provenance
+
 - **Location**: `hyper_cco/provenance_ledger.py` & `hyper_x/holdout/`
 - **Specification**: Candidates are frozen before testing on blind holdouts. Execution certificates are stamped with 25+ audit fields, SHA-256 hash chains, and verified execution timestamps.
 
@@ -154,4 +166,4 @@ We evaluate system efficiency using scientifically honest metrics:
 - **Contract Parity Rate ($CPR$)**:
   $$CPR = \frac{\text{Verified Contract-Satisfied Workloads}}{\text{Total Evaluated Workloads}}$$
 
-*Note: $HAE = 100\%$ does NOT mean the CPU physically matches RTX hardware throughput; it means the application's required observable has zero remaining dependency on GPU-specific architectural advantages.*
+_Note: $HAE = 100\%$ does NOT mean the CPU physically matches RTX hardware throughput; it means the application's required observable has zero remaining dependency on GPU-specific architectural advantages._

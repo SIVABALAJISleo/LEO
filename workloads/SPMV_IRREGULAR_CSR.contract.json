@@ -3,35 +3,25 @@
   "description": "Compressed Sparse Row matrix-vector product with non-uniform sparsity",
   "input_domain": {
     "data": {
-      "shape": [
-        2048
-      ],
+      "shape": [2048],
       "dtype": "FP32"
     },
     "indices": {
-      "shape": [
-        2048
-      ],
+      "shape": [2048],
       "dtype": "INT32"
     },
     "indptr": {
-      "shape": [
-        129
-      ],
+      "shape": [129],
       "dtype": "INT32"
     },
     "x": {
-      "shape": [
-        128
-      ],
+      "shape": [128],
       "dtype": "FP32"
     }
   },
   "output_domain": {
     "y": {
-      "shape": [
-        128
-      ],
+      "shape": [128],
       "dtype": "FP32"
     }
   },

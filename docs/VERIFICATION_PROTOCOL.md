@@ -34,40 +34,48 @@ In the HYPER discovery engine, no performance improvement or algorithmic transfo
 ```
 
 ### Level 1: Isolated Unit Testing
+
 - Verifies that candidate functions execute without throwing unhandled exceptions, memory faults, or infinite loops.
 - Enforces strict input validation on data types, array dimensionality, and memory layouts.
 
 ### Level 2: Differential Testing
+
 - Executes both the canonical unoptimized reference function $f_{ref}(x)$ and the discovered pathway candidate $f_{cand}(x)$ on identical inputs across hundreds of randomized trials.
 - Captures output deviations across varied seed initializations.
 
 ### Level 3: Bit-Exact Output Comparison
+
 - Mandatory for contracts specifying `ExactnessTier.BIT_EXACT`.
 - Computes SHA-256 digests over output memory buffers.
 - Requires $hash(f_{ref}(x)) == hash(f_{cand}(x))$.
 
 ### Level 4: Numerical Tolerance Budget Evaluation
+
 - Mandatory for numerical floating-point workloads (`FP64`, `FP32`, `FP16`).
 - Evaluates:
   $$\max_i |y_{cand}[i] - y_{ref}[i]| \le \epsilon_{abs} + \epsilon_{rel} \cdot |y_{ref}[i]|$$
 - Flags any candidate whose numerical drift exceeds the contract budget as `TOLERANCE_EXCEEDED`.
 
 ### Level 5: Property-Based Invariant Testing
+
 - Tests structural mathematical invariants:
-  - *Idempotency*: $f(f(x)) == f(x)$ for projections and sorting.
-  - *Monotonicity*: $x_1 \le x_2 \implies f(x_1) \le f(x_2)$ for monotonic transforms.
-  - *Permutation Invariance*: Output elements of a sorting network must be an exact multiset permutation of the input elements.
+  - _Idempotency_: $f(f(x)) == f(x)$ for projections and sorting.
+  - _Monotonicity_: $x_1 \le x_2 \implies f(x_1) \le f(x_2)$ for monotonic transforms.
+  - _Permutation Invariance_: Output elements of a sorting network must be an exact multiset permutation of the input elements.
 
 ### Level 6: Metamorphic Testing
+
 - Tests input/output relations under domain-specific transformations without requiring known ground-truth labels:
   - Linear scaling: $f(\alpha \cdot x) == \alpha \cdot f(x)$ for linear operators.
   - Spatial translation: $f(T(x)) == T(f(x))$ for translation-equivariant convolutions.
 
 ### Level 7: Independent Isolated Sandbox Verification
+
 - Re-executes the candidate in an out-of-process clean environment with fresh memory allocations.
 - Proves that the candidate does not rely on hidden global state, memoized cache leakage, or side-channel inputs.
 
 ### Level 8: Formal Equivalence & Proof Discovery
+
 - Applies symbolic computer algebra and rewrite rules (e.g. Horner expansion, matrix multiplication commutativity/associativity).
 - Emits formal `ProofCertificate` with machine-checkable deduction steps.
 - Distinguishes between `EMPIRICALLY_VERIFIED` (passed Levels 1-7) and `FORMALLY_PROVED` (passed Level 8).
@@ -89,6 +97,7 @@ Every candidate that passes verification is immediately attacked by the **Advers
    Permuted, reverse-sorted, or maximally noisy inputs specifically designed to defeat caching or sorting assumptions.
 
 If any attack succeeds, the counterexample is:
+
 - Minimized to its smallest reproducible form.
 - Recorded in the Knowledge Graph with a `CONTRADICTED_BY` relationship.
 - Fed into the Failure Memory to prune future search spaces.

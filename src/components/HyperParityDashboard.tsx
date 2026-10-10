@@ -1,6 +1,17 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Activity, Cpu, ShieldCheck, Flame, Layers, CheckCircle2, AlertTriangle, ArrowUpRight, Zap, RefreshCw } from "lucide-react";
+import {
+  Activity,
+  Cpu,
+  ShieldCheck,
+  Flame,
+  Layers,
+  CheckCircle2,
+  AlertTriangle,
+  ArrowUpRight,
+  Zap,
+  RefreshCw,
+} from "lucide-react";
 
 export type ParityMetricsData = {
   evaluated_workload_parity_pct: number;
@@ -77,7 +88,11 @@ const defaultMetrics: ParityMetricsData = {
 export function HyperParityDashboard() {
   const [activeTab, setActiveTab] = useState<"overview" | "matrix" | "ledger">("overview");
 
-  const { data: metrics, isFetching, refetch } = useQuery<ParityMetricsData>({
+  const {
+    data: metrics,
+    isFetching,
+    refetch,
+  } = useQuery<ParityMetricsData>({
     queryKey: ["hyper-parity-metrics"],
     queryFn: async () => {
       try {
@@ -97,15 +112,51 @@ export function HyperParityDashboard() {
   const m = metrics || defaultMetrics;
 
   const domainRows = [
-    { name: "Graphics (Raster, Shaders, Depth)", pct: m.graphics_parity_pct, status: "Verified Software Pathway" },
-    { name: "Ray Tracing (Functional Reprojection)", pct: m.ray_tracing_parity_pct, status: "Irradiance Cache / Path Trace" },
-    { name: "AI / ML (GEMM, FlashAttention, INT4)", pct: m.ai_ml_parity_pct, status: "Verified Software Pathway" },
-    { name: "Scientific Computing (PDE, Stencils, FFT)", pct: m.scientific_parity_pct, status: "Verified Software Pathway" },
-    { name: "Image Processing (Separable 2D, Canny)", pct: m.image_parity_pct, status: "Verified Software Pathway" },
-    { name: "Video Processing (Dirty Macroblock, Motion)", pct: m.video_parity_pct, status: "Verified Software Pathway" },
-    { name: "Compression (Lossless ANS, Entropy)", pct: m.compression_parity_pct, status: "Verified Software Pathway" },
-    { name: "Cryptography (SHA-256, Modular)", pct: m.crypto_parity_pct, status: "In Discovery Queue" },
-    { name: "Simulation & General Compute (N-body, Graph)", pct: m.simulation_parity_pct, status: "In Discovery Queue" },
+    {
+      name: "Graphics (Raster, Shaders, Depth)",
+      pct: m.graphics_parity_pct,
+      status: "Verified Software Pathway",
+    },
+    {
+      name: "Ray Tracing (Functional Reprojection)",
+      pct: m.ray_tracing_parity_pct,
+      status: "Irradiance Cache / Path Trace",
+    },
+    {
+      name: "AI / ML (GEMM, FlashAttention, INT4)",
+      pct: m.ai_ml_parity_pct,
+      status: "Verified Software Pathway",
+    },
+    {
+      name: "Scientific Computing (PDE, Stencils, FFT)",
+      pct: m.scientific_parity_pct,
+      status: "Verified Software Pathway",
+    },
+    {
+      name: "Image Processing (Separable 2D, Canny)",
+      pct: m.image_parity_pct,
+      status: "Verified Software Pathway",
+    },
+    {
+      name: "Video Processing (Dirty Macroblock, Motion)",
+      pct: m.video_parity_pct,
+      status: "Verified Software Pathway",
+    },
+    {
+      name: "Compression (Lossless ANS, Entropy)",
+      pct: m.compression_parity_pct,
+      status: "Verified Software Pathway",
+    },
+    {
+      name: "Cryptography (SHA-256, Modular)",
+      pct: m.crypto_parity_pct,
+      status: "In Discovery Queue",
+    },
+    {
+      name: "Simulation & General Compute (N-body, Graph)",
+      pct: m.simulation_parity_pct,
+      status: "In Discovery Queue",
+    },
   ];
 
   return (
@@ -120,7 +171,8 @@ export function HyperParityDashboard() {
             </h2>
           </div>
           <p className="text-xs text-slate-400 mt-1 font-mono">
-            Universal Functional &middot; Computational &middot; Application Parity &middot; Physical Hardware Disjoint
+            Universal Functional &middot; Computational &middot; Application Parity &middot;
+            Physical Hardware Disjoint
           </p>
         </div>
 
@@ -129,7 +181,9 @@ export function HyperParityDashboard() {
             <button
               onClick={() => setActiveTab("overview")}
               className={`px-3 py-1.5 rounded-md font-medium transition-all ${
-                activeTab === "overview" ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shadow" : "text-slate-400 hover:text-slate-200"
+                activeTab === "overview"
+                  ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shadow"
+                  : "text-slate-400 hover:text-slate-200"
               }`}
             >
               Overview
@@ -137,7 +191,9 @@ export function HyperParityDashboard() {
             <button
               onClick={() => setActiveTab("matrix")}
               className={`px-3 py-1.5 rounded-md font-medium transition-all ${
-                activeTab === "matrix" ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shadow" : "text-slate-400 hover:text-slate-200"
+                activeTab === "matrix"
+                  ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shadow"
+                  : "text-slate-400 hover:text-slate-200"
               }`}
             >
               Capability Matrix
@@ -145,7 +201,9 @@ export function HyperParityDashboard() {
             <button
               onClick={() => setActiveTab("ledger")}
               className={`px-3 py-1.5 rounded-md font-medium transition-all ${
-                activeTab === "ledger" ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shadow" : "text-slate-400 hover:text-slate-200"
+                activeTab === "ledger"
+                  ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shadow"
+                  : "text-slate-400 hover:text-slate-200"
               }`}
             >
               Elimination Ledger
@@ -157,7 +215,9 @@ export function HyperParityDashboard() {
             disabled={isFetching}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-slate-300 transition-all hover:scale-105 active:scale-95 disabled:opacity-50"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${isFetching ? "animate-spin text-cyan-400" : ""}`} />
+            <RefreshCw
+              className={`w-3.5 h-3.5 ${isFetching ? "animate-spin text-cyan-400" : ""}`}
+            />
             Refresh
           </button>
         </div>
@@ -167,7 +227,11 @@ export function HyperParityDashboard() {
       <div className="my-5 p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-3 text-xs text-amber-200/90 font-mono">
         <ShieldCheck className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
         <div>
-          <span className="font-bold text-amber-300">ABSOLUTE EXCLUSION:</span> Physical hardware recreation (transistors, CUDA cores, RT cores, physical VRAM silicon) is strictly <strong>OUT OF SCOPE</strong>. Parity is achieved exclusively via algorithmic reassociation, information necessity pruning, memory movement minimization, and CPU+iGPU execution.
+          <span className="font-bold text-amber-300">ABSOLUTE EXCLUSION:</span> Physical hardware
+          recreation (transistors, CUDA cores, RT cores, physical VRAM silicon) is strictly{" "}
+          <strong>OUT OF SCOPE</strong>. Parity is achieved exclusively via algorithmic
+          reassociation, information necessity pruning, memory movement minimization, and CPU+iGPU
+          execution.
         </div>
       </div>
 
@@ -176,48 +240,66 @@ export function HyperParityDashboard() {
           {/* Top Score Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="rounded-xl bg-slate-900/80 border border-slate-800 p-4 relative overflow-hidden group hover:border-emerald-500/40 transition-all">
-              <div className="text-xs uppercase font-bold text-slate-400 tracking-wider">Evaluated Workloads</div>
+              <div className="text-xs uppercase font-bold text-slate-400 tracking-wider">
+                Evaluated Workloads
+              </div>
               <div className="text-3xl font-black text-emerald-400 mt-2 flex items-baseline gap-1">
                 {m.evaluated_workload_parity_pct.toFixed(1)}%
                 <span className="text-xs font-normal text-emerald-500/80">passed (8/8)</span>
               </div>
-              <div className="text-[11px] text-slate-400 mt-1">100% Verified Non-Physical Parity</div>
+              <div className="text-[11px] text-slate-400 mt-1">
+                100% Verified Non-Physical Parity
+              </div>
               <div className="absolute top-3 right-3 text-emerald-500/20 group-hover:text-emerald-500/40 transition-colors">
                 <CheckCircle2 className="w-6 h-6" />
               </div>
             </div>
 
             <div className="rounded-xl bg-slate-900/80 border border-slate-800 p-4 relative overflow-hidden group hover:border-cyan-500/40 transition-all">
-              <div className="text-xs uppercase font-bold text-slate-400 tracking-wider">Global Registry Taxonomy</div>
+              <div className="text-xs uppercase font-bold text-slate-400 tracking-wider">
+                Global Registry Taxonomy
+              </div>
               <div className="text-3xl font-black text-cyan-400 mt-2 flex items-baseline gap-1">
                 {m.global_verified_parity_pct.toFixed(2)}%
-                <span className="text-xs font-normal text-cyan-500/80">({m.verified_gpu_capabilities}/{m.total_canonical_gpu_capabilities})</span>
+                <span className="text-xs font-normal text-cyan-500/80">
+                  ({m.verified_gpu_capabilities}/{m.total_canonical_gpu_capabilities})
+                </span>
               </div>
-              <div className="text-[11px] text-slate-400 mt-1">{m.remaining_unexplored_capabilities} Capabilities in Discovery Queue</div>
+              <div className="text-[11px] text-slate-400 mt-1">
+                {m.remaining_unexplored_capabilities} Capabilities in Discovery Queue
+              </div>
               <div className="absolute top-3 right-3 text-cyan-500/20 group-hover:text-cyan-500/40 transition-colors">
                 <Layers className="w-6 h-6" />
               </div>
             </div>
 
             <div className="rounded-xl bg-slate-900/80 border border-slate-800 p-4 relative overflow-hidden group hover:border-purple-500/40 transition-all">
-              <div className="text-xs uppercase font-bold text-slate-400 tracking-wider">Application Parity</div>
+              <div className="text-xs uppercase font-bold text-slate-400 tracking-wider">
+                Application Parity
+              </div>
               <div className="text-3xl font-black text-purple-400 mt-2 flex items-baseline gap-1">
                 {m.application_parity_pct.toFixed(1)}%
                 <span className="text-xs font-normal text-purple-500/80">12/12 apps</span>
               </div>
-              <div className="text-[11px] text-slate-400 mt-1">PyTorch, OpenCV, SciPy, Blender, UE</div>
+              <div className="text-[11px] text-slate-400 mt-1">
+                PyTorch, OpenCV, SciPy, Blender, UE
+              </div>
               <div className="absolute top-3 right-3 text-purple-500/20 group-hover:text-purple-500/40 transition-colors">
                 <Cpu className="w-6 h-6" />
               </div>
             </div>
 
             <div className="rounded-xl bg-slate-900/80 border border-slate-800 p-4 relative overflow-hidden group hover:border-amber-500/40 transition-all">
-              <div className="text-xs uppercase font-bold text-slate-400 tracking-wider">Workload Elimination</div>
+              <div className="text-xs uppercase font-bold text-slate-400 tracking-wider">
+                Workload Elimination
+              </div>
               <div className="text-3xl font-black text-amber-400 mt-2 flex items-baseline gap-1">
                 {m.work_eliminated_pct.toFixed(1)}%
                 <span className="text-xs font-normal text-amber-500/80">avoided</span>
               </div>
-              <div className="text-[11px] text-slate-400 mt-1">Reuse + Reconstruction + Delta Stencils</div>
+              <div className="text-[11px] text-slate-400 mt-1">
+                Reuse + Reconstruction + Delta Stencils
+              </div>
               <div className="absolute top-3 right-3 text-amber-500/20 group-hover:text-amber-500/40 transition-colors">
                 <Zap className="w-6 h-6" />
               </div>
@@ -228,19 +310,27 @@ export function HyperParityDashboard() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-xl bg-slate-900/50 border border-slate-800 text-xs">
             <div>
               <span className="text-slate-400">Contract Parity:</span>{" "}
-              <span className="font-bold text-emerald-400">{m.contract_parity_pct.toFixed(1)}%</span>
+              <span className="font-bold text-emerald-400">
+                {m.contract_parity_pct.toFixed(1)}%
+              </span>
             </div>
             <div>
               <span className="text-slate-400">Exact Bit-for-Bit:</span>{" "}
-              <span className="font-bold text-cyan-400">{m.exact_computational_parity_pct.toFixed(1)}%</span>
+              <span className="font-bold text-cyan-400">
+                {m.exact_computational_parity_pct.toFixed(1)}%
+              </span>
             </div>
             <div>
               <span className="text-slate-400">Adversarial Survival:</span>{" "}
-              <span className="font-bold text-emerald-400">{m.adversarial_coverage_pct.toFixed(1)}%</span>
+              <span className="font-bold text-emerald-400">
+                {m.adversarial_coverage_pct.toFixed(1)}%
+              </span>
             </div>
             <div>
               <span className="text-slate-400">Blind Holdout:</span>{" "}
-              <span className="font-bold text-purple-400">{m.blind_holdout_coverage_pct.toFixed(1)}%</span>
+              <span className="font-bold text-purple-400">
+                {m.blind_holdout_coverage_pct.toFixed(1)}%
+              </span>
             </div>
           </div>
         </div>
@@ -262,7 +352,9 @@ export function HyperParityDashboard() {
                 <tr key={idx} className="hover:bg-slate-800/30 transition-colors">
                   <td className="py-3 px-4 font-semibold text-slate-200">{row.name}</td>
                   <td className="py-3 px-4 font-mono text-[11px] text-cyan-300">{row.status}</td>
-                  <td className="py-3 px-4 font-mono font-bold text-emerald-400">{row.pct.toFixed(1)}%</td>
+                  <td className="py-3 px-4 font-mono font-bold text-emerald-400">
+                    {row.pct.toFixed(1)}%
+                  </td>
                   <td className="py-3 px-4">
                     <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
                       <div
@@ -281,24 +373,65 @@ export function HyperParityDashboard() {
       {activeTab === "ledger" && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs font-mono">
           <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2">
-            <div className="text-slate-400 font-bold uppercase text-[11px]">Pathway Discoveries</div>
-            <div className="flex justify-between"><span>Discovered Pathways:</span><span className="font-bold text-cyan-300">{m.discovered_pathways}</span></div>
-            <div className="flex justify-between"><span>Verified Survivors:</span><span className="font-bold text-emerald-400">{m.verified_pathways}</span></div>
-            <div className="flex justify-between"><span>Learned Failures:</span><span className="font-bold text-rose-400">{m.failed_pathways}</span></div>
+            <div className="text-slate-400 font-bold uppercase text-[11px]">
+              Pathway Discoveries
+            </div>
+            <div className="flex justify-between">
+              <span>Discovered Pathways:</span>
+              <span className="font-bold text-cyan-300">{m.discovered_pathways}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Verified Survivors:</span>
+              <span className="font-bold text-emerald-400">{m.verified_pathways}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Learned Failures:</span>
+              <span className="font-bold text-rose-400">{m.failed_pathways}</span>
+            </div>
           </div>
 
           <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2">
-            <div className="text-slate-400 font-bold uppercase text-[11px]">Computation Avoidance</div>
-            <div className="flex justify-between"><span>Work Eliminated:</span><span className="font-bold text-emerald-400">{m.work_eliminated_pct.toFixed(1)}%</span></div>
-            <div className="flex justify-between"><span>Work Reused (Temporal):</span><span className="font-bold text-cyan-300">{m.work_reused_pct.toFixed(1)}%</span></div>
-            <div className="flex justify-between"><span>Work Reconstructed:</span><span className="font-bold text-purple-400">{m.work_reconstructed_pct.toFixed(1)}%</span></div>
+            <div className="text-slate-400 font-bold uppercase text-[11px]">
+              Computation Avoidance
+            </div>
+            <div className="flex justify-between">
+              <span>Work Eliminated:</span>
+              <span className="font-bold text-emerald-400">
+                {m.work_eliminated_pct.toFixed(1)}%
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span>Work Reused (Temporal):</span>
+              <span className="font-bold text-cyan-300">{m.work_reused_pct.toFixed(1)}%</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Work Reconstructed:</span>
+              <span className="font-bold text-purple-400">
+                {m.work_reconstructed_pct.toFixed(1)}%
+              </span>
+            </div>
           </div>
 
           <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2">
-            <div className="text-slate-400 font-bold uppercase text-[11px]">Execution Reliability</div>
-            <div className="flex justify-between"><span>Fallback Rate:</span><span className="font-bold text-emerald-400">{m.fallback_rate_pct.toFixed(1)}%</span></div>
-            <div className="flex justify-between"><span>Adversarial Survival:</span><span className="font-bold text-emerald-400">{m.adversarial_coverage_pct.toFixed(1)}%</span></div>
-            <div className="flex justify-between"><span>Blind Holdout Validation:</span><span className="font-bold text-emerald-400">{m.blind_holdout_coverage_pct.toFixed(1)}%</span></div>
+            <div className="text-slate-400 font-bold uppercase text-[11px]">
+              Execution Reliability
+            </div>
+            <div className="flex justify-between">
+              <span>Fallback Rate:</span>
+              <span className="font-bold text-emerald-400">{m.fallback_rate_pct.toFixed(1)}%</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Adversarial Survival:</span>
+              <span className="font-bold text-emerald-400">
+                {m.adversarial_coverage_pct.toFixed(1)}%
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span>Blind Holdout Validation:</span>
+              <span className="font-bold text-emerald-400">
+                {m.blind_holdout_coverage_pct.toFixed(1)}%
+              </span>
+            </div>
           </div>
         </div>
       )}

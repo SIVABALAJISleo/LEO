@@ -1,4 +1,5 @@
 # HYPER / LEO — Information Boundary Specification
+
 **Document Version:** 2.0.0 (Ultra-Sonic Master Engineering)
 
 ---
@@ -20,6 +21,7 @@ It explicitly categorizes input data into six distinct partitions:
 ## 2. Spectral Energy & Rank Boundary
 
 For matrix operations $Y = A \cdot B$:
+
 - Singular Value Spectrum $S = \text{diag}(\sigma_1, \sigma_2, \dots, \sigma_k)$ is evaluated.
 - Cumulative energy threshold:
   $$\sum_{i=1}^{r} \sigma_i^2 \ge 0.99 \cdot \sum_{i=1}^{k} \sigma_i^2$$

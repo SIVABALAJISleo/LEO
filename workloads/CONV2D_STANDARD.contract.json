@@ -3,26 +3,17 @@
   "description": "2D spatial convolution of 64x64 image with 5x5 filter",
   "input_domain": {
     "image": {
-      "shape": [
-        64,
-        64
-      ],
+      "shape": [64, 64],
       "dtype": "FP32"
     },
     "kernel": {
-      "shape": [
-        5,
-        5
-      ],
+      "shape": [5, 5],
       "dtype": "FP32"
     }
   },
   "output_domain": {
     "output": {
-      "shape": [
-        60,
-        60
-      ],
+      "shape": [60, 60],
       "dtype": "FP32"
     }
   },

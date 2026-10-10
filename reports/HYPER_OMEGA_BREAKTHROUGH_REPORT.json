@@ -36,14 +36,14 @@
     {
       "route": "EXACT_ZERO_PRUNING",
       "mechanism": "Zero-row, zero-column, and zero-block elimination with threshold=0",
-      "work_elimination_ratio": 0.50,
+      "work_elimination_ratio": 0.5,
       "exact": true,
       "verification_status": "PASSED"
     },
     {
       "route": "EXACT_SPARSE_EXECUTION",
       "mechanism": "CSR traversal when sparsity > 70% with total cost validation",
-      "work_elimination_ratio": 0.80,
+      "work_elimination_ratio": 0.8,
       "exact": true,
       "verification_status": "PASSED"
     },

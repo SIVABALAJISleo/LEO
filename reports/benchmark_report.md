@@ -3,6 +3,7 @@
 **Document Version**: 1.0.0  
 **Date**: September 2026  
 **Hardware Fingerprint**:
+
 - **CPU**: 13th Gen Intel Core i5-13420H (4 Performance cores @ up to 4.6 GHz, 4 Efficient cores @ up to 3.4 GHz, 12 Threads)
 - **iGPU**: Intel UHD Graphics (48 Execution Units, ~1.2 GHz)
 - **RAM**: 15.7 GB LPDDR5
@@ -15,26 +16,26 @@
 
 The engine strictly separates 6 distinct benchmark categories to prevent confusing hardware speed with contract shortcuts:
 
-| Category | Category Name | Scientific Question Addressed | Target Status |
-| :--- | :--- | :--- | :--- |
-| **Category A** | **Raw Hardware Parity** | Does the Intel Core i5 + UHD physically match discrete RTX GPU throughput? | **NO** (Physical Silicon Law: 48 EUs vs 16,384 CUDA cores cannot match raw FLOPS) |
-| **Category B** | **Exact Computational Parity** | Is the identical mathematical calculation reproduced without modification? | **YES** for exact workloads (verified via Freivalds $O(N^2)$ and bit-exact hashing) |
-| **Category C** | **Contract Parity** | Is the application's declared contract satisfied within numerical/perceptual tolerance? | **YES** (Achieved across PDE, Graphics Filter, and Structured GEMM) |
-| **Category D** | **Application Performance** | Does the end-to-end workload finish within the interactive latency SLO? | **YES** (Sub-5ms for 720p filter, sub-1ms for Poisson solver) |
-| **Category E** | **Work Elimination** | How much original computation was proven unnecessary and eliminated? | **72.5% to 99.7%** on decomposable workloads |
-| **Category F** | **GPU Advantage Erasure** | How much of the workload actually required GPU-specific hardware advantages? | **HAE = 87.5% - 99.7%** on verified wormhole workloads |
+| Category       | Category Name                  | Scientific Question Addressed                                                           | Target Status                                                                       |
+| :------------- | :----------------------------- | :-------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------- |
+| **Category A** | **Raw Hardware Parity**        | Does the Intel Core i5 + UHD physically match discrete RTX GPU throughput?              | **NO** (Physical Silicon Law: 48 EUs vs 16,384 CUDA cores cannot match raw FLOPS)   |
+| **Category B** | **Exact Computational Parity** | Is the identical mathematical calculation reproduced without modification?              | **YES** for exact workloads (verified via Freivalds $O(N^2)$ and bit-exact hashing) |
+| **Category C** | **Contract Parity**            | Is the application's declared contract satisfied within numerical/perceptual tolerance? | **YES** (Achieved across PDE, Graphics Filter, and Structured GEMM)                 |
+| **Category D** | **Application Performance**    | Does the end-to-end workload finish within the interactive latency SLO?                 | **YES** (Sub-5ms for 720p filter, sub-1ms for Poisson solver)                       |
+| **Category E** | **Work Elimination**           | How much original computation was proven unnecessary and eliminated?                    | **72.5% to 99.7%** on decomposable workloads                                        |
+| **Category F** | **GPU Advantage Erasure**      | How much of the workload actually required GPU-specific hardware advantages?            | **HAE = 87.5% - 99.7%** on verified wormhole workloads                              |
 
 ---
 
 ## 2. Quantitative Results Table (Physical Target Machine)
 
-| Workload ID | Input Dimension | Baseline Latency (ms) | Candidate Latency (ms) | Physical Speedup | Work Elimination ($WE$) | Max Numerical Error | Correctness Class | Contract Satisfied |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| `GEMM_512x512` | $512 \times 512$ FP32 | 2.26 ms | 3.50 ms (cold)<br>0.08 ms (warm) | 0.65x (cold)<br>**28.2x (warm)** | 100.0% (warm) | 0.0 (exact) | `CACHED` | **TRUE** |
-| `PDE_Poisson_256` | $256 \times 256$ Grid | 2.20 ms | 0.96 ms | **2.28x** | 72.5% | $6.10 \times 10^{-3}$ | `NUMERICALLY_BOUNDED` | **TRUE** |
-| `Realtime_720p_Filter` | $1280 \times 720$ Frame | 5.58 ms | 1.43 ms | **3.89x** | 99.7% | 0.0 (masked) | `PERCEPTUALLY_EQUIVALENT` | **TRUE** |
-| `SpMV_CSR_10k` | $10000 \times 10000$ Sparse | 29.46 ms | 37.50 ms | 0.79x | 0.8% | $3.93 \times 10^{-2}$ | `APPLICATION_CONTRACT_EQUIVALENT` | **FALSE** |
-| `LLM_Residual_Block` | 512 tokens, $d=1024$ | 0.73 ms | 5.23 ms | 0.14x | 65.0% | 17.93 | `PREDICTIVE` | **FALSE** |
+| Workload ID            | Input Dimension             | Baseline Latency (ms) | Candidate Latency (ms)           | Physical Speedup                 | Work Elimination ($WE$) | Max Numerical Error   | Correctness Class                 | Contract Satisfied |
+| :--------------------- | :-------------------------- | :-------------------- | :------------------------------- | :------------------------------- | :---------------------- | :-------------------- | :-------------------------------- | :----------------- |
+| `GEMM_512x512`         | $512 \times 512$ FP32       | 2.26 ms               | 3.50 ms (cold)<br>0.08 ms (warm) | 0.65x (cold)<br>**28.2x (warm)** | 100.0% (warm)           | 0.0 (exact)           | `CACHED`                          | **TRUE**           |
+| `PDE_Poisson_256`      | $256 \times 256$ Grid       | 2.20 ms               | 0.96 ms                          | **2.28x**                        | 72.5%                   | $6.10 \times 10^{-3}$ | `NUMERICALLY_BOUNDED`             | **TRUE**           |
+| `Realtime_720p_Filter` | $1280 \times 720$ Frame     | 5.58 ms               | 1.43 ms                          | **3.89x**                        | 99.7%                   | 0.0 (masked)          | `PERCEPTUALLY_EQUIVALENT`         | **TRUE**           |
+| `SpMV_CSR_10k`         | $10000 \times 10000$ Sparse | 29.46 ms              | 37.50 ms                         | 0.79x                            | 0.8%                    | $3.93 \times 10^{-2}$ | `APPLICATION_CONTRACT_EQUIVALENT` | **FALSE**          |
+| `LLM_Residual_Block`   | 512 tokens, $d=1024$        | 0.73 ms               | 5.23 ms                          | 0.14x                            | 65.0%                   | 17.93                 | `PREDICTIVE`                      | **FALSE**          |
 
 ---
 
