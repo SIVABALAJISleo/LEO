@@ -209,3 +209,100 @@ def test_godmode_omega_canonical_suite_execution():
     assert res.average_speedup > 0.0
     assert len(res.certificates) >= 3
     assert res.is_100_percent_certified is True
+
+
+def test_ai_inference_kv_cache_estimation():
+    from hyper.godmode.ai_inference import AIInferenceOptimizer
+    budget = AIInferenceOptimizer.estimate_kv_cache(
+        batch_size=1,
+        context_length=2048,
+        num_layers=32,
+        num_heads=32,
+        head_dim=128,
+        bytes_per_element=2,
+    )
+    assert budget.total_kv_cache_mb > 0.0
+    assert budget.max_supported_context_in_16gb > 2048
+
+
+def test_ai_inference_quantization_and_generation():
+    from hyper.godmode.ai_inference import AIInferenceOptimizer
+    np.random.seed(42)
+    W = np.random.randn(64, 64).astype(np.float32)
+    x = np.random.randn(4, 64).astype(np.float32)
+
+    out, rel_err = AIInferenceOptimizer.quantized_linear_forward(x, W)
+    assert rel_err < 0.05
+    assert out.shape == (4, 64)
+
+    prof = AIInferenceOptimizer.benchmark_token_generation(
+        hidden_dim=128,
+        seq_len=16,
+        num_tokens_to_generate=8,
+    )
+    assert prof.time_to_first_token_ms > 0.0
+    assert prof.tokens_per_second > 0.0
+    assert prof.total_generated_tokens == 8
+
+
+def test_graphics_video_frustum_culling():
+    from hyper.godmode.graphics_video import GraphicsVideoOptimizer
+    np.random.seed(42)
+    # 100 spheres distributed in 3D
+    centers = np.random.uniform(-50, 50, size=(100, 3)).astype(np.float32)
+    # Ensure some are directly in front inside view frustum (z > 5, small x, y)
+    centers[:20, 2] = np.random.uniform(10, 30, size=20)
+    centers[:20, 0] = np.random.uniform(-2, 2, size=20)
+    centers[:20, 1] = np.random.uniform(-2, 2, size=20)
+    radii = np.ones(100, dtype=np.float32)
+
+    mask, res = GraphicsVideoOptimizer.frustum_cull_bounding_spheres(centers, radii)
+    assert res.total_primitives == 100
+    assert res.visible_primitives >= 15
+    assert res.culled_primitives > 0
+    assert res.cull_ratio_pct > 0.0
+
+
+def test_graphics_video_dirty_region_extraction():
+    from hyper.godmode.graphics_video import GraphicsVideoOptimizer
+    f1 = np.zeros((100, 100), dtype=np.float32)
+    f2 = f1.copy()
+    # Add dirty mutation to a small 20x20 region
+    f2[40:60, 40:60] = 1.0
+
+    bbox, res = GraphicsVideoOptimizer.extract_video_dirty_region(f1, f2)
+    assert bbox is not None
+    assert bbox == (40, 40, 59, 59)
+    assert res.changed_pixels == 400
+    assert res.work_reduction_pct > 90.0
+
+
+def test_scientific_engine_conjugate_gradient():
+    from hyper.godmode.scientific_engine import ScientificComputingOptimizer
+    np.random.seed(42)
+    # Create symmetric positive-definite matrix A = M^T M + I
+    M = np.random.randn(32, 32).astype(np.float64)
+    A = np.dot(M.T, M) + np.eye(32) * 5.0
+    b = np.random.randn(32).astype(np.float64)
+
+    x, cert = ScientificComputingOptimizer.conjugate_gradient_solve(A, b, tol=1e-5)
+    assert cert.converged is True
+    assert cert.final_residual_l2 < 1e-4
+
+    # Verify Ax = b
+    residual = np.linalg.norm(np.dot(A, x) - b)
+    assert residual < 1e-4
+
+
+def test_scientific_engine_low_rank_svd():
+    from hyper.godmode.scientific_engine import ScientificComputingOptimizer
+    np.random.seed(42)
+    # Rank-4 matrix + small noise
+    A = np.dot(np.random.randn(50, 4), np.random.randn(4, 50)).astype(np.float64)
+    A += np.random.randn(50, 50) * 1e-4
+
+    A_k, cert = ScientificComputingOptimizer.low_rank_svd_truncate(A, target_rank=4)
+    assert cert.target_rank == 4
+    assert cert.relative_frobenius_error < 1e-2
+    assert cert.storage_compression_ratio > 1.0
+

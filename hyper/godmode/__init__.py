@@ -54,6 +54,21 @@ from .playbooks import (
     BottleneckPlaybookRegistry,
     OptimizationPlaybook,
 )
+from .ai_inference import (
+    AIInferenceOptimizer,
+    KVCacheMemoryBudget,
+    ModelInferenceProfile,
+)
+from .graphics_video import (
+    GraphicsVideoOptimizer,
+    CullingResult,
+    DirtyRegionResult,
+)
+from .scientific_engine import (
+    ScientificComputingOptimizer,
+    SolverConvergenceCertificate,
+    LowRankApproximationCertificate,
+)
 
 __all__ = [
     "GodmodeExecutionSummary",
@@ -86,5 +101,14 @@ __all__ = [
     "HardwareTopologyProfile",
     "BottleneckPlaybookRegistry",
     "OptimizationPlaybook",
+    "AIInferenceOptimizer",
+    "KVCacheMemoryBudget",
+    "ModelInferenceProfile",
+    "GraphicsVideoOptimizer",
+    "CullingResult",
+    "DirtyRegionResult",
+    "ScientificComputingOptimizer",
+    "SolverConvergenceCertificate",
+    "LowRankApproximationCertificate",
 ]
 
