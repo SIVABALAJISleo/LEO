@@ -216,6 +216,52 @@ class TestExactFallbackAndRouter:
         assert replay_res["success"] is True
         assert replay_res["reproducibility_token_valid"] is True
 
+    def test_certificate_store_path_traversal_defense(self, tmp_path):
+        cert_store = CertificateStore(cert_dir=str(tmp_path / "certs"))
+        # Issue a legitimate certificate
+        cert = cert_store.issue_certificate(
+            workload_id="WORKLOAD_SAFE",
+            contract_id="CONTRACT_SAFE",
+            transformation_name="SafeTransform",
+            transformation_category="ALGEBRAIC",
+            proof_method="INDEPENDENT_VERIFICATION",
+            verifier_name="DifferentialVerifier",
+            exactness_level="EXACT_SEMANTIC",
+            input_hash="hash1",
+            output_hash="hash2",
+            reference_hash="hash2",
+            baseline_latency_ms=10.0,
+            candidate_latency_ms=2.0,
+        )
+
+        # 1. Valid certificate loads cleanly
+        loaded = cert_store.load_certificate(cert.certificate_id)
+        assert loaded is not None
+        assert loaded.certificate_id == cert.certificate_id
+
+        # 2. Path traversal attempts are rejected
+        malicious_ids = [
+            "../etc/passwd",
+            "..\\Windows\\System32\\cmd.exe",
+            "../../secret",
+            "/etc/shadow",
+            "C:\\boot.ini",
+            "../../../certs/evil",
+            "CERT_SAFE/../../escape",
+            "CERT_SAFE\0evil",
+            "CERT_SAFE;rm",
+            "CERT_SAFE&dir",
+            "CERT SAFE WITH SPACES",
+            "",
+            "   ",
+            "nonexistent_certificate_id_12345",
+        ]
+
+        for mal_id in malicious_ids:
+            assert cert_store.load_certificate(mal_id) is None
+            replay = cert_store.replay_certificate(mal_id)
+            assert replay["success"] is False
+
     def test_gate_h_and_i_live_coverage_engine(self):
         cov_engine = CoverageEngine()
         # Case 1: Partial coverage (some fallbacks)

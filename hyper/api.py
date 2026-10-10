@@ -196,6 +196,9 @@ if HAS_FASTAPI:
 
     @app.get("/certificate/{certificate_id}")
     def get_certificate(certificate_id: str):
+        import re
+        if not re.fullmatch(r"[a-zA-Z0-9_\-]+", certificate_id):
+            raise HTTPException(status_code=400, detail="Invalid certificate ID")
         cert = _cert_store.load_certificate(certificate_id)
         if not cert:
             raise HTTPException(status_code=404, detail=f"Certificate '{certificate_id}' not found")
@@ -203,6 +206,9 @@ if HAS_FASTAPI:
 
     @app.get("/replay/{certificate_id}")
     def replay_certificate(certificate_id: str):
+        import re
+        if not re.fullmatch(r"[a-zA-Z0-9_\-]+", certificate_id):
+            raise HTTPException(status_code=400, detail="Invalid certificate ID")
         res = _cert_store.replay_certificate(certificate_id)
         return res
 

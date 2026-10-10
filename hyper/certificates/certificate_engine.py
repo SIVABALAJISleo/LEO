@@ -224,7 +224,10 @@ class CertificateStore:
             reproducibility_token=repro_token,
         )
 
-        cert_path = os.path.join(self.cert_dir, f"{cert_id}.json")
+        base_dir = os.path.realpath(self.cert_dir)
+        cert_path = os.path.realpath(os.path.join(base_dir, f"{cert_id}.json"))
+        if not cert_path.startswith(os.path.join(base_dir, "")):
+            raise ValueError(f"Unsafe certificate path generated: {cert_path}")
         with open(cert_path, "w", encoding="utf-8") as f:
             json.dump(cert.to_dict(), f, indent=2)
 
@@ -236,21 +239,33 @@ class CertificateStore:
         if not certificate_id or not isinstance(certificate_id, str):
             return None
         # Disallow directory traversal characters and restrict to safe alphanumeric IDs
-        if not re.match(r"^[a-zA-Z0-9_\-]+$", certificate_id):
-            return None
-        safe_id = os.path.basename(certificate_id)
-        if safe_id != certificate_id:
-            return None
-        cert_dir_real = os.path.realpath(self.cert_dir)
-        cert_path = os.path.realpath(os.path.join(cert_dir_real, f"{safe_id}.json"))
-        try:
-            if os.path.commonpath([cert_dir_real, cert_path]) != cert_dir_real:
-                return None
-        except ValueError:
+        if not re.fullmatch(r"[a-zA-Z0-9_\-]+", certificate_id):
             return None
 
-        if not os.path.isfile(cert_path):
+        base_dir = os.path.realpath(self.cert_dir)
+        target_name = f"{os.path.basename(certificate_id)}.json"
+
+        # Lookup safe filename exclusively from validated existing files in cert_dir
+        # This breaks taint propagation from untrusted request input
+        matched_filename = None
+        try:
+            with os.scandir(base_dir) as entries:
+                for entry in entries:
+                    if entry.is_file() and entry.name == target_name:
+                        matched_filename = entry.name
+                        break
+        except OSError:
             return None
+
+        if not matched_filename:
+            return None
+
+        # Canonical path resolution with strict prefix validation for CodeQL CWE-22 sanitizer guard
+        cert_path = os.path.realpath(os.path.join(base_dir, matched_filename))
+        base_prefix = os.path.join(base_dir, "")
+        if not cert_path.startswith(base_prefix):
+            return None
+
         with open(cert_path, "r", encoding="utf-8") as f:
             return HyperCertificate.from_dict(json.load(f))
 
