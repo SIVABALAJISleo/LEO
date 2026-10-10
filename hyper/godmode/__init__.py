@@ -18,6 +18,42 @@ from .dashboard import (
     GodmodeDashboard,
     router as godmode_router,
 )
+from .godmode_omega import (
+    godmode_omega_engine,
+    HyperGodmodeOmegaEngine,
+    GodmodeOmegaSuiteResult,
+)
+from .workload_contracts import (
+    ContractRegistry,
+    WorkloadContract,
+    ExactnessRequirement,
+    WorkloadFamily,
+)
+from .bottleneck_detector import (
+    IntelligentBottleneckDetector,
+    BottleneckClass,
+    BottleneckReport,
+    TelemetrySnapshot,
+)
+from .computation_elimination import (
+    ComputationEliminationEngine,
+    OptimizationCertificate,
+)
+from .memory_engine import (
+    WorkingSetManager,
+    BoundedBufferPool,
+    ChunkedTilingEngine,
+    MemoryBudget,
+)
+from .adaptive_scheduler import (
+    AdaptiveHeterogeneousScheduler,
+    ExecutionBackend,
+    HardwareTopologyProfile,
+)
+from .playbooks import (
+    BottleneckPlaybookRegistry,
+    OptimizationPlaybook,
+)
 
 __all__ = [
     "GodmodeExecutionSummary",
@@ -28,4 +64,27 @@ __all__ = [
     "GodmodeDashboardMetrics",
     "GodmodeDashboard",
     "godmode_router",
+    "godmode_omega_engine",
+    "HyperGodmodeOmegaEngine",
+    "GodmodeOmegaSuiteResult",
+    "ContractRegistry",
+    "WorkloadContract",
+    "ExactnessRequirement",
+    "WorkloadFamily",
+    "IntelligentBottleneckDetector",
+    "BottleneckClass",
+    "BottleneckReport",
+    "TelemetrySnapshot",
+    "ComputationEliminationEngine",
+    "OptimizationCertificate",
+    "WorkingSetManager",
+    "BoundedBufferPool",
+    "ChunkedTilingEngine",
+    "MemoryBudget",
+    "AdaptiveHeterogeneousScheduler",
+    "ExecutionBackend",
+    "HardwareTopologyProfile",
+    "BottleneckPlaybookRegistry",
+    "OptimizationPlaybook",
 ]
+

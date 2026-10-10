@@ -207,3 +207,11 @@ async def get_godmode_capability_matrix():
 @router.get("/experiments")
 async def get_godmode_experiments():
     return {"experiments": [e.model_dump() for e in godmode_dashboard_instance.db.get_experiments()]}
+
+
+@router.post("/run-suite")
+async def run_godmode_suite():
+    from .godmode_omega import godmode_omega_engine
+    result = godmode_omega_engine.run_canonical_suite()
+    return result.model_dump()
+
