@@ -191,3 +191,10 @@ from backend.routers.pathway_router import router as pathway_router, parity_rout
 app.include_router(pathway_router)
 app.include_router(parity_router)
 
+try:
+    from hyper.hyper100_parity.dashboard import router as hyper100_router
+    app.include_router(hyper100_router)
+except Exception as e:
+    logger.warning(f"Failed to load hyper100 parity dashboard router: {e}")
+
+
