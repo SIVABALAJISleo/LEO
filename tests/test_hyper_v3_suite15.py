@@ -27,6 +27,17 @@ def test_benchmark_runner_full_suite():
     runner = BenchmarkRunner()
     results = runner.run_all()
     assert len(results["workloads"]) == 15
+    # Track A Exact: all 15 workloads pass bitwise/analytical parity
     assert results["summary"]["exact_parity_score"] == 1.0
-    assert results["summary"]["contract_parity_score"] == 1.0
+
+    # Track B Contract-Aware: rigorously fails workloads that exceed declared tolerances
+    assert results["workloads"]["dense_gemm_fp32"]["track_b_contract_aware"]["passed"] is False
+    assert results["workloads"]["rasterization"]["track_b_contract_aware"]["passed"] is False
+    assert results["workloads"]["bvh_hierarchy"]["track_b_contract_aware"]["passed"] is False
+    assert results["workloads"]["fft_1d"]["track_b_contract_aware"]["passed"] is True
+    assert results["workloads"]["vector_reduction"]["track_b_contract_aware"]["passed"] is True
+
+    # Contract parity score reflects verified passing ratio (7/15 = 46.7%)
+    assert results["summary"]["contract_parity_score"] == 7 / 15
     assert results["summary"]["mean_verified_work_avoidance"] > 0.5
+

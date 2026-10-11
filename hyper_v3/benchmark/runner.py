@@ -70,13 +70,14 @@ class BenchmarkRunner:
                 double_counting_prevented=True
             ))
 
+            # Populate Scoreboard D with truthful execution backend evidence
             self.scoreboards.scoreboard_d.append(ScoreboardDEntry(
                 workload_name=name,
-                target_device="CPU+iGPU" if "gemm" in name else "CPU",
-                cpu_percent=40.0 if "gemm" in name else 100.0,
-                igpu_percent=60.0 if "gemm" in name else 0.0,
-                memory_traffic_bytes=act_flops_b * 2,
-                transfer_traffic_bytes=int(act_flops_b * 0.1) if "gemm" in name else 0,
+                target_device="CPU (NumPy AVX2)",
+                cpu_percent=100.0,
+                igpu_percent=0.0,
+                memory_traffic_bytes=int(act_flops_b * 4),  # FP32 memory traffic
+                transfer_traffic_bytes=0,  # Zero-copy host execution
                 latency_us=time_b
             ))
 

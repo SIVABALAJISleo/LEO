@@ -1,13 +1,15 @@
 {
-  "total_certificates": 11,
-  "updated_at": 1791570144.2847602,
+  "total_certificates": 12,
+  "updated_at": 1791688080.7961175,
   "certificates": [
     {
       "id": "CERT_76d6d9f1b9",
       "type": "EXACT_EQUIVALENCE",
       "original": "Baseline",
       "replacement": "Optimized",
-      "assumptions": ["None"],
+      "assumptions": [
+        "None"
+      ],
       "proof": "Identical algebra",
       "tests": 10,
       "adversarial_tests": 5,
@@ -21,7 +23,9 @@
       "type": "EXACT_EQUIVALENCE",
       "original": "Baseline",
       "replacement": "Optimized",
-      "assumptions": ["None"],
+      "assumptions": [
+        "None"
+      ],
       "proof": "Identical algebra",
       "tests": 10,
       "adversarial_tests": 5,
@@ -35,7 +39,9 @@
       "type": "EXACT_EQUIVALENCE",
       "original": "Baseline",
       "replacement": "Optimized",
-      "assumptions": ["None"],
+      "assumptions": [
+        "None"
+      ],
       "proof": "Identical algebra",
       "tests": 10,
       "adversarial_tests": 5,
@@ -49,7 +55,9 @@
       "type": "EXACT_EQUIVALENCE",
       "original": "Baseline",
       "replacement": "Optimized",
-      "assumptions": ["None"],
+      "assumptions": [
+        "None"
+      ],
       "proof": "Identical algebra",
       "tests": 10,
       "adversarial_tests": 5,
@@ -63,7 +71,9 @@
       "type": "EXACT_EQUIVALENCE",
       "original": "Baseline",
       "replacement": "Optimized",
-      "assumptions": ["None"],
+      "assumptions": [
+        "None"
+      ],
       "proof": "Identical algebra",
       "tests": 10,
       "adversarial_tests": 5,
@@ -77,7 +87,9 @@
       "type": "EXACT_EQUIVALENCE",
       "original": "Baseline",
       "replacement": "Optimized",
-      "assumptions": ["None"],
+      "assumptions": [
+        "None"
+      ],
       "proof": "Identical algebra",
       "tests": 10,
       "adversarial_tests": 5,
@@ -91,7 +103,9 @@
       "type": "EXACT_EQUIVALENCE",
       "original": "Baseline",
       "replacement": "Optimized",
-      "assumptions": ["None"],
+      "assumptions": [
+        "None"
+      ],
       "proof": "Identical algebra",
       "tests": 10,
       "adversarial_tests": 5,
@@ -105,7 +119,9 @@
       "type": "EXACT_EQUIVALENCE",
       "original": "Baseline",
       "replacement": "Optimized",
-      "assumptions": ["None"],
+      "assumptions": [
+        "None"
+      ],
       "proof": "Identical algebra",
       "tests": 10,
       "adversarial_tests": 5,
@@ -119,7 +135,9 @@
       "type": "EXACT_EQUIVALENCE",
       "original": "Baseline",
       "replacement": "Optimized",
-      "assumptions": ["None"],
+      "assumptions": [
+        "None"
+      ],
       "proof": "Identical algebra",
       "tests": 10,
       "adversarial_tests": 5,
@@ -133,7 +151,9 @@
       "type": "EXACT_EQUIVALENCE",
       "original": "Baseline",
       "replacement": "Optimized",
-      "assumptions": ["None"],
+      "assumptions": [
+        "None"
+      ],
       "proof": "Identical algebra",
       "tests": 10,
       "adversarial_tests": 5,
@@ -147,7 +167,9 @@
       "type": "EXACT_EQUIVALENCE",
       "original": "Baseline",
       "replacement": "Optimized",
-      "assumptions": ["None"],
+      "assumptions": [
+        "None"
+      ],
       "proof": "Identical algebra",
       "tests": 10,
       "adversarial_tests": 5,
@@ -155,6 +177,22 @@
       "status": "VALIDATED",
       "sha256_fingerprint": "d069f4028e24a3542aeb786e06f11e7b4e1d2ce623d216ea9919f9199e57175f",
       "timestamp": 1791570144.2841992
+    },
+    {
+      "id": "CERT_8c77088088",
+      "type": "EXACT_EQUIVALENCE",
+      "original": "Baseline",
+      "replacement": "Optimized",
+      "assumptions": [
+        "None"
+      ],
+      "proof": "Identical algebra",
+      "tests": 10,
+      "adversarial_tests": 5,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "35ad1fff6da20ebecc694d83521e6848f47a56a8a41ab9596ec8cb88896a059b",
+      "timestamp": 1791688080.7958076
     }
   ]
 }

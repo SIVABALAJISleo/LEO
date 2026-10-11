@@ -1,25 +1,36 @@
 {
   "proof_version": "2.0-ULTRA-SONIC",
-  "timestamp": 1791569907.1307158,
-  "original_representation_hash": "b142326bd834a1e2ad60ccc04eb9928536d02a0f80ae736e652f5cd2348c9843",
-  "candidate_representation_hash": "b142326bd834a1e2ad60ccc04eb9928536d02a0f80ae736e652f5cd2348c9843",
-  "transformation_chain": ["CANONICAL_BASELINE"],
+  "timestamp": 1791687792.1240718,
+  "original_representation_hash": "3a6431ae50da6f83169c3b29e836e564e5073b7d02c896fc0a4aa0a19ee2b716",
+  "candidate_representation_hash": "3a6431ae50da6f83169c3b29e836e564e5073b7d02c896fc0a4aa0a19ee2b716",
+  "transformation_chain": [
+    "CANONICAL_BASELINE"
+  ],
   "contract": {
     "workload_id": "GEMM_STANDARD",
     "description": "Dense matrix multiplication C = A @ B (128x128 FP32)",
     "input_domain": {
       "A": {
-        "shape": [128, 128],
+        "shape": [
+          128,
+          128
+        ],
         "dtype": "FP32"
       },
       "B": {
-        "shape": [128, 128],
+        "shape": [
+          128,
+          128
+        ],
         "dtype": "FP32"
       }
     },
     "output_domain": {
       "C": {
-        "shape": [128, 128],
+        "shape": [
+          128,
+          128
+        ],
         "dtype": "FP32"
       }
     },
@@ -59,8 +70,8 @@
       "ADVERSARIAL_COUNTEREXAMPLE_HUNTING",
       "CONTRACT_EXACTNESS_COMPLIANCE"
     ],
-    "proof_hash": "b7551b7d0172ad3303b285807b663043580a77d1a6c2565747a30f0fe1ef756e",
-    "timestamp": 1791569907.1300411
+    "proof_hash": "d8fe3aa67dc5e5dcd4e2742bca0d75c53bc101a1a5c5acdad2e6db4ca93294ca",
+    "timestamp": 1791687792.1237974
   },
   "resource_measurements": {
     "latency_ms": 1.1,

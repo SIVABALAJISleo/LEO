@@ -69,7 +69,18 @@ class IndependentVerifier:
         max_rel_err: float,
         max_abs_err: float
     ) -> VerificationResult:
-        # Align shapes if candidate is a downsampled / strided representation
+        # Check for NaN / Inf values
+        if np.isnan(cand_out).any() or np.isinf(cand_out).any():
+            return VerificationResult(
+                is_valid=False,
+                method="DeterministicBoundCheck",
+                max_relative_error=float("inf"),
+                max_absolute_error=float("inf"),
+                confidence=1.0,
+                details={"error": "Candidate output contains NaN or Infinity values."}
+            )
+
+        # Align shapes if candidate is an authorized downsampled / strided representation
         if ref_out.shape != cand_out.shape:
             min_rows = min(ref_out.shape[0], cand_out.shape[0])
             ref_slice = ref_out[:min_rows]
@@ -80,15 +91,22 @@ class IndependentVerifier:
 
         abs_err = np.abs(ref_slice - cand_slice)
         max_abs = float(np.max(abs_err))
-        scale = max(float(np.max(np.abs(ref_slice))), 1e-6)
+        scale = max(float(np.max(np.abs(ref_slice))), 1e-12)
         max_rel = float(max_abs / scale)
 
-        is_valid = (max_rel <= max_rel_err) or (max_abs <= max_abs_err)
+        # Rigorous conjunctive verification: must satisfy both declared relative and absolute bounds
+        is_valid = bool((max_rel <= max_rel_err) and (max_abs <= max_abs_err))
         return VerificationResult(
             is_valid=is_valid,
             method="DeterministicBoundCheck",
             max_relative_error=max_rel,
             max_absolute_error=max_abs,
             confidence=1.0,
-            details={"max_abs": max_abs, "max_rel": max_rel, "threshold_rel": max_rel_err}
+            details={
+                "max_abs": max_abs,
+                "max_rel": max_rel,
+                "threshold_rel": max_rel_err,
+                "threshold_abs": max_abs_err,
+            }
         )
+

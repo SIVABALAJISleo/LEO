@@ -81,6 +81,109 @@ class ExecutionContract:
         object.__setattr__(self, "contract_hash", h)
 
 
+WORKLOAD_CONTRACT_PROFILES: Dict[str, Dict[str, Any]] = {
+    "dense_gemm_fp32": {
+        "max_relative_error": 0.05,
+        "max_absolute_error": 0.05,
+        "exactness_class": ExactnessClass.NUMERICALLY_EXACT_UNDER_DEFINED_MODEL,
+        "allow_low_rank": True,
+        "allow_sparsity": False,
+        "allow_representation_transform": False,
+    },
+    "dense_gemm_fp16": {
+        "max_relative_error": 0.05,
+        "max_absolute_error": 0.05,
+        "exactness_class": ExactnessClass.NUMERICALLY_EXACT_UNDER_DEFINED_MODEL,
+        "allow_sparsity": True,
+        "allow_low_rank": False,
+        "allow_representation_transform": False,
+    },
+    "fft_1d": {
+        "max_relative_error": 1e-4,
+        "max_absolute_error": 1e-4,
+        "min_snr_db": 60.0,
+        "exactness_class": ExactnessClass.MATHEMATICALLY_EQUIVALENT,
+        "allow_sparsity": True,
+    },
+    "vector_reduction": {
+        "max_relative_error": 1e-5,
+        "max_absolute_error": 1e-5,
+        "exactness_class": ExactnessClass.NUMERICALLY_EXACT_UNDER_DEFINED_MODEL,
+        "allow_spatial_reuse": True,
+    },
+    "batch1_ai": {
+        "max_relative_error": 0.05,
+        "max_absolute_error": 0.05,
+        "exactness_class": ExactnessClass.CONTRACT_EQUIVALENT,
+        "allow_reduced_precision": True,
+        "precision_target": PrecisionTarget.TERNARY,
+    },
+    "batched_ai": {
+        "max_relative_error": 0.05,
+        "max_absolute_error": 0.05,
+        "exactness_class": ExactnessClass.CONTRACT_EQUIVALENT,
+        "allow_spatial_reuse": True,
+    },
+    "semantic_query": {
+        "max_relative_error": 0.05,
+        "max_absolute_error": 0.05,
+        "exactness_class": ExactnessClass.APPROXIMATE,
+        "allow_adaptive_sampling": True,
+    },
+    "rasterization": {
+        "max_relative_error": 0.05,
+        "max_absolute_error": 0.05,
+        "min_ssim": 0.98,
+        "exactness_class": ExactnessClass.CONTRACT_EQUIVALENT,
+        "allow_spatial_reuse": True,
+    },
+    "particle_physics": {
+        "max_relative_error": 0.05,
+        "max_absolute_error": 0.05,
+        "exactness_class": ExactnessClass.CONTRACT_EQUIVALENT,
+        "allow_temporal_reuse": True,
+    },
+    "bvh_hierarchy": {
+        "max_relative_error": 0.05,
+        "max_absolute_error": 0.05,
+        "exactness_class": ExactnessClass.CONTRACT_EQUIVALENT,
+        "allow_representation_transform": False,
+    },
+    "path_tracing": {
+        "max_relative_error": 0.05,
+        "max_absolute_error": 0.05,
+        "min_ssim": 0.95,
+        "exactness_class": ExactnessClass.APPROXIMATE,
+        "allow_adaptive_sampling": True,
+    },
+    "video_pipeline": {
+        "max_relative_error": 0.05,
+        "max_absolute_error": 0.05,
+        "min_ssim": 0.98,
+        "exactness_class": ExactnessClass.CONTRACT_EQUIVALENT,
+        "allow_representation_transform": True,
+    },
+    "nbody_simulation": {
+        "max_relative_error": 0.05,
+        "max_absolute_error": 0.05,
+        "exactness_class": ExactnessClass.CONTRACT_EQUIVALENT,
+        "allow_adaptive_sampling": True,
+    },
+    "monte_carlo": {
+        "max_relative_error": 0.05,
+        "max_absolute_error": 1.0,
+        "exactness_class": ExactnessClass.PREDICTIVE,
+        "allow_early_termination": True,
+    },
+    "viewport_transform": {
+        "max_relative_error": 0.01,
+        "max_absolute_error": 0.01,
+        "exactness_class": ExactnessClass.CONTRACT_EQUIVALENT,
+        "allow_spatial_reuse": True,
+    },
+}
+
+
 class ContractParser:
     """Parses, freezes, and validates execution contracts."""
 
@@ -110,37 +213,41 @@ class ContractParser:
     @staticmethod
     def create_contract_aware_contract(
         workload_name: str,
-        allow_low_rank: bool = True,
-        allow_sparsity: bool = True,
-        allow_temporal_reuse: bool = True,
-        allow_spatial_reuse: bool = True,
-        allow_adaptive_sampling: bool = True,
-        allow_early_termination: bool = True,
-        allow_representation_transform: bool = True,
-        allow_reduced_precision: bool = False,
-        precision_target: PrecisionTarget = PrecisionTarget.FP32,
-        max_relative_error: float = 0.80,
-        max_absolute_error: float = 2.0,
-        min_snr_db: float = 10.0,
-        min_ssim: float = 0.80
+        allow_low_rank: Optional[bool] = None,
+        allow_sparsity: Optional[bool] = None,
+        allow_temporal_reuse: Optional[bool] = None,
+        allow_spatial_reuse: Optional[bool] = None,
+        allow_adaptive_sampling: Optional[bool] = None,
+        allow_early_termination: Optional[bool] = None,
+        allow_representation_transform: Optional[bool] = None,
+        allow_reduced_precision: Optional[bool] = None,
+        precision_target: Optional[PrecisionTarget] = None,
+        max_relative_error: Optional[float] = None,
+        max_absolute_error: Optional[float] = None,
+        min_snr_db: Optional[float] = None,
+        min_ssim: Optional[float] = None,
+        exactness_class: Optional[ExactnessClass] = None,
     ) -> ExecutionContract:
-        """Create a contract-aware Track B contract."""
+        """Create a contract-aware Track B contract with workload-specific bounds."""
+        profile = WORKLOAD_CONTRACT_PROFILES.get(workload_name, {})
+
         return ExecutionContract(
             contract_id=f"contract_aware_{workload_name}",
             workload_name=workload_name,
             track=ExecutionTrack.CONTRACT_AWARE,
-            exactness_class=ExactnessClass.CONTRACT_EQUIVALENT,
-            allow_low_rank=allow_low_rank,
-            allow_sparsity=allow_sparsity,
-            allow_temporal_reuse=allow_temporal_reuse,
-            allow_spatial_reuse=allow_spatial_reuse,
-            allow_adaptive_sampling=allow_adaptive_sampling,
-            allow_early_termination=allow_early_termination,
-            allow_representation_transform=allow_representation_transform,
-            allow_reduced_precision=allow_reduced_precision,
-            precision_target=precision_target,
-            max_relative_error=max_relative_error,
-            max_absolute_error=max_absolute_error,
-            min_snr_db=min_snr_db,
-            min_ssim=min_ssim
+            exactness_class=exactness_class or profile.get("exactness_class", ExactnessClass.CONTRACT_EQUIVALENT),
+            allow_low_rank=allow_low_rank if allow_low_rank is not None else profile.get("allow_low_rank", False),
+            allow_sparsity=allow_sparsity if allow_sparsity is not None else profile.get("allow_sparsity", False),
+            allow_temporal_reuse=allow_temporal_reuse if allow_temporal_reuse is not None else profile.get("allow_temporal_reuse", False),
+            allow_spatial_reuse=allow_spatial_reuse if allow_spatial_reuse is not None else profile.get("allow_spatial_reuse", False),
+            allow_adaptive_sampling=allow_adaptive_sampling if allow_adaptive_sampling is not None else profile.get("allow_adaptive_sampling", False),
+            allow_early_termination=allow_early_termination if allow_early_termination is not None else profile.get("allow_early_termination", False),
+            allow_representation_transform=allow_representation_transform if allow_representation_transform is not None else profile.get("allow_representation_transform", False),
+            allow_reduced_precision=allow_reduced_precision if allow_reduced_precision is not None else profile.get("allow_reduced_precision", False),
+            precision_target=precision_target or profile.get("precision_target", PrecisionTarget.FP32),
+            max_relative_error=max_relative_error if max_relative_error is not None else profile.get("max_relative_error", 0.05),
+            max_absolute_error=max_absolute_error if max_absolute_error is not None else profile.get("max_absolute_error", 0.05),
+            min_snr_db=min_snr_db if min_snr_db is not None else profile.get("min_snr_db", 40.0),
+            min_ssim=min_ssim if min_ssim is not None else profile.get("min_ssim", 0.98),
         )
+

@@ -3,7 +3,10 @@
     "candidate_id": "CAND_SPARSE_SKIP_001",
     "parent_id": "REF_DENSE_GEMM",
     "workload_id": "GEMM_512x512",
-    "transformations": ["sparsify", "zero_skip"],
+    "transformations": [
+      "sparsify",
+      "zero_skip"
+    ],
     "expected_gain": 0.45,
     "measured_gain": 0.42,
     "correctness": true,
@@ -19,7 +22,10 @@
     "candidate_id": "CAND_LOW_RANK_NYSTROM_002",
     "parent_id": "REF_DENSE_GEMM",
     "workload_id": "ATTN_PROJECTION_512",
-    "transformations": ["dense_to_low_rank", "subspace_projection"],
+    "transformations": [
+      "dense_to_low_rank",
+      "subspace_projection"
+    ],
     "expected_gain": 0.6,
     "measured_gain": 0.58,
     "correctness": true,
@@ -35,7 +41,10 @@
     "candidate_id": "CAND_CBE_TEMPORAL_003",
     "parent_id": "REF_PATH_TRACER",
     "workload_id": "CBE_RENDER_720P",
-    "transformations": ["temporal_reprojection", "bilateral_reconstruct"],
+    "transformations": [
+      "temporal_reprojection",
+      "bilateral_reconstruct"
+    ],
     "expected_gain": 0.9,
     "measured_gain": 0.92,
     "correctness": true,
@@ -53,9 +62,9 @@
     "exactness_class": "NUMERICALLY_EQUIVALENT",
     "correctness_result": "PASS",
     "work_elimination_pct": 0.0,
-    "throughput_ops_per_sec": 53.31,
+    "throughput_ops_per_sec": 74.32,
     "provenance": "MEASURED",
     "hardware": "Intel Core i5-12450H + UHD Graphics (48 EU)",
-    "last_verified_timestamp": 1791571070.0262082
+    "last_verified_timestamp": 1791688162.117192
   }
 ]

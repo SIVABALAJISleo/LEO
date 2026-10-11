@@ -1,17 +1,19 @@
 {
-  "total_certificates": 52,
-  "updated_at": 1791570144.328005,
+  "total_certificates": 53,
+  "updated_at": 1791688080.8499515,
   "certificates": [
     {
       "id": "CERT_bde29e4dba",
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference matrix_multiplication",
       "replacement": "Pathway_CAP_AI__MATRIX_MULTIPLICATION_e53171",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
-      "numerical_error": 2.288818359375e-5,
+      "numerical_error": 2.288818359375e-05,
       "status": "VALIDATED",
       "sha256_fingerprint": "0c15c310cda6a41de1a197058d62d6a6bd6907065e10853bc03fc413708c44de",
       "timestamp": 1791478726.6932716
@@ -21,7 +23,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference pde",
       "replacement": "Pathway_CAP_SCI_PDE_47f7f5",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -35,7 +39,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference attention",
       "replacement": "Pathway_CAP_AI__ATTENTION_7084b1",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -49,7 +55,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference convolution_filters",
       "replacement": "Pathway_CAP_IMA_CONVOLUTION_FILTERS_dbc370",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -63,7 +71,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference frame_processing",
       "replacement": "Pathway_CAP_VID_FRAME_PROCESSING_83e14e",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -77,7 +87,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference compression_lossless",
       "replacement": "Pathway_CAP_COM_COMPRESSION_LOSSLESS_5e7a9b",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -91,7 +103,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference n_body",
       "replacement": "Pathway_CAP_SCI_N_BODY_1ff00d",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -105,7 +119,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference rasterization",
       "replacement": "Pathway_CAP_GRA_RASTERIZATION_7161bf",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -119,11 +135,13 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference matrix_multiplication",
       "replacement": "Pathway_CAP_AI__MATRIX_MULTIPLICATION_6e5c2a",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
-      "numerical_error": 1.9073486328125e-5,
+      "numerical_error": 1.9073486328125e-05,
       "status": "VALIDATED",
       "sha256_fingerprint": "b6a50c076507ae141423e59b7b162579076fb8f48de3d6efdd0fce879928f1a7",
       "timestamp": 1791478828.6178665
@@ -133,7 +151,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference pde",
       "replacement": "Pathway_CAP_SCI_PDE_d56f13",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -147,7 +167,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference attention",
       "replacement": "Pathway_CAP_AI__ATTENTION_0374fe",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -161,7 +183,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference convolution_filters",
       "replacement": "Pathway_CAP_IMA_CONVOLUTION_FILTERS_ba5f6e",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -175,7 +199,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference frame_processing",
       "replacement": "Pathway_CAP_VID_FRAME_PROCESSING_b90c2b",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -189,7 +215,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference compression_lossless",
       "replacement": "Pathway_CAP_COM_COMPRESSION_LOSSLESS_503aac",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -203,7 +231,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference n_body",
       "replacement": "Pathway_CAP_SCI_N_BODY_2032ab",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -217,7 +247,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference rasterization",
       "replacement": "Pathway_CAP_GRA_RASTERIZATION_0eca65",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -231,7 +263,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference matrix_multiplication",
       "replacement": "Pathway_CAP_AI__MATRIX_MULTIPLICATION_476ba9",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -245,7 +279,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference pde",
       "replacement": "Pathway_CAP_SCI_PDE_579bc3",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -259,7 +295,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference attention",
       "replacement": "Pathway_CAP_AI__ATTENTION_6d9830",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -273,7 +311,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference convolution_filters",
       "replacement": "Pathway_CAP_IMA_CONVOLUTION_FILTERS_fa5e0a",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -287,7 +327,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference frame_processing",
       "replacement": "Pathway_CAP_VID_FRAME_PROCESSING_ef4864",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -301,7 +343,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference compression_lossless",
       "replacement": "Pathway_CAP_COM_COMPRESSION_LOSSLESS_2b67ba",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -315,7 +359,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference n_body",
       "replacement": "Pathway_CAP_SCI_N_BODY_4195b3",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -329,7 +375,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference rasterization",
       "replacement": "Pathway_CAP_GRA_RASTERIZATION_3f2485",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -343,7 +391,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference ray_generation",
       "replacement": "Pathway_CAP_RAY_RAY_GENERATION_0b9c3e",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -357,7 +407,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference pde",
       "replacement": "Pathway_CAP_SCI_PDE_ab95c3",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -371,7 +423,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference attention",
       "replacement": "Pathway_CAP_AI__ATTENTION_917463",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -385,7 +439,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference convolution_filters",
       "replacement": "Pathway_CAP_IMA_CONVOLUTION_FILTERS_a5614d",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -399,7 +455,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference frame_processing",
       "replacement": "Pathway_CAP_VID_FRAME_PROCESSING_554233",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -413,7 +471,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference compression_lossless",
       "replacement": "Pathway_CAP_COM_COMPRESSION_LOSSLESS_38fa1a",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -427,7 +487,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference n_body",
       "replacement": "Pathway_CAP_SCI_N_BODY_73e5f8",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -441,7 +503,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference rasterization",
       "replacement": "Pathway_CAP_GRA_RASTERIZATION_21e2a6",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -455,7 +519,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference ray_generation",
       "replacement": "Pathway_CAP_RAY_RAY_GENERATION_9bb207",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -469,11 +535,13 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference matrix_multiplication",
       "replacement": "Pathway_CAP_AI__MATRIX_MULTIPLICATION_3ea562",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
-      "numerical_error": 2.288818359375e-5,
+      "numerical_error": 2.288818359375e-05,
       "status": "VALIDATED",
       "sha256_fingerprint": "9222f980f4a4defc6c93dff248f59a51cc602d4f36c467b51b3d3dd7dd267b56",
       "timestamp": 1791480322.2941134
@@ -483,7 +551,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference pde",
       "replacement": "Pathway_CAP_SCI_PDE_172ddd",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -497,7 +567,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference attention",
       "replacement": "Pathway_CAP_AI__ATTENTION_db834b",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -511,7 +583,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference convolution_filters",
       "replacement": "Pathway_CAP_IMA_CONVOLUTION_FILTERS_38cb0c",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -525,7 +599,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference frame_processing",
       "replacement": "Pathway_CAP_VID_FRAME_PROCESSING_7dab34",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -539,7 +615,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference compression_lossless",
       "replacement": "Pathway_CAP_COM_COMPRESSION_LOSSLESS_f9ddd5",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -553,7 +631,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference n_body",
       "replacement": "Pathway_CAP_SCI_N_BODY_f3289a",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -567,7 +647,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference rasterization",
       "replacement": "Pathway_CAP_GRA_RASTERIZATION_95fc9c",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -581,7 +663,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference ray_generation",
       "replacement": "Pathway_CAP_RAY_RAY_GENERATION_6171ea",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -595,7 +679,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference matrix_multiplication",
       "replacement": "Pathway_CAP_AI__MATRIX_MULTIPLICATION_d9407e",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -609,7 +695,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference matrix_multiplication",
       "replacement": "Pathway_CAP_AI__MATRIX_MULTIPLICATION_58a472",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -623,7 +711,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference matrix_multiplication",
       "replacement": "Pathway_CAP_AI__MATRIX_MULTIPLICATION_525d03",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -637,7 +727,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference matrix_multiplication",
       "replacement": "Pathway_CAP_AI__MATRIX_MULTIPLICATION_81352b",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -651,7 +743,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference matrix_multiplication",
       "replacement": "Pathway_CAP_AI__MATRIX_MULTIPLICATION_eb4a7d",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -665,7 +759,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference matrix_multiplication",
       "replacement": "Pathway_CAP_AI__MATRIX_MULTIPLICATION_ccebc3",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -679,7 +775,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference matrix_multiplication",
       "replacement": "Pathway_CAP_AI__MATRIX_MULTIPLICATION_8d7eb3",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -693,7 +791,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference matrix_multiplication",
       "replacement": "Pathway_CAP_AI__MATRIX_MULTIPLICATION_d92014",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -707,7 +807,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference matrix_multiplication",
       "replacement": "Pathway_CAP_AI__MATRIX_MULTIPLICATION_4d2650",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -721,7 +823,9 @@
       "type": "NUMERICAL_EQUIVALENCE",
       "original": "Standard reference matrix_multiplication",
       "replacement": "Pathway_CAP_AI__MATRIX_MULTIPLICATION_5c3a8a",
-      "assumptions": ["Contract bounded"],
+      "assumptions": [
+        "Contract bounded"
+      ],
       "proof": "Algebraic reassociation & information-sufficient execution",
       "tests": 5,
       "adversarial_tests": 12,
@@ -729,6 +833,22 @@
       "status": "VALIDATED",
       "sha256_fingerprint": "ec15739855b1d3287ade7441547b555561a5574f8b59cc1b6367ef5353910210",
       "timestamp": 1791570144.3272038
+    },
+    {
+      "id": "CERT_b551615954",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference matrix_multiplication",
+      "replacement": "Pathway_CAP_AI__MATRIX_MULTIPLICATION_4a5859",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "e97fc1e99b98fdacd19b5bea335e879f175f4234db49954a09fccf411d8f8191",
+      "timestamp": 1791688080.8495827
     }
   ]
 }
