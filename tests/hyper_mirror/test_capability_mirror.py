@@ -140,10 +140,13 @@ class TestUniversalCapabilityMirror:
 
     def test_capability_mirror_api_endpoints(self):
         """Verifies FastAPI endpoints for capabilities and capability matrix."""
+        from fastapi import FastAPI
         from fastapi.testclient import TestClient
-        from backend.main import app
+        from backend.routers.hyper_escape_router import router
 
-        client = TestClient(app)
+        test_app = FastAPI()
+        test_app.include_router(router)
+        client = TestClient(test_app)
         # 1. List capabilities
         resp = client.get("/api/v1/escape_omega/capabilities")
         assert resp.status_code == 200

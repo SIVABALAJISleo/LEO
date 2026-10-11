@@ -9,6 +9,7 @@ import logging
 from typing import Any, Dict, List, Optional
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel, Field
+import numpy as np
 
 from hyper_universal.contracts.contract_engine import (
     ContractRegistry,
@@ -33,6 +34,7 @@ from hyper_universal.scheduler.scheduler import UniversalScheduler
 from hyper_universal.capability_mirror.registry import UniversalCapabilityRegistry
 from hyper_universal.capability_mirror.search import CapabilitySubstitutionSearch
 from hyper_universal.capability_mirror.matrix import CapabilityMatrixGenerator
+from hyper_universal.adapters.adapter_registry import AdapterRegistry, ProvisionalContractInferenceEngine
 
 logger = logging.getLogger(__name__)
 
@@ -51,6 +53,7 @@ _discovery_engine = AlternativeAlgorithmDiscoveryEngine()
 _capability_registry = UniversalCapabilityRegistry()
 _capability_search = CapabilitySubstitutionSearch(registry=_capability_registry)
 _capability_matrix_gen = CapabilityMatrixGenerator()
+_adapter_registry = AdapterRegistry()
 
 
 class WorkloadRegistrationRequest(BaseModel):
@@ -309,4 +312,39 @@ async def get_capability_details(capability_id: str) -> Dict[str, Any]:
 async def get_capability_matrix() -> Dict[str, Any]:
     """Generates and returns the full 21-capability 6-dimensional evaluation matrix."""
     return _capability_matrix_gen.evaluate_all()
+
+
+class ProvisionalInferenceRequest(BaseModel):
+    workload_id: str
+    sample_data: List[float] = Field(default_factory=list)
+    output_dtype: Optional[str] = "float32"
+    confirmed_exactness: Optional[str] = None
+
+
+@router.get("/adapters")
+async def list_adapter_declarations() -> List[Dict[str, Any]]:
+    """Lists declarations for all 9 supported workload families."""
+    return _adapter_registry.list_declarations()
+
+
+@router.post("/contracts/infer")
+async def infer_provisional_contract(req: ProvisionalInferenceRequest) -> Dict[str, Any]:
+    """Infers provisional contract requirements for undefined workloads."""
+    arr = np.array(req.sample_data, dtype=req.output_dtype or "float32")
+    confirmed = {}
+    if req.confirmed_exactness:
+        confirmed["exactness"] = ExactnessRequirement(req.confirmed_exactness)
+    contract = ProvisionalContractInferenceEngine.infer_provisional_contract(
+        workload_id=req.workload_id,
+        candidate_func=lambda x: x,
+        sample_input=arr,
+        confirmed_requirements=confirmed,
+    )
+    return {
+        "workload_id": req.workload_id,
+        "is_provisional": True,
+        "inferred_contract": contract.to_dict(),
+        "confirmed_requirements": confirmed,
+    }
+
 
