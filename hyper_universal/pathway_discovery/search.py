@@ -26,6 +26,32 @@ class DiscoveryStatus(str, Enum):
     FAILED_CORRECTNESS = "FAILED_CORRECTNESS"
 
 
+class SearchCompletenessStatus(str, Enum):
+    BEST_CANDIDATE_FOUND = "BEST_CANDIDATE_FOUND"
+    PROVEN_OPTIMUM_BOUNDED_SPACE = "PROVEN_OPTIMUM_BOUNDED_SPACE"
+    THEORETICALLY_ESTABLISHED_OPTIMUM = "THEORETICALLY_ESTABLISHED_OPTIMUM"
+    NO_SUCCESSFUL_CANDIDATE_FOUND = "NO_SUCCESSFUL_CANDIDATE_FOUND"
+    SEARCH_INCOMPLETE = "SEARCH_INCOMPLETE"
+
+
+class FailureCauseClassification(str, Enum):
+    UNSUPPORTED_INPUT_OR_ADAPTER = "UNSUPPORTED_INPUT_OR_ADAPTER"
+    MISSING_CONTRACT = "MISSING_CONTRACT"
+    IMPLEMENTATION_DEFECT = "IMPLEMENTATION_DEFECT"
+    INCORRECT_TRANSFORMATION = "INCORRECT_TRANSFORMATION"
+    NUMERICAL_INCOMPATIBILITY = "NUMERICAL_INCOMPATIBILITY"
+    EXCESSIVE_COMPUTATION = "EXCESSIVE_COMPUTATION"
+    MEMORY_CAPACITY_CONSTRAINT = "MEMORY_CAPACITY_CONSTRAINT"
+    MEMORY_BANDWIDTH_CONSTRAINT = "MEMORY_BANDWIDTH_CONSTRAINT"
+    SYNCHRONIZATION_OVERHEAD = "SYNCHRONIZATION_OVERHEAD"
+    THERMAL_OR_POWER_CONSTRAINT = "THERMAL_OR_POWER_CONSTRAINT"
+    UNSUPPORTED_BACKEND = "UNSUPPORTED_BACKEND"
+    SEARCH_BUDGET_EXHAUSTED = "SEARCH_BUDGET_EXHAUSTED"
+    UNPROVEN_LOWER_BOUND = "UNPROVEN_LOWER_BOUND"
+    PROVEN_LOWER_BOUND = "PROVEN_LOWER_BOUND"
+    UNKNOWN_CAUSE = "UNKNOWN_CAUSE"
+
+
 @dataclass
 class PathwayCandidate:
     candidate_id: str
@@ -35,6 +61,10 @@ class PathwayCandidate:
     kernel_fn: Callable[[Any], Any]
     precondition_check: Callable[[Any], bool]
     status: DiscoveryStatus = DiscoveryStatus.UNTESTED
+    data_representation: str = "DENSE_CONTIGUOUS"
+    memory_strategy: str = "BOUNDED_POOL"
+    backend: str = "CPU_AVX2"
+    exactness_mode: str = "NUMERICALLY_EQUIVALENT"
     estimated_speedup: float = 1.0
     measured_speedup: float = 1.0
     latency_ms: float = 0.0
@@ -61,6 +91,10 @@ class PathwayCandidate:
             "name": self.name,
             "algorithm_family": self.algorithm_family,
             "transformation_kind": self.transformation_kind,
+            "data_representation": self.data_representation,
+            "memory_strategy": self.memory_strategy,
+            "backend": self.backend,
+            "exactness_mode": self.exactness_mode,
             "verification_status": self.verification_status,
             "measured_speedup": round(self.measured_speedup, 2),
             "latency_ms": round(self.latency_ms, 3),
@@ -78,6 +112,9 @@ class DiscoverySearchReport:
     winning_candidate: Optional[PathwayCandidate]
     search_duration_ms: float
     all_candidates: List[PathwayCandidate] = field(default_factory=list)
+    search_completeness: SearchCompletenessStatus = SearchCompletenessStatus.BEST_CANDIDATE_FOUND
+    failure_classification: Optional[FailureCauseClassification] = None
+    search_coverage_ratio: float = 1.0
 
     @property
     def evaluated_candidates(self) -> List[PathwayCandidate]:
@@ -93,6 +130,9 @@ class DiscoverySearchReport:
             "total_candidates_generated": self.total_candidates_generated,
             "candidates_passing_preconditions": self.candidates_passing_preconditions,
             "verified_candidates": self.verified_candidates,
+            "search_completeness": self.search_completeness.value,
+            "failure_classification": self.failure_classification.value if self.failure_classification else None,
+            "search_coverage_ratio": round(self.search_coverage_ratio, 2),
             "winner_name": self.winning_candidate.name if self.winning_candidate else "NONE",
             "winner_speedup": round(self.winning_candidate.measured_speedup, 2) if self.winning_candidate else 1.0,
             "search_duration_ms": round(self.search_duration_ms, 2),
@@ -181,6 +221,25 @@ class AlternativeAlgorithmDiscoveryEngine:
 
         total_duration_ms = (time.perf_counter() - t_start) * 1000.0
 
+        completeness = SearchCompletenessStatus.BEST_CANDIDATE_FOUND if winner else SearchCompletenessStatus.NO_SUCCESSFUL_CANDIDATE_FOUND
+        failure_cause: Optional[FailureCauseClassification] = None
+
+        budget_exceeded = any(c.rejection_reason == "Search budget deadline exceeded" for c in evaluated)
+        if budget_exceeded:
+            completeness = SearchCompletenessStatus.SEARCH_INCOMPLETE
+            failure_cause = FailureCauseClassification.SEARCH_BUDGET_EXHAUSTED
+        elif not winner and evaluated:
+            has_tol = any("Verification failed" in c.rejection_reason for c in evaluated)
+            has_precond = any(c.status == DiscoveryStatus.PRECONDITION_FAILED for c in evaluated)
+            if has_tol:
+                failure_cause = FailureCauseClassification.NUMERICAL_INCOMPATIBILITY
+            elif has_precond:
+                failure_cause = FailureCauseClassification.UNSUPPORTED_INPUT_OR_ADAPTER
+            else:
+                failure_cause = FailureCauseClassification.UNKNOWN_CAUSE
+
+        coverage_ratio = len(evaluated) / max(len(candidate_pool), 1)
+
         return DiscoverySearchReport(
             workload_id=contract.workload_id,
             total_candidates_generated=len(candidate_pool),
@@ -189,6 +248,9 @@ class AlternativeAlgorithmDiscoveryEngine:
             winning_candidate=winner,
             search_duration_ms=total_duration_ms,
             all_candidates=evaluated,
+            search_completeness=completeness,
+            failure_classification=failure_cause,
+            search_coverage_ratio=coverage_ratio,
         )
 
     def discover_and_evaluate(

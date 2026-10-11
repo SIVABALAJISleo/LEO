@@ -11,6 +11,10 @@ from typing import Any, Callable, Dict, List, Optional
 import numpy as np
 
 
+import tracemalloc
+import psutil
+
+
 @dataclass
 class BenchmarkDistributionReport:
     workload_id: str
@@ -28,6 +32,10 @@ class BenchmarkDistributionReport:
     peak_memory_bytes: int
     reference_median_ms: float
     measured_speedup: float
+    warmup_cost_ms: float = 0.0
+    initialization_cost_ms: float = 0.0
+    sustained_throughput_ops_sec: float = 0.0
+    empirical_vs_worst_case_ratio: float = 1.0
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -43,13 +51,18 @@ class BenchmarkDistributionReport:
             "max_ms": round(self.max_ms, 3),
             "deadline_miss_rate": round(self.deadline_miss_rate, 4),
             "peak_memory_bytes": self.peak_memory_bytes,
+            "peak_memory_mb": round(self.peak_memory_bytes / (1024 * 1024), 2),
             "reference_median_ms": round(self.reference_median_ms, 3),
             "measured_speedup": round(self.measured_speedup, 2),
+            "warmup_cost_ms": round(self.warmup_cost_ms, 3),
+            "initialization_cost_ms": round(self.initialization_cost_ms, 3),
+            "sustained_throughput_ops_sec": round(self.sustained_throughput_ops_sec, 1),
+            "empirical_vs_worst_case_ratio": round(self.empirical_vs_worst_case_ratio, 2),
         }
 
 
 class RigorousPerformanceBenchmarker:
-    """Measures latency distributions across warm-up and repeated trials."""
+    """Measures latency distributions, memory usage, and throughput across repeated trials."""
 
     @staticmethod
     def benchmark_workload(
@@ -60,11 +73,15 @@ class RigorousPerformanceBenchmarker:
         trials: int = 5,
         deadline_ms: Optional[float] = None,
     ) -> BenchmarkDistributionReport:
-        # Warmup pass
+        tracemalloc.start()
+
+        # Measure Warmup & Initialization Cost
+        t_init_0 = time.perf_counter()
         try:
             _ = kernel_fn(sample_input)
+            warmup_cost = (time.perf_counter() - t_init_0) * 1000.0
         except Exception:
-            pass
+            warmup_cost = 0.0
 
         # Reference timing if provided
         ref_median_ms = 0.0
@@ -83,6 +100,9 @@ class RigorousPerformanceBenchmarker:
             _ = kernel_fn(sample_input)
             samples_ms.append((time.perf_counter() - t0) * 1000.0)
 
+        current_bytes, peak_bytes = tracemalloc.get_traced_memory()
+        tracemalloc.stop()
+
         arr = np.array(samples_ms)
         median_ms = float(np.median(arr))
         mean_ms = float(np.mean(arr))
@@ -99,6 +119,8 @@ class RigorousPerformanceBenchmarker:
             miss_rate = misses / float(trials)
 
         speedup = (ref_median_ms / median_ms) if (ref_median_ms > 0 and median_ms > 0) else 1.0
+        throughput = (1000.0 / median_ms) if median_ms > 0 else 0.0
+        worst_case_ratio = (max_ms / median_ms) if median_ms > 0 else 1.0
 
         return BenchmarkDistributionReport(
             workload_id=workload_id,
@@ -113,7 +135,11 @@ class RigorousPerformanceBenchmarker:
             min_ms=min_ms,
             max_ms=max_ms,
             deadline_miss_rate=miss_rate,
-            peak_memory_bytes=0,
+            peak_memory_bytes=peak_bytes,
             reference_median_ms=ref_median_ms,
             measured_speedup=speedup,
+            warmup_cost_ms=warmup_cost,
+            initialization_cost_ms=warmup_cost,
+            sustained_throughput_ops_sec=throughput,
+            empirical_vs_worst_case_ratio=worst_case_ratio,
         )
