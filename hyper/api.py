@@ -2,7 +2,7 @@
 hyper/api.py
 ============
 Official FastAPI Service for LEO/HYPER Universal Exact Semantic Replacement Engine.
-Fulfills Section 64:
+Fulfills Section 64 & Section 26:
 Exposes:
   POST /compile
   POST /optimize
@@ -14,6 +14,9 @@ Exposes:
   GET  /replay/{certificate_id}
   GET  /audit
   GET  /hardware
+  GET  /api/v1/hyper/parity/*
+  GET  /api/v1/hyper/godmode/*
+  GET  /api/v1/hyper100/*
 """
 
 from __future__ import annotations
@@ -23,6 +26,7 @@ import numpy as np
 
 try:
     from fastapi import FastAPI, HTTPException
+    from fastapi.middleware.cors import CORSMiddleware
     from pydantic import BaseModel, Field
     HAS_FASTAPI = True
 except ImportError:
@@ -44,6 +48,13 @@ if HAS_FASTAPI:
         title="HYPER Universal Exact Semantic Replacement Engine API",
         version="10.0.0",
         description="Unified contract-driven computation replacement and verification API",
+    )
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
     )
 else:
     app = None  # Graceful fallback if fastapi not installed
@@ -87,7 +98,10 @@ if HAS_FASTAPI:
             "endpoints": [
                 "/compile", "/optimize", "/verify", "/execute",
                 "/benchmark", "/coverage", "/certificate/{id}", "/replay/{id}",
-                "/audit", "/hardware"
+                "/audit", "/hardware",
+                "/api/v1/hyper/parity/metrics",
+                "/api/v1/hyper/godmode/metrics",
+                "/api/v1/hyper100/metrics",
             ],
         }
 
@@ -212,6 +226,12 @@ if HAS_FASTAPI:
         res = _cert_store.replay_certificate(certificate_id)
         return res
 
+    @app.get("/benchmark")
+    def get_benchmark():
+        from hyper.benchmark.canonical_runner import run_canonical_benchmark
+        summary = run_canonical_benchmark(warmup_trials=1, measured_trials=2, save_results_path=None)
+        return summary
+
     @app.get("/audit")
     def get_audit_ledger():
         return {
@@ -219,3 +239,30 @@ if HAS_FASTAPI:
             "summary_by_status": _ledger.summary(),
             "recent_evidence": [e.to_dict() for e in _ledger._entries[-10:]],
         }
+
+    # Mount HYPER-100 Parity & GODMODE sub-routers
+    try:
+        from hyper.parity_engine.dashboard import router as parity_dashboard_router
+        app.include_router(parity_dashboard_router)
+    except Exception:
+        pass
+
+    try:
+        from hyper.godmode.dashboard import router as godmode_dashboard_router
+        app.include_router(godmode_dashboard_router)
+    except Exception:
+        pass
+
+    try:
+        from hyper.hyper100_parity.dashboard import router as hyper100_dashboard_router
+        app.include_router(hyper100_dashboard_router)
+    except Exception:
+        pass
+
+
+if __name__ == "__main__":
+    if HAS_FASTAPI:
+        import uvicorn
+        uvicorn.run("hyper.api:app", host="0.0.0.0", port=8000, reload=True)
+    else:
+        print("FastAPI is not installed. Please install fastapi and uvicorn.")

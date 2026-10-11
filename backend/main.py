@@ -90,6 +90,12 @@ try:
 except Exception as e:
     logger.warning(f"Failed to load godmode dashboard router: {e}")
 
+try:
+    from hyper.hyper100_parity.dashboard import router as hyper100_dashboard_router
+    app.include_router(hyper100_dashboard_router)
+except Exception as e:
+    logger.warning(f"Failed to load hyper100 dashboard router: {e}")
+
 # Compatibility router for TestMemoryAPI endpoints in tests
 from fastapi import APIRouter
 compat_router = APIRouter(prefix="/api/v1/systems", tags=["Systems Compat"])
