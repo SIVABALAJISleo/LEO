@@ -60,5 +60,67 @@
     "confidence": 1.0,
     "certificate_id": null,
     "notes": "No escape proven; executed via exact semantic fallback on CPU_OPTIMIZED_AVX2"
+  },
+  {
+    "evidence_id": "EV_test_fallback_FALLBACK_1791686964401",
+    "workload_id": "test_fallback",
+    "contract_id": "CONTRACT_DEFAULT",
+    "ir_version": "HYPER-IR 1.0",
+    "semantic_version": "1.0.0",
+    "candidate_id": "EXACT_FALLBACK",
+    "status": "FALLBACK",
+    "provenance": {
+      "router": "UniversalRouter_v10",
+      "strategy": "EXACT_FALLBACK"
+    },
+    "hardware": {
+      "os": "Windows-11-10.0.26100-SP0",
+      "cpu_model": "13th Gen Intel(R) Core(TM) i5-13420H",
+      "physical_cores": 8,
+      "logical_processors": 12,
+      "ram_total_bytes": 16857817088,
+      "ram_available_bytes": 3885182976,
+      "gpu_model": "Intel(R) UHD Graphics",
+      "gpu_type": "integrated",
+      "gpu_execution_units": null,
+      "gpu_driver": "32.0.101.7076",
+      "shared_memory": true,
+      "openvino_devices": [
+        "CPU",
+        "GPU"
+      ],
+      "directml_available": false,
+      "cuda_available": false,
+      "python_version": "3.13.5",
+      "package_versions": {
+        "torch": "2.10.0+cpu",
+        "openvino": "2026.2.1-21919-ede283a88e3-releases/2026/2",
+        "numpy": "2.3.2",
+        "scipy": "1.17.0",
+        "onnx": "1.21.0",
+        "onnxruntime": "1.24.1",
+        "psutil": "5.9.8"
+      }
+    },
+    "software": {
+      "python": "3.13"
+    },
+    "git_commit": "HEAD",
+    "timestamp": 1791686965.075121,
+    "seed": 42,
+    "input_hash": "f0e42bd647fbb20f704ca636c3eb2db8be0dcea49db0aac673d052f99eebaa55",
+    "output_hash": "9020ad4bcec0d0134845d960fb6556e07add6d75cdc49f0eeeabafccc22f08fb",
+    "reference_hash": "9020ad4bcec0d0134845d960fb6556e07add6d75cdc49f0eeeabafccc22f08fb",
+    "verifier_result": {
+      "verdict": "PASS",
+      "backend": "CPU_OPTIMIZED_AVX2"
+    },
+    "measured_latency_ms": 0.0868,
+    "measured_memory_bytes": 1024,
+    "measured_operations": 1,
+    "exactness": "EXACT_SEMANTIC",
+    "confidence": 1.0,
+    "certificate_id": null,
+    "notes": "No escape proven; executed via exact semantic fallback on CPU_OPTIMIZED_AVX2"
   }
 ]

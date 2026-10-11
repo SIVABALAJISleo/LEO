@@ -46,6 +46,9 @@ class GodmodeOmegaSuiteResult(BaseModel):
     is_100_percent_certified: bool
 
 
+from hyper.six_engines import SixEngineUniversalOptimizer, PipelineExecutionResult
+
+
 class HyperGodmodeOmegaEngine:
     """
     Principal coordinator running the complete GODMODE Ω∞ autonomous optimization suite.
@@ -58,6 +61,7 @@ class HyperGodmodeOmegaEngine:
         self.buffer_pool = BoundedBufferPool()
         self.explorer = PathwayDiscoveryEngine()
         self.dashboard = godmode_dashboard_instance
+        self.six_engine_optimizer = SixEngineUniversalOptimizer()
 
     def run_canonical_suite(self) -> GodmodeOmegaSuiteResult:
         """
