@@ -203,4 +203,10 @@ try:
 except Exception as e:
     logger.warning(f"Failed to load hyper100 parity dashboard router: {e}")
 
+try:
+    from backend.routers.hyper_escape_router import router as hyper_escape_router
+    app.include_router(hyper_escape_router)
+except Exception as e:
+    logger.warning(f"Failed to load hyper_escape_router: {e}")
+
 
