@@ -30,6 +30,9 @@ from hyper_universal.data_movement.engine import DataMovementReductionEngine
 from hyper_universal.precision.optimizer import PrecisionOptimizer
 from hyper_universal.incremental.engine import IncrementalExecutionEngine
 from hyper_universal.scheduler.scheduler import UniversalScheduler
+from hyper_universal.capability_mirror.registry import UniversalCapabilityRegistry
+from hyper_universal.capability_mirror.search import CapabilitySubstitutionSearch
+from hyper_universal.capability_mirror.matrix import CapabilityMatrixGenerator
 
 logger = logging.getLogger(__name__)
 
@@ -45,6 +48,9 @@ _scheduler = UniversalScheduler()
 _benchmarker = RigorousPerformanceBenchmarker()
 _memory_controller = MemoryBudgetController()
 _discovery_engine = AlternativeAlgorithmDiscoveryEngine()
+_capability_registry = UniversalCapabilityRegistry()
+_capability_search = CapabilitySubstitutionSearch(registry=_capability_registry)
+_capability_matrix_gen = CapabilityMatrixGenerator()
 
 
 class WorkloadRegistrationRequest(BaseModel):
@@ -278,3 +284,29 @@ async def get_godmode_scorecard() -> Dict[str, Any]:
         "active_memory_budget_mb": _memory_controller.budget_mb,
         "backends_detected": [b.backend_name for b in backends],
     }
+
+
+@router.get("/capabilities")
+async def list_capabilities() -> List[Dict[str, Any]]:
+    """Lists all 21 reference GPU capabilities and software mirrors."""
+    return [cap.to_dict() for cap in _capability_registry.list_capabilities()]
+
+
+@router.get("/capabilities/{capability_id}")
+async def get_capability_details(capability_id: str) -> Dict[str, Any]:
+    """Retrieves specific capability record and runs substitution search."""
+    cap = _capability_registry.get(capability_id)
+    if not cap:
+        raise HTTPException(status_code=404, detail=f"Capability '{capability_id}' not found")
+    substitutions = _capability_search.search_substitution(capability_id)
+    return {
+        "capability": cap.to_dict(),
+        "available_substitutions": [s.to_dict() for s in substitutions],
+    }
+
+
+@router.get("/capability_matrix")
+async def get_capability_matrix() -> Dict[str, Any]:
+    """Generates and returns the full 21-capability 6-dimensional evaluation matrix."""
+    return _capability_matrix_gen.evaluate_all()
+

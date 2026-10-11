@@ -17,6 +17,7 @@ import numpy as np
 
 class HardwareTarget(str, Enum):
     CPU_AVX2 = "CPU_AVX2"
+    INTEL_UHD_IGPU_OPENVINO = "INTEL_UHD_IGPU_OPENVINO"
     INTEL_UHD_IGPU_VULKAN = "INTEL_UHD_IGPU_VULKAN"
     INTEL_UHD_IGPU_OPENCL = "INTEL_UHD_IGPU_OPENCL"
     HYBRID_CPU_IGPU = "HYBRID_CPU_IGPU"
@@ -115,11 +116,20 @@ class IntelHardwareScheduler:
         except Exception:
             has_vulkan = False
 
+        has_openvino_gpu = False
+        try:
+            import openvino as ov  # type: ignore
+            core = ov.Core()
+            has_openvino_gpu = "GPU" in core.available_devices
+        except Exception:
+            has_openvino_gpu = False
+
         return {
             "host_cpu": cpu_name,
             "avx2_supported": True,
             "opencl_available": has_opencl,
             "vulkan_available": has_vulkan,
+            "openvino_gpu_available": has_openvino_gpu,
             "measured_ram_bandwidth_gbps": cls.measure_host_memory_bandwidth_gbps(),
         }
 

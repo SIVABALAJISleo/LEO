@@ -84,6 +84,18 @@ class BackendCapabilityRegistry:
             is_native_gpu=hw_info["opencl_available"],
         )
 
+        # OpenVINO on Intel UHD iGPU (Native hardware graphics runtime)
+        has_ov_gpu = hw_info.get("openvino_gpu_available", False)
+        self._capabilities[HardwareTarget.INTEL_UHD_IGPU_OPENVINO] = BackendCapability(
+            target=HardwareTarget.INTEL_UHD_IGPU_OPENVINO,
+            is_available=has_ov_gpu,
+            description="Intel UHD Graphics via OpenVINO GPU Runtime",
+            supported_dtypes=["float32", "float16", "int8", "int32"],
+            peak_bandwidth_gbps=ram_bw,
+            requires_compilation=True,
+            is_native_gpu=has_ov_gpu,
+        )
+
         # Vulkan on Intel UHD iGPU
         self._capabilities[HardwareTarget.INTEL_UHD_IGPU_VULKAN] = BackendCapability(
             target=HardwareTarget.INTEL_UHD_IGPU_VULKAN,
