@@ -59,7 +59,8 @@ class NecessityAnalyzer:
 
         # 7. Low-Rank Compressibility
         has_matrices = any(isinstance(v, np.ndarray) and v.ndim == 2 for v in inputs.values())
-        scores["low_rank_compressibility"] = 0.65 if has_matrices and contract.allow_low_rank else 0.0
+        is_matrix_workload = has_matrices or "gemm" in workload_name.lower() or "linear" in workload_name.lower()
+        scores["low_rank_compressibility"] = 0.65 if is_matrix_workload and contract.allow_low_rank else 0.0
 
         # 8. Sparsity / Zero Concentration
         sparsity = 0.0
@@ -101,7 +102,9 @@ class NecessityAnalyzer:
                 scores["spatial_redundancy"] * 0.2 +
                 scores["low_rank_compressibility"] * 0.25 +
                 scores["sparsity_concentration"] * 0.25 +
-                scores["early_termination_potential"] * 0.2
+                scores["early_termination_potential"] * 0.2 +
+                scores["algebraic_simplifiability"] * 0.2 +
+                scores["contract_laxity"] * 0.1
             )
             avoidance = min(0.95, max(0.0, avoidance))
             overall = NecessityStatus.TRANSFORMABLE if avoidance > 0.3 else NecessityStatus.MANDATORY

@@ -6,4 +6,7 @@ from hyper_universal.evidence_store.database import (
     PathwayRecord,
 )
 
-__all__ = ["PathwayEvidenceStore", "PathwayRecord"]
+EvidenceStore = PathwayEvidenceStore
+
+__all__ = ["PathwayEvidenceStore", "PathwayRecord", "EvidenceStore"]
+

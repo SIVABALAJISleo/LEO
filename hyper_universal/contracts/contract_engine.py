@@ -97,8 +97,21 @@ class UniversalContract:
 
     # Aliases for flexible constructor kwargs
     exactness_requirement: Optional[ExactnessRequirement] = None
-    tolerance: Optional[NumericalTolerance] = None
+    tolerance: Optional[Any] = None
     resource_budget: Optional[ResourceBudget] = None
+    deterministic: bool = True
+
+    @property
+    def tolerance_val(self) -> float:
+        return self.tolerances.max_absolute_error
+
+    @property
+    def max_memory_mb(self) -> float:
+        return self.budget.max_ram_bytes / (1024.0 * 1024.0)
+
+    @property
+    def max_latency_ms(self) -> Optional[float]:
+        return self.budget.max_latency_ms
 
     def __post_init__(self):
         if self.exactness_requirement is not None:
@@ -107,7 +120,13 @@ class UniversalContract:
             self.exactness_requirement = self.exactness
 
         if self.tolerance is not None:
-            self.tolerances = self.tolerance
+            if isinstance(self.tolerance, (int, float)):
+                self.tolerances = NumericalTolerance(
+                    max_relative_error=float(self.tolerance),
+                    max_absolute_error=float(self.tolerance)
+                )
+            elif isinstance(self.tolerance, NumericalTolerance):
+                self.tolerances = self.tolerance
         else:
             self.tolerance = self.tolerances
 
@@ -128,6 +147,8 @@ class UniversalContract:
         }
         h = hashlib.sha256(json.dumps(payload, sort_keys=True).encode("utf-8")).hexdigest()
         self.contract_hash = h
+
+
 
     def validate_candidate_output(
         self, reference: Any, candidate: Any
@@ -223,6 +244,39 @@ class UniversalContract:
             "verification_strategy": self.verification_strategy,
             "fallback_backend": self.fallback_backend,
         }
+
+
+@dataclass
+class WorkloadContract(UniversalContract):
+    """Alias and specialization for UniversalContract with direct scalar parameters."""
+    def __init__(
+        self,
+        workload_id: str,
+        description: str = "",
+        tolerance: Union[float, NumericalTolerance] = 1e-5,
+        max_latency_ms: float = 100.0,
+        max_memory_mb: float = 64.0,
+        deterministic: bool = True,
+        **kwargs: Any
+    ) -> None:
+        if isinstance(tolerance, (int, float)):
+            tol = NumericalTolerance(max_relative_error=float(tolerance), max_absolute_error=float(tolerance))
+        else:
+            tol = tolerance
+
+        budget = ResourceBudget(
+            max_ram_bytes=int(max_memory_mb * 1024 * 1024),
+            max_latency_ms=max_latency_ms,
+        )
+        super().__init__(
+            workload_id=workload_id,
+            description=description,
+            tolerances=tol,
+            budget=budget,
+            deterministic=deterministic,
+            **kwargs
+        )
+
 
 
 def differential_contract_verify(
