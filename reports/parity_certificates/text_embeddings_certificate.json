@@ -1,13 +1,13 @@
 {
-  "certificate_id": "CERT_WLD_EMB_003_1791977369",
+  "certificate_id": "CERT_WLD_EMB_003_1791979037",
   "workload_name": "text_embeddings",
   "workload_id": "WLD_EMB_003",
   "contracts_file_sha256": "df6b2f6d4e56b984aa8e1219fe59a029925abda9d2110b983ec29d074259e6d1",
   "input_spec_sha256": "62c9416b3e688064a274ad62321a3b898f07ab582820c01789ea78d76fc1f628",
   "output_digest_sha256": "e2b1c55f868c4fd451f97fa6acf0af202690e572242de8198ece7a4a230f7314",
   "config_digest_sha256": "387b88c667dfff03ad459a9a1108377225219e8bd0b0b6bf0167d43fb068e51d",
-  "certificate_sha256": "1db9fdee2504ef4e01ab3790e879208b3009007464f73b8bb62ffee13f2621c5",
-  "timestamp_iso": "2026-10-14T11:29:29Z",
+  "certificate_sha256": "2771f1a70205456da0226c15e6cf94a9484d626ee03b4903462458142c00b872",
+  "timestamp_iso": "2026-10-14T11:57:17Z",
   "status": "PASS",
   "result_label": "REDUCED_WORK",
   "contract_clauses": {
@@ -16,20 +16,20 @@
     "latency_cap_ms": 15.0,
     "peak_ram_cap_mb": 48.0,
     "allowed_labels": [
-      "EXACT",
+      "APPROXIMATE",
       "REDUCED_WORK",
-      "APPROXIMATE"
+      "EXACT"
     ]
   },
   "measurements": {
-    "latency_p50_ms": 13.161,
-    "latency_p95_ms": 14.444,
-    "latency_p99_ms": 14.664,
-    "latency_mean_ms": 13.021,
-    "latency_std_ms": 0.99,
+    "latency_p50_ms": 10.601,
+    "latency_p95_ms": 11.5,
+    "latency_p99_ms": 11.641,
+    "latency_mean_ms": 10.659,
+    "latency_std_ms": 0.52,
     "peak_rss_mb": 1.25,
     "workload_resident_ram_mb": 1.25,
-    "peak_process_rss_mb": 48.11,
+    "peak_process_rss_mb": 48.34,
     "quality_metric_value": 1.0,
     "reps_timed": 10,
     "reps_warmup": 0,

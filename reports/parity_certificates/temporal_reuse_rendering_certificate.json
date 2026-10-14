@@ -1,13 +1,13 @@
 {
-  "certificate_id": "CERT_WLD_RND_004_1791977370",
+  "certificate_id": "CERT_WLD_RND_004_1791979038",
   "workload_name": "temporal_reuse_rendering",
   "workload_id": "WLD_RND_004",
   "contracts_file_sha256": "df6b2f6d4e56b984aa8e1219fe59a029925abda9d2110b983ec29d074259e6d1",
   "input_spec_sha256": "b80e3a2fc229dc80d096728f25533e6d34bc4900202bb3318831feafce89a953",
   "output_digest_sha256": "ef0fdcd710f4924401eb1c5afb32f7e86a2990cfefa585fc9c7222abc30da8aa",
   "config_digest_sha256": "4dc15f13b8da58522108402006d8484e1718879cf8d8cf2f3f6105d78a3f0200",
-  "certificate_sha256": "3e94a1695d2721fb63ee0cc52dfe874c667c5bae99776b029c43402e5e1cb919",
-  "timestamp_iso": "2026-10-14T11:29:30Z",
+  "certificate_sha256": "fee3d112b179fc57b5bcd0364f248c6f010276a318d654ece803db3780bf9cce",
+  "timestamp_iso": "2026-10-14T11:57:18Z",
   "status": "PASS",
   "result_label": "REDUCED_WORK",
   "contract_clauses": {
@@ -16,19 +16,19 @@
     "latency_cap_ms": 8.0,
     "peak_ram_cap_mb": 24.0,
     "allowed_labels": [
-      "EXACT",
-      "REDUCED_WORK"
+      "REDUCED_WORK",
+      "EXACT"
     ]
   },
   "measurements": {
-    "latency_p50_ms": 5.444,
-    "latency_p95_ms": 6.966,
-    "latency_p99_ms": 7.214,
-    "latency_mean_ms": 5.625,
-    "latency_std_ms": 0.875,
-    "peak_rss_mb": 0.1,
-    "workload_resident_ram_mb": 0.1,
-    "peak_process_rss_mb": 48.43,
+    "latency_p50_ms": 5.321,
+    "latency_p95_ms": 6.617,
+    "latency_p99_ms": 6.768,
+    "latency_mean_ms": 5.513,
+    "latency_std_ms": 0.737,
+    "peak_rss_mb": 0.27,
+    "workload_resident_ram_mb": 0.27,
+    "peak_process_rss_mb": 48.03,
     "quality_metric_value": 100.0,
     "reps_timed": 10,
     "reps_warmup": 0,

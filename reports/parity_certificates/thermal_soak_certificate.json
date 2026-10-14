@@ -1,10 +1,10 @@
 {
-  "duration_minutes": 0.5,
-  "total_iterations": 3770,
-  "ram_leakage_mb": 3.4,
+  "duration_minutes": 0.2,
+  "total_iterations": 1323,
+  "ram_leakage_mb": 2.52,
   "thermal_throttling_detected": false,
   "clock_drop_pct": 0.0,
   "initial_clock_mhz": 2100.0,
   "final_clock_mhz": 2100.0,
-  "telemetry_samples": 15
+  "telemetry_samples": 6
 }
