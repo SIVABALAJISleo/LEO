@@ -30,18 +30,30 @@ class ExecutionPlan:
 class UniversalScheduler:
     """Orchestrates heterogeneous execution selection."""
 
+    # Scientific Negative Knowledge (Section 14.2):
+    # Small-Scale OpenCL Offloading (< 256 KB) is slower than CPU (0.63x speedup)
+    # due to command queue synchronization latency. Added task-size dispatch thresholding.
+    MIN_OPENCL_DISPATCH_BYTES: int = 256 * 1024  # 256 KB
+
     def __init__(self):
         self.registry = BackendCapabilityRegistry()
         self.backend_registry = self.registry
         self.contract_registry = ContractRegistry()
 
-    def schedule_workload(self, workload_id: str) -> ExecutionPlan:
+    def schedule_workload(
+        self,
+        workload_id: str,
+        data_size_bytes: int = 1024 * 1024,
+    ) -> ExecutionPlan:
         contract = self.contract_registry.get(workload_id)
         fallback = "CPU_AVX2"
         available = [b.backend_name for b in self.registry.get_available_backends()]
 
-        # Select Intel UHD OpenCL if available and allowed, else CPU_AVX2
-        if "INTEL_UHD_IGPU_OPENCL" in available:
+        # Task-size dispatch thresholding:
+        # If payload < 256 KB, OpenCL launch/sync overhead exceeds compute benefits.
+        if data_size_bytes < self.MIN_OPENCL_DISPATCH_BYTES:
+            selected = "CPU_AVX2"
+        elif "INTEL_UHD_IGPU_OPENCL" in available:
             selected = "INTEL_UHD_IGPU_OPENCL"
         elif "CPU_AVX2" in available:
             selected = "CPU_AVX2"
@@ -52,6 +64,7 @@ class UniversalScheduler:
             workload_id=workload_id,
             selected_backend=selected,
             fallback_backend=fallback,
+            data_size_bytes=data_size_bytes,
         )
 
     def execute_with_fallback(
@@ -87,6 +100,10 @@ class UniversalScheduler:
         available_targets = self.registry.list_available_targets()
 
         if HardwareTarget.INTEL_UHD_IGPU_VULKAN not in available_targets and HardwareTarget.INTEL_UHD_IGPU_OPENCL not in available_targets:
+            workload_fn_igpu = None
+
+        # Small payload (< 256 KB): sync latency exceeds GPU acceleration. Force CPU execution.
+        if data_size_bytes < self.MIN_OPENCL_DISPATCH_BYTES:
             workload_fn_igpu = None
 
         decision = IntelHardwareScheduler.schedule_workload(

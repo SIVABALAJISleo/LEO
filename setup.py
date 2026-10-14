@@ -15,13 +15,20 @@ else:
     extra_compile_args = ['-O3', '-mavx2', '-mfma']
 
 setup(
-    name='bitnet_avx2_ext',
+    name='hyper_avx2_kernels',
     ext_modules=[
         cpp_extension.CppExtension(
             name='core_ai.kernels.bitnet_avx2_ext',
             sources=[
                 'core_ai/kernels/bindings.cpp',
                 'core_ai/kernels/bitnet_avx2.cpp'
+            ],
+            extra_compile_args=extra_compile_args
+        ),
+        cpp_extension.CppExtension(
+            name='core_ai.kernels.sparse_2_4_avx2_ext',
+            sources=[
+                'core_ai/kernels/sparse_2_4_avx2.cpp'
             ],
             extra_compile_args=extra_compile_args
         )

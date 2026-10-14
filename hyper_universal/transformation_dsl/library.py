@@ -94,18 +94,40 @@ class LowRankFactorizationTransformation(Transformation):
     Transforms matrix A into low-rank factor matrices U, S, V^T.
     """
 
-    def __init__(self, target_rank: int = 16) -> None:
+    def __init__(self, target_rank: int = 16, min_energy_ratio: float = 0.95) -> None:
         super().__init__("xf-low-rank", "Low-Rank SVD Factorization")
         self.target_rank = target_rank
+        self.min_energy_ratio = min_energy_ratio
 
     def check_preconditions(self, input_data: Any) -> Tuple[bool, str]:
         if not isinstance(input_data, np.ndarray) or input_data.ndim != 2:
             return False, "Input must be a 2D matrix."
         if min(input_data.shape) <= self.target_rank:
             return False, "Matrix dimension smaller than target rank."
+
+        # Scientific Negative Knowledge (Section 14.1):
+        # Direct SVD Factorization on Full-Rank Gaussian Noise fails with ~78.7% error.
+        # Precondition check requires singular value energy ratio sum_{i=1}^k \sigma_i / sum \sigma >= 0.95.
+        s = np.linalg.svd(input_data, compute_uv=False)
+        total_energy = float(np.sum(s))
+        if total_energy <= 1e-12:
+            return False, "Singular value energy near zero."
+        k = min(self.target_rank, len(s))
+        top_k_energy = float(np.sum(s[:k]))
+        energy_ratio = top_k_energy / total_energy
+        if energy_ratio < self.min_energy_ratio:
+            return (
+                False,
+                f"Singular value energy ratio {energy_ratio:.4f} < {self.min_energy_ratio:.2f} "
+                f"(matrix lacks low-rank structure; full-rank Gaussian noise detected)."
+            )
+
         return True, "Preconditions satisfied."
 
     def apply(self, input_data: Any) -> Any:
+        valid, msg = self.check_preconditions(input_data)
+        if not valid:
+            raise ValueError(f"LowRankSVDTransformation precondition failed: {msg}")
         u, s, vt = np.linalg.svd(input_data, full_matrices=False)
         k = min(self.target_rank, len(s))
         return u[:, :k], s[:k], vt[:k, :]
@@ -120,6 +142,9 @@ class LowRankFactorizationTransformation(Transformation):
             expected_work_reduction_pct=60.0,
             memory_traffic_multiplier=0.40,
         )
+
+
+LowRankSVDTransformation = LowRankFactorizationTransformation
 
 
 class HornerPolynomialTransformation(Transformation):
