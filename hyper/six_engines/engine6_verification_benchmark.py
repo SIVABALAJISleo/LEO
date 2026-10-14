@@ -168,7 +168,18 @@ class RigorousBenchmarkRunner:
         - Computes median, min, max, and std deviation
         - Measures peak resident memory via tracemalloc
         """
-        # Warmup (allows JIT, CPU branch predictor, and L1/L2 caches to stabilize)
+        # 1. Cold Cache Measurement (evict CPU cache lines before first execution)
+        dummy = np.zeros(16 * 1024 * 1024, dtype=np.uint8)
+        _ = int(np.sum(dummy))
+        del dummy
+        gc.collect()
+
+        t_cold0 = time.perf_counter()
+        _ = fn(sample_input)
+        t_cold1 = time.perf_counter()
+        cold_latency_ms = (t_cold1 - t_cold0) * 1000.0
+
+        # 2. Warmup Trials (allow JIT, CPU branch predictor, and L1/L2 caches to stabilize)
         for _ in range(warmup_trials):
             _ = fn(sample_input)
 
@@ -208,7 +219,13 @@ class RigorousBenchmarkRunner:
             std_latency=std_ms,
             throughput=throughput,
             peak_ram=peak / (1024.0 * 1024.0),
-            cpu_metrics={"threads_used": os.cpu_count() or 8, "avx2_active": True},
+            cpu_metrics={
+                "threads_used": os.cpu_count() or 8,
+                "avx2_active": True,
+                "cold_latency_ms": cold_latency_ms,
+                "warm_latency_ms": median_ms,
+                "cache_warmup_speedup": round(cold_latency_ms / max(median_ms, 1e-6), 2),
+            },
             igpu_metrics={"device": "Intel UHD Graphics (48 EUs)"},
             storage_io={"bytes_read": 0, "bytes_written": 0},
             thermal_metrics={"status": "NORMAL_NOMINAL"},

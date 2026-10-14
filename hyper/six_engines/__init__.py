@@ -24,7 +24,9 @@ from .models import (
     WorkloadContract,
 )
 from .engine1_memory_streaming import (
+    AsynchronousPrefetchBuffer,
     BoundedBufferPool,
+    CostAwareLRUCache,
     IntelligentMemoryEngine,
     MemoryBudgetEnforcer,
     MmapArrayStreamer,
@@ -43,11 +45,13 @@ from .engine2_computation_elimination import (
     TransformationEvidence,
 )
 from .engine3_data_reuse_locality import (
+    BlockTiledFlashAttentionEngine,
     CacheAwareTiledMatmul,
     CacheHierarchyProfile,
     DataReuseAndLocalityEngine,
     FusedKernelEngine,
     LocalityMetrics,
+    StencilPingPongEngine,
     TemporalCoherenceEngine,
 )
 from .engine4_adaptive_scheduler import (
@@ -80,7 +84,9 @@ __all__ = [
     "PathwayStatus",
     "TransformationClass",
     "WorkloadContract",
+    "AsynchronousPrefetchBuffer",
     "BoundedBufferPool",
+    "CostAwareLRUCache",
     "IntelligentMemoryEngine",
     "MemoryBudgetEnforcer",
     "MmapArrayStreamer",
@@ -95,11 +101,13 @@ __all__ = [
     "DependencyNode",
     "IncrementalComputeEngine",
     "TransformationEvidence",
+    "BlockTiledFlashAttentionEngine",
     "CacheAwareTiledMatmul",
     "CacheHierarchyProfile",
     "DataReuseAndLocalityEngine",
     "FusedKernelEngine",
     "LocalityMetrics",
+    "StencilPingPongEngine",
     "TemporalCoherenceEngine",
     "AdaptiveHeterogeneousScheduler",
     "BackendDevice",

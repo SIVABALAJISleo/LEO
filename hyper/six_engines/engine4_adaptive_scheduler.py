@@ -77,6 +77,30 @@ class HardwareCapabilityDetector:
         except ImportError:
             pass
 
+        # Check OpenVINO availability for Intel CPU/iGPU
+        try:
+            import openvino.runtime as ov
+            core = ov.Core()
+            devices = core.available_devices
+            info["openvino_available"] = True
+            info["openvino_devices"] = devices
+            if "GPU" in devices:
+                info["igpu_backend_available"] = True
+                info["openvino_gpu_available"] = True
+        except Exception:
+            pass
+
+        # Check ONNX Runtime providers (DirectML, CPU)
+        try:
+            import onnxruntime as ort
+            providers = ort.get_available_providers()
+            info["ort_providers"] = providers
+            if "DmlExecutionProvider" in providers:
+                info["directml_available"] = True
+                info["igpu_backend_available"] = True
+        except Exception:
+            pass
+
         # Check pyopencl or vulkan if installed
         try:
             import pyopencl

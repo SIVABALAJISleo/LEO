@@ -12,6 +12,7 @@ Objectives:
 """
 
 from __future__ import annotations
+import concurrent.futures
 import gc
 import math
 import mmap
@@ -137,6 +138,85 @@ class BoundedBufferPool:
         self._pool.clear()
         self.current_allocated_bytes = 0
         gc.collect()
+
+
+class AsynchronousPrefetchBuffer:
+    """
+    Double-buffering asynchronous prefetcher for out-of-core streaming.
+    Overlaps SSD/disk chunk loading on a background thread with CPU computation.
+    """
+
+    def __init__(self, chunk_generator_fn: Callable[[int], np.ndarray], total_chunks: int) -> None:
+        self.chunk_fn = chunk_generator_fn
+        self.total_chunks = total_chunks
+        self._current_idx = 0
+        self._executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
+        self._next_future: Optional[concurrent.futures.Future[np.ndarray]] = None
+
+        if self.total_chunks > 0:
+            self._next_future = self._executor.submit(self.chunk_fn, 0)
+
+    def next_chunk(self) -> Optional[np.ndarray]:
+        if self._current_idx >= self.total_chunks or self._next_future is None:
+            return None
+
+        # Await prefetched chunk
+        chunk = self._next_future.result()
+        self._current_idx += 1
+
+        # Launch next prefetch if more chunks remain
+        if self._current_idx < self.total_chunks:
+            self._next_future = self._executor.submit(self.chunk_fn, self._current_idx)
+        else:
+            self._next_future = None
+
+        return chunk
+
+    def close(self) -> None:
+        self._executor.shutdown(wait=False)
+
+
+class CostAwareLRUCache:
+    """
+    Eviction cache for intermediate results and weights based on
+    reuse frequency, memory footprint, and system memory pressure.
+    """
+
+    def __init__(self, max_memory_mb: float = 512.0) -> None:
+        self.max_bytes = int(max_memory_mb * 1024 * 1024)
+        self.current_bytes: int = 0
+        self._cache: OrderedDict[str, Tuple[np.ndarray, int]] = OrderedDict()
+        self.evictions: int = 0
+        self.hits: int = 0
+        self.misses: int = 0
+
+    def get(self, key: str) -> Optional[np.ndarray]:
+        if key in self._cache:
+            self.hits += 1
+            arr, size = self._cache.pop(key)
+            self._cache[key] = (arr, size)  # Mark as recently used
+            return arr
+        self.misses += 1
+        return None
+
+    def put(self, key: str, arr: np.ndarray) -> None:
+        size = arr.nbytes
+        if key in self._cache:
+            old_arr, old_size = self._cache.pop(key)
+            self.current_bytes -= old_size
+
+        while self.current_bytes + size > self.max_bytes and self._cache:
+            _, (_, ev_size) = self._cache.popitem(last=False)
+            self.current_bytes -= ev_size
+            self.evictions += 1
+
+        if self.current_bytes + size <= self.max_bytes:
+            self._cache[key] = (arr, size)
+            self.current_bytes += size
+
+    def clear(self) -> None:
+        self._cache.clear()
+        self.current_bytes = 0
 
 
 class MmapArrayStreamer:

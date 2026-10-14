@@ -209,4 +209,10 @@ try:
 except Exception as e:
     logger.warning(f"Failed to load hyper_escape_router: {e}")
 
+try:
+    from hyper.parity_engine.dashboard import router as parity_engine_router
+    app.include_router(parity_engine_router)
+except Exception as e:
+    logger.warning(f"Failed to load parity_engine_router: {e}")
+
 

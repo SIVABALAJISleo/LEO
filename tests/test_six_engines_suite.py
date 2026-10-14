@@ -411,3 +411,114 @@ def test_20_adversarial_edge_cases():
     )
     assert report.adversarial_passed is True
     assert report.passed is True
+
+
+# ----------------------------------------------------------------------
+# 21. Advanced Cooperating Engine Features (Prefetch, LRU, CSE, Circulant, Ping-Pong)
+# ----------------------------------------------------------------------
+def test_21_advanced_cooperating_engine_features():
+    from hyper.six_engines import (
+        AsynchronousPrefetchBuffer,
+        CostAwareLRUCache,
+        StencilPingPongEngine,
+    )
+
+    # 1. Asynchronous Double-Buffering Prefetcher
+    chunks = [np.ones(10, dtype=np.float32) * i for i in range(4)]
+    streamer = AsynchronousPrefetchBuffer(lambda idx: chunks[idx], total_chunks=4)
+    fetched = []
+    while True:
+        c = streamer.next_chunk()
+        if c is None:
+            break
+        fetched.append(float(c[0]))
+    streamer.close()
+    assert fetched == [0.0, 1.0, 2.0, 3.0]
+
+    # 2. Cost-Aware LRU Cache with Eviction
+    cache = CostAwareLRUCache(max_memory_mb=0.001)  # ~1 KB budget
+    a1 = np.ones(100, dtype=np.float32)  # 400 bytes
+    a2 = np.ones(100, dtype=np.float32) * 2.0  # 400 bytes
+    a3 = np.ones(100, dtype=np.float32) * 3.0  # 400 bytes -> triggers eviction
+    cache.put("k1", a1)
+    cache.put("k2", a2)
+    cache.put("k3", a3)
+    assert cache.evictions >= 1
+    assert cache.get("k3") is not None
+
+    # 3. Common Subexpression Elimination (CSE)
+    graph = DependencyGraph()
+    n_in = DependencyNode("in_1", "INPUT", [])
+    n_op1 = DependencyNode("op_1", "ADD", ["in_1", "in_1"])
+    n_op2 = DependencyNode("op_2", "ADD", ["in_1", "in_1"])  # Duplicate of op_1
+    n_out = DependencyNode("out", "MUL", ["op_1", "op_2"], produces_output=True)
+    for n in [n_in, n_op1, n_op2, n_out]:
+        graph.add_node(n)
+    eliminated = graph.eliminate_common_subexpressions()
+    assert eliminated == 1
+    assert graph.nodes["op_2"].is_live is False
+    assert graph.nodes["out"].inputs == ["op_1", "op_1"]
+
+    # 4. Circulant Matrix Fast FFT GEMM: O(N log N)
+    from scipy.linalg import circulant
+    N = 32
+    c_col = np.random.randn(N).astype(np.float32)
+    x = np.random.randn(N).astype(np.float32)
+    C_dense = circulant(c_col)
+    ref_y = C_dense @ x
+    fast_y, ev = AlgebraicReformulator.circulant_fft_gemm(c_col, x)
+    assert np.allclose(fast_y, ref_y, atol=1e-4)
+    assert ev.theoretical_cost_reduction_pct > 0.0
+
+    # 5. Stencil Ping-Pong Zero-Allocation Simulation
+    stencil = StencilPingPongEngine(shape=(32, 32), dtype=np.float32)
+    initial = np.zeros((32, 32), dtype=np.float32)
+    initial[16, 16] = 100.0
+    stencil.initialize(initial)
+    for _ in range(5):
+        step_res = stencil.step_2d_laplacian()
+    assert step_res.shape == (32, 32)
+    assert step_res[16, 16] < 100.0  # Heat diffused
+
+
+# ----------------------------------------------------------------------
+# 22. Feature H: Block-Tiled FlashAttention (Online Softmax)
+# ----------------------------------------------------------------------
+def test_22_block_tiled_flash_attention():
+    from hyper.six_engines.engine3_data_reuse_locality import BlockTiledFlashAttentionEngine
+    from hyper_universal.data_movement.engine import DataMovementReductionEngine
+
+    np.random.seed(42)
+    seq_len = 128
+    d = 32
+    Q = np.random.randn(seq_len, d).astype(np.float32)
+    K = np.random.randn(seq_len, d).astype(np.float32)
+    V = np.random.randn(seq_len, d).astype(np.float32)
+
+    # 1. Test causal block-tiled attention in engine3
+    ref_out, ref_ms = BlockTiledFlashAttentionEngine.standard_reference_attention(Q, K, V, causal=True)
+    flash_out, metrics = BlockTiledFlashAttentionEngine.block_tiled_flash_attention(
+        Q, K, V, block_r=32, block_c=32, causal=True
+    )
+
+    assert flash_out.shape == (seq_len, d)
+    assert np.allclose(flash_out, ref_out, atol=1e-5), f"Max diff: {np.max(np.abs(flash_out - ref_out))}"
+    assert metrics.intermediate_arrays_avoided == 2
+    assert metrics.total_bytes_moved < (4 * seq_len * d * 4 + 4 * seq_len * seq_len * 4)
+
+    # 2. Test non-causal block-tiled attention
+    ref_nc, _ = BlockTiledFlashAttentionEngine.standard_reference_attention(Q, K, V, causal=False)
+    flash_nc, _ = BlockTiledFlashAttentionEngine.block_tiled_flash_attention(
+        Q, K, V, block_r=32, block_c=32, causal=False
+    )
+    assert np.allclose(flash_nc, ref_nc, atol=1e-5)
+
+    # 3. Test hyper_universal DataMovementReductionEngine
+    univ_out, univ_rep = DataMovementReductionEngine.block_tiled_flash_attention(
+        Q, K, V, block_r=64, block_c=64, causal=True
+    )
+    assert np.allclose(univ_out, ref_out, atol=1e-5)
+    assert univ_rep.output_verified is True
+    assert univ_rep.bytes_avoided > 0
+
+

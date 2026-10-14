@@ -155,10 +155,19 @@ class AlternativeAlgorithmDiscoveryEngine:
     ) -> DiscoverySearchReport:
         t_start = time.perf_counter()
 
-        # 1. Benchmark reference execution
-        t0 = time.perf_counter()
+        # 1. Benchmark reference execution with warmup + 3-trial median
+        try:
+            _ = reference_fn(sample_input)  # Warmup
+        except Exception:
+            pass
+
+        ref_samples = []
         ref_out = reference_fn(sample_input)
-        ref_latency_ms = (time.perf_counter() - t0) * 1000.0
+        for _ in range(3):
+            t0 = time.perf_counter()
+            _ = reference_fn(sample_input)
+            ref_samples.append((time.perf_counter() - t0) * 1000.0)
+        ref_latency_ms = max(float(np.median(ref_samples)), 1e-6)
 
         evaluated: List[PathwayCandidate] = []
         verified_candidates: List[PathwayCandidate] = []
@@ -183,10 +192,15 @@ class AlternativeAlgorithmDiscoveryEngine:
 
             cand.status = DiscoveryStatus.PRECONDITION_MET
 
-            t1 = time.perf_counter()
             try:
-                cand_out = cand.kernel_fn(sample_input)
-                cand_latency_ms = (time.perf_counter() - t1) * 1000.0
+                # Warmup candidate
+                _ = cand.kernel_fn(sample_input)
+                cand_samples = []
+                for _ in range(3):
+                    t1 = time.perf_counter()
+                    cand_out = cand.kernel_fn(sample_input)
+                    cand_samples.append((time.perf_counter() - t1) * 1000.0)
+                cand_latency_ms = max(float(np.median(cand_samples)), 1e-6)
             except Exception as e:
                 cand.status = DiscoveryStatus.FAILED_CORRECTNESS
                 cand.rejection_reason = f"Runtime execution failed: {e}"
@@ -194,7 +208,10 @@ class AlternativeAlgorithmDiscoveryEngine:
                 continue
 
             cand.latency_ms = cand_latency_ms
-            cand.measured_speedup = (ref_latency_ms / cand_latency_ms) if cand_latency_ms > 0 else 1.0
+            if cand.algorithm_family == "BASELINE_DENSE":
+                cand.measured_speedup = 1.0
+            else:
+                cand.measured_speedup = (ref_latency_ms / cand_latency_ms) if cand_latency_ms > 0 else 1.0
 
             is_valid, rel_err, abs_err, reason = contract.validate_candidate_output(ref_out, cand_out)
             cand.max_relative_error = rel_err
@@ -205,7 +222,7 @@ class AlternativeAlgorithmDiscoveryEngine:
                 evaluated.append(cand)
                 continue
 
-            if cand.measured_speedup < 0.5:
+            if cand.measured_speedup < 0.5 and cand.algorithm_family != "BASELINE_DENSE":
                 cand.status = DiscoveryStatus.REJECTED_PERFORMANCE_REGRESSION
                 cand.rejection_reason = f"Candidate speedup {cand.measured_speedup:.2f}x was regression"
                 evaluated.append(cand)

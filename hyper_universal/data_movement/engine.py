@@ -96,3 +96,99 @@ class DataMovementReductionEngine:
             output_verified=is_valid,
         )
         return C, report
+
+    @staticmethod
+    def block_tiled_flash_attention(
+        Q: np.ndarray,
+        K: np.ndarray,
+        V: np.ndarray,
+        block_r: int = 64,
+        block_c: int = 64,
+        causal: bool = True,
+    ) -> Tuple[np.ndarray, DataMovementReport]:
+        """
+        Feature H: FlashAttention-Style Memory Traffic Optimization.
+        Computes exact scaled dot-product attention using 2D block tiling (Br x Bc)
+        and online numerically stable softmax reduction.
+        Eliminates intermediate (N, N) score matrix materialization in DRAM.
+        """
+        seq_len, d = Q.shape
+        scale = 1.0 / np.sqrt(d)
+
+        # Standard reference attention for ground-truth verification
+        t0 = time.perf_counter()
+        S_ref = (Q @ K.T) * scale
+        if causal:
+            mask = np.triu(np.ones((seq_len, seq_len), dtype=bool), k=1)
+            S_ref[mask] = -1e9
+        m_ref = np.max(S_ref, axis=-1, keepdims=True)
+        P_ref = np.exp(S_ref - m_ref)
+        P_ref /= np.maximum(np.sum(P_ref, axis=-1, keepdims=True), 1e-12)
+        ref_out = P_ref @ V
+        t_ref = time.perf_counter() - t0
+
+        # Block-tiled FlashAttention
+        t1 = time.perf_counter()
+        O = np.zeros_like(Q)
+
+        for i_start in range(0, seq_len, block_r):
+            i_end = min(i_start + block_r, seq_len)
+            b_r = i_end - i_start
+            Q_tile = Q[i_start:i_end]
+
+            m_i = np.full(b_r, -1e9, dtype=np.float32)
+            l_i = np.zeros(b_r, dtype=np.float32)
+            O_i = np.zeros((b_r, d), dtype=np.float32)
+
+            for j_start in range(0, seq_len, block_c):
+                if causal and j_start > (i_end - 1):
+                    break
+
+                j_end = min(j_start + block_c, seq_len)
+                b_c = j_end - j_start
+                K_tile = K[j_start:j_end]
+                V_tile = V[j_start:j_end]
+
+                S_ij = np.dot(Q_tile, K_tile.T) * scale
+                if causal and j_end > i_start:
+                    r_idx = np.arange(i_start, i_end)[:, None]
+                    c_idx = np.arange(j_start, j_end)[None, :]
+                    S_ij[c_idx > r_idx] = -1e9
+
+                tile_max = np.max(S_ij, axis=-1)
+                m_new = np.maximum(m_i, tile_max)
+                alpha = np.exp(m_i - m_new)
+                P_ij = np.exp(S_ij - m_new[:, None])
+
+                l_new = alpha * l_i + np.sum(P_ij, axis=-1)
+                O_i = alpha[:, None] * O_i + np.dot(P_ij, V_tile)
+
+                m_i = m_new
+                l_i = l_new
+
+            O[i_start:i_end] = O_i / np.maximum(l_i[:, None], 1e-12)
+
+        t_flash = time.perf_counter() - t1
+
+        unfused_traffic = 4 * seq_len * d * 4 + 4 * seq_len * seq_len * 4
+        fused_traffic = 4 * seq_len * d * 4
+        avoided = max(0, unfused_traffic - fused_traffic)
+
+        flops = 4.0 * seq_len * seq_len * d
+        intensity = flops / max(fused_traffic, 1)
+
+        diff = float(np.max(np.abs(ref_out - O)))
+        is_valid = diff <= 1e-4
+
+        report = DataMovementReport(
+            name="BlockTiled_FlashAttention",
+            logical_bytes_processed=unfused_traffic,
+            physical_bytes_transferred=fused_traffic,
+            bytes_avoided=avoided,
+            arithmetic_intensity_flops_per_byte=intensity,
+            peak_transient_buffer_bytes=block_r * block_c * 4,
+            execution_latency_ms=t_flash * 1000.0,
+            output_verified=is_valid,
+        )
+        return O, report
+

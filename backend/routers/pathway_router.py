@@ -60,7 +60,7 @@ async def get_pathway_dashboard():
 
 
 class WorkloadSubmitRequest(BaseModel):
-    workload_name: str = Field(..., example="chained_gemm")
+    workload_name: str = Field(..., examples=["chained_gemm"])
     graph: Dict[str, Any]
     inputs: Dict[str, Any]
     contract: Optional[Dict[str, Any]] = None
