@@ -87,5 +87,7 @@ scratch/
 
 # HYPER-Ω: Runtime-generated experiment artifacts and counterexamples
 # These are ephemeral proof/falsification outputs - NOT source code
-experiments/
-counterexamples/
+/experiments/
+/counterexamples/
+!hyper_universal/counterexamples/
+

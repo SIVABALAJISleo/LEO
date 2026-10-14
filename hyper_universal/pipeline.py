@@ -34,6 +34,8 @@ from hyper_universal.contracts.contract_engine import ContractRegistry, Workload
 from hyper_universal.scheduler.scheduler import UniversalScheduler, ExecutionPlan
 from hyper_universal.memory_escape.engine import OutOfCoreStreamEngine, MemoryBudgetController
 from hyper_universal.evidence_store import PathwayEvidenceStore as EvidenceStore
+from hyper_universal.counterexamples.engine import CounterexampleEngine
+
 
 
 
@@ -89,9 +91,11 @@ class UnifiedComputationalEscapePipeline:
         self.scheduler = scheduler or UniversalScheduler()
         self.evidence_store = evidence_store or EvidenceStore()
         self.memory_engine = OutOfCoreStreamEngine()
+        self.counterexample_engine = CounterexampleEngine()
 
         # Cache for Stage 5 & 10
         self._exact_memo_cache: Dict[str, Tuple[Any, float]] = {}
+
 
     # -------------------------------------------------------------------------
     # Stage 1: Contract Extraction
@@ -349,8 +353,14 @@ class UnifiedComputationalEscapePipeline:
     # -------------------------------------------------------------------------
     def stage_15_regression_strategy_learning(self, ctx: PipelineContext) -> None:
         if ctx.counterexample_detected:
-            # Record failure in knowledge base
-            pass
+            # Automatically record into persistent adversarial fuzzing corpus database
+            self.counterexample_engine.record_external_counterexample(
+                workload_id=ctx.workload_id,
+                candidate_id=ctx.candidate_transformations[0] if ctx.candidate_transformations else "default_candidate",
+                error_desc=ctx.counterexample_details or ctx.fallback_reason or "Verification divergence",
+                divergence=float(ctx.verification_error),
+            )
+
 
     # -------------------------------------------------------------------------
     # Full Pipeline Execution Entry Point

@@ -32,13 +32,66 @@ class Counterexample(BaseModel):
     timestamp: float = Field(default_factory=time.time)
 
 
+import json
+import os
+
 class CounterexampleEngine:
     """
-    Actively hunts for inputs that falsify candidate claims.
+    Actively hunts for inputs that falsify candidate claims and maintains
+    a persistent adversarial fuzzing corpus to guide future algorithm discovery.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, corpus_path: str = "failures/fuzzing_counterexample_corpus.json") -> None:
+        self.corpus_path = corpus_path
         self.counterexample_db: List[Counterexample] = []
+        self._load_corpus()
+
+    def _load_corpus(self) -> None:
+        if os.path.exists(self.corpus_path):
+            try:
+                with open(self.corpus_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    for item in data:
+                        self.counterexample_db.append(Counterexample(**item))
+            except Exception:
+                pass
+
+    def _save_corpus(self) -> None:
+        try:
+            os.makedirs(os.path.dirname(os.path.abspath(self.corpus_path)), exist_ok=True)
+            with open(self.corpus_path, "w", encoding="utf-8") as f:
+                dump_data = [
+                    cx.model_dump() if hasattr(cx, "model_dump") else cx.dict()
+                    for cx in self.counterexample_db
+                ]
+                json.dump(dump_data, f, indent=2)
+        except Exception:
+            pass
+
+
+    def record_counterexample(self, cx: Counterexample) -> None:
+        self.counterexample_db.append(cx)
+        self._save_corpus()
+
+    def record_external_counterexample(
+        self,
+        workload_id: str,
+        candidate_id: str,
+        error_desc: str,
+        divergence: float = 1.0,
+    ) -> Counterexample:
+        cx = Counterexample(
+            candidate_id=candidate_id,
+            workload_id=workload_id,
+            failure_mode="NUMERICAL_INSTABILITY" if divergence > 1e-3 else "PRECISION_DIVERGENCE",
+            divergence=divergence,
+            input_representation=f"Adversarial input for {workload_id}",
+            minimized_input_representation=f"Divergence {divergence:.5e}",
+            violated_assumption=error_desc,
+        )
+        self.record_counterexample(cx)
+        return cx
+
 
     def attack_matrix_candidate(
         self,
@@ -124,7 +177,7 @@ class CounterexampleEngine:
                     minimized_input_representation=f"Scalar slice divergence {div:.4e}",
                     violated_assumption=f"Candidate assumes well-behaved dynamic range; violated under {description}.",
                 )
-                self.counterexample_db.append(cx)
+                self.record_counterexample(cx)
                 return cx
         except Exception as e:
             cx = Counterexample(
@@ -135,7 +188,7 @@ class CounterexampleEngine:
                 input_representation=description,
                 violated_assumption=f"Crash during attack: {str(e)}",
             )
-            self.counterexample_db.append(cx)
+            self.record_counterexample(cx)
             return cx
 
         return None

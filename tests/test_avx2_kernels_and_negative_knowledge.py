@@ -69,6 +69,31 @@ def test_svd_structured_low_rank_accepted():
     assert max_err < 1e-4
 
 
+def test_svd_adaptive_energy_selection():
+    """Verify dynamic energy thresholding (sum sigma_i / sum sigma >= 0.99) adapts rank."""
+    np.random.seed(42)
+    # Construct rank-6 matrix with mild decaying noise
+    U = np.random.randn(64, 6).astype(np.float32)
+    V = np.random.randn(64, 6).astype(np.float32)
+    A_structured = U @ V.T + 1e-4 * np.random.randn(64, 64).astype(np.float32)
+
+    svd_adaptive = LowRankSVDTransformation(
+        target_rank=None,
+        target_energy_ratio=0.99,
+        adaptive_energy_selection=True,
+    )
+    valid, msg = svd_adaptive.check_preconditions(A_structured)
+    assert valid
+    assert "Adaptive rank" in msg
+    assert svd_adaptive._selected_rank <= 8  # Dynamically chose minimal rank around 6
+
+    u, s, vt = svd_adaptive.apply(A_structured)
+    assert u.shape[1] == svd_adaptive._selected_rank
+    reconstructed = (u * s) @ vt
+    assert np.allclose(A_structured, reconstructed, atol=1e-3)
+
+
+
 def test_opencl_task_size_thresholding():
     """Verify that payloads < 256 KB are routed to CPU_AVX2 to avoid command queue latency."""
     scheduler = UniversalScheduler()

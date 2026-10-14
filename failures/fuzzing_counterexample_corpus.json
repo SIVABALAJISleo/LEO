@@ -1,0 +1,57 @@
+[
+  {
+    "counterexample_id": "cx-b6b6b30a",
+    "candidate_id": "AVX2_CACHE_BLOCKED_BLAS",
+    "workload_id": "test_corpus_integration",
+    "failure_mode": "NUMERICAL_INSTABILITY",
+    "divergence": 50.0,
+    "input_representation": "Adversarial input for test_corpus_integration",
+    "minimized_input_representation": "Divergence 5.00000e+01",
+    "violated_assumption": "Output diverged from reference oracle. Error: 50.000000 (Tolerance: 0.000010)",
+    "timestamp": 1791986983.0202138
+  },
+  {
+    "counterexample_id": "cx-8f6078b0",
+    "candidate_id": "AVX2_CACHE_BLOCKED_BLAS",
+    "workload_id": "test_corpus_integration",
+    "failure_mode": "NUMERICAL_INSTABILITY",
+    "divergence": 50.0,
+    "input_representation": "Adversarial input for test_corpus_integration",
+    "minimized_input_representation": "Divergence 5.00000e+01",
+    "violated_assumption": "Output diverged from reference oracle. Error: 50.000000 (Tolerance: 0.000010)",
+    "timestamp": 1791987039.123271
+  },
+  {
+    "counterexample_id": "cx-cbc29a8b",
+    "candidate_id": "AVX2_CACHE_BLOCKED_BLAS",
+    "workload_id": "gemm_test_fallback",
+    "failure_mode": "PRECISION_DIVERGENCE",
+    "divergence": 0.0,
+    "input_representation": "Adversarial input for gemm_test_fallback",
+    "minimized_input_representation": "Divergence 0.00000e+00",
+    "violated_assumption": "Output diverged from reference oracle. Error: 998.000000 (Tolerance: 0.000010)",
+    "timestamp": 1791987086.91112
+  },
+  {
+    "counterexample_id": "cx-fa223558",
+    "candidate_id": "AVX2_CACHE_BLOCKED_BLAS",
+    "workload_id": "fail_closed_test",
+    "failure_mode": "NUMERICAL_INSTABILITY",
+    "divergence": 100.0,
+    "input_representation": "Adversarial input for fail_closed_test",
+    "minimized_input_representation": "Divergence 1.00000e+02",
+    "violated_assumption": "Output diverged from reference oracle. Error: 100.000000 (Tolerance: 0.000010)",
+    "timestamp": 1791987087.006848
+  },
+  {
+    "counterexample_id": "cx-5852fdfb",
+    "candidate_id": "AVX2_CACHE_BLOCKED_BLAS",
+    "workload_id": "test_corpus_integration",
+    "failure_mode": "NUMERICAL_INSTABILITY",
+    "divergence": 50.0,
+    "input_representation": "Adversarial input for test_corpus_integration",
+    "minimized_input_representation": "Divergence 5.00000e+01",
+    "violated_assumption": "Output diverged from reference oracle. Error: 50.000000 (Tolerance: 0.000010)",
+    "timestamp": 1791987087.432936
+  }
+]

@@ -92,26 +92,56 @@ class SparsificationCSRTransformation(Transformation):
 class LowRankFactorizationTransformation(Transformation):
     """
     Transforms matrix A into low-rank factor matrices U, S, V^T.
+    Supports both static target_rank and Adaptive Singular Value Energy Selection.
     """
 
-    def __init__(self, target_rank: int = 16, min_energy_ratio: float = 0.95) -> None:
+    def __init__(
+        self,
+        target_rank: Optional[int] = 16,
+        min_energy_ratio: float = 0.95,
+        target_energy_ratio: float = 0.99,
+        adaptive_energy_selection: bool = False,
+    ) -> None:
         super().__init__("xf-low-rank", "Low-Rank SVD Factorization")
         self.target_rank = target_rank
         self.min_energy_ratio = min_energy_ratio
+        self.target_energy_ratio = target_energy_ratio
+        self.adaptive_energy_selection = adaptive_energy_selection
+        self._selected_rank: int = target_rank if target_rank is not None else 16
 
     def check_preconditions(self, input_data: Any) -> Tuple[bool, str]:
         if not isinstance(input_data, np.ndarray) or input_data.ndim != 2:
             return False, "Input must be a 2D matrix."
-        if min(input_data.shape) <= self.target_rank:
-            return False, "Matrix dimension smaller than target rank."
 
-        # Scientific Negative Knowledge (Section 14.1):
-        # Direct SVD Factorization on Full-Rank Gaussian Noise fails with ~78.7% error.
-        # Precondition check requires singular value energy ratio sum_{i=1}^k \sigma_i / sum \sigma >= 0.95.
+        # Compute singular values
         s = np.linalg.svd(input_data, compute_uv=False)
         total_energy = float(np.sum(s))
         if total_energy <= 1e-12:
             return False, "Singular value energy near zero."
+
+        # Case 1: Adaptive Singular Value Energy Selection (Dynamic Thresholding)
+        # Finds minimum rank k such that cumulative energy >= target_energy_ratio (e.g. 0.99)
+        if self.adaptive_energy_selection or self.target_rank is None:
+            cumsum_energy = np.cumsum(s)
+            ratios = cumsum_energy / total_energy
+            valid_indices = np.where(ratios >= self.target_energy_ratio)[0]
+            if len(valid_indices) == 0:
+                return False, f"Cannot achieve target energy ratio {self.target_energy_ratio:.2f}."
+            k = int(valid_indices[0]) + 1
+            max_allowed_rank = max(1, int(0.5 * min(input_data.shape)))
+            if k > max_allowed_rank:
+                return (
+                    False,
+                    f"Adaptive rank k={k} exceeds compression limit {max_allowed_rank} "
+                    f"(matrix lacks low-rank structure; flat spectrum detected)."
+                )
+            self._selected_rank = k
+            return True, f"Adaptive rank {k} selected satisfying energy ratio >= {self.target_energy_ratio:.2f}."
+
+        # Case 2: Static target rank with minimum energy ratio enforcement
+        if min(input_data.shape) <= self.target_rank:
+            return False, "Matrix dimension smaller than target rank."
+
         k = min(self.target_rank, len(s))
         top_k_energy = float(np.sum(s[:k]))
         energy_ratio = top_k_energy / total_energy
@@ -122,6 +152,7 @@ class LowRankFactorizationTransformation(Transformation):
                 f"(matrix lacks low-rank structure; full-rank Gaussian noise detected)."
             )
 
+        self._selected_rank = k
         return True, "Preconditions satisfied."
 
     def apply(self, input_data: Any) -> Any:
@@ -129,8 +160,9 @@ class LowRankFactorizationTransformation(Transformation):
         if not valid:
             raise ValueError(f"LowRankSVDTransformation precondition failed: {msg}")
         u, s, vt = np.linalg.svd(input_data, full_matrices=False)
-        k = min(self.target_rank, len(s))
+        k = self._selected_rank
         return u[:, :k], s[:k], vt[:k, :]
+
 
     def proof_obligation(self) -> str:
         return "Eckart-Young-Mirsky Theorem: Truncated SVD provides best rank-k approximation under Frobenius norm."

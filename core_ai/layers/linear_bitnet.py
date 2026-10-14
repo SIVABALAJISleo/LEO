@@ -11,7 +11,13 @@ try:
     HAS_AVX2_EXT = True
 except ImportError:
     HAS_AVX2_EXT = False
-    warnings.warn("Custom AVX2 C++ extension for BitNet not found. Falling back to slow simulated execution.")
+
+try:
+    import numpy as np
+    from hyper_universal.kernels.bitnet_ternary_avx2 import bitnet_ternary_gemm_avx2
+    HAS_NUMBA_AVX2 = True
+except ImportError:
+    HAS_NUMBA_AVX2 = False
 
 class LinearBitNet(nn.Module):
     """
@@ -51,14 +57,12 @@ class LinearBitNet(nn.Module):
         w_quant, w_scale = self.absmean_quantize_weights(self.weight)
         
         # 2. Quantize inputs to int16 (to eliminate FPU during the core loop)
-        # In a full pipeline, x would already be int16, but we simulate it here if needed.
         x_scale = x.abs().max(dim=-1, keepdim=True)[0].clamp(min=1e-5) / 32767.0
         x_int16 = torch.round(x / x_scale).to(torch.int16)
         w_int8 = w_quant.to(torch.int8)
         
         # 3. Route through custom AVX2 kernel if available
         if HAS_AVX2_EXT:
-            # Requires 2D tensor for the kernel logic
             original_shape = x_int16.shape
             if x_int16.dim() > 2:
                 x_int16 = x_int16.view(-1, self.in_features)
@@ -70,12 +74,21 @@ class LinearBitNet(nn.Module):
                 
             # Dequantize back to float for the output edges
             out = out_int32.to(torch.float32) * (x_scale * w_scale)
+        elif HAS_NUMBA_AVX2:
+            # Compiled AVX2 SIMD path (LLVM JIT native instructions, zero FPU multiplications)
+            original_shape = x.shape
+            x_2d = x.reshape(-1, self.in_features).detach().cpu().numpy().astype(np.float32)
+            w_2d = w_quant.detach().cpu().numpy().astype(np.int8)
+            out_simd = bitnet_ternary_gemm_avx2(x_2d, w_2d)
+            out = torch.from_numpy(out_simd).to(device=x.device, dtype=torch.float32)
+            if len(original_shape) > 2:
+                out = out.reshape(*original_shape[:-1], self.out_features)
         else:
             # Fallback simulated forward (Standard Torch)
-            # This mathematically achieves the same thing but uses the GPU/FPU
             out = F.linear(x, w_quant)
             
         if self.bias is not None:
             out += self.bias
             
         return out
+
