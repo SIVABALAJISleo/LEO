@@ -1,312 +1,117 @@
 """
-tests/test_parity_engine.py
-===========================
-Comprehensive unit and integration test suite for the HYPER 100% Parity Engine.
-Tests:
-- Capability Registry taxonomy integrity
-- Parity Levels 1-8 contract engine & CONTRACT_UNDEFINED
-- Pathway IR serialization and validation
-- Workload Decomposer 10 questions
-- Counterfactual Engine hypothesis generation & testing
-- Search Space Compiler beam and evolutionary search
-- Kimi K3 Discovery Brain specialist consultation
-- Certificate Engine issuance & SHA-256 fingerprint validation
-- Independent Verification Engine & Anti-cheating audits
-- Adversarial Gauntlet 12 attack vectors
-- Heterogeneous Scheduler & Telemetry
-- Pathway Composition & Re-verification
-- Knowledge Graph failure memory
-- Breakthrough & Blind Holdout generalization
-- Application Parity validation for PyTorch, OpenCV, SciPy
-- Full 21-stage autonomous discovery cycle
+Test suite for Contract-Driven Parity Engine (leo.parity).
+Validates frozen contracts, engines, router, and adversarial fallbacks.
 """
 
+import os
 import pytest
 import numpy as np
 
-from hyper.parity_engine import (
-    CapabilityRegistry,
-    GPUDomain,
-    CapabilityStatus,
-    ContractEngine,
-    ParityLevel,
-    EquivalenceClass,
-    PrecisionRequirement,
-    ContractStatus,
-    PerformanceContract,
-    WorkloadContract,
-    PathwayIR,
-    WorkloadDecomposer,
-    CounterfactualEngine,
-    SearchSpaceCompiler,
-    SearchStrategy,
-    KimiK3DiscoveryBrain,
-    K3SpecialistRole,
-    CertificateEngine,
-    CertificateType,
-    VerificationEngine,
-    AdversarialVerificationEngine,
-    HeterogeneousScheduler,
-    PathwayComposer,
-    DiscoveryKnowledgeGraph,
-    BreakthroughHoldoutEngine,
-    UniversalApplicationParityHarness,
-    HyperUniversalPathwayEngine,
-    ParityDashboard,
-    PerformanceParityEngine,
-    SustainedPerformanceEngine,
-    PerformanceDiscoveryMode,
-    FirstAutomatedExperiments,
+from leo.parity.contracts import (
+    load_and_freeze_contracts,
+    ResultLabel,
+    ExecutionResult,
 )
+from leo.parity.router import ParityWorkloadRouter
+from leo.parity.engines.llm_inference import LLMInferenceEngine
+from leo.parity.engines.rag_retrieval import RAGRetrievalEngine
+from leo.parity.engines.text_embeddings import TextEmbeddingsEngine
+from leo.parity.engines.temporal_rendering import TemporalRenderingEngine
 
 
-def test_capability_registry():
-    reg = CapabilityRegistry()
-    caps = reg.list_capabilities()
-    assert len(caps) >= 80, f"Expected >= 80 capabilities, got {len(caps)}"
-    
-    # Check domains
-    domains = {c.domain for c in caps}
-    assert GPUDomain.GRAPHICS in domains
-    assert GPUDomain.RAY_TRACING in domains
-    assert GPUDomain.AI_ML in domains
-    assert GPUDomain.SCIENTIFIC_COMPUTING in domains
-
-    # Verify unique IDs
-    gemm = reg.get_by_name("matrix_multiplication")
-    assert gemm is not None
-    assert gemm.capability_id.startswith("CAP_")
-    assert gemm.workload_id.startswith("WLD_")
-    assert gemm.contract_id.startswith("CTR_")
-    assert gemm.verification_id.startswith("VRF_")
-    assert gemm.physical_parity_excluded is True
+def test_contracts_registry_and_hash():
+    """Verify contracts load properly and hash is deterministic."""
+    registry = load_and_freeze_contracts()
+    assert len(registry.contracts) == 4
+    assert len(registry.contracts_hash) == 64
+    assert "quantized_llm_inference" in registry.contracts
+    assert "rag_retrieval" in registry.contracts
+    assert "text_embeddings" in registry.contracts
+    assert "temporal_reuse_rendering" in registry.contracts
 
 
-def test_contract_engine_undefined_and_levels():
-    # Test undefined contract
-    undef = WorkloadContract.undefined("WLD_TEST", "CAP_TEST")
-    passed, report = ContractEngine.evaluate(undef, np.ones(4), np.ones(4), {})
-    assert not passed
-    assert report["status"] == ContractStatus.CONTRACT_UNDEFINED.value
+def test_quantized_llm_inference_engine():
+    """Verify LLM inference engine runs within budget and preserves quality."""
+    engine = LLMInferenceEngine(vocab_size=256, hidden_dim=64, num_layers=2)
+    prompt = [10, 20, 30]
+    res = engine.run_candidate(prompt, max_new_tokens=4)
 
-    # Test defined contract with exact match
-    p_contract = PerformanceContract(
-        contract_id="CTR_T1",
-        workload_id="WLD_T1",
-        max_latency_ms=100.0,
-        equivalence_class=EquivalenceClass.EXACT,
-    )
-    contract = WorkloadContract(
-        contract_id="CTR_T1",
-        workload_id="WLD_T1",
-        capability_id="CAP_T1",
-        required_parity_levels=[
-            ParityLevel.LEVEL_2_INTERFACE,
-            ParityLevel.LEVEL_4_EXACT_COMPUTATIONAL,
-            ParityLevel.LEVEL_5_NUMERICAL,
-        ],
-        performance_contract=p_contract,
-    )
-
-    arr = np.array([1.0, 2.0, 3.0], dtype=np.float32)
-    passed, report = ContractEngine.evaluate(contract, arr, arr, {"latency_ms": 5.0})
-    assert passed
-    assert report["levels"]["Level_1_Physical"]["status"] == "OUT_OF_SCOPE"
-    assert report["levels"]["Level_4_Exact_Computational"]["passed"] is True
+    assert isinstance(res, ExecutionResult)
+    assert res.label in (ResultLabel.PREDICTIVE, ResultLabel.EXACT)
+    assert res.correctness_metric_value == 1.0
+    assert res.latency_ms < 120.0
+    assert res.peak_ram_mb <= 32.0
 
 
-def test_workload_decomposer():
-    reg = CapabilityRegistry()
-    cap = reg.get_by_name("matrix_multiplication")
-    dec = WorkloadDecomposer.decompose(cap)
-    assert len(dec.operations) >= 3
-    assert len(dec.necessity.must_happen) > 0
-    assert len(dec.necessity.reusable_elements) > 0
-    assert dec.necessity.theoretical_work_reduction > 0.0
+def test_rag_retrieval_engine_and_cache():
+    """Verify RAG engine returns high recall and caches results."""
+    engine = RAGRetrievalEngine(corpus_size=1000, embedding_dim=128)
+    query = np.random.randn(128).astype(np.float32)
+
+    # First run: executes search and populates cache
+    res1 = engine.run_candidate(query, top_k=5, use_cache=True)
+    assert res1.correctness_metric_value >= 0.95
+    assert res1.latency_ms < 6.0
+
+    # Second run: identical query must hit exact cache
+    res2 = engine.run_candidate(query, top_k=5, use_cache=True)
+    assert res2.label == ResultLabel.CACHED
+    assert res2.correctness_metric_value == 1.0
 
 
-def test_counterfactual_engine():
-    reg = CapabilityRegistry()
-    cap = reg.get_by_name("matrix_multiplication")
-    dec = WorkloadDecomposer.decompose(cap)
-    hypotheses = CounterfactualEngine.generate_counterfactuals(dec)
-    assert len(hypotheses) >= 5
+def test_text_embeddings_engine():
+    """Verify text embeddings engine preserves Frobenius relative error <= 0.005 (cosine sim >= 0.999)."""
+    engine = TextEmbeddingsEngine(hidden_dim=256, rank=32)
+    tokens = np.random.randn(512, 256).astype(np.float32)
+    res = engine.run_candidate(tokens)
 
-    res = CounterfactualEngine.test_hypothesis(
-        hypothesis=hypotheses[0],
-        baseline_fn=lambda: np.array([1.0, 2.0]),
-        candidate_fn=lambda: np.array([1.0, 2.0]),
-        contract_validator=lambda c, r: (bool(np.array_equal(c, r)), 0.0),
-    )
-    assert res.is_valid is True
-    assert res.survivor_verdict == "SURVIVED_AND_VERIFIED"
+    assert res.correctness_metric_value >= 0.999
+    assert res.latency_ms < 15.0
+    assert res.label in (ResultLabel.REDUCED_WORK, ResultLabel.EXACT)
 
 
-def test_search_space_compiler():
-    reg = CapabilityRegistry()
-    cap = reg.get_by_name("matrix_multiplication")
-    dec = WorkloadDecomposer.decompose(cap)
-    p_contract = PerformanceContract(contract_id="C", workload_id="W")
-    contract = WorkloadContract(contract_id="C", workload_id="W", capability_id="CAP", performance_contract=p_contract)
+def test_temporal_rendering_engine():
+    """Verify temporal tile rendering achieves PSNR >= 40 dB."""
+    engine = TemporalRenderingEngine(height=128, width=128, tile_size=16)
+    # First frame establishes history (label: EXACT)
+    res1 = engine.run_candidate(frame_time=0.0)
+    assert res1.correctness_metric_value >= 40.0
 
-    compiler = SearchSpaceCompiler(seed=123)
-    survivors, progress = compiler.execute_search(
-        decomposed=dec,
-        contract=contract,
-        strategy=SearchStrategy.BEAM_SEARCH,
-        budget=10,
-    )
-    assert progress.candidates_generated >= 10
-    assert len(survivors) > 0
+    # Second frame with sparse dynamic tiles reuses temporal history (label: REDUCED_WORK)
+    res2 = engine.run_candidate(frame_time=1.0, dynamic_tile_coords=[(0, 0), (1, 1)])
+    assert res2.correctness_metric_value >= 40.0
+    assert res2.latency_ms < 8.0
+    assert res2.label == ResultLabel.REDUCED_WORK
 
 
-def test_kimi_k3_specialists():
-    brain = KimiK3DiscoveryBrain()
-    reg = CapabilityRegistry()
-    cap = reg.get_by_name("attention")
-    p_contract = PerformanceContract(contract_id="C", workload_id="W")
-    contract = WorkloadContract(contract_id="C", workload_id="W", capability_id="CAP", performance_contract=p_contract)
+def test_parity_router_end_to_end():
+    """Verify router executes declared workloads and certifies compliance."""
+    registry = load_and_freeze_contracts()
+    router = ParityWorkloadRouter(registry)
+    workloads = [
+        "quantized_llm_inference",
+        "rag_retrieval",
+        "text_embeddings",
+        "temporal_reuse_rendering",
+    ]
 
-    proposal = brain.consult_specialist(K3SpecialistRole.K3_AI_RESEARCHER, cap, contract)
-    assert proposal.specialist_role == K3SpecialistRole.K3_AI_RESEARCHER
-    assert proposal.requires_independent_verification is True
-    assert proposal.ai_alone_proves_parity is False
-
-
-def test_certificate_engine():
-    engine = CertificateEngine(ledger_file="reports/test_cert_ledger.json")
-    cert = engine.issue_certificate(
-        cert_type=CertificateType.EXACT_EQUIVALENCE,
-        original="Baseline",
-        replacement="Optimized",
-        assumptions=["None"],
-        proof="Identical algebra",
-        tests=10,
-        adversarial_tests=5,
-        numerical_error=0.0,
-    )
-    assert cert.id.startswith("CERT_")
-    assert engine.verify_certificate_integrity(cert.id) is True
+    for w_name in workloads:
+        contract = registry.get_contract(w_name)
+        res = router.route_and_execute(w_name)
+        assert contract.validate_execution(res), f"Workload {w_name} failed contract: {res.failure_reason}"
 
 
-def test_verification_engine_anti_cheat():
-    p_contract = PerformanceContract(contract_id="C", workload_id="W")
-    contract = WorkloadContract(contract_id="C", workload_id="W", capability_id="CAP", performance_contract=p_contract)
+def test_adversarial_self_healing_fallbacks():
+    """Verify that adversarial attacks trigger fail-closed fallbacks to EXACT."""
+    # 1. RAG hostile query
+    rag_engine = RAGRetrievalEngine(corpus_size=1000, embedding_dim=128)
+    hostile_query = np.ones(128, dtype=np.float32) * -1.0
+    rag_res = rag_engine.run_candidate(hostile_query, top_k=5, use_cache=False)
+    assert rag_res.correctness_metric_value >= 0.95  # Survived via linear scan fallback
 
-    rec = VerificationEngine.verify_candidate(
-        workload_id="WLD_TEST",
-        capability_id="CAP_TEST",
-        pathway_id="PTH_TEST",
-        candidate_fn=lambda: np.array([42.0]),
-        reference_fn=lambda: np.array([42.0]),
-        contract=contract,
-    )
-    assert rec.is_valid is True
-    assert rec.exact_match is True
-    assert rec.anti_cheat.is_honest is True
-
-
-def test_adversarial_verification():
-    report = AdversarialVerificationEngine.attack_candidate(
-        pathway_id="PTH_ADV_TEST",
-        candidate_wrapper=lambda t: t * 2.0,
-        reference_wrapper=lambda t: t * 2.0,
-        base_shape=(16, 16),
-    )
-    assert report.survived_gauntlet is True
-    assert report.adversarial_survival_score_pct == 100.0
-
-
-def test_application_parity_pytorch_opencv_scipy():
-    reports = UniversalApplicationParityHarness.validate_all_core_applications()
-    assert len(reports) == 12
-    all_passed = all(r.parity_achieved for r in reports)
-    assert all_passed is True
-
-
-def test_end_to_end_autonomous_cycle():
-    engine = HyperUniversalPathwayEngine()
-    summary = engine.run_discovery_cycle(
-        capability_name="matrix_multiplication",
-        baseline_fn=lambda: np.array([[1.0, 2.0], [3.0, 4.0]]) @ np.array([[5.0, 6.0], [7.0, 8.0]]),
-        sample_tensor=np.array([[1.0, 2.0], [3.0, 4.0]], dtype=np.float32),
-        search_budget=5,
-    )
-    assert summary.is_100_percent_verified is True
-    assert summary.evidence_level in ["VERIFIED", "INDEPENDENTLY_VERIFIED"]
-    assert summary.adversarial_survival_pct == 100.0
-
-
-def test_performance_parity_engine():
-    import time
-    target = PerformanceContract(
-        contract_id="CTR_P_TEST",
-        workload_id="WLD_P_TEST",
-        max_latency_ms=50.0,
-        min_fps=30.0,
-        min_throughput=50.0,
-    )
-    profile = PerformanceParityEngine.profile_workload(
-        workload_fn=lambda: sum(range(1000)),
-        iterations=5,
-        warmup=1,
-    )
-    verdict = PerformanceParityEngine.evaluate_performance_contract(
-        metrics=profile,
-        p_contract=target,
-    )
-    assert verdict.performance_parity_score > 0.0
-    assert verdict.is_performance_satisfied is True
-    assert profile.fps > 0.0
-
-
-def test_sustained_performance_validator():
-    report = SustainedPerformanceEngine.execute_sustained_validation(
-        workload_name="test_workload",
-        workload_fn=lambda: np.zeros((32, 32)),
-        reference_fn=lambda: np.zeros((32, 32)),
-        duration_budget_sec=0.2,
-        target_latency_ms=100.0,
-    )
-    assert report.is_sustained_parity_verified is True
-    assert report.total_steps >= 1
-    assert report.thermal_throttling_detected is False
-
-
-def test_performance_discovery_mode():
-    reg = CapabilityRegistry()
-    cap = reg.get_by_name("matrix_multiplication")
-    dec = WorkloadDecomposer.decompose(cap)
-    p_contract = PerformanceContract(contract_id="C", workload_id="W")
-    contract = WorkloadContract(contract_id="C", workload_id="W", capability_id="CAP", performance_contract=p_contract)
-    pathway = PathwayIR(
-        pathway_id="PTH_TEST",
-        capability_id="CAP",
-        workload_id="W",
-        contract_id="C",
-        algorithm_name="baseline",
-        mathematical_basis="direct",
-    )
-    mode = PerformanceDiscoveryMode()
-    new_pathway, attempt = mode.trigger_discovery(
-        current_pathway=pathway,
-        decomposed=dec,
-        contract=contract,
-        measured_latency_ms=10.0,
-        target_latency_ms=0.0001,
-    )
-    assert attempt.attempt_id.startswith("BTA_")
-    assert attempt.strategy_applied != ""
-    assert new_pathway.pathway_id != ""
-
-
-def test_parity_dashboard_and_scoreboard():
-    dash = ParityDashboard()
-    metrics = dash.metrics
-    assert metrics.total_canonical_gpu_capabilities >= 80
-    assert metrics.thermal_contract_parity_pct == 100.0
-    assert metrics.reproducibility_parity_pct == 100.0
-    term_text = dash.render_terminal_dashboard()
-    assert "HYPER 100% PARITY SCOREBOARD" in term_text
-    assert "ABSOLUTE EXCLUSION" in term_text
-
+    # 2. Rendering scene cut
+    render_engine = TemporalRenderingEngine(height=128, width=128, tile_size=16)
+    render_engine.run_candidate(frame_time=0.0)
+    scene_cut_res = render_engine.run_candidate(frame_time=1.0, force_scene_change=True)
+    assert scene_cut_res.correctness_metric_value >= 40.0
+    assert scene_cut_res.label == ResultLabel.EXACT

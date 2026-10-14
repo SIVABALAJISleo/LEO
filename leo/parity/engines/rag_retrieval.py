@@ -171,15 +171,8 @@ class RAGRetrievalEngine:
         ram_after = proc.memory_info().rss / (1024 * 1024)
         peak_ram_mb = max(ram_after - ram_before, 0.2)
 
-        # Store in exact & semantic cache
-        if use_cache:
-            self.exact_cache[q_hash] = (result_indices, result_scores)
-            self.semantic_cache.append((q_norm.copy(), result_indices, result_scores))
-            if len(self.semantic_cache) > 200:
-                self.semantic_cache.pop(0)
-
         # Calculate Recall@k against reference exhaustive scan
-        ref_indices, _, _ = self.run_reference(query, top_k=top_k)
+        ref_indices, ref_scores, _ = self.run_reference(query, top_k=top_k)
         overlap = len(set(result_indices).intersection(set(ref_indices)))
         recall = overlap / float(top_k)
 
@@ -188,12 +181,20 @@ class RAGRetrievalEngine:
         if recall < 0.95:
             # Quality contract gate: auto-fallback to exact linear scan to preserve correctness
             result_indices = ref_indices
+            result_scores = ref_scores
             recall = 1.0
             label = ResultLabel.EXACT
             fallback_triggered = True
         else:
             label = ResultLabel.REDUCED_WORK
             fallback_triggered = False
+
+        # Store validated result in exact & semantic cache
+        if use_cache:
+            self.exact_cache[q_hash] = (result_indices, result_scores)
+            self.semantic_cache.append((q_norm.copy(), result_indices, result_scores))
+            if len(self.semantic_cache) > 200:
+                self.semantic_cache.pop(0)
 
         return ExecutionResult(
             output={"indices": result_indices, "scores": result_scores},
