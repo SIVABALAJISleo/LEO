@@ -1,0 +1,51 @@
+{
+  "certificate_id": "CERT_WLD_EMB_003_1791977369",
+  "workload_name": "text_embeddings",
+  "workload_id": "WLD_EMB_003",
+  "contracts_file_sha256": "df6b2f6d4e56b984aa8e1219fe59a029925abda9d2110b983ec29d074259e6d1",
+  "input_spec_sha256": "62c9416b3e688064a274ad62321a3b898f07ab582820c01789ea78d76fc1f628",
+  "output_digest_sha256": "e2b1c55f868c4fd451f97fa6acf0af202690e572242de8198ece7a4a230f7314",
+  "config_digest_sha256": "387b88c667dfff03ad459a9a1108377225219e8bd0b0b6bf0167d43fb068e51d",
+  "certificate_sha256": "1db9fdee2504ef4e01ab3790e879208b3009007464f73b8bb62ffee13f2621c5",
+  "timestamp_iso": "2026-10-14T11:29:29Z",
+  "status": "PASS",
+  "result_label": "REDUCED_WORK",
+  "contract_clauses": {
+    "correctness_metric": "cosine_similarity",
+    "quality_threshold": 0.999,
+    "latency_cap_ms": 15.0,
+    "peak_ram_cap_mb": 48.0,
+    "allowed_labels": [
+      "EXACT",
+      "REDUCED_WORK",
+      "APPROXIMATE"
+    ]
+  },
+  "measurements": {
+    "latency_p50_ms": 13.161,
+    "latency_p95_ms": 14.444,
+    "latency_p99_ms": 14.664,
+    "latency_mean_ms": 13.021,
+    "latency_std_ms": 0.99,
+    "peak_rss_mb": 1.25,
+    "workload_resident_ram_mb": 1.25,
+    "peak_process_rss_mb": 48.11,
+    "quality_metric_value": 1.0,
+    "reps_timed": 10,
+    "reps_warmup": 0,
+    "cache_allowed": false
+  },
+  "telemetry_summary": {
+    "avg_cpu_clock_mhz": 2100.0,
+    "avg_cpu_temp_c": "NOT_AVAILABLE_USERMODE",
+    "samples_collected": 1
+  },
+  "hardware_fingerprint": {
+    "processor": "Intel64 Family 6 Model 186 Stepping 2, GenuineIntel",
+    "cpu_cores_logical": 12,
+    "cpu_cores_physical": 8,
+    "ram_total_gb": 15.7,
+    "os": "Windows 11",
+    "machine": "AMD64"
+  }
+}

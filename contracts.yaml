@@ -1,0 +1,107 @@
+# ==============================================================================
+# LEO / HYPER PARITY ENGINE: FORMAL WORKLOAD CONTRACTS
+# ==============================================================================
+# All contracts are defined BEFORE benchmarking and frozen by SHA-256 content hash.
+# Any modification of thresholds after observing benchmark outputs invalidates certificates.
+#
+# Workload Classes:
+# 1. quantized_llm_inference: INT8/INT4 layer streaming + speculative decoding
+# 2. rag_retrieval: Vector embedding search with semantic + exact cache
+# 3. text_embeddings: L3-blocked projection & sparse/low-rank transformation
+# 4. temporal_reuse_rendering: Tile reprojection with scene cut detection
+# ==============================================================================
+
+version: "2.0.0"
+target_hardware:
+  cpu: "Intel Core i5-12450H (4P + 4E cores, 12 logical threads, AVX2 enabled)"
+  gpu: "Intel UHD Integrated Graphics (48 EUs, shared DDR memory)"
+  ram_total_gb: 16.0
+  storage: "512 GB PCIe NVMe SSD"
+  os: "Windows 11"
+  silicon_parity_claimed: false
+
+contracts:
+  quantized_llm_inference:
+    workload_id: "WLD_LLM_001"
+    description: "Autoregressive token generation with INT8/INT4 weights and speculative verification"
+    input_spec:
+      prompt_tokens: [101, 2054, 2003, 1037, 3231, 102]  # Fixed evaluation prompt sequence
+      max_new_tokens: 16
+      temperature: 0.0  # Greedy decoding for deterministic verification
+    reference_implementation: "DenseFP32Autoregressive"
+    candidate_implementation: "LayerStreamedSpeculativeDecoder"
+    correctness_metric: "greedy_token_match_rate"
+    quality_threshold: 1.0  # Must match reference tokens exactly under greedy verification
+    max_relative_error: 0.05  # Logit distribution divergence must remain < 5%
+    latency_cap_ms: 120.0     # Max allowed latency for 16 tokens generated on CPU/iGPU
+    peak_ram_cap_mb: 64.0     # Resident RAM budget (must stream layers from SSD)
+    allowed_labels:
+      - "EXACT"
+      - "APPROXIMATE"
+      - "PREDICTIVE"
+      - "REDUCED_WORK"
+    cold_run_required: true
+
+  rag_retrieval:
+    workload_id: "WLD_RAG_002"
+    description: "Semantic document retrieval over 1,000 document embeddings with exact/semantic cache"
+    input_spec:
+      corpus_size: 1000
+      embedding_dim: 128
+      top_k: 5
+      query_vector_seed: 42
+    reference_implementation: "ExhaustiveLinearScanFP32"
+    candidate_implementation: "CachedSubspaceRetrieval"
+    correctness_metric: "top_k_recall"
+    quality_threshold: 0.95   # Top-5 recall must be at least 95% identical to exhaustive scan
+    max_relative_error: 0.01  # Cosine distance deviation < 1%
+    latency_cap_ms: 6.0       # Retrieval must complete within 6.0 ms
+    peak_ram_cap_mb: 32.0     # Maximum resident memory allowed for vector index
+    allowed_labels:
+      - "EXACT"
+      - "APPROXIMATE"
+      - "CACHED"
+      - "REDUCED_WORK"
+    cold_run_required: true
+
+  text_embeddings:
+    workload_id: "WLD_EMB_003"
+    description: "Dense text embedding batch projection with 12MB L3 cache blocking and low-rank filter"
+    input_spec:
+      batch_size: 16
+      sequence_length: 64
+      hidden_dim: 256
+      projection_dim: 128
+    reference_implementation: "FullDenseGEMMProjection"
+    candidate_implementation: "L3BlockedLowRankProjection"
+    correctness_metric: "cosine_similarity"
+    quality_threshold: 0.999  # Emitted embeddings must have >= 0.999 cosine similarity to FP32 baseline
+    max_relative_error: 0.005 # Max relative error < 0.5%
+    latency_cap_ms: 15.0      # Latency must remain under 15.0 ms
+    peak_ram_cap_mb: 48.0     # Maximum resident memory budget
+    allowed_labels:
+      - "EXACT"
+      - "APPROXIMATE"
+      - "REDUCED_WORK"
+    cold_run_required: true
+
+  temporal_reuse_rendering:
+    workload_id: "WLD_RND_004"
+    description: "Frame-to-frame temporal reprojection with changed-tile recomputation and scene cut detection"
+    input_spec:
+      frame_height: 256
+      frame_width: 256
+      tile_size: 32
+      dynamic_region_pct: 12.5  # 12.5% of tiles modified per frame
+      scene_change_threshold: 0.60
+    reference_implementation: "FullFrameRecomputation"
+    candidate_implementation: "TemporalTileReprojection"
+    correctness_metric: "psnr_db"
+    quality_threshold: 40.0   # PSNR must exceed 40.0 dB (visually indistinguishable)
+    max_relative_error: 0.001 # Static tiles must have bitwise identical output (error == 0)
+    latency_cap_ms: 8.0       # Must achieve < 8.0 ms per frame (> 120 FPS on CPU/iGPU)
+    peak_ram_cap_mb: 24.0     # Buffer pool resident cap
+    allowed_labels:
+      - "EXACT"
+      - "REDUCED_WORK"
+    cold_run_required: true
