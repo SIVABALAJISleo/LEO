@@ -79,7 +79,7 @@ class LinearBitNet(nn.Module):
             original_shape = x.shape
             x_2d = x.reshape(-1, self.in_features).detach().cpu().numpy().astype(np.float32)
             w_2d = w_quant.detach().cpu().numpy().astype(np.int8)
-            out_simd = bitnet_ternary_gemm_avx2(x_2d, w_2d)
+            out_simd = bitnet_ternary_gemm_avx2(x_2d, w_2d, gamma=1.0)
             out = torch.from_numpy(out_simd).to(device=x.device, dtype=torch.float32)
             if len(original_shape) > 2:
                 out = out.reshape(*original_shape[:-1], self.out_features)

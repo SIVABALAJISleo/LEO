@@ -19,7 +19,10 @@
 | `tests/test_extreme_heterogeneous.py` | TBIQS Engine, Alder Lake core affinity, CDRE Framework | 13 | **PASSED** | L3 cache working set ceiling, tiled GEMM, and P-core thread pinning. |
 | `tests/test_pathway_api.py` | REST API routes & Dashboard HTML endpoint | 4 | **PASSED** | Verifies `/api/v1/parity/report` and `/api/v1/pathway/dashboard`. |
 | `tests/test_vaee_complete.py` | Verified Autonomous Escape Engine (VAEE) full lifecycle | 13 | **PASSED** | Contract extraction, Pareto frontier, sorting/knapsack/convolution workloads, API routes. |
-| `tests/test_six_engines_suite.py` | Six Universal Optimization Engines Integration | 6 | **PASSED** | Multi-engine pipeline execution and verification. |
+| `tests/test_six_engines_suite.py` | Six Universal Optimization Engines Integration Suite | 21 | **PASSED** | Multi-engine pipeline, bounded streaming, DCE/CSE, cache blocking, Intel discovery, verifier, cold/warm benchmarking. |
+| `tests/test_parity_engine.py` | Parity Engine & 25-Dimension Scorecard Regression Suite | 15 | **PASSED** | Capability registry, contract levels 1-8, ledger hash signing, ray-tracing BVH, sustained performance. |
+| `tests/hyper_escape/` | Algorithmic Escape & Rigorous Multi-Domain Validation | 57 | **PASSED** | Contracts, counterexamples, memory budgets, pathway discovery, robust timing, universal adapters. |
+| `tests/test_api.py` | FastAPI Backend Route Integration | 6 | **PASSED** | Route responses, JSON schema validation, telemetry endpoints, memory routes. |
 
 ---
 

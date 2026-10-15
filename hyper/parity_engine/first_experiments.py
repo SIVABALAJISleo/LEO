@@ -30,18 +30,18 @@ from .pathway_ir import PathwayIR, TargetDevicePlacement, TransformationRecord, 
 
 
 class ExperimentSuiteResult(BaseModel):
-    total_experiments: int = 8
+    total_experiments: int = 9
     verified_experiments: int = 0
     average_speedup: float = 1.0
     average_work_reduction_pct: float = 0.0
     workload_summaries: List[CycleExecutionSummary] = Field(default_factory=list)
-    next_highest_value_unexplored_domain: str = "RAY_TRACING"
+    next_highest_value_unexplored_domain: str = "CRYPTOGRAPHY"
     timestamp: float = Field(default_factory=time.time)
 
 
 class FirstAutomatedExperiments:
     """
-    Executes the 8 mandatory automated experiments required by Section 48.
+    Executes the 9 mandatory automated experiments required by Section 48 (including Ray-Tracing).
     """
 
     def __init__(self, engine: Optional[HyperUniversalPathwayEngine] = None) -> None:

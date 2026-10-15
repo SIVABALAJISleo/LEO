@@ -142,5 +142,29 @@
     "reason": "Double-Buffering Prefetch for Files < 1 MB fails because thread synchronization overhead exceeded read latency. Added minimum threshold of 8 MB for asynchronous prefetching (MIN_ASYNC_PREFETCH_BYTES = 8 MB).",
     "counterexample_hash": "file_below_8mb",
     "timestamp": 1791955002.0
+  },
+  {
+    "failure_id": "fail_2f19b72a",
+    "workload_id": "TEST_GEMM",
+    "transformation_sequence": [
+      "CANONICAL",
+      "BAD_TRUNCATION"
+    ],
+    "failure_category": "NUMERICAL_INSTABILITY",
+    "reason": "Exceeded error tolerance 1e-4",
+    "counterexample_hash": null,
+    "timestamp": 1791983065.194695
+  },
+  {
+    "failure_id": "fail_1e4592a7",
+    "workload_id": "TEST_GEMM",
+    "transformation_sequence": [
+      "CANONICAL",
+      "BAD_TRUNCATION"
+    ],
+    "failure_category": "NUMERICAL_INSTABILITY",
+    "reason": "Exceeded error tolerance 1e-4",
+    "counterexample_hash": null,
+    "timestamp": 1792028203.2322226
   }
 ]

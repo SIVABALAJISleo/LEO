@@ -1,6 +1,6 @@
 {
-  "total_certificates": 53,
-  "updated_at": 1791688080.8499515,
+  "total_certificates": 88,
+  "updated_at": 1791954306.731266,
   "certificates": [
     {
       "id": "CERT_bde29e4dba",
@@ -849,6 +849,566 @@
       "status": "VALIDATED",
       "sha256_fingerprint": "e97fc1e99b98fdacd19b5bea335e879f175f4234db49954a09fccf411d8f8191",
       "timestamp": 1791688080.8495827
+    },
+    {
+      "id": "CERT_09b95cce04",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference matrix_multiplication",
+      "replacement": "Pathway_CAP_AI__MATRIX_MULTIPLICATION_244035",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "74825736b8e574bbffe63de7409a7af8af12dee7b74193c00a4af725ef160c85",
+      "timestamp": 1791900296.695513
+    },
+    {
+      "id": "CERT_c7de92cd9b",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference matrix_multiplication",
+      "replacement": "Pathway_CAP_AI__MATRIX_MULTIPLICATION_ccc3c3",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 2.09808349609375e-05,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "ab27e568da1b6372ac6b0c73df120c3b59add636928c5bc5fc3d7ac5816f2c58",
+      "timestamp": 1791900356.262615
+    },
+    {
+      "id": "CERT_d970a5dd16",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference pde",
+      "replacement": "Pathway_CAP_SCI_PDE_d70846",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "52aa4e91cbd01b096705f4d8fdb802b146e4cc1835d2f1a1825f89a2ed4de462",
+      "timestamp": 1791900356.3125114
+    },
+    {
+      "id": "CERT_e2f5bbdcdd",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference attention",
+      "replacement": "Pathway_CAP_AI__ATTENTION_c0ba1f",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "b1137f44bbc0359ef75a0dc947d8c73cf130913314007b1c4fb485c6229f6968",
+      "timestamp": 1791900356.3486495
+    },
+    {
+      "id": "CERT_fc5c99f6f1",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference convolution_filters",
+      "replacement": "Pathway_CAP_IMA_CONVOLUTION_FILTERS_2a5ac2",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "ee9d0a676d89dc07265eda4b4655a133f1458adb2cf990c512ae70c6a7e576a4",
+      "timestamp": 1791900356.3842392
+    },
+    {
+      "id": "CERT_fc5841cd7c",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference frame_processing",
+      "replacement": "Pathway_CAP_VID_FRAME_PROCESSING_058e09",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "aa8e3d70b01c1bb1a104dd8406fbccd091662a0730e6d9bc846e19d345fc7dc3",
+      "timestamp": 1791900356.4388378
+    },
+    {
+      "id": "CERT_b846b24972",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference compression_lossless",
+      "replacement": "Pathway_CAP_COM_COMPRESSION_LOSSLESS_465e7b",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "c8325d466faa991e401d66cf8462534481f3aae93ce02b8bca9d00d873ea05af",
+      "timestamp": 1791900356.487259
+    },
+    {
+      "id": "CERT_942f1ff6e7",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference n_body",
+      "replacement": "Pathway_CAP_SCI_N_BODY_08a127",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "2e37364743ac2cac3cedb9edcbe5a8df1403d555e4a61361bb06696fb4e103d2",
+      "timestamp": 1791900356.571729
+    },
+    {
+      "id": "CERT_2be7bd71fd",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference rasterization",
+      "replacement": "Pathway_CAP_GRA_RASTERIZATION_41bf13",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "7073b66f2d68b37eeabe6238664768816a415a74899ff246418b693369bbd9ca",
+      "timestamp": 1791900356.6374454
+    },
+    {
+      "id": "CERT_6a50c057a0",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference ray_generation",
+      "replacement": "Pathway_CAP_RAY_RAY_GENERATION_ae871d",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "c17bfdae0c8c06cb8c344def6797f87e3275e2b2de3a886432b5f7d7d2513878",
+      "timestamp": 1791900356.7066069
+    },
+    {
+      "id": "CERT_5047f85dd3",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference matrix_multiplication",
+      "replacement": "Pathway_CAP_AI__MATRIX_MULTIPLICATION_fe0508",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "325066a7bf718457359236a6a5bd44d70654ff4a3878e435c775bed38376d254",
+      "timestamp": 1791949672.8945954
+    },
+    {
+      "id": "CERT_867f088ea5",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference matrix_multiplication",
+      "replacement": "Pathway_CAP_AI__MATRIX_MULTIPLICATION_5045d2",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 1.52587890625e-05,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "1c1530a7c1e65528895d404e3fc965c37655a9cc7f9480aaf734f0d723cb61d5",
+      "timestamp": 1791949754.2543283
+    },
+    {
+      "id": "CERT_81cbddd8a3",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference pde",
+      "replacement": "Pathway_CAP_SCI_PDE_24953a",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "5c0b94e495d5356ac5a97ee887305f8a9f8fbd0223a5365dd77110ef0b1260ff",
+      "timestamp": 1791949754.3150923
+    },
+    {
+      "id": "CERT_496a1d0e99",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference attention",
+      "replacement": "Pathway_CAP_AI__ATTENTION_1e8543",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "b27df2905a8038e6ced5e751b5dc7d98398986a10106418cb3ff77450534facc",
+      "timestamp": 1791949754.3489373
+    },
+    {
+      "id": "CERT_9315c2fa70",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference convolution_filters",
+      "replacement": "Pathway_CAP_IMA_CONVOLUTION_FILTERS_ede05d",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "95852e63e12f76f90c6760daed57609818b7715edeeec9e8ec8a0705d328a4f5",
+      "timestamp": 1791949754.3809633
+    },
+    {
+      "id": "CERT_f6fab729f1",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference frame_processing",
+      "replacement": "Pathway_CAP_VID_FRAME_PROCESSING_d0fd5b",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "808aedc54e3e52d8c590be1fca74ecb8d988dae1f4a4bb74f9bf1a9208c7fd07",
+      "timestamp": 1791949754.4247005
+    },
+    {
+      "id": "CERT_855a2eeeb7",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference compression_lossless",
+      "replacement": "Pathway_CAP_COM_COMPRESSION_LOSSLESS_4680ee",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "6a2e9e82bbeed6f63aff29b626f3a82f29fb48cf7e1aa4c3d4ffaf18f36d043e",
+      "timestamp": 1791949754.4506166
+    },
+    {
+      "id": "CERT_b0e40c43dc",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference n_body",
+      "replacement": "Pathway_CAP_SCI_N_BODY_5fcbb8",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "67cb97914b81942b74d5d6d9c29f8083be74821f8e718cd424066d00f7416032",
+      "timestamp": 1791949754.4857295
+    },
+    {
+      "id": "CERT_95502faaef",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference rasterization",
+      "replacement": "Pathway_CAP_GRA_RASTERIZATION_52e3ed",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "4fa3e74a293e99ec7784422e9bd0884cb952d8c607fae16c0778a616abb0727c",
+      "timestamp": 1791949754.5410428
+    },
+    {
+      "id": "CERT_7b07d364b2",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference ray_generation",
+      "replacement": "Pathway_CAP_RAY_RAY_GENERATION_fa2deb",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "0efe4fc5dd1f1f625f3657a5e7e2082579be5e1a65c488868a8b9f64f97259a1",
+      "timestamp": 1791949754.57564
+    },
+    {
+      "id": "CERT_bb9dfe2e28",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference matrix_multiplication",
+      "replacement": "Pathway_CAP_AI__MATRIX_MULTIPLICATION_9d6b71",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 1.71661376953125e-05,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "936515dab8c8e1fa639521cc46f0c44ec02ac27439eef62b6bd5b7115d5fdad4",
+      "timestamp": 1791950078.7569346
+    },
+    {
+      "id": "CERT_a7ae78d589",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference pde",
+      "replacement": "Pathway_CAP_SCI_PDE_cd6400",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "e3575db534c3ec756decdeae1ad5b6b11537ddf8604eb0a23da4bdfa4aa145b9",
+      "timestamp": 1791950078.9580972
+    },
+    {
+      "id": "CERT_afdd88216a",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference attention",
+      "replacement": "Pathway_CAP_AI__ATTENTION_36151d",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "d8fa70eb92b3b327c583c1acbf5ead8a2f61150ee29f642284d791d727831125",
+      "timestamp": 1791950079.1163676
+    },
+    {
+      "id": "CERT_d3ce5ddd89",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference convolution_filters",
+      "replacement": "Pathway_CAP_IMA_CONVOLUTION_FILTERS_551b3f",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "09e3162147416b74a8a97cb3c88b13725523da081278217e1be138081e32cfdb",
+      "timestamp": 1791950079.468599
+    },
+    {
+      "id": "CERT_e475abb0b3",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference frame_processing",
+      "replacement": "Pathway_CAP_VID_FRAME_PROCESSING_1bfc5d",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "f95635d591b750e6d983457d9c2746f85d753c537c20aa63c76b2b0f90e30425",
+      "timestamp": 1791950079.7285268
+    },
+    {
+      "id": "CERT_255905c85a",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference compression_lossless",
+      "replacement": "Pathway_CAP_COM_COMPRESSION_LOSSLESS_aeb5e8",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "678497314666589cdc75fdf4acf339f37c0860577afe8f13e209fe844bff9d53",
+      "timestamp": 1791950079.8616233
+    },
+    {
+      "id": "CERT_5ff80a0a5d",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference n_body",
+      "replacement": "Pathway_CAP_SCI_N_BODY_abd5b9",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "4a06358e339190d8cbcfaf0bebcfb2944642325a491a505600f7279f62c5c76d",
+      "timestamp": 1791950079.992226
+    },
+    {
+      "id": "CERT_fe1682d190",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference rasterization",
+      "replacement": "Pathway_CAP_GRA_RASTERIZATION_482407",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "e3aea1c4880e788506eabb30a065ca4159250498630b0a567b9c5cde1fe36151",
+      "timestamp": 1791950080.1415117
+    },
+    {
+      "id": "CERT_9e5bd50f35",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference ray_generation",
+      "replacement": "Pathway_CAP_RAY_RAY_GENERATION_011f07",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "a9974c71182f580791f580f1374ad03c2cbfa7fb8e39a573bd0e0a97bdb66832",
+      "timestamp": 1791950080.2668924
+    },
+    {
+      "id": "CERT_8ec5f6bbdb",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference matrix_multiplication",
+      "replacement": "Pathway_CAP_AI__MATRIX_MULTIPLICATION_1fef6a",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "e8081dca30a653954139db104052327cd18f4e5336cf6b1c55e1c4a021646ea6",
+      "timestamp": 1791950106.5639372
+    },
+    {
+      "id": "CERT_17105c41e3",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference matrix_multiplication",
+      "replacement": "Pathway_CAP_AI__MATRIX_MULTIPLICATION_0543f9",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "d7980cf6aa23aaf4ce809199f7a659529e4c4a943233c2caf549bd9ab41707db",
+      "timestamp": 1791951288.3621862
+    },
+    {
+      "id": "CERT_997a163104",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference matrix_multiplication",
+      "replacement": "Pathway_CAP_AI__MATRIX_MULTIPLICATION_c29f57",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "094757e5ca7a9155de29dc1a04cdaee41c97694af9d1e93f17880acca13d3a86",
+      "timestamp": 1791952135.756534
+    },
+    {
+      "id": "CERT_8f7328b15e",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference matrix_multiplication",
+      "replacement": "Pathway_CAP_AI__MATRIX_MULTIPLICATION_aabba8",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "09bc3dbb4260d69168e6ca4890913ec9e686d19e86973a927264fba9041d195c",
+      "timestamp": 1791952469.3858383
+    },
+    {
+      "id": "CERT_fd9fbe22bb",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference matrix_multiplication",
+      "replacement": "Pathway_CAP_AI__MATRIX_MULTIPLICATION_5c72c4",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "d839d53e0720c717e96f9dc25f12e0dd89446644310dd776a6e9ff9918747237",
+      "timestamp": 1791953930.2227077
+    },
+    {
+      "id": "CERT_3ae6498080",
+      "type": "NUMERICAL_EQUIVALENCE",
+      "original": "Standard reference matrix_multiplication",
+      "replacement": "Pathway_CAP_AI__MATRIX_MULTIPLICATION_3f2a91",
+      "assumptions": [
+        "Contract bounded"
+      ],
+      "proof": "Algebraic reassociation & information-sufficient execution",
+      "tests": 5,
+      "adversarial_tests": 12,
+      "numerical_error": 0.0,
+      "status": "VALIDATED",
+      "sha256_fingerprint": "49af42db153705c575bfdc05b4a93d44cd424b300060152d78ce56950cd593c0",
+      "timestamp": 1791954306.7303493
     }
   ]
 }

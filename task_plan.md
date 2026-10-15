@@ -74,24 +74,24 @@ Hardware Environment (Absolute):
 
 ### Phase 19: Dedicated Performance Parity Engine (`performance_engine.py`)
 
-- [ ] Measure complete application/workload metrics: latency, throughput, FPS, frame time, 1% low FPS, worst-case latency, startup latency, end-to-end latency, sustained throughput, memory overhead, sync overhead, CPU/iGPU overhead, thermal & power behavior, fallback overhead.
-- [ ] Calculate performance_parity = verified_required_performance / target_required_performance * 100.
+- [x] Measure complete application/workload metrics: latency, throughput, FPS, frame time, 1% low FPS, worst-case latency, startup latency, end-to-end latency, sustained throughput, memory overhead, sync overhead, CPU/iGPU overhead, thermal & power behavior, fallback overhead.
+- [x] Calculate performance_parity = verified_required_performance / target_required_performance * 100.
 
 ### Phase 20: Sustained Performance Engine (`sustained_performance.py`)
 
-- [ ] Implement multi-iteration burn-in / sustained duration tests.
-- [ ] Detect thermal throttling, memory pressure, performance decay, instability, and numerical drift.
+- [x] Implement multi-iteration burn-in / sustained duration tests.
+- [x] Detect thermal throttling, memory pressure, performance decay, instability, and numerical drift.
 
 ### Phase 21: Performance Breakthrough Search / PERFORMANCE_DISCOVERY_MODE (`performance_discovery.py`)
 
-- [ ] Implement automated fallback to PERFORMANCE_DISCOVERY_MODE when target is missed: algorithm replacement, mathematical reformulation, work elimination, reuse, incremental computation, sparsity, factorization, compression, memory reduction, operator fusion, heterogeneous partitioning, representation transformation.
+- [x] Implement automated fallback to PERFORMANCE_DISCOVERY_MODE when target is missed: algorithm replacement, mathematical reformulation, work elimination, reuse, incremental computation, sparsity, factorization, compression, memory reduction, operator fusion, heterogeneous partitioning, representation transformation.
 
 ### Phase 22: Ray-Tracing Functional Workload Integration
 
-- [ ] Add Ray-tracing (ray generation, BVH traversal, intersection hit, reflections, irradiance gathering) to automated suite (raising suite to 9 core workloads).
+- [x] Add Ray-tracing (ray generation, BVH traversal, intersection hit, reflections, irradiance gathering) to automated suite (raising suite to 9 core workloads).
 
 ### Phase 23: Complete 25-Dimension Scoreboard & Live Dashboard Upgrade
 
-- [ ] Update `parity_score.py` and `dashboard.py` to strictly present the 25 dimensions of Section 30.
-- [ ] Update React component `src/components/HyperParityDashboard.tsx` to render all 25 metrics with tabs and visual indicators.
-- [ ] Validate and execute tests and frontend build.
+- [x] Update `parity_score.py` and `dashboard.py` to strictly present the 25 dimensions of Section 30.
+- [x] Update React component `src/components/HyperParityDashboard.tsx` to render all 25 metrics with tabs and visual indicators.
+- [x] Validate and execute tests and frontend build.

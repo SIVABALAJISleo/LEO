@@ -93,7 +93,7 @@ def _bitnet_ternary_gemm_kernel(
 def bitnet_ternary_gemm_avx2(
     X: np.ndarray,
     W_ternary: np.ndarray,
-    gamma: float,
+    gamma: float = 1.0,
 ) -> np.ndarray:
     """
     Executes BitNet 1.58b ternary matrix multiplication using compiled AVX2 SIMD.

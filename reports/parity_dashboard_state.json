@@ -25,6 +25,8 @@
   "fps_parity_pct": 100.0,
   "sustained_performance_parity_pct": 100.0,
   "thermal_contract_parity_pct": 100.0,
+  "memory_behavior_parity_pct": 100.0,
+  "application_performance_parity_pct": 100.0,
   "edge_case_coverage_pct": 100.0,
   "adversarial_coverage_pct": 100.0,
   "blind_holdout_coverage_pct": 85.0,
@@ -38,5 +40,5 @@
   "work_reused_pct": 42.1,
   "work_reconstructed_pct": 25.5,
   "fallback_rate_pct": 0.0,
-  "timestamp": 1791480322.6157038
+  "timestamp": 1791950080.3185315
 }

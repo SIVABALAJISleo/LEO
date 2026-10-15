@@ -14,7 +14,7 @@
       "Numerical tolerance exceeded on ill-conditioned inputs"
     ],
     "proof_template": "Dual-path independent verification against textbook reference",
-    "verified_discoveries_count": 8
+    "verified_discoveries_count": 11
   },
   "CANONICAL_BASELINE": {
     "transformation_name": "CANONICAL_BASELINE",
@@ -40,7 +40,7 @@
       "Numerical tolerance exceeded on ill-conditioned inputs"
     ],
     "proof_template": "Dual-path independent verification against textbook reference",
-    "verified_discoveries_count": 88
+    "verified_discoveries_count": 111
   },
   "FAST_FOURIER_CONVOLUTION": {
     "transformation_name": "FAST_FOURIER_CONVOLUTION",
@@ -51,13 +51,13 @@
       "CONV2D_STANDARD"
     ],
     "measured_benefit": {
-      "average_speedup": 1.38
+      "average_speedup": 1.34
     },
     "failure_modes": [
       "Numerical tolerance exceeded on ill-conditioned inputs"
     ],
     "proof_template": "Dual-path independent verification against textbook reference",
-    "verified_discoveries_count": 5
+    "verified_discoveries_count": 6
   },
   "HOMOTOPIC_HOARE_PRUNING": {
     "transformation_name": "HOMOTOPIC_HOARE_PRUNING",
@@ -69,16 +69,17 @@
       "ADVERSARIAL_HILBERT_STRESS",
       "SPMV_IRREGULAR_CSR",
       "ATTENTION_HEAD",
-      "SHA256_CRYPTO"
+      "SHA256_CRYPTO",
+      "CONV2D_STANDARD"
     ],
     "measured_benefit": {
-      "average_speedup": 25.98
+      "average_speedup": 24.37
     },
     "failure_modes": [
       "Numerical tolerance exceeded on ill-conditioned inputs"
     ],
     "proof_template": "Dual-path independent verification against textbook reference",
-    "verified_discoveries_count": 24
+    "verified_discoveries_count": 34
   },
   "SEMANTIC_L3_MEMOIZATION": {
     "transformation_name": "SEMANTIC_L3_MEMOIZATION",
@@ -109,13 +110,13 @@
       "ADVERSARIAL_HILBERT_STRESS"
     ],
     "measured_benefit": {
-      "average_speedup": 1.9
+      "average_speedup": 1.8
     },
     "failure_modes": [
       "Numerical tolerance exceeded on ill-conditioned inputs"
     ],
     "proof_template": "Dual-path independent verification against textbook reference",
-    "verified_discoveries_count": 11
+    "verified_discoveries_count": 14
   },
   "WINOGRAD_MINIMAL_FILTERING_F23": {
     "transformation_name": "WINOGRAD_MINIMAL_FILTERING_F23",

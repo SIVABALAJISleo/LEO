@@ -3,23 +3,23 @@
     "discovery_cost": 0.5,
     "compilation_cost": 0.1,
     "verification_cost": 0.8,
-    "execution_cost": 0.19458,
+    "execution_cost": 0.19944,
     "data_movement_cost": 0.01,
-    "memory_cost": 0.0072273254394531255,
+    "memory_cost": 0.007365274429321289,
     "recovery_cost": 0.0
   },
-  "one_shot_total_cost_ms": 1.611807325439453,
-  "amortized_cost_ms_over_100_runs": 0.22580732543945314,
+  "one_shot_total_cost_ms": 1.6168052744293213,
+  "amortized_cost_ms_over_100_runs": 0.2308052744293213,
   "telemetry": {
-    "peak_ram_bytes": 1241645056,
+    "peak_ram_bytes": 1265344512,
     "cpu_utilization_pct": 10.0,
     "igpu_utilization_pct": 0.0,
     "temperature_celsius": 47.5,
     "power_watts": 22.0,
     "memory_bandwidth_gbps": 18.57,
-    "wall_clock_time_ms": 0.205,
-    "throughput_items_per_sec": 5139.3,
-    "latency_ms": 0.195
+    "wall_clock_time_ms": 0.209,
+    "throughput_items_per_sec": 5014.0,
+    "latency_ms": 0.199
   },
   "resource_plan": {
     "selected_device": "CPU_ONLY",

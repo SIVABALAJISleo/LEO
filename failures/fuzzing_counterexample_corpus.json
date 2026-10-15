@@ -119,5 +119,82 @@
     "minimized_input_representation": "Divergence 1.00000e+02",
     "violated_assumption": "Output diverged from reference oracle. Error: 100.000000 (Tolerance: 0.000010)",
     "timestamp": 1792027126.1532278
+  },
+  {
+    "counterexample_id": "cx-2d95e7be",
+    "candidate_id": "AVX2_CACHE_BLOCKED_BLAS",
+    "workload_id": "gemm_test_fallback",
+    "failure_mode": "PRECISION_DIVERGENCE",
+    "divergence": 0.0,
+    "input_representation": "Adversarial input for gemm_test_fallback",
+    "minimized_input_representation": "Divergence 0.00000e+00",
+    "violated_assumption": "Output diverged from reference oracle. Error: 998.000000 (Tolerance: 0.000010)",
+    "timestamp": 1792028394.8254583
+  },
+  {
+    "counterexample_id": "cx-6c47fc87",
+    "candidate_id": "AVX2_CACHE_BLOCKED_BLAS",
+    "workload_id": "fail_closed_test",
+    "failure_mode": "NUMERICAL_INSTABILITY",
+    "divergence": 100.0,
+    "input_representation": "Adversarial input for fail_closed_test",
+    "minimized_input_representation": "Divergence 1.00000e+02",
+    "violated_assumption": "Output diverged from reference oracle. Error: 100.000000 (Tolerance: 0.000010)",
+    "timestamp": 1792028394.856284
+  },
+  {
+    "counterexample_id": "cx-91fe65d4",
+    "candidate_id": "AVX2_CACHE_BLOCKED_BLAS",
+    "workload_id": "test_corpus_integration",
+    "failure_mode": "NUMERICAL_INSTABILITY",
+    "divergence": 50.0,
+    "input_representation": "Adversarial input for test_corpus_integration",
+    "minimized_input_representation": "Divergence 5.00000e+01",
+    "violated_assumption": "Output diverged from reference oracle. Error: 50.000000 (Tolerance: 0.000010)",
+    "timestamp": 1792028396.6206634
+  },
+  {
+    "counterexample_id": "cx-f991c472",
+    "candidate_id": "cand-flawed-transpose",
+    "workload_id": "wl-mat-inv",
+    "failure_mode": "PRECISION_DIVERGENCE",
+    "divergence": 6479.7999999986005,
+    "input_representation": "Ill-conditioned Hilbert matrix (shape=(4, 4))",
+    "minimized_input_representation": "Scalar slice divergence 6.4798e+03",
+    "violated_assumption": "Candidate assumes well-behaved dynamic range; violated under Ill-conditioned Hilbert matrix.",
+    "timestamp": 1792028457.871093
+  },
+  {
+    "counterexample_id": "cx-7c2e5299",
+    "candidate_id": "AVX2_CACHE_BLOCKED_BLAS",
+    "workload_id": "test_corpus_integration",
+    "failure_mode": "NUMERICAL_INSTABILITY",
+    "divergence": 50.0,
+    "input_representation": "Adversarial input for test_corpus_integration",
+    "minimized_input_representation": "Divergence 5.00000e+01",
+    "violated_assumption": "Output diverged from reference oracle. Error: 50.000000 (Tolerance: 0.000010)",
+    "timestamp": 1792029336.3391297
+  },
+  {
+    "counterexample_id": "cx-4e9ad310",
+    "candidate_id": "AVX2_CACHE_BLOCKED_BLAS",
+    "workload_id": "gemm_test_fallback",
+    "failure_mode": "PRECISION_DIVERGENCE",
+    "divergence": 0.0,
+    "input_representation": "Adversarial input for gemm_test_fallback",
+    "minimized_input_representation": "Divergence 0.00000e+00",
+    "violated_assumption": "Output diverged from reference oracle. Error: 998.000000 (Tolerance: 0.000010)",
+    "timestamp": 1792029336.62171
+  },
+  {
+    "counterexample_id": "cx-f752c9e2",
+    "candidate_id": "AVX2_CACHE_BLOCKED_BLAS",
+    "workload_id": "fail_closed_test",
+    "failure_mode": "NUMERICAL_INSTABILITY",
+    "divergence": 100.0,
+    "input_representation": "Adversarial input for fail_closed_test",
+    "minimized_input_representation": "Divergence 1.00000e+02",
+    "violated_assumption": "Output diverged from reference oracle. Error: 100.000000 (Tolerance: 0.000010)",
+    "timestamp": 1792029336.7189965
   }
 ]

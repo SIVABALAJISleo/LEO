@@ -1,6 +1,6 @@
 [
   {
-    "evidence_id": "EV_test_fallback_FALLBACK_1791688164321",
+    "evidence_id": "EV_test_fallback_FALLBACK_1792028535092",
     "workload_id": "test_fallback",
     "contract_id": "CONTRACT_DEFAULT",
     "ir_version": "HYPER-IR 1.0",
@@ -17,7 +17,7 @@
       "physical_cores": 8,
       "logical_processors": 12,
       "ram_total_bytes": 16857817088,
-      "ram_available_bytes": 5042262016,
+      "ram_available_bytes": 5008265216,
       "gpu_model": "Intel(R) UHD Graphics",
       "gpu_type": "integrated",
       "gpu_execution_units": null,
@@ -44,16 +44,16 @@
       "python": "3.13"
     },
     "git_commit": "HEAD",
-    "timestamp": 1791688164.9276798,
+    "timestamp": 1792028535.7619567,
     "seed": 42,
-    "input_hash": "b7e2bee57640390b66f1de4cdb6de5661270c1ce15f2f14d01b3485e1f3af6db",
-    "output_hash": "343c12ec5641924324870b6ab9c13712fc9280468775a67a927d3dae016ac771",
-    "reference_hash": "343c12ec5641924324870b6ab9c13712fc9280468775a67a927d3dae016ac771",
+    "input_hash": "cee947324d16579904276bc3f87597a1d7eac31f259a6d73281c9204ec0af9be",
+    "output_hash": "589801491169108ae1babad08ef536501d7b3f91504b98200e2f3d6a644efba1",
+    "reference_hash": "589801491169108ae1babad08ef536501d7b3f91504b98200e2f3d6a644efba1",
     "verifier_result": {
       "verdict": "PASS",
       "backend": "CPU_OPTIMIZED_AVX2"
     },
-    "measured_latency_ms": 0.0416,
+    "measured_latency_ms": 0.0139,
     "measured_memory_bytes": 1024,
     "measured_operations": 1,
     "exactness": "EXACT_SEMANTIC",

@@ -33,12 +33,12 @@ def main():
     runner = FirstAutomatedExperiments(engine=engine)
     dashboard = ParityDashboard()
 
-    print("\n[PHASE 18] Executing First Automated Experiment Suite (Section 48)...")
-    print("Workloads: GEMM, PDE, Attention, Image, Video, Compression, N-body, Graphics")
+    print("\n[PHASE 18] Executing Automated Experiment Suite (Section 48)...")
+    print("Workloads: GEMM, PDE, Attention, Image, Video, Compression, N-body, Graphics, Ray-Tracing")
     t0 = time.perf_counter()
     suite_res = runner.run_all()
     dur = time.perf_counter() - t0
-    print(f"Completed 8/8 automated workloads in {dur:.2f}s!")
+    print(f"Completed {suite_res.total_experiments}/{suite_res.total_experiments} automated workloads in {dur:.2f}s!")
     print(f"Verified Workloads: {suite_res.verified_experiments}/{suite_res.total_experiments}")
     print(f"Average Measured Speedup: {suite_res.average_speedup:.2f}x")
     print(f"Average Work Reduction: {suite_res.average_work_reduction_pct:.1f}%")
