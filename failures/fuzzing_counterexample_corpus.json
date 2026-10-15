@@ -53,5 +53,71 @@
     "minimized_input_representation": "Divergence 5.00000e+01",
     "violated_assumption": "Output diverged from reference oracle. Error: 50.000000 (Tolerance: 0.000010)",
     "timestamp": 1791987087.432936
+  },
+  {
+    "counterexample_id": "cx-d67cea7b",
+    "candidate_id": "AVX2_CACHE_BLOCKED_BLAS",
+    "workload_id": "gemm_test_fallback",
+    "failure_mode": "PRECISION_DIVERGENCE",
+    "divergence": 0.0,
+    "input_representation": "Adversarial input for gemm_test_fallback",
+    "minimized_input_representation": "Divergence 0.00000e+00",
+    "violated_assumption": "Output diverged from reference oracle. Error: 998.000000 (Tolerance: 0.000010)",
+    "timestamp": 1791987484.9012537
+  },
+  {
+    "counterexample_id": "cx-10733847",
+    "candidate_id": "AVX2_CACHE_BLOCKED_BLAS",
+    "workload_id": "fail_closed_test",
+    "failure_mode": "NUMERICAL_INSTABILITY",
+    "divergence": 100.0,
+    "input_representation": "Adversarial input for fail_closed_test",
+    "minimized_input_representation": "Divergence 1.00000e+02",
+    "violated_assumption": "Output diverged from reference oracle. Error: 100.000000 (Tolerance: 0.000010)",
+    "timestamp": 1791987484.9823942
+  },
+  {
+    "counterexample_id": "cx-f3427978",
+    "candidate_id": "AVX2_CACHE_BLOCKED_BLAS",
+    "workload_id": "test_corpus_integration",
+    "failure_mode": "NUMERICAL_INSTABILITY",
+    "divergence": 50.0,
+    "input_representation": "Adversarial input for test_corpus_integration",
+    "minimized_input_representation": "Divergence 5.00000e+01",
+    "violated_assumption": "Output diverged from reference oracle. Error: 50.000000 (Tolerance: 0.000010)",
+    "timestamp": 1791987485.3273873
+  },
+  {
+    "counterexample_id": "cx-0ff895c7",
+    "candidate_id": "AVX2_CACHE_BLOCKED_BLAS",
+    "workload_id": "test_corpus_integration",
+    "failure_mode": "NUMERICAL_INSTABILITY",
+    "divergence": 50.0,
+    "input_representation": "Adversarial input for test_corpus_integration",
+    "minimized_input_representation": "Divergence 5.00000e+01",
+    "violated_assumption": "Output diverged from reference oracle. Error: 50.000000 (Tolerance: 0.000010)",
+    "timestamp": 1792027125.8367958
+  },
+  {
+    "counterexample_id": "cx-48518996",
+    "candidate_id": "AVX2_CACHE_BLOCKED_BLAS",
+    "workload_id": "gemm_test_fallback",
+    "failure_mode": "PRECISION_DIVERGENCE",
+    "divergence": 0.0,
+    "input_representation": "Adversarial input for gemm_test_fallback",
+    "minimized_input_representation": "Divergence 0.00000e+00",
+    "violated_assumption": "Output diverged from reference oracle. Error: 998.000000 (Tolerance: 0.000010)",
+    "timestamp": 1792027126.0678964
+  },
+  {
+    "counterexample_id": "cx-c309974c",
+    "candidate_id": "AVX2_CACHE_BLOCKED_BLAS",
+    "workload_id": "fail_closed_test",
+    "failure_mode": "NUMERICAL_INSTABILITY",
+    "divergence": 100.0,
+    "input_representation": "Adversarial input for fail_closed_test",
+    "minimized_input_representation": "Divergence 1.00000e+02",
+    "violated_assumption": "Output diverged from reference oracle. Error: 100.000000 (Tolerance: 0.000010)",
+    "timestamp": 1792027126.1532278
   }
 ]
