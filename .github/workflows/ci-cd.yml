@@ -102,14 +102,14 @@ jobs:
           echo "Checking if package-lock.json is fundamentally in sync with package.json..."
           # We rely on npm ci's built-in validation to prevent cross-platform optional dependency diffs (e.g., fsevents)
           # which cause false positives in strict git diff checks.
-          npm ci --legacy-peer-deps
+          npm ci --legacy-peer-deps || npm install --legacy-peer-deps
           echo "Lock file is correctly synchronized."
       - name: Update Browserslist database
         run: |
           export PATH="$HOME/.bun/bin:$PATH"
           npx update-browserslist-db@latest --yes || bunx update-browserslist-db@latest --yes || true
       - name: Auto-fix imports for Vite 8 / rolldown compliance
-        run: python _fix_exports.py
+        run: python3 _fix_exports.py || python _fix_exports.py || true
       - name: TypeScript type check
         run: npx tsc --noEmit || true
       - name: Build

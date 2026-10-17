@@ -25,7 +25,7 @@ self.onmessage = (event: MessageEvent<LedgerWorkerInput>) => {
   try {
     const records = Array.isArray(rawLedgerData)
       ? rawLedgerData
-      : (rawLedgerData?.certificates || rawLedgerData?.records || []);
+      : rawLedgerData?.certificates || rawLedgerData?.records || [];
 
     let total = 0;
     let verified = 0;

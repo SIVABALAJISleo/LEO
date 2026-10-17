@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
-
   Activity,
   Cpu,
   ShieldCheck,
@@ -120,7 +119,9 @@ const defaultMetrics: ParityMetricsData = {
 };
 
 export function HyperParityDashboard() {
-  const [activeTab, setActiveTab] = useState<"overview" | "dimensions25" | "matrix" | "ledger">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "dimensions25" | "matrix" | "ledger">(
+    "overview",
+  );
 
   const {
     data: metrics,
@@ -141,6 +142,8 @@ export function HyperParityDashboard() {
     },
     initialData: defaultMetrics,
     refetchInterval: 5000,
+  });
+
   const m = metrics || defaultMetrics;
 
   // Web Worker offloading for certificate ledger processing and 60 FPS UI responsiveness
@@ -149,10 +152,9 @@ export function HyperParityDashboard() {
   useEffect(() => {
     if (typeof Worker !== "undefined") {
       try {
-        const worker = new Worker(
-          new URL("../workers/ledgerParser.worker.ts", import.meta.url),
-          { type: "module" }
-        );
+        const worker = new Worker(new URL("../workers/ledgerParser.worker.ts", import.meta.url), {
+          type: "module",
+        });
         worker.onmessage = (e) => {
           if (e.data?.success) {
             setWorkerActive(true);
@@ -165,7 +167,6 @@ export function HyperParityDashboard() {
       }
     }
   }, [m]);
-
 
   const all25Dimensions = [
     // 1-5: Functional & Contract Core
@@ -447,7 +448,6 @@ export function HyperParityDashboard() {
           </div>
         </div>
 
-
         <div className="flex items-center gap-3">
           <div className="inline-flex rounded-lg bg-slate-800/60 p-1 border border-slate-700/60 text-xs flex-wrap">
             <button
@@ -509,9 +509,9 @@ export function HyperParityDashboard() {
       <div className="my-5 p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-3 text-xs text-amber-200/90 font-mono">
         <ShieldCheck className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
         <div>
-          <span className="font-bold text-amber-300">ABSOLUTE EXCLUSION (SECTION 20):</span> Physical hardware
-          recreation (transistors, CUDA cores, RT cores, physical VRAM silicon) is strictly{" "}
-          <strong>OUT OF SCOPE</strong>. Parity is achieved exclusively via algorithmic
+          <span className="font-bold text-amber-300">ABSOLUTE EXCLUSION (SECTION 20):</span>{" "}
+          Physical hardware recreation (transistors, CUDA cores, RT cores, physical VRAM silicon) is
+          strictly <strong>OUT OF SCOPE</strong>. Parity is achieved exclusively via algorithmic
           reassociation, information necessity pruning, memory movement minimization, and CPU+iGPU
           execution.
         </div>
@@ -636,8 +636,8 @@ export function HyperParityDashboard() {
                     isVerified
                       ? "bg-slate-900/90 border-emerald-500/30 hover:border-emerald-500/60"
                       : isZero
-                      ? "bg-slate-900/40 border-slate-800/80 hover:border-slate-700"
-                      : "bg-slate-900/70 border-cyan-500/30 hover:border-cyan-500/60"
+                        ? "bg-slate-900/40 border-slate-800/80 hover:border-slate-700"
+                        : "bg-slate-900/70 border-cyan-500/30 hover:border-cyan-500/60"
                   }`}
                 >
                   <div className="flex items-center justify-between gap-2">
@@ -649,20 +649,16 @@ export function HyperParityDashboard() {
                         isVerified
                           ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
                           : isZero
-                          ? "bg-slate-800 text-slate-400"
-                          : "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30"
+                            ? "bg-slate-800 text-slate-400"
+                            : "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30"
                       }`}
                     >
                       {dim.status}
                     </span>
                   </div>
 
-                  <div className="mt-2 text-sm font-semibold text-slate-200">
-                    {dim.name}
-                  </div>
-                  <div className="text-[11px] text-slate-400 line-clamp-2 mt-0.5">
-                    {dim.desc}
-                  </div>
+                  <div className="mt-2 text-sm font-semibold text-slate-200">{dim.name}</div>
+                  <div className="text-[11px] text-slate-400 line-clamp-2 mt-0.5">{dim.desc}</div>
 
                   <div className="mt-3 flex items-center justify-between font-mono text-xs">
                     <span className="text-slate-400">Parity Progress:</span>
@@ -671,8 +667,8 @@ export function HyperParityDashboard() {
                         isVerified
                           ? "text-emerald-400"
                           : isZero
-                          ? "text-slate-400"
-                          : "text-cyan-400"
+                            ? "text-slate-400"
+                            : "text-cyan-400"
                       }`}
                     >
                       {dim.value.toFixed(1)}%
@@ -685,8 +681,8 @@ export function HyperParityDashboard() {
                         isVerified
                           ? "bg-emerald-400"
                           : isZero
-                          ? "bg-slate-700"
-                          : "bg-gradient-to-r from-teal-400 to-cyan-400"
+                            ? "bg-slate-700"
+                            : "bg-gradient-to-r from-teal-400 to-cyan-400"
                       }`}
                       style={{ width: `${Math.max(dim.value, 4)}%` }}
                     />
