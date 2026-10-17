@@ -166,5 +166,17 @@
     "reason": "Exceeded error tolerance 1e-4",
     "counterexample_hash": null,
     "timestamp": 1792028203.2322226
+  },
+  {
+    "failure_id": "fail_3ff36ead",
+    "workload_id": "TEST_GEMM",
+    "transformation_sequence": [
+      "CANONICAL",
+      "BAD_TRUNCATION"
+    ],
+    "failure_category": "NUMERICAL_INSTABILITY",
+    "reason": "Exceeded error tolerance 1e-4",
+    "counterexample_hash": null,
+    "timestamp": 1792242882.5074537
   }
 ]

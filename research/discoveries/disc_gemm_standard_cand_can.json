@@ -2,7 +2,7 @@
   "discovery_id": "disc_gemm_standard_cand_can",
   "workload_id": "GEMM_STANDARD",
   "original_algorithm": "GEMM_STANDARD_CANONICAL_REFERENCE",
-  "discovered_algorithm": "cand_canonical_ccaf6162",
+  "discovered_algorithm": "cand_canonical_88128c6f",
   "transformation_sequence": [
     "CANONICAL_BASELINE"
   ],
@@ -11,7 +11,7 @@
   "complexity_estimate_discovered": "O(N^3)",
   "measured_speedup": 1.0,
   "measured_memory_reduction": 0.0,
-  "verification_proof_hash": "61602449ed3aa99f510251e90907fa4aff6df442089ba7594d9009ac4f93204d",
+  "verification_proof_hash": "c14e68f8332d4d2343456d0ec261596b14c2f71ba8f362d1765e5bd0dc80ea5f",
   "verification_status": "FAILED",
   "exactness_category": "NUMERICALLY_EQUIVALENT",
   "is_research_candidate": false,
@@ -19,5 +19,5 @@
     "Search budget exhausted before exact verified alternative found"
   ],
   "discovery_cost_ms": 1.0,
-  "timestamp": 1792028182.3655493
+  "timestamp": 1792242847.7121003
 }

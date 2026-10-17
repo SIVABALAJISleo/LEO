@@ -153,6 +153,17 @@
       "bottleneck_description": "Dynamic range underflow",
       "learned_constraint": "Require FP32 accumulator for large dynamic ranges",
       "timestamp": 1792028399.0165687
+    },
+    {
+      "failure_id": "FAIL_104346",
+      "workload_name": "test_workload",
+      "pathway_id": "PTH_TEST_FAIL",
+      "category": "CORRECTNESS_FAILURE",
+      "failed_transformation": "NAIVE_FP16_TRUNCATION",
+      "counterexample_summary": "Inf on large exponents",
+      "bottleneck_description": "Dynamic range underflow",
+      "learned_constraint": "Require FP32 accumulator for large dynamic ranges",
+      "timestamp": 1792243104.346483
     }
   ],
   "learned_constraints": [

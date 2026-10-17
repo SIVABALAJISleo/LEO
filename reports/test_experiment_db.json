@@ -376,5 +376,32 @@
     "temperature_celsius": 52.0,
     "power_watts": 28.0,
     "record_sha256": "90d8c1a4159f1c77bac1afe6d10aa2d800bc3e46cc2b1a1a86244e704dbd98fd"
+  },
+  {
+    "experiment_id": "EXP_test_workload_104356",
+    "workload_name": "test_workload",
+    "pathway_id": "PTH_TEST_EXP",
+    "timestamp": 1792243104.3566253,
+    "machine_cpu": "Intel Core i5-12450H (4P + 4E cores)",
+    "machine_igpu": "Intel UHD Graphics (32 EUs)",
+    "machine_ram": "16 GB DDR4/DDR5",
+    "os_version": "Windows-11-10.0.26100-SP0",
+    "python_version": "3.13.5",
+    "input_hash": "89068aca4a528233",
+    "output_hash": "89068aca4a528233",
+    "is_correct": true,
+    "evidence_level": "MEASURED",
+    "sample_count": 4,
+    "median_latency_ms": 2.125,
+    "mean_latency_ms": 2.113,
+    "std_dev_ms": 0.074,
+    "worst_case_latency_ms": 2.2,
+    "measured_speedup_vs_reference": 2.07,
+    "peak_memory_mb": 128.0,
+    "cpu_utilization_pct": 65.0,
+    "igpu_utilization_pct": 0.0,
+    "temperature_celsius": 52.0,
+    "power_watts": 28.0,
+    "record_sha256": "a1f571f40f9ae159b325ed0f96fcb41904b415efd7cc03363a9869e346661105"
   }
 ]

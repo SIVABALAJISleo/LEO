@@ -383,5 +383,115 @@
     "minimized_input_representation": "Divergence 1.00000e+02",
     "violated_assumption": "Output diverged from reference oracle. Error: 100.000000 (Tolerance: 0.000010)",
     "timestamp": 1792240354.4068952
+  },
+  {
+    "counterexample_id": "cx-72202432",
+    "candidate_id": "CPU_AVX2_BLAS",
+    "workload_id": "tony_stark_adversarial_test",
+    "failure_mode": "NUMERICAL_INSTABILITY",
+    "divergence": 8.0,
+    "input_representation": "Adversarial input for tony_stark_adversarial_test",
+    "minimized_input_representation": "Divergence 8.00000e+00",
+    "violated_assumption": "Verification divergence: error 8.000000 exceeded tolerance 1e-05",
+    "timestamp": 1792241392.404268
+  },
+  {
+    "counterexample_id": "cx-b29f95fd",
+    "candidate_id": "CPU_AVX2_BLAS",
+    "workload_id": "tony_stark_adversarial_test",
+    "failure_mode": "NUMERICAL_INSTABILITY",
+    "divergence": 8.0,
+    "input_representation": "Adversarial input for tony_stark_adversarial_test",
+    "minimized_input_representation": "Divergence 8.00000e+00",
+    "violated_assumption": "Verification divergence: error 8.000000 exceeded tolerance 1e-05",
+    "timestamp": 1792241982.2082455
+  },
+  {
+    "counterexample_id": "cx-8841b9cb",
+    "candidate_id": "CPU_AVX2_BLAS",
+    "workload_id": "tony_stark_adversarial_test",
+    "failure_mode": "NUMERICAL_INSTABILITY",
+    "divergence": 8.0,
+    "input_representation": "Adversarial input for tony_stark_adversarial_test",
+    "minimized_input_representation": "Divergence 8.00000e+00",
+    "violated_assumption": "Verification divergence: error 8.000000 exceeded tolerance 1e-05",
+    "timestamp": 1792242623.8670323
+  },
+  {
+    "counterexample_id": "cx-93a0221f",
+    "candidate_id": "CPU_AVX2_BLAS",
+    "workload_id": "tony_stark_adversarial_test",
+    "failure_mode": "NUMERICAL_INSTABILITY",
+    "divergence": 8.0,
+    "input_representation": "Adversarial input for tony_stark_adversarial_test",
+    "minimized_input_representation": "Divergence 8.00000e+00",
+    "violated_assumption": "Verification divergence: error 8.000000 exceeded tolerance 1e-05",
+    "timestamp": 1792242933.36698
+  },
+  {
+    "counterexample_id": "cx-d73ab025",
+    "candidate_id": "AVX2_CACHE_BLOCKED_BLAS",
+    "workload_id": "gemm_test_fallback",
+    "failure_mode": "PRECISION_DIVERGENCE",
+    "divergence": 0.0,
+    "input_representation": "Adversarial input for gemm_test_fallback",
+    "minimized_input_representation": "Divergence 0.00000e+00",
+    "violated_assumption": "Output diverged from reference oracle. Error: 998.000000 (Tolerance: 0.000010)",
+    "timestamp": 1792243091.425624
+  },
+  {
+    "counterexample_id": "cx-38bb82cc",
+    "candidate_id": "AVX2_CACHE_BLOCKED_BLAS",
+    "workload_id": "fail_closed_test",
+    "failure_mode": "NUMERICAL_INSTABILITY",
+    "divergence": 100.0,
+    "input_representation": "Adversarial input for fail_closed_test",
+    "minimized_input_representation": "Divergence 1.00000e+02",
+    "violated_assumption": "Output diverged from reference oracle. Error: 100.000000 (Tolerance: 0.000010)",
+    "timestamp": 1792243091.4900267
+  },
+  {
+    "counterexample_id": "cx-1b3d3168",
+    "candidate_id": "AVX2_CACHE_BLOCKED_BLAS",
+    "workload_id": "test_corpus_integration",
+    "failure_mode": "NUMERICAL_INSTABILITY",
+    "divergence": 50.0,
+    "input_representation": "Adversarial input for test_corpus_integration",
+    "minimized_input_representation": "Divergence 5.00000e+01",
+    "violated_assumption": "Output diverged from reference oracle. Error: 50.000000 (Tolerance: 0.000010)",
+    "timestamp": 1792243098.1030025
+  },
+  {
+    "counterexample_id": "cx-7c87241f",
+    "candidate_id": "cand-flawed-transpose",
+    "workload_id": "wl-mat-inv",
+    "failure_mode": "PRECISION_DIVERGENCE",
+    "divergence": 6479.7999999986005,
+    "input_representation": "Ill-conditioned Hilbert matrix (shape=(4, 4))",
+    "minimized_input_representation": "Scalar slice divergence 6.4798e+03",
+    "violated_assumption": "Candidate assumes well-behaved dynamic range; violated under Ill-conditioned Hilbert matrix.",
+    "timestamp": 1792243187.1044264
+  },
+  {
+    "counterexample_id": "cx-972da434",
+    "candidate_id": "CPU_AVX2_BLAS",
+    "workload_id": "tony_stark_adversarial_test",
+    "failure_mode": "NUMERICAL_INSTABILITY",
+    "divergence": 8.0,
+    "input_representation": "Adversarial input for tony_stark_adversarial_test",
+    "minimized_input_representation": "Divergence 8.00000e+00",
+    "violated_assumption": "Verification divergence: error 8.000000 exceeded tolerance 1e-05",
+    "timestamp": 1792243279.8091083
+  },
+  {
+    "counterexample_id": "cx-af0518cb",
+    "candidate_id": "CPU_AVX2_BLAS",
+    "workload_id": "tony_stark_adversarial_test",
+    "failure_mode": "NUMERICAL_INSTABILITY",
+    "divergence": 8.0,
+    "input_representation": "Adversarial input for tony_stark_adversarial_test",
+    "minimized_input_representation": "Divergence 8.00000e+00",
+    "violated_assumption": "Verification divergence: error 8.000000 exceeded tolerance 1e-05",
+    "timestamp": 1792248416.12392
   }
 ]
