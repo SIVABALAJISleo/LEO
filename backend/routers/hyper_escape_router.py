@@ -418,11 +418,23 @@ async def list_craft_engines() -> Dict[str, Any]:
                 "memory_budget_ceiling_mb": 512.0,
             },
             "TensorCraft": {
-                "algorithms": ["Fused GEMM + Bias + ReLU", "OpenVINO IR Subgraph Execution", "Shape-Specialized GEMV"],
+                "algorithms": [
+                    "Fused GEMM + Bias + ReLU",
+                    "OpenVINO IR Subgraph Execution",
+                    "Shape-Specialized GEMV",
+                    "Strassen Sub-Cubic Fast GEMM (Dense Full-Rank Mitigation)",
+                    "AVX-VNNI INT8 Tensor Core MMA Emulation (Hardware Boundary Mitigation)",
+                    "Spectral Flatness Wiener Entropy Detection",
+                ],
                 "memory_traffic_reduction": "Eliminates intermediate buffer DRAM passes",
             },
             "InferenceCraft": {
-                "algorithms": ["BitNet 1.58b Ternary Quantization (-1, 0, 1)", "Bounded Sliding-Window KV-Cache", "Speculative Verification Decoding"],
+                "algorithms": [
+                    "BitNet 1.58b Ternary Quantization (-1, 0, 1)",
+                    "Bounded Sliding-Window KV-Cache",
+                    "Speculative Verification Decoding",
+                    "Shannon Entropy-Bounded Compressor (Information-Theoretic Bound Mitigation)",
+                ],
                 "quantization_accuracy": "Explicitly reported via Cosine Similarity and MSE",
             },
             "DeviceCraft": {
@@ -430,9 +442,25 @@ async def list_craft_engines() -> Dict[str, Any]:
                 "host_igpu": "Intel UHD Graphics (48 EUs)",
                 "dispatch_latency_cutoff_kb": 256.0,
                 "raw_hardware_parity": "0.0% (Software-Only Optimization)",
+                "algorithms": [
+                    "Task-Size Dispatch Latency Thresholding (< 256 KB to CPU AVX2 zero-copy)",
+                    "Persistent Command Queue Batch Dispatcher (Driver Latency Mitigation)",
+                    "Host Unified Memory Architecture (HUMA) Zero-Copy Ring",
+                ],
             },
         },
     }
+
+
+@router.get("/tony_stark/limitations_and_mitigations")
+async def get_limitations_and_mitigations() -> Dict[str, Any]:
+    """
+    Returns the comprehensive engineering boundary mitigation report.
+    Details how each of the 4 known limitations is systematically mitigated
+    in software without violating physics, information theory, or contract correctness.
+    """
+    return _tony_stark_engine.get_limitation_mitigation_report()
+
 
 
 @router.get("/tony_stark/scoreboards")

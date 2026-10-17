@@ -369,3 +369,173 @@ def test_tony_stark_api_router_endpoints():
     assert exec_data["output_preview"] == 17.0
     assert exec_data["selected_algorithm"] == "Horner's Rule Exact Polynomial"
 
+    # 5. Test limitations and mitigations endpoint
+    r_limits = client.get("/api/v1/escape_omega/tony_stark/limitations_and_mitigations")
+    assert r_limits.status_code == 200
+    limits_data = r_limits.json()
+    assert "boundaries_and_mitigations" in limits_data
+    assert len(limits_data["boundaries_and_mitigations"]) == 4
+    for b in limits_data["boundaries_and_mitigations"]:
+        assert b["status"] == "OPERATIONAL"
+
+
+# =============================================================================
+# 9. Limitation 1 Mitigation: Physical Hardware Boundary (AVX-VNNI MMA)
+# =============================================================================
+def test_limitation_mitigation_physical_hardware_vnni_tensor_core():
+    engine = TensorCraft()
+    np.random.seed(42)
+    A = np.random.randn(32, 64).astype(np.float32)
+    B = np.random.randn(64, 32).astype(np.float32)
+
+    out, meta = engine.vnni_int8_tensor_core_mma(A, B)
+
+    # Truthful metric invariant: raw hardware parity is permanently 0.0%
+    assert meta["raw_hardware_parity"] == "0.0%"
+    assert meta["synthetic_tensor_core_active"] is True
+    assert meta["memory_footprint_reduction_ratio"] >= 3.5
+    assert meta["cosine_similarity"] >= 0.99
+    assert meta["max_absolute_error"] < 0.60
+
+
+# =============================================================================
+# 10. Limitation 2 Mitigation: Dense Full-Rank Matrices (Strassen Fast GEMM)
+# =============================================================================
+def test_limitation_mitigation_dense_full_rank_strassen():
+    engine = TensorCraft()
+    np.random.seed(42)
+    # Dense Gaussian random matrix: flat singular value spectrum
+    A = np.random.randn(64, 64).astype(np.float32)
+    B = np.random.randn(64, 64).astype(np.float32)
+
+    # 1. Verify spectral flatness detector flags it as flat spectrum
+    flatness_info = engine.detect_spectral_flatness(A)
+    assert flatness_info["is_flat_spectrum"] is True
+    assert flatness_info["low_rank_svd_admissible"] is False
+    assert flatness_info["recommended_path"] == "STRASSEN_FAST_GEMM"
+
+    # 2. Run Strassen sub-cubic multiplication
+    out, meta = engine.strassen_gemm_full_rank(A, B, cutoff=32)
+    ref = A @ B
+
+    # Exact mathematical guarantee: error within float32 precision
+    assert meta["exactness"] == "EXACT_MATHEMATICAL"
+    assert meta["verified"] is True
+    assert meta["max_absolute_error"] < 1e-4
+    assert np.allclose(out, ref, atol=1e-4)
+
+
+# =============================================================================
+# 11. Limitation 3 Mitigation: Driver Dispatch Latency (Persistent Batching)
+# =============================================================================
+def test_limitation_mitigation_driver_dispatch_latency_batching():
+    engine = DeviceCraft(dispatch_cutoff_bytes=256 * 1024)
+
+    # Create 8 micro-tasks (each 32 KB, totaling 256 KB)
+    tasks = []
+    for i in range(8):
+        data = np.ones(8192, dtype=np.float32) * (i + 1)
+        tasks.append((lambda d: float(np.sum(d)), (data,), {}, 32768))
+
+    results, meta = engine.batch_and_dispatch_sub256kb(tasks)
+
+    assert len(results) == 8
+    assert results[0] == 8192.0
+    assert results[1] == 16384.0
+    assert meta["driver_latency_mitigated"] is True
+    assert meta["dispatched_tasks"] == 8
+    assert meta["total_bytes"] == 256 * 1024
+    assert meta["unbatched_driver_overhead_saved_ms"] > 0.0
+
+
+# =============================================================================
+# 12. Limitation 4 Mitigation: Information-Theoretic Compression Limits
+# =============================================================================
+def test_limitation_mitigation_shannon_entropy_bounded_compressor():
+    engine = InferenceCraft()
+    np.random.seed(42)
+
+    # High-entropy white noise (Shannon entropy ~ 7.8 - 8.0 bits/byte)
+    high_entropy_noise = np.random.uniform(-1.0, 1.0, size=(64, 64)).astype(np.float32)
+
+    # Case A: Exact contract (Lossless required) -> Fast Bypass per Shannon's Theorem
+    out_exact, meta_exact = engine.shannon_entropy_bounded_compressor(
+        high_entropy_noise,
+        allow_lossy_contract=False,
+    )
+    assert meta_exact["is_high_entropy"] is True
+    assert meta_exact["strategy"] == "ZERO_OVERHEAD_COMPRESSION_BYPASS"
+    assert meta_exact["compression_ratio"] == 1.0
+    assert np.array_equal(out_exact, high_entropy_noise)
+
+    # Case B: Tolerant contract -> Contract-Bounded Dynamic Range INT8 Quantization
+    out_lossy, meta_lossy = engine.shannon_entropy_bounded_compressor(
+        high_entropy_noise,
+        allow_lossy_contract=True,
+        max_error_tolerance=0.02,
+    )
+    assert meta_lossy["is_high_entropy"] is True
+    assert meta_lossy["strategy"] == "CONTRACT_BOUNDED_APPROXIMATION"
+    assert meta_lossy["compression_ratio"] >= 3.5
+    assert meta_lossy["actual_max_error"] < 0.02
+
+
+# =============================================================================
+# 13. Tony Stark Master Engine End-to-End Mitigation Execution
+# =============================================================================
+def test_tony_stark_master_engine_mitigation_routes():
+    engine = TonyStarkComputationalEscapeEngine()
+
+    # 1. Strassen Dense Full-Rank
+    contract_strassen = EscapeContract(
+        workload_id="tony_stark_strassen_full_rank",
+        guarantee_level=GuaranteeLevel.EXACT_MATHEMATICAL,
+        max_absolute_error=1e-4,
+    )
+    np.random.seed(42)
+    A = np.random.randn(32, 32).astype(np.float32)
+    B = np.random.randn(32, 32).astype(np.float32)
+    res_strassen = engine.execute(
+        workload_id="tony_stark_strassen_full_rank",
+        input_data={"A": A, "B": B},
+        contract=contract_strassen,
+        reference_oracle_fn=lambda d: d["A"] @ d["B"],
+    )
+    assert res_strassen.verified is True
+    assert "Strassen" in res_strassen.selected_algorithm
+
+    # 2. VNNI INT8 Tensor Core MMA
+    contract_vnni = EscapeContract(
+        workload_id="tony_stark_vnni_tensor_core",
+        guarantee_level=GuaranteeLevel.APPROXIMATE_BOUNDED,
+        max_absolute_error=0.60,
+    )
+    res_vnni = engine.execute(
+        workload_id="tony_stark_vnni_tensor_core",
+        input_data={"A": A, "B": B},
+        contract=contract_vnni,
+    )
+    assert res_vnni.verified is True
+    assert "VNNI" in res_vnni.selected_algorithm
+
+    # 3. Shannon Entropy Compressor
+    contract_shannon = EscapeContract(
+        workload_id="tony_stark_shannon_compress",
+        guarantee_level=GuaranteeLevel.EXACT_BITWISE,
+    )
+    noise = np.random.randn(16, 16).astype(np.float32)
+    res_shannon = engine.execute(
+        workload_id="tony_stark_shannon_compress",
+        input_data={"tensor": noise},
+        contract=contract_shannon,
+    )
+    assert res_shannon.verified is True
+    assert "Shannon" in res_shannon.selected_algorithm
+
+    # 4. Mitigation report inspection
+    report = engine.get_limitation_mitigation_report()
+    assert len(report["boundaries_and_mitigations"]) == 4
+    for b in report["boundaries_and_mitigations"]:
+        assert b["status"] == "OPERATIONAL"
+
+
