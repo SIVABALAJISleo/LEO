@@ -25,6 +25,21 @@ from hyper_universal.claim_gate import UniversalClaimGate, UniversalClaimCheckli
 from hyper_universal.parity_engine import ParityEngine, MultidimensionalParityReport, DimensionParity
 from hyper_universal.adaptive_orchestrator import AdaptiveOrchestrator, ExecutionRouting, RoutingDecision
 from hyper_universal.research_loop import UniversalResearchLoop, DiscoveryCycleArtifact
+from hyper_universal.tony_stark_engine import (
+    TonyStarkComputationalEscapeEngine,
+    GuaranteeLevel,
+    WorkloadResultLabel,
+    EscapeContract,
+    ProductionExecutionResult,
+)
+from hyper_universal.craft import (
+    ExactCraft,
+    SparseCraft,
+    StreamCraft,
+    TensorCraft,
+    InferenceCraft,
+    DeviceCraft,
+)
 
 __all__ = [
     "ResultState",
@@ -71,4 +86,15 @@ __all__ = [
     "RoutingDecision",
     "UniversalResearchLoop",
     "DiscoveryCycleArtifact",
+    "TonyStarkComputationalEscapeEngine",
+    "GuaranteeLevel",
+    "WorkloadResultLabel",
+    "EscapeContract",
+    "ProductionExecutionResult",
+    "ExactCraft",
+    "SparseCraft",
+    "StreamCraft",
+    "TensorCraft",
+    "InferenceCraft",
+    "DeviceCraft",
 ]

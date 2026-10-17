@@ -21,11 +21,13 @@ from .engines import (
     TemporalRenderingEngine,
     TextEmbeddingsEngine,
 )
+from hyper_universal.tony_stark_engine import TonyStarkComputationalEscapeEngine
 
 
 class ParityWorkloadRouter:
     """
-    Contract-driven execution router for the four target workloads.
+    Contract-driven execution router for the four target workloads,
+    with automatic routing to the Tony Stark Computational Escape Engine.
     """
 
     def __init__(self, registry: ContractsRegistry) -> None:
@@ -36,6 +38,7 @@ class ParityWorkloadRouter:
         self.rag_engine = RAGRetrievalEngine()
         self.embeddings_engine = TextEmbeddingsEngine()
         self.rendering_engine = TemporalRenderingEngine()
+        self.tony_stark_engine = TonyStarkComputationalEscapeEngine()
 
     def route_and_execute(
         self,
@@ -199,4 +202,33 @@ class ParityWorkloadRouter:
             return cand_res
 
         else:
-            raise ValueError(f"Unknown workload: {workload_name}")
+            # Route through the Tony Stark Computational Escape Engine
+            stark_res = self.tony_stark_engine.execute(
+                workload_id=workload_name,
+                input_data=inp,
+                allow_cache=allow_cache,
+            )
+            label_map = {
+                "EXACT": ResultLabel.EXACT,
+                "APPROXIMATE": ResultLabel.APPROXIMATE,
+                "CACHED": ResultLabel.CACHED,
+                "PREDICTIVE": ResultLabel.PREDICTIVE,
+                "REDUCED_WORK": ResultLabel.REDUCED_WORK,
+                "EMULATED": ResultLabel.EMULATED,
+            }
+            res_label = label_map.get(stark_res.result_label, ResultLabel.REDUCED_WORK)
+            return ExecutionResult(
+                output=stark_res.output,
+                label=res_label,
+                latency_ms=stark_res.latency_ms,
+                peak_ram_mb=float(stark_res.memory_metrics.get("peak_mb", 4.0)),
+                correctness_metric_value=1.0 if stark_res.verified else 0.0,
+                metrics={
+                    "selected_algorithm": stark_res.selected_algorithm,
+                    "applied_transformations": stark_res.applied_transformations,
+                    "execution_backend": stark_res.execution_backend,
+                },
+                verified=stark_res.verified,
+                error_margin=stark_res.verification_error,
+                failure_reason=stark_res.fallback_reason,
+            )

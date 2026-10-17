@@ -35,6 +35,7 @@ from hyper_universal.scheduler.scheduler import UniversalScheduler, ExecutionPla
 from hyper_universal.memory_escape.engine import OutOfCoreStreamEngine, MemoryBudgetController
 from hyper_universal.evidence_store import PathwayEvidenceStore as EvidenceStore
 from hyper_universal.counterexamples.engine import CounterexampleEngine
+from hyper_universal.tony_stark_engine import TonyStarkComputationalEscapeEngine, EscapeContract, GuaranteeLevel
 
 
 
@@ -92,6 +93,7 @@ class UnifiedComputationalEscapePipeline:
         self.evidence_store = evidence_store or EvidenceStore()
         self.memory_engine = OutOfCoreStreamEngine()
         self.counterexample_engine = CounterexampleEngine()
+        self.tony_stark_engine = TonyStarkComputationalEscapeEngine()
 
         # Cache for Stage 5 & 10
         self._exact_memo_cache: Dict[str, Tuple[Any, float]] = {}
@@ -186,6 +188,12 @@ class UnifiedComputationalEscapePipeline:
             transforms.append("SPECULATIVE_VERIFICATION_DECODING")
         elif ctx.category == WorkloadCategory.REUSABLE_INCREMENTAL:
             transforms.append("TEMPORAL_DELTA_REPROJECTION")
+        elif "HORNER" in ctx.workload_id.upper() or "POLYNOMIAL" in ctx.workload_id.upper():
+            transforms.append("HORNER_POLYNOMIAL_EVALUATION")
+        elif "FUSED" in ctx.workload_id.upper() or "RELU" in ctx.workload_id.upper():
+            transforms.append("FUSED_GEMM_BIAS_RELU")
+        elif "BITNET" in ctx.workload_id.upper() or "TERNARY" in ctx.workload_id.upper():
+            transforms.append("BITNET_1_58B_TERNARY")
         else:
             transforms.append("AVX2_CACHE_BLOCKED_BLAS")
 
@@ -242,13 +250,24 @@ class UnifiedComputationalEscapePipeline:
         try:
             if execute_fn is not None:
                 ctx.execution_result = execute_fn(ctx.input_data)
+                ctx.result_label = "REDUCED_WORK" if len(ctx.candidate_transformations) > 0 else "EXACT"
+            elif any(k in ctx.workload_id.upper() for k in ["HORNER", "POLYNOMIAL", "FUSED", "BITNET", "TERNARY"]):
+                # Route through Tony Stark Computational Escape Engine
+                escape_res = self.tony_stark_engine.execute(
+                    workload_id=ctx.workload_id,
+                    input_data=ctx.input_data,
+                    allow_cache=False,
+                )
+                ctx.execution_result = escape_res.output
+                ctx.result_label = escape_res.result_label
+                ctx.execution_backend = escape_res.execution_backend
             elif isinstance(ctx.input_data, np.ndarray):
                 # Standard linear algebra transformation: A @ A.T or 2:4 sparse / GEMV
                 ctx.execution_result = np.dot(ctx.input_data, ctx.input_data.T)
+                ctx.result_label = "REDUCED_WORK" if len(ctx.candidate_transformations) > 0 else "EXACT"
             else:
                 ctx.execution_result = ctx.input_data
-
-            ctx.result_label = "REDUCED_WORK" if len(ctx.candidate_transformations) > 0 else "EXACT"
+                ctx.result_label = "REDUCED_WORK" if len(ctx.candidate_transformations) > 0 else "EXACT"
         except Exception as e:
             ctx.fallback_triggered = True
             ctx.fallback_reason = f"Execution failed: {str(e)}"

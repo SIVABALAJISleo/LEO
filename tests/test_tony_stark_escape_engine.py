@@ -1,0 +1,321 @@
+"""
+tests/test_tony_stark_escape_engine.py
+======================================
+Automated Behavioral & Differential Test Suite for the Tony Stark
+Computational Escape Engine and the Six Specialized Craft Engines.
+"""
+
+import math
+import numpy as np
+import pytest
+
+from hyper_universal.tony_stark_engine import (
+    TonyStarkComputationalEscapeEngine,
+    EscapeContract,
+    GuaranteeLevel,
+    WorkloadResultLabel,
+)
+from hyper_universal.craft import (
+    ExactCraft,
+    SparseCraft,
+    StreamCraft,
+    TensorCraft,
+    InferenceCraft,
+    DeviceCraft,
+)
+from hyper_universal.craft.device_craft import ExecutionBackend
+
+
+# =============================================================================
+# 1. ExactCraft Tests (Section 10.1)
+# =============================================================================
+def test_exact_craft_horner_polynomial():
+    engine = ExactCraft()
+    coeffs = [3.0, -2.0, 5.0, 1.0]  # P(x) = 3 - 2x + 5x^2 + x^3
+    x = 2.5
+
+    # Naive reference: 3 - 2(2.5) + 5(6.25) + 15.625 = 3 - 5 + 31.25 + 15.625 = 44.875
+    naive_ref = 3.0 - 2.0 * x + 5.0 * (x ** 2) + 1.0 * (x ** 3)
+    val, meta = engine.horner_polynomial_evaluation(coeffs, x)
+
+    assert abs(val - naive_ref) < 1e-10, f"Horner evaluation mismatch: {val} vs {naive_ref}"
+    assert meta["exactness_guarantee"] == "EXACT_MATHEMATICAL"
+    assert meta["eliminated_operations"] > 0
+    assert meta["ops_after"] < meta["ops_before"]
+
+
+def test_exact_craft_prefix_sum_range_query():
+    engine = ExactCraft()
+    arr = np.array([3, 1, 4, 1, 5, 9, 2, 6, 5], dtype=np.int64)
+    prefix_table, query_fn = engine.prefix_sum_range_query_engine(arr)
+
+    # Range sum [2, 5]: 4 + 1 + 5 + 9 = 19
+    assert query_fn(2, 5) == 19
+    # Range sum [0, 8]: full sum = 36
+    assert query_fn(0, 8) == np.sum(arr)
+    # Range sum [4, 4]: single element = 5
+    assert query_fn(4, 4) == 5
+
+
+def test_exact_craft_modular_matrix_power():
+    engine = ExactCraft()
+    M = np.array([[1, 1], [1, 0]], dtype=np.int64)  # Fibonacci matrix
+    exp = 10
+    mod = 1000
+
+    result, meta = engine.modular_matrix_power(M, exp, mod)
+
+    # Fibonacci(10) = 55 -> M^10 = [[89, 55], [55, 34]]
+    assert result[0, 1] == 55
+    assert result[1, 0] == 55
+    assert meta["exactness_guarantee"] == "EXACT_BITWISE"
+    assert meta["eliminated_operations"] > 0
+
+
+# =============================================================================
+# 2. SparseCraft Tests (Section 10.2)
+# =============================================================================
+def test_sparse_craft_sparsity_rejection_for_dense_matrices():
+    engine = SparseCraft(sparsity_threshold=0.20)
+    # Dense Gaussian matrix (0% zeros)
+    np.random.seed(42)
+    dense_matrix = np.random.randn(64, 64).astype(np.float32)
+
+    analysis = engine.analyze_sparsity(dense_matrix)
+    assert not analysis["sparse_advantageous"], "Dense matrix should fail sparse advantage precondition!"
+
+    B = np.random.randn(64, 64).astype(np.float32)
+    out, meta = engine.execute_sparse_or_dense_gemm(dense_matrix, B)
+    # Honors Negative Knowledge: dense BLAS retained, conversion rejected
+    assert meta["selected_path"] == "DENSE_BLAS_AVX2"
+    assert meta["conversion_overhead_ms"] == 0.0
+
+
+def test_sparse_craft_csr_execution_on_sparse_matrix():
+    engine = SparseCraft(sparsity_threshold=0.20)
+    # 80% sparse matrix
+    np.random.seed(42)
+    sparse_mat = np.random.randn(64, 64).astype(np.float32)
+    sparse_mat[np.abs(sparse_mat) < 1.0] = 0.0  # create genuine zeros
+
+    analysis = engine.analyze_sparsity(sparse_mat)
+    assert analysis["sparse_advantageous"], "Sparse matrix should pass sparsity check!"
+
+    B = np.random.randn(64, 64).astype(np.float32)
+    out, meta = engine.execute_sparse_or_dense_gemm(sparse_mat, B)
+    assert meta["verified"] is True
+    assert meta["max_abs_error"] < 1e-4
+
+
+def test_sparse_craft_2_4_structured_sparsity():
+    engine = SparseCraft()
+    np.random.seed(42)
+    X = np.random.randn(16, 64).astype(np.float32)
+    W = np.random.randn(32, 64).astype(np.float32)
+
+    out, meta = engine.execute_2_4_structured_sparsity(X, W)
+    assert out.shape == (16, 32)
+    assert meta["theoretical_flop_reduction"] == 0.50
+
+
+# =============================================================================
+# 3. StreamCraft Tests (Section 10.3 & 11)
+# =============================================================================
+def test_stream_craft_chunked_gemv():
+    engine = StreamCraft(memory_budget_mb=512.0)
+    total_rows = 128
+    dim_k = 64
+    vec = np.ones(dim_k, dtype=np.float32)
+
+    # Stream 4 chunks of 32 rows
+    chunks = [np.ones((32, dim_k), dtype=np.float32) for _ in range(4)]
+    out, meta = engine.stream_chunked_gemv(iter(chunks), vec, total_rows=total_rows)
+
+    assert out.shape == (128,)
+    assert np.allclose(out, 64.0)
+    assert meta["within_budget"] is True
+    assert meta["peak_memory_mb"] <= 512.0
+
+
+def test_stream_craft_streaming_online_softmax():
+    engine = StreamCraft()
+    rows = [np.array([1.0, 2.0, 3.0], dtype=np.float32), np.array([10.0, 20.0, 30.0], dtype=np.float32)]
+    outputs, meta = engine.streaming_online_softmax(iter(rows))
+
+    assert len(outputs) == 2
+    for sm in outputs:
+        assert abs(np.sum(sm) - 1.0) < 1e-6
+        assert np.all(sm >= 0.0)
+
+
+def test_stream_craft_cache_blocked_gemm():
+    engine = StreamCraft(l2_cache_block_kb=256)
+    np.random.seed(42)
+    A = np.random.randn(64, 64).astype(np.float32)
+    B = np.random.randn(64, 64).astype(np.float32)
+
+    C, meta = engine.cache_blocked_gemm_2d(A, B, block_size=32)
+    ref = A @ B
+    assert np.allclose(C, ref, atol=1e-4)
+
+
+# =============================================================================
+# 4. TensorCraft Tests (Section 10.4)
+# =============================================================================
+def test_tensor_craft_fused_gemm_bias_relu():
+    engine = TensorCraft()
+    np.random.seed(42)
+    A = np.random.randn(32, 64).astype(np.float32)
+    B = np.random.randn(64, 16).astype(np.float32)
+    bias = np.random.randn(16).astype(np.float32)
+
+    out, meta = engine.fused_gemm_bias_relu(A, B, bias)
+
+    ref = np.maximum(A @ B + bias, 0.0)
+    assert np.allclose(out, ref, atol=1e-4)
+    assert meta["verified"] is True
+    assert meta["memory_traffic_reduction_ratio"] > 1.0
+
+
+# =============================================================================
+# 5. InferenceCraft Tests (Section 10.5)
+# =============================================================================
+def test_inference_craft_bitnet_ternary():
+    engine = InferenceCraft()
+    np.random.seed(42)
+    X = np.random.randn(8, 64).astype(np.float32)
+    W = np.random.randn(16, 64).astype(np.float32)
+
+    out, meta = engine.bitnet_ternary_inference(X, W)
+    assert out.shape == (8, 16)
+    assert meta["cosine_similarity"] >= 0.85
+    assert meta["memory_compression_ratio"] >= 4.0
+
+
+def test_inference_craft_kv_cache_and_speculative_decoding():
+    engine = InferenceCraft()
+
+    # Speculative verification
+    logits = np.array([0.1, 0.2, 5.0, 0.3], dtype=np.float32)
+    # Draft token matches argmax
+    accepted, token, meta = engine.speculative_verification_step(draft_token=2, target_logits=logits)
+    assert accepted is True
+    assert token == 2
+
+    # Draft token mismatches argmax
+    accepted2, token2, meta2 = engine.speculative_verification_step(draft_token=0, target_logits=logits)
+    assert accepted2 is False
+    assert token2 == 2  # Falls back to target model greedy token
+
+
+# =============================================================================
+# 6. DeviceCraft Tests (Section 10.6 & 13)
+# =============================================================================
+def test_device_craft_dispatch_latency_thresholding():
+    engine = DeviceCraft(dispatch_cutoff_bytes=256 * 1024)
+
+    # 1. Task below 256 KB cutoff (e.g. 16 KB)
+    backend_small, meta_small = engine.route_workload(data_bytes=16 * 1024)
+    assert backend_small == ExecutionBackend.CPU_AVX2
+    assert "256 KB threshold" in meta_small["routing_reason"]
+    assert meta_small["raw_hardware_parity"] == "0.0%"
+
+    # 2. Host profile detection
+    profile = engine.profile
+    assert profile.p_cores == 4
+    assert profile.has_avx2 is True
+    assert profile.raw_hardware_parity_pct == 0.0
+
+
+# =============================================================================
+# 7. TonyStarkComputationalEscapeEngine Master Pipeline Tests (Section 3-17)
+# =============================================================================
+def test_tony_stark_master_engine_execution_and_caching():
+    engine = TonyStarkComputationalEscapeEngine()
+
+    # 1. Exact Polynomial evaluation
+    contract = EscapeContract(
+        workload_id="tony_stark_horner_poly",
+        guarantee_level=GuaranteeLevel.EXACT_MATHEMATICAL,
+        max_absolute_error=1e-6,
+    )
+    inp = {"coefficients": [1.0, 2.0, 3.0], "x": 4.0}  # 1 + 2(4) + 3(16) = 57
+    oracle_fn = lambda d: sum(c * (d["x"] ** i) for i, c in enumerate(d["coefficients"]))
+
+    # Cold run
+    res_cold = engine.execute(
+        workload_id="tony_stark_horner_poly",
+        input_data=inp,
+        contract=contract,
+        reference_oracle_fn=oracle_fn,
+        allow_cache=True,
+    )
+    assert res_cold.verified is True
+    assert res_cold.output == 57.0
+    assert res_cold.result_label in [WorkloadResultLabel.EXACT.value, WorkloadResultLabel.REDUCED_WORK.value]
+    assert res_cold.cache_status == "MISS"
+    assert res_cold.necessity_report is not None
+    assert res_cold.necessity_report.provably_eliminated_operations > 0
+
+    # Hot run (Cache hit)
+    res_hot = engine.execute(
+        workload_id="tony_stark_horner_poly",
+        input_data=inp,
+        contract=contract,
+        reference_oracle_fn=oracle_fn,
+        allow_cache=True,
+    )
+    assert res_hot.cache_status == "HIT"
+    assert res_hot.result_label == WorkloadResultLabel.CACHED.value
+    assert res_hot.output == 57.0
+
+
+def test_tony_stark_master_engine_fused_tensor():
+    engine = TonyStarkComputationalEscapeEngine()
+    contract = EscapeContract(
+        workload_id="tony_stark_fused_tensor",
+        guarantee_level=GuaranteeLevel.NUMERICAL_TOLERANCE,
+        max_absolute_error=1e-4,
+    )
+    np.random.seed(42)
+    A = np.random.randn(16, 32).astype(np.float32)
+    B = np.random.randn(32, 16).astype(np.float32)
+    bias = np.ones(16, dtype=np.float32)
+    inp = {"A": A, "B": B, "bias": bias}
+
+    oracle_fn = lambda d: np.maximum(d["A"] @ d["B"] + d["bias"], 0.0)
+
+    res = engine.execute(
+        workload_id="tony_stark_fused_tensor",
+        input_data=inp,
+        contract=contract,
+        reference_oracle_fn=oracle_fn,
+    )
+    assert res.verified is True
+    assert res.verification_error <= 1e-4
+    assert res.result_label == WorkloadResultLabel.REDUCED_WORK.value
+
+
+def test_tony_stark_master_engine_cegis_divergence_capture():
+    engine = TonyStarkComputationalEscapeEngine()
+    contract = EscapeContract(
+        workload_id="tony_stark_adversarial_test",
+        max_absolute_error=1e-5,
+    )
+    inp = np.ones((8, 8), dtype=np.float32)
+
+    # Reference oracle that deliberately returns different numbers to trigger CEGIS
+    divergent_oracle = lambda d: np.zeros((8, 8), dtype=np.float32)
+    exact_fallback = lambda d: np.ones((8, 8), dtype=np.float32)
+
+    res = engine.execute(
+        workload_id="tony_stark_adversarial_test",
+        input_data=inp,
+        contract=contract,
+        reference_oracle_fn=divergent_oracle,
+        exact_reference_fn=exact_fallback,
+    )
+
+    # Safe fallback was engaged
+    assert res.verified is True
+    assert res.result_label == WorkloadResultLabel.EXACT.value
