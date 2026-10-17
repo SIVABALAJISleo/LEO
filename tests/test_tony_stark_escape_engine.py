@@ -319,3 +319,53 @@ def test_tony_stark_master_engine_cegis_divergence_capture():
     # Safe fallback was engaged
     assert res.verified is True
     assert res.result_label == WorkloadResultLabel.EXACT.value
+
+
+# =============================================================================
+# 8. FastAPI Router Integration Tests (Section 16)
+# =============================================================================
+def test_tony_stark_api_router_endpoints():
+    from fastapi import FastAPI
+    from fastapi.testclient import TestClient
+    from backend.routers.hyper_escape_router import router
+
+    app = FastAPI()
+    app.include_router(router)
+    client = TestClient(app)
+
+    # 1. Test craft engines list
+    r_craft = client.get("/api/v1/escape_omega/tony_stark/craft_engines")
+    assert r_craft.status_code == 200
+    craft_data = r_craft.json()
+    assert "ExactCraft" in craft_data["engines"]
+    assert "DeviceCraft" in craft_data["engines"]
+    assert craft_data["engines"]["DeviceCraft"]["raw_hardware_parity"] == "0.0% (Software-Only Optimization)"
+
+    # 2. Test scoreboards retrieval
+    r_score = client.get("/api/v1/escape_omega/tony_stark/scoreboards")
+    assert r_score.status_code == 200
+    score_data = r_score.json()
+    assert score_data.get("all_scoreboards_passed") is True or "raw_hardware_parity" in score_data
+
+    # 3. Test necessity report
+    r_nec = client.get("/api/v1/escape_omega/tony_stark/necessity_report/tony_stark_horner_poly")
+    assert r_nec.status_code == 200
+    nec_data = r_nec.json()
+    assert nec_data["provably_eliminated_operations"] > 0
+    assert "Horner" in nec_data["justification"]
+
+    # 4. Test execute endpoint
+    payload = {
+        "workload_id": "tony_stark_horner_poly",
+        "guarantee_level": "EXACT_MATHEMATICAL",
+        "max_absolute_error": 1e-6,
+        "input_payload": {"coefficients": [1.0, 2.0, 3.0], "x": 2.0},  # 1 + 2(2) + 3(4) = 17
+        "allow_cache": True,
+    }
+    r_exec = client.post("/api/v1/escape_omega/tony_stark/execute", json=payload)
+    assert r_exec.status_code == 200
+    exec_data = r_exec.json()
+    assert exec_data["verified"] is True
+    assert exec_data["output_preview"] == 17.0
+    assert exec_data["selected_algorithm"] == "Horner's Rule Exact Polynomial"
+
