@@ -504,5 +504,38 @@
     "minimized_input_representation": "Divergence 8.00000e+00",
     "violated_assumption": "Verification divergence: error 8.000000 exceeded tolerance 1e-05",
     "timestamp": 1792253465.419638
+  },
+  {
+    "counterexample_id": "cx-834c37c0",
+    "candidate_id": "CPU_AVX2_BLAS",
+    "workload_id": "tony_stark_adversarial_test",
+    "failure_mode": "NUMERICAL_INSTABILITY",
+    "divergence": 8.0,
+    "input_representation": "Adversarial input for tony_stark_adversarial_test",
+    "minimized_input_representation": "Divergence 8.00000e+00",
+    "violated_assumption": "Verification divergence: error 8.000000 exceeded tolerance 1e-05",
+    "timestamp": 1792418546.2320247
+  },
+  {
+    "counterexample_id": "cx-3592fd91",
+    "candidate_id": "CPU_AVX2_BLAS",
+    "workload_id": "tony_stark_adversarial_test",
+    "failure_mode": "NUMERICAL_INSTABILITY",
+    "divergence": 8.0,
+    "input_representation": "Adversarial input for tony_stark_adversarial_test",
+    "minimized_input_representation": "Divergence 8.00000e+00",
+    "violated_assumption": "Verification divergence: error 8.000000 exceeded tolerance 1e-05",
+    "timestamp": 1792418612.373543
+  },
+  {
+    "counterexample_id": "cx-dc6b6418",
+    "candidate_id": "CPU_AVX2_BLAS",
+    "workload_id": "tony_stark_adversarial_test",
+    "failure_mode": "NUMERICAL_INSTABILITY",
+    "divergence": 8.0,
+    "input_representation": "Adversarial input for tony_stark_adversarial_test",
+    "minimized_input_representation": "Divergence 8.00000e+00",
+    "violated_assumption": "Verification divergence: error 8.000000 exceeded tolerance 1e-05",
+    "timestamp": 1792418639.5831325
   }
 ]

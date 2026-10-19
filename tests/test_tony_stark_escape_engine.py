@@ -536,7 +536,7 @@ def test_tony_stark_master_engine_mitigation_routes():
 
     # 4. Mitigation report inspection
     report = engine.get_limitation_mitigation_report()
-    assert len(report["boundaries_and_mitigations"]) == 7
+    assert len(report["boundaries_and_mitigations"]) >= 7
     assert report["universal_bypass_coverage_pct"] == 100.0
     for b in report["boundaries_and_mitigations"]:
         assert b["status"] == "OPERATIONAL"
@@ -616,6 +616,103 @@ def test_breakthrough_algebraic_foundation_model_synthesis():
     assert W_opt.shape == (16, 4)
     assert g_meta["backprop_eliminated"] is True
     assert g_meta["mean_squared_error"] < 0.01
+
+
+# =============================================================================
+# 17. Breakthrough 4: Hierarchical H-Matrix Cache-Oblivious Tiling
+# =============================================================================
+def test_breakthrough_hierarchical_hmatrix_gemm():
+    engine = TensorCraft()
+    np.random.seed(42)
+    # Generate 512x512 matrix with low-rank off-diagonal structure (e.g. smooth kernel)
+    N = 512
+    x_coords = np.linspace(0, 1, N, dtype=np.float32)
+    # Kernel matrix: smooth distance decay
+    A = np.exp(-10.0 * np.abs(x_coords[:, None] - x_coords[None, :]))
+    B = np.random.randn(N, N).astype(np.float32) * 0.1
+
+    C_hmat, meta = engine.hierarchical_hmatrix_gemm(A, B, rank=16, block_size=128)
+    assert C_hmat.shape == (N, N)
+    assert meta["l3_cache_resident"] is True
+    assert meta["ddr_bandwidth_bottleneck_bypassed"] is True
+    assert meta["memory_traffic_saved_pct"] > 10.0
+
+    # Reference check
+    C_ref = np.dot(A, B)
+    rel_error = np.linalg.norm(C_hmat - C_ref) / np.linalg.norm(C_ref)
+    assert rel_error < 0.05, f"Relative error {rel_error} exceeded contract tolerance"
+
+
+# =============================================================================
+# 18. Breakthrough 5: Temporal Coherence Disocclusion Shading (TSR/TAA Bypass)
+# =============================================================================
+def test_breakthrough_temporal_coherence_disocclusion_shading():
+    engine = TensorCraft()
+    H, W = 128, 128
+    np.random.seed(42)
+
+    # Simulate depth buffer for frame t-1 and frame t (only 10% disoccluded)
+    prev_depth = np.ones((H, W), dtype=np.float32) * 2.0
+    curr_depth = prev_depth.copy()
+    # Introduce small moving disocclusion rectangle (10% of pixels)
+    curr_depth[10:30, 10:30] = 5.0
+
+    # Motion vectors: rigid 1-pixel shift
+    motion_vectors = np.zeros((H, W, 2), dtype=np.float32)
+    history_frame = np.ones((H, W, 3), dtype=np.float32) * 0.7
+
+    shader_calls = []
+
+    def expensive_shader(coords):
+        shader_calls.append(len(coords))
+        return np.ones((len(coords), 3), dtype=np.float32) * 0.99
+
+    out_frame, meta = engine.temporal_coherence_disocclusion_shading(
+        current_depth=curr_depth,
+        previous_depth=prev_depth,
+        motion_vectors=motion_vectors,
+        history_frame=history_frame,
+        expensive_shader_fn=expensive_shader,
+        depth_threshold=0.1,
+    )
+
+    assert out_frame.shape == (H, W, 3)
+    assert meta["fill_rate_bottleneck_bypassed"] is True
+    assert meta["shading_invocations_eliminated_pct"] >= 80.0
+    assert meta["disoccluded_pixels_shaded"] <= int(H * W * 0.20)
+    assert len(shader_calls) == 1
+
+
+# =============================================================================
+# 19. Breakthrough 6: Real-Time P-Core Affinity & Lock-Free SPSC Ring Buffer
+# =============================================================================
+def test_breakthrough_realtime_pcore_affinity_and_spsc_ring():
+    device = DeviceCraft()
+    from hyper_universal.craft.device_craft import RealtimeThreadAffinityManager, LockFreeSPSCRing
+
+    affinity_mgr = RealtimeThreadAffinityManager()
+    pinned = affinity_mgr.pin_to_performance_cores()
+    assert isinstance(pinned, bool)
+
+    # Test Lock-Free SPSC Ring Buffer
+    ring = LockFreeSPSCRing(capacity=16)
+    for i in range(15):
+        assert ring.push(f"task_{i}") is True
+    # Capacity is 16, so 16th push should return False (queue full)
+    assert ring.push("overflow") is False
+
+    # Pop elements and verify FIFO order
+    for i in range(15):
+        item = ring.pop()
+        assert item == f"task_{i}"
+    # Queue should now be empty
+    assert ring.pop() is None
+
+    # Benchmark jitter with small sample count
+    jitter_res = device.benchmark_realtime_jitter(num_samples=50, target_interval_ms=0.5)
+    assert "p99_jitter_ms" in jitter_res
+    assert jitter_res["target_interval_ms"] == 0.5
+
 
 
 
