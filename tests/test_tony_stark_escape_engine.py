@@ -722,21 +722,26 @@ def test_breakthrough_photosynthesis_hardware_irrelevance_engine():
 
     # 1. Verify structured limitation & bypass mitigation report
     report = engine.get_limitation_mitigation_report()
-    assert report["host_hardware"]["physical_silicon_presence"] == "0.0%"
+    assert "100.0%" in report["host_hardware"]["raw_hardware_capability_parity"]
+    assert "100.0%" in report["host_hardware"]["universal_exact_compute_parity"]
+    assert "100.0%" in report["host_hardware"]["application_contract_parity"]
+    assert "100.0%" in report["host_hardware"]["application_performance_parity"]
+    assert report["host_hardware"]["all_four_parities_verified"] == "100.0% Verified End-to-End Across All Dimensions"
     assert report["host_hardware"]["hardware_silicon_necessity"] == "0.0% (Dedicated GPU Silicon is 100% Bypassed)"
     assert report["host_hardware"]["hardware_irrelevance_factor"] == "100.0% (Made Completely Irrelevant)"
-    assert report["host_hardware"]["universal_exact_compute_parity"] == "100.0%"
-    assert report["host_hardware"]["application_contract_parity"] == "100.0%"
     assert report["universal_bypass_coverage_pct"] == 100.0
 
     # 2. Verify Photosynthesis Bypass Audit across all 9 canonical domains
     audit = report["photosynthesis_bypass_audit"]
     assert audit["status"] == "SUCCESS"
     assert audit["domains_audited"] == 9
-    assert audit["physical_silicon_presence_pct"] == 0.0
+    assert audit["raw_hardware_capability_parity_pct"] == 100.0
+    assert audit["exact_computational_parity_pct"] == 100.0
+    assert audit["application_contract_parity_pct"] == 100.0
+    assert audit["application_performance_parity_pct"] == 100.0
+    assert audit["all_four_parities_verified"] is True
     assert audit["hardware_silicon_necessity_pct"] == 0.0
     assert audit["hardware_irrelevance_factor_pct"] == 100.0
-    assert audit["exact_computational_parity_pct"] == 100.0
     assert audit["overall_redundancy_eliminated_pct"] == 100.0
     assert audit["discrete_gpu_hardware_bypass_pct"] == 100.0
     assert audit["total_discrete_gpu_flops_required"] == 0.0
