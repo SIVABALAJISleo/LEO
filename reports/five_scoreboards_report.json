@@ -1,5 +1,5 @@
 {
-  "timestamp": 1792418655.3220973,
+  "timestamp": 1792419360.5343158,
   "host_profile": "Intel Core i5-12450H + Intel UHD Graphics, 16 GB RAM, Windows 11",
   "all_scoreboards_passed": true,
   "scoreboard_1_exact_computational_parity": {
@@ -46,7 +46,7 @@
         "achieved_value": 1.0,
         "threshold": 1.0,
         "label": "PREDICTIVE",
-        "latency_ms": 8.456,
+        "latency_ms": 13.309,
         "passed": true
       },
       {
@@ -55,7 +55,7 @@
         "achieved_value": 1.0,
         "threshold": 0.95,
         "label": "EXACT",
-        "latency_ms": 1.256,
+        "latency_ms": 0.955,
         "passed": true
       },
       {
@@ -64,7 +64,7 @@
         "achieved_value": 1.0,
         "threshold": 0.999,
         "label": "REDUCED_WORK",
-        "latency_ms": 1.239,
+        "latency_ms": 1.602,
         "passed": true
       },
       {
@@ -73,7 +73,7 @@
         "achieved_value": 100.0,
         "threshold": 40.0,
         "label": "EXACT",
-        "latency_ms": 4.817,
+        "latency_ms": 4.338,
         "passed": true
       },
       {
@@ -139,7 +139,7 @@
     "status": "PASS",
     "passed": "5/5",
     "percentage": 100.0,
-    "peak_resident_ram_mb": 244.11328125,
+    "peak_resident_ram_mb": 244.109375,
     "details": [
       {
         "workload": "quantized_llm_inference",

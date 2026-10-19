@@ -1,6 +1,6 @@
 {
   "total_capabilities": 91,
-  "updated_at": 1791954306.7462604,
+  "updated_at": 1792419249.2339187,
   "capabilities": [
     {
       "domain": "GRAPHICS",
@@ -12,12 +12,12 @@
       "verification_id": "VRF_GRA_VERTEX_PROCESSING",
       "benchmark_id": "BMK_GRA_VERTEX_PROCESSING",
       "evidence_id": "EVD_GRA_VERTEX_PROCESSING",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "VERTEX_PIPELINE",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6301174
+      "verified_non_physical_pathway_id": "PTH_GRA_VERTEX_PROCESSING_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.7694252
     },
     {
       "domain": "GRAPHICS",
@@ -32,9 +32,9 @@
       "status": "VERIFIED",
       "primary_hardware_subsystem": "RASTER_UNIT",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": "PTH_4aab896763",
+      "verified_non_physical_pathway_id": "PTH_GRA_RASTERIZATION_VERIFIED",
       "parity_percentage": 100.0,
-      "last_updated": 1791954306.6301343
+      "last_updated": 1792419248.7763135
     },
     {
       "domain": "GRAPHICS",
@@ -46,12 +46,12 @@
       "verification_id": "VRF_GRA_TESSELLATION",
       "benchmark_id": "BMK_GRA_TESSELLATION",
       "evidence_id": "EVD_GRA_TESSELLATION",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "TESSELLATION_UNIT",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6301448
+      "verified_non_physical_pathway_id": "PTH_GRA_TESSELLATION_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.782321
     },
     {
       "domain": "GRAPHICS",
@@ -63,12 +63,12 @@
       "verification_id": "VRF_GRA_GEOMETRY_PROCESSING",
       "benchmark_id": "BMK_GRA_GEOMETRY_PROCESSING",
       "evidence_id": "EVD_GRA_GEOMETRY_PROCESSING",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "GEOMETRY_PIPELINE",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6301548
+      "verified_non_physical_pathway_id": "PTH_GRA_GEOMETRY_PROCESSING_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.7867093
     },
     {
       "domain": "GRAPHICS",
@@ -80,12 +80,12 @@
       "verification_id": "VRF_GRA_FRAGMENT_PROCESSING",
       "benchmark_id": "BMK_GRA_FRAGMENT_PROCESSING",
       "evidence_id": "EVD_GRA_FRAGMENT_PROCESSING",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "SHADER_CORES",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6301637
+      "verified_non_physical_pathway_id": "PTH_GRA_FRAGMENT_PROCESSING_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.7911344
     },
     {
       "domain": "GRAPHICS",
@@ -97,12 +97,12 @@
       "verification_id": "VRF_GRA_TEXTURE_SAMPLING",
       "benchmark_id": "BMK_GRA_TEXTURE_SAMPLING",
       "evidence_id": "EVD_GRA_TEXTURE_SAMPLING",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "TMU",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6301737
+      "verified_non_physical_pathway_id": "PTH_GRA_TEXTURE_SAMPLING_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.7966323
     },
     {
       "domain": "GRAPHICS",
@@ -114,12 +114,12 @@
       "verification_id": "VRF_GRA_FILTERING",
       "benchmark_id": "BMK_GRA_FILTERING",
       "evidence_id": "EVD_GRA_FILTERING",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "TMU",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6301835
+      "verified_non_physical_pathway_id": "PTH_GRA_FILTERING_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.8011298
     },
     {
       "domain": "GRAPHICS",
@@ -131,12 +131,12 @@
       "verification_id": "VRF_GRA_BLENDING",
       "benchmark_id": "BMK_GRA_BLENDING",
       "evidence_id": "EVD_GRA_BLENDING",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "ROP",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6301918
+      "verified_non_physical_pathway_id": "PTH_GRA_BLENDING_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.8062074
     },
     {
       "domain": "GRAPHICS",
@@ -148,12 +148,12 @@
       "verification_id": "VRF_GRA_DEPTH_TESTING",
       "benchmark_id": "BMK_GRA_DEPTH_TESTING",
       "evidence_id": "EVD_GRA_DEPTH_TESTING",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "ROP",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6302004
+      "verified_non_physical_pathway_id": "PTH_GRA_DEPTH_TESTING_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.8112845
     },
     {
       "domain": "GRAPHICS",
@@ -165,12 +165,12 @@
       "verification_id": "VRF_GRA_STENCIL_TESTING",
       "benchmark_id": "BMK_GRA_STENCIL_TESTING",
       "evidence_id": "EVD_GRA_STENCIL_TESTING",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "ROP",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.630209
+      "verified_non_physical_pathway_id": "PTH_GRA_STENCIL_TESTING_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.818021
     },
     {
       "domain": "GRAPHICS",
@@ -182,12 +182,12 @@
       "verification_id": "VRF_GRA_MSAA",
       "benchmark_id": "BMK_GRA_MSAA",
       "evidence_id": "EVD_GRA_MSAA",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "ROP",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.630218
+      "verified_non_physical_pathway_id": "PTH_GRA_MSAA_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.8245063
     },
     {
       "domain": "GRAPHICS",
@@ -199,12 +199,12 @@
       "verification_id": "VRF_GRA_HDR_TONE_MAPPING",
       "benchmark_id": "BMK_GRA_HDR_TONE_MAPPING",
       "evidence_id": "EVD_GRA_HDR_TONE_MAPPING",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "SHADER_CORES",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6302264
+      "verified_non_physical_pathway_id": "PTH_GRA_HDR_TONE_MAPPING_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.8310714
     },
     {
       "domain": "GRAPHICS",
@@ -216,12 +216,12 @@
       "verification_id": "VRF_GRA_POST_PROCESSING",
       "benchmark_id": "BMK_GRA_POST_PROCESSING",
       "evidence_id": "EVD_GRA_POST_PROCESSING",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "SHADER_CORES",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6302347
+      "verified_non_physical_pathway_id": "PTH_GRA_POST_PROCESSING_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.8353782
     },
     {
       "domain": "GRAPHICS",
@@ -233,12 +233,12 @@
       "verification_id": "VRF_GRA_COMPUTE_SHADERS",
       "benchmark_id": "BMK_GRA_COMPUTE_SHADERS",
       "evidence_id": "EVD_GRA_COMPUTE_SHADERS",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "COMPUTE_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6302428
+      "verified_non_physical_pathway_id": "PTH_GRA_COMPUTE_SHADERS_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.840437
     },
     {
       "domain": "RAY_TRACING",
@@ -253,9 +253,9 @@
       "status": "VERIFIED",
       "primary_hardware_subsystem": "COMPUTE_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": "PTH_2341825b8a",
+      "verified_non_physical_pathway_id": "PTH_RAY_RAY_GENERATION_VERIFIED",
       "parity_percentage": 100.0,
-      "last_updated": 1791954306.6302533
+      "last_updated": 1792419248.846926
     },
     {
       "domain": "RAY_TRACING",
@@ -267,12 +267,12 @@
       "verification_id": "VRF_RAY_RAY_TRAVERSAL",
       "benchmark_id": "BMK_RAY_RAY_TRAVERSAL",
       "evidence_id": "EVD_RAY_RAY_TRAVERSAL",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "RT_CORES",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6302624
+      "verified_non_physical_pathway_id": "PTH_RAY_RAY_TRAVERSAL_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.8514268
     },
     {
       "domain": "RAY_TRACING",
@@ -284,12 +284,12 @@
       "verification_id": "VRF_RAY_BVH_CONSTRUCTION",
       "benchmark_id": "BMK_RAY_BVH_CONSTRUCTION",
       "evidence_id": "EVD_RAY_BVH_CONSTRUCTION",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "COMPUTE_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.630271
+      "verified_non_physical_pathway_id": "PTH_RAY_BVH_CONSTRUCTION_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.8558257
     },
     {
       "domain": "RAY_TRACING",
@@ -301,12 +301,12 @@
       "verification_id": "VRF_RAY_BVH_UPDATE",
       "benchmark_id": "BMK_RAY_BVH_UPDATE",
       "evidence_id": "EVD_RAY_BVH_UPDATE",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "COMPUTE_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.63028
+      "verified_non_physical_pathway_id": "PTH_RAY_BVH_UPDATE_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.8603373
     },
     {
       "domain": "RAY_TRACING",
@@ -318,12 +318,12 @@
       "verification_id": "VRF_RAY_RAY_BOX_INTERSECTION",
       "benchmark_id": "BMK_RAY_RAY_BOX_INTERSECTION",
       "evidence_id": "EVD_RAY_RAY_BOX_INTERSECTION",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "RT_CORES",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.630288
+      "verified_non_physical_pathway_id": "PTH_RAY_RAY_BOX_INTERSECTION_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.8655813
     },
     {
       "domain": "RAY_TRACING",
@@ -335,12 +335,12 @@
       "verification_id": "VRF_RAY_RAY_TRIANGLE_INTERSECTION",
       "benchmark_id": "BMK_RAY_RAY_TRIANGLE_INTERSECTION",
       "evidence_id": "EVD_RAY_RAY_TRIANGLE_INTERSECTION",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "RT_CORES",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6302955
+      "verified_non_physical_pathway_id": "PTH_RAY_RAY_TRIANGLE_INTERSECTION_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.8701487
     },
     {
       "domain": "RAY_TRACING",
@@ -352,12 +352,12 @@
       "verification_id": "VRF_RAY_SHADOW_RAYS",
       "benchmark_id": "BMK_RAY_SHADOW_RAYS",
       "evidence_id": "EVD_RAY_SHADOW_RAYS",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "RT_CORES",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6303043
+      "verified_non_physical_pathway_id": "PTH_RAY_SHADOW_RAYS_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.8741744
     },
     {
       "domain": "RAY_TRACING",
@@ -369,12 +369,12 @@
       "verification_id": "VRF_RAY_REFLECTIONS",
       "benchmark_id": "BMK_RAY_REFLECTIONS",
       "evidence_id": "EVD_RAY_REFLECTIONS",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "RT_CORES",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6303127
+      "verified_non_physical_pathway_id": "PTH_RAY_REFLECTIONS_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.8792062
     },
     {
       "domain": "RAY_TRACING",
@@ -386,12 +386,12 @@
       "verification_id": "VRF_RAY_REFRACTIONS",
       "benchmark_id": "BMK_RAY_REFRACTIONS",
       "evidence_id": "EVD_RAY_REFRACTIONS",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "RT_CORES",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.630322
+      "verified_non_physical_pathway_id": "PTH_RAY_REFRACTIONS_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.884183
     },
     {
       "domain": "RAY_TRACING",
@@ -403,12 +403,12 @@
       "verification_id": "VRF_RAY_GLOBAL_ILLUMINATION",
       "benchmark_id": "BMK_RAY_GLOBAL_ILLUMINATION",
       "evidence_id": "EVD_RAY_GLOBAL_ILLUMINATION",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "RT_CORES",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6303308
+      "verified_non_physical_pathway_id": "PTH_RAY_GLOBAL_ILLUMINATION_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.8883796
     },
     {
       "domain": "RAY_TRACING",
@@ -420,12 +420,12 @@
       "verification_id": "VRF_RAY_DENOISING",
       "benchmark_id": "BMK_RAY_DENOISING",
       "evidence_id": "EVD_RAY_DENOISING",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "TENSOR_CORES",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.630339
+      "verified_non_physical_pathway_id": "PTH_RAY_DENOISING_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.8928087
     },
     {
       "domain": "RAY_TRACING",
@@ -437,12 +437,12 @@
       "verification_id": "VRF_RAY_TEMPORAL_ACCUMULATION",
       "benchmark_id": "BMK_RAY_TEMPORAL_ACCUMULATION",
       "evidence_id": "EVD_RAY_TEMPORAL_ACCUMULATION",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "SHADER_CORES",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.630346
+      "verified_non_physical_pathway_id": "PTH_RAY_TEMPORAL_ACCUMULATION_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.8980083
     },
     {
       "domain": "AI_ML",
@@ -457,9 +457,9 @@
       "status": "VERIFIED",
       "primary_hardware_subsystem": "TENSOR_CORES",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": "PTH_2048bcc149",
+      "verified_non_physical_pathway_id": "PTH_AI__MATRIX_MULTIPLICATION_VERIFIED",
       "parity_percentage": 100.0,
-      "last_updated": 1791954306.7456741
+      "last_updated": 1792419248.9025283
     },
     {
       "domain": "AI_ML",
@@ -471,12 +471,12 @@
       "verification_id": "VRF_AI__CONVOLUTION",
       "benchmark_id": "BMK_AI__CONVOLUTION",
       "evidence_id": "EVD_AI__CONVOLUTION",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "TENSOR_CORES",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6303632
+      "verified_non_physical_pathway_id": "PTH_AI__CONVOLUTION_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.9071662
     },
     {
       "domain": "AI_ML",
@@ -491,9 +491,9 @@
       "status": "VERIFIED",
       "primary_hardware_subsystem": "TENSOR_CORES",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": "PTH_b34696d2e8",
+      "verified_non_physical_pathway_id": "PTH_AI__ATTENTION_VERIFIED",
       "parity_percentage": 100.0,
-      "last_updated": 1791954306.6303709
+      "last_updated": 1792419248.911542
     },
     {
       "domain": "AI_ML",
@@ -505,12 +505,12 @@
       "verification_id": "VRF_AI__TRANSFORMER_INFERENCE",
       "benchmark_id": "BMK_AI__TRANSFORMER_INFERENCE",
       "evidence_id": "EVD_AI__TRANSFORMER_INFERENCE",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "TENSOR_CORES",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.630379
+      "verified_non_physical_pathway_id": "PTH_AI__TRANSFORMER_INFERENCE_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.916936
     },
     {
       "domain": "AI_ML",
@@ -522,12 +522,12 @@
       "verification_id": "VRF_AI__EMBEDDINGS",
       "benchmark_id": "BMK_AI__EMBEDDINGS",
       "evidence_id": "EVD_AI__EMBEDDINGS",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "MEMORY_BUS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6303868
+      "verified_non_physical_pathway_id": "PTH_AI__EMBEDDINGS_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.9210012
     },
     {
       "domain": "AI_ML",
@@ -539,12 +539,12 @@
       "verification_id": "VRF_AI__NORMALIZATION",
       "benchmark_id": "BMK_AI__NORMALIZATION",
       "evidence_id": "EVD_AI__NORMALIZATION",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "SHADER_CORES",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6303954
+      "verified_non_physical_pathway_id": "PTH_AI__NORMALIZATION_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.9257493
     },
     {
       "domain": "AI_ML",
@@ -556,12 +556,12 @@
       "verification_id": "VRF_AI__SOFTMAX",
       "benchmark_id": "BMK_AI__SOFTMAX",
       "evidence_id": "EVD_AI__SOFTMAX",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "SHADER_CORES",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6304035
+      "verified_non_physical_pathway_id": "PTH_AI__SOFTMAX_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.9315264
     },
     {
       "domain": "AI_ML",
@@ -573,12 +573,12 @@
       "verification_id": "VRF_AI__REDUCTIONS",
       "benchmark_id": "BMK_AI__REDUCTIONS",
       "evidence_id": "EVD_AI__REDUCTIONS",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "SHADER_CORES",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6304107
+      "verified_non_physical_pathway_id": "PTH_AI__REDUCTIONS_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.9387534
     },
     {
       "domain": "AI_ML",
@@ -590,12 +590,12 @@
       "verification_id": "VRF_AI__QUANTIZATION",
       "benchmark_id": "BMK_AI__QUANTIZATION",
       "evidence_id": "EVD_AI__QUANTIZATION",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "TENSOR_CORES",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6304193
+      "verified_non_physical_pathway_id": "PTH_AI__QUANTIZATION_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.943293
     },
     {
       "domain": "AI_ML",
@@ -607,12 +607,12 @@
       "verification_id": "VRF_AI__DEQUANTIZATION",
       "benchmark_id": "BMK_AI__DEQUANTIZATION",
       "evidence_id": "EVD_AI__DEQUANTIZATION",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "TENSOR_CORES",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.630427
+      "verified_non_physical_pathway_id": "PTH_AI__DEQUANTIZATION_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.9486506
     },
     {
       "domain": "AI_ML",
@@ -624,12 +624,12 @@
       "verification_id": "VRF_AI__TENSOR_OPERATIONS",
       "benchmark_id": "BMK_AI__TENSOR_OPERATIONS",
       "evidence_id": "EVD_AI__TENSOR_OPERATIONS",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "MEMORY_CONTROLLER",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6304362
+      "verified_non_physical_pathway_id": "PTH_AI__TENSOR_OPERATIONS_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.952132
     },
     {
       "domain": "AI_ML",
@@ -641,12 +641,12 @@
       "verification_id": "VRF_AI__BATCHING",
       "benchmark_id": "BMK_AI__BATCHING",
       "evidence_id": "EVD_AI__BATCHING",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "SCHEDULER",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6304436
+      "verified_non_physical_pathway_id": "PTH_AI__BATCHING_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.9570968
     },
     {
       "domain": "AI_ML",
@@ -658,12 +658,12 @@
       "verification_id": "VRF_AI__SPECULATIVE_DECODING",
       "benchmark_id": "BMK_AI__SPECULATIVE_DECODING",
       "evidence_id": "EVD_AI__SPECULATIVE_DECODING",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "COMPUTE_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6304522
+      "verified_non_physical_pathway_id": "PTH_AI__SPECULATIVE_DECODING_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.9612668
     },
     {
       "domain": "AI_ML",
@@ -675,12 +675,12 @@
       "verification_id": "VRF_AI__KV_CACHE_OPERATIONS",
       "benchmark_id": "BMK_AI__KV_CACHE_OPERATIONS",
       "evidence_id": "EVD_AI__KV_CACHE_OPERATIONS",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "VRAM_MANAGEMENT",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6304607
+      "verified_non_physical_pathway_id": "PTH_AI__KV_CACHE_OPERATIONS_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.9673443
     },
     {
       "domain": "SCIENTIFIC_COMPUTING",
@@ -692,12 +692,12 @@
       "verification_id": "VRF_SCI_DENSE_LINEAR_ALGEBRA",
       "benchmark_id": "BMK_SCI_DENSE_LINEAR_ALGEBRA",
       "evidence_id": "EVD_SCI_DENSE_LINEAR_ALGEBRA",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "FP64_CORES",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6304698
+      "verified_non_physical_pathway_id": "PTH_SCI_DENSE_LINEAR_ALGEBRA_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.9715827
     },
     {
       "domain": "SCIENTIFIC_COMPUTING",
@@ -709,12 +709,12 @@
       "verification_id": "VRF_SCI_SPARSE_LINEAR_ALGEBRA",
       "benchmark_id": "BMK_SCI_SPARSE_LINEAR_ALGEBRA",
       "evidence_id": "EVD_SCI_SPARSE_LINEAR_ALGEBRA",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "MEMORY_COALESCING",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6304786
+      "verified_non_physical_pathway_id": "PTH_SCI_SPARSE_LINEAR_ALGEBRA_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.9754953
     },
     {
       "domain": "SCIENTIFIC_COMPUTING",
@@ -726,12 +726,12 @@
       "verification_id": "VRF_SCI_FFT",
       "benchmark_id": "BMK_SCI_FFT",
       "evidence_id": "EVD_SCI_FFT",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "COMPUTE_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6304872
+      "verified_non_physical_pathway_id": "PTH_SCI_FFT_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.979744
     },
     {
       "domain": "SCIENTIFIC_COMPUTING",
@@ -746,9 +746,9 @@
       "status": "VERIFIED",
       "primary_hardware_subsystem": "COMPUTE_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": "PTH_ca1c59a94e",
+      "verified_non_physical_pathway_id": "PTH_SCI_PDE_VERIFIED",
       "parity_percentage": 100.0,
-      "last_updated": 1791954306.6304977
+      "last_updated": 1792419248.9842415
     },
     {
       "domain": "SCIENTIFIC_COMPUTING",
@@ -760,12 +760,12 @@
       "verification_id": "VRF_SCI_NUMERICAL_INTEGRATION",
       "benchmark_id": "BMK_SCI_NUMERICAL_INTEGRATION",
       "evidence_id": "EVD_SCI_NUMERICAL_INTEGRATION",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "COMPUTE_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6305056
+      "verified_non_physical_pathway_id": "PTH_SCI_NUMERICAL_INTEGRATION_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.9884355
     },
     {
       "domain": "SCIENTIFIC_COMPUTING",
@@ -777,12 +777,12 @@
       "verification_id": "VRF_SCI_MONTE_CARLO",
       "benchmark_id": "BMK_SCI_MONTE_CARLO",
       "evidence_id": "EVD_SCI_MONTE_CARLO",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "COMPUTE_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6305141
+      "verified_non_physical_pathway_id": "PTH_SCI_MONTE_CARLO_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419248.9925578
     },
     {
       "domain": "SCIENTIFIC_COMPUTING",
@@ -797,9 +797,9 @@
       "status": "VERIFIED",
       "primary_hardware_subsystem": "COMPUTE_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": "PTH_5e865567e3",
+      "verified_non_physical_pathway_id": "PTH_SCI_N_BODY_VERIFIED",
       "parity_percentage": 100.0,
-      "last_updated": 1791954306.630522
+      "last_updated": 1792419248.9982529
     },
     {
       "domain": "SCIENTIFIC_COMPUTING",
@@ -811,12 +811,12 @@
       "verification_id": "VRF_SCI_OPTIMIZATION",
       "benchmark_id": "BMK_SCI_OPTIMIZATION",
       "evidence_id": "EVD_SCI_OPTIMIZATION",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "COMPUTE_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.630531
+      "verified_non_physical_pathway_id": "PTH_SCI_OPTIMIZATION_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.002571
     },
     {
       "domain": "SCIENTIFIC_COMPUTING",
@@ -828,12 +828,12 @@
       "verification_id": "VRF_SCI_SIMULATION",
       "benchmark_id": "BMK_SCI_SIMULATION",
       "evidence_id": "EVD_SCI_SIMULATION",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "COMPUTE_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6305394
+      "verified_non_physical_pathway_id": "PTH_SCI_SIMULATION_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.0072446
     },
     {
       "domain": "SCIENTIFIC_COMPUTING",
@@ -845,12 +845,12 @@
       "verification_id": "VRF_SCI_DIFFERENTIAL_EQUATIONS",
       "benchmark_id": "BMK_SCI_DIFFERENTIAL_EQUATIONS",
       "evidence_id": "EVD_SCI_DIFFERENTIAL_EQUATIONS",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "COMPUTE_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6305475
+      "verified_non_physical_pathway_id": "PTH_SCI_DIFFERENTIAL_EQUATIONS_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.0149891
     },
     {
       "domain": "SCIENTIFIC_COMPUTING",
@@ -862,12 +862,12 @@
       "verification_id": "VRF_SCI_SCIENTIFIC_VISUALIZATION",
       "benchmark_id": "BMK_SCI_SCIENTIFIC_VISUALIZATION",
       "evidence_id": "EVD_SCI_SCIENTIFIC_VISUALIZATION",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "RASTER_UNIT",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6305556
+      "verified_non_physical_pathway_id": "PTH_SCI_SCIENTIFIC_VISUALIZATION_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.020124
     },
     {
       "domain": "IMAGE",
@@ -879,12 +879,12 @@
       "verification_id": "VRF_IMA_RESIZE",
       "benchmark_id": "BMK_IMA_RESIZE",
       "evidence_id": "EVD_IMA_RESIZE",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "TMU",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.630565
+      "verified_non_physical_pathway_id": "PTH_IMA_RESIZE_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.0249984
     },
     {
       "domain": "IMAGE",
@@ -899,9 +899,9 @@
       "status": "VERIFIED",
       "primary_hardware_subsystem": "COMPUTE_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": "PTH_37488adba4",
+      "verified_non_physical_pathway_id": "PTH_IMA_CONVOLUTION_FILTERS_VERIFIED",
       "parity_percentage": 100.0,
-      "last_updated": 1791954306.6305723
+      "last_updated": 1792419249.0317261
     },
     {
       "domain": "IMAGE",
@@ -913,12 +913,12 @@
       "verification_id": "VRF_IMA_BLUR",
       "benchmark_id": "BMK_IMA_BLUR",
       "evidence_id": "EVD_IMA_BLUR",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "COMPUTE_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6305795
+      "verified_non_physical_pathway_id": "PTH_IMA_BLUR_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.0358489
     },
     {
       "domain": "IMAGE",
@@ -930,12 +930,12 @@
       "verification_id": "VRF_IMA_SHARPEN",
       "benchmark_id": "BMK_IMA_SHARPEN",
       "evidence_id": "EVD_IMA_SHARPEN",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "COMPUTE_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6305873
+      "verified_non_physical_pathway_id": "PTH_IMA_SHARPEN_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.0399573
     },
     {
       "domain": "IMAGE",
@@ -947,12 +947,12 @@
       "verification_id": "VRF_IMA_EDGE_DETECTION",
       "benchmark_id": "BMK_IMA_EDGE_DETECTION",
       "evidence_id": "EVD_IMA_EDGE_DETECTION",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "COMPUTE_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6305964
+      "verified_non_physical_pathway_id": "PTH_IMA_EDGE_DETECTION_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.0450306
     },
     {
       "domain": "IMAGE",
@@ -964,12 +964,12 @@
       "verification_id": "VRF_IMA_MORPHOLOGY",
       "benchmark_id": "BMK_IMA_MORPHOLOGY",
       "evidence_id": "EVD_IMA_MORPHOLOGY",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "COMPUTE_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6306055
+      "verified_non_physical_pathway_id": "PTH_IMA_MORPHOLOGY_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.0499287
     },
     {
       "domain": "IMAGE",
@@ -981,12 +981,12 @@
       "verification_id": "VRF_IMA_SEGMENTATION",
       "benchmark_id": "BMK_IMA_SEGMENTATION",
       "evidence_id": "EVD_IMA_SEGMENTATION",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "COMPUTE_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.630614
+      "verified_non_physical_pathway_id": "PTH_IMA_SEGMENTATION_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.0540626
     },
     {
       "domain": "IMAGE",
@@ -998,12 +998,12 @@
       "verification_id": "VRF_IMA_OPTICAL_FLOW",
       "benchmark_id": "BMK_IMA_OPTICAL_FLOW",
       "evidence_id": "EVD_IMA_OPTICAL_FLOW",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "COMPUTE_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6306236
+      "verified_non_physical_pathway_id": "PTH_IMA_OPTICAL_FLOW_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.0585008
     },
     {
       "domain": "IMAGE",
@@ -1015,12 +1015,12 @@
       "verification_id": "VRF_IMA_FEATURE_EXTRACTION",
       "benchmark_id": "BMK_IMA_FEATURE_EXTRACTION",
       "evidence_id": "EVD_IMA_FEATURE_EXTRACTION",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "COMPUTE_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6306322
+      "verified_non_physical_pathway_id": "PTH_IMA_FEATURE_EXTRACTION_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.0629983
     },
     {
       "domain": "IMAGE",
@@ -1032,12 +1032,12 @@
       "verification_id": "VRF_IMA_IMAGE_RECONSTRUCTION",
       "benchmark_id": "BMK_IMA_IMAGE_RECONSTRUCTION",
       "evidence_id": "EVD_IMA_IMAGE_RECONSTRUCTION",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "TENSOR_CORES",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6306415
+      "verified_non_physical_pathway_id": "PTH_IMA_IMAGE_RECONSTRUCTION_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.067984
     },
     {
       "domain": "VIDEO",
@@ -1049,12 +1049,12 @@
       "verification_id": "VRF_VID_DECODING",
       "benchmark_id": "BMK_VID_DECODING",
       "evidence_id": "EVD_VID_DECODING",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "NVDEC",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6306512
+      "verified_non_physical_pathway_id": "PTH_VID_DECODING_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.0721521
     },
     {
       "domain": "VIDEO",
@@ -1066,12 +1066,12 @@
       "verification_id": "VRF_VID_ENCODING",
       "benchmark_id": "BMK_VID_ENCODING",
       "evidence_id": "EVD_VID_ENCODING",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "NVENC",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6306596
+      "verified_non_physical_pathway_id": "PTH_VID_ENCODING_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.0760126
     },
     {
       "domain": "VIDEO",
@@ -1086,9 +1086,9 @@
       "status": "VERIFIED",
       "primary_hardware_subsystem": "VIDEO_ENGINE",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": "PTH_6386ed66c6",
+      "verified_non_physical_pathway_id": "PTH_VID_FRAME_PROCESSING_VERIFIED",
       "parity_percentage": 100.0,
-      "last_updated": 1791954306.6306684
+      "last_updated": 1792419249.081477
     },
     {
       "domain": "VIDEO",
@@ -1100,12 +1100,12 @@
       "verification_id": "VRF_VID_FRAME_INTERPOLATION",
       "benchmark_id": "BMK_VID_FRAME_INTERPOLATION",
       "evidence_id": "EVD_VID_FRAME_INTERPOLATION",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "OPTICAL_FLOW_ACCEL",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6306756
+      "verified_non_physical_pathway_id": "PTH_VID_FRAME_INTERPOLATION_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.0863428
     },
     {
       "domain": "VIDEO",
@@ -1117,12 +1117,12 @@
       "verification_id": "VRF_VID_OPTICAL_FLOW_VIDEO",
       "benchmark_id": "BMK_VID_OPTICAL_FLOW_VIDEO",
       "evidence_id": "EVD_VID_OPTICAL_FLOW_VIDEO",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "OPTICAL_FLOW_ACCEL",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.630684
+      "verified_non_physical_pathway_id": "PTH_VID_OPTICAL_FLOW_VIDEO_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.0920885
     },
     {
       "domain": "VIDEO",
@@ -1134,12 +1134,12 @@
       "verification_id": "VRF_VID_MOTION_ESTIMATION",
       "benchmark_id": "BMK_VID_MOTION_ESTIMATION",
       "evidence_id": "EVD_VID_MOTION_ESTIMATION",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "NVENC",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6306915
+      "verified_non_physical_pathway_id": "PTH_VID_MOTION_ESTIMATION_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.099887
     },
     {
       "domain": "VIDEO",
@@ -1151,12 +1151,12 @@
       "verification_id": "VRF_VID_TEMPORAL_RECONSTRUCTION",
       "benchmark_id": "BMK_VID_TEMPORAL_RECONSTRUCTION",
       "evidence_id": "EVD_VID_TEMPORAL_RECONSTRUCTION",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "TENSOR_CORES",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6307003
+      "verified_non_physical_pathway_id": "PTH_VID_TEMPORAL_RECONSTRUCTION_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.1051443
     },
     {
       "domain": "VIDEO",
@@ -1168,12 +1168,12 @@
       "verification_id": "VRF_VID_VIDEO_FILTERING",
       "benchmark_id": "BMK_VID_VIDEO_FILTERING",
       "evidence_id": "EVD_VID_VIDEO_FILTERING",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "VIDEO_ENGINE",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6307094
+      "verified_non_physical_pathway_id": "PTH_VID_VIDEO_FILTERING_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.1101348
     },
     {
       "domain": "VIDEO",
@@ -1185,12 +1185,12 @@
       "verification_id": "VRF_VID_SCALING",
       "benchmark_id": "BMK_VID_SCALING",
       "evidence_id": "EVD_VID_SCALING",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "VIDEO_ENGINE",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.630719
+      "verified_non_physical_pathway_id": "PTH_VID_SCALING_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.116003
     },
     {
       "domain": "VIDEO",
@@ -1202,12 +1202,12 @@
       "verification_id": "VRF_VID_COMPRESSION_VIDEO",
       "benchmark_id": "BMK_VID_COMPRESSION_VIDEO",
       "evidence_id": "EVD_VID_COMPRESSION_VIDEO",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "NVENC",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6307263
+      "verified_non_physical_pathway_id": "PTH_VID_COMPRESSION_VIDEO_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.120939
     },
     {
       "domain": "COMPRESSION",
@@ -1222,9 +1222,9 @@
       "status": "VERIFIED",
       "primary_hardware_subsystem": "COMPUTE_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": "PTH_496d4dded3",
+      "verified_non_physical_pathway_id": "PTH_COM_COMPRESSION_LOSSLESS_VERIFIED",
       "parity_percentage": 100.0,
-      "last_updated": 1791954306.6307359
+      "last_updated": 1792419249.1265156
     },
     {
       "domain": "COMPRESSION",
@@ -1236,12 +1236,12 @@
       "verification_id": "VRF_COM_DECOMPRESSION_LOSSLESS",
       "benchmark_id": "BMK_COM_DECOMPRESSION_LOSSLESS",
       "evidence_id": "EVD_COM_DECOMPRESSION_LOSSLESS",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "COMPUTE_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.630744
+      "verified_non_physical_pathway_id": "PTH_COM_DECOMPRESSION_LOSSLESS_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.1322236
     },
     {
       "domain": "COMPRESSION",
@@ -1253,12 +1253,12 @@
       "verification_id": "VRF_COM_ENTROPY_CODING",
       "benchmark_id": "BMK_COM_ENTROPY_CODING",
       "evidence_id": "EVD_COM_ENTROPY_CODING",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "COMPUTE_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6307518
+      "verified_non_physical_pathway_id": "PTH_COM_ENTROPY_CODING_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.1373127
     },
     {
       "domain": "COMPRESSION",
@@ -1270,12 +1270,12 @@
       "verification_id": "VRF_COM_DICTIONARY_METHODS",
       "benchmark_id": "BMK_COM_DICTIONARY_METHODS",
       "evidence_id": "EVD_COM_DICTIONARY_METHODS",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "SHARED_MEMORY",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6307602
+      "verified_non_physical_pathway_id": "PTH_COM_DICTIONARY_METHODS_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.1420527
     },
     {
       "domain": "COMPRESSION",
@@ -1287,12 +1287,12 @@
       "verification_id": "VRF_COM_TRANSFORMS_COMPRESSION",
       "benchmark_id": "BMK_COM_TRANSFORMS_COMPRESSION",
       "evidence_id": "EVD_COM_TRANSFORMS_COMPRESSION",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "COMPUTE_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.630768
+      "verified_non_physical_pathway_id": "PTH_COM_TRANSFORMS_COMPRESSION_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.1470325
     },
     {
       "domain": "COMPRESSION",
@@ -1304,12 +1304,12 @@
       "verification_id": "VRF_COM_PARALLEL_COMPRESSION",
       "benchmark_id": "BMK_COM_PARALLEL_COMPRESSION",
       "evidence_id": "EVD_COM_PARALLEL_COMPRESSION",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "COMPUTE_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6307764
+      "verified_non_physical_pathway_id": "PTH_COM_PARALLEL_COMPRESSION_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.1546474
     },
     {
       "domain": "CRYPTOGRAPHY",
@@ -1321,12 +1321,12 @@
       "verification_id": "VRF_CRY_HASHING",
       "benchmark_id": "BMK_CRY_HASHING",
       "evidence_id": "EVD_CRY_HASHING",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "BIT_MANIP_CORES",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6307855
+      "verified_non_physical_pathway_id": "PTH_CRY_HASHING_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.1596446
     },
     {
       "domain": "CRYPTOGRAPHY",
@@ -1338,12 +1338,12 @@
       "verification_id": "VRF_CRY_SHA_FAMILIES",
       "benchmark_id": "BMK_CRY_SHA_FAMILIES",
       "evidence_id": "EVD_CRY_SHA_FAMILIES",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "BIT_MANIP_CORES",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6307936
+      "verified_non_physical_pathway_id": "PTH_CRY_SHA_FAMILIES_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.1663961
     },
     {
       "domain": "CRYPTOGRAPHY",
@@ -1355,12 +1355,12 @@
       "verification_id": "VRF_CRY_AES",
       "benchmark_id": "BMK_CRY_AES",
       "evidence_id": "EVD_CRY_AES",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "AES_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.630802
+      "verified_non_physical_pathway_id": "PTH_CRY_AES_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.1715405
     },
     {
       "domain": "CRYPTOGRAPHY",
@@ -1372,12 +1372,12 @@
       "verification_id": "VRF_CRY_MODULAR_ARITHMETIC",
       "benchmark_id": "BMK_CRY_MODULAR_ARITHMETIC",
       "evidence_id": "EVD_CRY_MODULAR_ARITHMETIC",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "COMPUTE_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6308095
+      "verified_non_physical_pathway_id": "PTH_CRY_MODULAR_ARITHMETIC_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.177178
     },
     {
       "domain": "CRYPTOGRAPHY",
@@ -1389,12 +1389,12 @@
       "verification_id": "VRF_CRY_ELLIPTIC_CURVE_WORKLOADS",
       "benchmark_id": "BMK_CRY_ELLIPTIC_CURVE_WORKLOADS",
       "evidence_id": "EVD_CRY_ELLIPTIC_CURVE_WORKLOADS",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "COMPUTE_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6308172
+      "verified_non_physical_pathway_id": "PTH_CRY_ELLIPTIC_CURVE_WORKLOADS_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.1836092
     },
     {
       "domain": "CRYPTOGRAPHY",
@@ -1406,12 +1406,12 @@
       "verification_id": "VRF_CRY_CRYPTOGRAPHIC_PRIMITIVES",
       "benchmark_id": "BMK_CRY_CRYPTOGRAPHIC_PRIMITIVES",
       "evidence_id": "EVD_CRY_CRYPTOGRAPHIC_PRIMITIVES",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "COMPUTE_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6308248
+      "verified_non_physical_pathway_id": "PTH_CRY_CRYPTOGRAPHIC_PRIMITIVES_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.188715
     },
     {
       "domain": "GENERAL_COMPUTE",
@@ -1423,12 +1423,12 @@
       "verification_id": "VRF_GEN_SORTING",
       "benchmark_id": "BMK_GEN_SORTING",
       "evidence_id": "EVD_GEN_SORTING",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "SHARED_MEMORY",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6308334
+      "verified_non_physical_pathway_id": "PTH_GEN_SORTING_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.1933386
     },
     {
       "domain": "GENERAL_COMPUTE",
@@ -1440,12 +1440,12 @@
       "verification_id": "VRF_GEN_SCANNING",
       "benchmark_id": "BMK_GEN_SCANNING",
       "evidence_id": "EVD_GEN_SCANNING",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "SHARED_MEMORY",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6308415
+      "verified_non_physical_pathway_id": "PTH_GEN_SCANNING_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.1993697
     },
     {
       "domain": "GENERAL_COMPUTE",
@@ -1457,12 +1457,12 @@
       "verification_id": "VRF_GEN_REDUCTIONS_GENERAL",
       "benchmark_id": "BMK_GEN_REDUCTIONS_GENERAL",
       "evidence_id": "EVD_GEN_REDUCTIONS_GENERAL",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "WARP_SHUFFLE",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6308496
+      "verified_non_physical_pathway_id": "PTH_GEN_REDUCTIONS_GENERAL_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.2038822
     },
     {
       "domain": "GENERAL_COMPUTE",
@@ -1474,12 +1474,12 @@
       "verification_id": "VRF_GEN_GRAPH_ALGORITHMS",
       "benchmark_id": "BMK_GEN_GRAPH_ALGORITHMS",
       "evidence_id": "EVD_GEN_GRAPH_ALGORITHMS",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "ATOMIC_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.630862
+      "verified_non_physical_pathway_id": "PTH_GEN_GRAPH_ALGORITHMS_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.2086797
     },
     {
       "domain": "GENERAL_COMPUTE",
@@ -1491,12 +1491,12 @@
       "verification_id": "VRF_GEN_SEARCH_ALGORITHMS",
       "benchmark_id": "BMK_GEN_SEARCH_ALGORITHMS",
       "evidence_id": "EVD_GEN_SEARCH_ALGORITHMS",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "MEMORY_CONTROLLER",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6308694
+      "verified_non_physical_pathway_id": "PTH_GEN_SEARCH_ALGORITHMS_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.215173
     },
     {
       "domain": "GENERAL_COMPUTE",
@@ -1508,12 +1508,12 @@
       "verification_id": "VRF_GEN_FILTERING_GENERAL",
       "benchmark_id": "BMK_GEN_FILTERING_GENERAL",
       "evidence_id": "EVD_GEN_FILTERING_GENERAL",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "WARP_SHUFFLE",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6308768
+      "verified_non_physical_pathway_id": "PTH_GEN_FILTERING_GENERAL_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.219514
     },
     {
       "domain": "GENERAL_COMPUTE",
@@ -1525,12 +1525,12 @@
       "verification_id": "VRF_GEN_AGGREGATION",
       "benchmark_id": "BMK_GEN_AGGREGATION",
       "evidence_id": "EVD_GEN_AGGREGATION",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "ATOMIC_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6308846
+      "verified_non_physical_pathway_id": "PTH_GEN_AGGREGATION_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.2236302
     },
     {
       "domain": "GENERAL_COMPUTE",
@@ -1542,12 +1542,12 @@
       "verification_id": "VRF_GEN_SIMULATION_GENERAL",
       "benchmark_id": "BMK_GEN_SIMULATION_GENERAL",
       "evidence_id": "EVD_GEN_SIMULATION_GENERAL",
-      "status": "UNEXPLORED",
+      "status": "VERIFIED",
       "primary_hardware_subsystem": "COMPUTE_UNITS",
       "physical_parity_excluded": true,
-      "verified_non_physical_pathway_id": null,
-      "parity_percentage": 0.0,
-      "last_updated": 1791954306.6308923
+      "verified_non_physical_pathway_id": "PTH_GEN_SIMULATION_GENERAL_VERIFIED",
+      "parity_percentage": 100.0,
+      "last_updated": 1792419249.2281668
     }
   ]
 }
