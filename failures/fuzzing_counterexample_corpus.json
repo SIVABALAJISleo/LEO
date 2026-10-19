@@ -548,5 +548,16 @@
     "minimized_input_representation": "Divergence 8.00000e+00",
     "violated_assumption": "Verification divergence: error 8.000000 exceeded tolerance 1e-05",
     "timestamp": 1792419346.756558
+  },
+  {
+    "counterexample_id": "cx-1569bbb3",
+    "candidate_id": "CPU_AVX2_BLAS",
+    "workload_id": "tony_stark_adversarial_test",
+    "failure_mode": "NUMERICAL_INSTABILITY",
+    "divergence": 8.0,
+    "input_representation": "Adversarial input for tony_stark_adversarial_test",
+    "minimized_input_representation": "Divergence 8.00000e+00",
+    "violated_assumption": "Verification divergence: error 8.000000 exceeded tolerance 1e-05",
+    "timestamp": 1792420141.4925075
   }
 ]
