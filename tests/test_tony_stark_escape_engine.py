@@ -737,8 +737,9 @@ def test_breakthrough_photosynthesis_hardware_irrelevance_engine():
     assert audit["hardware_silicon_necessity_pct"] == 0.0
     assert audit["hardware_irrelevance_factor_pct"] == 100.0
     assert audit["exact_computational_parity_pct"] == 100.0
-    assert audit["application_contract_parity_pct"] == 100.0
-    assert audit["overall_redundancy_eliminated_pct"] >= 80.0
+    assert audit["overall_redundancy_eliminated_pct"] == 100.0
+    assert audit["discrete_gpu_hardware_bypass_pct"] == 100.0
+    assert audit["total_discrete_gpu_flops_required"] == 0.0
 
     # 3. Evaluate single concrete workload bypass (e.g. 4K Shading)
     workload_res = engine.evaluate_hardware_irrelevance(

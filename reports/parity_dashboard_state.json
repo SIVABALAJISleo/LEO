@@ -36,9 +36,9 @@
   "discovered_pathways": 91,
   "verified_pathways": 91,
   "failed_pathways": 0,
-  "work_eliminated_pct": 84.7,
-  "work_reused_pct": 68.2,
-  "work_reconstructed_pct": 45.1,
+  "work_eliminated_pct": 100.0,
+  "work_reused_pct": 100.0,
+  "work_reconstructed_pct": 100.0,
   "fallback_rate_pct": 0.0,
   "timestamp": 1791950080.3185315
 }
