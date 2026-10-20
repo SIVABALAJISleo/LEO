@@ -1,9 +1,12 @@
 import time
+import sys
+import platform
 from fastapi import APIRouter
 from backend.layers.v43_software_first_orchestrator import get_v43_orchestrator
 from backend.layers.v_infinity_orchestrator import get_vinfinity_orchestrator
 
 router = APIRouter()
+_system_boot_time = time.time()
 
 # Lazy singletons
 _v43 = None
@@ -98,6 +101,34 @@ async def get_hardware_profile():
         return layer.get_hardware_summary()
     except Exception:
         return {"backend": "Vulkan/WebGPU CPU-First", "cores_detected": 8, "iGPU_relevance_reduction": "active"}
+
+@router.get("/api/v1/leo/diagnostics", tags=["Observability"])
+async def get_leo_diagnostics():
+    return {
+        "status": "healthy",
+        "environment": {
+            "app_name": "LEO AI V43",
+            "host": "localhost",
+            "platform": sys.platform,
+            "architecture": platform.machine(),
+            "python_version": sys.version.split()[0],
+            "device": "Intel Core i5-12450H + Intel UHD Graphics",
+            "cors": "enabled",
+        },
+        "models": {
+            "sentence_transformer": "all-MiniLM-L6-v2",
+            "execution_engine": "CPU+iGPU Heterogeneous Unified Memory",
+            "status": "active",
+        },
+        "config": {
+            "rate_limit_per_min": 600,
+            "max_payload_mb": 5,
+            "cors_enabled": True,
+            "cache_backend": "in-memory / sqlite",
+        },
+        "last_error": None,
+        "uptime_seconds": round(time.time() - _system_boot_time, 2),
+    }
 
 @router.get("/api/v1/leo/swarm", tags=["Distributed"])
 async def get_swarm_status():

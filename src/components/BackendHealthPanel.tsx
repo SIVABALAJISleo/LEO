@@ -113,19 +113,19 @@ function StatusBlock({
           : "Error";
 
   return (
-    <div className="border border-border bg-background/60 p-4">
+    <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-card/60 p-5 shadow-lg backdrop-blur-xl">
       <div className="flex flex-wrap items-center gap-3">
         <span className={`inline-block h-2.5 w-2.5 rounded-full ${dot}`} aria-hidden />
-        <span className="font-semibold" role="status" aria-live="polite">
+        <span className="font-semibold text-sm" role="status" aria-live="polite">
           Backend {label}
         </span>
         {health.latencyMs != null && health.status === "online" && (
-          <span className="text-xs text-muted-foreground">· {health.latencyMs}ms</span>
+          <span className="text-xs text-muted-foreground font-mono">· {health.latencyMs}ms</span>
         )}
         <button
           type="button"
           onClick={health.refresh}
-          className="ml-auto border border-border px-3 py-1 text-xs font-semibold hover:border-leo hover:text-leo focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
+          className="ml-auto rounded-lg border border-border/60 bg-muted/20 px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:border-primary/50 hover:text-foreground transition-all focus:outline-none"
         >
           Re-check now
         </button>
@@ -202,9 +202,9 @@ function SourceBlock({
   onReset: () => void;
 }) {
   return (
-    <div className="border border-border p-4">
-      <p className="eyebrow">Effective API base URL</p>
-      <code className="mt-2 block break-all font-mono text-sm">{base || "—"}</code>
+    <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-card/60 p-5 shadow-lg backdrop-blur-xl">
+      <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Effective API base URL</p>
+      <code className="mt-2 block break-all font-mono text-sm text-foreground bg-background/50 p-2.5 rounded-lg border border-border/40">{base || "—"}</code>
       <p className="mt-2 text-xs text-muted-foreground">
         Source: <span className="font-semibold text-foreground">{SOURCE_LABEL[source]}</span>
       </p>
@@ -218,7 +218,7 @@ function SourceBlock({
         type="button"
         onClick={onReset}
         disabled={source !== "settings"}
-        className="mt-3 border border-border px-4 py-2 text-xs font-semibold hover:border-leo hover:text-leo disabled:opacity-40 disabled:hover:border-border disabled:hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-leo"
+        className="mt-3 rounded-lg border border-border/60 bg-muted/20 px-4 py-2 text-xs font-semibold text-muted-foreground hover:border-primary/50 hover:text-foreground disabled:opacity-40 disabled:hover:border-border/60 disabled:hover:text-muted-foreground transition-all focus:outline-none"
       >
         Reset to defaults
       </button>

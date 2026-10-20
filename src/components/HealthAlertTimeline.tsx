@@ -53,10 +53,10 @@ export function HealthAlertTimeline() {
   }, [events, range, level, query]);
 
   return (
-    <div className="border border-border p-4">
+    <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-card/60 p-5 shadow-lg backdrop-blur-xl">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <div>
-          <p className="eyebrow">Alert timeline</p>
+          <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Alert timeline</p>
           <p className="mt-1 text-xs text-muted-foreground">
             Every warn/critical episode with start, end, and thresholds exceeded.
           </p>
@@ -70,10 +70,10 @@ export function HealthAlertTimeline() {
                 onClick={() => setRange(r)}
                 aria-pressed={range === r}
                 className={
-                  "border px-2 py-0.5 text-[11px] font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-leo " +
+                  "rounded-lg border px-2.5 py-1 text-xs font-semibold transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primary " +
                   (range === r
-                    ? "border-leo bg-leo/10 text-leo"
-                    : "border-border hover:border-leo hover:text-leo")
+                    ? "border-primary bg-primary/20 text-primary"
+                    : "border-border/60 bg-muted/20 text-muted-foreground hover:border-primary/40 hover:text-foreground")
                 }
               >
                 {r === "all" ? "All" : r}
@@ -86,7 +86,7 @@ export function HealthAlertTimeline() {
               clearAlertTimeline();
               toast.success("Alert timeline cleared");
             }}
-            className="border border-border px-2 py-0.5 text-[11px] font-semibold hover:border-red-500 hover:text-red-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+            className="rounded-lg border border-border/60 bg-muted/20 px-2.5 py-1 text-xs font-semibold text-muted-foreground hover:border-red-500/60 hover:text-red-400 focus:outline-none transition-all"
           >
             Clear
           </button>
@@ -97,31 +97,29 @@ export function HealthAlertTimeline() {
         <fieldset className="flex gap-1" aria-label="Filter timeline by level">
           {(["all", "warn", "critical"] as LevelFilter[]).map((l) => {
             const active = level === l;
-            const tone =
-              l === "critical"
-                ? active
-                  ? "border-red-500 bg-red-500/10 text-red-300"
-                  : "hover:border-red-500 hover:text-red-400"
-                : l === "warn"
-                  ? active
-                    ? "border-yellow-400 bg-yellow-400/10 text-yellow-200"
-                    : "hover:border-yellow-400 hover:text-yellow-200"
-                  : active
-                    ? "border-leo bg-leo/10 text-leo"
-                    : "hover:border-leo hover:text-leo";
             return (
               <button
                 key={l}
                 type="button"
                 onClick={() => setLevel(l)}
                 aria-pressed={active}
-                className={`border border-border px-2 py-0.5 text-[11px] font-semibold uppercase focus:outline-none focus-visible:ring-2 focus-visible:ring-leo ${tone}`}
+                className={
+                  "rounded-lg border px-2.5 py-1 text-xs font-semibold capitalize transition-all focus:outline-none " +
+                  (active
+                    ? l === "critical"
+                      ? "border-red-500/60 bg-red-500/20 text-red-300"
+                      : l === "warn"
+                        ? "border-amber-500/60 bg-amber-500/20 text-amber-300"
+                        : "border-primary bg-primary/20 text-primary"
+                    : "border-border/60 bg-muted/20 text-muted-foreground hover:border-primary/40 hover:text-foreground")
+                }
               >
                 {l}
               </button>
             );
           })}
         </fieldset>
+
         <label className="flex flex-1 min-w-[180px] items-center gap-2 text-xs">
           <span className="sr-only">Search alert reasons</span>
           <input
@@ -129,10 +127,10 @@ export function HealthAlertTimeline() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search reasons (e.g. latency, 500, cors)…"
-            className="w-full border border-border bg-background px-2 py-1 font-mono text-xs focus:border-leo focus:outline-none"
+            className="w-full rounded-lg border border-border/60 bg-background/50 px-3 py-1 font-mono text-xs focus:border-primary focus:outline-none text-foreground"
           />
         </label>
-        <span className="text-[11px] text-muted-foreground">
+        <span className="text-[11px] text-muted-foreground font-mono">
           {filtered.length}/{events.length}
         </span>
       </div>
@@ -159,28 +157,35 @@ function TimelineRow({ event }: { event: AlertEvent }) {
   return (
     <li
       className={
-        "border-l-2 p-2 text-xs " +
-        (isCritical ? "border-red-500 bg-red-500/5" : "border-yellow-500 bg-yellow-500/5")
+        "rounded-xl border p-3 text-xs transition-all " +
+        (isCritical
+          ? "border-red-500/30 bg-red-950/20 text-red-200"
+          : "border-amber-500/30 bg-amber-950/20 text-amber-200")
       }
     >
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <p
           className={
-            "font-semibold uppercase tracking-wide " +
-            (isCritical ? "text-red-400" : "text-yellow-200")
+            "font-semibold uppercase tracking-wider text-[11px] flex items-center gap-2 " +
+            (isCritical ? "text-red-400" : "text-amber-300")
           }
         >
+          <span
+            className={
+              "h-2 w-2 rounded-full " + (isCritical ? "bg-red-500" : "bg-amber-400")
+            }
+          />
           {isCritical ? "Critical" : "Warn"}
           {ended ? "" : " · ongoing"}
         </p>
         <p className="font-mono text-[11px] text-muted-foreground">{fmtDuration(duration)}</p>
       </div>
-      <p className="mt-1 text-[11px] text-muted-foreground">
+      <p className="mt-1 text-[11px] text-muted-foreground font-mono">
         {fmtTime(event.startedAt)} → {ended ? fmtTime(ended) : "now"}
       </p>
-      <ul className="mt-1 list-inside list-disc space-y-0.5">
+      <ul className="mt-1.5 list-inside list-disc space-y-0.5 text-muted-foreground">
         {(event.lastReasons.length ? event.lastReasons : event.startReasons).map((r) => (
-          <li key={r}>{r}</li>
+          <li key={r} className="font-mono text-[11px]">{r}</li>
         ))}
       </ul>
     </li>

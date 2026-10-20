@@ -375,25 +375,26 @@ export function BackendDiagnosticsPanel() {
   const connWarn = latest && !latest.ok;
 
   return (
-    <section className="border border-border bg-background/60">
-      <header className="flex flex-wrap items-center justify-between gap-2 border-b border-border px-4 py-3">
+    <section className="relative overflow-hidden rounded-2xl border border-border/60 bg-card/60 shadow-lg backdrop-blur-xl">
+      <header className="flex flex-wrap items-center justify-between gap-2 border-b border-border/40 px-5 py-4">
         <div className="min-w-0">
-          <div className="eyebrow">Backend /diagnostics</div>
-          <div className="text-xs text-muted-foreground font-mono truncate max-w-[420px]">
+          <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Backend /diagnostics</div>
+          <div className="text-xs text-muted-foreground font-mono truncate max-w-[420px] mt-0.5">
             {url}
           </div>
-          <div className="mt-1 flex items-center gap-2 text-[11px]">
+          <div className="mt-1.5 flex items-center gap-2 text-[11px]">
             <span
               aria-live="polite"
-              className={`inline-flex items-center gap-1 px-2 py-0.5 border ${
+              className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border text-xs font-mono ${
                 connOk
-                  ? "border-green-500/40 bg-green-500/10 text-green-300"
+                  ? "border-emerald-500/30 bg-emerald-950/40 text-emerald-300"
                   : connWarn
-                    ? "border-red-500/40 bg-red-500/10 text-red-300"
+                    ? "border-red-500/30 bg-red-950/40 text-red-300"
                     : "border-border text-muted-foreground"
               }`}
             >
-              {connOk ? "● reachable" : connWarn ? "● unreachable" : "● unknown"}
+              <span className={`h-1.5 w-1.5 rounded-full ${connOk ? "bg-emerald-400 animate-pulse" : "bg-red-400"}`} />
+              {connOk ? "reachable" : connWarn ? "unreachable" : "unknown"}
               {latest?.httpStatus != null && (
                 <span className="font-mono">HTTP {latest.httpStatus}</span>
               )}
@@ -402,12 +403,12 @@ export function BackendDiagnosticsPanel() {
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <label className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
+          <label className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
             Auto
             <select
               value={refreshMs}
               onChange={(e) => setRefreshMs(Number(e.target.value))}
-              className="border border-border bg-background px-1 py-0.5 font-mono text-[11px] focus:border-leo focus:outline-none"
+              className="rounded-lg border border-border/60 bg-background/50 px-2 py-1 font-mono text-xs focus:border-primary focus:outline-none text-foreground"
               aria-label="Auto-refresh interval"
             >
               {REFRESH_OPTIONS.map((o) => (
@@ -421,7 +422,7 @@ export function BackendDiagnosticsPanel() {
             type="button"
             onClick={() => void run("manual")}
             disabled={isFetching}
-            className="border border-border px-2 py-1 text-[11px] hover:border-leo hover:text-leo disabled:opacity-50"
+            className="rounded-lg border border-border/60 bg-muted/20 px-3 py-1 text-xs font-semibold text-muted-foreground hover:border-primary/50 hover:text-foreground transition-all disabled:opacity-40"
           >
             {isFetching ? "Fetching…" : "Refresh"}
           </button>
@@ -429,7 +430,7 @@ export function BackendDiagnosticsPanel() {
             type="button"
             onClick={copyLatestJson}
             disabled={!latest?.data}
-            className="border border-border px-2 py-1 text-[11px] hover:border-leo hover:text-leo disabled:opacity-50"
+            className="rounded-lg border border-border/60 bg-muted/20 px-3 py-1 text-xs font-semibold text-muted-foreground hover:border-primary/50 hover:text-foreground transition-all disabled:opacity-40"
             title="Copy latest /diagnostics JSON payload (including last_error)"
           >
             Copy JSON
@@ -438,7 +439,7 @@ export function BackendDiagnosticsPanel() {
             type="button"
             onClick={copy}
             disabled={!selected?.data}
-            className="border border-border px-2 py-1 text-[11px] hover:border-leo hover:text-leo disabled:opacity-50"
+            className="rounded-lg border border-border/60 bg-muted/20 px-3 py-1 text-xs font-semibold text-muted-foreground hover:border-primary/50 hover:text-foreground transition-all disabled:opacity-40"
           >
             Copy
           </button>
@@ -446,7 +447,7 @@ export function BackendDiagnosticsPanel() {
             type="button"
             onClick={download}
             disabled={!selected?.data}
-            className="border border-border px-2 py-1 text-[11px] hover:border-leo hover:text-leo disabled:opacity-50"
+            className="rounded-lg border border-border/60 bg-muted/20 px-3 py-1 text-xs font-semibold text-muted-foreground hover:border-primary/50 hover:text-foreground transition-all disabled:opacity-40"
           >
             Download JSON
           </button>
@@ -454,7 +455,7 @@ export function BackendDiagnosticsPanel() {
             type="button"
             onClick={downloadCsv}
             disabled={history.length === 0}
-            className="border border-border px-2 py-1 text-[11px] hover:border-leo hover:text-leo disabled:opacity-50"
+            className="rounded-lg border border-border/60 bg-muted/20 px-3 py-1 text-xs font-semibold text-muted-foreground hover:border-primary/50 hover:text-foreground transition-all disabled:opacity-40"
           >
             Download CSV
           </button>
@@ -462,7 +463,7 @@ export function BackendDiagnosticsPanel() {
             type="button"
             onClick={exportDiffJson}
             disabled={!compare || !selected}
-            className="border border-border px-2 py-1 text-[11px] hover:border-leo hover:text-leo disabled:opacity-50"
+            className="rounded-lg border border-border/60 bg-muted/20 px-3 py-1 text-xs font-semibold text-muted-foreground hover:border-primary/50 hover:text-foreground transition-all disabled:opacity-40"
             title="Export the current baseline↔current diff as JSON"
           >
             Export diff JSON
@@ -471,7 +472,7 @@ export function BackendDiagnosticsPanel() {
             type="button"
             onClick={exportDiffMarkdown}
             disabled={!compare || !selected}
-            className="border border-border px-2 py-1 text-[11px] hover:border-leo hover:text-leo disabled:opacity-50"
+            className="rounded-lg border border-border/60 bg-muted/20 px-3 py-1 text-xs font-semibold text-muted-foreground hover:border-primary/50 hover:text-foreground transition-all disabled:opacity-40"
             title="Export the current baseline↔current diff as Markdown"
           >
             Export diff MD
@@ -480,7 +481,7 @@ export function BackendDiagnosticsPanel() {
             type="button"
             onClick={clearHistory}
             disabled={history.length === 0}
-            className="border border-border px-2 py-1 text-[11px] hover:border-red-500/60 hover:text-red-300 disabled:opacity-50"
+            className="rounded-lg border border-border/60 bg-muted/20 px-3 py-1 text-xs font-semibold text-muted-foreground hover:border-red-500/60 hover:text-red-400 transition-all disabled:opacity-40"
           >
             Clear
           </button>

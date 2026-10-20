@@ -427,18 +427,21 @@ export function HyperParityDashboard() {
   ];
 
   return (
-    <div className="w-full rounded-2xl bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 border border-slate-800/80 p-6 shadow-2xl text-slate-100 backdrop-blur-xl">
+    <div className="relative overflow-hidden rounded-2xl border border-primary/30 bg-gradient-to-r from-card/90 via-card/70 to-card/90 p-6 shadow-2xl backdrop-blur-xl text-foreground">
       {/* Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-slate-800 gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-border/40 gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <div className="h-3 w-3 rounded-full bg-emerald-400 animate-ping" />
-            <h2 className="text-2xl font-black tracking-tight bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 bg-clip-text text-transparent">
+            <span className="flex h-3 w-3 rounded-full bg-emerald-500 animate-pulse" />
+            <h2 className="text-2xl font-black tracking-tight text-white lg:text-3xl">
               HYPER 100% NON-PHYSICAL PARITY ENGINE
             </h2>
+            <span className="rounded-full bg-primary/20 px-3 py-1 text-xs font-bold text-primary border border-primary/30">
+              PARITY VALIDATION
+            </span>
           </div>
           <div className="flex items-center gap-2 mt-1">
-            <p className="text-xs text-slate-400 font-mono">
+            <p className="text-xs text-muted-foreground font-mono">
               Universal Functional &middot; Computational &middot; Application Parity &middot;
               Physical Hardware Disjoint
             </p>
@@ -449,93 +452,98 @@ export function HyperParityDashboard() {
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="inline-flex rounded-lg bg-slate-800/60 p-1 border border-slate-700/60 text-xs flex-wrap">
-            <button
-              onClick={() => setActiveTab("overview")}
-              className={`px-3 py-1.5 rounded-md font-medium transition-all ${
-                activeTab === "overview"
-                  ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shadow"
-                  : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              Overview
-            </button>
-            <button
-              onClick={() => setActiveTab("dimensions25")}
-              className={`px-3 py-1.5 rounded-md font-medium transition-all ${
-                activeTab === "dimensions25"
-                  ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shadow"
-                  : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              25 Dimensions
-            </button>
-            <button
-              onClick={() => setActiveTab("matrix")}
-              className={`px-3 py-1.5 rounded-md font-medium transition-all ${
-                activeTab === "matrix"
-                  ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shadow"
-                  : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              Capability Matrix
-            </button>
-            <button
-              onClick={() => setActiveTab("ledger")}
-              className={`px-3 py-1.5 rounded-md font-medium transition-all ${
-                activeTab === "ledger"
-                  ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shadow"
-                  : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              Elimination Ledger
-            </button>
-          </div>
-
           <button
             onClick={() => refetch()}
             disabled={isFetching}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-slate-300 transition-all hover:scale-105 active:scale-95 disabled:opacity-50"
+            className="flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-lg transition-all hover:bg-primary/90 active:scale-95 disabled:opacity-50"
           >
             <RefreshCw
-              className={`w-3.5 h-3.5 ${isFetching ? "animate-spin text-cyan-400" : ""}`}
+              className={`w-4 h-4 ${isFetching ? "animate-spin" : ""}`}
             />
-            Refresh
+            <span>Refresh</span>
           </button>
         </div>
       </div>
 
+      {/* Navigation Tabs */}
+      <div className="flex flex-wrap border-b border-border/40 gap-2 mt-4 pb-2">
+        <button
+          onClick={() => setActiveTab("overview")}
+          className={`flex items-center gap-2 px-4 py-2 text-sm font-bold border-b-2 transition-all ${
+            activeTab === "overview"
+              ? "border-primary text-primary"
+              : "border-transparent text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Activity className="w-4 h-4" />
+          <span>Overview</span>
+        </button>
+        <button
+          onClick={() => setActiveTab("dimensions25")}
+          className={`flex items-center gap-2 px-4 py-2 text-sm font-bold border-b-2 transition-all ${
+            activeTab === "dimensions25"
+              ? "border-primary text-primary"
+              : "border-transparent text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Layers className="w-4 h-4" />
+          <span>25 Dimensions</span>
+        </button>
+        <button
+          onClick={() => setActiveTab("matrix")}
+          className={`flex items-center gap-2 px-4 py-2 text-sm font-bold border-b-2 transition-all ${
+            activeTab === "matrix"
+              ? "border-primary text-primary"
+              : "border-transparent text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Cpu className="w-4 h-4" />
+          <span>Capability Matrix</span>
+        </button>
+        <button
+          onClick={() => setActiveTab("ledger")}
+          className={`flex items-center gap-2 px-4 py-2 text-sm font-bold border-b-2 transition-all ${
+            activeTab === "ledger"
+              ? "border-primary text-primary"
+              : "border-transparent text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Sparkles className="w-4 h-4" />
+          <span>Elimination Ledger</span>
+        </button>
+      </div>
+
       {/* Photosynthesis Strategic Bypass & 100% Hardware Irrelevance Callout */}
-      <div className="my-5 p-4 rounded-xl bg-gradient-to-r from-emerald-950/40 via-cyan-950/30 to-slate-900 border border-emerald-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-xs font-mono">
+      <div className="my-5 p-4 rounded-xl border border-border/40 bg-background/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-xs font-mono">
         <div className="flex items-start gap-3">
           <Sparkles className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5 animate-pulse" />
           <div>
-            <div className="font-bold text-emerald-300 uppercase tracking-wide flex items-center gap-2">
+            <div className="font-bold text-emerald-400 uppercase tracking-wide flex items-center gap-2">
               <span>PHOTOSYNTHESIS STRATEGIC BYPASS PARADIGM: 100% HARDWARE IRRELEVANCE</span>
               <span className="px-2 py-0.5 text-[9px] font-bold rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
                 ACTIVE
               </span>
             </div>
-            <p className="text-slate-300 text-[11px] mt-1 leading-relaxed">
+            <p className="text-muted-foreground text-[11px] mt-1 leading-relaxed">
               Just as a plant leaf synthesizes hydrocarbons directly from sunlight without industrial cracking towers,
               LEO/HYPER eliminates 85%–95% of redundant computation.
-              <strong> Physical Hardware Silicon Necessity is 0.0% (100% Irrelevant & Bypassed)</strong> while
-              <strong> Universal Exact-Compute & Application Contract Parity is 100.0%</strong>.
+              <strong className="text-foreground"> Physical Hardware Silicon Necessity is 0.0% (100% Irrelevant & Bypassed)</strong> while
+              <strong className="text-foreground"> Universal Exact-Compute & Application Contract Parity is 100.0%</strong>.
             </p>
           </div>
         </div>
         <div className="flex items-center gap-3 shrink-0 self-end md:self-auto">
-          <div className="px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-center">
+          <div className="px-3 py-1.5 rounded-lg bg-emerald-950/40 border border-emerald-500/30 text-center">
             <div className="text-[10px] text-emerald-400/80 uppercase font-bold">HW Necessity</div>
             <div className="text-base font-black text-emerald-300">0.0%</div>
           </div>
-          <div className="px-3 py-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-center">
-            <div className="text-[10px] text-cyan-400/80 uppercase font-bold">HW Irrelevance</div>
-            <div className="text-base font-black text-cyan-300">100.0%</div>
+          <div className="px-3 py-1.5 rounded-lg bg-emerald-950/40 border border-emerald-500/30 text-center">
+            <div className="text-[10px] text-emerald-400/80 uppercase font-bold">HW Irrelevance</div>
+            <div className="text-base font-black text-emerald-300">100.0%</div>
           </div>
-          <div className="px-3 py-1.5 rounded-lg bg-purple-500/10 border border-purple-500/30 text-center">
-            <div className="text-[10px] text-purple-400/80 uppercase font-bold">Contract Parity</div>
-            <div className="text-base font-black text-purple-300">100.0%</div>
+          <div className="px-3 py-1.5 rounded-lg bg-emerald-950/40 border border-emerald-500/30 text-center">
+            <div className="text-[10px] text-emerald-400/80 uppercase font-bold">Contract Parity</div>
+            <div className="text-base font-black text-emerald-300">100.0%</div>
           </div>
         </div>
       </div>
@@ -544,65 +552,65 @@ export function HyperParityDashboard() {
         <div className="space-y-6">
           {/* Top Score Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="rounded-xl bg-slate-900/80 border border-slate-800 p-4 relative overflow-hidden group hover:border-emerald-500/40 transition-all">
-              <div className="text-xs uppercase font-bold text-slate-400 tracking-wider">
+            <div className="rounded-xl border border-border/50 bg-card/60 p-4 relative overflow-hidden group hover:border-primary/40 transition-all">
+              <div className="text-xs uppercase font-bold text-muted-foreground tracking-wider">
                 Evaluated Workloads
               </div>
               <div className="text-3xl font-black text-emerald-400 mt-2 flex items-baseline gap-1">
                 {m.evaluated_workload_parity_pct.toFixed(1)}%
                 <span className="text-xs font-normal text-emerald-500/80">passed (9/9)</span>
               </div>
-              <div className="text-[11px] text-slate-400 mt-1">
+              <div className="text-[11px] text-muted-foreground mt-1">
                 100% Verified Non-Physical Parity
               </div>
-              <div className="absolute top-3 right-3 text-emerald-500/20 group-hover:text-emerald-500/40 transition-colors">
+              <div className="absolute top-3 right-3 text-primary/20 group-hover:text-primary/40 transition-colors">
                 <CheckCircle2 className="w-6 h-6" />
               </div>
             </div>
 
-            <div className="rounded-xl bg-slate-900/80 border border-slate-800 p-4 relative overflow-hidden group hover:border-cyan-500/40 transition-all">
-              <div className="text-xs uppercase font-bold text-slate-400 tracking-wider">
+            <div className="rounded-xl border border-border/50 bg-card/60 p-4 relative overflow-hidden group hover:border-primary/40 transition-all">
+              <div className="text-xs uppercase font-bold text-muted-foreground tracking-wider">
                 Global Registry Taxonomy
               </div>
-              <div className="text-3xl font-black text-cyan-400 mt-2 flex items-baseline gap-1">
+              <div className="text-3xl font-black text-emerald-400 mt-2 flex items-baseline gap-1">
                 {m.global_verified_parity_pct.toFixed(2)}%
-                <span className="text-xs font-normal text-cyan-500/80">
+                <span className="text-xs font-normal text-emerald-500/80">
                   ({m.verified_gpu_capabilities}/{m.total_canonical_gpu_capabilities})
                 </span>
               </div>
-              <div className="text-[11px] text-slate-400 mt-1">
+              <div className="text-[11px] text-muted-foreground mt-1">
                 {m.remaining_unexplored_capabilities} Capabilities in Discovery Queue
               </div>
-              <div className="absolute top-3 right-3 text-cyan-500/20 group-hover:text-cyan-500/40 transition-colors">
+              <div className="absolute top-3 right-3 text-primary/20 group-hover:text-primary/40 transition-colors">
                 <Layers className="w-6 h-6" />
               </div>
             </div>
 
-            <div className="rounded-xl bg-slate-900/80 border border-slate-800 p-4 relative overflow-hidden group hover:border-purple-500/40 transition-all">
-              <div className="text-xs uppercase font-bold text-slate-400 tracking-wider">
+            <div className="rounded-xl border border-border/50 bg-card/60 p-4 relative overflow-hidden group hover:border-primary/40 transition-all">
+              <div className="text-xs uppercase font-bold text-muted-foreground tracking-wider">
                 Application Parity
               </div>
-              <div className="text-3xl font-black text-purple-400 mt-2 flex items-baseline gap-1">
+              <div className="text-3xl font-black text-emerald-400 mt-2 flex items-baseline gap-1">
                 {m.application_parity_pct.toFixed(1)}%
-                <span className="text-xs font-normal text-purple-500/80">12/12 apps</span>
+                <span className="text-xs font-normal text-emerald-500/80">12/12 apps</span>
               </div>
-              <div className="text-[11px] text-slate-400 mt-1">
+              <div className="text-[11px] text-muted-foreground mt-1">
                 PyTorch, OpenCV, SciPy, Blender, UE
               </div>
-              <div className="absolute top-3 right-3 text-purple-500/20 group-hover:text-purple-500/40 transition-colors">
+              <div className="absolute top-3 right-3 text-primary/20 group-hover:text-primary/40 transition-colors">
                 <Cpu className="w-6 h-6" />
               </div>
             </div>
 
-            <div className="rounded-xl bg-slate-900/80 border border-slate-800 p-4 relative overflow-hidden group hover:border-amber-500/40 transition-all">
-              <div className="text-xs uppercase font-bold text-slate-400 tracking-wider">
+            <div className="rounded-xl border border-border/50 bg-card/60 p-4 relative overflow-hidden group hover:border-primary/40 transition-all">
+              <div className="text-xs uppercase font-bold text-muted-foreground tracking-wider">
                 Discrete GPU Workload
               </div>
               <div className="text-3xl font-black text-amber-400 mt-2 flex items-baseline gap-1">
                 {m.work_eliminated_pct.toFixed(1)}%
                 <span className="text-xs font-normal text-amber-500/80">bypassed</span>
               </div>
-              <div className="text-[11px] text-slate-400 mt-1">
+              <div className="text-[11px] text-muted-foreground mt-1">
                 0.0 Discrete GPU FLOPs Required
               </div>
               <div className="absolute top-3 right-3 text-amber-500/20 group-hover:text-amber-500/40 transition-colors">
@@ -612,28 +620,28 @@ export function HyperParityDashboard() {
           </div>
 
           {/* Verification Coverage Summary */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-xl bg-slate-900/50 border border-slate-800 text-xs">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-xl border border-border/40 bg-background/50 text-xs">
             <div>
-              <span className="text-slate-400">Contract Parity:</span>{" "}
+              <span className="text-muted-foreground">Contract Parity:</span>{" "}
               <span className="font-bold text-emerald-400">
                 {m.contract_parity_pct.toFixed(1)}%
               </span>
             </div>
             <div>
-              <span className="text-slate-400">Exact Bit-for-Bit:</span>{" "}
-              <span className="font-bold text-cyan-400">
+              <span className="text-muted-foreground">Exact Bit-for-Bit:</span>{" "}
+              <span className="font-bold text-emerald-400">
                 {m.exact_computational_parity_pct.toFixed(1)}%
               </span>
             </div>
             <div>
-              <span className="text-slate-400">Adversarial Survival:</span>{" "}
+              <span className="text-muted-foreground">Adversarial Survival:</span>{" "}
               <span className="font-bold text-emerald-400">
                 {m.adversarial_coverage_pct.toFixed(1)}%
               </span>
             </div>
             <div>
-              <span className="text-slate-400">Blind Holdout:</span>{" "}
-              <span className="font-bold text-purple-400">
+              <span className="text-muted-foreground">Blind Holdout:</span>{" "}
+              <span className="font-bold text-emerald-400">
                 {m.blind_holdout_coverage_pct.toFixed(1)}%
               </span>
             </div>
@@ -643,7 +651,7 @@ export function HyperParityDashboard() {
 
       {activeTab === "dimensions25" && (
         <div className="space-y-4">
-          <div className="flex items-center justify-between pb-2 border-b border-slate-800 text-xs font-mono text-slate-400">
+          <div className="flex items-center justify-between pb-2 border-b border-border/40 text-xs font-mono text-muted-foreground">
             <span>THE 25 CANONICAL DIMENSIONS OF PARITY (SECTION 3 &amp; SECTION 30)</span>
             <span className="text-emerald-400 font-bold">UNAUSPICIOUS &middot; NEVER AVERAGED</span>
           </div>
@@ -657,14 +665,14 @@ export function HyperParityDashboard() {
                   key={dim.id}
                   className={`p-3.5 rounded-xl border transition-all ${
                     isVerified
-                      ? "bg-slate-900/90 border-emerald-500/30 hover:border-emerald-500/60"
+                      ? "bg-card/80 border-emerald-500/30 hover:border-emerald-500/60"
                       : isZero
-                        ? "bg-slate-900/40 border-slate-800/80 hover:border-slate-700"
-                        : "bg-slate-900/70 border-cyan-500/30 hover:border-cyan-500/60"
+                        ? "bg-card/40 border-border/40 hover:border-border/70"
+                        : "bg-card/60 border-primary/30 hover:border-primary/60"
                   }`}
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">
+                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-muted/40 text-muted-foreground">
                       #{dim.id} &middot; {dim.category}
                     </span>
                     <span
@@ -672,40 +680,40 @@ export function HyperParityDashboard() {
                         isVerified
                           ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
                           : isZero
-                            ? "bg-slate-800 text-slate-400"
-                            : "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30"
+                            ? "bg-muted/40 text-muted-foreground"
+                            : "bg-primary/20 text-primary border border-primary/30"
                       }`}
                     >
                       {dim.status}
                     </span>
                   </div>
 
-                  <div className="mt-2 text-sm font-semibold text-slate-200">{dim.name}</div>
-                  <div className="text-[11px] text-slate-400 line-clamp-2 mt-0.5">{dim.desc}</div>
+                  <div className="mt-2 text-sm font-semibold text-foreground">{dim.name}</div>
+                  <div className="text-[11px] text-muted-foreground line-clamp-2 mt-0.5">{dim.desc}</div>
 
                   <div className="mt-3 flex items-center justify-between font-mono text-xs">
-                    <span className="text-slate-400">Parity Progress:</span>
+                    <span className="text-muted-foreground">Parity Progress:</span>
                     <span
                       className={`font-bold ${
                         isVerified
                           ? "text-emerald-400"
                           : isZero
-                            ? "text-slate-400"
-                            : "text-cyan-400"
+                            ? "text-muted-foreground"
+                            : "text-primary"
                       }`}
                     >
                       {dim.value.toFixed(1)}%
                     </span>
                   </div>
 
-                  <div className="mt-1.5 w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                  <div className="mt-1.5 w-full bg-muted/40 h-1.5 rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all duration-500 ${
                         isVerified
                           ? "bg-emerald-400"
                           : isZero
-                            ? "bg-slate-700"
-                            : "bg-gradient-to-r from-teal-400 to-cyan-400"
+                            ? "bg-muted"
+                            : "bg-primary"
                       }`}
                       style={{ width: `${Math.max(dim.value, 4)}%` }}
                     />
@@ -718,28 +726,28 @@ export function HyperParityDashboard() {
       )}
 
       {activeTab === "matrix" && (
-        <div className="overflow-x-auto rounded-xl border border-slate-800">
+        <div className="overflow-x-auto rounded-xl border border-border/50 bg-card/40">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="bg-slate-900/90 text-slate-400 border-b border-slate-800 font-mono">
+              <tr className="bg-muted/30 text-muted-foreground border-b border-border/50 font-mono">
                 <th className="py-3 px-4">Universal GPU Domain</th>
                 <th className="py-3 px-4">Status</th>
                 <th className="py-3 px-4">Parity Progress</th>
                 <th className="py-3 px-4 w-48">Bar</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60 font-sans">
+            <tbody className="divide-y divide-border/40 font-sans">
               {domainRows.map((row, idx) => (
-                <tr key={idx} className="hover:bg-slate-800/30 transition-colors">
-                  <td className="py-3 px-4 font-semibold text-slate-200">{row.name}</td>
-                  <td className="py-3 px-4 font-mono text-[11px] text-cyan-300">{row.status}</td>
+                <tr key={idx} className="hover:bg-muted/20 transition-colors">
+                  <td className="py-3 px-4 font-semibold text-foreground">{row.name}</td>
+                  <td className="py-3 px-4 font-mono text-[11px] text-emerald-400">{row.status}</td>
                   <td className="py-3 px-4 font-mono font-bold text-emerald-400">
                     {row.pct.toFixed(1)}%
                   </td>
                   <td className="py-3 px-4">
-                    <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                    <div className="w-full bg-muted/40 h-2 rounded-full overflow-hidden">
                       <div
-                        className="bg-gradient-to-r from-teal-400 to-emerald-400 h-full rounded-full transition-all duration-500"
+                        className="bg-emerald-400 h-full rounded-full transition-all duration-500"
                         style={{ width: `${Math.max(row.pct, 4)}%` }}
                       />
                     </div>
@@ -753,13 +761,13 @@ export function HyperParityDashboard() {
 
       {activeTab === "ledger" && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs font-mono">
-          <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2">
-            <div className="text-slate-400 font-bold uppercase text-[11px]">
+          <div className="p-4 rounded-xl bg-card/60 border border-border/50 space-y-2">
+            <div className="text-muted-foreground font-bold uppercase text-[11px]">
               Pathway Discoveries
             </div>
             <div className="flex justify-between">
               <span>Discovered Pathways:</span>
-              <span className="font-bold text-cyan-300">{m.discovered_pathways}</span>
+              <span className="font-bold text-emerald-400">{m.discovered_pathways}</span>
             </div>
             <div className="flex justify-between">
               <span>Verified Survivors:</span>
@@ -771,8 +779,8 @@ export function HyperParityDashboard() {
             </div>
           </div>
 
-          <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2">
-            <div className="text-slate-400 font-bold uppercase text-[11px]">
+          <div className="p-4 rounded-xl bg-card/60 border border-border/50 space-y-2">
+            <div className="text-muted-foreground font-bold uppercase text-[11px]">
               Computation Avoidance
             </div>
             <div className="flex justify-between">
@@ -783,18 +791,18 @@ export function HyperParityDashboard() {
             </div>
             <div className="flex justify-between">
               <span>Work Reused (Temporal):</span>
-              <span className="font-bold text-cyan-300">{m.work_reused_pct.toFixed(1)}%</span>
+              <span className="font-bold text-emerald-400">{m.work_reused_pct.toFixed(1)}%</span>
             </div>
             <div className="flex justify-between">
               <span>Work Reconstructed:</span>
-              <span className="font-bold text-purple-400">
+              <span className="font-bold text-emerald-400">
                 {m.work_reconstructed_pct.toFixed(1)}%
               </span>
             </div>
           </div>
 
-          <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2">
-            <div className="text-slate-400 font-bold uppercase text-[11px]">
+          <div className="p-4 rounded-xl bg-card/60 border border-border/50 space-y-2">
+            <div className="text-muted-foreground font-bold uppercase text-[11px]">
               Execution Reliability
             </div>
             <div className="flex justify-between">
