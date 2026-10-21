@@ -215,4 +215,10 @@ try:
 except Exception as e:
     logger.warning(f"Failed to load parity_engine_router: {e}")
 
+try:
+    from backend.routers.upe_router import router as upe_router
+    app.include_router(upe_router)
+except Exception as e:
+    logger.warning(f"Failed to load upe_router: {e}")
+
 

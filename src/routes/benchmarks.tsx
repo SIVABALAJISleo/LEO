@@ -30,6 +30,7 @@ import { PermalinkButton } from "@/components/PermalinkButton";
 import { GeneratePdfReportButton } from "@/components/GeneratePdfReportButton";
 import { HyperParityDashboard } from "@/components/HyperParityDashboard";
 import { HyperGodmodeDashboard } from "@/components/HyperGodmodeDashboard";
+import { UnseenPathwayDashboard } from "@/components/UnseenPathwayDashboard";
 import { applyPermalinkState, readPermalinkFromUrl, clearPermalinkFromUrl } from "@/lib/permalink";
 
 import { useBackendHealth } from "@/lib/backend-health";
@@ -168,8 +169,9 @@ function BenchmarksPage() {
               : "Live from your LEO runtime."}
       </p>
 
-      {/* HYPER-GODMODE Universal Pathway Engine & 100% Parity Dashboard */}
+      {/* HYPER UPE Unseen Pathway Engine & 100% Parity Dashboards */}
       <div className="mt-8 space-y-8">
+        <UnseenPathwayDashboard />
         <HyperGodmodeDashboard />
         <HyperParityDashboard />
       </div>
