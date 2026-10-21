@@ -197,6 +197,25 @@ async def execute_workload_pipeline(req: ExecuteWorkloadRequest) -> Dict[str, An
         elif "sparse" in req.workload_id:
             A_sp = (np.random.randn(64, 64) * (np.random.rand(64, 64) > 0.8)).astype(np.float32)
             inputs = {"A": A_sp, "B": np.random.randn(64, 16).astype(np.float32)}
+        elif "matrix_chain" in req.workload_id or "chain" in req.workload_id:
+            inputs = {
+                "A": np.random.randn(10, 100).astype(np.float32),
+                "B": np.random.randn(100, 5).astype(np.float32),
+                "C": np.random.randn(5, 50).astype(np.float32),
+            }
+        elif "kolmogorov" in req.workload_id or "prng" in req.workload_id:
+            inputs = {"seed": 42, "count": 10_000}
+        elif "welford" in req.workload_id or "statistics" in req.workload_id:
+            inputs = {"data": np.random.randn(5000).astype(np.float64)}
+        elif "kv_cache" in req.workload_id or "sliding_window" in req.workload_id:
+            inputs = {"seq_len": 512, "hidden_dim": 128, "max_window": 256}
+        elif "spherical" in req.workload_id or "radiance" in req.workload_id:
+            inputs = {"normals": np.array([[0.0, 0.0, 1.0], [0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [0.577, 0.577, 0.577]], dtype=np.float32)}
+        elif "strassen" in req.workload_id:
+            inputs = {
+                "A": np.random.randn(64, 64).astype(np.float32),
+                "B": np.random.randn(64, 64).astype(np.float32),
+            }
         else:
             inputs = {
                 "A": np.random.randn(64, 64).astype(np.float32),

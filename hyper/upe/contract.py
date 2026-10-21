@@ -337,3 +337,78 @@ class ContractRegistry:
             supported_input_domain="Weights with bounded dynamic range",
             reference_implementation="fp32_dense_linear",
         ))
+
+        # 8. Strassen Subcubic Matrix Multiplication
+        self.register(WorkloadContract(
+            workload_id="strassen_gemm",
+            version="v1.0-subcubic",
+            validation_mode=ValidationMode.TOLERANCE_BASED,
+            exactness_requirement=ExactnessRequirement.EPSILON_TOLERANT,
+            max_absolute_error=1e-4,
+            max_relative_error=1e-4,
+            description="7-subproduct recursive decomposition reducing complexity to O(N^2.807) for large square matrices.",
+            supported_input_domain="Square matrices of even dimension >= 64",
+            reference_implementation="numpy_matmul",
+        ))
+
+        # 9. Matrix Chain Associativity Optimization
+        self.register(WorkloadContract(
+            workload_id="matrix_chain_order",
+            version="v1.0-exact",
+            validation_mode=ValidationMode.TOLERANCE_BASED,
+            exactness_requirement=ExactnessRequirement.MATHEMATICAL_EXACT,
+            max_absolute_error=1e-4,
+            max_relative_error=1e-4,
+            description="Dynamic programming optimization of matrix multiplication order A*(B*C) vs (A*B)*C.",
+            supported_input_domain="Sequence of compatible 2D matrices",
+            reference_implementation="left_to_right_chain_matmul",
+        ))
+
+        # 10. Kolmogorov PRNG Inversion
+        self.register(WorkloadContract(
+            workload_id="kolmogorov_prng",
+            version="v1.0-exact",
+            validation_mode=ValidationMode.EXACT,
+            exactness_requirement=ExactnessRequirement.BITWISE_EXACT,
+            description="Replaces bulk pseudo-random array storage and bus transfers with O(1) seed and generator state.",
+            supported_input_domain="Deterministic pseudo-random sequences with known seed",
+            reference_implementation="bulk_array_allocation_and_copy",
+        ))
+
+        # 11. Welford's Streaming Online Statistics
+        self.register(WorkloadContract(
+            workload_id="welford_statistics",
+            version="v1.0-stream",
+            validation_mode=ValidationMode.TOLERANCE_BASED,
+            exactness_requirement=ExactnessRequirement.EPSILON_TOLERANT,
+            max_absolute_error=1e-5,
+            max_relative_error=1e-5,
+            description="Single-pass streaming mean and sample variance using Welford's recurrence, eliminating second DRAM pass.",
+            supported_input_domain="1D numerical sequence of observations",
+            reference_implementation="two_pass_mean_variance",
+        ))
+
+        # 12. Sliding Window KV Cache Rolling
+        self.register(WorkloadContract(
+            workload_id="sliding_window_kv_cache",
+            version="v1.0-stream",
+            validation_mode=ValidationMode.EXACT,
+            exactness_requirement=ExactnessRequirement.BITWISE_EXACT,
+            description="Bounded circular ring buffer attention KV cache avoiding dynamic reallocations and memory copies.",
+            supported_input_domain="Autoregressive transformer sequence attention states",
+            reference_implementation="unbounded_dynamic_kv_cache_realloc",
+        ))
+
+        # 13. Spherical Harmonic Radiance Projection
+        self.register(WorkloadContract(
+            workload_id="spherical_harmonic_radiance",
+            version="v1.0-approx",
+            validation_mode=ValidationMode.TOLERANCE_BASED,
+            exactness_requirement=ExactnessRequirement.COSINE_BOUNDED,
+            max_absolute_error=1e-2,
+            min_cosine_similarity=0.99,
+            description="Analytic 9-coefficient Ramamoorthi-Hanrahan diffuse irradiance projection eliminating ray-triangle intersections.",
+            supported_input_domain="3D surface normal vectors in R^3",
+            reference_implementation="monte_carlo_diffuse_ray_tracing",
+        ))
+

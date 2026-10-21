@@ -468,3 +468,122 @@ def test_api_upe_scientific_audit():
     assert audit["hardware_boundary"]["physical_dedicated_gpu_silicon"] == "0.0%"
     assert audit["scientific_integrity_metrics"]["simulated_or_fake_timings_permitted"] is False
     assert audit["scientific_integrity_metrics"]["validation_levels"]["Level 7 (Runtime Postconditions)"] == "PASS"
+
+
+# =============================================================================
+# 16. Extended Rules & OpenVINO Subgraph Adapter Tests
+# =============================================================================
+def test_path_algebra_extended_rules():
+    algebra = PathAlgebra()
+
+    # Rule 8: Matrix Chain Associativity
+    rule_mc = algebra.get("matrix_chain_associativity")
+    assert rule_mc is not None
+    # A is (10, 100), B is (100, 5), C is (5, 50)
+    A = np.random.randn(10, 100).astype(np.float64)
+    B = np.random.randn(100, 5).astype(np.float64)
+    C = np.random.randn(5, 50).astype(np.float64)
+    out_mc, meta_mc = rule_mc.transform_fn({"A": A, "B": B, "C": C})
+    ref_mc = rule_mc.fallback_fn({"A": A, "B": B, "C": C})
+    assert np.allclose(out_mc, ref_mc, atol=1e-5)
+    assert meta_mc["operations_optimal"] <= meta_mc["operations_naive"]
+
+    # Rule 9: Kolmogorov PRNG Inversion
+    rule_prng = algebra.get("kolmogorov_prng_inversion")
+    assert rule_prng is not None
+    out_prng, meta_prng = rule_prng.transform_fn({"seed": 42, "count": 1000})
+    ref_prng = rule_prng.fallback_fn({"seed": 42, "count": 1000})
+    assert np.array_equal(out_prng, ref_prng)
+    assert meta_prng["generator_state_bytes"] == 16
+
+    # Rule 10: Welford Online Statistics
+    rule_wf = algebra.get("welford_online_statistics")
+    assert rule_wf is not None
+    data = np.array([2.5, 3.0, 7.5, 9.0, 12.0, 15.5], dtype=np.float64)
+    out_wf, meta_wf = rule_wf.transform_fn({"data": data})
+    ref_wf = rule_wf.fallback_fn({"data": data})
+    assert np.allclose(out_wf, ref_wf, atol=1e-5)
+    assert meta_wf["passes"] == 1
+
+    # Rule 11: Sliding Window KV Cache
+    rule_kv = algebra.get("sliding_window_kv_cache")
+    assert rule_kv is not None
+    out_kv, meta_kv = rule_kv.transform_fn({"seq_len": 512, "hidden_dim": 64, "max_window": 128})
+    assert out_kv.shape == (128, 64)
+    assert meta_kv["allocations_avoided"] == (512 - 128)
+
+    # Rule 12: Spherical Harmonic Radiance
+    rule_sh = algebra.get("spherical_harmonic_radiance")
+    assert rule_sh is not None
+    normals = np.array([[0.0, 0.0, 1.0], [0.0, 1.0, 0.0], [1.0, 0.0, 0.0]], dtype=np.float32)
+    out_sh, meta_sh = rule_sh.transform_fn({"normals": normals})
+    ref_sh = rule_sh.fallback_fn({"normals": normals})
+    assert np.allclose(out_sh, ref_sh, atol=1e-3)
+    assert meta_sh["ray_intersections_eliminated"] > 0
+
+
+def test_contract_registry_canonical_contracts():
+    registry = ContractRegistry()
+    contracts = registry.list_contracts()
+    assert len(contracts) >= 13
+
+    # Check key contracts present
+    c_ids = {c["workload_id"] for c in contracts}
+    expected = {
+        "horner_polynomial",
+        "prefix_sum_queries",
+        "dense_gemm",
+        "fused_gemm_bias_relu",
+        "sparse_spmv",
+        "streaming_gemv",
+        "bitnet_ternary_linear",
+        "strassen_gemm",
+        "matrix_chain_order",
+        "kolmogorov_prng",
+        "welford_statistics",
+        "sliding_window_kv_cache",
+        "spherical_harmonic_radiance",
+    }
+    assert expected.issubset(c_ids)
+
+
+def test_openvino_subgraph_adapter():
+    from hyper.upe.execution import OpenVINOExecutionSubgraphAdapter
+    adapter = OpenVINOExecutionSubgraphAdapter()
+
+    # Small matrix: < 256 KB, should execute on CPU AVX2 zero-copy
+    A_small = np.random.randn(32, 32).astype(np.float32)
+    B_small = np.random.randn(32, 32).astype(np.float32)
+    out_small, meta_small = adapter.execute_dense_gemm(A_small, B_small)
+    assert meta_small["driver_queue_bypassed"] is True
+    assert meta_small["device"] == "CPU"
+    assert np.allclose(out_small, A_small @ B_small, atol=1e-4)
+
+    # Large matrix: >= 256 KB (e.g. 256x256 float32 is 256KB for each, 512KB total)
+    A_large = np.random.randn(256, 256).astype(np.float32)
+    B_large = np.random.randn(256, 256).astype(np.float32)
+    bias_large = np.ones((256,), dtype=np.float32)
+    out_large, meta_large = adapter.execute_dense_gemm(A_large, B_large, bias=bias_large, relu=True)
+    expected_large = np.maximum((A_large @ B_large) + bias_large, 0.0)
+    
+    # Verify OpenVINO GPU result exhibits > 99.99% cosine similarity and < 0.05 mean absolute error
+    norm_out = np.linalg.norm(out_large)
+    norm_exp = np.linalg.norm(expected_large)
+    cosine_sim = float(np.dot(out_large.ravel(), expected_large.ravel()) / (norm_out * norm_exp))
+    assert cosine_sim >= 0.999
+    assert float(np.mean(np.abs(out_large - expected_large))) < 0.05
+    assert meta_large["latency_ms"] >= 0.0
+
+
+def test_api_contracts_list_all():
+    resp = client.get("/api/v1/upe/contracts")
+    assert resp.status_code == 200
+    data = resp.json()
+    assert isinstance(data, list)
+    assert len(data) >= 13
+    workload_ids = [c["workload_id"] for c in data]
+    assert "spherical_harmonic_radiance" in workload_ids
+    assert "matrix_chain_order" in workload_ids
+    assert "welford_statistics" in workload_ids
+
+

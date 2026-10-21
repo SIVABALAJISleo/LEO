@@ -178,6 +178,51 @@ class AlternativePathwayGenerator:
                     preconditions_met = False
                     rejection_reason = "Contract does not permit quality-bounded approximate MMA"
 
+            elif rule.rule_id == "matrix_chain_associativity":
+                if "matrix_chain" in wid or "chain" in wid or "matrices" in inputs or ("A" in inputs and "B" in inputs and "C" in inputs):
+                    speedup_est = 3.8
+                    flops_est = 15_000
+                    mem_est = 256 * 1024
+                else:
+                    preconditions_met = False
+                    rejection_reason = "Input does not contain matrix chain (requires 3+ matrices)"
+
+            elif rule.rule_id == "kolmogorov_prng_inversion":
+                if "kolmogorov" in wid or "prng" in wid or "seed" in inputs or "random" in wid:
+                    speedup_est = 25.0
+                    flops_est = 100
+                    mem_est = 64
+                else:
+                    preconditions_met = False
+                    rejection_reason = "Input is not a deterministic PRNG request (requires seed/count)"
+
+            elif rule.rule_id == "welford_online_statistics":
+                if "welford" in wid or "statistics" in wid or "data" in inputs or "variance" in wid:
+                    speedup_est = 2.4
+                    flops_est = 2_000
+                    mem_est = 128
+                else:
+                    preconditions_met = False
+                    rejection_reason = "Input is not a 1D observation sequence"
+
+            elif rule.rule_id == "sliding_window_kv_cache":
+                if "kv_cache" in wid or "sliding_window" in wid or "seq_len" in inputs:
+                    speedup_est = 4.5
+                    flops_est = 5_000
+                    mem_est = 512 * 1024
+                else:
+                    preconditions_met = False
+                    rejection_reason = "Input does not specify autoregressive sequence dimensions"
+
+            elif rule.rule_id == "spherical_harmonic_radiance":
+                if "spherical" in wid or "radiance" in wid or "normals" in inputs:
+                    speedup_est = 42.0
+                    flops_est = 500
+                    mem_est = 64 * 1024
+                else:
+                    preconditions_met = False
+                    rejection_reason = "Input does not contain 3D surface normal vectors"
+
             # Create candidate record
             cand = CandidatePathway(
                 pathway_id=f"pw_{rule.rule_id}_{uuid.uuid4().hex[:6]}",

@@ -82,6 +82,22 @@ interface ContractItem {
   reference_implementation: string;
 }
 
+const CANONICAL_WORKLOADS = [
+  "horner_polynomial",
+  "prefix_sum_queries",
+  "dense_gemm",
+  "fused_gemm_bias_relu",
+  "sparse_spmv",
+  "streaming_gemv",
+  "bitnet_ternary_linear",
+  "strassen_gemm",
+  "matrix_chain_order",
+  "kolmogorov_prng",
+  "welford_statistics",
+  "sliding_window_kv_cache",
+  "spherical_harmonic_radiance",
+];
+
 export function UnseenPathwayDashboard() {
   const [activeTab, setActiveTab] = useState<
     "overview" | "contracts" | "necessity" | "cegis" | "pipeline" | "benchmarks"
@@ -443,9 +459,9 @@ export function UnseenPathwayDashboard() {
                 onChange={(e) => setSelectedWorkload(e.target.value)}
                 className="rounded-lg border border-border bg-background px-3 py-1.5 font-mono text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-emerald-500"
               >
-                {contracts?.map((c) => (
-                  <option key={c.workload_id} value={c.workload_id}>
-                    {c.workload_id}
+                {(contracts && contracts.length > 0 ? contracts.map((c) => c.workload_id) : CANONICAL_WORKLOADS).map((wid) => (
+                  <option key={wid} value={wid}>
+                    {wid}
                   </option>
                 ))}
               </select>
@@ -541,9 +557,9 @@ export function UnseenPathwayDashboard() {
                 onChange={(e) => setSelectedWorkload(e.target.value)}
                 className="rounded-lg border border-border bg-background px-3 py-1.5 font-mono text-xs text-foreground focus:outline-none"
               >
-                {contracts?.map((c) => (
-                  <option key={c.workload_id} value={c.workload_id}>
-                    {c.workload_id}
+                {(contracts && contracts.length > 0 ? contracts.map((c) => c.workload_id) : CANONICAL_WORKLOADS).map((wid) => (
+                  <option key={wid} value={wid}>
+                    {wid}
                   </option>
                 ))}
               </select>
@@ -633,9 +649,9 @@ export function UnseenPathwayDashboard() {
                 onChange={(e) => setSelectedWorkload(e.target.value)}
                 className="rounded-lg border border-border bg-background px-3 py-1.5 font-mono text-xs text-foreground focus:outline-none"
               >
-                {contracts?.map((c) => (
-                  <option key={c.workload_id} value={c.workload_id}>
-                    {c.workload_id}
+                {(contracts && contracts.length > 0 ? contracts.map((c) => c.workload_id) : CANONICAL_WORKLOADS).map((wid) => (
+                  <option key={wid} value={wid}>
+                    {wid}
                   </option>
                 ))}
               </select>

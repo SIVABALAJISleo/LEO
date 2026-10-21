@@ -140,3 +140,131 @@ class ResourceAwareExecutionPlanner:
             chunk_size_bytes=chunk_size,
             zero_copy_eligible=True,
         )
+
+
+class OpenVINOExecutionSubgraphAdapter:
+    """
+    Direct OpenVINO Subgraph Execution Adapter for Intel UHD Graphics (iGPU)
+    and CPU AVX2 acceleration with compiled model caching and 256 KB thresholding.
+    """
+    _compiled_cache: Dict[str, Any] = {}
+
+    def __init__(self) -> None:
+        self.available: bool = False
+        self.gpu_available: bool = False
+        self.core: Any = None
+        self.device: str = "CPU"
+        self._init_openvino()
+
+    def _init_openvino(self) -> None:
+        try:
+            import openvino as ov
+            self.core = ov.Core()
+            devs = self.core.available_devices
+            self.available = True
+            if "GPU" in devs:
+                self.gpu_available = True
+                self.device = "GPU"
+            else:
+                self.gpu_available = False
+                self.device = "CPU"
+        except Exception:
+            self.available = False
+            self.gpu_available = False
+
+    def execute_dense_gemm(
+        self,
+        A: np.ndarray,
+        B: np.ndarray,
+        bias: Optional[np.ndarray] = None,
+        relu: bool = False,
+        force_cpu: bool = False,
+    ) -> Tuple[np.ndarray, Dict[str, Any]]:
+        """
+        Executes GEMM (+ optional bias + ReLU) via OpenVINO iGPU or CPU zero-copy.
+        Enforces 256 KB threshold: sizes < 256 KB run on CPU zero-copy to avoid driver launch overhead.
+        """
+        A_np = np.asarray(A, dtype=np.float32)
+        B_np = np.asarray(B, dtype=np.float32)
+        total_bytes = A_np.nbytes + B_np.nbytes
+
+        # If < 256 KB, force_cpu, or OpenVINO is unavailable: run CPU AVX2 zero-copy
+        if force_cpu or not self.available or total_bytes < 256 * 1024:
+            t0 = time.perf_counter()
+            out = np.matmul(A_np, B_np)
+            if bias is not None:
+                out = out + np.asarray(bias, dtype=np.float32)
+            if relu:
+                out = np.maximum(out, 0.0)
+            latency_ms = (time.perf_counter() - t0) * 1000.0
+            return out, {
+                "backend": "CPU_AVX2_NUMPY",
+                "device": "CPU",
+                "latency_ms": round(latency_ms, 3),
+                "data_bytes": total_bytes,
+                "driver_queue_bypassed": True,
+            }
+
+        # Otherwise dispatch to OpenVINO on iGPU/CPU
+        try:
+            target_device = "GPU" if self.gpu_available and not force_cpu else "CPU"
+            model_key = f"matmul_bias_{bias is not None}_relu_{relu}_{target_device}"
+
+            if model_key not in self._compiled_cache:
+                import openvino as ov
+                import openvino.opset13 as ops
+
+                param_a = ops.parameter([-1, -1], dtype=np.float32, name="A")
+                param_b = ops.parameter([-1, -1], dtype=np.float32, name="B")
+                node = ops.matmul(param_a, param_b, False, False)
+                params = [param_a, param_b]
+
+                if bias is not None:
+                    param_bias = ops.parameter([-1], dtype=np.float32, name="bias")
+                    node = ops.add(node, param_bias)
+                    params.append(param_bias)
+
+                if relu:
+                    node = ops.relu(node)
+
+                res = ops.result(node, name="output")
+                ov_model = ov.Model([res], params, f"UPE_GEMM_{model_key}")
+                compiled = self.core.compile_model(ov_model, target_device)
+                self._compiled_cache[model_key] = compiled
+
+            compiled = self._compiled_cache[model_key]
+            inputs_dict = {"A": A_np, "B": B_np}
+            if bias is not None:
+                inputs_dict["bias"] = np.asarray(bias, dtype=np.float32)
+
+            t0 = time.perf_counter()
+            req = compiled.create_infer_request()
+            res = req.infer(inputs_dict)
+            out = list(res.values())[0]
+            latency_ms = (time.perf_counter() - t0) * 1000.0
+
+            return out, {
+                "backend": "INTEL_IGPU_OPENVINO" if target_device == "GPU" else "CPU_OPENVINO",
+                "device": target_device,
+                "latency_ms": round(latency_ms, 3),
+                "data_bytes": total_bytes,
+                "driver_queue_bypassed": False,
+            }
+        except Exception as e:
+            # Fallback to CPU AVX2 on any runtime issue
+            t0 = time.perf_counter()
+            out = np.matmul(A_np, B_np)
+            if bias is not None:
+                out = out + np.asarray(bias, dtype=np.float32)
+            if relu:
+                out = np.maximum(out, 0.0)
+            latency_ms = (time.perf_counter() - t0) * 1000.0
+            return out, {
+                "backend": "CPU_AVX2_FALLBACK",
+                "device": "CPU",
+                "latency_ms": round(latency_ms, 3),
+                "data_bytes": total_bytes,
+                "driver_queue_bypassed": True,
+                "fallback_error": str(e),
+            }
+
