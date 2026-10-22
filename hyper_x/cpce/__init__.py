@@ -222,9 +222,18 @@ class ComputationalPhaseChangeEngine:
             "contracts": self.contracts.list_contracts(),
             "cache_stats": self.cache.stats,
             "support_matrix_metrics": self.support_matrix.compute_summary_metrics(),
+            "jit_available": hasattr(self.execution_planner, "jit_compiler") and self.execution_planner.jit_compiler.is_numba_available(),
+            "subgraph_offload_available": hasattr(self.execution_planner, "subgraph_offloader") and self.execution_planner.subgraph_offloader.is_igpu_available,
         }
 
 
+from hyper_x.cpce.jit_compiler import CIRJITCompiler
+from hyper_x.cpce.egraph import EGraph, ENode, EClass, EqualitySaturationEngine
+from hyper_x.cpce.subgraph_offloader import (
+    OpenVINOSubgraphOffloader,
+    SubgraphPartition,
+    PartitionedExecutionResult,
+)
 
 __all__ = [
     "ComputationalPhaseChangeEngine",
@@ -272,4 +281,12 @@ __all__ = [
     "TelemetryRecord",
     "CPCESupportMatrix",
     "SupportMatrixEntry",
+    "CIRJITCompiler",
+    "EGraph",
+    "ENode",
+    "EClass",
+    "EqualitySaturationEngine",
+    "OpenVINOSubgraphOffloader",
+    "SubgraphPartition",
+    "PartitionedExecutionResult",
 ]

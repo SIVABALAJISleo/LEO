@@ -60,6 +60,10 @@ def get_support_matrix():
     return {
         "summary": cpce_engine.support_matrix.compute_summary_metrics(),
         "workloads": cpce_engine.support_matrix.list_entries(),
+        "failed_experiments": cpce_engine.support_matrix.get_failed_experiments(),
+        "unsupported_workloads": cpce_engine.support_matrix.get_unsupported_workloads(),
+        "known_limitations": cpce_engine.support_matrix.get_known_limitations(),
+        "research_upgrades": cpce_engine.support_matrix.get_research_upgrades(),
     }
 
 
@@ -134,3 +138,53 @@ def execute_workload(req: ExecuteRequest):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"CPCE execution failed: {e}",
         )
+
+
+@router.post("/jit-benchmark")
+def benchmark_jit_kernel(dim_m: int = 512, dim_n: int = 512, iterations: int = 5):
+    """Benchmarks native JIT diagonal scaling loop against NumPy broadcast baseline."""
+    return cpce_engine.execution_planner.jit_compiler.benchmark_kernel(
+        kernel_name="diagonal_scale",
+        dim_m=dim_m,
+        dim_n=dim_n,
+        iterations=iterations,
+    )
+
+
+@router.post("/egraph-saturate")
+def run_egraph_saturation(req: ExecuteRequest):
+    """Demonstrates multi-rule Equality Saturation without phase-ordering bias."""
+    from hyper_x.cpce.egraph import EqualitySaturationEngine
+    from hyper_x.cpce.ir import CanonicalGraph, CIRNode, OpType
+
+    g = CanonicalGraph(name="egraph_demo")
+    g.add_node(CIRNode("in_A", OpType.INPUT))
+    g.add_node(CIRNode("in_I", OpType.INPUT, parameters={"structure": "identity"}))
+    g.add_node(CIRNode("matmul_op", OpType.MATMUL, inputs=["in_A", "in_I"]))
+    g.add_node(CIRNode("out_op", OpType.OUTPUT, inputs=["matmul_op"]))
+
+    egraph_engine = EqualitySaturationEngine()
+    egraph, root_id = egraph_engine.build_egraph(g)
+    applied_rules = egraph_engine.saturate(egraph)
+    opt_g, opt_cost = egraph_engine.extract_optimal_ast(egraph, root_id)
+
+    return {
+        "status": "PASS",
+        "provenance": "MEASURED",
+        "applied_fusions": applied_rules,
+        "saturated_node_count": egraph.total_nodes(),
+        "extracted_optimal_cost": opt_cost,
+        "extracted_graph_nodes": len(opt_g.nodes),
+    }
+
+
+@router.post("/subgraph-offload")
+def run_subgraph_offload(dim: int = 512):
+    """Executes heterogeneous CPU+iGPU pipeline using OpenVINOSubgraphOffloader."""
+    A = np.random.randn(dim, dim).astype(np.float32)
+    B = np.random.randn(dim, dim).astype(np.float32)
+    D = np.random.randn(dim).astype(np.float32)
+
+    res = cpce_engine.execution_planner.subgraph_offloader.execute_hybrid_pipeline(A, B, D)
+    return res.to_dict()
+

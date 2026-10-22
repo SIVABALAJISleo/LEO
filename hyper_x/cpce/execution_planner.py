@@ -34,6 +34,10 @@ class CPCEExecutionPlanner:
 
     def __init__(self, backend_registry: Optional[CPCEBackendRegistry] = None):
         self.backend_registry = backend_registry or CPCEBackendRegistry()
+        from hyper_x.cpce.jit_compiler import CIRJITCompiler
+        from hyper_x.cpce.subgraph_offloader import OpenVINOSubgraphOffloader
+        self.jit_compiler = CIRJITCompiler()
+        self.subgraph_offloader = OpenVINOSubgraphOffloader()
         self._compiled_openvino_models: Dict[str, Any] = {}
 
     def execute_plan(
@@ -69,7 +73,17 @@ class CPCEExecutionPlanner:
         candidate_output = None
 
         try:
-            if actual_backend == "INTEL_UHD_IGPU":
+            if plan.plan_id == "PLAN_HETEROGENEOUS_SUBGRAPH_OFFLOAD":
+                A = inputs.get("A")
+                B = inputs.get("B")
+                D = inputs.get("D")
+                if D is None:
+                    M = A.shape[0] if hasattr(A, "shape") else 512
+                    D = np.ones(M, dtype=np.float32)
+                part_res = self.subgraph_offloader.execute_hybrid_pipeline(A, B, D)
+                candidate_output = part_res.output
+                device_id = part_res.device_used
+            elif actual_backend == "INTEL_UHD_IGPU":
                 candidate_output = self._execute_openvino_gpu(plan.graph, inputs)
             elif actual_backend == "LOCAL_GGUF_CPU":
                 candidate_output = self._execute_local_gguf(inputs)
@@ -207,15 +221,13 @@ class CPCEExecutionPlanner:
                 diag = node_results[node.inputs[0]]
                 mat = node_results[node.inputs[1]]
                 diag_vec = diag.diagonal if hasattr(diag, "diagonal") else np.asarray(diag)
-                node_results[node.node_id] = diag_vec[:, np.newaxis] * np.asarray(mat)
+                node_results[node.node_id] = self.jit_compiler.execute_diagonal_scale(diag_vec, np.asarray(mat))
             elif node.op_type == OpType.HORNER_EVAL:
                 # Polynomial Horner evaluation: c0 + x*(c1 + x*(c2 + ...))
                 coeffs = np.asarray(inputs.get("coefficients", [1.0, 2.0, 3.0]))
                 x = inputs.get("x", 2.0)
-                res = coeffs[-1]
-                for c in reversed(coeffs[:-1]):
-                    res = res * x + c
-                node_results[node.node_id] = res
+                res_arr = self.jit_compiler.execute_horner_batch(coeffs, np.array([x], dtype=np.float64))
+                node_results[node.node_id] = float(res_arr[0])
             elif node.op_type == OpType.OUTPUT:
                 inp_id = node.inputs[0] if node.inputs else list(node_results.keys())[-1]
                 node_results[node.node_id] = node_results[inp_id]

@@ -165,6 +165,89 @@ class CPCESearchEngine:
                     rank_score=cost_gpu.total_cost_score,
                 ))
 
+        # Candidate 4: Automated Algorithmic Discovery via E-Graphs (Equality Saturation)
+        try:
+            from hyper_x.cpce.egraph import EqualitySaturationEngine
+            egraph_engine = EqualitySaturationEngine()
+            egraph, root_id = egraph_engine.build_egraph(graph)
+            egraph_rules = egraph_engine.saturate(egraph)
+            if egraph_rules:
+                opt_egraph_g, _ = egraph_engine.extract_optimal_ast(egraph, root_id)
+                egraph_flops = sum(n.resource_cost_flops for n in opt_egraph_g.nodes.values())
+                egraph_mem = sum(n.memory_bytes for n in opt_egraph_g.nodes.values()) / (1024 * 1024)
+                est_egraph_lat = max(0.01, (egraph_flops / 1e9) * 1000.0)
+
+                cost_egraph = self.cost_model.evaluate_cost(
+                    estimated_latency_ms=est_egraph_lat,
+                    memory_mb=egraph_mem,
+                    contract=contract,
+                    is_exact=True,
+                    is_accelerated=False,
+                )
+                candidates.append(CandidatePlan(
+                    plan_id=f"PLAN_EGRAPH_SATURATION_{len(egraph_rules)}FUSIONS",
+                    target_backend="CPU",
+                    graph=opt_egraph_g,
+                    applied_rules=egraph_rules,
+                    is_exact=True,
+                    estimated_flops=egraph_flops,
+                    estimated_memory_mb=egraph_mem,
+                    cost_breakdown=cost_egraph,
+                    rank_score=cost_egraph.total_cost_score,
+                ))
+        except Exception:
+            pass
+
+        # Candidate 5: JIT Vectorized Kernel Emission (AVX2 parallel scaling / Horner)
+        has_fusible_ops = any(n.op_type in (OpType.SCALE, OpType.HORNER_EVAL) for n in graph.nodes.values())
+        if has_fusible_ops:
+            jit_flops = sum(n.resource_cost_flops for n in graph.nodes.values())
+            jit_mem = sum(n.memory_bytes for n in graph.nodes.values()) / (1024 * 1024)
+            est_jit_lat = max(0.02, (jit_flops / 1.5e10) * 1000.0)
+            cost_jit = self.cost_model.evaluate_cost(
+                estimated_latency_ms=est_jit_lat,
+                memory_mb=jit_mem,
+                contract=contract,
+                is_exact=True,
+                is_accelerated=True,
+            )
+            candidates.append(CandidatePlan(
+                plan_id="PLAN_JIT_NATIVE_KERNEL",
+                target_backend="CPU",
+                graph=graph.clone(),
+                applied_rules=["JIT_KERNEL_EMISSION_AVX2"],
+                is_exact=True,
+                estimated_flops=jit_flops,
+                estimated_memory_mb=jit_mem,
+                cost_breakdown=cost_jit,
+                rank_score=cost_jit.total_cost_score,
+            ))
+
+        # Candidate 6: Heterogeneous Subgraph Offloading (CPU + iGPU)
+        if "INTEL_UHD_IGPU" in contract.permitted_backends and self.backend_registry.is_available("INTEL_UHD_IGPU"):
+            has_dense = any(n.op_type == OpType.MATMUL and (n.shape and n.shape[0] >= 768) for n in graph.nodes.values())
+            has_structural = any(n.op_type in (OpType.SCALE, OpType.HORNER_EVAL) for n in graph.nodes.values())
+            if has_dense and has_structural:
+                est_subgraph_lat = max(0.5, (base_flops / 9e9) * 1000.0)
+                cost_subgraph = self.cost_model.evaluate_cost(
+                    estimated_latency_ms=est_subgraph_lat,
+                    memory_mb=base_mem * 1.15,
+                    contract=contract,
+                    is_exact=True,
+                    is_accelerated=True,
+                    dispatch_overhead_ms=0.5,
+                )
+                candidates.append(CandidatePlan(
+                    plan_id="PLAN_HETEROGENEOUS_SUBGRAPH_OFFLOAD",
+                    target_backend="INTEL_UHD_IGPU",
+                    graph=graph.clone(),
+                    applied_rules=["SUBGRAPH_PARTITION_OFFLOAD"],
+                    is_exact=True,
+                    estimated_flops=base_flops,
+                    estimated_memory_mb=base_mem * 1.15,
+                    cost_breakdown=cost_subgraph,
+                    rank_score=cost_subgraph.total_cost_score,
+                ))
 
         # Rank candidates by cost score (ascending)
         candidates.sort(key=lambda c: c.rank_score)
