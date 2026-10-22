@@ -14,6 +14,9 @@ import logging
 import numpy as np
 from typing import Dict, Any, Tuple, Optional
 
+from concurrent.futures import ThreadPoolExecutor
+import platform
+
 logger = logging.getLogger("HeterogeneousOrchestrator")
 
 try:
@@ -69,7 +72,8 @@ class HeterogeneousOrchestrator:
     """Heterogeneous CPU + Intel UHD execution scheduler."""
 
     def __init__(self, pool_size_mb: int = 64):
-        self.device_cpu = "Intel Core i5-12450H (8 Cores: 4P+4E, AVX2)"
+        proc = platform.processor() or "Host CPU (AVX2/FMA3)"
+        self.device_cpu = f"Host CPU ({proc})"
         self.gpu_backend = IntelUHDGPUBackend(precision="f32")
         self.device_igpu = self.gpu_backend.device_name
         self.is_real_gpu = self.gpu_backend.is_available
@@ -81,36 +85,78 @@ class HeterogeneousOrchestrator:
         split_ratio: float = 0.5
     ) -> Tuple[np.ndarray, Dict[str, Any]]:
         """
-        Splits matrix multiplication between CPU (AVX2) and Intel UHD iGPU (OpenVINO GPU) concurrently.
+        Splits matrix multiplication between CPU (AVX2) and Intel UHD iGPU (OpenVINO GPU).
+        If GPU is unavailable, falls back to CPU cleanly and reports truthful CPU_ONLY_FALLBACK.
+        If GPU is available, dispatches concurrently via ThreadPoolExecutor.
         """
         t0 = time.perf_counter()
         M, K = A.shape
         _, N = B.shape
-
         split_M = int(M * split_ratio)
 
-        # Sub-task 1: CPU evaluates Upper Block
         A_cpu = A[:split_M, :]
-        C_cpu = A_cpu @ B
-
-        # Sub-task 2: Intel UHD iGPU evaluates Lower Block via Genuine GPU Runtime
         A_igpu = A[split_M:, :]
-        C_igpu = self.gpu_backend.execute_matmul(A_igpu, B)
 
-        # Assemble unified result
+        if not self.is_real_gpu:
+            # Clean CPU fallback when GPU is not detected
+            C_cpu = A_cpu @ B
+            C_igpu = A_igpu @ B
+            C_full = np.vstack([C_cpu, C_igpu])
+            t1 = time.perf_counter()
+            total_latency_ms = (t1 - t0) * 1000.0
+
+            return C_full, {
+                "execution_mode": "CPU_ONLY_FALLBACK",
+                "cpu_device": self.device_cpu,
+                "igpu_device": self.device_igpu,
+                "is_real_gpu_executed": False,
+                "is_concurrent": False,
+                "cpu_split_rows": M,
+                "igpu_split_rows": 0,
+                "latency_ms": round(total_latency_ms, 3),
+            }
+
+        # Genuine concurrent execution across CPU and Intel UHD iGPU
+        cpu_t0 = time.perf_counter()
+        igpu_t0 = time.perf_counter()
+        cpu_ms = 0.0
+        igpu_ms = 0.0
+
+        def run_cpu():
+            nonlocal cpu_ms
+            c_t0 = time.perf_counter()
+            res = A_cpu @ B
+            cpu_ms = (time.perf_counter() - c_t0) * 1000.0
+            return res
+
+        def run_igpu():
+            nonlocal igpu_ms
+            g_t0 = time.perf_counter()
+            res = self.gpu_backend.execute_matmul(A_igpu, B)
+            igpu_ms = (time.perf_counter() - g_t0) * 1000.0
+            return res
+
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            fut_cpu = executor.submit(run_cpu)
+            fut_igpu = executor.submit(run_igpu)
+            C_cpu = fut_cpu.result()
+            C_igpu = fut_igpu.result()
+
         C_full = np.vstack([C_cpu, C_igpu])
         t1 = time.perf_counter()
-
         total_latency_ms = (t1 - t0) * 1000.0
 
         return C_full, {
             "execution_mode": "HETEROGENEOUS_CPU_IGPU_HYBRID",
             "cpu_device": self.device_cpu,
             "igpu_device": self.device_igpu,
-            "is_real_gpu_executed": self.is_real_gpu,
+            "is_real_gpu_executed": True,
+            "is_concurrent": True,
             "cpu_split_rows": split_M,
             "igpu_split_rows": M - split_M,
-            "latency_ms": round(total_latency_ms, 3)
+            "cpu_duration_ms": round(cpu_ms, 3),
+            "igpu_duration_ms": round(igpu_ms, 3),
+            "latency_ms": round(total_latency_ms, 3),
         }
 
     def benchmark_device_modes(self, A: np.ndarray, B: np.ndarray) -> Dict[str, Any]:

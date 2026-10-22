@@ -364,13 +364,15 @@ class OpenCLZeroCopyUVA:
             self._cl.clReleaseMemObject(mem_C)
 
             t_end = time.perf_counter_ns()
+            copy_bytes = int(A.nbytes + B.nbytes + C_bytes)
             return C, {
-                "backend": "INTEL_UHD_OPENCL_ZERO_COPY",
+                "backend": "INTEL_UHD_OPENCL_HOST_PINNED_MAPPED",
                 "device": self.device_name,
                 "compute_units": self.compute_units,
                 "elapsed_ms": (t_end - t_start) / 1e6,
-                "copy_overhead_bytes": 0,
-                "is_zero_copy": True,
+                "copy_overhead_bytes": copy_bytes,
+                "is_zero_copy": False,
+                "memory_mode": "HOST_PINNED_MAPPED_COPY",
             }
         except Exception as e:
             C = np.matmul(A, B)
@@ -443,13 +445,15 @@ class OpenCLZeroCopyUVA:
             self._cl.clReleaseMemObject(mem_mask)
 
             t_end = time.perf_counter_ns()
+            copy_bytes = int(3 * nbytes)
             return target, {
-                "backend": "INTEL_UHD_OPENCL_ZERO_COPY",
+                "backend": "INTEL_UHD_OPENCL_HOST_PINNED_MAPPED",
                 "device": self.device_name,
                 "compute_units": self.compute_units,
                 "elapsed_ms": (t_end - t_start) / 1e6,
-                "copy_overhead_bytes": 0,
-                "is_zero_copy": True,
+                "copy_overhead_bytes": copy_bytes,
+                "is_zero_copy": False,
+                "memory_mode": "HOST_PINNED_MAPPED_COPY",
             }
         except Exception as e:
             np.bitwise_and(target_u32, mask_u32, out=target_u32)
@@ -528,13 +532,15 @@ class OpenCLZeroCopyUVA:
             self._cl.clReleaseMemObject(mem_out)
 
             t_end = time.perf_counter_ns()
+            copy_bytes = int(3 * nbytes)
             return counts, {
-                "backend": "INTEL_UHD_OPENCL_ZERO_COPY",
+                "backend": "INTEL_UHD_OPENCL_HOST_PINNED_MAPPED",
                 "device": self.device_name,
                 "compute_units": self.compute_units,
                 "elapsed_ms": (t_end - t_start) / 1e6,
-                "copy_overhead_bytes": 0,
-                "is_zero_copy": True,
+                "copy_overhead_bytes": copy_bytes,
+                "is_zero_copy": False,
+                "memory_mode": "HOST_PINNED_MAPPED_COPY",
             }
         except Exception as e:
             xor_res = np.bitwise_xor(a_u32, b_u32)

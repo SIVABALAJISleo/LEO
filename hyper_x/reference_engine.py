@@ -16,6 +16,7 @@ import json
 import time
 from dataclasses import dataclass, asdict, field
 from typing import Any, Dict, List, Optional, Tuple, Union
+import platform
 import numpy as np
 
 
@@ -23,9 +24,9 @@ import numpy as np
 class ExternalReferenceManifest:
     """Immutable manifest of a trusted external reference execution."""
     workload_id: str
-    gpu_identity: str                    # e.g., "NVIDIA GeForce RTX 5090 (Blackwell GB202)"
-    driver_version: str                  # e.g., "572.16"
-    cuda_version: str                    # e.g., "12.8"
+    gpu_identity: str                    # Actual device identity or simulated reference tag
+    driver_version: str                  # e.g., "572.16" or host platform details
+    cuda_version: str                    # e.g., "12.8" or "N/A (CPU Baseline)"
     library_versions: Dict[str, str]     # e.g., {"cuBLAS": "12.8", "cuDNN": "9.7", "PyTorch": "2.6"}
     precision: str                       # "FP32", "FP16", "BF16", "INT8", "INT4"
     seed: int
@@ -38,6 +39,8 @@ class ExternalReferenceManifest:
     reference_latency_ms: float          # Real reference latency in ms
     reference_throughput: float          # Samples/sec or GFLOPS
     execution_graph_hash: str
+    provenance: str = "MEASURED"         # "MEASURED", "SIMULATED_REFERENCE", "CONFIGURED", "UNAVAILABLE"
+    is_simulated: bool = False
     metadata: Dict[str, Any] = field(default_factory=dict)
     timestamp: float = field(default_factory=time.time)
 
@@ -69,11 +72,38 @@ class ExternalReferenceEngine:
         nominal_memory_bytes: float,
         precision: str = "FP32",
         seed: int = 42,
+        provenance: str = "MEASURED",
+        device_identity: Optional[str] = None,
+        driver_version: Optional[str] = None,
+        cuda_version: Optional[str] = None,
+        library_versions: Optional[Dict[str, str]] = None,
+        is_simulated: Optional[bool] = None,
         metadata: Optional[Dict[str, Any]] = None,
     ) -> ExternalReferenceManifest:
         """
         Registers an external reference observation. Computes cryptographic hashes of inputs and outputs.
         """
+        if is_simulated is None:
+            is_simulated = (provenance == "SIMULATED_REFERENCE")
+
+        if device_identity is None:
+            if is_simulated:
+                resolved_device = "SIMULATED_TARGET: NVIDIA GeForce RTX 5090 (Theoretical Reference)"
+                resolved_driver = driver_version or "SIMULATED_DRIVER_572.16"
+                resolved_cuda = cuda_version or "SIMULATED_CUDA_12.8"
+                resolved_libs = library_versions or {"cuBLAS": "12.8.3", "cuDNN": "9.7.1", "PyTorch": "2.6.0+cu128"}
+            else:
+                proc = platform.processor() or "x86_64"
+                resolved_device = f"Host Baseline ({proc} | CPU BLAS Reference)"
+                resolved_driver = driver_version or f"{platform.system()} {platform.release()}"
+                resolved_cuda = cuda_version or "N/A (CPU Baseline)"
+                resolved_libs = library_versions or {"NumPy": np.__version__}
+        else:
+            resolved_device = device_identity
+            resolved_driver = driver_version or "Host Driver"
+            resolved_cuda = cuda_version or "N/A"
+            resolved_libs = library_versions or {}
+
         # Hash inputs
         if isinstance(input_data, np.ndarray):
             in_bytes = np.ascontiguousarray(input_data).tobytes()
@@ -100,10 +130,10 @@ class ExternalReferenceEngine:
 
         manifest = ExternalReferenceManifest(
             workload_id=workload_id,
-            gpu_identity="NVIDIA GeForce RTX 5090 (Blackwell GB202 Reference Target)",
-            driver_version="572.16 (Reference Manifest)",
-            cuda_version="12.8",
-            library_versions={"cuBLAS": "12.8.3", "cuDNN": "9.7.1", "PyTorch": "2.6.0+cu128"},
+            gpu_identity=resolved_device,
+            driver_version=resolved_driver,
+            cuda_version=resolved_cuda,
+            library_versions=resolved_libs,
             precision=precision,
             seed=seed,
             deterministic_policy=True,
@@ -115,6 +145,8 @@ class ExternalReferenceEngine:
             reference_latency_ms=reference_latency_ms,
             reference_throughput=round(throughput, 2),
             execution_graph_hash=hashlib.sha256(f"{workload_id}_{precision}".encode()).hexdigest(),
+            provenance=provenance,
+            is_simulated=is_simulated,
             metadata=metadata or {},
         )
 

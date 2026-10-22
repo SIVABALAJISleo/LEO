@@ -21,6 +21,10 @@ import time
 import json
 import numpy as np
 
+# Reconfigure stdout for safe Unicode on Windows
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
 # Ensure root directory in sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -101,7 +105,7 @@ def run_gemm_benchmark() -> dict:
     print(f"[*] Dimensions: {N}x{N} ({nominal_ops / 1e6:.1f} MFLOPs)")
     print("[*] Executing full 29-step HYPER-Ω pipeline...")
 
-    # Simulated reference latency for RTX 5090 at 512x512 FP32 (nominal ~0.08 ms)
+    # Execute with local measured baseline (provenance: MEASURED)
     result = runner.run_workload(
         config=config,
         canonical_input=(A_init, B_init),
@@ -111,20 +115,27 @@ def run_gemm_benchmark() -> dict:
         holdout_generator=holdout_generator,
         nominal_operations=nominal_ops,
         nominal_memory_bytes=nominal_bytes,
-        reference_latency_ms=0.15,
+        reference_latency_ms=None,
+        candidate_operations=nominal_ops,
+        reference_provenance="MEASURED",
     )
 
     cert = result.certificate
-    print("\n--- EXPERIMENT RESULTS ---")
-    print(f"Status:               {cert.status}")
-    print(f"Verification Verdict: {result.equivalence_report.verdict.value}")
-    print(f"Adversarial Result:   {cert.adversarial_result}")
-    print(f"Holdout Result:       {cert.holdout_result}")
-    print(f"Integrity Valid:      {result.integrity_audit.is_valid}")
-    print(f"Candidate Latency:    {cert.candidate_latency_ms:.3f} ms")
-    print(f"Max Absolute Error:   {result.equivalence_report.max_absolute_error:.2e}")
-    print(f"Relative Error:       {result.equivalence_report.relative_error:.2e}")
-    print(f"Certificate Hash:     {cert.certificate_hash}")
+    print("\n--- EXPERIMENT RESULTS (TRUTHFUL BENCHMARK PROVENANCE) ---")
+    print(f"Status:                     {cert.status}")
+    print(f"Verification Verdict:       {result.equivalence_report.verdict.value}")
+    print(f"Adversarial Result:         {cert.adversarial_result}")
+    print(f"Holdout Result:             {cert.holdout_result}")
+    print(f"Integrity Valid:            {result.integrity_audit.is_valid}")
+    print(f"Measured Reference Latency: {cert.measured_reference_latency_ms:.3f} ms [PROVENANCE: {cert.reference_provenance}]")
+    print(f"Candidate Latency:          {cert.candidate_latency_ms:.3f} ms [PROVENANCE: {cert.candidate_provenance}]")
+    print(f"Measured Speedup Ratio:     {cert.measured_speedup_ratio:.2f}x")
+    print(f"External GPU Comparison:    UNKNOWN (No physical discrete GPU present on host)")
+    print(f"Work Elimination:           {cert.verified_work_elimination * 100.0:.1f}% (Substantiated Algorithmic Operations: {cert.candidate_operation_count / 1e6:.1f} MFLOPs)")
+    print(f"Candidate Memory:           {cert.candidate_memory_bytes / (1024 * 1024):.2f} MB (Measured)")
+    print(f"Max Absolute Error:         {result.equivalence_report.max_absolute_error:.2e}")
+    print(f"Relative Error:             {result.equivalence_report.relative_error:.2e}")
+    print(f"Certificate Hash:           {cert.certificate_hash}")
 
     out_path = os.path.join(os.path.dirname(__file__), "hyper_omega_001_results.json")
     with open(out_path, "w", encoding="utf-8") as f:

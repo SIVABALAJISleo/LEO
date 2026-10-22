@@ -46,6 +46,12 @@ class ExternalEquivalenceWorkCertificate:
     holdout_result: str                    # "PASS", "FAIL", "UNKNOWN"
     reproducibility_command: str
     status: str                            # "VERIFIED", "VERIFIED_EXACT", "VERIFIED_CONTRACT", "FAILED", "UNKNOWN", "INVALID"
+    reference_provenance: str = "MEASURED" # "MEASURED", "SIMULATED_REFERENCE", "CONFIGURED", "UNAVAILABLE"
+    candidate_provenance: str = "MEASURED"
+    is_reference_simulated: bool = False
+    measured_reference_latency_ms: float = 0.0
+    measured_speedup_ratio: float = 1.0
+    metadata: Dict[str, Any] = field(default_factory=dict)
     certificate_hash: str = ""
     timestamp: float = field(default_factory=time.time)
 

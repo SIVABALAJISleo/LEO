@@ -28,6 +28,8 @@ class FailureClass(str, enum.Enum):
     EQUIVALENCE_FAILURE = "equivalence_failure"
     CONTRACT_FAILURE = "contract_failure"
     GENERALIZATION_FAILURE = "generalization_failure"
+    ADVERSARIAL_FAILURE = "adversarial_failure"
+    HOLDOUT_FAILURE = "holdout_failure"
     UNSUPPORTED_BACKEND = "unsupported_backend"
     ALGORITHM_SEARCH_FAILURE = "algorithm_search_failure"
 

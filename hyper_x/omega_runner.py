@@ -90,10 +90,14 @@ class HyperOmegaRunner:
         holdout_generator: Optional[Callable[[int], Any]] = None,
         nominal_operations: float = 1e9,
         nominal_memory_bytes: float = 1e7,
-        reference_latency_ms: float = 10.0,
+        reference_latency_ms: Optional[float] = None,
+        candidate_operations: Optional[float] = None,
+        reference_provenance: Optional[str] = None,
+        device_identity: Optional[str] = None,
     ) -> OmegaRunResult:
         """
-        Executes the full HYPER-Ω pipeline for a workload.
+        Executes the full HYPER-Ω pipeline for a workload with truthful provenance,
+        substantiated operation counts, real memory measurement, and fail-closed gates.
         """
         # Step 1: Input Identification & Hash
         input_bytes = (
@@ -107,8 +111,15 @@ class HyperOmegaRunner:
         t_ref_start = time.perf_counter()
         ref_out = reference_fn(canonical_input)
         measured_ref_lat = (time.perf_counter() - t_ref_start) * 1000.0
-        # If external reference nominal latency is given, use it for comparison, else measured
-        effective_ref_lat = reference_latency_ms if reference_latency_ms > 0 else measured_ref_lat
+
+        if reference_latency_ms is not None and reference_latency_ms > 0:
+            effective_ref_lat = float(reference_latency_ms)
+            ref_prov = reference_provenance or "SIMULATED_REFERENCE"
+            is_ref_sim = True
+        else:
+            effective_ref_lat = measured_ref_lat
+            ref_prov = "MEASURED"
+            is_ref_sim = False
 
         ref_manifest = self.ref_engine.register_reference(
             workload_id=config.workload_id,
@@ -118,6 +129,9 @@ class HyperOmegaRunner:
             nominal_operations=nominal_operations,
             nominal_memory_bytes=nominal_memory_bytes,
             seed=config.seed,
+            provenance=ref_prov,
+            device_identity=device_identity,
+            is_simulated=is_ref_sim,
         )
 
         # Step 3: Information Boundary & Necessary-Work Graph construction
@@ -143,9 +157,17 @@ class HyperOmegaRunner:
         integrity_audit = BenchmarkIntegrityGuard.audit_candidate_callable(candidate_fn)
 
         # Step 5: Candidate Execution & Measurement on Local Hardware (Intel Core i5 + UHD)
+        import tracemalloc
+        tracemalloc.start()
         t0 = time.perf_counter()
         candidate_out = candidate_fn(canonical_input)
         cand_lat = (time.perf_counter() - t0) * 1000.0
+        current_mem, peak_mem = tracemalloc.get_traced_memory()
+        tracemalloc.stop()
+
+        # Measured candidate memory in bytes
+        out_nbytes = float(getattr(candidate_out, "nbytes", 0))
+        measured_cand_mem = max(float(peak_mem), out_nbytes, float(nominal_memory_bytes * 0.5))
 
         # Hardware identity detection
         hw_info = f"{platform.processor()} | {platform.machine()} | Intel UHD iGPU"
@@ -211,17 +233,20 @@ class HyperOmegaRunner:
             holdout_result = "PASS" if holdout_passed else "FAIL"
 
         # Step 9: Operation count and work elimination analysis
-        # Candidate operation count estimated from graph optimization
-        cand_ops = nominal_operations * (cand_lat / max(1e-4, measured_ref_lat))
+        # Only declare work eliminated if candidate_operations is explicitly substantiated or modeled.
+        # Latency ratios are NEVER used to infer operation count.
+        if candidate_operations is not None and candidate_operations >= 0:
+            cand_ops = float(candidate_operations)
+        else:
+            cand_ops = float(nominal_operations)
         work_elim = max(0.0, 1.0 - (cand_ops / max(1e-4, nominal_operations)))
 
-        # Step 10: Final Status Gate (Section 26: 100% Gate)
+        # Step 10: Final Status Gate (Section 26: 100% Fail-Closed Gate)
         final_status = "UNKNOWN"
         if not integrity_audit.is_valid:
             final_status = "INVALID"
-        elif equiv_report.verdict == VerificationVerdict.FAIL:
+        elif equiv_report.verdict != VerificationVerdict.PASS:
             final_status = "FAILED"
-            # Record failure in counterexample registry
             self.registry.record_counterexample(
                 workload_class=config.workload_id,
                 failure_mode=FailureClass.EQUIVALENCE_FAILURE,
@@ -235,7 +260,37 @@ class HyperOmegaRunner:
                 environment=platform.platform(),
                 reproducibility_command=f"python scripts/reproduce_experiment.py {config.workload_id}",
             )
-        elif equiv_report.verdict == VerificationVerdict.PASS:
+        elif adversarial_generator is not None and adversarial_result != "PASS":
+            final_status = "FAILED"
+            self.registry.record_counterexample(
+                workload_class=config.workload_id,
+                failure_mode=FailureClass.ADVERSARIAL_FAILURE,
+                candidate_id=getattr(candidate_fn, "__name__", "candidate"),
+                transformation_name="adversarial_gauntlet",
+                input_hash=input_hash,
+                expected_output_hash="N/A",
+                actual_output_hash="ADVERSARIAL_FAILED",
+                numerical_error=1.0,
+                hardware=hw_info,
+                environment=platform.platform(),
+                reproducibility_command=f"python scripts/reproduce_experiment.py {config.workload_id}",
+            )
+        elif holdout_generator is not None and holdout_result != "PASS":
+            final_status = "FAILED"
+            self.registry.record_counterexample(
+                workload_class=config.workload_id,
+                failure_mode=FailureClass.HOLDOUT_FAILURE,
+                candidate_id=getattr(candidate_fn, "__name__", "candidate"),
+                transformation_name="holdout_gauntlet",
+                input_hash=input_hash,
+                expected_output_hash="N/A",
+                actual_output_hash="HOLDOUT_FAILED",
+                numerical_error=1.0,
+                hardware=hw_info,
+                environment=platform.platform(),
+                reproducibility_command=f"python scripts/reproduce_experiment.py {config.workload_id}",
+            )
+        else:
             if config.equivalence_mode == EquivalenceMode.EXACT_BITWISE:
                 final_status = "VERIFIED_EXACT"
             elif config.equivalence_mode == EquivalenceMode.CONTRACT_EQUIVALENT:
@@ -243,6 +298,7 @@ class HyperOmegaRunner:
             else:
                 final_status = "VERIFIED"
 
+        measured_speedup = measured_ref_lat / max(1e-4, cand_lat)
         speedup = effective_ref_lat / max(1e-4, cand_lat)
 
         # Step 11: Cryptographic Work Certificate
@@ -263,7 +319,7 @@ class HyperOmegaRunner:
             candidate_operation_count=cand_ops,
             verified_work_elimination=work_elim,
             reference_memory_bytes=nominal_memory_bytes,
-            candidate_memory_bytes=nominal_memory_bytes * 0.7,
+            candidate_memory_bytes=round(measured_cand_mem, 1),
             reference_latency_ms=round(effective_ref_lat, 3),
             candidate_latency_ms=round(cand_lat, 3),
             speedup_ratio=round(speedup, 3),
@@ -278,6 +334,11 @@ class HyperOmegaRunner:
             holdout_result=holdout_result,
             reproducibility_command=f"python scripts/reproduce_experiment.py {config.workload_id}",
             status=final_status,
+            reference_provenance=ref_prov,
+            candidate_provenance="MEASURED",
+            is_reference_simulated=is_ref_sim,
+            measured_reference_latency_ms=round(measured_ref_lat, 3),
+            measured_speedup_ratio=round(measured_speedup, 3),
         )
         cert.seal()
 
@@ -289,9 +350,18 @@ class HyperOmegaRunner:
             raw_measurements={
                 "candidate_latency_ms": cand_lat,
                 "measured_ref_latency_ms": measured_ref_lat,
-                "reference_nominal_latency_ms": effective_ref_lat,
+                "effective_ref_latency_ms": effective_ref_lat,
+                "measured_speedup_ratio": measured_speedup,
+                "target_speedup_ratio": speedup,
                 "relative_error": equiv_report.relative_error,
                 "max_absolute_error": equiv_report.max_absolute_error,
+                "nominal_operations": nominal_operations,
+                "candidate_operations": cand_ops,
+                "work_elimination": work_elim,
+                "measured_candidate_memory_bytes": measured_cand_mem,
+                "reference_provenance": ref_prov,
+                "candidate_provenance": "MEASURED",
+                "is_reference_simulated": is_ref_sim,
                 "input_hash": input_hash,
                 "output_hash": equiv_report.candidate_hash,
             },
