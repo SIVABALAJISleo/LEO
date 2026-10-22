@@ -227,4 +227,11 @@ try:
 except Exception as e:
     logger.warning(f"Failed to load inference_router: {e}")
 
+try:
+    from backend.routers.cpce_router import router as cpce_router
+    app.include_router(cpce_router)
+except Exception as e:
+    logger.warning(f"Failed to load cpce_router: {e}")
+
+
 
