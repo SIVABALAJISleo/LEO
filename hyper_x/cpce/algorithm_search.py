@@ -136,22 +136,22 @@ class CPCESearchEngine:
             ))
 
         # Candidate 3: Intel UHD iGPU Acceleration (if available & permitted)
+        # Empirical crossover threshold from benchmarks/igpu_tiling_tuning.py: N >= 768
         if "INTEL_UHD_IGPU" in contract.permitted_backends and self.backend_registry.is_available("INTEL_UHD_IGPU"):
-            # Check if graph has significant matrix operations (e.g. M, N >= 128)
-            has_heavy_matmul = any(
-                n.op_type == OpType.MATMUL and (n.shape and n.shape[0] >= 128)
+            has_beneficial_matmul = any(
+                n.op_type == OpType.MATMUL and (n.shape and n.shape[0] >= 768 and n.shape[1] >= 768)
                 for n in graph.nodes.values()
             )
-            if has_heavy_matmul:
-                # Accelerator has dispatch overhead (~0.5ms) but higher parallel throughput
-                est_gpu_lat = max(0.2, (base_flops / (5e9)) * 1000.0)
+            if has_beneficial_matmul:
+                # Intel UHD iGPU delivers 1.3-1.5x speedup for N >= 768 with ~0.8ms dispatch overhead
+                est_gpu_lat = max(0.5, (base_flops / (8e9)) * 1000.0)
                 cost_gpu = self.cost_model.evaluate_cost(
                     estimated_latency_ms=est_gpu_lat,
-                    memory_mb=base_mem * 1.2,
+                    memory_mb=base_mem * 1.1,
                     contract=contract,
                     is_exact=True,
                     is_accelerated=True,
-                    dispatch_overhead_ms=0.5,
+                    dispatch_overhead_ms=0.8,
                 )
                 candidates.append(CandidatePlan(
                     plan_id="PLAN_INTEL_UHD_GPU",
@@ -160,10 +160,11 @@ class CPCESearchEngine:
                     applied_rules=["OPENVINO_GPU_DISPATCH"],
                     is_exact=True,
                     estimated_flops=base_flops,
-                    estimated_memory_mb=base_mem * 1.2,
+                    estimated_memory_mb=base_mem * 1.1,
                     cost_breakdown=cost_gpu,
                     rank_score=cost_gpu.total_cost_score,
                 ))
+
 
         # Rank candidates by cost score (ascending)
         candidates.sort(key=lambda c: c.rank_score)

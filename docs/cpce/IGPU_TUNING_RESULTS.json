@@ -1,0 +1,379 @@
+{
+  "device_info": {
+    "cpu": "Intel64 Family 6 Model 186 Stepping 2, GenuineIntel",
+    "igpu": "Intel(R) UHD Graphics (iGPU)",
+    "openvino_version": "2026.2.1-21919-ede283a88e3-releases/2026/2"
+  },
+  "exact_crossover_dimension": 768,
+  "crossover_finding": "Intel UHD Graphics beats CPU AVX2 OpenBLAS for N >= 768.",
+  "dimensions_evaluated": [
+    256,
+    512,
+    768,
+    1024,
+    1536,
+    2048
+  ],
+  "results": {
+    "256": {
+      "dimension": 256,
+      "cpu_median_ms": 0.834,
+      "pure_gpu_median_ms": 1.583,
+      "pure_gpu_speedup": 0.53,
+      "best_config": "Hybrid(alpha=1.0)",
+      "best_time_ms": 0.544,
+      "max_speedup_vs_cpu": 1.53,
+      "split_sweeps": [
+        {
+          "alpha": 0.0,
+          "median_ms": 0.557,
+          "speedup_vs_cpu": 1.5,
+          "max_rel_error": "0.00e+00",
+          "verified": true
+        },
+        {
+          "alpha": 0.2,
+          "median_ms": 1.029,
+          "speedup_vs_cpu": 0.81,
+          "max_rel_error": "6.53e-07",
+          "verified": true
+        },
+        {
+          "alpha": 0.4,
+          "median_ms": 1.166,
+          "speedup_vs_cpu": 0.72,
+          "max_rel_error": "7.07e-07",
+          "verified": true
+        },
+        {
+          "alpha": 0.5,
+          "median_ms": 0.982,
+          "speedup_vs_cpu": 0.85,
+          "max_rel_error": "7.07e-07",
+          "verified": true
+        },
+        {
+          "alpha": 0.6,
+          "median_ms": 1.073,
+          "speedup_vs_cpu": 0.78,
+          "max_rel_error": "7.07e-07",
+          "verified": true
+        },
+        {
+          "alpha": 0.8,
+          "median_ms": 1.187,
+          "speedup_vs_cpu": 0.7,
+          "max_rel_error": "5.98e-07",
+          "verified": true
+        },
+        {
+          "alpha": 1.0,
+          "median_ms": 0.544,
+          "speedup_vs_cpu": 1.53,
+          "max_rel_error": "5.98e-07",
+          "verified": true
+        }
+      ]
+    },
+    "512": {
+      "dimension": 512,
+      "cpu_median_ms": 1.66,
+      "pure_gpu_median_ms": 1.863,
+      "pure_gpu_speedup": 0.89,
+      "best_config": "CPU",
+      "best_time_ms": 1.66,
+      "max_speedup_vs_cpu": 1.0,
+      "split_sweeps": [
+        {
+          "alpha": 0.0,
+          "median_ms": 1.785,
+          "speedup_vs_cpu": 0.93,
+          "max_rel_error": "0.00e+00",
+          "verified": true
+        },
+        {
+          "alpha": 0.2,
+          "median_ms": 2.452,
+          "speedup_vs_cpu": 0.68,
+          "max_rel_error": "5.38e-07",
+          "verified": true
+        },
+        {
+          "alpha": 0.4,
+          "median_ms": 2.387,
+          "speedup_vs_cpu": 0.7,
+          "max_rel_error": "5.38e-07",
+          "verified": true
+        },
+        {
+          "alpha": 0.5,
+          "median_ms": 2.391,
+          "speedup_vs_cpu": 0.69,
+          "max_rel_error": "6.14e-07",
+          "verified": true
+        },
+        {
+          "alpha": 0.6,
+          "median_ms": 2.632,
+          "speedup_vs_cpu": 0.63,
+          "max_rel_error": "6.14e-07",
+          "verified": true
+        },
+        {
+          "alpha": 0.8,
+          "median_ms": 3.137,
+          "speedup_vs_cpu": 0.53,
+          "max_rel_error": "5.38e-07",
+          "verified": true
+        },
+        {
+          "alpha": 1.0,
+          "median_ms": 2.27,
+          "speedup_vs_cpu": 0.73,
+          "max_rel_error": "5.38e-07",
+          "verified": true
+        }
+      ]
+    },
+    "768": {
+      "dimension": 768,
+      "cpu_median_ms": 4.84,
+      "pure_gpu_median_ms": 4.427,
+      "pure_gpu_speedup": 1.09,
+      "best_config": "Hybrid(alpha=0.0)",
+      "best_time_ms": 4.122,
+      "max_speedup_vs_cpu": 1.17,
+      "split_sweeps": [
+        {
+          "alpha": 0.0,
+          "median_ms": 4.122,
+          "speedup_vs_cpu": 1.17,
+          "max_rel_error": "0.00e+00",
+          "verified": true
+        },
+        {
+          "alpha": 0.2,
+          "median_ms": 5.909,
+          "speedup_vs_cpu": 0.82,
+          "max_rel_error": "6.09e-07",
+          "verified": true
+        },
+        {
+          "alpha": 0.4,
+          "median_ms": 6.023,
+          "speedup_vs_cpu": 0.8,
+          "max_rel_error": "5.51e-07",
+          "verified": true
+        },
+        {
+          "alpha": 0.5,
+          "median_ms": 5.821,
+          "speedup_vs_cpu": 0.83,
+          "max_rel_error": "5.80e-07",
+          "verified": true
+        },
+        {
+          "alpha": 0.6,
+          "median_ms": 6.227,
+          "speedup_vs_cpu": 0.78,
+          "max_rel_error": "5.80e-07",
+          "verified": true
+        },
+        {
+          "alpha": 0.8,
+          "median_ms": 8.117,
+          "speedup_vs_cpu": 0.6,
+          "max_rel_error": "5.80e-07",
+          "verified": true
+        },
+        {
+          "alpha": 1.0,
+          "median_ms": 4.72,
+          "speedup_vs_cpu": 1.03,
+          "max_rel_error": "5.80e-07",
+          "verified": true
+        }
+      ]
+    },
+    "1024": {
+      "dimension": 1024,
+      "cpu_median_ms": 11.237,
+      "pure_gpu_median_ms": 8.674,
+      "pure_gpu_speedup": 1.3,
+      "best_config": "Hybrid(alpha=1.0)",
+      "best_time_ms": 7.378,
+      "max_speedup_vs_cpu": 1.52,
+      "split_sweeps": [
+        {
+          "alpha": 0.0,
+          "median_ms": 12.018,
+          "speedup_vs_cpu": 0.94,
+          "max_rel_error": "0.00e+00",
+          "verified": true
+        },
+        {
+          "alpha": 0.2,
+          "median_ms": 10.116,
+          "speedup_vs_cpu": 1.11,
+          "max_rel_error": "5.33e-07",
+          "verified": true
+        },
+        {
+          "alpha": 0.4,
+          "median_ms": 10.148,
+          "speedup_vs_cpu": 1.11,
+          "max_rel_error": "5.57e-07",
+          "verified": true
+        },
+        {
+          "alpha": 0.5,
+          "median_ms": 10.678,
+          "speedup_vs_cpu": 1.05,
+          "max_rel_error": "5.57e-07",
+          "verified": true
+        },
+        {
+          "alpha": 0.6,
+          "median_ms": 16.155,
+          "speedup_vs_cpu": 0.7,
+          "max_rel_error": "5.57e-07",
+          "verified": true
+        },
+        {
+          "alpha": 0.8,
+          "median_ms": 9.321,
+          "speedup_vs_cpu": 1.21,
+          "max_rel_error": "5.57e-07",
+          "verified": true
+        },
+        {
+          "alpha": 1.0,
+          "median_ms": 7.378,
+          "speedup_vs_cpu": 1.52,
+          "max_rel_error": "7.75e-07",
+          "verified": true
+        }
+      ]
+    },
+    "1536": {
+      "dimension": 1536,
+      "cpu_median_ms": 30.418,
+      "pure_gpu_median_ms": 33.38,
+      "pure_gpu_speedup": 0.91,
+      "best_config": "Hybrid(alpha=1.0)",
+      "best_time_ms": 23.368,
+      "max_speedup_vs_cpu": 1.3,
+      "split_sweeps": [
+        {
+          "alpha": 0.0,
+          "median_ms": 37.087,
+          "speedup_vs_cpu": 0.82,
+          "max_rel_error": "0.00e+00",
+          "verified": true
+        },
+        {
+          "alpha": 0.2,
+          "median_ms": 33.972,
+          "speedup_vs_cpu": 0.9,
+          "max_rel_error": "5.77e-07",
+          "verified": true
+        },
+        {
+          "alpha": 0.4,
+          "median_ms": 57.278,
+          "speedup_vs_cpu": 0.53,
+          "max_rel_error": "5.77e-07",
+          "verified": true
+        },
+        {
+          "alpha": 0.5,
+          "median_ms": 24.617,
+          "speedup_vs_cpu": 1.24,
+          "max_rel_error": "5.77e-07",
+          "verified": true
+        },
+        {
+          "alpha": 0.6,
+          "median_ms": 69.686,
+          "speedup_vs_cpu": 0.44,
+          "max_rel_error": "5.77e-07",
+          "verified": true
+        },
+        {
+          "alpha": 0.8,
+          "median_ms": 31.933,
+          "speedup_vs_cpu": 0.95,
+          "max_rel_error": "5.77e-07",
+          "verified": true
+        },
+        {
+          "alpha": 1.0,
+          "median_ms": 23.368,
+          "speedup_vs_cpu": 1.3,
+          "max_rel_error": "5.77e-07",
+          "verified": true
+        }
+      ]
+    },
+    "2048": {
+      "dimension": 2048,
+      "cpu_median_ms": 79.425,
+      "pure_gpu_median_ms": 71.674,
+      "pure_gpu_speedup": 1.11,
+      "best_config": "Hybrid(alpha=1.0)",
+      "best_time_ms": 59.797,
+      "max_speedup_vs_cpu": 1.33,
+      "split_sweeps": [
+        {
+          "alpha": 0.0,
+          "median_ms": 100.515,
+          "speedup_vs_cpu": 0.79,
+          "max_rel_error": "0.00e+00",
+          "verified": true
+        },
+        {
+          "alpha": 0.2,
+          "median_ms": 85.355,
+          "speedup_vs_cpu": 0.93,
+          "max_rel_error": "4.83e-07",
+          "verified": true
+        },
+        {
+          "alpha": 0.4,
+          "median_ms": 62.091,
+          "speedup_vs_cpu": 1.28,
+          "max_rel_error": "6.03e-07",
+          "verified": true
+        },
+        {
+          "alpha": 0.5,
+          "median_ms": 68.778,
+          "speedup_vs_cpu": 1.15,
+          "max_rel_error": "6.03e-07",
+          "verified": true
+        },
+        {
+          "alpha": 0.6,
+          "median_ms": 71.391,
+          "speedup_vs_cpu": 1.11,
+          "max_rel_error": "7.84e-07",
+          "verified": true
+        },
+        {
+          "alpha": 0.8,
+          "median_ms": 67.81,
+          "speedup_vs_cpu": 1.17,
+          "max_rel_error": "7.84e-07",
+          "verified": true
+        },
+        {
+          "alpha": 1.0,
+          "median_ms": 59.797,
+          "speedup_vs_cpu": 1.33,
+          "max_rel_error": "7.84e-07",
+          "verified": true
+        }
+      ]
+    }
+  }
+}

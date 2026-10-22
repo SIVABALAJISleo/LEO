@@ -16,10 +16,12 @@ export type StreamHandlers = {
 export type StreamOptions = {
   model?: string;
   temperature?: number;
+  max_tokens?: number;
   /** Max auto-reconnect attempts after a mid-stream network drop. */
   maxReconnects?: number;
   /** Base backoff (ms) for exponential retry. */
   reconnectBaseMs?: number;
+  endpoint?: string;
 };
 
 function isTransientNetworkError(err: unknown): boolean {
@@ -41,28 +43,51 @@ async function openStream(
   signal: AbortSignal | undefined,
   priorPartial: string,
 ): Promise<Response> {
-  const url = `${getApiBase()}/v1/chat/completions`;
+  const endpoint = opts.endpoint ?? "/api/v1/inference/generate";
+  const url = `${getApiBase()}${endpoint}`;
   const token = getToken();
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     Accept: "text/event-stream",
   };
   if (token) headers.Authorization = `Bearer ${token}`;
+  const latestPrompt = messages[messages.length - 1]?.content ?? "";
   const body: Record<string, unknown> = {
-    model: opts.model ?? "leo-zni-turbo",
+    model: opts.model ?? "Qwen2.5-0.5B-Instruct-Q4_K_M",
+    prompt: latestPrompt,
     messages,
     temperature: opts.temperature ?? 0.7,
+    max_tokens: opts.max_tokens ?? 256,
     stream: true,
   };
   if (priorPartial) {
     body.resume = { prior_partial: priorPartial, length: priorPartial.length };
   }
-  return fetch(url, {
+
+  let res = await fetch(url, {
     method: "POST",
     headers,
     signal,
     body: JSON.stringify(body),
   });
+
+  // Graceful fallback to OpenAI-compatible gateway if local GGUF endpoint is not configured (e.g. 404 or 503)
+  if ((res.status === 404 || res.status === 503) && endpoint === "/api/v1/inference/generate") {
+    const fallbackUrl = `${getApiBase()}/v1/chat/completions`;
+    res = await fetch(fallbackUrl, {
+      method: "POST",
+      headers,
+      signal,
+      body: JSON.stringify({
+        model: opts.model ?? "leo-zni-turbo",
+        messages,
+        temperature: opts.temperature ?? 0.7,
+        stream: true,
+      }),
+    });
+  }
+
+  return res;
 }
 
 export async function streamChat(

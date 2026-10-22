@@ -243,9 +243,12 @@ class CPCEExecutionPlanner:
             param_b = ov.opset10.parameter(shape=[K, N], dtype=ov.Type.f32, name="B")
             matmul = ov.opset10.matmul(param_a, param_b, False, False)
             model = ov.Model([matmul], [param_a, param_b], model_key)
-            self._compiled_openvino_models[model_key] = core.compile_model(model, "GPU")
+            self._compiled_openvino_models[model_key] = core.compile_model(
+                model, "GPU", {"INFERENCE_PRECISION_HINT": "f32"}
+            )
 
         compiled = self._compiled_openvino_models[model_key]
+
         res = compiled([A, B])
         return res[0]
 

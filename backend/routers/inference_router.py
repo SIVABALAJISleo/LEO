@@ -21,7 +21,9 @@ import platform
 import threading
 from typing import Any, Dict, List, Optional
 from fastapi import APIRouter, HTTPException, status
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
+import json
 
 try:
     import psutil
@@ -92,11 +94,13 @@ def get_or_load_model(model_path: str = DEFAULT_MODEL_PATH, n_ctx: int = 512, n_
 
 
 class GenerationRequest(BaseModel):
-    prompt: str = Field(..., min_length=1, max_length=2048, description="Prompt text for local language model")
-    max_tokens: int = Field(default=64, ge=1, le=512, description="Maximum tokens to generate")
+    prompt: Optional[str] = Field(default="", max_length=2048, description="Prompt text for local language model")
+    messages: Optional[List[Dict[str, Any]]] = Field(default=None, description="Conversation message history")
+    max_tokens: int = Field(default=128, ge=1, le=2048, description="Maximum tokens to generate")
     temperature: float = Field(default=0.7, ge=0.0, le=2.0, description="Sampling temperature")
     top_p: float = Field(default=0.9, ge=0.0, le=1.0, description="Top-p nucleus sampling")
     seed: int = Field(default=42, description="Random seed for reproducibility")
+    stream: bool = Field(default=False, description="Stream output as Server-Sent Events (SSE)")
 
 
 class GenerationResponse(BaseModel):
@@ -153,10 +157,11 @@ def get_model_info():
     }
 
 
-@router.post("/generate", response_model=GenerationResponse)
+@router.post("/generate")
 def generate_text(req: GenerationRequest):
     """
     Executes real local inference with time-to-first-token (TTFT) and token throughput measurement.
+    Supports standard JSON responses and Server-Sent Events (SSE) streaming mode.
     """
     if not _HAS_LLAMA_CPP:
         raise HTTPException(
@@ -170,11 +175,25 @@ def generate_text(req: GenerationRequest):
             detail=f"Local GGUF model not found at: {DEFAULT_MODEL_PATH}",
         )
 
+    # Format effective prompt from messages or prompt string
+    if req.messages and len(req.messages) > 0:
+        formatted = []
+        for m in req.messages:
+            role = str(m.get("role", "user")).upper()
+            content = str(m.get("content", ""))
+            formatted.append(f"{role}: {content}")
+        formatted.append("ASSISTANT:")
+        effective_prompt = "\n".join(formatted)
+    elif req.prompt:
+        effective_prompt = req.prompt
+    else:
+        effective_prompt = "Hello"
+
     model, load_ms = get_or_load_model()
 
     t_start = time.perf_counter()
     tokens_stream = model.create_completion(
-        prompt=req.prompt,
+        prompt=effective_prompt,
         max_tokens=req.max_tokens,
         temperature=req.temperature,
         top_p=req.top_p,
@@ -182,6 +201,60 @@ def generate_text(req: GenerationRequest):
         stream=True,
     )
 
+    if req.stream:
+        def sse_generator():
+            first_t = None
+            count = 0
+            accumulated = []
+            for chunk in tokens_stream:
+                now = time.perf_counter()
+                if first_t is None:
+                    first_t = now
+                choice = chunk["choices"][0]
+                text_piece = choice.get("text", "")
+                accumulated.append(text_piece)
+                count += 1
+                payload = {
+                    "token": text_piece,
+                    "choices": [
+                        {
+                            "delta": {"content": text_piece},
+                            "index": 0,
+                        }
+                    ],
+                    "done": False,
+                    "tokens_generated": count,
+                }
+                yield f"data: {json.dumps(payload)}\n\n"
+
+            t_end = time.perf_counter()
+            ttft_ms = ((first_t - t_start) * 1000.0) if first_t else 0.0
+            gen_sec = max(1e-4, t_end - (first_t or t_start))
+            tps = round(count / gen_sec, 2)
+            final_payload = {
+                "token": "",
+                "choices": [{"delta": {"content": ""}}],
+                "done": True,
+                "tokens_generated": count,
+                "time_to_first_token_ms": round(ttft_ms, 2),
+                "generation_throughput_tokens_per_sec": tps,
+                "total_latency_ms": round((t_end - t_start) * 1000.0, 2),
+                "x_leo_metadata": {
+                    "resolved_by": "Local LLaMA (Qwen2.5-0.5B AVX2)",
+                    "latency_ms": round((t_end - t_start) * 1000.0, 2),
+                    "ttft_ms": round(ttft_ms, 2),
+                    "throughput_tps": tps,
+                    "tokens_generated": count,
+                    "local_only": True,
+                    "provenance": "MEASURED",
+                },
+            }
+            yield f"data: {json.dumps(final_payload)}\n\n"
+            yield "data: [DONE]\n\n"
+
+        return StreamingResponse(sse_generator(), media_type="text/event-stream")
+
+    # Non-streaming JSON mode
     generated_pieces: List[str] = []
     first_token_time: Optional[float] = None
     prompt_tokens = 0
@@ -224,6 +297,14 @@ def generate_text(req: GenerationRequest):
         quantization="Q4_K_M",
         is_local_only=True,
     )
+
+
+@router.post("/stream")
+def stream_text(req: GenerationRequest):
+    """Direct Server-Sent Events (SSE) streaming endpoint."""
+    req.stream = True
+    return generate_text(req)
+
 
 
 @router.post("/benchmark")

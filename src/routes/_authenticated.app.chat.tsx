@@ -420,19 +420,36 @@ function ChatPage() {
             return;
           }
           try {
-            const res = await leoFetch("/v1/chat/completions", {
+            let res = await leoFetch("/api/v1/inference/generate", {
               method: "POST",
               signal: ctrl.signal,
               body: JSON.stringify({
-                model: "leo-zni-turbo",
+                prompt: history[history.length - 1]?.content ?? "",
                 messages: history,
                 temperature: 0.7,
+                max_tokens: 256,
+                stream: false,
               }),
             });
+            if (!res.ok && (res.status === 404 || res.status === 503)) {
+              res = await leoFetch("/v1/chat/completions", {
+                method: "POST",
+                signal: ctrl.signal,
+                body: JSON.stringify({
+                  model: "leo-zni-turbo",
+                  messages: history,
+                  temperature: 0.7,
+                }),
+              });
+            }
             const data = await res.json();
             if (!res.ok) throw new Error(data?.message || `HTTP ${res.status}`);
-            const content = data?.choices?.[0]?.message?.content ?? "";
-            const meta = data?.x_leo_metadata;
+            const content = data?.text ?? data?.choices?.[0]?.message?.content ?? "";
+            const meta = data?.x_leo_metadata ?? {
+              latency_ms: data?.total_latency_ms,
+              resolved_by: data?.backend,
+              ttft_ms: data?.time_to_first_token_ms,
+            };
             setMessages((m) => {
               const next = [...m];
               const last = next[next.length - 1];

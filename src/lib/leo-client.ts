@@ -292,6 +292,32 @@ export function getMockResponse(path: string, init: RequestInit = {}): Response 
     );
   }
 
+  // 6b. Local AI Inference Endpoint
+  if (cleanPath.includes("/api/v1/inference/generate") || cleanPath.includes("/api/v1/inference/stream")) {
+    const userMsg = bodyData.prompt || bodyData.messages?.[bodyData.messages?.length - 1]?.content || "Hello";
+    return new Response(
+      JSON.stringify({
+        text: `Hello! I am LEO local inference engine. You said: "${userMsg}". Running locally with zero cloud dependencies.`,
+        tokens_generated: 18,
+        prompt_tokens: 6,
+        completion_tokens: 18,
+        load_time_ms: 0.0,
+        time_to_first_token_ms: 45.2,
+        generation_throughput_tokens_per_sec: 42.5,
+        generation_latency_ms: 420.0,
+        total_latency_ms: 465.2,
+        device: "Host CPU (AVX2/FMA)",
+        backend: "LLAMA_CPP_CPU_AVX2",
+        provenance: "MEASURED",
+        memory_rss_mb: 245.0,
+        model_name: "Qwen2.5-0.5B-Instruct-Q4_K_M",
+        quantization: "Q4_K_M",
+        is_local_only: true,
+      }),
+      { status: 200, headers: { "Content-Type": "application/json" } },
+    );
+  }
+
   // 7. Embeddings Endpoint
   if (cleanPath.endsWith("/v1/embeddings")) {
     const vec = Array.from({ length: 384 }, (_, i) => Math.sin(i * 0.1) * 0.5);

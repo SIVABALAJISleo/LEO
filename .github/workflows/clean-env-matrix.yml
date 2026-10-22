@@ -1,0 +1,61 @@
+name: Clean-Environment Matrix CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-matrix:
+    name: Test Suite (Python ${{ matrix.python-version }} · ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.12", "3.13"]
+
+    env:
+      APP_ENV: test
+      SECRET_KEY: test-secret-key-clean-ci-only
+      ALLOWED_ORIGINS: http://localhost:5173
+      LEO_OFFLINE: "1"
+      TRANSFORMERS_OFFLINE: "1"
+      HF_DATASETS_OFFLINE: "1"
+      PYTHONPATH: .
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+
+      - name: Install clean CPU dependencies (zero GPU prerequisites)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-clean-ci.txt
+
+      - name: Smoke check zero-GPU module imports
+        run: |
+          python -c "from hyper_x.cpce import ComputationalPhaseChangeEngine, WorkloadContractRegistry; print('CPCE modules verified successfully.')"
+          python -c "from hyper_x.cpce.execution_planner import CPCEExecutionPlanner; print('Execution planner verified successfully.')"
+
+      - name: Run CPCE Core test suite
+        run: python -m pytest tests/test_cpce_core.py -v --tb=short
+
+      - name: Run Provenance Truth and Zero-Fake-Hardware test suite
+        run: python -m pytest tests/test_benchmark_provenance_truth.py -v --tb=short
+
+      - name: Run Local Inference Product & Streaming test suite
+        run: python -m pytest tests/test_local_inference_product.py -v --tb=short
