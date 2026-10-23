@@ -233,5 +233,11 @@ try:
 except Exception as e:
     logger.warning(f"Failed to load cpce_router: {e}")
 
+try:
+    from backend.routers.canonical_workload_router import router as canonical_workload_router
+    app.include_router(canonical_workload_router)
+except Exception as e:
+    logger.warning(f"Failed to load canonical_workload_router: {e}")
+
 
 

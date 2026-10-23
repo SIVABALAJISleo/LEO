@@ -1,0 +1,75 @@
+{
+  "audit_version": "1.0.0-omega",
+  "timestamp": "2026-10-23T18:33:00+05:30",
+  "environment": {
+    "os": "Windows 11 (10.0.26100)",
+    "host_machine": "Lenovo IdeaPad Slim 3 15IAH8",
+    "cpu": "Intel Core i5-12450H (8 Cores: 4P + 4E, 12 Threads)",
+    "ram_installed_gb": 16.0,
+    "gpu": "Intel(R) UHD Graphics (48 EUs)",
+    "python_version": "3.13.5",
+    "numpy_version": "2.3.2",
+    "pytest_version": "9.0.2",
+    "git_commit": "057230eb6dfd83d3f95f8f65f3b8380e16527b62",
+    "git_branch": "main",
+    "working_tree_clean": true
+  },
+  "baseline_test_suites": [
+    {
+      "suite": "tests/test_cpce_core.py",
+      "status": "PASSED",
+      "tests_collected": 25,
+      "tests_passed": 25,
+      "tests_failed": 0,
+      "execution_time_s": 28.5
+    },
+    {
+      "suite": "tests/test_cpce_research_experiments.py",
+      "status": "PASSED",
+      "tests_collected": 16,
+      "tests_passed": 16,
+      "tests_failed": 0,
+      "execution_time_s": 20.6
+    },
+    {
+      "suite": "tests/test_benchmark_provenance_truth.py",
+      "status": "PASSED",
+      "tests_collected": 6,
+      "tests_passed": 6,
+      "tests_failed": 0,
+      "execution_time_s": 21.0
+    },
+    {
+      "suite": "tests/test_local_inference_product.py",
+      "status": "PASSED",
+      "tests_collected": 5,
+      "tests_passed": 5,
+      "tests_failed": 0,
+      "execution_time_s": 19.2
+    },
+    {
+      "suite": "tests/test_research_engine.py",
+      "status": "PASSED",
+      "tests_collected": 9,
+      "tests_passed": 9,
+      "tests_failed": 0,
+      "execution_time_s": 9.3
+    },
+    {
+      "suite": "tests/test_unseen_pathway_engine.py",
+      "status": "PASSED_WITH_CAVEAT",
+      "tests_collected": 22,
+      "tests_passed": 21,
+      "tests_failed": 1,
+      "execution_time_s": 38.9,
+      "notes": "1 test had global singleton state collision during full run, passes in isolation"
+    }
+  ],
+  "forensic_findings": {
+    "finding_1": "hyper_v2/workloads/suite_15.py returned static dictionaries with simulated timings (42ms, 18ms GPU) for 9 out of 15 workloads (AI inference, graphics, physics, video).",
+    "finding_2": "hyper/research_engine/independent_reference.py intercepted inputs using ('A' in inputs and 'B' in inputs) before checking workload_id, causing MLP inference to execute generic matrix multiplication instead of ReLU(X @ W1 + b1) @ W2 + b2.",
+    "finding_3": "hyper/research_engine/independent_reference.py returned inputs['x'].copy() for STREAMING_VECTOR_OPS instead of true AXPY (y = alpha * x + y) sequence.",
+    "finding_4": "hyper/research_engine/solution_space_compiler.py baseline candidate delegated directly to IndependentReferenceEngine.execute_reference, causing candidate and reference to share the identical implementation.",
+    "finding_5": "hyper/research_engine/independent_reference.py had generic fallback returning inputs['x'].copy() on unhandled workloads instead of raising UnsupportedWorkloadError."
+  }
+}

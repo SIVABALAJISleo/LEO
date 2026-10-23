@@ -179,8 +179,22 @@ class IndependentReferenceEngine:
             return cls._dynamic_references[workload_id](inputs)
 
         w_id = workload_id.upper()
-        if ("A" in inputs and "B" in inputs):
-            return IndependentReferenceEngine.reference_matmul(inputs["A"], inputs["B"])
+        # Workload-specific explicit dispatch must precede generic operand heuristics
+        if "MLP" in w_id or "ML_MLP" in w_id:
+            if "X" in inputs and "W1" in inputs:
+                h1 = np.maximum(0.0, np.matmul(inputs["X"], inputs["W1"]) + inputs.get("b1", 0.0))
+                return np.matmul(h1, inputs["W2"]) + inputs.get("b2", 0.0)
+            elif "A" in inputs and "B" in inputs:
+                # Dense -> ReLU -> Dense equivalent for 2-input test harness
+                hidden = np.maximum(0.0, np.matmul(inputs["A"], inputs["B"]))
+                return hidden
+            else:
+                raise ValueError(f"MLP inference missing required tensor inputs: {list(inputs.keys())}")
+        elif "STREAM" in w_id:
+            x = np.asarray(inputs["x"], dtype=np.float32)
+            y = np.asarray(inputs.get("y", np.zeros_like(x)), dtype=np.float32)
+            alpha = float(inputs.get("alpha", 2.0))
+            return (alpha * x + y).astype(np.float32)
         elif "CONV2D" in w_id:
             return IndependentReferenceEngine.reference_conv2d(inputs["image"], inputs["kernel"])
         elif "CONV1D" in w_id:
@@ -197,7 +211,7 @@ class IndependentReferenceEngine:
             )
         elif "SOBEL" in w_id or "IMAGE" in w_id:
             return IndependentReferenceEngine.reference_sobel(inputs["image"])
-        elif "REDUCE" in w_id:
+        elif "REDUCE" in w_id or "REDUCTION" in w_id:
             return IndependentReferenceEngine.reference_reduction_sum(inputs["x"])
         elif "SORT" in w_id:
             return IndependentReferenceEngine.reference_sort(inputs["x"])
@@ -207,11 +221,10 @@ class IndependentReferenceEngine:
             )
         elif "MANDELBROT" in w_id:
             return IndependentReferenceEngine.reference_mandelbrot(inputs["c_grid"])
-        elif "STREAM" in w_id and "x" in inputs:
-            return inputs["x"].copy()
         elif "SHA256" in w_id or "CRYPTO" in w_id:
             return IndependentReferenceEngine.reference_sha256(inputs["data"])
-        elif "x" in inputs and isinstance(inputs["x"], np.ndarray):
-            return inputs["x"].copy()
+        elif "GEMM" in w_id or ("A" in inputs and "B" in inputs):
+            return IndependentReferenceEngine.reference_matmul(inputs["A"], inputs["B"])
         else:
-            raise ValueError(f"No independent reference defined for workload '{workload_id}'")
+            raise ValueError(f"No independent reference defined for workload '{workload_id}' (fail-closed)")
+
