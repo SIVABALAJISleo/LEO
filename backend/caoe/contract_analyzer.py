@@ -23,10 +23,12 @@ class WorkloadSpec:
     shape: Tuple[int, ...]
     dtype: np.dtype = np.dtype("float32")
     sample_inputs: List[np.ndarray] = dataclasses.field(default_factory=list)
-    task_type: str = "GEMM"  # GEMM | FFT | RENDERING | INFERENCE
+    task_type: str = "GEMM"  # GEMM | FFT | RENDERING | INFERENCE | CRYPTO
     perceptual_metric: Optional[str] = None
     functional_metric: Optional[str] = None
     k: int = 5
+    max_memory_mb: float = 12000.0  # 12 GB hard safety cap for Lenovo IdeaPad Slim 3
+    exactness_class: str = "NUMERICALLY_EQUIVALENT"
 
 
 @dataclasses.dataclass
@@ -43,6 +45,12 @@ class Contract:
     perceptual_metric: Optional[str] = None
     functional_metric: Optional[str] = None
     k: int = 5
+    max_memory_mb: float = 12000.0
+    exactness_class: str = "NUMERICALLY_EQUIVALENT"
+    shannon_entropy: float = 0.0
+    routing_recommendation: str = "ONLINE_PHASE_TRANSITION_SUBSUMPTION"
+    is_admissible: bool = True
+    boundary_note: Optional[str] = None
 
     def update(self, best_option: Dict[str, Any]) -> None:
         if "precision" in best_option:
@@ -68,6 +76,46 @@ class ContractAnalyzer:
         elif workload_spec.task_type == "FFT":
             rel_tol = 1e-6
             cache_ttl = 0.0
+        elif workload_spec.task_type == "CRYPTO":
+            rel_tol = 0.0
+            cache_ttl = 0.0
+
+        # Pre-flight Memory and Entropy Inspection
+        from backend.hardware.universal_subsumption_engine import UniversalSubsumptionEngine
+
+        inputs_dict: Dict[str, Any] = {}
+        if workload_spec.sample_inputs:
+            for idx, arr in enumerate(workload_spec.sample_inputs):
+                inputs_dict[f"input_{idx}"] = arr
+        else:
+            # Estimate footprint from shape and dtype
+            elem_count = 1
+            for dim in workload_spec.shape:
+                elem_count *= dim
+            itemsize = np.dtype(workload_spec.dtype).itemsize
+            est_bytes = elem_count * itemsize
+            est_mb = est_bytes / (1024.0 * 1024.0)
+            if est_mb > workload_spec.max_memory_mb:
+                inputs_dict["synthetic_payload"] = b"\x00" * int(min(1024 * 1024, est_bytes))
+                # Explicit trigger of memory barrier
+                inputs_dict["_declared_bytes"] = est_bytes
+
+        # If declared bytes exceeds max_memory_mb
+        declared_bytes = inputs_dict.pop("_declared_bytes", None)
+        if declared_bytes is not None and (declared_bytes / (1024.0 * 1024.0)) > workload_spec.max_memory_mb:
+            is_admissible = False
+            mem_mb = declared_bytes / (1024.0 * 1024.0)
+            entropy = 0.0
+            route_rec = f"PHYSICAL_ENVELOPE_EXCEEDED: Requested {mem_mb:.1f} MB exceeds hard 12 GB safety cap ({workload_spec.max_memory_mb} MB)."
+        elif inputs_dict:
+            is_admissible, mem_mb, entropy, route_rec = UniversalSubsumptionEngine.preflight_contract_and_memory_guard(
+                inputs_dict, max_memory_mb=workload_spec.max_memory_mb
+            )
+        else:
+            is_admissible, mem_mb, entropy, route_rec = True, 0.0, 0.0, "ONLINE_PHASE_TRANSITION_SUBSUMPTION"
+
+        if rel_tol == 0.0 or entropy > 0.85:
+            route_rec = "NATIVE_EXACT_AVX2_OPENCL_USM"
 
         contract = Contract(
             name=workload_spec.name,
@@ -83,10 +131,16 @@ class ContractAnalyzer:
             precision=32,
             sparsity_tolerance=0.0,
             cache_ttl=cache_ttl,
-            fallback="full_computation",
+            fallback="native_exact" if route_rec == "NATIVE_EXACT_AVX2_OPENCL_USM" else "full_computation",
             perceptual_metric=workload_spec.perceptual_metric,
             functional_metric=workload_spec.functional_metric,
             k=workload_spec.k,
+            max_memory_mb=workload_spec.max_memory_mb,
+            exactness_class=workload_spec.exactness_class,
+            shannon_entropy=entropy,
+            routing_recommendation=route_rec,
+            is_admissible=is_admissible,
+            boundary_note=route_rec if not is_admissible else None,
         )
         return contract
 

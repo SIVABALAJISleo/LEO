@@ -1,0 +1,229 @@
+{
+  "evaluation_name": "Hostile Blind-Holdout Unseen Workload Audit",
+  "system_profile": {
+    "model": "Lenovo IdeaPad Slim 3 15IAH8",
+    "cpu": "Intel(R) Core(TM) i5-12450H (4P + 4E Cores, 12 Threads)",
+    "igpu": "Intel(R) UHD Graphics (48 Execution Units, OpenVINO 2025.0)",
+    "ram_capacity_gb": 15.7,
+    "safety_cap_mb": 12000.0,
+    "discrete_gpu": "NOT_MEASURED (no dedicated NVIDIA/AMD GPU in system)"
+  },
+  "total_runs": 10,
+  "passed_runs": 10,
+  "pass_rate_pct": 100.0,
+  "mean_work_elimination_pct": 95.93,
+  "mean_shannon_entropy": 0.0602,
+  "mean_latency_ms": 7.488,
+  "records": [
+    {
+      "run_index": 1,
+      "workload_id": "BLIND_HOLDOUT_UNSEEN_01",
+      "dimensions": {
+        "M": 231,
+        "K": 138,
+        "N": 215,
+        "active_rank": 6
+      },
+      "metric1_freivalds_pass": true,
+      "metric1_holdout_relative_error": 7.146371328483667e-08,
+      "metric2_work_eliminated_pct": 95.65217391304348,
+      "metric2_shannon_entropy": 0.060498090641921756,
+      "metric3_backend": "ONLINE_SUBSUMPTION_VSA",
+      "metric3_device": "Intel Core i5-12450H (AVX2/FMA)",
+      "metric3_latency_ms": 8.401099825277925,
+      "metric3_speedup": 20.700000000000028,
+      "self_correction_fallback": false,
+      "output_digest": "df91519e41903a1df78af5ff4f89ec7ef00f899d3a42dda1793129c304263adf",
+      "verdict": "PASS"
+    },
+    {
+      "run_index": 2,
+      "workload_id": "BLIND_HOLDOUT_UNSEEN_02",
+      "dimensions": {
+        "M": 198,
+        "K": 206,
+        "N": 251,
+        "active_rank": 4
+      },
+      "metric1_freivalds_pass": true,
+      "metric1_holdout_relative_error": 1.3024291752726086e-07,
+      "metric2_work_eliminated_pct": 98.05825242718447,
+      "metric2_shannon_entropy": 0.03054391056371008,
+      "metric3_backend": "ONLINE_SUBSUMPTION_VSA",
+      "metric3_device": "Intel Core i5-12450H (AVX2/FMA)",
+      "metric3_latency_ms": 7.530800066888332,
+      "metric3_speedup": 46.3500000000001,
+      "self_correction_fallback": false,
+      "output_digest": "8f85f31db4b0afe9bee6dc463fdb6e4e39375e9f568a79ab566956c16d4d38fa",
+      "verdict": "PASS"
+    },
+    {
+      "run_index": 3,
+      "workload_id": "BLIND_HOLDOUT_UNSEEN_03",
+      "dimensions": {
+        "M": 160,
+        "K": 131,
+        "N": 164,
+        "active_rank": 7
+      },
+      "metric1_freivalds_pass": true,
+      "metric1_holdout_relative_error": 1.0631284491787142e-07,
+      "metric2_work_eliminated_pct": 94.65648854961832,
+      "metric2_shannon_entropy": 0.06760428357394344,
+      "metric3_backend": "ONLINE_SUBSUMPTION_VSA",
+      "metric3_device": "Intel Core i5-12450H (AVX2/FMA)",
+      "metric3_latency_ms": 7.771000033244491,
+      "metric3_speedup": 16.84285714285713,
+      "self_correction_fallback": false,
+      "output_digest": "092bef5ff025367e3de184e8afbafa70520f9990081f9652f122ed3318cddda3",
+      "verdict": "PASS"
+    },
+    {
+      "run_index": 4,
+      "workload_id": "BLIND_HOLDOUT_UNSEEN_04",
+      "dimensions": {
+        "M": 175,
+        "K": 224,
+        "N": 238,
+        "active_rank": 4
+      },
+      "metric1_freivalds_pass": true,
+      "metric1_holdout_relative_error": 4.532878953912149e-08,
+      "metric2_work_eliminated_pct": 98.21428571428571,
+      "metric2_shannon_entropy": 0.03054391056371008,
+      "metric3_backend": "ONLINE_SUBSUMPTION_VSA",
+      "metric3_device": "Intel Core i5-12450H (AVX2/FMA)",
+      "metric3_latency_ms": 7.27920001372695,
+      "metric3_speedup": 50.39999999999983,
+      "self_correction_fallback": false,
+      "output_digest": "f17dea58efbaebc00bf1f8a1880a78847010ed1542ad3a67f223dc9f056cc6b2",
+      "verdict": "PASS"
+    },
+    {
+      "run_index": 5,
+      "workload_id": "BLIND_HOLDOUT_UNSEEN_05",
+      "dimensions": {
+        "M": 189,
+        "K": 160,
+        "N": 130,
+        "active_rank": 6
+      },
+      "metric1_freivalds_pass": true,
+      "metric1_holdout_relative_error": 8.456370541612679e-08,
+      "metric2_work_eliminated_pct": 96.25,
+      "metric2_shannon_entropy": 0.060986371891921756,
+      "metric3_backend": "ONLINE_SUBSUMPTION_VSA",
+      "metric3_device": "Intel Core i5-12450H (AVX2/FMA)",
+      "metric3_latency_ms": 7.639199960976839,
+      "metric3_speedup": 24.0,
+      "self_correction_fallback": false,
+      "output_digest": "96e9305896c85a87c8354d59a17eb7bfa6f3e72ee9be5f7587b6920855de45a6",
+      "verdict": "PASS"
+    },
+    {
+      "run_index": 6,
+      "workload_id": "BLIND_HOLDOUT_UNSEEN_06",
+      "dimensions": {
+        "M": 195,
+        "K": 154,
+        "N": 210,
+        "active_rank": 12
+      },
+      "metric1_freivalds_pass": true,
+      "metric1_holdout_relative_error": 9.35808600133769e-08,
+      "metric2_work_eliminated_pct": 92.20779220779221,
+      "metric2_shannon_entropy": 0.1164159426782174,
+      "metric3_backend": "ONLINE_SUBSUMPTION_VSA",
+      "metric3_device": "Intel Core i5-12450H (AVX2/FMA)",
+      "metric3_latency_ms": 7.047899998724461,
+      "metric3_speedup": 11.550000000000002,
+      "self_correction_fallback": false,
+      "output_digest": "415903db1eeb5368456dfa2921dca42990509bed26a3fb987faf18d94096553e",
+      "verdict": "PASS"
+    },
+    {
+      "run_index": 7,
+      "workload_id": "BLIND_HOLDOUT_UNSEEN_07",
+      "dimensions": {
+        "M": 216,
+        "K": 159,
+        "N": 173,
+        "active_rank": 4
+      },
+      "metric1_freivalds_pass": true,
+      "metric1_holdout_relative_error": 7.149161242877056e-08,
+      "metric2_work_eliminated_pct": 97.48427672955975,
+      "metric2_shannon_entropy": 0.04070279053908933,
+      "metric3_backend": "ONLINE_SUBSUMPTION_VSA",
+      "metric3_device": "Intel Core i5-12450H (AVX2/FMA)",
+      "metric3_latency_ms": 7.686600089073181,
+      "metric3_speedup": 35.775000000000055,
+      "self_correction_fallback": false,
+      "output_digest": "d8063f1c7ffb9396f0645415fad7d457bf50d673799c0a7c1c0c921b7efeeabb",
+      "verdict": "PASS"
+    },
+    {
+      "run_index": 8,
+      "workload_id": "BLIND_HOLDOUT_UNSEEN_08",
+      "dimensions": {
+        "M": 184,
+        "K": 202,
+        "N": 166,
+        "active_rank": 4
+      },
+      "metric1_freivalds_pass": true,
+      "metric1_holdout_relative_error": 1.1842604036712489e-07,
+      "metric2_work_eliminated_pct": 98.01980198019803,
+      "metric2_shannon_entropy": 0.029383049357127197,
+      "metric3_backend": "ONLINE_SUBSUMPTION_VSA",
+      "metric3_device": "Intel Core i5-12450H (AVX2/FMA)",
+      "metric3_latency_ms": 6.904700072482228,
+      "metric3_speedup": 45.450000000000124,
+      "self_correction_fallback": false,
+      "output_digest": "158fb87212021c2493d4ba3e75b8749798a8510a4be1733140fcd05f91e12b8b",
+      "verdict": "PASS"
+    },
+    {
+      "run_index": 9,
+      "workload_id": "BLIND_HOLDOUT_UNSEEN_09",
+      "dimensions": {
+        "M": 130,
+        "K": 202,
+        "N": 190,
+        "active_rank": 14
+      },
+      "metric1_freivalds_pass": true,
+      "metric1_holdout_relative_error": 1.41851610638236e-07,
+      "metric2_work_eliminated_pct": 93.06930693069307,
+      "metric2_shannon_entropy": 0.1040129480259888,
+      "metric3_backend": "ONLINE_SUBSUMPTION_VSA",
+      "metric3_device": "Intel Core i5-12450H (AVX2/FMA)",
+      "metric3_latency_ms": 7.655499968677759,
+      "metric3_speedup": 12.985714285714295,
+      "self_correction_fallback": false,
+      "output_digest": "171cd7d8b0a5cff526313fdce0fdd19cb9528f03cb0d09975a710cbaaa39fa59",
+      "verdict": "PASS"
+    },
+    {
+      "run_index": 10,
+      "workload_id": "BLIND_HOLDOUT_UNSEEN_10",
+      "dimensions": {
+        "M": 217,
+        "K": 187,
+        "N": 237,
+        "active_rank": 8
+      },
+      "metric1_freivalds_pass": true,
+      "metric1_holdout_relative_error": 1.263637121932605e-07,
+      "metric2_work_eliminated_pct": 95.72192513368985,
+      "metric2_shannon_entropy": 0.060986371891921756,
+      "metric3_backend": "ONLINE_SUBSUMPTION_VSA",
+      "metric3_device": "Intel Core i5-12450H (AVX2/FMA)",
+      "metric3_latency_ms": 6.959599908441305,
+      "metric3_speedup": 21.037500000000055,
+      "self_correction_fallback": false,
+      "output_digest": "46e1455170bb4f199a20e194f34009e6341d2640c3d00ab981bb025ae931bcad",
+      "verdict": "PASS"
+    }
+  ]
+}
