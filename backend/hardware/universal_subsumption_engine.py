@@ -284,6 +284,18 @@ class UniversalSubsumptionEngine:
                 self._ov_core = None
 
     @staticmethod
+    def verify_freivalds_streamed(
+        A: Union[np.ndarray, np.memmap],
+        B: Union[np.ndarray, np.memmap],
+        C: Union[np.ndarray, np.memmap],
+        k: int = 5,
+        epsilon: float = 1e-3,
+        seed: Optional[int] = None,
+    ) -> Tuple[bool, float]:
+        """Exposes streamed Freivalds matrix product verification in O(k N^2) time."""
+        return IndependentVerifier.freivalds_verify_gemm(A, B, C, epsilon=epsilon, num_trials=k, seed=seed)
+
+    @staticmethod
     def compute_normalized_entropy_512(sample: Union[bytes, bytearray, np.ndarray]) -> float:
         """
         Computes normalized Shannon entropy over an initial 512-element sample:

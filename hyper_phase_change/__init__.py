@@ -122,7 +122,27 @@ from hyper_phase_change.benchmark import (
     UniversalFabricBenchmark,
 )
 
-__version__ = "3.0.0-universal-fabric"
+# 13. Automated Algorithm Discovery Subsystem
+from hyper_phase_change.discovery import (
+    CandidateStatus,
+    DiscoveryBudget,
+    CandidateProfile,
+    DiscoverySearchResult,
+    AlgorithmDiscoveryEngine,
+)
+
+# 14. Research Memory & Failed-Attempt Learning Database
+from hyper_phase_change.experiment_db import (
+    FailureCategory,
+    ExperimentRecord,
+    ResearchExperimentDB,
+    EXPERIMENT_DB,
+)
+
+# 15. Real Application Workload Suite
+from hyper_phase_change.real_workloads import RealWorkloadSuite
+
+__version__ = "3.0.0-research-breakthrough"
 
 
 # Global Shared Cache
@@ -382,4 +402,15 @@ __all__ = [
     "DetailedBenchmarkMetric",
     "HonestBenchmarkHarness",
     "UniversalFabricBenchmark",
+    # Algorithm Discovery & Research Memory
+    "CandidateStatus",
+    "DiscoveryBudget",
+    "CandidateProfile",
+    "DiscoverySearchResult",
+    "AlgorithmDiscoveryEngine",
+    "FailureCategory",
+    "ExperimentRecord",
+    "ResearchExperimentDB",
+    "EXPERIMENT_DB",
+    "RealWorkloadSuite",
 ]
