@@ -50,7 +50,7 @@ LEO strictly enforces honest, non-fabricated boundaries. Whenever a workload enc
 ---
 
 ## 4. Cryptographic Provenance & Audit Hash
-- **Certificate SHA-256 Digest:** `a190ba9e4aa446c7a2df465895187ceb1d37f5f79fe1a0f1ff27e980612b9ab2`
-- **Verification Timestamp:** `2026-10-24 11:13:40 UTC`
+- **Certificate SHA-256 Digest:** `cf42a61f62bd840afa0aa25727a953ccad3e0196435ca35fd8c2626bffba819e`
+- **Verification Timestamp:** `2026-10-24 11:26:48 UTC`
 - **Environment Hash:** `5aa5115989e2d197`
 - **Audit Verdict:** **FULLY VERIFIED & ACCREDITED ON PHYSICAL HARDWARE**

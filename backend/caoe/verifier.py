@@ -79,6 +79,9 @@ class Verifier:
             candidate_out, reference_fn, inputs, holdout_ratio=holdout_ratio, epsilon=epsilon
         )
 
+    verify_freivalds = verify_gemm_freivalds
+    verify_holdout = verify_holdout_coordinate
+
     @staticmethod
     def verify(
         result: np.ndarray,

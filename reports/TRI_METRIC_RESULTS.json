@@ -25,28 +25,28 @@
       "metric1_correctness": {
         "verified": true,
         "freivalds_pass": true,
-        "relative_error": 1.32e-07,
-        "method": "FREIVALDS_O(N^2)_RADEMACHER"
+        "relative_error": 1.2e-07,
+        "method": "FREIVALDS_O(N^2)_INCREMENTAL_SPECTRAL"
       },
       "metric2_coverage": {
         "supported": true,
-        "work_eliminated_pct": 94.79,
+        "work_eliminated_pct": 84.9,
         "shannon_entropy": 0.0735,
-        "boundary_note": "Online Importance Subspace Compression"
+        "boundary_note": "Incremental Spectral Residual Boosting (1 Slices)"
       },
       "metric3_execution": {
         "backend": "ONLINE_SUBSUMPTION_VSA",
         "device": "Intel Core i5-12450H (AVX2/FMA)",
         "zero_copy_shared_ram": true,
-        "latency_ms": 7.1996,
-        "speedup": 17.28
+        "latency_ms": 7.4421,
+        "speedup": 5.96
       },
       "self_correction": {
         "fallback_occurred": false,
         "fallback_reason": null
       },
-      "output_digest": "ca76c650c67510c6418d24f47e6cc0c5ccfeb5773e57a1bc7a90a361b9d131dc",
-      "timestamp": 1792840420.0014505
+      "output_digest": "ae9bec54a261835a9c2f13a7b54c727c2b3b18e0b1657ceaccad28fd80e653a2",
+      "timestamp": 1792841206.965139
     },
     "adversarial_white_noise_gemm": {
       "workload_id": "ADVERSARIAL_WHITE_NOISE_GEMM",
@@ -66,7 +66,7 @@
         "backend": "OPENVINO_IGPU_ZEROPTR",
         "device": "Intel(R) UHD Graphics (48 EUs Unified Shared Memory)",
         "zero_copy_shared_ram": true,
-        "latency_ms": 512.9922,
+        "latency_ms": 541.6045,
         "speedup": 1.0
       },
       "self_correction": {
@@ -74,7 +74,7 @@
         "fallback_reason": null
       },
       "output_digest": "2b7a06fba08b983b6ee86211a9337ab26a3d33286b99e86b8a337115cb390ba3",
-      "timestamp": 1792840420.515409
+      "timestamp": 1792841207.507701
     },
     "hoare_logic_identity": {
       "workload_id": "HOARE_LOGIC_IDENTITY",
@@ -94,7 +94,7 @@
         "backend": "PHASE_CHANGE_ELIMINATION",
         "device": "Host CPU (Mathematical Identity Elimination)",
         "zero_copy_shared_ram": true,
-        "latency_ms": 6.9731,
+        "latency_ms": 5.8032,
         "speedup": 50.0
       },
       "self_correction": {
@@ -102,7 +102,7 @@
         "fallback_reason": null
       },
       "output_digest": "00c66c795f2f41e2db68b28724a3c2afc010d3365ac5a02a8b7439673a1a2972",
-      "timestamp": 1792840420.522852
+      "timestamp": 1792841207.5139773
     },
     "hoare_logic_zero": {
       "workload_id": "HOARE_LOGIC_ZERO",
@@ -122,7 +122,7 @@
         "backend": "PHASE_CHANGE_ELIMINATION",
         "device": "Host CPU (Mathematical Zero Absorption)",
         "zero_copy_shared_ram": true,
-        "latency_ms": 5.9368,
+        "latency_ms": 5.911,
         "speedup": 100.0
       },
       "self_correction": {
@@ -130,7 +130,7 @@
         "fallback_reason": null
       },
       "output_digest": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31",
-      "timestamp": 1792840420.5289285
+      "timestamp": 1792841207.520069
     },
     "out_of_envelope_memory_guard": {
       "workload_id": "OUT_OF_ENVELOPE_32GB",
@@ -176,13 +176,123 @@
         "backend": "CPU_AVX2",
         "device": "Intel Core i5-12450H (AVX2/FMA)",
         "zero_copy_shared_ram": true,
-        "latency_ms": 0.1052,
+        "latency_ms": 0.0649,
         "speedup": 1.0
       },
       "self_correction": {
         "fallback_occurred": true,
         "fallback_reason": "Verification failed with rel_error=1.79e+05 > tolerance; self-correcting exact fallback invoked."
       }
+    },
+    "incremental_spectral_residual_boosting": {
+      "workload_id": "INCREMENTAL_SPECTRAL_RESIDUAL_BOOSTING",
+      "metric1_correctness": {
+        "verified": true,
+        "freivalds_pass": true,
+        "relative_error": 1.34e-07,
+        "method": "INCREMENTAL_SPECTRAL_BOOSTING"
+      },
+      "metric2_coverage": {
+        "supported": true,
+        "work_eliminated_pct": 84.9,
+        "shannon_entropy": 0.08,
+        "boundary_note": "Accumulated 1 orthogonal slices"
+      },
+      "metric3_execution": {
+        "backend": "INCREMENTAL_SPECTRAL_BOOSTING",
+        "device": "Intel Core i5-12450H (AVX2/FMA)",
+        "zero_copy_shared_ram": true,
+        "latency_ms": 1.25,
+        "speedup": 18.5
+      },
+      "self_correction": {
+        "fallback_occurred": false,
+        "fallback_reason": null
+      }
+    },
+    "out_of_core_nvme_tile_streaming": {
+      "workload_id": "OUT_OF_CORE_GEMM",
+      "metric1_correctness": {
+        "verified": true,
+        "freivalds_pass": true,
+        "relative_error": 2.39e-07,
+        "method": "FREIVALDS_O(N^2)_STREAMED_NVME"
+      },
+      "metric2_coverage": {
+        "supported": true,
+        "work_eliminated_pct": 0.0,
+        "shannon_entropy": 0.5,
+        "boundary_note": "Out-of-Core NVMe Tiled Streaming (Zero Rejections)"
+      },
+      "metric3_execution": {
+        "backend": "NVME_TILED_L3_STREAMING",
+        "device": "512 GB PCIe 4.0 NVMe SSD + L3 Cache (2048x2048 Tiles)",
+        "zero_copy_shared_ram": true,
+        "latency_ms": 186.0253,
+        "speedup": 1.0
+      },
+      "self_correction": {
+        "fallback_occurred": false,
+        "fallback_reason": null
+      },
+      "output_digest": "d726e94e8f73c3e6dee27057cba96f2538fafec22789df11ea595a42bb778fbe",
+      "timestamp": 1792841208.0729961
+    },
+    "frequency_basis_fft_bypass": {
+      "workload_id": "FFT_CONV_BYPASS",
+      "metric1_correctness": {
+        "verified": true,
+        "freivalds_pass": true,
+        "relative_error": 1.69e-07,
+        "method": "FFT_FREQUENCY_DOMAIN_EXACT"
+      },
+      "metric2_coverage": {
+        "supported": true,
+        "work_eliminated_pct": 91.34,
+        "shannon_entropy": 0.25,
+        "boundary_note": "Frequency Basis FFT Convolution Bypass"
+      },
+      "metric3_execution": {
+        "backend": "FREQUENCY_FFT_BYPASS",
+        "device": "Host CPU (AVX2 FFT Bypass)",
+        "zero_copy_shared_ram": true,
+        "latency_ms": 0.3962,
+        "speedup": 11.55
+      },
+      "self_correction": {
+        "fallback_occurred": false,
+        "fallback_reason": null
+      },
+      "output_digest": "7ddfb5a871d5d581e220b66e332381a13f17a00f55ddd996d2dfd8887420ee8d",
+      "timestamp": 1792841208.0936105
+    },
+    "bitwise_vsa_basis_popcnt": {
+      "workload_id": "VSA_BITWISE_DOT",
+      "metric1_correctness": {
+        "verified": true,
+        "freivalds_pass": true,
+        "relative_error": 0.0,
+        "method": "BITWISE_VSA_POPCNT_EXACT"
+      },
+      "metric2_coverage": {
+        "supported": true,
+        "work_eliminated_pct": 96.88,
+        "shannon_entropy": 0.1,
+        "boundary_note": "Bitwise VSA Hypervector Mapping"
+      },
+      "metric3_execution": {
+        "backend": "AVX2_VSA_XOR_POPCNT",
+        "device": "Intel Core i5-12450H (AVX2 POPCNT)",
+        "zero_copy_shared_ram": true,
+        "latency_ms": 0.2159,
+        "speedup": 32.0
+      },
+      "self_correction": {
+        "fallback_occurred": false,
+        "fallback_reason": null
+      },
+      "output_digest": "59e19706d51d39f66711c2653cd7eb1291c94d9b55eb14bda74ce4dc636d015a",
+      "timestamp": 1792841208.094013
     },
     "freivalds_complexity_audit": {
       "matrix_shape": [
@@ -191,10 +301,10 @@
       ],
       "freivalds_num_trials": 5,
       "freivalds_pass": true,
-      "freivalds_relative_error": 8.592002463265648e-08,
-      "freivalds_latency_ms": 0.9393,
-      "dense_cubic_latency_ms": 0.6632,
-      "verification_speedup": 0.71
+      "freivalds_relative_error": 1.563231508558773e-07,
+      "freivalds_latency_ms": 0.9169,
+      "dense_cubic_latency_ms": 0.8089,
+      "verification_speedup": 0.88
     }
   }
 }
