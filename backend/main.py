@@ -239,5 +239,13 @@ try:
 except Exception as e:
     logger.warning(f"Failed to load canonical_workload_router: {e}")
 
+try:
+    from backend.routers.universal_fabric_router import router as universal_fabric_router
+    app.include_router(universal_fabric_router)
+    logger.info("Universal Replacement Fabric REST API mounted successfully at /api/hyper/*")
+except Exception as e:
+    logger.warning(f"Failed to load universal_fabric_router: {e}")
+
+
 
 

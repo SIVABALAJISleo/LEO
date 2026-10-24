@@ -284,6 +284,9 @@ class CanonicalWorkloadRegistry:
     def get(self, workload_id: str) -> Optional[CanonicalWorkloadContract]:
         return self._contracts.get(workload_id)
 
+    def get_contract(self, workload_id: str) -> Optional[CanonicalWorkloadContract]:
+        return self._contracts.get(workload_id)
+
     def list_workloads(self) -> List[str]:
         return list(self._contracts.keys())
 
