@@ -39,6 +39,7 @@ Uncaught Fallback        Self-Healing Guard                       │
 ```
 
 ### Failure 1: Adversarial Orthogonal & Inverted Vectors in Clustered Subspace RAG
+
 - **Workload**: `rag_retrieval` (Top-10 semantic retrieval over 1,000 document embeddings).
 - **Optimization Strategy**: K-means subspace centroid partitioning with inverted cluster postings ($k=16$).
 - **The Failure**: When presented with an adversarial query crafted to lie perpendicular or equidistant between cluster centroids (high-entropy adversarial vector), the subspace index failed to prune the search space accurately.
@@ -56,6 +57,7 @@ Uncaught Fallback        Self-Healing Guard                       │
 ---
 
 ### Failure 2: Dense Full-Rank White-Noise Perturbations in Low-Rank Factorization
+
 - **Workload**: `text_embeddings` (Batch projection $1024 \times 512 \to 1024 \times 512$).
 - **Optimization Strategy**: Truncated SVD / Low-Rank Factorization ($W \approx U V^T$, rank $k=32$, $16\times$ FLOP reduction).
 - **The Failure**: Injected a synthetic weight matrix generated from a uniform Gaussian random walk with flat singular value spectrum (full rank, no low-rank structure).
@@ -73,6 +75,7 @@ Uncaught Fallback        Self-Healing Guard                       │
 ---
 
 ### Failure 3: Dirty Tile Saturation During Scene Cuts in Temporal-Reuse Rendering
+
 - **Workload**: `temporal_reuse_rendering` (Procedural scene tile reprojection with motion estimation).
 - **Optimization Strategy**: Temporal tile reprojection reusing unchanged tiles across consecutive frames.
 - **The Failure**: Simulated a camera teleportation / cut-scene where 95% of screen tiles changed instantaneously.
@@ -90,6 +93,7 @@ Uncaught Fallback        Self-Healing Guard                       │
 ---
 
 ### Failure 4: CPython Interpreter Boxing Overhead in Token Slicing
+
 - **Workload**: `text_embeddings`.
 - **Initial Implementation**: Iterative row-by-row Python loop iterating over 1024 sequence positions to project token slices.
 - **The Failure**: Measured latency was **15.24 ms**, exceeding the contract maximum of **15.00 ms**.
@@ -102,6 +106,7 @@ Uncaught Fallback        Self-Healing Guard                       │
 ---
 
 ### Failure 5: Base Python Runtime Footprint vs Workload Isolation
+
 - **Workload**: All contracts (`quantized_llm_inference`, `rag_retrieval`, etc.).
 - **Initial Implementation**: Evaluated `psutil.Process().memory_info().rss`, which measured total OS process memory (~40.2 MB).
 - **The Failure**: Process RSS exceeded the strict isolated workload caps (e.g. 32 MB for LLM, 24 MB for Embeddings).
@@ -119,6 +124,7 @@ python -m leo.parity falsify
 ```
 
 ### Empirical Execution Output:
+
 ```text
 ================================================================================
 BATTERY 1: ZERO-REPETITION COLD SUITE (CACHE FLUSHED)
@@ -169,12 +175,12 @@ BATTERY 5: THERMAL SOAK TEST (30 SECONDS SUSTAINED)
 
 Based on these falsification tests, the precise operational boundary of HYPER is established:
 
-| Domain | HYPER Operates (Contract Parity) | HYPER Breaks Down (Fallback / Infeasible) |
-| :--- | :--- | :--- |
-| **LLM Inference** | Quantized INT8/INT4 weights with layer-by-layer SSD streaming and speculative verification for autoregressive generation. | Large unquantized FP32 70B+ models requiring $\ge 140\text{ GB}$ physical VRAM bandwidth without streaming tolerance. |
-| **Vector Search** | Clustered or cached semantic embeddings where corpus fits in system RAM ($N \le 10^7$) or allows exact linear fallback. | Billion-scale unindexed raw vectors with random adversarial queries requiring multi-terabyte HBM bandwidth. |
-| **Embeddings** | Matrices with decaying singular value spectra ($\ge 90\%$ energy in top 32 components) or small batches ($B \le 1024$). | Dense white-noise / cryptographically random matrices with flat singular spectra where low-rank reduction is mathematically impossible. |
-| **Rendering** | Temporal tile reprojection for camera motion with $\le 60\%$ dirty tiles per frame. | High-frequency geometric scene cuts, non-deterministic particle systems, or real-time path tracing with complex BVH traversal. |
+| Domain            | HYPER Operates (Contract Parity)                                                                                          | HYPER Breaks Down (Fallback / Infeasible)                                                                                               |
+| :---------------- | :------------------------------------------------------------------------------------------------------------------------ | :-------------------------------------------------------------------------------------------------------------------------------------- |
+| **LLM Inference** | Quantized INT8/INT4 weights with layer-by-layer SSD streaming and speculative verification for autoregressive generation. | Large unquantized FP32 70B+ models requiring $\ge 140\text{ GB}$ physical VRAM bandwidth without streaming tolerance.                   |
+| **Vector Search** | Clustered or cached semantic embeddings where corpus fits in system RAM ($N \le 10^7$) or allows exact linear fallback.   | Billion-scale unindexed raw vectors with random adversarial queries requiring multi-terabyte HBM bandwidth.                             |
+| **Embeddings**    | Matrices with decaying singular value spectra ($\ge 90\%$ energy in top 32 components) or small batches ($B \le 1024$).   | Dense white-noise / cryptographically random matrices with flat singular spectra where low-rank reduction is mathematically impossible. |
+| **Rendering**     | Temporal tile reprojection for camera motion with $\le 60\%$ dirty tiles per frame.                                       | High-frequency geometric scene cuts, non-deterministic particle systems, or real-time path tracing with complex BVH traversal.          |
 
 ---
 

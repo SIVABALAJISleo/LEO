@@ -7,7 +7,7 @@
 **Memory**: 15.7 GB Available System DDR RAM  
 **Graphics**: Intel(R) UHD Graphics (48 EUs, OpenVINO `GPU` target detected and verified)  
 **Operating System**: Windows 11 Home (AMD64)  
-**Python Runtime**: 3.13.5 Baseline  
+**Python Runtime**: 3.13.5 Baseline
 
 ---
 
@@ -22,16 +22,16 @@
 
 ## 2. Workload & Backend Support Matrix
 
-| Workload ID & Version | Input Domain | Correctness Semantics | Supported Backend | Verification Coverage | Status | Performance Evidence | Known Limitations & Unsupported Conditions | Dependencies |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| `HYPER_OMEGA_001_GEMM` (v1.0) | Dense FP32 Matrices ($512 \times 512$) | IEEE 754 Relative Tolerance ($10^{-4}$) | Host CPU (OpenBLAS / NumPy AVX2) | Primary + Adversarial + Holdout | **PASS** | Ref: 1.710 ms, Cand: 2.007 ms, Speedup: 0.85x, Candidate RAM: 1.50 MB [MEASURED] | Generic dense GEMM has theoretical lower bounds. Discrete GPU speedup marked UNKNOWN. | `numpy`, `openvino` |
-| `HORNER_POLYNOMIAL` (v1.0) | Real Polynomial Coefficients ($N \le 128$) | Exact Mathematical Equivalence | CPU SIMD / Horner Shortcut | Exact Bitwise + Freivalds | **PASS** | FLOPs reduced from $O(N^2)$ to $2N$. Work eliminated: ~85% verified. | Non-polynomial expressions reject Horner shortcut and fall back to baseline. | `numpy` |
-| `SPARSE_SPMV_CSR` (v1.0) | Sparse Matrix ($N \le 4096$, Sparsity $\ge 70\%$) | Numerical Equivalence ($10^{-5}$) | CPU Scipy/NumPy CSR | Matrix Vector Invariants | **PASS** | Memory traffic reduced proportional to sparsity ratio. | Densities $> 40\%$ incur CSR pointer overhead; falls back to dense BLAS. | `scipy`, `numpy` |
-| `QWEN2.5_0.5B_INSTRUCT` (v1.0) | Prompt strings ($\le 2048$ chars, max 256 tokens) | Language Model Quality Contract | CPU (`llama.cpp` AVX2, 4 threads) | TTFT + Throughput + Output Token Validity | **PASS** | TTFT: 120–250 ms, Throughput: 18–35 tokens/sec, RAM: < 500 MB [MEASURED] | Maximum context limited to 512 tokens to stay within 16 GB laptop RAM budget. | `llama-cpp-python` |
-| `INTEL_UHD_OPENCL_UVA` (v1.0) | Pinned Host DRAM Buffers | Bitwise Exact Masking / GEMM | Intel UHD OpenCL (`CL_MEM_ALLOC_HOST_PTR`) | Bitwise Parity vs CPU | **PASS** | Host-pinned memory move: `copy_overhead_bytes = 3 * nbytes` truthfully reported. | Not zero-copy; `ctypes.memmove` transfers bytes. Discrete GPU UVA unsupported. | `OpenCL.dll` |
-| `HETEROGENEOUS_DUAL_DISPATCH` (v1.0) | Block-partitioned Matrices | IEEE 754 Equivalent | CPU (AVX2) + Intel UHD (OpenVINO GPU) | Block Invariant + Numerical Diff | **PASS** | Concurrent ThreadPool dispatch: CPU upper block + GPU lower block. | Small matrices ($N < 128$) dominated by OpenVINO dispatch latency. | `openvino`, `numpy` |
-| `VSA_HYPERVECTOR_HAMMING` (v1.0) | 10,000-bit Binary Hypervectors | Exact Integer Hamming Distance | CPU AVX2 Bitcount / OpenCL | Exact Bitwise Popcount | **PASS** | SIMD popcount executes in $< 0.05$ ms. | VSA similarity is not an exact drop-in replacement for floating-point matrix inversion. | `numpy` |
-| `DISCRETE_NVIDIA_5090_GEMM` (v1.0) | Blackwell GB202 FP32 GEMM | N/A (Hardware Not Present) | NVIDIA CUDA 12.8 / cuBLAS | Unverified | **UNKNOWN** | Hardware not physically detected on laptop host. Latency marked UNKNOWN. | Physical laptop lacks discrete NVIDIA GPU. No synthetic numbers substituted. | N/A |
+| Workload ID & Version                | Input Domain                                      | Correctness Semantics                   | Supported Backend                          | Verification Coverage                     | Status      | Performance Evidence                                                             | Known Limitations & Unsupported Conditions                                              | Dependencies        |
+| :----------------------------------- | :------------------------------------------------ | :-------------------------------------- | :----------------------------------------- | :---------------------------------------- | :---------- | :------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------- | :------------------ |
+| `HYPER_OMEGA_001_GEMM` (v1.0)        | Dense FP32 Matrices ($512 \times 512$)            | IEEE 754 Relative Tolerance ($10^{-4}$) | Host CPU (OpenBLAS / NumPy AVX2)           | Primary + Adversarial + Holdout           | **PASS**    | Ref: 1.710 ms, Cand: 2.007 ms, Speedup: 0.85x, Candidate RAM: 1.50 MB [MEASURED] | Generic dense GEMM has theoretical lower bounds. Discrete GPU speedup marked UNKNOWN.   | `numpy`, `openvino` |
+| `HORNER_POLYNOMIAL` (v1.0)           | Real Polynomial Coefficients ($N \le 128$)        | Exact Mathematical Equivalence          | CPU SIMD / Horner Shortcut                 | Exact Bitwise + Freivalds                 | **PASS**    | FLOPs reduced from $O(N^2)$ to $2N$. Work eliminated: ~85% verified.             | Non-polynomial expressions reject Horner shortcut and fall back to baseline.            | `numpy`             |
+| `SPARSE_SPMV_CSR` (v1.0)             | Sparse Matrix ($N \le 4096$, Sparsity $\ge 70\%$) | Numerical Equivalence ($10^{-5}$)       | CPU Scipy/NumPy CSR                        | Matrix Vector Invariants                  | **PASS**    | Memory traffic reduced proportional to sparsity ratio.                           | Densities $> 40\%$ incur CSR pointer overhead; falls back to dense BLAS.                | `scipy`, `numpy`    |
+| `QWEN2.5_0.5B_INSTRUCT` (v1.0)       | Prompt strings ($\le 2048$ chars, max 256 tokens) | Language Model Quality Contract         | CPU (`llama.cpp` AVX2, 4 threads)          | TTFT + Throughput + Output Token Validity | **PASS**    | TTFT: 120–250 ms, Throughput: 18–35 tokens/sec, RAM: < 500 MB [MEASURED]         | Maximum context limited to 512 tokens to stay within 16 GB laptop RAM budget.           | `llama-cpp-python`  |
+| `INTEL_UHD_OPENCL_UVA` (v1.0)        | Pinned Host DRAM Buffers                          | Bitwise Exact Masking / GEMM            | Intel UHD OpenCL (`CL_MEM_ALLOC_HOST_PTR`) | Bitwise Parity vs CPU                     | **PASS**    | Host-pinned memory move: `copy_overhead_bytes = 3 * nbytes` truthfully reported. | Not zero-copy; `ctypes.memmove` transfers bytes. Discrete GPU UVA unsupported.          | `OpenCL.dll`        |
+| `HETEROGENEOUS_DUAL_DISPATCH` (v1.0) | Block-partitioned Matrices                        | IEEE 754 Equivalent                     | CPU (AVX2) + Intel UHD (OpenVINO GPU)      | Block Invariant + Numerical Diff          | **PASS**    | Concurrent ThreadPool dispatch: CPU upper block + GPU lower block.               | Small matrices ($N < 128$) dominated by OpenVINO dispatch latency.                      | `openvino`, `numpy` |
+| `VSA_HYPERVECTOR_HAMMING` (v1.0)     | 10,000-bit Binary Hypervectors                    | Exact Integer Hamming Distance          | CPU AVX2 Bitcount / OpenCL                 | Exact Bitwise Popcount                    | **PASS**    | SIMD popcount executes in $< 0.05$ ms.                                           | VSA similarity is not an exact drop-in replacement for floating-point matrix inversion. | `numpy`             |
+| `DISCRETE_NVIDIA_5090_GEMM` (v1.0)   | Blackwell GB202 FP32 GEMM                         | N/A (Hardware Not Present)              | NVIDIA CUDA 12.8 / cuBLAS                  | Unverified                                | **UNKNOWN** | Hardware not physically detected on laptop host. Latency marked UNKNOWN.         | Physical laptop lacks discrete NVIDIA GPU. No synthetic numbers substituted.            | N/A                 |
 
 ---
 
@@ -93,4 +93,3 @@ The engine fail-closed support matrix explicitly flags the following workloads a
    - Dense compute-heavy GEMM subgraphs ($N \ge 768$) offloaded to Intel UHD Graphics with FP32 strict precision.
    - Memory-bound structural operations (diagonal scaling, SpMV) retained on CPU AVX2 cores where cache latency is lowest.
    - Verified Frobenius relative error: $3.08 \times 10^{-7}$ ($\le 10^{-6}$ float32 reference).
-

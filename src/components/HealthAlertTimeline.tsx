@@ -56,7 +56,9 @@ export function HealthAlertTimeline() {
     <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-card/60 p-5 shadow-lg backdrop-blur-xl">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <div>
-          <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Alert timeline</p>
+          <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+            Alert timeline
+          </p>
           <p className="mt-1 text-xs text-muted-foreground">
             Every warn/critical episode with start, end, and thresholds exceeded.
           </p>
@@ -171,9 +173,7 @@ function TimelineRow({ event }: { event: AlertEvent }) {
           }
         >
           <span
-            className={
-              "h-2 w-2 rounded-full " + (isCritical ? "bg-red-500" : "bg-amber-400")
-            }
+            className={"h-2 w-2 rounded-full " + (isCritical ? "bg-red-500" : "bg-amber-400")}
           />
           {isCritical ? "Critical" : "Warn"}
           {ended ? "" : " · ongoing"}
@@ -185,7 +185,9 @@ function TimelineRow({ event }: { event: AlertEvent }) {
       </p>
       <ul className="mt-1.5 list-inside list-disc space-y-0.5 text-muted-foreground">
         {(event.lastReasons.length ? event.lastReasons : event.startReasons).map((r) => (
-          <li key={r} className="font-mono text-[11px]">{r}</li>
+          <li key={r} className="font-mono text-[11px]">
+            {r}
+          </li>
         ))}
       </ul>
     </li>

@@ -109,7 +109,11 @@ export function UnseenPathwayDashboard() {
   const [cegisResult, setCegisResult] = useState<any | null>(null);
 
   // Fetch status
-  const { data: status, isLoading: statusLoading, refetch: refetchStatus } = useQuery<UpeStatus>({
+  const {
+    data: status,
+    isLoading: statusLoading,
+    refetch: refetchStatus,
+  } = useQuery<UpeStatus>({
     queryKey: ["upe-status"],
     queryFn: async () => {
       const res = await fetch("http://127.0.0.1:8005/api/v1/upe/status");
@@ -245,7 +249,8 @@ export function UnseenPathwayDashboard() {
             </span>
           </div>
           <p className="mt-1 text-sm text-muted-foreground">
-            Computational Escape and Verified Algorithm Discovery System · Scientific Parity on Host Silicon
+            Computational Escape and Verified Algorithm Discovery System · Scientific Parity on Host
+            Silicon
           </p>
         </div>
 
@@ -255,7 +260,9 @@ export function UnseenPathwayDashboard() {
             <Cpu className="h-3.5 w-3.5 text-emerald-400" />
             <span className="text-muted-foreground">CPU:</span>
             <span className="font-medium text-foreground">
-              {status?.host_hardware.cpu_model ? status.host_hardware.cpu_model.split("@")[0].trim() : "Intel Core i5"}
+              {status?.host_hardware.cpu_model
+                ? status.host_hardware.cpu_model.split("@")[0].trim()
+                : "Intel Core i5"}
             </span>
           </div>
 
@@ -317,32 +324,47 @@ export function UnseenPathwayDashboard() {
         <div className="mt-6 space-y-6">
           <div className="grid gap-4 md:grid-cols-4">
             <div className="rounded-xl border border-border bg-background/50 p-4">
-              <span className="text-xs uppercase tracking-wider text-muted-foreground">Dedicated GPU Silicon</span>
+              <span className="text-xs uppercase tracking-wider text-muted-foreground">
+                Dedicated GPU Silicon
+              </span>
               <div className="mt-2 text-2xl font-bold font-mono text-emerald-400">0.0%</div>
-              <p className="mt-1 text-xs text-muted-foreground">Physical discrete silicon presence on target machine</p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Physical discrete silicon presence on target machine
+              </p>
             </div>
 
             <div className="rounded-xl border border-border bg-background/50 p-4">
-              <span className="text-xs uppercase tracking-wider text-muted-foreground">Contract Compliance</span>
+              <span className="text-xs uppercase tracking-wider text-muted-foreground">
+                Contract Compliance
+              </span>
               <div className="mt-2 text-2xl font-bold font-mono text-cyan-400">100.0%</div>
-              <p className="mt-1 text-xs text-muted-foreground">Bit-exact or tolerance compliant across all workloads</p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Bit-exact or tolerance compliant across all workloads
+              </p>
             </div>
 
             <div className="rounded-xl border border-border bg-background/50 p-4">
-              <span className="text-xs uppercase tracking-wider text-muted-foreground">Verified Pathways</span>
+              <span className="text-xs uppercase tracking-wider text-muted-foreground">
+                Verified Pathways
+              </span>
               <div className="mt-2 text-2xl font-bold font-mono text-purple-400">
                 {status?.pathway_knowledge_base.total_verified_pathways ?? 0}
               </div>
-              <p className="mt-1 text-xs text-muted-foreground">Recorded in SQLite persistent path memory</p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Recorded in SQLite persistent path memory
+              </p>
             </div>
 
             <div className="rounded-xl border border-border bg-background/50 p-4">
-              <span className="text-xs uppercase tracking-wider text-muted-foreground">Result Cache Hit Rate</span>
+              <span className="text-xs uppercase tracking-wider text-muted-foreground">
+                Result Cache Hit Rate
+              </span>
               <div className="mt-2 text-2xl font-bold font-mono text-amber-400">
                 {status?.active_subsystems.engine_9_verified_result_reuse.hit_rate_pct ?? 0}%
               </div>
               <p className="mt-1 text-xs text-muted-foreground">
-                {status?.active_subsystems.engine_9_verified_result_reuse.total_hits ?? 0} instant hits · 0 ms compute
+                {status?.active_subsystems.engine_9_verified_result_reuse.total_hits ?? 0} instant
+                hits · 0 ms compute
               </p>
             </div>
           </div>
@@ -355,21 +377,66 @@ export function UnseenPathwayDashboard() {
             </h3>
             <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {[
-                { name: "Engine 1: Contract Intelligence", detail: "Typed exactness schemas, 3 validation modes" },
-                { name: "Engine 2: Path Zero Necessity", detail: "Eliminates dead code, intermediate DRAM writes" },
-                { name: "Engine 3: Path Algebra", detail: "Horner, Strassen, Prefix-Sum, Fused MMA" },
-                { name: "Engine 4: Alternative Generator", detail: "Proposes multi-craft candidate execution paths" },
-                { name: "Engine 5: Search Space Compiler", detail: "Bounded budget, timeout & memory safety" },
-                { name: "Engine 6: CEGIS Discovery", detail: "Adversarial stress-testing & bug regression" },
-                { name: "Engine 7: 7-Level Validation", detail: "Differential, property, & formal symbolic verification" },
-                { name: "Engine 8: SQLite Path Memory", detail: "Persistent pathway & proof knowledge base" },
-                { name: "Engine 9: Verified Result Reuse", detail: "Contract-scoped collision-resistant memoization" },
-                { name: "Engine 10: Resource Execution", detail: "Host-aware CPU AVX2 & 256 KB dispatch gating" },
-                { name: "Engine 11: Memory Escape", detail: "Out-of-core streaming & L2 cache-blocked chunking" },
-                { name: "Engine 12: Six Craft Families", detail: "Exact, Sparse, Stream, Tensor, Inference, Device" },
-                { name: "Engine 13: Benchmark Truth", detail: "Real statistical distributions · zero fake numbers" },
-                { name: "Engine 14: Adaptive Learning", detail: "Empirical weight updates from historical trials" },
-                { name: "Engine 15: Observability & API", detail: "Production FastAPI endpoints & live UI metrics" },
+                {
+                  name: "Engine 1: Contract Intelligence",
+                  detail: "Typed exactness schemas, 3 validation modes",
+                },
+                {
+                  name: "Engine 2: Path Zero Necessity",
+                  detail: "Eliminates dead code, intermediate DRAM writes",
+                },
+                {
+                  name: "Engine 3: Path Algebra",
+                  detail: "Horner, Strassen, Prefix-Sum, Fused MMA",
+                },
+                {
+                  name: "Engine 4: Alternative Generator",
+                  detail: "Proposes multi-craft candidate execution paths",
+                },
+                {
+                  name: "Engine 5: Search Space Compiler",
+                  detail: "Bounded budget, timeout & memory safety",
+                },
+                {
+                  name: "Engine 6: CEGIS Discovery",
+                  detail: "Adversarial stress-testing & bug regression",
+                },
+                {
+                  name: "Engine 7: 7-Level Validation",
+                  detail: "Differential, property, & formal symbolic verification",
+                },
+                {
+                  name: "Engine 8: SQLite Path Memory",
+                  detail: "Persistent pathway & proof knowledge base",
+                },
+                {
+                  name: "Engine 9: Verified Result Reuse",
+                  detail: "Contract-scoped collision-resistant memoization",
+                },
+                {
+                  name: "Engine 10: Resource Execution",
+                  detail: "Host-aware CPU AVX2 & 256 KB dispatch gating",
+                },
+                {
+                  name: "Engine 11: Memory Escape",
+                  detail: "Out-of-core streaming & L2 cache-blocked chunking",
+                },
+                {
+                  name: "Engine 12: Six Craft Families",
+                  detail: "Exact, Sparse, Stream, Tensor, Inference, Device",
+                },
+                {
+                  name: "Engine 13: Benchmark Truth",
+                  detail: "Real statistical distributions · zero fake numbers",
+                },
+                {
+                  name: "Engine 14: Adaptive Learning",
+                  detail: "Empirical weight updates from historical trials",
+                },
+                {
+                  name: "Engine 15: Observability & API",
+                  detail: "Production FastAPI endpoints & live UI metrics",
+                },
               ].map((sub, i) => (
                 <div key={i} className="rounded-lg border border-border/80 bg-background/60 p-3">
                   <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
@@ -418,19 +485,24 @@ export function UnseenPathwayDashboard() {
                           c.validation_mode === "EXACT"
                             ? "bg-purple-500/10 text-purple-400 border border-purple-500/30"
                             : c.validation_mode === "TOLERANCE_BASED"
-                            ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30"
-                            : "bg-amber-500/10 text-amber-400 border border-amber-500/30"
+                              ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30"
+                              : "bg-amber-500/10 text-amber-400 border border-amber-500/30"
                         }`}
                       >
                         {c.validation_mode}
                       </span>
                     </td>
-                    <td className="p-3 font-mono text-muted-foreground">{c.exactness_requirement}</td>
+                    <td className="p-3 font-mono text-muted-foreground">
+                      {c.exactness_requirement}
+                    </td>
                     <td className="p-3 font-mono text-muted-foreground">
                       atol={c.max_absolute_error} · rtol={c.max_relative_error}
                     </td>
                     <td className="p-3 font-mono text-muted-foreground">{c.memory_budget_mb} MB</td>
-                    <td className="p-3 text-muted-foreground max-w-xs truncate" title={c.description}>
+                    <td
+                      className="p-3 text-muted-foreground max-w-xs truncate"
+                      title={c.description}
+                    >
                       {c.description}
                     </td>
                   </tr>
@@ -459,7 +531,10 @@ export function UnseenPathwayDashboard() {
                 onChange={(e) => setSelectedWorkload(e.target.value)}
                 className="rounded-lg border border-border bg-background px-3 py-1.5 font-mono text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-emerald-500"
               >
-                {(contracts && contracts.length > 0 ? contracts.map((c) => c.workload_id) : CANONICAL_WORKLOADS).map((wid) => (
+                {(contracts && contracts.length > 0
+                  ? contracts.map((c) => c.workload_id)
+                  : CANONICAL_WORKLOADS
+                ).map((wid) => (
                   <option key={wid} value={wid}>
                     {wid}
                   </option>
@@ -505,7 +580,9 @@ export function UnseenPathwayDashboard() {
                 <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   Mathematical Justification
                 </span>
-                <p className="mt-2 font-mono text-xs text-emerald-300">{necessityResult.justification}</p>
+                <p className="mt-2 font-mono text-xs text-emerald-300">
+                  {necessityResult.justification}
+                </p>
               </div>
 
               {necessityResult.elimination_records?.length > 0 && (
@@ -514,9 +591,14 @@ export function UnseenPathwayDashboard() {
                     Elimination Records ({necessityResult.elimination_records.length})
                   </h4>
                   {necessityResult.elimination_records.map((r: any, idx: number) => (
-                    <div key={idx} className="rounded-lg border border-border bg-background/60 p-3.5 text-xs space-y-1">
+                    <div
+                      key={idx}
+                      className="rounded-lg border border-border bg-background/60 p-3.5 text-xs space-y-1"
+                    >
                       <div className="flex items-center justify-between">
-                        <span className="font-mono font-semibold text-foreground">{r.operation_name}</span>
+                        <span className="font-mono font-semibold text-foreground">
+                          {r.operation_name}
+                        </span>
                         <span className="rounded bg-secondary px-2 py-0.5 text-[10px] font-mono text-emerald-400">
                           {r.category}
                         </span>
@@ -532,7 +614,8 @@ export function UnseenPathwayDashboard() {
             </div>
           ) : (
             <div className="rounded-xl border border-dashed border-border p-8 text-center text-xs text-muted-foreground">
-              Select a workload and click "Analyze Necessity" to see which operations are mathematically eliminated.
+              Select a workload and click "Analyze Necessity" to see which operations are
+              mathematically eliminated.
             </div>
           )}
         </div>
@@ -547,8 +630,8 @@ export function UnseenPathwayDashboard() {
                 CEGIS — Counterexample-Guided Synthesis & Adversarial Gauntlet
               </h3>
               <p className="text-xs text-muted-foreground">
-                Subject candidate pathways to boundary inputs (zero matrices, prime dimensions, ill-conditioned matrices)
-                to catch defects before promotion.
+                Subject candidate pathways to boundary inputs (zero matrices, prime dimensions,
+                ill-conditioned matrices) to catch defects before promotion.
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -557,7 +640,10 @@ export function UnseenPathwayDashboard() {
                 onChange={(e) => setSelectedWorkload(e.target.value)}
                 className="rounded-lg border border-border bg-background px-3 py-1.5 font-mono text-xs text-foreground focus:outline-none"
               >
-                {(contracts && contracts.length > 0 ? contracts.map((c) => c.workload_id) : CANONICAL_WORKLOADS).map((wid) => (
+                {(contracts && contracts.length > 0
+                  ? contracts.map((c) => c.workload_id)
+                  : CANONICAL_WORKLOADS
+                ).map((wid) => (
                   <option key={wid} value={wid}>
                     {wid}
                   </option>
@@ -603,9 +689,14 @@ export function UnseenPathwayDashboard() {
                     Captured Counterexample Regression Corpus
                   </h4>
                   {cegisResult.counterexamples.map((cx: any) => (
-                    <div key={cx.counterexample_id} className="rounded-lg border border-red-500/30 bg-red-950/10 p-3.5 text-xs space-y-1">
+                    <div
+                      key={cx.counterexample_id}
+                      className="rounded-lg border border-red-500/30 bg-red-950/10 p-3.5 text-xs space-y-1"
+                    >
                       <div className="flex items-center justify-between">
-                        <span className="font-mono font-semibold text-red-300">{cx.input_signature}</span>
+                        <span className="font-mono font-semibold text-red-300">
+                          {cx.input_signature}
+                        </span>
                         <span className="font-mono text-[10px] text-red-400 bg-red-900/30 px-2 py-0.5 rounded">
                           {cx.failure_category}
                         </span>
@@ -619,13 +710,15 @@ export function UnseenPathwayDashboard() {
                 </div>
               ) : (
                 <div className="rounded-xl border border-emerald-500/30 bg-emerald-950/10 p-6 text-center text-xs text-emerald-400">
-                  All 8 adversarial cases passed without contract violation. Zero counterexamples found.
+                  All 8 adversarial cases passed without contract violation. Zero counterexamples
+                  found.
                 </div>
               )}
             </div>
           ) : (
             <div className="rounded-xl border border-dashed border-border p-8 text-center text-xs text-muted-foreground">
-              Select a workload and click "Run Adversarial Hunter" to stress-test candidate pathways.
+              Select a workload and click "Run Adversarial Hunter" to stress-test candidate
+              pathways.
             </div>
           )}
         </div>
@@ -640,7 +733,8 @@ export function UnseenPathwayDashboard() {
                 End-to-End 11-Stage Pipeline Execution
               </h3>
               <p className="text-xs text-muted-foreground">
-                Runs the complete scientific loop: CONTRACT → CLASSIFY → NECESSITY → GENERATE → PRUNE → VERIFY → COST → EXECUTE → VALIDATE → BENCHMARK → STORE.
+                Runs the complete scientific loop: CONTRACT → CLASSIFY → NECESSITY → GENERATE →
+                PRUNE → VERIFY → COST → EXECUTE → VALIDATE → BENCHMARK → STORE.
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -649,7 +743,10 @@ export function UnseenPathwayDashboard() {
                 onChange={(e) => setSelectedWorkload(e.target.value)}
                 className="rounded-lg border border-border bg-background px-3 py-1.5 font-mono text-xs text-foreground focus:outline-none"
               >
-                {(contracts && contracts.length > 0 ? contracts.map((c) => c.workload_id) : CANONICAL_WORKLOADS).map((wid) => (
+                {(contracts && contracts.length > 0
+                  ? contracts.map((c) => c.workload_id)
+                  : CANONICAL_WORKLOADS
+                ).map((wid) => (
                   <option key={wid} value={wid}>
                     {wid}
                   </option>
@@ -680,7 +777,9 @@ export function UnseenPathwayDashboard() {
                       {executionResult.validation_outcome}
                     </span>
                   </div>
-                  <p className="mt-1 text-xs text-emerald-300/80">{executionResult.status_message}</p>
+                  <p className="mt-1 text-xs text-emerald-300/80">
+                    {executionResult.status_message}
+                  </p>
                 </div>
                 <div className="flex items-center gap-4 text-xs font-mono">
                   <div>
@@ -715,7 +814,9 @@ export function UnseenPathwayDashboard() {
                         </span>
                         <span
                           className={`text-[9px] font-mono px-1.5 py-0.2 rounded font-bold ${
-                            lr.passed ? "bg-emerald-500/20 text-emerald-400" : "bg-red-500/20 text-red-400"
+                            lr.passed
+                              ? "bg-emerald-500/20 text-emerald-400"
+                              : "bg-red-500/20 text-red-400"
                           }`}
                         >
                           {lr.status_label}
@@ -737,10 +838,16 @@ export function UnseenPathwayDashboard() {
                   </h4>
                   <div className="font-mono text-xs space-y-1 text-muted-foreground">
                     <div>
-                      Target: <span className="text-cyan-400">{executionResult.execution_plan?.selected_target}</span>
+                      Target:{" "}
+                      <span className="text-cyan-400">
+                        {executionResult.execution_plan?.selected_target}
+                      </span>
                     </div>
                     <div>
-                      Data Size: <span className="text-foreground">{executionResult.execution_plan?.data_size_bytes} bytes</span>
+                      Data Size:{" "}
+                      <span className="text-foreground">
+                        {executionResult.execution_plan?.data_size_bytes} bytes
+                      </span>
                     </div>
                     <p className="text-[11px] text-foreground/80 mt-2">
                       {executionResult.execution_plan?.dispatch_reason}
@@ -756,7 +863,9 @@ export function UnseenPathwayDashboard() {
                     <div className="font-mono text-xs space-y-1 text-muted-foreground">
                       <div>
                         Baseline Median:{" "}
-                        <span className="text-foreground">{executionResult.benchmark_record.baseline_median_ms} ms</span>
+                        <span className="text-foreground">
+                          {executionResult.benchmark_record.baseline_median_ms} ms
+                        </span>
                       </div>
                       <div>
                         Optimized Median:{" "}
@@ -765,22 +874,32 @@ export function UnseenPathwayDashboard() {
                         </span>
                       </div>
                       <div>
-                        P95: <span className="text-foreground">{executionResult.benchmark_record.p95_optimized_ms} ms</span> · P99:{" "}
-                        <span className="text-foreground">{executionResult.benchmark_record.p99_optimized_ms} ms</span>
+                        P95:{" "}
+                        <span className="text-foreground">
+                          {executionResult.benchmark_record.p95_optimized_ms} ms
+                        </span>{" "}
+                        · P99:{" "}
+                        <span className="text-foreground">
+                          {executionResult.benchmark_record.p99_optimized_ms} ms
+                        </span>
                       </div>
                       <div className="text-[10px] text-muted-foreground/80 mt-2">
-                        {executionResult.benchmark_record.repetitions} trials executed · 0 fake or simulated timings
+                        {executionResult.benchmark_record.repetitions} trials executed · 0 fake or
+                        simulated timings
                       </div>
                     </div>
                   ) : (
-                    <p className="text-xs text-muted-foreground">Benchmarks not executed for this run.</p>
+                    <p className="text-xs text-muted-foreground">
+                      Benchmarks not executed for this run.
+                    </p>
                   )}
                 </div>
               </div>
             </div>
           ) : (
             <div className="rounded-xl border border-dashed border-border p-8 text-center text-xs text-muted-foreground">
-              Select a workload and click "Execute 11-Stage Pipeline" to run the full Unseen Pathway discovery loop.
+              Select a workload and click "Execute 11-Stage Pipeline" to run the full Unseen Pathway
+              discovery loop.
             </div>
           )}
         </div>
@@ -821,7 +940,9 @@ export function UnseenPathwayDashboard() {
                       <td className="p-3 text-foreground font-semibold">{p.workload_id}</td>
                       <td className="p-3 text-emerald-400 font-sans">{p.candidate_name}</td>
                       <td className="p-3 text-muted-foreground">{p.family}</td>
-                      <td className="p-3 text-cyan-400 font-bold">{p.measured_speedup.toFixed(2)}x</td>
+                      <td className="p-3 text-cyan-400 font-bold">
+                        {p.measured_speedup.toFixed(2)}x
+                      </td>
                       <td className="p-3">
                         <span className="rounded bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 text-[10px] text-emerald-400 font-bold">
                           LEVEL {p.highest_validation_level}
@@ -832,7 +953,8 @@ export function UnseenPathwayDashboard() {
                   {(!pathways || pathways.length === 0) && (
                     <tr>
                       <td colSpan={6} className="p-4 text-center text-xs text-muted-foreground">
-                        No pathways stored yet. Execute workloads to populate persistent path memory.
+                        No pathways stored yet. Execute workloads to populate persistent path
+                        memory.
                       </td>
                     </tr>
                   )}
@@ -859,16 +981,27 @@ export function UnseenPathwayDashboard() {
                   {benchmarks?.map((b: any) => (
                     <tr key={b.run_id} className="hover:bg-secondary/20">
                       <td className="p-3 text-muted-foreground text-[11px]">{b.run_id}</td>
-                      <td className="p-3 text-foreground font-sans font-semibold">{b.workload_id}</td>
-                      <td className="p-3 text-muted-foreground">{b.baseline_latency_ms.toFixed(3)}</td>
-                      <td className="p-3 text-emerald-400 font-bold">{b.optimized_latency_ms.toFixed(3)}</td>
-                      <td className="p-3 text-cyan-400 font-bold">{b.measured_speedup.toFixed(2)}x</td>
+                      <td className="p-3 text-foreground font-sans font-semibold">
+                        {b.workload_id}
+                      </td>
+                      <td className="p-3 text-muted-foreground">
+                        {b.baseline_latency_ms.toFixed(3)}
+                      </td>
+                      <td className="p-3 text-emerald-400 font-bold">
+                        {b.optimized_latency_ms.toFixed(3)}
+                      </td>
+                      <td className="p-3 text-cyan-400 font-bold">
+                        {b.measured_speedup.toFixed(2)}x
+                      </td>
                       <td className="p-3 text-muted-foreground">{b.repetitions}</td>
                     </tr>
                   ))}
                   {(!benchmarks || benchmarks.length === 0) && (
                     <tr>
-                      <td colSpan={6} className="p-4 text-center text-xs text-muted-foreground font-sans">
+                      <td
+                        colSpan={6}
+                        className="p-4 text-center text-xs text-muted-foreground font-sans"
+                      >
                         No benchmark trials recorded yet.
                       </td>
                     </tr>

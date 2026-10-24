@@ -2,10 +2,7 @@
   {
     "failure_id": "fail_94fdbb47",
     "workload_id": "TEST_GEMM",
-    "transformation_sequence": [
-      "CANONICAL",
-      "BAD_TRUNCATION"
-    ],
+    "transformation_sequence": ["CANONICAL", "BAD_TRUNCATION"],
     "failure_category": "NUMERICAL_INSTABILITY",
     "reason": "Exceeded error tolerance 1e-4",
     "counterexample_hash": null,
@@ -14,10 +11,7 @@
   {
     "failure_id": "fail_8f64a1d5",
     "workload_id": "TEST_GEMM",
-    "transformation_sequence": [
-      "CANONICAL",
-      "BAD_TRUNCATION"
-    ],
+    "transformation_sequence": ["CANONICAL", "BAD_TRUNCATION"],
     "failure_category": "NUMERICAL_INSTABILITY",
     "reason": "Exceeded error tolerance 1e-4",
     "counterexample_hash": null,
@@ -26,10 +20,7 @@
   {
     "failure_id": "fail_9e398473",
     "workload_id": "TEST_GEMM",
-    "transformation_sequence": [
-      "CANONICAL",
-      "BAD_TRUNCATION"
-    ],
+    "transformation_sequence": ["CANONICAL", "BAD_TRUNCATION"],
     "failure_category": "NUMERICAL_INSTABILITY",
     "reason": "Exceeded error tolerance 1e-4",
     "counterexample_hash": null,
@@ -38,10 +29,7 @@
   {
     "failure_id": "fail_702fc5d2",
     "workload_id": "TEST_GEMM",
-    "transformation_sequence": [
-      "CANONICAL",
-      "BAD_TRUNCATION"
-    ],
+    "transformation_sequence": ["CANONICAL", "BAD_TRUNCATION"],
     "failure_category": "NUMERICAL_INSTABILITY",
     "reason": "Exceeded error tolerance 1e-4",
     "counterexample_hash": null,
@@ -50,10 +38,7 @@
   {
     "failure_id": "fail_1a3f81d7",
     "workload_id": "TEST_GEMM",
-    "transformation_sequence": [
-      "CANONICAL",
-      "BAD_TRUNCATION"
-    ],
+    "transformation_sequence": ["CANONICAL", "BAD_TRUNCATION"],
     "failure_category": "NUMERICAL_INSTABILITY",
     "reason": "Exceeded error tolerance 1e-4",
     "counterexample_hash": null,
@@ -62,10 +47,7 @@
   {
     "failure_id": "fail_34638a14",
     "workload_id": "TEST_GEMM",
-    "transformation_sequence": [
-      "CANONICAL",
-      "BAD_TRUNCATION"
-    ],
+    "transformation_sequence": ["CANONICAL", "BAD_TRUNCATION"],
     "failure_category": "NUMERICAL_INSTABILITY",
     "reason": "Exceeded error tolerance 1e-4",
     "counterexample_hash": null,
@@ -74,10 +56,7 @@
   {
     "failure_id": "fail_634e63a0",
     "workload_id": "TEST_GEMM",
-    "transformation_sequence": [
-      "CANONICAL",
-      "BAD_TRUNCATION"
-    ],
+    "transformation_sequence": ["CANONICAL", "BAD_TRUNCATION"],
     "failure_category": "NUMERICAL_INSTABILITY",
     "reason": "Exceeded error tolerance 1e-4",
     "counterexample_hash": null,
@@ -86,10 +65,7 @@
   {
     "failure_id": "fail_f1d468b3",
     "workload_id": "TEST_GEMM",
-    "transformation_sequence": [
-      "CANONICAL",
-      "BAD_TRUNCATION"
-    ],
+    "transformation_sequence": ["CANONICAL", "BAD_TRUNCATION"],
     "failure_category": "NUMERICAL_INSTABILITY",
     "reason": "Exceeded error tolerance 1e-4",
     "counterexample_hash": null,
@@ -98,10 +74,7 @@
   {
     "failure_id": "fail_adf9c64a",
     "workload_id": "TEST_GEMM",
-    "transformation_sequence": [
-      "CANONICAL",
-      "BAD_TRUNCATION"
-    ],
+    "transformation_sequence": ["CANONICAL", "BAD_TRUNCATION"],
     "failure_category": "NUMERICAL_INSTABILITY",
     "reason": "Exceeded error tolerance 1e-4",
     "counterexample_hash": null,
@@ -110,10 +83,7 @@
   {
     "failure_id": "fail_svd_full_rank_noise",
     "workload_id": "SVD_LOW_RANK_FACTORIZATION",
-    "transformation_sequence": [
-      "CANONICAL",
-      "LOW_RANK_SVD_TRUNCATION"
-    ],
+    "transformation_sequence": ["CANONICAL", "LOW_RANK_SVD_TRUNCATION"],
     "failure_category": "MATHEMATICAL_UNSOUNDNESS",
     "reason": "Direct SVD Factorization on Full-Rank Gaussian Noise failed with 78.7% error. Taught system that low-rank factorization cannot approximate arbitrary random matrices with flat singular spectrum. Added precondition check requiring singular value energy ratio sum_{i=1}^k sigma_i / sum sigma >= 0.95.",
     "counterexample_hash": "sha256_full_rank_gaussian_noise",
@@ -122,10 +92,7 @@
   {
     "failure_id": "fail_opencl_small_payload",
     "workload_id": "OPENCL_IGPU_DISPATCH",
-    "transformation_sequence": [
-      "CANONICAL",
-      "IGPU_OPENCL_OFFLOAD"
-    ],
+    "transformation_sequence": ["CANONICAL", "IGPU_OPENCL_OFFLOAD"],
     "failure_category": "LATENCY_INVERSION",
     "reason": "Small-Scale OpenCL Offloading (< 256 KB) is slower than CPU (0.63x speedup) due to command queue synchronization latency. Added task-size dispatch thresholding (MIN_OPENCL_DISPATCH_BYTES = 256 KB).",
     "counterexample_hash": "payload_below_256kb",
@@ -134,10 +101,7 @@
   {
     "failure_id": "fail_prefetch_small_file",
     "workload_id": "STREAMING_PREFETCH",
-    "transformation_sequence": [
-      "CANONICAL",
-      "ASYNC_DOUBLE_BUFFERED_PREFETCH"
-    ],
+    "transformation_sequence": ["CANONICAL", "ASYNC_DOUBLE_BUFFERED_PREFETCH"],
     "failure_category": "SYNCHRONIZATION_CONTENTION",
     "reason": "Double-Buffering Prefetch for Files < 1 MB fails because thread synchronization overhead exceeded read latency. Added minimum threshold of 8 MB for asynchronous prefetching (MIN_ASYNC_PREFETCH_BYTES = 8 MB).",
     "counterexample_hash": "file_below_8mb",
@@ -146,10 +110,7 @@
   {
     "failure_id": "fail_2f19b72a",
     "workload_id": "TEST_GEMM",
-    "transformation_sequence": [
-      "CANONICAL",
-      "BAD_TRUNCATION"
-    ],
+    "transformation_sequence": ["CANONICAL", "BAD_TRUNCATION"],
     "failure_category": "NUMERICAL_INSTABILITY",
     "reason": "Exceeded error tolerance 1e-4",
     "counterexample_hash": null,
@@ -158,10 +119,7 @@
   {
     "failure_id": "fail_1e4592a7",
     "workload_id": "TEST_GEMM",
-    "transformation_sequence": [
-      "CANONICAL",
-      "BAD_TRUNCATION"
-    ],
+    "transformation_sequence": ["CANONICAL", "BAD_TRUNCATION"],
     "failure_category": "NUMERICAL_INSTABILITY",
     "reason": "Exceeded error tolerance 1e-4",
     "counterexample_hash": null,
@@ -170,10 +128,7 @@
   {
     "failure_id": "fail_3ff36ead",
     "workload_id": "TEST_GEMM",
-    "transformation_sequence": [
-      "CANONICAL",
-      "BAD_TRUNCATION"
-    ],
+    "transformation_sequence": ["CANONICAL", "BAD_TRUNCATION"],
     "failure_category": "NUMERICAL_INSTABILITY",
     "reason": "Exceeded error tolerance 1e-4",
     "counterexample_hash": null,

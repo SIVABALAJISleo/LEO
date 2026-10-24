@@ -7,7 +7,7 @@
 **Graphics**: Intel(R) UHD Graphics (48 Execution Units, OpenVINO `GPU` target verified)  
 **Operating System**: Microsoft Windows 11 Home (Build 26100, AMD64)  
 **Python Runtime**: 3.13.5 (`C:\Program Files\Python313\python.exe`)  
-**Node.js / Frontend**: Node.js v22.12.0, Vite 5.4.19, React 18  
+**Node.js / Frontend**: Node.js v22.12.0, Vite 5.4.19, React 18
 
 ---
 
@@ -16,6 +16,7 @@
 Prior to applying Phase 1 repairs, baseline test executions were performed across the core suites:
 
 ### Suite 1: Unseen Pathway Engine (`tests/test_unseen_pathway_engine.py`)
+
 - **Execution Command**: `python -m pytest tests/test_unseen_pathway_engine.py -k "test_upe_engine or test_api_upe"`
 - **Collected Tests**: 5
 - **Passed**: 5
@@ -30,6 +31,7 @@ Prior to applying Phase 1 repairs, baseline test executions were performed acros
   - `test_api_upe_search_and_execute`: PASS (Full pathway discovery to verified result confirmed).
 
 ### Suite 2: Tony Stark Escape Engine Suite (`tests/test_tony_stark_escape_engine.py`)
+
 - **Execution Command**: `python -m pytest tests/test_tony_stark_escape_engine.py`
 - **Collected Tests**: 31
 - **Passed**: 31
@@ -38,6 +40,7 @@ Prior to applying Phase 1 repairs, baseline test executions were performed acros
 - **Exit Code**: 0
 
 ### Suite 3: Frontend Build & Unit Suite
+
 - **Vite Production Build**: `npm run build`
   - Output: `dist/` bundle compiled in 2.62 seconds with zero errors.
 - **Vitest Unit Suite**:
@@ -48,17 +51,17 @@ Prior to applying Phase 1 repairs, baseline test executions were performed acros
 
 ## 2. Environment & Dependency Audit
 
-| Dependency | Required Version / Role | Installed Version | Status | Notes |
-| :--- | :--- | :--- | :--- | :--- |
-| `python` | Baseline 3.12+ | 3.13.5 | PASS | Fully functional; C extensions built cleanly. |
-| `numpy` | Array operations & BLAS | 2.2.3 | PASS | OpenBLAS multi-threaded AVX2 operational. |
-| `openvino` | Intel CPU & iGPU execution | 2026.2.1 | PASS | Devices detected: `['CPU', 'GPU']`. Device name: `Intel(R) UHD Graphics (iGPU)`. |
-| `torch` | PyTorch baseline | 2.10.0+cpu | PASS | CPU-only PyTorch verified. No CUDA required or pretended. |
-| `llama-cpp-python` | Local quantized GGUF inference | 0.3.2 | PASS | C/C++ backend loaded; local model inferencing verified. |
-| `fastapi` | Backend API server | 0.115.8 | PASS | Running on port 8005. |
-| `uvicorn` | ASGI server | 0.34.0 | PASS | Standard async I/O worker. |
-| `pydantic` | Data validation | 2.10.6 | PASS | Type safety and schema enforcement. |
-| `pytest` | Test execution | 9.0.2 | PASS | Note: Config warning for unknown option `env` handled cleanly. |
+| Dependency         | Required Version / Role        | Installed Version | Status | Notes                                                                            |
+| :----------------- | :----------------------------- | :---------------- | :----- | :------------------------------------------------------------------------------- |
+| `python`           | Baseline 3.12+                 | 3.13.5            | PASS   | Fully functional; C extensions built cleanly.                                    |
+| `numpy`            | Array operations & BLAS        | 2.2.3             | PASS   | OpenBLAS multi-threaded AVX2 operational.                                        |
+| `openvino`         | Intel CPU & iGPU execution     | 2026.2.1          | PASS   | Devices detected: `['CPU', 'GPU']`. Device name: `Intel(R) UHD Graphics (iGPU)`. |
+| `torch`            | PyTorch baseline               | 2.10.0+cpu        | PASS   | CPU-only PyTorch verified. No CUDA required or pretended.                        |
+| `llama-cpp-python` | Local quantized GGUF inference | 0.3.2             | PASS   | C/C++ backend loaded; local model inferencing verified.                          |
+| `fastapi`          | Backend API server             | 0.115.8           | PASS   | Running on port 8005.                                                            |
+| `uvicorn`          | ASGI server                    | 0.34.0            | PASS   | Standard async I/O worker.                                                       |
+| `pydantic`         | Data validation                | 2.10.6            | PASS   | Type safety and schema enforcement.                                              |
+| `pytest`           | Test execution                 | 9.0.2             | PASS   | Note: Config warning for unknown option `env` handled cleanly.                   |
 
 ---
 

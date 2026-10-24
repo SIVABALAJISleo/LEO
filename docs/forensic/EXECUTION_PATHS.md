@@ -45,13 +45,13 @@ The canonical execution pathway across LEO/HYPER flows strictly through the foll
 ## 2. Identified Bypasses & Forensic Corrections
 
 1. **The Disjunctive Tolerance Bypass (Repaired)**:
-   - *Previous Path*: `IndependentVerifier.verify_contract_bounds` evaluated `(max_rel <= max_rel_err) or (max_abs <= max_abs_err)`. Because `max_abs_err` was default `2.0`, candidates with 100% relative error passed because their absolute values were <= 2.0.
-   - *Repaired Path*: Enforces conjunctive evaluation `(max_rel <= max_rel_err) and (max_abs <= max_abs_err)`. Candidates with errors exceeding contract are rejected (`passed: False`).
+   - _Previous Path_: `IndependentVerifier.verify_contract_bounds` evaluated `(max_rel <= max_rel_err) or (max_abs <= max_abs_err)`. Because `max_abs_err` was default `2.0`, candidates with 100% relative error passed because their absolute values were <= 2.0.
+   - _Repaired Path_: Enforces conjunctive evaluation `(max_rel <= max_rel_err) and (max_abs <= max_abs_err)`. Candidates with errors exceeding contract are rejected (`passed: False`).
 
 2. **Synthetic Telemetry Bypass in Scoreboard D (Repaired)**:
-   - *Previous Path*: `ScoreboardDEntry` assigned `cpu_percent=40.0, igpu_percent=60.0` whenever `"gemm"` was in the workload name, despite executing purely in Python NumPy on the CPU.
-   - *Repaired Path*: Accurately records `target_device="CPU (NumPy AVX2)"`, `cpu_percent=100.0`, `igpu_percent=0.0`.
+   - _Previous Path_: `ScoreboardDEntry` assigned `cpu_percent=40.0, igpu_percent=60.0` whenever `"gemm"` was in the workload name, despite executing purely in Python NumPy on the CPU.
+   - _Repaired Path_: Accurately records `target_device="CPU (NumPy AVX2)"`, `cpu_percent=100.0`, `igpu_percent=0.0`.
 
 3. **Memory Bypass Formula vs Reality (Repaired)**:
-   - *Previous Path*: Calculated `effective_bw = physical_bw * 16 * 4` and claimed memory bus was bypassed, while allocating a full unpacked matrix in RAM during execution.
-   - *Repaired Path*: Separates measured DDR physical copy bandwidth (18.57 GB/s) from algorithmic intensity multiplier. Implements cache-blocked tiling (32 rows per block, ~32 KB) so uncompressed full matrices are never materialized in main RAM.
+   - _Previous Path_: Calculated `effective_bw = physical_bw * 16 * 4` and claimed memory bus was bypassed, while allocating a full unpacked matrix in RAM during execution.
+   - _Repaired Path_: Separates measured DDR physical copy bandwidth (18.57 GB/s) from algorithmic intensity multiplier. Implements cache-blocked tiling (32 rows per block, ~32 KB) so uncompressed full matrices are never materialized in main RAM.

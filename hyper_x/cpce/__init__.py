@@ -18,6 +18,9 @@ from hyper_x.cpce.contracts import (
     ExactnessRequirement,
     ContractRegistry,
 )
+
+# Canonical alias required by CI test suite
+WorkloadContractRegistry = ContractRegistry
 from hyper_x.cpce.types import (
     TaggedMatrix,
     DenseMatrix,
@@ -241,6 +244,7 @@ __all__ = [
     "ValidationMode",
     "ExactnessRequirement",
     "ContractRegistry",
+    "WorkloadContractRegistry",
     "TaggedMatrix",
     "DenseMatrix",
     "IdentityMatrix",

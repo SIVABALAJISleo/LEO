@@ -7,9 +7,7 @@
       "type": "EXACT_EQUIVALENCE",
       "original": "Baseline",
       "replacement": "Optimized",
-      "assumptions": [
-        "None"
-      ],
+      "assumptions": ["None"],
       "proof": "Identical algebra",
       "tests": 10,
       "adversarial_tests": 5,
@@ -23,9 +21,7 @@
       "type": "EXACT_EQUIVALENCE",
       "original": "Baseline",
       "replacement": "Optimized",
-      "assumptions": [
-        "None"
-      ],
+      "assumptions": ["None"],
       "proof": "Identical algebra",
       "tests": 10,
       "adversarial_tests": 5,
@@ -39,9 +35,7 @@
       "type": "EXACT_EQUIVALENCE",
       "original": "Baseline",
       "replacement": "Optimized",
-      "assumptions": [
-        "None"
-      ],
+      "assumptions": ["None"],
       "proof": "Identical algebra",
       "tests": 10,
       "adversarial_tests": 5,
@@ -55,9 +49,7 @@
       "type": "EXACT_EQUIVALENCE",
       "original": "Baseline",
       "replacement": "Optimized",
-      "assumptions": [
-        "None"
-      ],
+      "assumptions": ["None"],
       "proof": "Identical algebra",
       "tests": 10,
       "adversarial_tests": 5,
@@ -71,9 +63,7 @@
       "type": "EXACT_EQUIVALENCE",
       "original": "Baseline",
       "replacement": "Optimized",
-      "assumptions": [
-        "None"
-      ],
+      "assumptions": ["None"],
       "proof": "Identical algebra",
       "tests": 10,
       "adversarial_tests": 5,
@@ -87,9 +77,7 @@
       "type": "EXACT_EQUIVALENCE",
       "original": "Baseline",
       "replacement": "Optimized",
-      "assumptions": [
-        "None"
-      ],
+      "assumptions": ["None"],
       "proof": "Identical algebra",
       "tests": 10,
       "adversarial_tests": 5,
@@ -103,9 +91,7 @@
       "type": "EXACT_EQUIVALENCE",
       "original": "Baseline",
       "replacement": "Optimized",
-      "assumptions": [
-        "None"
-      ],
+      "assumptions": ["None"],
       "proof": "Identical algebra",
       "tests": 10,
       "adversarial_tests": 5,
@@ -119,9 +105,7 @@
       "type": "EXACT_EQUIVALENCE",
       "original": "Baseline",
       "replacement": "Optimized",
-      "assumptions": [
-        "None"
-      ],
+      "assumptions": ["None"],
       "proof": "Identical algebra",
       "tests": 10,
       "adversarial_tests": 5,
@@ -135,9 +119,7 @@
       "type": "EXACT_EQUIVALENCE",
       "original": "Baseline",
       "replacement": "Optimized",
-      "assumptions": [
-        "None"
-      ],
+      "assumptions": ["None"],
       "proof": "Identical algebra",
       "tests": 10,
       "adversarial_tests": 5,
@@ -151,9 +133,7 @@
       "type": "EXACT_EQUIVALENCE",
       "original": "Baseline",
       "replacement": "Optimized",
-      "assumptions": [
-        "None"
-      ],
+      "assumptions": ["None"],
       "proof": "Identical algebra",
       "tests": 10,
       "adversarial_tests": 5,
@@ -167,9 +147,7 @@
       "type": "EXACT_EQUIVALENCE",
       "original": "Baseline",
       "replacement": "Optimized",
-      "assumptions": [
-        "None"
-      ],
+      "assumptions": ["None"],
       "proof": "Identical algebra",
       "tests": 10,
       "adversarial_tests": 5,
@@ -183,9 +161,7 @@
       "type": "EXACT_EQUIVALENCE",
       "original": "Baseline",
       "replacement": "Optimized",
-      "assumptions": [
-        "None"
-      ],
+      "assumptions": ["None"],
       "proof": "Identical algebra",
       "tests": 10,
       "adversarial_tests": 5,
@@ -199,9 +175,7 @@
       "type": "EXACT_EQUIVALENCE",
       "original": "Baseline",
       "replacement": "Optimized",
-      "assumptions": [
-        "None"
-      ],
+      "assumptions": ["None"],
       "proof": "Identical algebra",
       "tests": 10,
       "adversarial_tests": 5,
@@ -215,9 +189,7 @@
       "type": "EXACT_EQUIVALENCE",
       "original": "Baseline",
       "replacement": "Optimized",
-      "assumptions": [
-        "None"
-      ],
+      "assumptions": ["None"],
       "proof": "Identical algebra",
       "tests": 10,
       "adversarial_tests": 5,
@@ -231,9 +203,7 @@
       "type": "EXACT_EQUIVALENCE",
       "original": "Baseline",
       "replacement": "Optimized",
-      "assumptions": [
-        "None"
-      ],
+      "assumptions": ["None"],
       "proof": "Identical algebra",
       "tests": 10,
       "adversarial_tests": 5,
@@ -247,9 +217,7 @@
       "type": "EXACT_EQUIVALENCE",
       "original": "Baseline",
       "replacement": "Optimized",
-      "assumptions": [
-        "None"
-      ],
+      "assumptions": ["None"],
       "proof": "Identical algebra",
       "tests": 10,
       "adversarial_tests": 5,
@@ -263,9 +231,7 @@
       "type": "EXACT_EQUIVALENCE",
       "original": "Baseline",
       "replacement": "Optimized",
-      "assumptions": [
-        "None"
-      ],
+      "assumptions": ["None"],
       "proof": "Identical algebra",
       "tests": 10,
       "adversarial_tests": 5,
@@ -279,9 +245,7 @@
       "type": "EXACT_EQUIVALENCE",
       "original": "Baseline",
       "replacement": "Optimized",
-      "assumptions": [
-        "None"
-      ],
+      "assumptions": ["None"],
       "proof": "Identical algebra",
       "tests": 10,
       "adversarial_tests": 5,
@@ -295,9 +259,7 @@
       "type": "EXACT_EQUIVALENCE",
       "original": "Baseline",
       "replacement": "Optimized",
-      "assumptions": [
-        "None"
-      ],
+      "assumptions": ["None"],
       "proof": "Identical algebra",
       "tests": 10,
       "adversarial_tests": 5,
@@ -311,9 +273,7 @@
       "type": "EXACT_EQUIVALENCE",
       "original": "Baseline",
       "replacement": "Optimized",
-      "assumptions": [
-        "None"
-      ],
+      "assumptions": ["None"],
       "proof": "Identical algebra",
       "tests": 10,
       "adversarial_tests": 5,

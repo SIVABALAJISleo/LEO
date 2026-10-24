@@ -25,7 +25,7 @@
       "metric1_correctness": {
         "verified": true,
         "freivalds_pass": true,
-        "relative_error": 1.2e-07,
+        "relative_error": 1.2e-7,
         "method": "FREIVALDS_O(N^2)_INCREMENTAL_SPECTRAL"
       },
       "metric2_coverage": {
@@ -53,7 +53,7 @@
       "metric1_correctness": {
         "verified": true,
         "freivalds_pass": true,
-        "relative_error": 1.01e-07,
+        "relative_error": 1.01e-7,
         "method": "FREIVALDS_O(N^2)_EXACT_VERIFIED"
       },
       "metric2_coverage": {
@@ -189,7 +189,7 @@
       "metric1_correctness": {
         "verified": true,
         "freivalds_pass": true,
-        "relative_error": 1.34e-07,
+        "relative_error": 1.34e-7,
         "method": "INCREMENTAL_SPECTRAL_BOOSTING"
       },
       "metric2_coverage": {
@@ -215,7 +215,7 @@
       "metric1_correctness": {
         "verified": true,
         "freivalds_pass": true,
-        "relative_error": 2.39e-07,
+        "relative_error": 2.39e-7,
         "method": "FREIVALDS_O(N^2)_STREAMED_NVME"
       },
       "metric2_coverage": {
@@ -243,7 +243,7 @@
       "metric1_correctness": {
         "verified": true,
         "freivalds_pass": true,
-        "relative_error": 1.69e-07,
+        "relative_error": 1.69e-7,
         "method": "FFT_FREQUENCY_DOMAIN_EXACT"
       },
       "metric2_coverage": {
@@ -295,13 +295,10 @@
       "timestamp": 1792841208.094013
     },
     "freivalds_complexity_audit": {
-      "matrix_shape": [
-        192,
-        192
-      ],
+      "matrix_shape": [192, 192],
       "freivalds_num_trials": 5,
       "freivalds_pass": true,
-      "freivalds_relative_error": 1.563231508558773e-07,
+      "freivalds_relative_error": 1.563231508558773e-7,
       "freivalds_latency_ms": 0.9169,
       "dense_cubic_latency_ms": 0.8089,
       "verification_speedup": 0.88

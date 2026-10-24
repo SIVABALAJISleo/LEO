@@ -1,4 +1,5 @@
 # Universal Replacement Fabric & Computational Phase-Change Engine
+
 ## Comprehensive Forensic Repository Audit & Acceptance Gate Report
 
 ---
@@ -23,17 +24,17 @@ This forensic audit evaluates the implementation and integration of the **Univer
 The forensic audit of earlier prototype branches revealed critical defects that have been completely eradicated:
 
 1. **Elimination of Simulated GPU Identifiers:**
-   - *Previous Defect:* Earlier reports contained simulated NVIDIA RTX 4090 / RTX 5090 performance projections, synthetic TFLOPS, or fake GPU labels applied to CPU loops.
-   - *Rectification:* All simulated hardware identities have been deleted. Discrete GPU parity is explicitly marked `NOT_MEASURED`.
+   - _Previous Defect:_ Earlier reports contained simulated NVIDIA RTX 4090 / RTX 5090 performance projections, synthetic TFLOPS, or fake GPU labels applied to CPU loops.
+   - _Rectification:_ All simulated hardware identities have been deleted. Discrete GPU parity is explicitly marked `NOT_MEASURED`.
 2. **Elimination of Silent CPU Fallback:**
-   - *Previous Defect:* If a GPU offload failed, earlier routers silently executed on the CPU while labeling the output as "GPU-accelerated".
-   - *Rectification:* The `VERIFIED_IGPU_ONLY` policy strictly fails closed (`BackendExecutionError`) if a workload cannot run on the physical Intel UHD iGPU. `AUTO_VERIFIED` truthfully records `actual_backend` and `device_identity`.
+   - _Previous Defect:_ If a GPU offload failed, earlier routers silently executed on the CPU while labeling the output as "GPU-accelerated".
+   - _Rectification:_ The `VERIFIED_IGPU_ONLY` policy strictly fails closed (`BackendExecutionError`) if a workload cannot run on the physical Intel UHD iGPU. `AUTO_VERIFIED` truthfully records `actual_backend` and `device_identity`.
 3. **Elimination of Single-Operand Cache Vulnerabilities:**
-   - *Previous Defect:* Caching algorithms hashed only operand `A`, causing false cache hits when operand `B` differed.
-   - *Rectification:* `ExactSemanticCache` in `hyper_phase_change.cache` computes cryptographic SHA-256 keys across *all* operands, shapes, dtypes, strides, layout, algorithm version, and precision mode.
+   - _Previous Defect:_ Caching algorithms hashed only operand `A`, causing false cache hits when operand `B` differed.
+   - _Rectification:_ `ExactSemanticCache` in `hyper_phase_change.cache` computes cryptographic SHA-256 keys across _all_ operands, shapes, dtypes, strides, layout, algorithm version, and precision mode.
 4. **Resolution of OpenVINO GPU Precision Quantization:**
-   - *Previous Defect:* Default OpenVINO GPU compilation defaulted to FP16 performance mode, causing a numerical discrepancy of `~0.052` on FP32 GEMM contracts.
-   - *Rectification:* Discovered and applied OpenVINO execution mode hints: `{"INFERENCE_PRECISION_HINT": "f32", "EXECUTION_MODE_HINT": "ACCURACY"}`. The Intel UHD iGPU now achieves a maximum absolute error of `5.72e-06`, well within the canonical `atol=1e-4` contract tolerance!
+   - _Previous Defect:_ Default OpenVINO GPU compilation defaulted to FP16 performance mode, causing a numerical discrepancy of `~0.052` on FP32 GEMM contracts.
+   - _Rectification:_ Discovered and applied OpenVINO execution mode hints: `{"INFERENCE_PRECISION_HINT": "f32", "EXECUTION_MODE_HINT": "ACCURACY"}`. The Intel UHD iGPU now achieves a maximum absolute error of `5.72e-06`, well within the canonical `atol=1e-4` contract tolerance!
 
 ---
 
@@ -59,6 +60,7 @@ hyper_phase_change/
 ```
 
 #### The 11-Stage Authoritative Pipeline:
+
 ```
 [1. Input Reception]
        │
@@ -87,37 +89,37 @@ hyper_phase_change/
 
 ### 4. Canonical 15 Workload Support Contract Matrix
 
-| # | Workload ID | Name | Mathematical Contract | Exactness Class | Tolerance | Reference Oracle |
-| :-: | :--- | :--- | :--- | :--- | :---: | :--- |
-| 1 | `GEMM_STANDARD` | Dense Matrix Multiplication | $C = A \cdot B \in \mathbb{R}^{128 \times 128}$ | NUMERICALLY_EQUIVALENT | atol=1e-4 | FP64 Textbook BLAS |
-| 2 | `CONV2D_STANDARD` | 2D Direct Spatial Convolution | Output $y[i,j] = \sum x \cdot k$ | NUMERICALLY_EQUIVALENT | atol=1e-4 | Textbook Sliding Window |
-| 3 | `FFT_STANDARD` | 1D Fast Fourier Transform | 1024-pt Discrete Fourier Transform | NUMERICALLY_EQUIVALENT | atol=1e-4 | Direct DFT Oracle |
-| 4 | `REDUCTION_SUM` | High-Precision Reduction | $s = \sum x_i$ across 100k elements | NUMERICALLY_EQUIVALENT | atol=1e-4 | Compensated FP64 Accum |
-| 5 | `SORT_STANDARD` | Bitonic / Quick Sort | Exact ascending monotonic order | INTEGER_EXACT | atol=0.0 | Pure Python Timsort |
-| 6 | `PAGERANK_GRAPH` | Graph Centrality Iteration | $p_{k+1} = d M p_k + \frac{1-d}{N}$ | NUMERICALLY_EQUIVALENT | atol=1e-4 | Unaccelerated Power Iter |
-| 7 | `SHA256_CRYPTO` | Cryptographic SHA-256 | Bit-exact byte digest | BIT_EXACT | atol=0.0 | Python hashlib (FIPS 180-4) |
-| 8 | `NBODY_GRAVITATIONAL`| Gravitational Particle Dynamics | $O(N^2)$ direct pairwise Newtonian | NUMERICALLY_EQUIVALENT | atol=1e-3 | Double-Precision N-Body |
-| 9 | `ML_MLP_INFERENCE` | 2-Layer Feedforward MLP | $\text{ReLU}(X W_1 + b_1) W_2 + b_2$ | NUMERICALLY_EQUIVALENT | atol=1e-4 | Layered FP64 Dense Eval |
-| 10 | `ATTENTION_HEAD` | Scaled Dot-Product Attention | $\text{Softmax}(\frac{Q K^T}{\sqrt{d}}) V$ | NUMERICALLY_EQUIVALENT | atol=1e-4 | Textbook Softmax Matmul |
-| 11 | `SOBEL_FILTER` | 2D Spatial Gradient Operator | $G = \sqrt{G_x^2 + G_y^2}$ | NUMERICALLY_EQUIVALENT | atol=1e-4 | Discrete Convolve 3x3 |
-| 12 | `STREAMING_VECTOR_OPS`| Streaming BLAS-1 AXPY | $y_{\text{out}} = \alpha x + y$ (1M floats) | NUMERICALLY_EQUIVALENT | atol=1e-4 | Scalar Elementwise Loop |
-| 13 | `MANDELBROT_FRACTAL` | Complex Dynamical System | Escape iterations $z_{k+1} = z_k^2 + c$ | INTEGER_EXACT | atol=0.0 | Exact Integer Iteration |
-| 14 | `SPMV_IRREGULAR_CSR` | Irregular Sparse CSR Product | $y = A_{\text{sparse}} x$ | NUMERICALLY_EQUIVALENT | atol=1e-4 | Direct Indptr CSR Loop |
-| 15 | `ADVERSARIAL_HILBERT` | Near-Singular Hilbert Matrix | Ill-conditioned stress test ($\kappa > 10^{12}$) | NUMERICALLY_EQUIVALENT | atol=1e-4 | FP64 Quad Accumulation |
+|  #  | Workload ID            | Name                            | Mathematical Contract                            | Exactness Class        | Tolerance | Reference Oracle            |
+| :-: | :--------------------- | :------------------------------ | :----------------------------------------------- | :--------------------- | :-------: | :-------------------------- |
+|  1  | `GEMM_STANDARD`        | Dense Matrix Multiplication     | $C = A \cdot B \in \mathbb{R}^{128 \times 128}$  | NUMERICALLY_EQUIVALENT | atol=1e-4 | FP64 Textbook BLAS          |
+|  2  | `CONV2D_STANDARD`      | 2D Direct Spatial Convolution   | Output $y[i,j] = \sum x \cdot k$                 | NUMERICALLY_EQUIVALENT | atol=1e-4 | Textbook Sliding Window     |
+|  3  | `FFT_STANDARD`         | 1D Fast Fourier Transform       | 1024-pt Discrete Fourier Transform               | NUMERICALLY_EQUIVALENT | atol=1e-4 | Direct DFT Oracle           |
+|  4  | `REDUCTION_SUM`        | High-Precision Reduction        | $s = \sum x_i$ across 100k elements              | NUMERICALLY_EQUIVALENT | atol=1e-4 | Compensated FP64 Accum      |
+|  5  | `SORT_STANDARD`        | Bitonic / Quick Sort            | Exact ascending monotonic order                  | INTEGER_EXACT          | atol=0.0  | Pure Python Timsort         |
+|  6  | `PAGERANK_GRAPH`       | Graph Centrality Iteration      | $p_{k+1} = d M p_k + \frac{1-d}{N}$              | NUMERICALLY_EQUIVALENT | atol=1e-4 | Unaccelerated Power Iter    |
+|  7  | `SHA256_CRYPTO`        | Cryptographic SHA-256           | Bit-exact byte digest                            | BIT_EXACT              | atol=0.0  | Python hashlib (FIPS 180-4) |
+|  8  | `NBODY_GRAVITATIONAL`  | Gravitational Particle Dynamics | $O(N^2)$ direct pairwise Newtonian               | NUMERICALLY_EQUIVALENT | atol=1e-3 | Double-Precision N-Body     |
+|  9  | `ML_MLP_INFERENCE`     | 2-Layer Feedforward MLP         | $\text{ReLU}(X W_1 + b_1) W_2 + b_2$             | NUMERICALLY_EQUIVALENT | atol=1e-4 | Layered FP64 Dense Eval     |
+| 10  | `ATTENTION_HEAD`       | Scaled Dot-Product Attention    | $\text{Softmax}(\frac{Q K^T}{\sqrt{d}}) V$       | NUMERICALLY_EQUIVALENT | atol=1e-4 | Textbook Softmax Matmul     |
+| 11  | `SOBEL_FILTER`         | 2D Spatial Gradient Operator    | $G = \sqrt{G_x^2 + G_y^2}$                       | NUMERICALLY_EQUIVALENT | atol=1e-4 | Discrete Convolve 3x3       |
+| 12  | `STREAMING_VECTOR_OPS` | Streaming BLAS-1 AXPY           | $y_{\text{out}} = \alpha x + y$ (1M floats)      | NUMERICALLY_EQUIVALENT | atol=1e-4 | Scalar Elementwise Loop     |
+| 13  | `MANDELBROT_FRACTAL`   | Complex Dynamical System        | Escape iterations $z_{k+1} = z_k^2 + c$          | INTEGER_EXACT          | atol=0.0  | Exact Integer Iteration     |
+| 14  | `SPMV_IRREGULAR_CSR`   | Irregular Sparse CSR Product    | $y = A_{\text{sparse}} x$                        | NUMERICALLY_EQUIVALENT | atol=1e-4 | Direct Indptr CSR Loop      |
+| 15  | `ADVERSARIAL_HILBERT`  | Near-Singular Hilbert Matrix    | Ill-conditioned stress test ($\kappa > 10^{12}$) | NUMERICALLY_EQUIVALENT | atol=1e-4 | FP64 Quad Accumulation      |
 
 ---
 
 ### 5. The Seven Formal Acceptance Gates
 
-| Gate ID | Gate Name | Required Acceptance Criteria | Live Audit Evidence | Gate Status |
-| :---: | :--- | :--- | :--- | :---: |
-| **Gate A** | **Correctness** | 100% of canonical workloads pass primary and adversarial tests. Zero false passes. | **15/15 PASS** (0 FAIL, 0 UNKNOWN, 0 BLOCKED). | **PASSED** |
-| **Gate B** | **Workload Coverage** | 100% coverage of declared versioned support contract v3.0. | All 15 workload IDs fully implemented and tested. | **PASSED** |
-| **Gate C** | **Device Provenance** | Physical Intel UHD iGPU verified via live compiled execution test. | Discovered: `Intel(R) UHD Graphics (iGPU)`. Live probe compile: 15.6ms, exec: 1.8ms. Verified. | **PASSED** |
-| **Gate D** | **Performance Integrity** | Real timers, statistical metrics, regressions explicitly reported. | 5-run statistical benchmarks recorded. Average speedup: 15.34x. Zero fabricated numbers. | **PASSED** |
-| **Gate E** | **Application Integration** | Unified execution fabric exposed via real REST APIs. | Mounted at `/api/hyper/*`: `/capabilities`, `/backends`, `/workloads`, `/execute`, `/verify`, `/benchmark`, `/certification`. | **PASSED** |
-| **Gate F** | **Reproducibility** | Clean installation reproduces documented results via deterministic script. | Master script `scripts/run_universal_fabric_verification.ps1` runs 6/6 stages end-to-end. | **PASSED** |
-| **Gate G** | **Scientific Scope** | Explicit boundary of supported vs unsupported domains; discrete parity declared unmeasured. | Discrete GPU marked `NOT_MEASURED`. Zero false claims of universal hardware equivalence. | **PASSED** |
+|  Gate ID   | Gate Name                   | Required Acceptance Criteria                                                                | Live Audit Evidence                                                                                                           | Gate Status |
+| :--------: | :-------------------------- | :------------------------------------------------------------------------------------------ | :---------------------------------------------------------------------------------------------------------------------------- | :---------: |
+| **Gate A** | **Correctness**             | 100% of canonical workloads pass primary and adversarial tests. Zero false passes.          | **15/15 PASS** (0 FAIL, 0 UNKNOWN, 0 BLOCKED).                                                                                | **PASSED**  |
+| **Gate B** | **Workload Coverage**       | 100% coverage of declared versioned support contract v3.0.                                  | All 15 workload IDs fully implemented and tested.                                                                             | **PASSED**  |
+| **Gate C** | **Device Provenance**       | Physical Intel UHD iGPU verified via live compiled execution test.                          | Discovered: `Intel(R) UHD Graphics (iGPU)`. Live probe compile: 15.6ms, exec: 1.8ms. Verified.                                | **PASSED**  |
+| **Gate D** | **Performance Integrity**   | Real timers, statistical metrics, regressions explicitly reported.                          | 5-run statistical benchmarks recorded. Average speedup: 15.34x. Zero fabricated numbers.                                      | **PASSED**  |
+| **Gate E** | **Application Integration** | Unified execution fabric exposed via real REST APIs.                                        | Mounted at `/api/hyper/*`: `/capabilities`, `/backends`, `/workloads`, `/execute`, `/verify`, `/benchmark`, `/certification`. | **PASSED**  |
+| **Gate F** | **Reproducibility**         | Clean installation reproduces documented results via deterministic script.                  | Master script `scripts/run_universal_fabric_verification.ps1` runs 6/6 stages end-to-end.                                     | **PASSED**  |
+| **Gate G** | **Scientific Scope**        | Explicit boundary of supported vs unsupported domains; discrete parity declared unmeasured. | Discrete GPU marked `NOT_MEASURED`. Zero false claims of universal hardware equivalence.                                      | **PASSED**  |
 
 ---
 

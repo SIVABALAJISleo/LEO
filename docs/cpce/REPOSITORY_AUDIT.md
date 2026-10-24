@@ -7,7 +7,7 @@
 **Memory**: 15.7 GB Available System DDR RAM  
 **Graphics**: Intel(R) UHD Graphics (48 EUs, OpenVINO `GPU` target verified)  
 **Operating System**: Microsoft Windows 11 Home (AMD64)  
-**Python Runtime**: 3.13.5 Baseline  
+**Python Runtime**: 3.13.5 Baseline
 
 ---
 
@@ -15,9 +15,10 @@
 
 This forensic audit evaluates the existing LEO / HYPER codebase in preparation for the integration of the **Computational Phase-Change Engine (CPCE)**. The central hypothesis of CPCE is:
 
-> *"A computation's original hardware implementation is not necessarily the only way to produce its required result. HYPER identifies the computation's true contract, discovers alternative representations and algorithms, eliminates provably unnecessary work, chooses the best valid execution path, and verifies the result independently."*
+> _"A computation's original hardware implementation is not necessarily the only way to produce its required result. HYPER identifies the computation's true contract, discovers alternative representations and algorithms, eliminates provably unnecessary work, chooses the best valid execution path, and verifies the result independently."_
 
 The codebase has undergone substantial integrity restoration:
+
 1. Hardcoded discrete GPU latencies (e.g. theoretical RTX 5090 Blackwell GB202 latency of 0.15 ms) have been eliminated.
 2. Latency-ratio FLOP deductions have been eliminated in favor of substantiated operational models.
 3. Deceptive zero-copy claims in OpenCL buffer management have been replaced with truthful `HOST_PINNED_MAPPED_COPY` reporting.
@@ -28,15 +29,15 @@ The codebase has undergone substantial integrity restoration:
 
 ## 2. Inventory of Pre-existing Subsystems & Integration Strategy
 
-| Existing Subsystem | Current Status | Integration & Reuse Strategy for CPCE |
-| :--- | :--- | :--- |
-| `hyper/upe/` (Unseen Pathway Engine) | Active / Verified | Serves as the foundational algorithmic pathway pipeline; its contracts, necessity analyzer, and Horner execution adapters integrate into CPCE. |
-| `hyper_x/` (HYPER-X Omega & Escape) | Active / Verified | Provides reference engine, cryptographic work certificates, and counterexample registry. CPCE will link directly with these verifiers. |
-| `hyper/extreme/opencl_uva.py` | Active / Honest | Truthful host-pinned OpenCL memory management used for parallel bitwise operations. |
-| `hyper_x/heterogeneous_orchestrator.py` | Active / Honest | Dual CPU + Intel UHD concurrent scheduler with fallback to `CPU_ONLY_FALLBACK`. |
-| `backend/routers/inference_router.py` | Active / Verified | Exposes local GGUF Qwen2.5-0.5B inference with measured TTFT and token throughput. |
-| `backend/main.py` | Active (Port 8005) | Canonical FastAPI application; CPCE router (`/api/v1/cpce`) will be registered cleanly alongside UPE and Inference routers. |
-| `frontend/` (React 18 + Vite + TanStack) | Active / Compiles | Verified production build (`npm run build` succeeds in 2.99s); CPCE metrics and states feed the UI dashboard. |
+| Existing Subsystem                       | Current Status     | Integration & Reuse Strategy for CPCE                                                                                                          |
+| :--------------------------------------- | :----------------- | :--------------------------------------------------------------------------------------------------------------------------------------------- |
+| `hyper/upe/` (Unseen Pathway Engine)     | Active / Verified  | Serves as the foundational algorithmic pathway pipeline; its contracts, necessity analyzer, and Horner execution adapters integrate into CPCE. |
+| `hyper_x/` (HYPER-X Omega & Escape)      | Active / Verified  | Provides reference engine, cryptographic work certificates, and counterexample registry. CPCE will link directly with these verifiers.         |
+| `hyper/extreme/opencl_uva.py`            | Active / Honest    | Truthful host-pinned OpenCL memory management used for parallel bitwise operations.                                                            |
+| `hyper_x/heterogeneous_orchestrator.py`  | Active / Honest    | Dual CPU + Intel UHD concurrent scheduler with fallback to `CPU_ONLY_FALLBACK`.                                                                |
+| `backend/routers/inference_router.py`    | Active / Verified  | Exposes local GGUF Qwen2.5-0.5B inference with measured TTFT and token throughput.                                                             |
+| `backend/main.py`                        | Active (Port 8005) | Canonical FastAPI application; CPCE router (`/api/v1/cpce`) will be registered cleanly alongside UPE and Inference routers.                    |
+| `frontend/` (React 18 + Vite + TanStack) | Active / Compiles  | Verified production build (`npm run build` succeeds in 2.99s); CPCE metrics and states feed the UI dashboard.                                  |
 
 ---
 
@@ -52,6 +53,7 @@ The codebase has undergone substantial integrity restoration:
 ## 4. CPCE Architectural Blueprint
 
 The CPCE package is created under `hyper_x/cpce/` with modular, typed, and verifiable interfaces:
+
 - `contracts.py`: Workload contracts defining exactness, tolerances, and resource limits.
 - `types.py`: Tagged matrix representations (`DenseMatrix`, `IdentityMatrix`, `ZeroMatrix`, `DiagonalMatrix`, `SparseMatrix`, `LowRankMatrix`).
 - `ir.py`: Canonical Computation Representation capturing nodes, edges, dependencies, and annotations.

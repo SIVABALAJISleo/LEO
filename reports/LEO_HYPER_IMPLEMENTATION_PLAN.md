@@ -7,6 +7,7 @@
 ## Architecture & Phase Roadmap
 
 ### Phase 1: Authoritative Canonical Workload Contract Registry
+
 - **File**: `hyper/canonical/workload_registry.py`
 - **Specification**:
   - Exactly 15 versioned canonical workload definitions (`v2.0-canonical`).
@@ -31,6 +32,7 @@
   - Strict input/output schema validation.
 
 ### Phase 2: Independent Reference Engine
+
 - **File**: `hyper/canonical/independent_reference.py`
 - **Specification**:
   - 100% standalone, isolated textbook reference algorithms.
@@ -43,6 +45,7 @@
   - Fail-closed: raises `UnsupportedWorkloadError` on unknown workloads.
 
 ### Phase 3: Candidate Compiler and Dispatch Engine
+
 - **File**: `hyper/canonical/candidate_compiler.py`
 - **Specification**:
   - Independent candidate implementations optimized for Intel CPU AVX2 and iGPU.
@@ -51,10 +54,12 @@
   - Transparent fallback to CPU if an accelerator or rewrite is unsupported.
 
 ### Phase 4: Computational Phase-Change Engine (CPCE) Integration
+
 - **Integration**: Connect `hyper_x/cpce` rewrite rules and canonical IR to the 15 workloads.
 - Verified shortcuts when preconditions hold (identity matrix, zero matrix, sparse CSR, Horner polynomial form).
 
 ### Phase 5: Correctness-Preserving Cache
+
 - **File**: `hyper/canonical/verified_cache.py`
 - **Specification**:
   - Content-addressable cache using SHA-256 digests over ALL input operands ($A$, $B$, biases, alphas, etc.).
@@ -62,6 +67,7 @@
   - Bounded memory with LRU eviction and collision handling.
 
 ### Phase 6: Truthful CPU & Intel UHD iGPU Execution Backends
+
 - **File**: `hyper/canonical/hardware_backends.py`
 - **Specification**:
   - Detect Intel Core i5-12450H and Intel UHD Graphics GT1.
@@ -69,6 +75,7 @@
   - Distinguish measured execution from fallback; record memory copy costs.
 
 ### Phase 7 & 8: Adversarial Verification & Strict State Machine
+
 - **File**: `hyper/canonical/verification_state_machine.py`
 - **Specification**:
   - Adversarial gauntlet: zero matrices, identities, prime dimensions, ill-conditioned matrices, NaNs/Infs, non-contiguous arrays.
@@ -76,12 +83,14 @@
   - Aggregation rule: 15/15 is permitted ONLY if all 15 workloads achieve verified `PASS`.
 
 ### Phase 9: Honest Performance Benchmarking Harness
+
 - **File**: `hyper/canonical/benchmark_harness.py`
 - **Specification**:
   - Multi-run statistical protocol (warmup runs, measured iterations, median, stddev, memory measurement).
   - Separate correctness tracking from latency.
 
 ### Phase 10 & 11: Real Application Integration & API Endpoints
+
 - **Files**:
   - `backend/routers/canonical_workload_router.py`
   - Integration into `backend/main.py`
@@ -92,6 +101,7 @@
   - Expose `/api/v1/workloads/canonical/report`
 
 ### Phase 12 & 13: Test Suite & Comprehensive Reports
+
 - **Files**:
   - `tests/test_canonical_15_suite.py`
   - `reports/LEO_HYPER_CANONICAL_15_VERIFICATION_REPORT.json`

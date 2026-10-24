@@ -378,7 +378,9 @@ export function BackendDiagnosticsPanel() {
     <section className="relative overflow-hidden rounded-2xl border border-border/60 bg-card/60 shadow-lg backdrop-blur-xl">
       <header className="flex flex-wrap items-center justify-between gap-2 border-b border-border/40 px-5 py-4">
         <div className="min-w-0">
-          <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Backend /diagnostics</div>
+          <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+            Backend /diagnostics
+          </div>
           <div className="text-xs text-muted-foreground font-mono truncate max-w-[420px] mt-0.5">
             {url}
           </div>
@@ -393,7 +395,9 @@ export function BackendDiagnosticsPanel() {
                     : "border-border text-muted-foreground"
               }`}
             >
-              <span className={`h-1.5 w-1.5 rounded-full ${connOk ? "bg-emerald-400 animate-pulse" : "bg-red-400"}`} />
+              <span
+                className={`h-1.5 w-1.5 rounded-full ${connOk ? "bg-emerald-400 animate-pulse" : "bg-red-400"}`}
+              />
               {connOk ? "reachable" : connWarn ? "unreachable" : "unknown"}
               {latest?.httpStatus != null && (
                 <span className="font-mono">HTTP {latest.httpStatus}</span>

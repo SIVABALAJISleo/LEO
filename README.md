@@ -50,15 +50,15 @@ HYPER includes a contract-driven, falsifiable parity engine enforcing strict, pr
 
 #### Live Measured Results on Target Machine (Intel Core i5-12450H + Intel UHD, 16 GB RAM):
 
-| Workload Contract | Latency Cap | Live p50 (Warm) | Live p50 (Cold) | Result Label | Quality Score | Workload RAM | Contract Status |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **`quantized_llm_inference`** | $\le 120.0\text{ ms}$ | **13.20 ms** | **13.06 ms** | `PREDICTIVE` | $1.000$ (Token Agreement) | 0.50 MB | **PASSED (100%)** |
-| **`rag_retrieval`** | $\le 6.0\text{ ms}$ | **0.036 ms** | **0.269 ms** | `CACHED` (Cold: `EXACT`) | $1.000$ (Top-10 Recall) | 0.10 MB | **PASSED (100%)** |
-| **`text_embeddings`** | $\le 15.0\text{ ms}$ | **12.91 ms** | **12.91 ms** | `REDUCED_WORK` | $1.000$ (Rel Err $0.00$) | 1.25 MB | **PASSED (100%)** |
-| **`temporal_reuse_rendering`** | $\le 8.0\text{ ms}$ | **4.88 ms** | **4.92 ms** | `REDUCED_WORK` | $100.0\text{ dB}$ (PSNR) | 0.25 MB | **PASSED (100%)** |
+| Workload Contract              | Latency Cap           | Live p50 (Warm) | Live p50 (Cold) | Result Label             | Quality Score             | Workload RAM | Contract Status   |
+| :----------------------------- | :-------------------- | :-------------- | :-------------- | :----------------------- | :------------------------ | :----------- | :---------------- |
+| **`quantized_llm_inference`**  | $\le 120.0\text{ ms}$ | **13.20 ms**    | **13.06 ms**    | `PREDICTIVE`             | $1.000$ (Token Agreement) | 0.50 MB      | **PASSED (100%)** |
+| **`rag_retrieval`**            | $\le 6.0\text{ ms}$   | **0.036 ms**    | **0.269 ms**    | `CACHED` (Cold: `EXACT`) | $1.000$ (Top-10 Recall)   | 0.10 MB      | **PASSED (100%)** |
+| **`text_embeddings`**          | $\le 15.0\text{ ms}$  | **12.91 ms**    | **12.91 ms**    | `REDUCED_WORK`           | $1.000$ (Rel Err $0.00$)  | 1.25 MB      | **PASSED (100%)** |
+| **`temporal_reuse_rendering`** | $\le 8.0\text{ ms}$   | **4.88 ms**     | **4.92 ms**     | `REDUCED_WORK`           | $100.0\text{ dB}$ (PSNR)  | 0.25 MB      | **PASSED (100%)** |
 
 - **Contract Parity on Declared Workload Set**: **100.0% (4/4 Contracts Passed)**
-- **Raw Physical Hardware Parity**: **0.0%** (*Permanently acknowledged: software cannot synthesize physical CUDA/Tensor cores or 1 TB/s memory bandwidth*).
+- **Raw Physical Hardware Parity**: **0.0%** (_Permanently acknowledged: software cannot synthesize physical CUDA/Tensor cores or 1 TB/s memory bandwidth_).
 
 #### CLI Commands & Verification:
 

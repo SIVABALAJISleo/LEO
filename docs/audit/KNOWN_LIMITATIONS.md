@@ -2,7 +2,7 @@
 
 **Audit Date**: October 2026  
 **Auditor**: Principal Systems Architect & Senior Verification Specialist  
-**Standard**: Strict Physical Realism & Scientific Honesty  
+**Standard**: Strict Physical Realism & Scientific Honesty
 
 ---
 
@@ -47,14 +47,14 @@
 
 ## 3. Workload Domain Support Boundaries
 
-| Workload Class | Supported Status | Verified Execution Pathway | Limitations / Failure Modes |
-| :--- | :--- | :--- | :--- |
-| **Polynomial Evaluation** | Fully Supported | Horner's Rule (Algorithmic Elimination) | Requires polynomial structure. Arbitrary non-polynomial operations fall back. |
-| **Structured Sparse Linear Algebra** | Fully Supported | Compressed Sparse Row / Column (CSR/CSC) | Matrices with density > 40% fall back to dense BLAS to avoid indexing overhead. |
-| **Symmetric / Rank-Deficient GEMM** | Fully Supported | Low-Rank Decomposition / Truncated SVD | Requires spectral gap. Full-rank ill-conditioned matrices cannot be truncated without accuracy loss. |
-| **Local LLM Inference (GGUF)** | Fully Supported | `llama_cpp` CPU (AVX2, 4–8 threads) | Model size constrained to 16 GB RAM budget. Tested with 0.5B–3B GGUF models. Large 70B models cannot run locally in 16 GB. |
-| **Arbitrary Dense FP32 GEMM** | CPU/iGPU BLAS Baseline | OpenBLAS AVX2 / OpenVINO GPU MatMul | Exact IEEE 754 computation. No fake 90%+ work elimination claimed. Real performance reported. |
-| **Cryptographic Hashing (SHA256)** | Contract Equivalent | Hardware SIMD (SHA extensions if supported) | Zero computation elimination possible due to avalanche property of cryptographic hashes. |
+| Workload Class                       | Supported Status       | Verified Execution Pathway                  | Limitations / Failure Modes                                                                                                |
+| :----------------------------------- | :--------------------- | :------------------------------------------ | :------------------------------------------------------------------------------------------------------------------------- |
+| **Polynomial Evaluation**            | Fully Supported        | Horner's Rule (Algorithmic Elimination)     | Requires polynomial structure. Arbitrary non-polynomial operations fall back.                                              |
+| **Structured Sparse Linear Algebra** | Fully Supported        | Compressed Sparse Row / Column (CSR/CSC)    | Matrices with density > 40% fall back to dense BLAS to avoid indexing overhead.                                            |
+| **Symmetric / Rank-Deficient GEMM**  | Fully Supported        | Low-Rank Decomposition / Truncated SVD      | Requires spectral gap. Full-rank ill-conditioned matrices cannot be truncated without accuracy loss.                       |
+| **Local LLM Inference (GGUF)**       | Fully Supported        | `llama_cpp` CPU (AVX2, 4–8 threads)         | Model size constrained to 16 GB RAM budget. Tested with 0.5B–3B GGUF models. Large 70B models cannot run locally in 16 GB. |
+| **Arbitrary Dense FP32 GEMM**        | CPU/iGPU BLAS Baseline | OpenBLAS AVX2 / OpenVINO GPU MatMul         | Exact IEEE 754 computation. No fake 90%+ work elimination claimed. Real performance reported.                              |
+| **Cryptographic Hashing (SHA256)**   | Contract Equivalent    | Hardware SIMD (SHA extensions if supported) | Zero computation elimination possible due to avalanche property of cryptographic hashes.                                   |
 
 ---
 

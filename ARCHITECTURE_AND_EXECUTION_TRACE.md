@@ -2,7 +2,7 @@
 
 **Workload Trace**: Dense Matrix Multiplication (GEMM 512×512 FP32) & Out-of-Core Tiled Streaming  
 **Contract**: `dense_gemm_512x512` (Numerically Equivalent, Relative Error <= 1e-4, Absolute Error <= 1e-4)  
-**Host Target**: Intel Core i5-12450H + Intel UHD Graphics iGPU  
+**Host Target**: Intel Core i5-12450H + Intel UHD Graphics iGPU
 
 ---
 
@@ -100,20 +100,20 @@
 During repository forensic analysis, several legacy patterns were audited and resolved:
 
 1. **Synthetic Bandwidth Numbers Eliminated**:
-   - *Legacy defect*: Early research prototypes hardcoded `measured_ram_bandwidth_gbps = 25.0` or assumed constant PCIe 4.0 speeds.
-   - *Active correction*: `IntelHardwareScheduler.measure_host_memory_bandwidth_gbps()` dynamically measures host DDR copy bandwidth using multi-trial memory copies on the real system (~18.57 GB/s measured).
+   - _Legacy defect_: Early research prototypes hardcoded `measured_ram_bandwidth_gbps = 25.0` or assumed constant PCIe 4.0 speeds.
+   - _Active correction_: `IntelHardwareScheduler.measure_host_memory_bandwidth_gbps()` dynamically measures host DDR copy bandwidth using multi-trial memory copies on the real system (~18.57 GB/s measured).
 
 2. **False iGPU Backend Reporting Prevented**:
-   - *Legacy defect*: Some legacy test scripts labeled a CPU fallback execution as `INTEL_UHD_IGPU` when OpenCL initialization failed.
-   - *Active correction*: `hyper_universal/scheduler/scheduler.py` and `hyper_omega/scheduler/heterogeneous.py` strictly track `is_native_gpu: bool` and report `CPU_FALLBACK` whenever the iGPU kernel is not physically invoked.
+   - _Legacy defect_: Some legacy test scripts labeled a CPU fallback execution as `INTEL_UHD_IGPU` when OpenCL initialization failed.
+   - _Active correction_: `hyper_universal/scheduler/scheduler.py` and `hyper_omega/scheduler/heterogeneous.py` strictly track `is_native_gpu: bool` and report `CPU_FALLBACK` whenever the iGPU kernel is not physically invoked.
 
 3. **Untrusted Cache Hits Distinguished From True Execution**:
-   - *Legacy defect*: Memoized results in incremental caches were sometimes treated as zero-latency compute speedup.
-   - *Active correction*: `hyper_universal/incremental/engine.py` explicitly flags `from_cache: True` and records cache lookup overhead separately from mathematical execution runtime.
+   - _Legacy defect_: Memoized results in incremental caches were sometimes treated as zero-latency compute speedup.
+   - _Active correction_: `hyper_universal/incremental/engine.py` explicitly flags `from_cache: True` and records cache lookup overhead separately from mathematical execution runtime.
 
 4. **Independent Reference Execution Enforced**:
-   - *Legacy defect*: Comparing a candidate output against an optimized reference that shared the same numerical transform risked masking precision drift.
-   - *Active correction*: All verification tests compare against an independent, pure canonical baseline (e.g., standard float64 NumPy matrix multiplication or pure Python reference).
+   - _Legacy defect_: Comparing a candidate output against an optimized reference that shared the same numerical transform risked masking precision drift.
+   - _Active correction_: All verification tests compare against an independent, pure canonical baseline (e.g., standard float64 NumPy matrix multiplication or pure Python reference).
 
 ---
 

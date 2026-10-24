@@ -3,7 +3,7 @@
 **Document**: `audit/ARCHITECTURE_AND_DATAFLOW.md`  
 **Date**: October 2026  
 **Auditor**: Principal Systems Architect  
-**Host Target**: Intel Core i5-12450H / i5-13420H, Intel UHD Graphics, 16 GB RAM, 512 GB SSD, Windows 11  
+**Host Target**: Intel Core i5-12450H / i5-13420H, Intel UHD Graphics, 16 GB RAM, 512 GB SSD, Windows 11
 
 ---
 

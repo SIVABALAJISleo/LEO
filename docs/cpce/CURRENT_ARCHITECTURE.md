@@ -2,7 +2,7 @@
 
 **Architecture Version**: CPCE-1.0  
 **Target Platform**: Lenovo IdeaPad Slim 3 15IAH8 (Intel Core i5-13420H, 16 GB RAM, Intel UHD Graphics, Windows 11 Home)  
-**Standard**: Provable Correctness, Representation Transformation, and Fail-Closed Certification  
+**Standard**: Provable Correctness, Representation Transformation, and Fail-Closed Certification
 
 ---
 

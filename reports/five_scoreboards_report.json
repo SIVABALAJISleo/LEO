@@ -16,7 +16,7 @@
       },
       {
         "workload": "sparse_2_4_avx2_gemm",
-        "error": 1.239776611328125e-05,
+        "error": 1.239776611328125e-5,
         "passed": true,
         "mode": "ALGEBRAICALLY_EXACT"
       },

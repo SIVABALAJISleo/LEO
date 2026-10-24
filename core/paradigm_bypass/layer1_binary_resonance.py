@@ -4,7 +4,16 @@ try:
 except ImportError:
     cl = None
 
-from numba import njit, prange
+try:
+    from numba import njit, prange
+except ImportError:
+    prange = range
+    def njit(*args, **kwargs):
+        def decorator(func):
+            return func
+        if len(args) == 1 and callable(args[0]):
+            return args[0]
+        return decorator
 
 class BinaryNeuralNetwork:
     def __init__(self, layer_size):

@@ -12,12 +12,7 @@
     "physical_cores": 8,
     "logical_processors": 12,
     "base_frequency_mhz": 2100.0,
-    "simd_capabilities": [
-      "AVX2",
-      "FMA3",
-      "SSE4.2",
-      "BMI2"
-    ],
+    "simd_capabilities": ["AVX2", "FMA3", "SSE4.2", "BMI2"],
     "execution_status": "OPERATIONAL"
   },
   "memory": {

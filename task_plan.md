@@ -99,22 +99,22 @@ Hardware Environment (Absolute):
 ### Phase 24: Tony Stark Computational Escape Engine & Production Integration
 
 - [x] Six Specialized Craft Engines (`hyper_universal/craft/`):
-  * ExactCraft: Horner's polynomial rule, modular binary power, prefix-sum $O(1)$ range queries.
-  * SparseCraft: Genuine sparsity detection, negative knowledge dense retention, CSR, and 2:4 structured AVX2 SIMD.
-  * StreamCraft: Out-of-core chunked streaming, bounded buffering ($\le 512$ MB), 256 KB L2 cache blocking, online softmax.
-  * TensorCraft: Fused GEMM + Bias + ReLU, transpose elimination, OpenVINO IR subgraph export.
-  * InferenceCraft: BitNet 1.58b ternary quantization, sliding-window KV-cache, speculative decoding.
-  * DeviceCraft: Intel Core i5-12450H (4P+4E/12T) topology detection, 256 KB dispatch latency thresholding.
+  - ExactCraft: Horner's polynomial rule, modular binary power, prefix-sum $O(1)$ range queries.
+  - SparseCraft: Genuine sparsity detection, negative knowledge dense retention, CSR, and 2:4 structured AVX2 SIMD.
+  - StreamCraft: Out-of-core chunked streaming, bounded buffering ($\le 512$ MB), 256 KB L2 cache blocking, online softmax.
+  - TensorCraft: Fused GEMM + Bias + ReLU, transpose elimination, OpenVINO IR subgraph export.
+  - InferenceCraft: BitNet 1.58b ternary quantization, sliding-window KV-cache, speculative decoding.
+  - DeviceCraft: Intel Core i5-12450H (4P+4E/12T) topology detection, 256 KB dispatch latency thresholding.
 - [x] Master Tony Stark Engine (`hyper_universal/tony_stark_engine.py`):
-  * 5 Guarantee Levels (`EXACT_BITWISE`, `EXACT_MATHEMATICAL`, `NUMERICAL_TOLERANCE`, `APPROXIMATE_BOUNDED`, `UNVERIFIED_CANDIDATE`).
-  * Computational Necessity Analyzer (provably eliminated, transformed, reused, required operations).
-  * Contract-scoped deterministic SHA-256 caching with mutually exclusive labels (`EXACT`, `APPROXIMATE`, `CACHED`, `PREDICTIVE`, `REDUCED_WORK`, `EMULATED`).
-  * CEGIS counterexample logging into `failures/fuzzing_counterexample_corpus.json`.
-  * Production API schema conforming to Section 17.
+  - 5 Guarantee Levels (`EXACT_BITWISE`, `EXACT_MATHEMATICAL`, `NUMERICAL_TOLERANCE`, `APPROXIMATE_BOUNDED`, `UNVERIFIED_CANDIDATE`).
+  - Computational Necessity Analyzer (provably eliminated, transformed, reused, required operations).
+  - Contract-scoped deterministic SHA-256 caching with mutually exclusive labels (`EXACT`, `APPROXIMATE`, `CACHED`, `PREDICTIVE`, `REDUCED_WORK`, `EMULATED`).
+  - CEGIS counterexample logging into `failures/fuzzing_counterexample_corpus.json`.
+  - Production API schema conforming to Section 17.
 - [x] Production Routing & Pipeline Integration:
-  * Wired into `hyper_universal/pipeline.py` (Stages 6, 9, 10).
-  * Wired into `leo/parity/router.py` `ParityWorkloadRouter` for seamless backward-compatible workload dispatch.
+  - Wired into `hyper_universal/pipeline.py` (Stages 6, 9, 10).
+  - Wired into `leo/parity/router.py` `ParityWorkloadRouter` for seamless backward-compatible workload dispatch.
 - [x] Verification & Scoreboards:
-  * 16/16 tests passing in `tests/test_tony_stark_escape_engine.py`.
-  * 122/122 tests passing across target suite.
-  * 5/5 scoreboards verified passing at 100.0% on host hardware.
+  - 16/16 tests passing in `tests/test_tony_stark_escape_engine.py`.
+  - 122/122 tests passing across target suite.
+  - 5/5 scoreboards verified passing at 100.0% on host hardware.

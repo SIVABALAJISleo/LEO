@@ -5,6 +5,7 @@
 The **Alternative Algorithm Discovery Engine** (`hyper_universal/pathway_discovery/search.py`) explores a bounded combinatorial search space of algorithmic alternatives for any given workload contract.
 
 ### Candidate Structure
+
 ```python
 @dataclass
 class PathwayCandidate:

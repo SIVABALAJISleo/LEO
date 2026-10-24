@@ -10,10 +10,7 @@
     "igpu_backend_available": false,
     "directml_available": false,
     "vulkan_available": false,
-    "ort_providers": [
-      "AzureExecutionProvider",
-      "CPUExecutionProvider"
-    ]
+    "ort_providers": ["AzureExecutionProvider", "CPUExecutionProvider"]
   },
   "workloads": [
     {

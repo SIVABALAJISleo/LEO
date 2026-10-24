@@ -47,5 +47,6 @@
 ## 3. Cryptographic Provenance
 
 Every `FormalCertificate` includes:
+
 - `contract_hash`: SHA-256 hash of the immutable workload specification.
 - `provenance_hash`: SHA-256 signature binding certificate ID, workload ID, certified state, and speedup.

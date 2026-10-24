@@ -25,16 +25,16 @@ contracts:
     workload_id: "WLD_LLM_001"
     description: "Autoregressive token generation with INT8/INT4 weights and speculative verification"
     input_spec:
-      prompt_tokens: [101, 2054, 2003, 1037, 3231, 102]  # Fixed evaluation prompt sequence
+      prompt_tokens: [101, 2054, 2003, 1037, 3231, 102] # Fixed evaluation prompt sequence
       max_new_tokens: 16
-      temperature: 0.0  # Greedy decoding for deterministic verification
+      temperature: 0.0 # Greedy decoding for deterministic verification
     reference_implementation: "DenseFP32Autoregressive"
     candidate_implementation: "LayerStreamedSpeculativeDecoder"
     correctness_metric: "greedy_token_match_rate"
-    quality_threshold: 1.0  # Must match reference tokens exactly under greedy verification
-    max_relative_error: 0.05  # Logit distribution divergence must remain < 5%
-    latency_cap_ms: 120.0     # Max allowed latency for 16 tokens generated on CPU/iGPU
-    peak_ram_cap_mb: 64.0     # Resident RAM budget (must stream layers from SSD)
+    quality_threshold: 1.0 # Must match reference tokens exactly under greedy verification
+    max_relative_error: 0.05 # Logit distribution divergence must remain < 5%
+    latency_cap_ms: 120.0 # Max allowed latency for 16 tokens generated on CPU/iGPU
+    peak_ram_cap_mb: 64.0 # Resident RAM budget (must stream layers from SSD)
     allowed_labels:
       - "EXACT"
       - "APPROXIMATE"
@@ -53,10 +53,10 @@ contracts:
     reference_implementation: "ExhaustiveLinearScanFP32"
     candidate_implementation: "CachedSubspaceRetrieval"
     correctness_metric: "top_k_recall"
-    quality_threshold: 0.95   # Top-5 recall must be at least 95% identical to exhaustive scan
-    max_relative_error: 0.01  # Cosine distance deviation < 1%
-    latency_cap_ms: 6.0       # Retrieval must complete within 6.0 ms
-    peak_ram_cap_mb: 32.0     # Maximum resident memory allowed for vector index
+    quality_threshold: 0.95 # Top-5 recall must be at least 95% identical to exhaustive scan
+    max_relative_error: 0.01 # Cosine distance deviation < 1%
+    latency_cap_ms: 6.0 # Retrieval must complete within 6.0 ms
+    peak_ram_cap_mb: 32.0 # Maximum resident memory allowed for vector index
     allowed_labels:
       - "EXACT"
       - "APPROXIMATE"
@@ -75,10 +75,10 @@ contracts:
     reference_implementation: "FullDenseGEMMProjection"
     candidate_implementation: "L3BlockedLowRankProjection"
     correctness_metric: "cosine_similarity"
-    quality_threshold: 0.999  # Emitted embeddings must have >= 0.999 cosine similarity to FP32 baseline
+    quality_threshold: 0.999 # Emitted embeddings must have >= 0.999 cosine similarity to FP32 baseline
     max_relative_error: 0.005 # Max relative error < 0.5%
-    latency_cap_ms: 15.0      # Latency must remain under 15.0 ms
-    peak_ram_cap_mb: 48.0     # Maximum resident memory budget
+    latency_cap_ms: 15.0 # Latency must remain under 15.0 ms
+    peak_ram_cap_mb: 48.0 # Maximum resident memory budget
     allowed_labels:
       - "EXACT"
       - "APPROXIMATE"
@@ -92,15 +92,15 @@ contracts:
       frame_height: 256
       frame_width: 256
       tile_size: 32
-      dynamic_region_pct: 12.5  # 12.5% of tiles modified per frame
+      dynamic_region_pct: 12.5 # 12.5% of tiles modified per frame
       scene_change_threshold: 0.60
     reference_implementation: "FullFrameRecomputation"
     candidate_implementation: "TemporalTileReprojection"
     correctness_metric: "psnr_db"
-    quality_threshold: 40.0   # PSNR must exceed 40.0 dB (visually indistinguishable)
+    quality_threshold: 40.0 # PSNR must exceed 40.0 dB (visually indistinguishable)
     max_relative_error: 0.001 # Static tiles must have bitwise identical output (error == 0)
-    latency_cap_ms: 8.0       # Must achieve < 8.0 ms per frame (> 120 FPS on CPU/iGPU)
-    peak_ram_cap_mb: 24.0     # Buffer pool resident cap
+    latency_cap_ms: 8.0 # Must achieve < 8.0 ms per frame (> 120 FPS on CPU/iGPU)
+    peak_ram_cap_mb: 24.0 # Buffer pool resident cap
     allowed_labels:
       - "EXACT"
       - "REDUCED_WORK"

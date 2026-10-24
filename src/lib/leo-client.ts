@@ -293,8 +293,12 @@ export function getMockResponse(path: string, init: RequestInit = {}): Response 
   }
 
   // 6b. Local AI Inference Endpoint
-  if (cleanPath.includes("/api/v1/inference/generate") || cleanPath.includes("/api/v1/inference/stream")) {
-    const userMsg = bodyData.prompt || bodyData.messages?.[bodyData.messages?.length - 1]?.content || "Hello";
+  if (
+    cleanPath.includes("/api/v1/inference/generate") ||
+    cleanPath.includes("/api/v1/inference/stream")
+  ) {
+    const userMsg =
+      bodyData.prompt || bodyData.messages?.[bodyData.messages?.length - 1]?.content || "Hello";
     return new Response(
       JSON.stringify({
         text: `Hello! I am LEO local inference engine. You said: "${userMsg}". Running locally with zero cloud dependencies.`,

@@ -15,12 +15,7 @@
     "quality_threshold": 1.0,
     "latency_cap_ms": 120.0,
     "peak_ram_cap_mb": 64.0,
-    "allowed_labels": [
-      "APPROXIMATE",
-      "EXACT",
-      "PREDICTIVE",
-      "REDUCED_WORK"
-    ]
+    "allowed_labels": ["APPROXIMATE", "EXACT", "PREDICTIVE", "REDUCED_WORK"]
   },
   "measurements": {
     "latency_p50_ms": 13.192,

@@ -65,12 +65,14 @@ The platform integrates a multi-tier runtime architecture designed for provable 
 ## 2. Core Subsystems
 
 ### 2.1 Canonical Execution Runtime (`hyper/upe/runtime.py`)
+
 - Central coordination pipeline that accepts typed `WorkloadRequest` instances.
 - Mines or matches verified `WorkloadContract`.
 - Dispatches through `UnseenPathwayPlanner` to locate verified algorithmic shortcuts (e.g. Horner's scheme, rank reduction, cache-tiled kernels).
 - Invokes independent `FreivaldsVerifier` or `ExternalEquivalenceVerifier` before returning results.
 
 ### 2.2 Truthful Backend Registry (`hyper_x/heterogeneous_orchestrator.py`, `hyper/upe/execution.py`)
+
 - Discovers physical devices at runtime via `openvino.Core()` and `numpy.__config__`.
 - Identifies:
   - `CPU`: Intel Core i5-13420H with AVX2/FMA3 support.
@@ -80,6 +82,7 @@ The platform integrates a multi-tier runtime architecture designed for provable 
   - True copy overhead is measured and reported; host-mapped transfers are never labeled zero-copy.
 
 ### 2.3 Local AI Inference Subsystem (`backend/routers/inference_router.py`)
+
 - Integrates `llama_cpp` engine loading `models/qwen2.5-0.5b-instruct-q4_k_m.gguf` (491 MB).
 - Runs 100% locally with zero cloud dependencies, zero external network requests, and zero paid API keys.
 - Measures and reports:
@@ -91,6 +94,7 @@ The platform integrates a multi-tier runtime architecture designed for provable 
   - `tokens_generated`
 
 ### 2.4 Verification & Fail-Closed Certification (`hyper_x/omega_runner.py`, `hyper_x/equivalence_verifier.py`)
+
 - Generates `ExternalEquivalenceWorkCertificate` carrying SHA-256 digests of input, reference output, candidate output, and contract.
 - Status gate rules:
   - Any failed primary check $\to$ `FAIL`.
@@ -99,6 +103,7 @@ The platform integrates a multi-tier runtime architecture designed for provable 
   - All mandatory checks pass $\to$ `VERIFIED`.
 
 ### 2.5 REST API & Frontend Observability (`backend/main.py`, `src/`)
+
 - Exposes typed REST endpoints:
   - `/api/v1/upe/status`: Engine health and detected hardware.
   - `/api/v1/upe/contracts`: Registered workload contracts.

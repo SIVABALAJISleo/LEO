@@ -3,6 +3,7 @@
 ## 1. Phase-by-Phase Execution Ledger
 
 ### Phase 1: Stop Invalid Success Claims (Completed)
+
 - **Objective**: Prevent candidates with massive numerical errors from receiving passing certificates.
 - **Root Causes**:
   - `hyper_v3/frontend/contract_parser.py`: Loose default contract tolerance `max_relative_error = 0.80`, `max_absolute_error = 2.0`.
@@ -14,6 +15,7 @@
   4. Regenerated `HYPER_3_0_RESULTS.json` and its mirror `reports/hyper_3/HYPER_3_0_RESULTS.json`. Failing candidates (`dense_gemm`, `rasterization`, `bvh`, etc.) are now accurately marked `passed: false`.
 
 ### Phase 2: Stop Misleading Measurements & Scheduler Repair (Completed)
+
 - **Objective**: Eliminate synthetic constants and unverified GPU backend labels.
 - **Root Cause**: `hyper_omega/scheduler/heterogeneous.py` assumed a constant 25 GB/s bus bandwidth and assigned `INTEL_UHD_IGPU_VULKAN` even to CPU callbacks.
 - **Actions Executed**:
@@ -22,6 +24,7 @@
   3. Added backend discovery (`discover_hardware_backends`) to verify whether Vulkan or OpenCL runtimes are genuinely present before labeling execution targets.
 
 ### Phase 3: Repair Memory Bandwidth and Compression Claims (Completed)
+
 - **Objective**: Truthfully classify BitNet ternary quantization and eliminate full-matrix RAM allocations.
 - **Root Cause**: `hyper_omega/memory_bypass/engine.py` claimed BitNet was a "lossless" memory bypass and allocated an entire reconstructed array in RAM.
 - **Actions Executed**:
@@ -30,18 +33,21 @@
   3. Clearly decoupled physical memory bandwidth (18.57 GB/s nominal) from algorithmic intensity multipliers.
 
 ### Phase 4: Create a Canonical Evidence Pipeline (Completed)
+
 - **Objective**: Synchronize root results and report mirrors from an authoritative execution source.
 - **Actions Executed**:
   1. Updated `BenchmarkRunner` to record truthful `CPU (NumPy AVX2)` device provenance in Scoreboard D.
   2. Synchronized `HYPER_3_0_RESULTS.json` and `reports/hyper_3/HYPER_3_0_RESULTS.json`.
 
 ### Phase 5: Revalidate Target Hardware Fingerprints (Completed)
+
 - **Objective**: Accurately report host hardware and differentiate between reference target profile (i5-12450H) and host environment (i5-13420H).
 - **Actions Executed**:
   1. Queried actual host hardware via CIM/WMI: Detected 13th Gen Intel Core i5-13420H with Intel UHD Graphics.
   2. Verified `HYPER_MASTER_SCORECARD.json` and `HYPER_MASTER_SCORECARD.md` declare `HOST_MISMATCH` honestly rather than pretending to be the reference i5-12450H.
 
 ### Phase 6: Application & Dashboard Integration Repair (Completed)
+
 - **Objective**: Fix frontend and backend integration defects.
 - **Actions Executed**:
   1. Repaired formatting newline break in `dashboard/pathway_discovery_dashboard.html` that broke API route tests.

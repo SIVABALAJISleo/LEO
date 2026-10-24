@@ -203,8 +203,12 @@ function SourceBlock({
 }) {
   return (
     <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-card/60 p-5 shadow-lg backdrop-blur-xl">
-      <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Effective API base URL</p>
-      <code className="mt-2 block break-all font-mono text-sm text-foreground bg-background/50 p-2.5 rounded-lg border border-border/40">{base || "—"}</code>
+      <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+        Effective API base URL
+      </p>
+      <code className="mt-2 block break-all font-mono text-sm text-foreground bg-background/50 p-2.5 rounded-lg border border-border/40">
+        {base || "—"}
+      </code>
       <p className="mt-2 text-xs text-muted-foreground">
         Source: <span className="font-semibold text-foreground">{SOURCE_LABEL[source]}</span>
       </p>

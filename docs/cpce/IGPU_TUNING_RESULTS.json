@@ -6,14 +6,7 @@
   },
   "exact_crossover_dimension": 768,
   "crossover_finding": "Intel UHD Graphics beats CPU AVX2 OpenBLAS for N >= 768.",
-  "dimensions_evaluated": [
-    256,
-    512,
-    768,
-    1024,
-    1536,
-    2048
-  ],
+  "dimensions_evaluated": [256, 512, 768, 1024, 1536, 2048],
   "results": {
     "256": {
       "dimension": 256,

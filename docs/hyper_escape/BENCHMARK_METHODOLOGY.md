@@ -25,5 +25,6 @@ $$\text{Speedup (Throughput)} = \frac{\text{Candidate Throughput (ops/s)}}{\max(
 ## 3. Bandwidth Accounting
 
 Physical DDR bus bandwidth is strictly separated from algorithmic data avoidance:
+
 - **Measured Bus Bandwidth:** $\frac{\text{Physical Bytes Transferred}}{\text{Wall Clock Time}}$ (typically 15–25 GB/s on dual-channel DDR).
 - **Algorithmic Data Avoidance:** Calculated theoretically when intermediate tensors are avoided via kernel fusion or tiling. Algorithmic avoidance is **never** reported as physical bus throughput.

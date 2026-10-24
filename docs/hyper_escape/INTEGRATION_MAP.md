@@ -56,6 +56,7 @@ hyper_universal/
 ## 2. API Endpoint Mapping (`/api/v1/escape_omega`)
 
 Mounted in `backend/main.py` and implemented in `backend/routers/hyper_escape_router.py`:
+
 - `GET  /api/v1/escape_omega/status`: Live hardware discovery, memory headroom, engine readiness.
 - `GET  /api/v1/escape_omega/contracts`: Lists registered universal workload contracts.
 - `POST /api/v1/escape_omega/contracts/register`: Registers a new contract.

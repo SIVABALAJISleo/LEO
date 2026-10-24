@@ -23,24 +23,10 @@
       "ref_latency_ms": 1.826,
       "cand_latency_ms": 68.048,
       "speedup_ratio": 0.027,
-      "ref_samples_ms": [
-        1.879,
-        1.813,
-        1.94,
-        1.738,
-        1.826
-      ],
-      "cand_samples_ms": [
-        76.448,
-        67.468,
-        68.809,
-        68.048,
-        66.606
-      ],
+      "ref_samples_ms": [1.879, 1.813, 1.94, 1.738, 1.826],
+      "cand_samples_ms": [76.448, 67.468, 68.809, 68.048, 66.606],
       "peak_memory_mb": 0.0,
-      "optimizations_applied": [
-        "OPENVINO_GPU_DISPATCH"
-      ],
+      "optimizations_applied": ["OPENVINO_GPU_DISPATCH"],
       "work_elimination_ratio": 0.0,
       "provenance": {
         "latency": "MEASURED",
@@ -56,24 +42,10 @@
       "ref_latency_ms": 2.243,
       "cand_latency_ms": 5.042,
       "speedup_ratio": 0.445,
-      "ref_samples_ms": [
-        2.595,
-        2.116,
-        2.317,
-        2.243,
-        2.058
-      ],
-      "cand_samples_ms": [
-        9.236,
-        5.095,
-        4.828,
-        4.92,
-        5.042
-      ],
+      "ref_samples_ms": [2.595, 2.116, 2.317, 2.243, 2.058],
+      "cand_samples_ms": [9.236, 5.095, 4.828, 4.92, 5.042],
       "peak_memory_mb": 0.0,
-      "optimizations_applied": [
-        "RULE_001_IDENTITY_ELIMINATION"
-      ],
+      "optimizations_applied": ["RULE_001_IDENTITY_ELIMINATION"],
       "work_elimination_ratio": 1.0,
       "provenance": {
         "latency": "MEASURED",
@@ -118,9 +90,7 @@
       "cand_latency_ms": 3.7037,
       "speedup_ratio": 18.37,
       "peak_memory_mb": 1.003,
-      "optimizations_applied": [
-        "VERIFIED_COMPUTATION_MEMOIZATION"
-      ],
+      "optimizations_applied": ["VERIFIED_COMPUTATION_MEMOIZATION"],
       "work_elimination_ratio": 1.0,
       "provenance": {
         "latency": "MEASURED",

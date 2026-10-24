@@ -34,7 +34,7 @@
         "reference_result": "Deterministic IEEE-754 reference",
         "candidate_result": "Verified software execution pathway",
         "exactness": "NUMERICALLY_EQUIVALENT",
-        "numerical_error": 1.71661376953125e-05,
+        "numerical_error": 1.71661376953125e-5,
         "quality": 1.0,
         "latency": 1.0,
         "throughput": 1000.0,

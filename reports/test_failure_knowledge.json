@@ -166,7 +166,5 @@
       "timestamp": 1792243104.346483
     }
   ],
-  "learned_constraints": [
-    "Require FP32 accumulator for large dynamic ranges"
-  ]
+  "learned_constraints": ["Require FP32 accumulator for large dynamic ranges"]
 }

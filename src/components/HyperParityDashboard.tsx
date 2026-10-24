@@ -457,9 +457,7 @@ export function HyperParityDashboard() {
             disabled={isFetching}
             className="flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-lg transition-all hover:bg-primary/90 active:scale-95 disabled:opacity-50"
           >
-            <RefreshCw
-              className={`w-4 h-4 ${isFetching ? "animate-spin" : ""}`}
-            />
+            <RefreshCw className={`w-4 h-4 ${isFetching ? "animate-spin" : ""}`} />
             <span>Refresh</span>
           </button>
         </div>
@@ -525,10 +523,18 @@ export function HyperParityDashboard() {
               </span>
             </div>
             <p className="text-muted-foreground text-[11px] mt-1 leading-relaxed">
-              Just as a plant leaf synthesizes hydrocarbons directly from sunlight without industrial cracking towers,
-              LEO/HYPER eliminates 85%–95% of redundant computation.
-              <strong className="text-foreground"> Physical Hardware Silicon Necessity is 0.0% (100% Irrelevant & Bypassed)</strong> while
-              <strong className="text-foreground"> Universal Exact-Compute & Application Contract Parity is 100.0%</strong>.
+              Just as a plant leaf synthesizes hydrocarbons directly from sunlight without
+              industrial cracking towers, LEO/HYPER eliminates 85%–95% of redundant computation.
+              <strong className="text-foreground">
+                {" "}
+                Physical Hardware Silicon Necessity is 0.0% (100% Irrelevant & Bypassed)
+              </strong>{" "}
+              while
+              <strong className="text-foreground">
+                {" "}
+                Universal Exact-Compute & Application Contract Parity is 100.0%
+              </strong>
+              .
             </p>
           </div>
         </div>
@@ -538,11 +544,15 @@ export function HyperParityDashboard() {
             <div className="text-base font-black text-emerald-300">0.0%</div>
           </div>
           <div className="px-3 py-1.5 rounded-lg bg-emerald-950/40 border border-emerald-500/30 text-center">
-            <div className="text-[10px] text-emerald-400/80 uppercase font-bold">HW Irrelevance</div>
+            <div className="text-[10px] text-emerald-400/80 uppercase font-bold">
+              HW Irrelevance
+            </div>
             <div className="text-base font-black text-emerald-300">100.0%</div>
           </div>
           <div className="px-3 py-1.5 rounded-lg bg-emerald-950/40 border border-emerald-500/30 text-center">
-            <div className="text-[10px] text-emerald-400/80 uppercase font-bold">Contract Parity</div>
+            <div className="text-[10px] text-emerald-400/80 uppercase font-bold">
+              Contract Parity
+            </div>
             <div className="text-base font-black text-emerald-300">100.0%</div>
           </div>
         </div>
@@ -689,7 +699,9 @@ export function HyperParityDashboard() {
                   </div>
 
                   <div className="mt-2 text-sm font-semibold text-foreground">{dim.name}</div>
-                  <div className="text-[11px] text-muted-foreground line-clamp-2 mt-0.5">{dim.desc}</div>
+                  <div className="text-[11px] text-muted-foreground line-clamp-2 mt-0.5">
+                    {dim.desc}
+                  </div>
 
                   <div className="mt-3 flex items-center justify-between font-mono text-xs">
                     <span className="text-muted-foreground">Parity Progress:</span>
@@ -709,11 +721,7 @@ export function HyperParityDashboard() {
                   <div className="mt-1.5 w-full bg-muted/40 h-1.5 rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all duration-500 ${
-                        isVerified
-                          ? "bg-emerald-400"
-                          : isZero
-                            ? "bg-muted"
-                            : "bg-primary"
+                        isVerified ? "bg-emerald-400" : isZero ? "bg-muted" : "bg-primary"
                       }`}
                       style={{ width: `${Math.max(dim.value, 4)}%` }}
                     />

@@ -1,155 +1,145 @@
 ﻿{
-    "certificate_id":  "CERT-UFR-1792838470",
-    "issued_timestamp":  1792838470.8252351,
-    "contract_version":  "v3.0-universal-replacement-fabric",
-    "overall_status":  "CERTIFIED_VERIFIED_FABRIC",
-    "gates":  {
-                  "GATE_A_CORRECTNESS":  {
-                                             "gate_id":  "GATE_A",
-                                             "gate_name":  "Independent Correctness Verification",
-                                             "status":  "PASSED",
-                                             "criteria":  "100% of canonical workloads pass primary \u0026 adversarial tests against independent reference.",
-                                             "evidence":  "Passed: 15/15. Fails: 0, Unknown: 0, Blocked: 0.",
-                                             "details":  {
-                                                             "pass_count":  15,
-                                                             "total":  15,
-                                                             "zero_false_passes_verified":  true
-                                                         }
-                                         },
-                  "GATE_B_COVERAGE":  {
-                                          "gate_id":  "GATE_B",
-                                          "gate_name":  "Declared Support Contract Coverage",
-                                          "status":  "PASSED",
-                                          "criteria":  "100% coverage of all 15 workloads declared in versioned contract v3.0.",
-                                          "evidence":  "Implemented \u0026 verified: 15/15 canonical contracts.",
-                                          "details":  {
-                                                          "supported_workloads":  [
-                                                                                      "GEMM_STANDARD",
-                                                                                      "CONV2D_STANDARD",
-                                                                                      "FFT_STANDARD",
-                                                                                      "REDUCTION_SUM",
-                                                                                      "SORT_STANDARD",
-                                                                                      "PAGERANK_GRAPH",
-                                                                                      "SHA256_CRYPTO",
-                                                                                      "NBODY_GRAVITATIONAL",
-                                                                                      "ML_MLP_INFERENCE",
-                                                                                      "ATTENTION_HEAD",
-                                                                                      "SOBEL_FILTER",
-                                                                                      "STREAMING_VECTOR_OPS",
-                                                                                      "MANDELBROT_FRACTAL",
-                                                                                      "SPMV_IRREGULAR_CSR",
-                                                                                      "ADVERSARIAL_HILBERT_STRESS"
-                                                                                  ],
-                                                          "coverage_ratio":  1.0
-                                                      }
-                                      },
-                  "GATE_C_DEVICE_PROVENANCE":  {
-                                                   "gate_id":  "GATE_C",
-                                                   "gate_name":  "Physical Device Execution Provenance",
-                                                   "status":  "PASSED",
-                                                   "criteria":  "Intel UHD Graphics iGPU discovered, compiled, and verified on physical hardware.",
-                                                   "evidence":  "iGPU: Intel(R) UHD Graphics (iGPU). Live compilation: 44.52ms, exec: 0.93ms.",
-                                                   "details":  {
-                                                                   "igpu_device":  "Intel(R) UHD Graphics (iGPU)",
-                                                                   "driver":  "[\u0027FP32\u0027, \u0027BIN\u0027, \u0027FP16\u0027, \u0027INT8\u0027, \u0027GPU_USM_MEMORY\u0027, \u0027EXPORT_IMPORT\u0027]",
-                                                                   "probe_verified":  true
-                                                               }
-                                               },
-                  "GATE_D_PERFORMANCE":  {
-                                             "gate_id":  "GATE_D",
-                                             "gate_name":  "Empirical Benchmarking \u0026 Zero Simulated Metrics",
-                                             "status":  "PASSED",
-                                             "criteria":  "Real wall-clock timers, warm-up counts, zero fabricated throughput.",
-                                             "evidence":  "Average measured speedup across suite: 32.46x (range: 0.78x - 297.65x).",
-                                             "details":  {
-                                                             "min_speedup":  0.78,
-                                                             "max_speedup":  297.65,
-                                                             "mean_speedup":  32.46
-                                                         }
-                                         },
-                  "GATE_E_INTEGRATION":  {
-                                             "gate_id":  "GATE_E",
-                                             "gate_name":  "Application \u0026 REST API Integration",
-                                             "status":  "PASSED",
-                                             "criteria":  "Exposed via canonical REST endpoints under /api/hyper/*.",
-                                             "evidence":  "REST routes active: /capabilities, /backends, /execute, /verify, /benchmark, /certification, /workloads.",
-                                             "details":  {
-                                                             "api_prefix":  "/api/hyper"
-                                                         }
-                                         },
-                  "GATE_F_REPRODUCIBILITY":  {
-                                                 "gate_id":  "GATE_F",
-                                                 "gate_name":  "Deterministic Seed \u0026 Artifact Reproducibility",
-                                                 "status":  "PASSED",
-                                                 "criteria":  "PowerShell runner and Python harnesses reproduce identical outputs.",
-                                                 "evidence":  "Seeded PRNG (seed=42) and SHA-256 output digests match reference oracles.",
-                                                 "details":  {
-                                                                 "seed":  42
-                                                             }
-                                             },
-                  "GATE_G_SCOPE_INTEGRITY":  {
-                                                 "gate_id":  "GATE_G",
-                                                 "gate_name":  "Scientific Scope \u0026 Truthful Limitation Boundaries",
-                                                 "status":  "PASSED",
-                                                 "criteria":  "Explicit matrix of supported vs unsupported domains; zero false claims of universal GPU parity.",
-                                                 "evidence":  "All hardware boundaries declared; discrete parity explicitly marked NOT_MEASURED.",
-                                                 "details":  {
-                                                                 "limitations_count":  5
-                                                             }
-                                             }
-              },
-    "workload_summary":  {
-                             "total_workloads":  15,
-                             "pass_count":  15,
-                             "fail_count":  0,
-                             "unknown_count":  0,
-                             "blocked_count":  0
-                         },
-    "hardware_provenance":  {
-                                "probe_timestamp":  1792838470.8249266,
-                                "os_name":  "Windows",
-                                "os_version":  "11 (Build 10.0.26100)",
-                                "python_version":  "3.13.5",
-                                "cpu_model":  "13th Gen Intel(R) Core(TM) i5-13420H",
-                                "cpu_physical_cores":  8,
-                                "cpu_logical_threads":  12,
-                                "cpu_features":  [
-                                                     "SSE",
-                                                     "SSE2",
-                                                     "SSE3",
-                                                     "SSSE3",
-                                                     "SSE4.1",
-                                                     "SSE4.2",
-                                                     "AVX",
-                                                     "AVX2",
-                                                     "FMA3"
-                                                 ],
-                                "total_ram_gb":  15.7,
-                                "available_ram_gb":  2.46,
-                                "igpu_available":  true,
-                                "igpu_device_name":  "Intel(R) UHD Graphics (iGPU)",
-                                "igpu_driver_version":  "[\u0027FP32\u0027, \u0027BIN\u0027, \u0027FP16\u0027, \u0027INT8\u0027, \u0027GPU_USM_MEMORY\u0027, \u0027EXPORT_IMPORT\u0027]",
-                                "igpu_probe_success":  true,
-                                "igpu_compile_time_ms":  44.515,
-                                "igpu_exec_time_ms":  0.931,
-                                "discrete_gpu_present":  false,
-                                "discrete_gpu_name":  "None",
-                                "discrete_gpu_parity_status":  "NOT_MEASURED (no discrete GPU present in system; discrete parity unmeasured)",
-                                "iree_available":  false,
-                                "swiftshader_available":  false,
-                                "pocl_available":  false,
-                                "probe_notes":  [
-                                                    "Physical Intel GPU probe verified: Intel(R) UHD Graphics (iGPU) executed live 16x16 MatMul in 0.93ms.",
-                                                    "Memory Architecture: Unified system RAM (15.7 GB total, 2.5 GB available).",
-                                                    "Discrete GPU status: NOT_MEASURED (no discrete GPU present in system; discrete parity unmeasured)"
-                                                ]
-                            },
-    "limitations":  [
-                        "Discrete GPU Parity: NOT_MEASURED (no dedicated NVIDIA/AMD GPU present in Lenovo IdeaPad Slim 3).",
-                        "Universal Hardware Replacement is an active research horizon, not an established claim for arbitrary CUDA code.",
-                        "Intel UHD Graphics shared unified memory (16GB RAM) limits maximum non-tiled allocation.",
-                        "IREE and PoCL backends dynamically probed; marked UNSUPPORTED when external runtime packages are uninstalled.",
-                        "OpenVINO GPU kernels registered for GEMM, MLP, and Reductions; unsupported operations strictly fall back to CPU."
-                    ],
-    "certificate_hash":  "d41cfd9fdb9114a8974307d6b2b588734286438004ca1365f984862240c0bb9d"
+  "certificate_id": "CERT-UFR-1792838470",
+  "issued_timestamp": 1792838470.8252351,
+  "contract_version": "v3.0-universal-replacement-fabric",
+  "overall_status": "CERTIFIED_VERIFIED_FABRIC",
+  "gates": {
+    "GATE_A_CORRECTNESS": {
+      "gate_id": "GATE_A",
+      "gate_name": "Independent Correctness Verification",
+      "status": "PASSED",
+      "criteria": "100% of canonical workloads pass primary \u0026 adversarial tests against independent reference.",
+      "evidence": "Passed: 15/15. Fails: 0, Unknown: 0, Blocked: 0.",
+      "details": {
+        "pass_count": 15,
+        "total": 15,
+        "zero_false_passes_verified": true
+      }
+    },
+    "GATE_B_COVERAGE": {
+      "gate_id": "GATE_B",
+      "gate_name": "Declared Support Contract Coverage",
+      "status": "PASSED",
+      "criteria": "100% coverage of all 15 workloads declared in versioned contract v3.0.",
+      "evidence": "Implemented \u0026 verified: 15/15 canonical contracts.",
+      "details": {
+        "supported_workloads": [
+          "GEMM_STANDARD",
+          "CONV2D_STANDARD",
+          "FFT_STANDARD",
+          "REDUCTION_SUM",
+          "SORT_STANDARD",
+          "PAGERANK_GRAPH",
+          "SHA256_CRYPTO",
+          "NBODY_GRAVITATIONAL",
+          "ML_MLP_INFERENCE",
+          "ATTENTION_HEAD",
+          "SOBEL_FILTER",
+          "STREAMING_VECTOR_OPS",
+          "MANDELBROT_FRACTAL",
+          "SPMV_IRREGULAR_CSR",
+          "ADVERSARIAL_HILBERT_STRESS"
+        ],
+        "coverage_ratio": 1.0
+      }
+    },
+    "GATE_C_DEVICE_PROVENANCE": {
+      "gate_id": "GATE_C",
+      "gate_name": "Physical Device Execution Provenance",
+      "status": "PASSED",
+      "criteria": "Intel UHD Graphics iGPU discovered, compiled, and verified on physical hardware.",
+      "evidence": "iGPU: Intel(R) UHD Graphics (iGPU). Live compilation: 44.52ms, exec: 0.93ms.",
+      "details": {
+        "igpu_device": "Intel(R) UHD Graphics (iGPU)",
+        "driver": "[\u0027FP32\u0027, \u0027BIN\u0027, \u0027FP16\u0027, \u0027INT8\u0027, \u0027GPU_USM_MEMORY\u0027, \u0027EXPORT_IMPORT\u0027]",
+        "probe_verified": true
+      }
+    },
+    "GATE_D_PERFORMANCE": {
+      "gate_id": "GATE_D",
+      "gate_name": "Empirical Benchmarking \u0026 Zero Simulated Metrics",
+      "status": "PASSED",
+      "criteria": "Real wall-clock timers, warm-up counts, zero fabricated throughput.",
+      "evidence": "Average measured speedup across suite: 32.46x (range: 0.78x - 297.65x).",
+      "details": {
+        "min_speedup": 0.78,
+        "max_speedup": 297.65,
+        "mean_speedup": 32.46
+      }
+    },
+    "GATE_E_INTEGRATION": {
+      "gate_id": "GATE_E",
+      "gate_name": "Application \u0026 REST API Integration",
+      "status": "PASSED",
+      "criteria": "Exposed via canonical REST endpoints under /api/hyper/*.",
+      "evidence": "REST routes active: /capabilities, /backends, /execute, /verify, /benchmark, /certification, /workloads.",
+      "details": {
+        "api_prefix": "/api/hyper"
+      }
+    },
+    "GATE_F_REPRODUCIBILITY": {
+      "gate_id": "GATE_F",
+      "gate_name": "Deterministic Seed \u0026 Artifact Reproducibility",
+      "status": "PASSED",
+      "criteria": "PowerShell runner and Python harnesses reproduce identical outputs.",
+      "evidence": "Seeded PRNG (seed=42) and SHA-256 output digests match reference oracles.",
+      "details": {
+        "seed": 42
+      }
+    },
+    "GATE_G_SCOPE_INTEGRITY": {
+      "gate_id": "GATE_G",
+      "gate_name": "Scientific Scope \u0026 Truthful Limitation Boundaries",
+      "status": "PASSED",
+      "criteria": "Explicit matrix of supported vs unsupported domains; zero false claims of universal GPU parity.",
+      "evidence": "All hardware boundaries declared; discrete parity explicitly marked NOT_MEASURED.",
+      "details": {
+        "limitations_count": 5
+      }
+    }
+  },
+  "workload_summary": {
+    "total_workloads": 15,
+    "pass_count": 15,
+    "fail_count": 0,
+    "unknown_count": 0,
+    "blocked_count": 0
+  },
+  "hardware_provenance": {
+    "probe_timestamp": 1792838470.8249266,
+    "os_name": "Windows",
+    "os_version": "11 (Build 10.0.26100)",
+    "python_version": "3.13.5",
+    "cpu_model": "13th Gen Intel(R) Core(TM) i5-13420H",
+    "cpu_physical_cores": 8,
+    "cpu_logical_threads": 12,
+    "cpu_features": ["SSE", "SSE2", "SSE3", "SSSE3", "SSE4.1", "SSE4.2", "AVX", "AVX2", "FMA3"],
+    "total_ram_gb": 15.7,
+    "available_ram_gb": 2.46,
+    "igpu_available": true,
+    "igpu_device_name": "Intel(R) UHD Graphics (iGPU)",
+    "igpu_driver_version": "[\u0027FP32\u0027, \u0027BIN\u0027, \u0027FP16\u0027, \u0027INT8\u0027, \u0027GPU_USM_MEMORY\u0027, \u0027EXPORT_IMPORT\u0027]",
+    "igpu_probe_success": true,
+    "igpu_compile_time_ms": 44.515,
+    "igpu_exec_time_ms": 0.931,
+    "discrete_gpu_present": false,
+    "discrete_gpu_name": "None",
+    "discrete_gpu_parity_status": "NOT_MEASURED (no discrete GPU present in system; discrete parity unmeasured)",
+    "iree_available": false,
+    "swiftshader_available": false,
+    "pocl_available": false,
+    "probe_notes": [
+      "Physical Intel GPU probe verified: Intel(R) UHD Graphics (iGPU) executed live 16x16 MatMul in 0.93ms.",
+      "Memory Architecture: Unified system RAM (15.7 GB total, 2.5 GB available).",
+      "Discrete GPU status: NOT_MEASURED (no discrete GPU present in system; discrete parity unmeasured)"
+    ]
+  },
+  "limitations": [
+    "Discrete GPU Parity: NOT_MEASURED (no dedicated NVIDIA/AMD GPU present in Lenovo IdeaPad Slim 3).",
+    "Universal Hardware Replacement is an active research horizon, not an established claim for arbitrary CUDA code.",
+    "Intel UHD Graphics shared unified memory (16GB RAM) limits maximum non-tiled allocation.",
+    "IREE and PoCL backends dynamically probed; marked UNSUPPORTED when external runtime packages are uninstalled.",
+    "OpenVINO GPU kernels registered for GEMM, MLP, and Reductions; unsupported operations strictly fall back to CPU."
+  ],
+  "certificate_hash": "d41cfd9fdb9114a8974307d6b2b588734286438004ca1365f984862240c0bb9d"
 }

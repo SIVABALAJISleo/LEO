@@ -11,6 +11,7 @@
 A software system that claims to accelerate everything accelerates nothing.
 
 HYPER's contract-driven optimization achieves parity **only** when a workload contains exploitable structure:
+
 - **Redundancy** (memoization, caching)
 - **Low-Rank Energy Concentration** (factorization, singular value decay)
 - **Temporal Locality** (tile reprojection, delta computation)
@@ -48,7 +49,8 @@ Below is the authoritative list of workloads that are strictly **OUT OF SCOPE**.
 ---
 
 ### Class 1: Real-Time AAA 3D Gaming with Hardware Ray Tracing
-*Examples: Cyberpunk 2077 (Ray Tracing Overdrive), Alan Wake 2, Unreal Engine 5 Lumen/Nanite at 4K Ultra 60+ FPS.*
+
+_Examples: Cyberpunk 2077 (Ray Tracing Overdrive), Alan Wake 2, Unreal Engine 5 Lumen/Nanite at 4K Ultra 60+ FPS._
 
 - **Hardware Gap**:
   - Missing dedicated **Ray Tracing (RT) Cores** for hardware Bounding Volume Hierarchy (BVH) box/triangle intersection testing.
@@ -61,7 +63,8 @@ Below is the authoritative list of workloads that are strictly **OUT OF SCOPE**.
 ---
 
 ### Class 2: Frontier Foundation Model Training
-*Examples: Pre-training or full fine-tuning of 7B, 13B, 70B, or 405B parameter models (e.g. LLaMA-3, DeepSeek, Mistral) in FP32, FP16, or BF16.*
+
+_Examples: Pre-training or full fine-tuning of 7B, 13B, 70B, or 405B parameter models (e.g. LLaMA-3, DeepSeek, Mistral) in FP32, FP16, or BF16._
 
 - **Hardware Gap**:
   - Missing **multi-GPU high-speed interconnects** (NVLink 900 GB/s - 3.2 TB/s; NVSwitch fabrics; 800 Gbps InfiniBand).
@@ -75,7 +78,8 @@ Below is the authoritative list of workloads that are strictly **OUT OF SCOPE**.
 ---
 
 ### Class 3: Multi-Stream 4K/8K 60fps Real-Time Video Transcoding
-*Examples: Concurrent 4K HEVC / AV1 / ProRes broadcasting, multi-channel live streaming at 60 fps without hardware encoders.*
+
+_Examples: Concurrent 4K HEVC / AV1 / ProRes broadcasting, multi-channel live streaming at 60 fps without hardware encoders._
 
 - **Hardware Gap**:
   - Missing dual or triple dedicated fixed-function video encoding ASICs (e.g. NVENC 8th Gen, Apple ProRes hardware engines).
@@ -86,7 +90,8 @@ Below is the authoritative list of workloads that are strictly **OUT OF SCOPE**.
 ---
 
 ### Class 4: Fresh Unstructured Full-Rank Dense FP32 GEMM ($A \times B$)
-*Examples: Cryptographic whitening, pseudo-random matrix multiplication, dense full-rank scientific Monte Carlo simulations without recurring matrices.*
+
+_Examples: Cryptographic whitening, pseudo-random matrix multiplication, dense full-rank scientific Monte Carlo simulations without recurring matrices._
 
 - **Hardware Gap**:
   - Peak theoretical FP32 FLOPs on Intel Core i5-12450H is **~0.5 TFLOPS**. Peak FP32 on an RTX 4090 is **82.6 TFLOPS** ($165\times$ physical ratio).
@@ -99,17 +104,18 @@ Below is the authoritative list of workloads that are strictly **OUT OF SCOPE**.
 
 ## 3. Summary Boundary Matrix
 
-| Workload Domain | In Scope (Contract Parity) | Out of Scope (Hardware Parity) |
-| :--- | :--- | :--- |
-| **Large Language Models** | Streaming INT8/INT4 inference, speculative decoding with target verification, KV-cache compression. | Full FP32/FP16 70B+ pre-training, multi-GPU gradient backprop, zero-latency multi-token generation on unquantized weights. |
-| **Information Retrieval & RAG** | Subspace clustering, semantic/exact caching, incremental vector retrieval for corpora $\le 10^7$ vectors. | Billion-scale brute-force linear search over unindexed high-entropy embeddings requiring terabytes of HBM. |
-| **Scientific & Linear Algebra** | Low-rank factorized matrices, structured sparse matrices, PDE stencils with temporal reuse. | Fresh unstructured full-rank dense FP32 GEMM matching RTX 4090 FLOP rates. |
-| **Computer Graphics & Vision** | Procedural tile reprojection, temporal frame reuse, perceptual equivalence ($\text{PSNR} \ge 40\text{ dB}$). | AAA real-time hardware ray tracing (DXR), 4K 144Hz path-traced rendering, real-time uncompressed 8K video encoding. |
+| Workload Domain                 | In Scope (Contract Parity)                                                                                   | Out of Scope (Hardware Parity)                                                                                             |
+| :------------------------------ | :----------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------- |
+| **Large Language Models**       | Streaming INT8/INT4 inference, speculative decoding with target verification, KV-cache compression.          | Full FP32/FP16 70B+ pre-training, multi-GPU gradient backprop, zero-latency multi-token generation on unquantized weights. |
+| **Information Retrieval & RAG** | Subspace clustering, semantic/exact caching, incremental vector retrieval for corpora $\le 10^7$ vectors.    | Billion-scale brute-force linear search over unindexed high-entropy embeddings requiring terabytes of HBM.                 |
+| **Scientific & Linear Algebra** | Low-rank factorized matrices, structured sparse matrices, PDE stencils with temporal reuse.                  | Fresh unstructured full-rank dense FP32 GEMM matching RTX 4090 FLOP rates.                                                 |
+| **Computer Graphics & Vision**  | Procedural tile reprojection, temporal frame reuse, perceptual equivalence ($\text{PSNR} \ge 40\text{ dB}$). | AAA real-time hardware ray tracing (DXR), 4K 144Hz path-traced rendering, real-time uncompressed 8K video encoding.        |
 
 ---
 
 ## 4. Integrity Commitment
 
 HYPER commits to the following standard:
+
 1. **Never claim hardware parity**: When a benchmark compares against a dedicated GPU, it must explicitly state whether the comparison is **contract-level** (satisfying the application contract) or **raw hardware** (which remains 0.0%).
 2. **Fail closed**: Any workload submitted to HYPER that falls into an out-of-scope class or fails contract thresholds must return `result.label = "EMULATED"` or `NOT_RUN` and fail the certification suite.

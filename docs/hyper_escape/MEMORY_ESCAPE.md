@@ -26,16 +26,19 @@ class MemoryBudgetController:
 ## 3. Storage-Aware Execution Pathways
 
 ### 3.1 Chunked Binary Streaming Reduction
+
 - Reads multi-gigabyte continuous binary files in fixed chunks (e.g., 4 MB to 16 MB).
 - Reduces intermediate states in place ($O(1)$ working memory complexity).
 - Verified with exact bitwise and floating-point summation matching monolithic reference.
 
 ### 3.2 Block-Tiled GEMV Matrix Execution
+
 - Large matrix $A \in \mathbb{R}^{M \times N}$ and vector $x \in \mathbb{R}^N$ are computed row-block by row-block:
-$$y_i = A_{[r : r+B, :]} x$$
+  $$y_i = A_{[r : r+B, :]} x$$
 - Working set is strictly bounded to $B \times N + N$ elements rather than $M \times N$.
 
 ### 3.3 Layer-by-Layer Sequential Pipeline
+
 - Executes deep sequential networks layer by layer.
 - Retains only current layer activations; immediately deletes earlier layer activations and calls garbage collection.
 - Enables deep inference pipelines that exceed total system RAM.

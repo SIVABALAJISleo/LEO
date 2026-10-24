@@ -10,19 +10,19 @@
 
 ## 2. Subsystem Test Breakdown
 
-| Test Suite | Purpose | Tests | Status | Key Verifications |
-| :--- | :--- | :--- | :--- | :--- |
-| `tests/test_hyper_v3_suite15.py` | 15 Canonical Workload Dual-Track Benchmarks | 2 | **PASSED** | Validates exact parity on Track A (1.0), and truthful detection of Track B failures (`dense_gemm`, `rasterization`, `bvh`). |
-| `tests/test_hyper_v3_verifier.py` | Freivalds matmul, SSIM, Symplectic Drift, Proof Engine | 3 | **PASSED** | Verifies O(k*N^2) randomized matrix check, structural similarity, and energy conservation. |
-| `tests/test_universal_24_family_and_memory_bypass.py` | 24-Family Universal Suite & Memory Bypass Engine | 2 | **PASSED** | Verifies BitNet b1.58 ternary packing, cache tile dot product, and DestinationTracker state updates. |
-| `tests/test_hybrid_scheduler.py` | Heterogeneous Scheduler Measurement & Pipelining | 2 | **PASSED** | Confirms CPU vs iGPU cost model measures before selecting execution target. |
-| `tests/test_extreme_heterogeneous.py` | TBIQS Engine, Alder Lake core affinity, CDRE Framework | 13 | **PASSED** | L3 cache working set ceiling, tiled GEMM, and P-core thread pinning. |
-| `tests/test_pathway_api.py` | REST API routes & Dashboard HTML endpoint | 4 | **PASSED** | Verifies `/api/v1/parity/report` and `/api/v1/pathway/dashboard`. |
-| `tests/test_vaee_complete.py` | Verified Autonomous Escape Engine (VAEE) full lifecycle | 13 | **PASSED** | Contract extraction, Pareto frontier, sorting/knapsack/convolution workloads, API routes. |
-| `tests/test_six_engines_suite.py` | Six Universal Optimization Engines Integration Suite | 21 | **PASSED** | Multi-engine pipeline, bounded streaming, DCE/CSE, cache blocking, Intel discovery, verifier, cold/warm benchmarking. |
-| `tests/test_parity_engine.py` | Parity Engine & 25-Dimension Scorecard Regression Suite | 15 | **PASSED** | Capability registry, contract levels 1-8, ledger hash signing, ray-tracing BVH, sustained performance. |
-| `tests/hyper_escape/` | Algorithmic Escape & Rigorous Multi-Domain Validation | 57 | **PASSED** | Contracts, counterexamples, memory budgets, pathway discovery, robust timing, universal adapters. |
-| `tests/test_api.py` | FastAPI Backend Route Integration | 6 | **PASSED** | Route responses, JSON schema validation, telemetry endpoints, memory routes. |
+| Test Suite                                            | Purpose                                                 | Tests | Status     | Key Verifications                                                                                                           |
+| :---------------------------------------------------- | :------------------------------------------------------ | :---- | :--------- | :-------------------------------------------------------------------------------------------------------------------------- |
+| `tests/test_hyper_v3_suite15.py`                      | 15 Canonical Workload Dual-Track Benchmarks             | 2     | **PASSED** | Validates exact parity on Track A (1.0), and truthful detection of Track B failures (`dense_gemm`, `rasterization`, `bvh`). |
+| `tests/test_hyper_v3_verifier.py`                     | Freivalds matmul, SSIM, Symplectic Drift, Proof Engine  | 3     | **PASSED** | Verifies O(k*N^2) randomized matrix check, structural similarity, and energy conservation.                                  |
+| `tests/test_universal_24_family_and_memory_bypass.py` | 24-Family Universal Suite & Memory Bypass Engine        | 2     | **PASSED** | Verifies BitNet b1.58 ternary packing, cache tile dot product, and DestinationTracker state updates.                        |
+| `tests/test_hybrid_scheduler.py`                      | Heterogeneous Scheduler Measurement & Pipelining        | 2     | **PASSED** | Confirms CPU vs iGPU cost model measures before selecting execution target.                                                 |
+| `tests/test_extreme_heterogeneous.py`                 | TBIQS Engine, Alder Lake core affinity, CDRE Framework  | 13    | **PASSED** | L3 cache working set ceiling, tiled GEMM, and P-core thread pinning.                                                        |
+| `tests/test_pathway_api.py`                           | REST API routes & Dashboard HTML endpoint               | 4     | **PASSED** | Verifies `/api/v1/parity/report` and `/api/v1/pathway/dashboard`.                                                           |
+| `tests/test_vaee_complete.py`                         | Verified Autonomous Escape Engine (VAEE) full lifecycle | 13    | **PASSED** | Contract extraction, Pareto frontier, sorting/knapsack/convolution workloads, API routes.                                   |
+| `tests/test_six_engines_suite.py`                     | Six Universal Optimization Engines Integration Suite    | 21    | **PASSED** | Multi-engine pipeline, bounded streaming, DCE/CSE, cache blocking, Intel discovery, verifier, cold/warm benchmarking.       |
+| `tests/test_parity_engine.py`                         | Parity Engine & 25-Dimension Scorecard Regression Suite | 15    | **PASSED** | Capability registry, contract levels 1-8, ledger hash signing, ray-tracing BVH, sustained performance.                      |
+| `tests/hyper_escape/`                                 | Algorithmic Escape & Rigorous Multi-Domain Validation   | 57    | **PASSED** | Contracts, counterexamples, memory budgets, pathway discovery, robust timing, universal adapters.                           |
+| `tests/test_api.py`                                   | FastAPI Backend Route Integration                       | 6     | **PASSED** | Route responses, JSON schema validation, telemetry endpoints, memory routes.                                                |
 
 ---
 
