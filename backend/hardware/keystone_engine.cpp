@@ -218,13 +218,13 @@ ImportanceSample KeystoneEngine::compute_online_importance_distribution(
     for (size_t k = 0; k < K; ++k) {
         double norm_a_sq = 0.0;
         for (size_t m = 0; m < M; ++m) {
-            float val = A[m * K + k];
+            double val = static_cast<double>(A[m * K + k]);
             norm_a_sq += val * val;
         }
 
         double norm_b_sq = 0.0;
         for (size_t n = 0; n < N; ++n) {
-            float val = B[k * N + n];
+            double val = static_cast<double>(B[k * N + n]);
             norm_b_sq += val * val;
         }
 
@@ -344,9 +344,10 @@ bool KeystoneEngine::freivalds_verify_gemm(
         double diff_norm_sq = 0.0;
         double abr_norm_sq = 0.0;
         for (size_t m = 0; m < M; ++m) {
-            double d = ABr[m] - Cr[m];
+            double d = static_cast<double>(ABr[m]) - static_cast<double>(Cr[m]);
+            double abr_val = static_cast<double>(ABr[m]);
             diff_norm_sq += d * d;
-            abr_norm_sq += ABr[m] * ABr[m];
+            abr_norm_sq += abr_val * abr_val;
         }
 
         double relative_diff = std::sqrt(diff_norm_sq) / (std::sqrt(abr_norm_sq) + 1e-12);

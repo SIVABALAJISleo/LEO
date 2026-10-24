@@ -13,7 +13,7 @@ Measures whether candidate execution strictly met the negotiated application con
 from __future__ import annotations
 
 import dataclasses
-from typing import Any, Dict, Optional
+from typing import Any, Callable, Dict, Optional, Tuple
 
 import numpy as np
 

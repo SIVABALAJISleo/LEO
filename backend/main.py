@@ -118,84 +118,49 @@ async def compat_memory_summary():
 
 app.include_router(compat_router)
 
-from backend.routers.orchestrate import router as orchestrate_router
-app.include_router(orchestrate_router)
+router_specs = [
+    ("backend.routers.orchestrate", "router", {}),
+    ("backend.routers.policy", "router", {}),
+    ("backend.routers.devops", "router", {}),
+    ("backend.routers.system", "router", {}),
+    ("backend.routers.v40_engines", "router", {"prefix": "/api/v1/v40/engines", "tags": ["V40 Engines"]}),
+    ("backend.routers.prefetch", "router", {}),
+    ("backend.routers.scoreboard", "router", {}),
+    ("backend.routers.escape_engine_router", "router", {}),
+    ("backend.routers.universal_router", "router", {}),
+    ("backend.routers.discovery_router", "router", {}),
+    ("backend.ira_router", "router", {}),
+    ("backend.routers.ollama_chat", "router", {}),
+    ("backend.routers.dream", "router", {}),
+    ("backend.routers.hardware_boost", "router", {}),
+    ("backend.routers.governor", "router", {}),
+    ("backend.routers.contract_subsumption", "router", {}),
+    ("backend.routers.caao", "router", {}),
+    ("backend.routers.contract_engine_v1", "router", {}),
+    ("backend.routers.cgfp", "router", {}),
+    ("backend.routers.breakthrough_dashboard", "router", {}),
+    ("backend.routers.cgace", "router", {}),
+    ("backend.routers.hyper_v2_api", "router", {}),
+    ("backend.routers.hyper_v3_api", "router", {}),
+    ("backend.routers.hyper_mvc_dar_router", "router", {}),
+    ("backend.routers.omega_router", "router", {}),
+]
 
-from backend.routers.policy import router as policy_router
-app.include_router(policy_router)
+for mod_name, attr_name, kwargs in router_specs:
+    try:
+        import importlib
+        mod = importlib.import_module(mod_name)
+        r = getattr(mod, attr_name)
+        app.include_router(r, **kwargs)
+    except Exception as e:
+        logger.warning(f"Optional router {mod_name} not loaded: {e}")
 
-from backend.routers.devops import router as devops_router
-app.include_router(devops_router)
-
-from backend.routers.system import router as system_router
-app.include_router(system_router)
-
-from backend.routers.v40_engines import router as v40_engines_router
-app.include_router(v40_engines_router, prefix="/api/v1/v40/engines", tags=["V40 Engines"])
-
-from backend.routers.prefetch import router as prefetch_router
-app.include_router(prefetch_router)
-
-from backend.routers.scoreboard import router as scoreboard_router
-app.include_router(scoreboard_router)
-
-from backend.routers.escape_engine_router import router as escape_engine_router
-app.include_router(escape_engine_router)
-
-from backend.routers.universal_router import router as universal_router
-app.include_router(universal_router)
-
-from backend.routers.discovery_router import router as discovery_router
-app.include_router(discovery_router)
-
-from backend.ira_router import router as ira_router
-app.include_router(ira_router)
-
-from backend.routers.ollama_chat import router as ollama_router
-app.include_router(ollama_router)
-
-from backend.routers.dream import router as dream_router
-app.include_router(dream_router)
-
-from backend.routers.hardware_boost import router as hardware_boost_router
-app.include_router(hardware_boost_router)
-
-from backend.routers.governor import router as governor_router
-app.include_router(governor_router)
-
-from backend.routers.contract_subsumption import router as contract_subsumption_router
-app.include_router(contract_subsumption_router)
-
-from backend.routers.caao import router as caao_router
-app.include_router(caao_router)
-
-from backend.routers.contract_engine_v1 import router as contract_v1_router
-app.include_router(contract_v1_router)
-
-from backend.routers.cgfp import router as cgfp_router
-app.include_router(cgfp_router)
-
-from backend.routers.breakthrough_dashboard import router as breakthrough_dashboard_router
-app.include_router(breakthrough_dashboard_router)
-
-from backend.routers.cgace import router as cgace_router
-app.include_router(cgace_router)
-
-from backend.routers.hyper_v2_api import router as hyper_v2_router
-app.include_router(hyper_v2_router)
-
-from backend.routers.hyper_v3_api import router as hyper_v3_router
-app.include_router(hyper_v3_router)
-
-from backend.routers.hyper_mvc_dar_router import router as hyper_mvc_dar_router
-app.include_router(hyper_mvc_dar_router)
-
-from backend.routers.omega_router import router as omega_router
-app.include_router(omega_router)
-
-from backend.routers.pathway_router import router as pathway_router, parity_router
-app.include_router(pathway_router)
-app.include_router(parity_router)
+try:
+    from backend.routers.pathway_router import router as pathway_router, parity_router
+    app.include_router(pathway_router)
+    app.include_router(parity_router)
+except Exception as e:
+    logger.warning(f"Optional pathway_router not loaded: {e}")
 
 try:
     from hyper.hyper100_parity.dashboard import router as hyper100_router
