@@ -1,0 +1,47 @@
+{
+  "timestamp_utc": "2026-10-24T07:43:00.597873+00:00",
+  "probe_duration_ms": 8.53,
+  "host_target": {
+    "model": "Lenovo IdeaPad Slim 3 15IAH8",
+    "os": "Windows 11 (Build 10.0.26100)",
+    "architecture": "AMD64",
+    "python_version": "3.13.5"
+  },
+  "cpu": {
+    "model": "Intel64 Family 6 Model 186 Stepping 2, GenuineIntel",
+    "physical_cores": 8,
+    "logical_processors": 12,
+    "base_frequency_mhz": 2100.0,
+    "simd_capabilities": [
+      "AVX2",
+      "FMA3",
+      "SSE4.2",
+      "BMI2"
+    ],
+    "execution_status": "OPERATIONAL"
+  },
+  "memory": {
+    "total_ram_gb": 15.7,
+    "available_ram_gb": 1.7,
+    "utilization_percent": 89.2
+  },
+  "igpu": {
+    "detected": true,
+    "model": "Intel(R) UHD Graphics (iGPU)",
+    "runtime": "OpenVINO (Intel GPU plugin)",
+    "openvino_available": true,
+    "device_probe_test_passed": true,
+    "probe_kernel_latency_ms": 1.847,
+    "execution_status": "VERIFIED_OPERATIONAL"
+  },
+  "discrete_gpu": {
+    "detected": false,
+    "model": null,
+    "status": "NOT_PRESENT (Host laptop uses Intel Integrated UHD Graphics)"
+  },
+  "ethical_disclosures": {
+    "igpu_execution": "VERIFIED on physical Intel UHD Graphics via OpenVINO",
+    "discrete_gpu_parity": "NOT_MEASURED (No discrete NVIDIA RTX GPU present on this laptop)",
+    "universal_gpu_replacement": "NOT_ESTABLISHED (Scientific boundary: Subsumption applies strictly under verified mathematical invariants)"
+  }
+}
