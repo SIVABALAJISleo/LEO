@@ -142,6 +142,16 @@ from hyper_phase_change.experiment_db import (
 # 15. Real Application Workload Suite
 from hyper_phase_change.real_workloads import RealWorkloadSuite
 
+# 16. Universal Application-Parity Engine
+from hyper_phase_change.universal_parity_engine import (
+    ParityTier,
+    ComputationalPhase,
+    TransformationPlan,
+    ParityExecutionResult,
+    UniversalApplicationParityEngine,
+    UNIVERSAL_PARITY_ENGINE,
+)
+
 __version__ = "3.0.0-research-breakthrough"
 
 
@@ -413,4 +423,11 @@ __all__ = [
     "ResearchExperimentDB",
     "EXPERIMENT_DB",
     "RealWorkloadSuite",
+    # Universal Application-Parity Engine
+    "ParityTier",
+    "ComputationalPhase",
+    "TransformationPlan",
+    "ParityExecutionResult",
+    "UniversalApplicationParityEngine",
+    "UNIVERSAL_PARITY_ENGINE",
 ]

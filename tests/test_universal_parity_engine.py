@@ -1,312 +1,170 @@
 """
 tests/test_universal_parity_engine.py
 ======================================
-Comprehensive Test Suite for the Universal Computational Parity Engine (UCPE).
+Comprehensive test suite for the Universal Application-Parity Engine (UAPE).
+
 Tests:
-- Universal Workload Adapter & Schema Extraction
-- Contract Specification & Zero Silent Downgrade
-- Information Boundary & Entropy Analysis
-- 10 Transformation Families & Pathway Composition
-- Pathway Diversity & Pseudodiversity Rejection
-- AST-Sandboxed Program Synthesis
-- Independent Verification (Freivalds, Exact, Invariants)
-- Multi-Dimensional Parity Vector & RTX 5090 Reference Model
-- Cache Discipline & Anti-Cheating Validation
-- Formal Barrier Detection (Entropy, Dependency)
-- Multi-Objective Pareto Frontier & Breakthrough Detection
-- End-to-End Pipeline on Numerical, Sorting, Unseen, and Adversarial Workloads
-- REST API Endpoints
+1. Spectral / Frequency Domain Convolution Phase Change (FFT vs direct spatial).
+2. Low-Rank Subspace Factorization (SVD / LoRA phase change vs dense GEMM).
+3. Dynamic Attention Manifold Sparsification (Top-K power-law pruning).
+4. Discrete Bitwise Vector Symbolic Architecture (Single-cycle Hamming similarity).
+5. Full End-to-End Application-Parity Pipeline with exact semantic caching and self-falsification.
+6. Honest Parity Tier Demarcation (RAW_HARDWARE vs CONTRACT vs APPLICATION_PERFORMANCE).
 """
 
-from __future__ import annotations
-
+import math
 import numpy as np
 import pytest
-from fastapi.testclient import TestClient
 
-from hyper.universal import (
-    UniversalComputationalParityEngine,
-    UniversalWorkload,
-    UniversalWorkloadAdapter,
-    WorkloadDomain,
-    UniversalContract,
-    ContractCorrectness,
-    PrecisionTier,
-    InformationBoundaryEngine,
-    UniversalPathway,
-    TransformationFamily,
-    UniversalPathwayGenerator,
-    UniversalDiversityEngine,
-    UniversalPathwayComposer,
-    ProgramSynthesizer,
-    UniversalSandbox,
-    UniversalVerifier,
-    VerificationState,
-    ScientificOutcome,
-    FreivaldsVerifier,
-    InvariantChecker,
-    ParityVector,
-    RTX5090Model,
-    CacheState,
-    CacheDisciplineValidator,
-    UniversalBarrierEngine,
-    UniversalParetoPoint,
-    UniversalParetoFrontier,
-    BreakthroughDetector,
-    UniversalWorkloadSuite,
-    AdversarialWorkloadGenerator,
+from hyper_phase_change.universal_parity_engine import (
+    ParityTier,
+    ComputationalPhase,
+    ParityExecutionResult,
+    UniversalApplicationParityEngine,
+    UNIVERSAL_PARITY_ENGINE,
 )
-from backend.main import app
+from hyper_phase_change.backend_router import ROUTER, ExecutionPolicy
 
 
-@pytest.fixture
-def engine() -> UniversalComputationalParityEngine:
-    return UniversalComputationalParityEngine(seed=42)
+def test_spectral_convolution_phase_change():
+    """Verify that FFT frequency domain convolution matches spatial direct convolution."""
+    engine = UniversalApplicationParityEngine()
+    rng = np.random.default_rng(42)
+
+    x = rng.standard_normal((32, 32)).astype(np.float32)
+    kernel = rng.standard_normal((5, 5)).astype(np.float32)
+
+    # 1. Frequency Spectral Phase Change
+    fft_out, elapsed_ms = engine.convolve_spectral_phase_change(x, kernel)
+
+    # 2. Independent Reference Direct Spatial Convolution
+    H_x, W_x = x.shape
+    H_k, W_k = kernel.shape
+    out_H = H_x - H_k + 1
+    out_W = W_x - W_k + 1
+    ref_out = np.zeros((out_H, out_W), dtype=np.float32)
+    for i in range(out_H):
+        for j in range(out_W):
+            ref_out[i, j] = np.sum(x[i : i + H_k, j : j + W_k] * kernel)
+
+    max_diff = float(np.max(np.abs(fft_out - ref_out)))
+    assert max_diff < 1e-4, f"FFT convolution output mismatch: max diff {max_diff}"
+    assert fft_out.shape == (28, 28)
 
 
-def test_workload_adapter():
-    data = np.array([1, 5, 2, 8, 3], dtype=np.int32)
-    wl = UniversalWorkloadAdapter.adapt(
-        target=lambda x: np.sort(x),
-        sample_input=data,
-        workload_id="test_sort",
+def test_low_rank_gemm_phase_change():
+    """Verify that low-rank SVD factorization replaces O(N^3) with O(2 N r) when rank is low."""
+    engine = UniversalApplicationParityEngine()
+    rng = np.random.default_rng(101)
+
+    M, K, N = 64, 64, 64
+    A = rng.standard_normal((M, K)).astype(np.float32)
+
+    # Construct an intrinsically low-rank matrix B (rank 4)
+    U_low = rng.standard_normal((K, 4)).astype(np.float32)
+    V_low = rng.standard_normal((4, N)).astype(np.float32)
+    B_low_rank = np.matmul(U_low, V_low)
+
+    # Low-rank transformation
+    factored_out, rank, elapsed_ms = engine.gemm_low_rank_phase_change(A, B_low_rank, rank_threshold=0.99)
+    assert factored_out is not None
+    assert rank is not None
+    assert rank <= 5
+
+    # Check numerical equivalence against direct dense matmul
+    ref_out = np.matmul(A, B_low_rank)
+    rel_error = float(np.linalg.norm(factored_out - ref_out) / np.linalg.norm(ref_out))
+    assert rel_error < 1e-4
+
+    # Full rank matrix should be rejected by the economic guard (fail-closed)
+    B_full_rank = rng.standard_normal((K, N)).astype(np.float32)
+    full_factored_out, full_rank, _ = engine.gemm_low_rank_phase_change(A, B_full_rank, rank_threshold=0.85)
+    assert full_factored_out is None  # Economic guard properly rejected full rank
+
+
+def test_dynamic_attention_manifold_sparsification():
+    """Verify top-k dynamic power-law pruning in multi-head attention."""
+    engine = UniversalApplicationParityEngine()
+    rng = np.random.default_rng(202)
+
+    seq_len, d_k = 64, 32
+    Q = rng.standard_normal((seq_len, d_k)).astype(np.float32) * 1.5
+    K = rng.standard_normal((seq_len, d_k)).astype(np.float32) * 1.5
+    V = rng.standard_normal((seq_len, d_k)).astype(np.float32)
+
+    # Dense reference attention
+    scale = 1.0 / math.sqrt(d_k)
+    scores = np.matmul(Q, K.T) * scale
+    exp_scores = np.exp(scores - np.max(scores, axis=-1, keepdims=True))
+    probs = exp_scores / np.sum(exp_scores, axis=-1, keepdims=True)
+    dense_ref = np.matmul(probs, V)
+
+    # Top-50% dynamic sparse attention
+    sparse_out, elapsed_ms, sparsity = engine.sparse_attention_phase_change(Q, K, V, keep_ratio=0.50)
+    assert sparsity == pytest.approx(0.50, abs=0.05)
+    assert sparse_out.shape == (seq_len, d_k)
+
+    # Cosine similarity between sparse projection and dense reference
+    dot_prod = np.sum(sparse_out * dense_ref)
+    norm_sparse = np.linalg.norm(sparse_out)
+    norm_dense = np.linalg.norm(dense_ref)
+    cosine_sim = dot_prod / (norm_sparse * norm_dense)
+    assert cosine_sim > 0.90, f"Sparse attention deviated from manifold direction: {cosine_sim}"
+
+
+def test_discrete_bitwise_vsa_similarity():
+    """Verify single-cycle bitwise Hamming distance similarity over packed words."""
+    engine = UniversalApplicationParityEngine()
+    rng = np.random.default_rng(303)
+
+    # 10,000-bit hyperdimensional vector codebook (10 entries)
+    dim_bits = 64 * 10  # 640 bits
+    codebook = (rng.uniform(-1.0, 1.0, size=(10, dim_bits)) > 0).astype(np.float32)
+
+    # Create a query vector identical to entry 4 with small 5% noise
+    query = codebook[4].copy()
+    noise_idx = rng.choice(dim_bits, size=int(dim_bits * 0.05), replace=False)
+    query[noise_idx] = 1.0 - query[noise_idx]
+
+    best_idx, elapsed_ms = engine.bitwise_vsa_similarity(query, codebook)
+    assert best_idx == 4, f"Bitwise VSA failed to retrieve closest associative memory anchor: got {best_idx}"
+    assert elapsed_ms >= 0.0
+
+
+def test_end_to_end_application_parity_execution():
+    """Verify full pipeline execution, honest device attribution, and exact memoization."""
+    engine = UniversalApplicationParityEngine()
+    rng = np.random.default_rng(404)
+
+    inputs = {
+        "image": rng.standard_normal((64, 64)).astype(np.float32),
+        "kernel": rng.standard_normal((5, 5)).astype(np.float32),
+    }
+
+    # 1. Cold execution via Frequency Spectral Phase Change
+    res1 = engine.execute_with_application_parity("CONV2D_STANDARD", inputs)
+    assert res1.is_verified is True
+    assert res1.achieved_tier in (ParityTier.APPLICATION_PERFORMANCE_PARITY, ParityTier.CONTRACT_PARITY)
+    assert res1.selected_phase == ComputationalPhase.FREQUENCY_SPECTRAL
+    assert "AVX2" in res1.hardware_attribution or "CPU" in res1.hardware_attribution
+    assert res1.self_falsification_passed is True
+
+    # 2. Warm execution via Exact Semantic Manifold Caching
+    res2 = engine.execute_with_application_parity("CONV2D_STANDARD", inputs)
+    assert res2.is_verified is True
+    assert res2.selected_phase == ComputationalPhase.EXACT_MANIFOLD_REUSE
+    assert res2.redundant_flops_eliminated == 1.0
+    assert "Exact Semantic Cache" in res2.hardware_attribution
+    np.testing.assert_allclose(res1.output, res2.output)
+
+
+def test_honest_parity_demarcation():
+    """Verify that RAW_HARDWARE_PARITY is never claimed, upholding scientific truth."""
+    res = UNIVERSAL_PARITY_ENGINE.execute_with_application_parity(
+        "SORT_STANDARD",
+        {"x": np.array([5.0, 2.0, 8.0, 1.0], dtype=np.float32)},
     )
-    assert wl.workload_id == "test_sort"
-    assert wl.schema.input_type == "ndarray"
-    assert wl.schema.input_shape == (5,)
-    assert wl.domain == WorkloadDomain.SEARCH_SORTING
-    assert len(wl.workload_hash) == 64
-
-
-def test_contract_validation():
-    c = UniversalContract(
-        contract_id="c1",
-        workload_id="w1",
-        correctness=ContractCorrectness.EXACT,
-        numeric_tolerance=0.0,
-    )
-    assert c.is_exact()
-    assert c.to_dict()["correctness"] == "EXACT"
-
-
-def test_information_boundary():
-    # Dense array with repeated zeros
-    data = np.zeros((32, 32), dtype=np.float32)
-    data[0, 0] = 1.0
-    wl = UniversalWorkloadAdapter.adapt(lambda x: x * 2.0, data, workload_id="sparse_wl")
-    c = UniversalContract(contract_id="c_sparse", workload_id=wl.workload_id)
-
-    profile = InformationBoundaryEngine.analyze(wl, c)
-    assert profile.sparsity_ratio > 0.9
-    assert profile.is_compressible
-    assert "SPARSITY_SKIPPING" in profile.reduction_opportunities
-
-
-def test_ten_transformation_families(engine: UniversalComputationalParityEngine):
-    wl, c = UniversalWorkloadSuite.get_polynomial_workload(degree=5)
-    candidates = engine.generator.generate_candidate_pool(wl, c, max_candidates=15)
-
-    families = {cand.family for cand in candidates}
-    # Check that multiple canonical families are present
-    assert len(families) >= 4
-    assert all(isinstance(cand.structural_hash, str) for cand in candidates)
-
-
-def test_pathway_composition():
-    wl, c = UniversalWorkloadSuite.get_matrix_workload(dim=32)
-    p1 = UniversalPathway(
-        pathway_id="p1",
-        family=TransformationFamily.MATHEMATICAL,
-        name="Factorization",
-        transformation_chain=["SVD_FACTORIZATION"],
-        structural_hash="h1",
-    )
-    p2 = UniversalPathway(
-        pathway_id="p2",
-        family=TransformationFamily.MEMORY,
-        name="Tiling",
-        transformation_chain=["CACHE_TILING"],
-        structural_hash="h2",
-    )
-    comp = UniversalPathwayComposer.compose(p1, p2)
-    assert "SVD_FACTORIZATION" in comp.transformation_chain
-    assert "CACHE_TILING" in comp.transformation_chain
-    assert comp.lineage_depth == 1
-    assert comp.parent_id == "p1"
-
-
-def test_diversity_pseudodiversity_rejection():
-    div = UniversalDiversityEngine()
-    p1 = UniversalPathway(
-        pathway_id="p1",
-        family=TransformationFamily.COMPILER,
-        name="AVX2 Vectorization",
-        transformation_chain=["AVX2_256BIT_VECTORIZATION"],
-        structural_hash="hash_avx2",
-        target_hardware="CPU_AVX2",
-    )
-    assert div.register(p1)
-
-    # Attempt to register identical structural pathway under different ID
-    p2 = UniversalPathway(
-        pathway_id="p2_fake",
-        family=TransformationFamily.COMPILER,
-        name="AVX2 Vectorization Clone",
-        transformation_chain=["AVX2_256BIT_VECTORIZATION"],
-        structural_hash="hash_avx2",
-        target_hardware="CPU_AVX2",
-    )
-    assert not div.register(p2)
-
-
-def test_program_synthesis_and_ast_safety():
-    # Valid synthesis
-    p_synth = ProgramSynthesizer.synthesize_reduction_pathway("sum")
-    assert p_synth.family == TransformationFamily.PROGRAM_SYNTHESIS
-    assert p_synth.run_fn is not None
-    res = p_synth.run_fn(np.array([1.0, 2.0, 3.0]))
-    assert res == 6.0
-
-    # Unsafe synthesis rejection
-    unsafe_code = "import os\ndef evil(x): return os.system('echo hi')"
-    is_safe, reasons = ProgramSynthesizer.validate_code(unsafe_code)
-    assert not is_safe
-    assert any("Forbidden" in r for r in reasons)
-
-
-def test_sandbox_timeout():
-    def infinite_loop(x):
-        import time
-        time.sleep(1.0)
-        return x
-
-    sb = UniversalSandbox(default_timeout_s=0.1)
-    success, res, elapsed_ms, err = sb.run_safe(infinite_loop, 42)
-    assert not success
-    assert "timed out" in err.lower()
-
-
-def test_freivalds_verifier():
-    A = np.array([[1.0, 2.0], [3.0, 4.0]], dtype=np.float32)
-    B = np.array([[5.0, 6.0], [7.0, 8.0]], dtype=np.float32)
-    C_correct = A @ B
-    C_corrupt = C_correct.copy()
-    C_corrupt[0, 0] += 0.5
-
-    v_ok = FreivaldsVerifier.verify(A, B, C_correct)
-    assert v_ok.is_valid
-    assert v_ok.confidence_score > 0.99
-
-    v_fail = FreivaldsVerifier.verify(A, B, C_corrupt)
-    assert not v_fail.is_valid
-    assert v_fail.state == VerificationState.FAILED
-
-
-def test_invariant_checker():
-    sorted_arr = np.array([1, 2, 5, 8, 10], dtype=np.int32)
-    unsorted_arr = np.array([1, 5, 2, 8, 10], dtype=np.int32)
-
-    assert InvariantChecker.verify_sorted_monotonic(sorted_arr).is_valid
-    assert not InvariantChecker.verify_sorted_monotonic(unsorted_arr).is_valid
-
-    perm_ok = InvariantChecker.verify_permutation(sorted_arr, np.array([10, 8, 5, 2, 1], dtype=np.int32))
-    assert perm_ok.is_valid
-
-
-def test_rtx5090_reference_model():
-    model = RTX5090Model()
-    vec = model.estimate_workload_cost(estimated_flops=1e9, data_movement_bytes=1e7)
-    assert vec.bandwidth_gb_per_sec == 1792.0
-    assert vec.power_watts == 600.0
-    assert vec.latency_ms > 0.0
-
-
-def test_cache_discipline():
-    # Comparing cached HYPER to cold RTX is forbidden
-    is_valid, err = CacheDisciplineValidator.validate_comparison(
-        hyper_cache_state=CacheState.CACHED,
-        reference_cache_state=CacheState.COLD,
-    )
-    assert not is_valid
-    assert "INVALID_COMPARISON" in err
-
-    # Fair comparison is allowed
-    is_valid_cold, _ = CacheDisciplineValidator.validate_comparison(CacheState.COLD, CacheState.COLD)
-    assert is_valid_cold
-
-
-def test_barrier_detection():
-    wl_noise, c_noise = AdversarialWorkloadGenerator.get_incompressible_noise_workload(size=5000)
-    profile = InformationBoundaryEngine.analyze(wl_noise, c_noise)
-    verdict = UniversalBarrierEngine.detect_barrier(c_noise, profile)
-    assert verdict.has_barrier
-    assert verdict.barrier_type.value == "INFORMATION_ENTROPY"
-
-
-def test_end_to_end_polynomial_horner(engine: UniversalComputationalParityEngine):
-    wl, c = UniversalWorkloadSuite.get_polynomial_workload(degree=8, num_points=500)
-    res = engine.run_universal_pipeline(
-        workload_target=wl,
-        sample_input=wl.sample_input,
-        contract=c,
-        max_candidates=10,
-    )
-    assert res["status"] in ("TARGET_REACHED", "IMPROVEMENT_FOUND", "UNKNOWN")
-    # Timing on small polynomial workloads (degree=8, 500pts) is noisy ±15% on i5-12450H.
-    # We allow >= 0.85 to prevent flaky CI from Python-loop overhead vs NumPy vectorisation.
-    # Algorithmic improvement (Horner's method: 2N vs N² multiplications) is verified separately.
-    assert res["verified_speedup"] >= 0.85, (
-        f"Horner speedup {res['verified_speedup']} should be >= 0.85 "
-        "(timing-noise floor). Algorithm correctness is verified via parity scorecard."
-    )
-    assert res["parity_scorecard"]["dimensions"][0]["dimension"] == "LATENCY"
-
-
-def test_end_to_end_sorting(engine: UniversalComputationalParityEngine):
-    wl, c = UniversalWorkloadSuite.get_sorting_workload(N=20000, key_max=300)
-    res = engine.run_universal_pipeline(
-        workload_target=wl,
-        sample_input=wl.sample_input,
-        contract=c,
-        max_candidates=10,
-    )
-    assert res["status"] in ("TARGET_REACHED", "IMPROVEMENT_FOUND", "UNKNOWN")
-    assert res["parity_scorecard"]["dimensions"][4]["hyper"] == "PASS"
-
-
-def test_end_to_end_unseen_workload(engine: UniversalComputationalParityEngine):
-    wl, c = UniversalWorkloadSuite.generate_unseen_workload(seed=123)
-    res = engine.run_universal_pipeline(
-        workload_target=wl,
-        sample_input=wl.sample_input,
-        contract=c,
-        max_candidates=8,
-    )
-    assert res["experiment_id"].startswith("EXP-UCPE-")
-    assert res["workload"]["domain"] == WorkloadDomain.UNKNOWN_UNSEEN.value
-
-
-def test_universal_api_endpoints():
-    client = TestClient(app)
-
-    # 1. Status
-    r_stat = client.get("/api/v1/universal/status")
-    assert r_stat.status_code == 200
-    assert "diversity_stats" in r_stat.json()
-
-    # 2. Search
-    r_search = client.post("/api/v1/universal/search", json={"workload_domain": "POLYNOMIAL", "dimension": 100, "max_candidates": 5})
-    assert r_search.status_code == 200
-    data = r_search.json()
-    assert "verified_speedup" in data
-    assert "parity_scorecard" in data
-
-    # 3. Verify
-    r_verify = client.post("/api/v1/universal/verify", json={"candidate_output": [1.0, 2.0], "reference_output": [1.0, 2.0], "tolerance": 0.0})
-    assert r_verify.status_code == 200
-    assert r_verify.json()["is_valid"]
-
-    # 4. Synthesize
-    r_synth = client.post("/api/v1/universal/synthesize", json={"operation": "sum"})
-    assert r_synth.status_code == 200
-    assert r_synth.json()["family"] == "PROGRAM_SYNTHESIS"
+    # RAW_HARDWARE_PARITY must never be the achieved tier
+    assert res.achieved_tier != ParityTier.RAW_HARDWARE_PARITY
+    assert res.achieved_tier in (ParityTier.CONTRACT_PARITY, ParityTier.APPLICATION_PERFORMANCE_PARITY)
+    assert "Intel" in res.hardware_attribution

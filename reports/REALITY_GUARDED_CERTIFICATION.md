@@ -1,9 +1,9 @@
 # LEO/HYPER Reality-Guarded Universal Replacement Engine
 
 **Overall Certification Status:** `CERTIFIED`  
-**Timestamp (UTC):** `2026-10-25T05:43:30.696274+00:00`  
-**Git Commit:** `98fa3d43db` (Branch: `main`, Dirty: `False`)  
-**Total Run Time:** `14562.19 ms`  
+**Timestamp (UTC):** `2026-10-25T06:14:23.312217+00:00`  
+**Git Commit:** `bf96418190` (Branch: `main`, Dirty: `True`)  
+**Total Run Time:** `14671.69 ms`  
 
 ## 1. Physical Hardware Profile & Environment
 
@@ -23,7 +23,7 @@
 | :--- | :--- | :--- | :--- |
 | **Gate A** | Canonical 15 Independent Verification | `PASS` | 15/15 Pass Rate (15/15), 0 UNKNOWN, 0 UNSUPPORTED |
 | **Gate B** | Honest Provenance & Device Attribution | `PASS` | 0 False GPU Labels (0 violations) |
-| **Gate C** | Latency Isolation & Performance | `PASS` | Avg Speedup: 168.44x, 0 Severe Regressions |
+| **Gate C** | Latency Isolation & Performance | `PASS` | Avg Speedup: 185.31x, 0 Severe Regressions |
 | **Gate D** | Safe Exact Memoization | `PASS` | Refuse unverified, Multi-operand hash, Economic bypass |
 
 ## 3. Canonical 15-Workload Audit Matrix
@@ -50,8 +50,8 @@
 
 | Workload ID | Disclosed Device | Latency (ms) | Max Abs Diff vs CPU Ref | Status |
 | :--- | :--- | :-: | :-: | :---: |
-| `GEMM_STANDARD` | `Intel(R) UHD Graphics (iGPU)` | 1.267 | 0.00e+00 | **`PASS`** |
-| `ATTENTION_HEAD` | `Intel(R) UHD Graphics (iGPU)` | 1.945 | 1.04e-08 | **`PASS`** |
+| `GEMM_STANDARD` | `Intel(R) UHD Graphics (iGPU)` | 1.463 | 0.00e+00 | **`PASS`** |
+| `ATTENTION_HEAD` | `Intel(R) UHD Graphics (iGPU)` | 1.974 | 8.83e-09 | **`PASS`** |
 
 ## 5. Scientific Boundary & Research Disclosures
 

@@ -1,5 +1,5 @@
 {
-  "timestamp_utc": "2026-10-25T05:38:20.630990+00:00",
+  "timestamp_utc": "2026-10-25T06:13:56.642737+00:00",
   "reproducibility_seed": 42,
   "total_workloads": 15,
   "pass_count": 15,
@@ -15,7 +15,7 @@
     "physical_cores": 8,
     "logical_processors": 12,
     "ram_total_gb": 15.7,
-    "ram_available_gb": 3.47,
+    "ram_available_gb": 2.4,
     "igpu_detected": true,
     "igpu_model": "Intel(R) UHD Graphics (iGPU)",
     "igpu_runtime": "OpenVINO (Intel GPU plugin)",
@@ -42,12 +42,12 @@
       "adversarial_cases_tested": 3,
       "adversarial_cases_passed": 3,
       "backend_used": "INTEL_UHD_IGPU",
-      "candidate_latency_ms": 0.4526,
-      "reference_latency_ms": 0.5873,
-      "speedup": 1.3,
+      "candidate_latency_ms": 1.2925,
+      "reference_latency_ms": 2.2923,
+      "speedup": 1.77,
       "failure_reasons": [],
       "reproducibility_seed": 42,
-      "timestamp": 1792906698.5507426
+      "timestamp": 1792908834.6040406
     },
     "CONV2D_STANDARD": {
       "workload_id": "CONV2D_STANDARD",
@@ -60,12 +60,12 @@
       "adversarial_cases_tested": 2,
       "adversarial_cases_passed": 2,
       "backend_used": "CPU_AVX2",
-      "candidate_latency_ms": 0.3722,
-      "reference_latency_ms": 21.4283,
-      "speedup": 57.57,
+      "candidate_latency_ms": 0.3972,
+      "reference_latency_ms": 20.0723,
+      "speedup": 50.53,
       "failure_reasons": [],
       "reproducibility_seed": 42,
-      "timestamp": 1792906698.6170344
+      "timestamp": 1792908834.6695154
     },
     "FFT_STANDARD": {
       "workload_id": "FFT_STANDARD",
@@ -78,12 +78,12 @@
       "adversarial_cases_tested": 2,
       "adversarial_cases_passed": 2,
       "backend_used": "CPU_AVX2",
-      "candidate_latency_ms": 0.1394,
-      "reference_latency_ms": 70.8316,
-      "speedup": 508.12,
+      "candidate_latency_ms": 0.1445,
+      "reference_latency_ms": 65.1653,
+      "speedup": 450.97,
       "failure_reasons": [],
       "reproducibility_seed": 42,
-      "timestamp": 1792906698.8256009
+      "timestamp": 1792908834.8626478
     },
     "REDUCTION_SUM": {
       "workload_id": "REDUCTION_SUM",
@@ -96,12 +96,12 @@
       "adversarial_cases_tested": 3,
       "adversarial_cases_passed": 3,
       "backend_used": "CPU_AVX2",
-      "candidate_latency_ms": 0.1297,
-      "reference_latency_ms": 13.4724,
-      "speedup": 103.87,
+      "candidate_latency_ms": 0.139,
+      "reference_latency_ms": 11.9983,
+      "speedup": 86.32,
       "failure_reasons": [],
       "reproducibility_seed": 42,
-      "timestamp": 1792906698.8855274
+      "timestamp": 1792908834.9163017
     },
     "SORT_STANDARD": {
       "workload_id": "SORT_STANDARD",
@@ -114,12 +114,12 @@
       "adversarial_cases_tested": 3,
       "adversarial_cases_passed": 3,
       "backend_used": "CPU_AVX2",
-      "candidate_latency_ms": 0.9627,
-      "reference_latency_ms": 0.9877,
-      "speedup": 1.03,
+      "candidate_latency_ms": 0.9501,
+      "reference_latency_ms": 1.0587,
+      "speedup": 1.11,
       "failure_reasons": [],
       "reproducibility_seed": 42,
-      "timestamp": 1792906698.8884733
+      "timestamp": 1792908834.919304
     },
     "PAGERANK_GRAPH": {
       "workload_id": "PAGERANK_GRAPH",
@@ -132,12 +132,12 @@
       "adversarial_cases_tested": 2,
       "adversarial_cases_passed": 2,
       "backend_used": "CPU_AVX2",
-      "candidate_latency_ms": 0.142,
-      "reference_latency_ms": 0.3274,
-      "speedup": 2.31,
+      "candidate_latency_ms": 0.1401,
+      "reference_latency_ms": 0.3374,
+      "speedup": 2.41,
       "failure_reasons": [],
       "reproducibility_seed": 42,
-      "timestamp": 1792906698.8899562
+      "timestamp": 1792908834.9208457
     },
     "SHA256_CRYPTO": {
       "workload_id": "SHA256_CRYPTO",
@@ -150,12 +150,12 @@
       "adversarial_cases_tested": 3,
       "adversarial_cases_passed": 3,
       "backend_used": "CPU_AVX2",
-      "candidate_latency_ms": 0.0197,
-      "reference_latency_ms": 0.0121,
-      "speedup": 0.61,
+      "candidate_latency_ms": 0.0066,
+      "reference_latency_ms": 0.0104,
+      "speedup": 1.58,
       "failure_reasons": [],
       "reproducibility_seed": 42,
-      "timestamp": 1792906698.8901627
+      "timestamp": 1792908834.9210486
     },
     "NBODY_GRAVITATIONAL": {
       "workload_id": "NBODY_GRAVITATIONAL",
@@ -168,12 +168,12 @@
       "adversarial_cases_tested": 1,
       "adversarial_cases_passed": 1,
       "backend_used": "CPU_AVX2",
-      "candidate_latency_ms": 5.5934,
-      "reference_latency_ms": 513.5064,
-      "speedup": 91.81,
+      "candidate_latency_ms": 6.1067,
+      "reference_latency_ms": 544.8801,
+      "speedup": 89.23,
       "failure_reasons": [],
       "reproducibility_seed": 42,
-      "timestamp": 1792906699.9799576
+      "timestamp": 1792908836.0316918
     },
     "ML_MLP_INFERENCE": {
       "workload_id": "ML_MLP_INFERENCE",
@@ -186,12 +186,12 @@
       "adversarial_cases_tested": 1,
       "adversarial_cases_passed": 1,
       "backend_used": "CPU_AVX2",
-      "candidate_latency_ms": 0.1403,
-      "reference_latency_ms": 0.3906,
-      "speedup": 2.78,
+      "candidate_latency_ms": 0.1903,
+      "reference_latency_ms": 0.3088,
+      "speedup": 1.62,
       "failure_reasons": [],
       "reproducibility_seed": 42,
-      "timestamp": 1792906699.9825444
+      "timestamp": 1792908836.0345683
     },
     "ATTENTION_HEAD": {
       "workload_id": "ATTENTION_HEAD",
@@ -204,12 +204,12 @@
       "adversarial_cases_tested": 1,
       "adversarial_cases_passed": 1,
       "backend_used": "CPU_AVX2",
-      "candidate_latency_ms": 0.0871,
-      "reference_latency_ms": 0.1461,
-      "speedup": 1.68,
+      "candidate_latency_ms": 0.0798,
+      "reference_latency_ms": 0.132,
+      "speedup": 1.65,
       "failure_reasons": [],
       "reproducibility_seed": 42,
-      "timestamp": 1792906699.983767
+      "timestamp": 1792908836.035687
     },
     "SOBEL_FILTER": {
       "workload_id": "SOBEL_FILTER",
@@ -222,12 +222,12 @@
       "adversarial_cases_tested": 1,
       "adversarial_cases_passed": 1,
       "backend_used": "CPU_AVX2",
-      "candidate_latency_ms": 0.2094,
-      "reference_latency_ms": 209.8264,
-      "speedup": 1002.04,
+      "candidate_latency_ms": 0.2085,
+      "reference_latency_ms": 181.0926,
+      "speedup": 868.55,
       "failure_reasons": [],
       "reproducibility_seed": 42,
-      "timestamp": 1792906700.3918016
+      "timestamp": 1792908836.402592
     },
     "STREAMING_VECTOR_OPS": {
       "workload_id": "STREAMING_VECTOR_OPS",
@@ -240,12 +240,12 @@
       "adversarial_cases_tested": 2,
       "adversarial_cases_passed": 2,
       "backend_used": "CPU_AVX2",
-      "candidate_latency_ms": 5.5809,
-      "reference_latency_ms": 7.4113,
-      "speedup": 1.33,
+      "candidate_latency_ms": 5.5056,
+      "reference_latency_ms": 7.2772,
+      "speedup": 1.32,
       "failure_reasons": [],
       "reproducibility_seed": 42,
-      "timestamp": 1792906700.57154
+      "timestamp": 1792908836.576953
     },
     "MANDELBROT_FRACTAL": {
       "workload_id": "MANDELBROT_FRACTAL",
@@ -258,12 +258,12 @@
       "adversarial_cases_tested": 2,
       "adversarial_cases_passed": 2,
       "backend_used": "CPU_AVX2",
-      "candidate_latency_ms": 12.2696,
-      "reference_latency_ms": 13.6678,
-      "speedup": 1.11,
+      "candidate_latency_ms": 12.7649,
+      "reference_latency_ms": 12.9639,
+      "speedup": 1.02,
       "failure_reasons": [],
       "reproducibility_seed": 42,
-      "timestamp": 1792906700.6276517
+      "timestamp": 1792908836.6338706
     },
     "SPMV_IRREGULAR_CSR": {
       "workload_id": "SPMV_IRREGULAR_CSR",
@@ -276,12 +276,12 @@
       "adversarial_cases_tested": 1,
       "adversarial_cases_passed": 1,
       "backend_used": "CPU_AVX2",
-      "candidate_latency_ms": 0.3011,
-      "reference_latency_ms": 1.2007,
-      "speedup": 3.99,
+      "candidate_latency_ms": 2.7875,
+      "reference_latency_ms": 1.175,
+      "speedup": 0.42,
       "failure_reasons": [],
       "reproducibility_seed": 42,
-      "timestamp": 1792906700.630124
+      "timestamp": 1792908836.6418326
     },
     "ADVERSARIAL_HILBERT_STRESS": {
       "workload_id": "ADVERSARIAL_HILBERT_STRESS",
@@ -294,12 +294,12 @@
       "adversarial_cases_tested": 2,
       "adversarial_cases_passed": 2,
       "backend_used": "CPU_AVX2",
-      "candidate_latency_ms": 0.016,
-      "reference_latency_ms": 0.0296,
-      "speedup": 1.85,
+      "candidate_latency_ms": 0.0163,
+      "reference_latency_ms": 0.0335,
+      "speedup": 2.06,
       "failure_reasons": [],
       "reproducibility_seed": 42,
-      "timestamp": 1792906700.6308298
+      "timestamp": 1792908836.6425452
     }
   },
   "cache_telemetry": {
