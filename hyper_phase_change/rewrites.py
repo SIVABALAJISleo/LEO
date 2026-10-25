@@ -74,7 +74,8 @@ class StructuralAnalyzer:
                 detection_cost_ms=(time.perf_counter() - t0) * 1000.0,
             )
 
-        if np.all(arr == 0):
+        # Fast zero pre-check
+        if arr.flat[0] == 0.0 and arr.flat[-1] == 0.0 and np.all(arr == 0):
             return StructuralMetadata(
                 operand_name=name,
                 shape=shape,
@@ -86,11 +87,13 @@ class StructuralAnalyzer:
                 detection_cost_ms=(time.perf_counter() - t0) * 1000.0,
             )
 
-        if is_square:
+        # Fast identity / diagonal pre-check
+        if is_square and arr.ndim == 2 and (shape[0] < 2 or arr[0, 1] == 0.0):
             diag_vals = np.diag(arr)
-            off_diag_zero = np.all(arr - np.diag(diag_vals) == 0)
-            if off_diag_zero:
-                if np.all(diag_vals == 1):
+            nnz = int(np.count_nonzero(arr))
+            diag_nnz = int(np.count_nonzero(diag_vals))
+            if nnz == diag_nnz and diag_nnz > 0:
+                if diag_nnz == shape[0] and np.all(diag_vals == 1):
                     return StructuralMetadata(
                         operand_name=name,
                         shape=shape,
@@ -107,29 +110,40 @@ class StructuralAnalyzer:
                         shape=shape,
                         dtype=dtype,
                         structure_type=StructureType.DIAGONAL,
-                        sparsity_ratio=(total - np.count_nonzero(diag_vals)) / total,
-                        nnz=int(np.count_nonzero(diag_vals)),
+                        sparsity_ratio=(total - diag_nnz) / total,
+                        nnz=diag_nnz,
                         is_square=True,
                         detection_cost_ms=(time.perf_counter() - t0) * 1000.0,
                         properties={"diagonal": diag_vals},
                     )
 
-        nnz = int(np.count_nonzero(arr))
-        sparsity = 1.0 - (nnz / total)
-        if sparsity >= 0.80:
-            return StructuralMetadata(
-                operand_name=name,
-                shape=shape,
-                dtype=dtype,
-                structure_type=StructureType.SPARSE,
-                sparsity_ratio=sparsity,
-                nnz=nnz,
-                is_square=is_square,
-                detection_cost_ms=(time.perf_counter() - t0) * 1000.0,
-            )
+        # Fast sparsity pre-check (sample first 16 elements if array is large)
+        nnz = total
+        sparsity = 0.0
+        is_sparse_cand = True
+        if total > 512:
+            probe_nnz = int(np.count_nonzero(arr.flat[:16]))
+            if probe_nnz > 10:  # > 60% dense in probe sample -> not sparse
+                is_sparse_cand = False
 
+        if is_sparse_cand:
+            nnz = int(np.count_nonzero(arr))
+            sparsity = 1.0 - (nnz / total)
+            if sparsity >= 0.80:
+                return StructuralMetadata(
+                    operand_name=name,
+                    shape=shape,
+                    dtype=dtype,
+                    structure_type=StructureType.SPARSE,
+                    sparsity_ratio=sparsity,
+                    nnz=nnz,
+                    is_square=is_square,
+                    detection_cost_ms=(time.perf_counter() - t0) * 1000.0,
+                )
+
+        # Fast constant pre-check
         first_val = arr.flat[0]
-        if np.all(arr == first_val):
+        if arr.flat[-1] == first_val and np.all(arr == first_val):
             return StructuralMetadata(
                 operand_name=name,
                 shape=shape,
@@ -276,23 +290,116 @@ class PhaseChangeRewriteEngine:
                     apply_fn=lambda inp: np.asarray(float(inp["x"].size * inp["x"].flat[0]), dtype=inp["x"].dtype),
                 ))
 
-        # 5. Fused MLP
+        # 5. MLP Structural Transformations
         if workload_id == "ML_MLP_INFERENCE":
-            det_ms = sum(m.detection_cost_ms for m in structures.values())
-            rewrites.append(PhaseChangeRewrite(
-                rule_id="REWRITE_FUSED_MLP",
-                name="Fused MLP Layer: Dense + Bias + ReLU in-place",
-                mathematical_proof="Fusing ReLU(X @ W1 + b1) eliminates memory round-trip of intermediate hidden activation.",
-                preconditions=["Valid MLP weights and biases", "FP32 activation"],
-                is_applicable=True,
-                estimated_speedup=2.2,
-                detection_overhead_ms=det_ms,
-                projected_exec_ms=0.20,
-                baseline_latency_ms=2.5,
-                is_approximation=False,
-                error_bound=0.0,
-                apply_fn=lambda inp: np.maximum(0.0, inp["X"] @ inp["W1"] + inp["b1"]) @ inp["W2"] + inp["b2"],
-            ))
+            X_meta = structures.get("X")
+            W1_meta = structures.get("W1")
+            W2_meta = structures.get("W2")
+
+            # Algebraic shortcut 1: Zero input X eliminates layer 1 matmul
+            if X_meta and X_meta.structure_type == StructureType.ZERO and "b1" in inputs and "W2" in inputs and "b2" in inputs:
+                det_ms = sum(m.detection_cost_ms for m in structures.values())
+                rewrites.append(PhaseChangeRewrite(
+                    rule_id="REWRITE_MLP_ZERO_INPUT",
+                    name="Zero Input Elimination: ReLU(0 @ W1 + b1) @ W2 + b2 = ReLU(b1) @ W2 + b2",
+                    mathematical_proof="X @ W1 = 0 when X is identically zero. Eliminates first matrix multiplication entirely.",
+                    preconditions=["X is all-zero tensor", "Valid b1, W2, b2 operands"],
+                    is_applicable=True,
+                    estimated_speedup=20.0,
+                    detection_overhead_ms=det_ms,
+                    projected_exec_ms=0.01,
+                    baseline_latency_ms=0.5,
+                    is_approximation=False,
+                    error_bound=0.0,
+                    apply_fn=lambda inp: np.maximum(0.0, inp["b1"]) @ inp["W2"] + inp["b2"],
+                ))
+
+            # Algebraic shortcut 2: Identity W1 eliminates first matmul
+            if W1_meta and W1_meta.structure_type == StructureType.IDENTITY and "X" in inputs and "b1" in inputs and "W2" in inputs and "b2" in inputs:
+                det_ms = sum(m.detection_cost_ms for m in structures.values())
+                rewrites.append(PhaseChangeRewrite(
+                    rule_id="REWRITE_MLP_IDENTITY_W1",
+                    name="Identity Weight Elimination: ReLU(X @ I + b1) @ W2 + b2 = ReLU(X + b1) @ W2 + b2",
+                    mathematical_proof="X @ I = X. Reduces first layer from O(M*K*N) matrix multiply to O(M*K) elementwise addition.",
+                    preconditions=["W1 is identity matrix", "Valid X, b1, W2, b2 operands"],
+                    is_applicable=True,
+                    estimated_speedup=8.0,
+                    detection_overhead_ms=det_ms,
+                    projected_exec_ms=0.05,
+                    baseline_latency_ms=0.5,
+                    is_approximation=False,
+                    error_bound=0.0,
+                    apply_fn=lambda inp: np.maximum(0.0, inp["X"] + inp["b1"]) @ inp["W2"] + inp["b2"],
+                ))
+
+            # Algebraic shortcut 3: Zero W2 eliminates second layer
+            if W2_meta and W2_meta.structure_type == StructureType.ZERO and "b2" in inputs:
+                det_ms = sum(m.detection_cost_ms for m in structures.values())
+                rewrites.append(PhaseChangeRewrite(
+                    rule_id="REWRITE_MLP_ZERO_W2",
+                    name="Zero Output Layer Elimination: H @ 0 + b2 = b2",
+                    mathematical_proof="Any intermediate activation multiplied by zero weight matrix yields zero; output is identically bias b2.",
+                    preconditions=["W2 is all-zero matrix", "Valid b2 operand"],
+                    is_applicable=True,
+                    estimated_speedup=30.0,
+                    detection_overhead_ms=det_ms,
+                    projected_exec_ms=0.005,
+                    baseline_latency_ms=0.5,
+                    is_approximation=False,
+                    error_bound=0.0,
+                    apply_fn=lambda inp: np.broadcast_to(inp["b2"], (inp["X"].shape[0], inp["b2"].shape[0])).copy() if "X" in inp else inp["b2"].copy(),
+                ))
+
+        # 6. Streaming Vector Ops (AXPY) Shortcuts
+        if workload_id == "STREAMING_VECTOR_OPS":
+            alpha = float(inputs.get("alpha", 2.0))
+            y_meta = structures.get("y")
+
+            if alpha == 0.0 and "y" in inputs:
+                rewrites.append(PhaseChangeRewrite(
+                    rule_id="REWRITE_AXPY_ALPHA_ZERO",
+                    name="Zero Alpha Elimination: 0 * x + y = y",
+                    mathematical_proof="Multiplication by scalar zero eliminates array multiplication and addition.",
+                    preconditions=["alpha == 0.0"],
+                    is_applicable=True,
+                    estimated_speedup=10.0,
+                    detection_overhead_ms=0.001,
+                    projected_exec_ms=0.01,
+                    baseline_latency_ms=0.3,
+                    is_approximation=False,
+                    error_bound=0.0,
+                    apply_fn=lambda inp: inp["y"].copy(),
+                ))
+            elif alpha == 1.0 and "x" in inputs and "y" in inputs:
+                rewrites.append(PhaseChangeRewrite(
+                    rule_id="REWRITE_AXPY_ALPHA_ONE",
+                    name="Unit Alpha Elimination: 1 * x + y = x + y",
+                    mathematical_proof="Multiplication by scalar identity 1.0 eliminates vector multiplication.",
+                    preconditions=["alpha == 1.0"],
+                    is_applicable=True,
+                    estimated_speedup=1.8,
+                    detection_overhead_ms=0.001,
+                    projected_exec_ms=0.15,
+                    baseline_latency_ms=0.3,
+                    is_approximation=False,
+                    error_bound=0.0,
+                    apply_fn=lambda inp: inp["x"] + inp["y"],
+                ))
+            elif y_meta and y_meta.structure_type == StructureType.ZERO and "x" in inputs:
+                rewrites.append(PhaseChangeRewrite(
+                    rule_id="REWRITE_AXPY_Y_ZERO",
+                    name="Zero Vector Addition Elimination: alpha * x + 0 = alpha * x",
+                    mathematical_proof="Addition of zero vector eliminates second vector read and elementwise sum.",
+                    preconditions=["y is zero vector"],
+                    is_applicable=True,
+                    estimated_speedup=2.0,
+                    detection_overhead_ms=y_meta.detection_cost_ms,
+                    projected_exec_ms=0.15,
+                    baseline_latency_ms=0.3,
+                    is_approximation=False,
+                    error_bound=0.0,
+                    apply_fn=lambda inp: alpha * inp["x"],
+                ))
 
         return rewrites
 

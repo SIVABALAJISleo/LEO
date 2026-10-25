@@ -49,7 +49,7 @@ def run_verification(output_path: str, seed: int = 42, prefer_igpu: bool = True,
             print(f"{i:<3} {wid:<28} {'UNKNOWN':<24} {'NONE':<22} {'0/0':<10} {'NOT_RUN':<8}")
 
     print("-" * 98)
-    print(f"Summary: {report.pass_count} PASS | {report.fail_count} FAIL | {report.unknown_count} UNKNOWN | {report.blocked_count} BLOCKED")
+    print(f"Summary: {report.pass_count} PASS | {report.fail_count} FAIL | {report.unknown_count} UNKNOWN | {report.unsupported_count} UNSUPPORTED | {report.blocked_count} BLOCKED")
     print(f"15/15 Aggregate Result: {'VERIFIED PASS' if report.is_15_of_15_verified else 'FAILED'}")
 
     # Prepare structured JSON
@@ -61,6 +61,7 @@ def run_verification(output_path: str, seed: int = 42, prefer_igpu: bool = True,
         "pass_count": report.pass_count,
         "fail_count": report.fail_count,
         "unknown_count": report.unknown_count,
+        "unsupported_count": report.unsupported_count,
         "blocked_count": report.blocked_count,
         "not_run_count": report.not_run_count,
         "is_15_of_15_verified": report.is_15_of_15_verified,

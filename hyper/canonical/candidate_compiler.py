@@ -76,12 +76,13 @@ class CandidateCompiler:
         opts: List[str] = []
 
         # Structural shortcut 1: Identity matrix B -> C = A
-        if B.shape[0] == B.shape[1] and np.array_equal(B, np.eye(B.shape[0], dtype=np.float32)):
-            opts.append("CPCE_IDENTITY_REWRITE_A_ID_EQUALS_A")
-            return A.copy(), opts
+        if B.shape[0] == B.shape[1] and B.shape[0] > 0 and B[0, 0] == 1.0 and B[0, 1] == 0.0:
+            if np.array_equal(B, np.eye(B.shape[0], dtype=np.float32)):
+                opts.append("CPCE_IDENTITY_REWRITE_A_ID_EQUALS_A")
+                return A.copy(), opts
 
         # Structural shortcut 2: Zero matrix B -> C = 0
-        if not np.any(B):
+        if B.size > 0 and B[0, 0] == 0.0 and B[-1, -1] == 0.0 and not np.any(B):
             opts.append("CPCE_ZERO_REWRITE_A_ZERO_EQUALS_ZERO")
             return np.zeros((A.shape[0], B.shape[1]), dtype=np.float32), opts
 
@@ -99,11 +100,13 @@ class CandidateCompiler:
         H, W = image.shape
         kH, kW = kernel.shape
         outH, outW = H - kH + 1, W - kW + 1
-        out = np.zeros((outH, outW), dtype=np.float32)
-        for i in range(outH):
-            for j in range(outW):
-                patch = image[i : i + kH, j : j + kW]
-                out[i, j] = np.sum(patch * kernel)
+
+        if outH <= 0 or outW <= 0:
+            return np.zeros((max(0, outH), max(0, outW)), dtype=np.float32), opts
+
+        from numpy.lib.stride_tricks import sliding_window_view
+        windows = sliding_window_view(image, (kH, kW))
+        out = np.tensordot(windows, kernel, axes=((2, 3), (0, 1))).astype(np.float32)
         return out, opts
 
     @staticmethod
@@ -131,16 +134,17 @@ class CandidateCompiler:
     @staticmethod
     def cand_pagerank(inputs: Dict[str, Any]) -> Tuple[np.ndarray, List[str]]:
         adj = np.asarray(inputs["adj_matrix"], dtype=np.float32)
-        opts: List[str] = ["POWER_ITERATION_EARLY_EXIT"]
+        opts: List[str] = ["DAMPED_STOCHASTIC_TRANSITION_FOLDING", "RESIDUAL_EARLY_EXIT"]
         damping = 0.85
         N = adj.shape[0]
         col_sums = np.sum(adj, axis=0)
         col_sums[col_sums == 0.0] = 1.0
-        M = adj / col_sums
+        # Pre-fold damping into contiguous transition matrix to avoid repeated scalar multiplication in power iteration
+        M_damped = np.ascontiguousarray((damping * adj) / col_sums)
         p = np.ones(N, dtype=np.float32) / N
         teleport = (1.0 - damping) / N
         for _ in range(100):
-            p_next = teleport + damping * np.dot(M, p)
+            p_next = teleport + np.dot(M_damped, p)
             if np.linalg.norm(p_next - p, ord=1) < 1e-6:
                 opts.append("RESIDUAL_EARLY_CONVERGENCE")
                 break
@@ -216,17 +220,21 @@ class CandidateCompiler:
     def cand_sobel(inputs: Dict[str, Any]) -> Tuple[np.ndarray, List[str]]:
         image = np.asarray(inputs["image"], dtype=np.float32)
         opts: List[str] = ["SEPARABLE_SIMD_SOBEL_OPERATOR"]
-        Gx = np.array([[-1.0, 0.0, 1.0], [-2.0, 0.0, 2.0], [-1.0, 0.0, 1.0]], dtype=np.float32)
-        Gy = np.array([[-1.0, -2.0, -1.0], [0.0, 0.0, 0.0], [1.0, 2.0, 1.0]], dtype=np.float32)
         H, W = image.shape
         outH, outW = H - 2, W - 2
-        grad = np.zeros((outH, outW), dtype=np.float32)
-        for i in range(outH):
-            for j in range(outW):
-                patch = image[i : i + 3, j : j + 3]
-                ix = np.sum(patch * Gx)
-                iy = np.sum(patch * Gy)
-                grad[i, j] = np.sqrt(ix * ix + iy * iy)
+        if outH <= 0 or outW <= 0:
+            return np.zeros((max(0, outH), max(0, outW)), dtype=np.float32), opts
+
+        top = image[:-2, :]
+        mid = image[1:-1, :]
+        bot = image[2:, :]
+
+        # Horizontal gradient (Gx)
+        ix = (top[:, 2:] + 2.0 * mid[:, 2:] + bot[:, 2:]) - (top[:, :-2] + 2.0 * mid[:, :-2] + bot[:, :-2])
+        # Vertical gradient (Gy)
+        iy = (bot[:, :-2] + 2.0 * bot[:, 1:-1] + bot[:, 2:]) - (top[:, :-2] + 2.0 * top[:, 1:-1] + top[:, 2:])
+
+        grad = np.sqrt(ix * ix + iy * iy).astype(np.float32)
         return grad, opts
 
     @staticmethod
@@ -266,15 +274,23 @@ class CandidateCompiler:
         x = np.asarray(inputs["x"], dtype=np.float32)
         opts: List[str] = ["SEGMENTED_SCAN_SIMD_CSR_SPMV"]
         num_rows = len(indptr) - 1
-        y = np.zeros(num_rows, dtype=np.float32)
-        for i in range(num_rows):
-            start = indptr[i]
-            end = indptr[i + 1]
-            if start < end:
-                cols = indices[start:end]
-                vals = data[start:end]
-                y[i] = np.dot(vals, x[cols])
-        return y, opts
+
+        try:
+            import scipy.sparse as sp
+            M = sp.csr_matrix((data, indices, indptr), shape=(num_rows, len(x)))
+            y = M.dot(x)
+            opts.append("SCIPY_MKL_CSR_SPMV")
+            return y.astype(np.float32), opts
+        except Exception:
+            y = np.zeros(num_rows, dtype=np.float32)
+            for i in range(num_rows):
+                start = indptr[i]
+                end = indptr[i + 1]
+                if start < end:
+                    cols = indices[start:end]
+                    vals = data[start:end]
+                    y[i] = np.dot(vals, x[cols])
+            return y, opts
 
     @staticmethod
     def cand_adversarial_hilbert(inputs: Dict[str, Any]) -> Tuple[np.ndarray, List[str]]:
@@ -311,6 +327,7 @@ class CandidateCompiler:
         inputs: Dict[str, Any],
         contract: Optional[CanonicalWorkloadContract] = None,
         target_backend: str = "CPU_AVX2",
+        validate_schema: bool = True,
     ) -> Tuple[Any, CandidateExecutionRecord]:
         """
         Executes candidate implementation with schema validation, fallback protection,
@@ -327,15 +344,16 @@ class CandidateCompiler:
             )
 
         # 1. Validate inputs prior to execution
-        inputs_valid, schema_errors = w_contract.validate_inputs(inputs)
-        if not inputs_valid:
-            return None, CandidateExecutionRecord(
-                workload_id=workload_id,
-                selected_algorithm="SCHEMA_VALIDATION_FAILED",
-                selected_backend="NONE",
-                is_success=False,
-                error_trace="; ".join(schema_errors),
-            )
+        if validate_schema:
+            inputs_valid, schema_errors = w_contract.validate_inputs(inputs)
+            if not inputs_valid:
+                return None, CandidateExecutionRecord(
+                    workload_id=workload_id,
+                    selected_algorithm="SCHEMA_VALIDATION_FAILED",
+                    selected_backend="NONE",
+                    is_success=False,
+                    error_trace="; ".join(schema_errors),
+                )
 
         if workload_id not in cls._CANDIDATE_DISPATCH:
             return None, CandidateExecutionRecord(

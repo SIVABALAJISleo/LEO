@@ -223,7 +223,7 @@ class ContractAwareOptimizationEngine:
                 },
                 "metric3_execution": {
                     "backend": "ONLINE_SUBSUMPTION_VSA" if not fallback_used else "CPU_AVX2",
-                    "device": "Intel Core i5-12450H (AVX2/FMA)" if executor == "cpu" else "Intel(R) UHD Graphics (48 EUs Unified Shared Memory)",
+                    "device": "Intel Core i5-12450H (AVX2/FMA)" if (executor == "cpu" or not getattr(computation_fn, "_is_verified_gpu", False)) else "Intel(R) UHD Graphics (OpenVINO iGPU)",
                     "zero_copy_shared_ram": True,
                     "latency_ms": round(exec_ms, 4),
                     "speedup": round(speedup, 2) if not fallback_used else 1.0,

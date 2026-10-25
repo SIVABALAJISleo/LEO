@@ -110,14 +110,18 @@ class FabricCertificationEngine:
             suite_report.pass_count == len(CANONICAL_15_WORKLOAD_IDS)
             and suite_report.fail_count == 0
             and suite_report.unknown_count == 0
+            and getattr(suite_report, "unsupported_count", 0) == 0
+            and getattr(suite_report, "not_run_count", 0) == 0
             and suite_report.blocked_count == 0
         )
+        unsupp_cnt = getattr(suite_report, "unsupported_count", 0)
+        not_run_cnt = getattr(suite_report, "not_run_count", 0)
         gates["GATE_A_CORRECTNESS"] = GateEvaluation(
             gate_id="GATE_A",
             gate_name="Independent Correctness Verification",
             status=GateStatus.PASSED if gate_a_pass else GateStatus.FAILED,
             criteria="100% of canonical workloads pass primary & adversarial tests against independent reference.",
-            evidence=f"Passed: {suite_report.pass_count}/{suite_report.total_workloads}. Fails: {suite_report.fail_count}, Unknown: {suite_report.unknown_count}, Blocked: {suite_report.blocked_count}.",
+            evidence=f"Passed: {suite_report.pass_count}/{suite_report.total_workloads}. Fails: {suite_report.fail_count}, Unknown: {suite_report.unknown_count}, Unsupported: {unsupp_cnt}, NotRun: {not_run_cnt}, Blocked: {suite_report.blocked_count}.",
             details={
                 "pass_count": suite_report.pass_count,
                 "total": suite_report.total_workloads,
@@ -240,6 +244,8 @@ class FabricCertificationEngine:
                 "pass_count": suite_report.pass_count,
                 "fail_count": suite_report.fail_count,
                 "unknown_count": suite_report.unknown_count,
+                "unsupported_count": getattr(suite_report, "unsupported_count", 0),
+                "not_run_count": getattr(suite_report, "not_run_count", 0),
                 "blocked_count": suite_report.blocked_count,
             },
             hardware_provenance=probe.to_dict(),

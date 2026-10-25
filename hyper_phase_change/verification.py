@@ -274,9 +274,9 @@ class PhaseChangeVerifier:
         )
 
     @classmethod
-    def run_suite(cls) -> SuiteVerificationReport:
+    def run_suite(cls, seed: int = 42, prefer_igpu: bool = True) -> SuiteVerificationReport:
         """Executes full verification across all 15 canonical workloads."""
-        return StrictVerificationRunner.verify_all_canonical_workloads()
+        return StrictVerificationRunner.verify_all_canonical_workloads(seed=seed, prefer_igpu=prefer_igpu)
 
 
 __all__ = [

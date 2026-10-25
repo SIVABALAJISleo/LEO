@@ -43,8 +43,9 @@ class VerificationStatus(str, Enum):
     PASS = "PASS"
     FAIL = "FAIL"
     UNKNOWN = "UNKNOWN"
-    BLOCKED = "BLOCKED"
     NOT_RUN = "NOT_RUN"
+    UNSUPPORTED = "UNSUPPORTED"
+    BLOCKED = "BLOCKED"
 
 
 @dataclasses.dataclass
@@ -95,6 +96,7 @@ class SuiteVerificationReport:
     pass_count: int
     fail_count: int
     unknown_count: int
+    unsupported_count: int
     blocked_count: int
     not_run_count: int
     is_15_of_15_verified: bool
@@ -109,6 +111,7 @@ class SuiteVerificationReport:
             "pass_count": self.pass_count,
             "fail_count": self.fail_count,
             "unknown_count": self.unknown_count,
+            "unsupported_count": self.unsupported_count,
             "blocked_count": self.blocked_count,
             "not_run_count": self.not_run_count,
             "is_15_of_15_verified": self.is_15_of_15_verified,
@@ -351,7 +354,7 @@ class StrictVerificationRunner:
         if contract is None:
             return WorkloadVerificationRecord(
                 workload_id=workload_id,
-                status=VerificationStatus.NOT_RUN,
+                status=VerificationStatus.UNSUPPORTED,
                 exactness_class="UNKNOWN",
                 reference_impl_id="NONE",
                 candidate_impl_id="NONE",
@@ -518,6 +521,7 @@ class StrictVerificationRunner:
         pass_c = 0
         fail_c = 0
         unknown_c = 0
+        unsupported_c = 0
         blocked_c = 0
         not_run_c = 0
 
@@ -530,18 +534,28 @@ class StrictVerificationRunner:
                 fail_c += 1
             elif rec.status == VerificationStatus.UNKNOWN:
                 unknown_c += 1
+            elif rec.status == VerificationStatus.UNSUPPORTED:
+                unsupported_c += 1
             elif rec.status == VerificationStatus.BLOCKED:
                 blocked_c += 1
             elif rec.status == VerificationStatus.NOT_RUN:
                 not_run_c += 1
 
         total = len(all_ids)
-        is_15_verified = (pass_c == total) and (total == 15)
+        is_15_verified = (
+            (pass_c == total)
+            and (total == 15)
+            and (fail_c == 0)
+            and (unknown_c == 0)
+            and (unsupported_c == 0)
+            and (blocked_c == 0)
+            and (not_run_c == 0)
+        )
 
         summary = (
             f"15/15 CANONICAL WORKLOAD CONTRACTS VERIFIED (PASS: {pass_c}/{total})"
             if is_15_verified
-            else f"VERIFICATION FAILED: {pass_c}/{total} PASS (FAIL: {fail_c}, BLOCKED: {blocked_c})"
+            else f"VERIFICATION FAILED: {pass_c}/{total} PASS (FAIL: {fail_c}, UNKNOWN: {unknown_c}, UNSUPPORTED: {unsupported_c}, BLOCKED: {blocked_c})"
         )
 
         return SuiteVerificationReport(
@@ -549,6 +563,7 @@ class StrictVerificationRunner:
             pass_count=pass_c,
             fail_count=fail_c,
             unknown_count=unknown_c,
+            unsupported_count=unsupported_c,
             blocked_count=blocked_c,
             not_run_count=not_run_c,
             is_15_of_15_verified=is_15_verified,

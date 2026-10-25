@@ -189,13 +189,18 @@ class PhysicalDeviceProbe:
             notes.append(f"OpenVINO GPU probe exception: {str(e)}")
             return False, "None", "None", False, 0.0, 0.0, notes
 
+    _discrete_gpu_cache: Optional[Tuple[bool, str, str]] = None
+
     @classmethod
     def probe_discrete_gpu(cls) -> Tuple[bool, str, str]:
         """
         Inspects system for dedicated NVIDIA or AMD GPUs.
         Accurately reports absence on Lenovo IdeaPad Slim 3.
         """
-        # Run wmic or PowerShell Get-CimInstance to inspect display controllers
+        if cls._discrete_gpu_cache is not None:
+            return cls._discrete_gpu_cache
+
+        # Run PowerShell Get-CimInstance to inspect display controllers
         discrete_found = False
         gpu_name = "None"
         try:
@@ -203,7 +208,7 @@ class PhysicalDeviceProbe:
                 ["powershell", "-NoProfile", "-Command", "Get-CimInstance Win32_VideoController | Select-Object -ExpandProperty Name"],
                 capture_output=True,
                 text=True,
-                timeout=5,
+                timeout=3,
             )
             lines = [line.strip() for line in res.stdout.splitlines() if line.strip()]
             for name in lines:
@@ -219,7 +224,8 @@ class PhysicalDeviceProbe:
         else:
             parity_status = "NOT_MEASURED (no discrete GPU present in system; discrete parity unmeasured)"
 
-        return discrete_found, gpu_name, parity_status
+        cls._discrete_gpu_cache = (discrete_found, gpu_name, parity_status)
+        return cls._discrete_gpu_cache
 
     @classmethod
     def probe_optional_backends(cls) -> Tuple[bool, bool, bool]:
@@ -295,3 +301,6 @@ class PhysicalDeviceProbe:
             pocl_available=pocl_avail,
             probe_notes=notes,
         )
+
+    # Formal alias for single-line unified hardware discovery
+    probe_all = run_full_probe
