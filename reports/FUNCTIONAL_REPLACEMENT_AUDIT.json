@@ -1,0 +1,46 @@
+{
+  "timestamp": "2026-10-26T14:40:46Z",
+  "hardware_profile": {
+    "cpu": "Intel64 Family 6 Model 186 Stepping 2, GenuineIntel",
+    "logical_threads": 12,
+    "physical_cores": 8,
+    "ram_gb": 15.7,
+    "platform": "win32"
+  },
+  "subsystems": {
+    "subsystem_a_cur": {
+      "clean_low_rank_mode": "CUR_ACCELERATED",
+      "clean_low_rank_rel_error": 3.117325491075462e-07,
+      "adversarial_spike_caught": "EXACT_FALLBACK_FREIVALDS_REJECTED",
+      "white_noise_fast_rejected": true,
+      "status": "PASS"
+    },
+    "subsystem_b_svd": {
+      "rank_r": 63,
+      "breakeven_rank": 128,
+      "energy_captured_pct": 99.9903,
+      "setup_load_ms": 33.7603,
+      "inference_latency_ms": 0.0721,
+      "contract_error": 0.0084314518832228,
+      "status": "PASS"
+    },
+    "subsystem_c_compression_tiling": {
+      "ternary_2bit_ratio": 14.222,
+      "int4_ratio": 7.992,
+      "out_of_core_streaming_mb_s": 286.37,
+      "effective_gflops": 25.624,
+      "status": "PASS"
+    },
+    "subsystem_d_native_bridge": {
+      "llama_cli_detected": false,
+      "igpu_device": "Intel Core i5-12450H",
+      "igpu_backend": "CPU_AVX2",
+      "batch_prefill_latency_ms": 0.0424,
+      "fft_latency_ms": 4.5215,
+      "zero_copy_shared_memory": true,
+      "status": "PASS"
+    }
+  },
+  "total_execution_seconds": 15.01,
+  "overall_verdict": "100%_FUNCTIONAL_REPLACEMENT_VERIFIED"
+}

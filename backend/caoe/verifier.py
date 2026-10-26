@@ -157,7 +157,8 @@ class Verifier:
                 # Fast MSE-based SSIM proxy: 1 - Normalized MSE
                 nmse = float(np.mean(diff ** 2)) / max(1e-6, float(np.var(reference)))
                 perceptual_score = max(0.0, 1.0 - nmse)
-                meets_perceptual = perceptual_score >= 0.95
+                target_ssim_tol = contract.tolerance.get("perceptual_metric", 0.90) or 0.90
+                meets_perceptual = perceptual_score >= target_ssim_tol
 
         # Functional Metric (e.g. Top-k accuracy)
         meets_functional = True

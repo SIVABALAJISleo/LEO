@@ -21,12 +21,11 @@ logger = logging.getLogger(__name__)
 _BACKEND_SCORE: Dict[str, float] = {
     "ternary_lookup": 4.5,  # Optimized element-wise table lookup
     "npu":       4.0,   # NPU: lowest power, fast for small models
-    "moe_spec":  3.8,   # Speculative Expert Budgeting verification
-    "metal":     3.5,   # Apple Silicon GPU (Metal)
-    "mlx":       3.5,   # Apple MLX (uses Metal internally)
     "vulkan":    3.0,   # iGPU Vulkan (Intel Iris/Arc, AMD Radeon)
     "directml":  2.8,   # DirectML (Windows iGPU/NPU)
     "openvino":  2.5,   # OpenVINO (Intel CPU/iGPU/NPU)
+    "metal":     0.0,   # Quarantined: Non-target Apple hardware
+    "mlx":       0.0,   # Quarantined: Non-target Apple hardware
     "cpu_amx":   2.2,   # Intel AMX (4th-gen Xeon / Core Ultra)
     "cpu_avx512_vnni": 1.9,
     "cpu_avx512": 1.6,

@@ -71,19 +71,17 @@ class AdaptivePrecisionSelector:
         # Precision policy
         if cond < self.cond_int4 or rank_ratio < 0.35:
             precision = "INT4"
-            speedup = 1.85
-            mem_factor = 0.125 # 4 bits vs 32 bits = 1/8
             recommendation = "Safe for INT4/Q4_K_M quantization without quality loss."
         elif cond < self.cond_int8 or rank_ratio < 0.70:
             precision = "INT8"
-            speedup = 1.35
-            mem_factor = 0.25 # 8 bits vs 32 bits = 1/4
             recommendation = "Safe for INT8/Q8_0 quantization."
         else:
             precision = "FP32"
-            speedup = 1.00
-            mem_factor = 1.00
             recommendation = "Ill-conditioned spectrum requires FP32/FP16 precision to avoid representation collapse."
+
+        bits = 4 if precision == "INT4" else (8 if precision == "INT8" else 32)
+        mem_factor = float(bits) / 32.0
+        speedup = round(1.0 / mem_factor, 2)
 
         dt_ms = (time.perf_counter() - t0) * 1000.0
 
