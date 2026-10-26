@@ -3,7 +3,10 @@ import json
 import time
 import logging
 from typing import List, Dict, Any
-import aiohttp
+try:
+    import aiohttp
+except ImportError:
+    aiohttp = None
 
 logger = logging.getLogger(__name__)
 

@@ -10,7 +10,11 @@ Reports input/accumulator/output precision, errors, speed, and memory honestly.
 import time
 from typing import Any, Dict, Optional, Tuple
 import numpy as np
-import torch
+try:
+    import torch
+except ImportError:
+    torch = None
+
 
 
 PRECISION_MODES = [
@@ -102,11 +106,19 @@ class PrecisionEngine:
             input_prec = "bfloat16"
             accum_prec = "float32"
             output_prec = "bfloat16"
-            tA = torch.from_numpy(A.astype(np.float32)).to(torch.bfloat16)
-            tB = torch.from_numpy(B.astype(np.float32)).to(torch.bfloat16)
-            tC = torch.matmul(tA, tB)
-            C = tC.to(torch.float32).numpy()
+            if torch is not None:
+                tA = torch.from_numpy(A.astype(np.float32)).to(torch.bfloat16)
+                tB = torch.from_numpy(B.astype(np.float32)).to(torch.bfloat16)
+                tC = torch.matmul(tA, tB)
+                C = tC.to(torch.float32).numpy()
+            else:
+                A_u32 = A.astype(np.float32).view(np.uint32) & 0xFFFF0000
+                B_u32 = B.astype(np.float32).view(np.uint32) & 0xFFFF0000
+                A_bf16 = A_u32.view(np.float32)
+                B_bf16 = B_u32.view(np.float32)
+                C = A_bf16 @ B_bf16
             memory_bytes = A.size * 2 + B.size * 2 + C.size * 2
+
 
         elif mode == "int8":
             input_prec = "int8"

@@ -32,7 +32,11 @@ import time
 from dataclasses import dataclass, asdict
 from typing import Any, Dict, List, Optional, Tuple
 import numpy as np
-import torch
+try:
+    import torch
+except ImportError:
+    torch = None
+
 
 try:
     import openvino as ov

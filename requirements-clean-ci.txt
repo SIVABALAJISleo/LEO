@@ -20,3 +20,4 @@ PyJWT>=2.8.0
 passlib[bcrypt]>=1.7.4
 bcrypt>=4.0.0
 pytest-env>=1.1.0
+aiohttp>=3.9.0
