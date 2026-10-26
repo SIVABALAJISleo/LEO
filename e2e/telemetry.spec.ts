@@ -21,7 +21,7 @@ test.describe("telemetry — domain events reach /api/telemetry", () => {
     // Force the stream request to fail so a dropped-partial banner appears
     // (but only AFTER at least one delta arrives so `receivedAny` is true).
     let callCount = 0;
-    await page.route("**/v1/chat/completions", async (route) => {
+    const streamRouteHandler = async (route: import("@playwright/test").Route) => {
       callCount += 1;
       if (callCount === 1) {
         // Send one delta, then abort mid-stream.
@@ -51,7 +51,10 @@ test.describe("telemetry — domain events reach /api/telemetry", () => {
           "",
         ].join("\n\n"),
       });
-    });
+    };
+    await page.route("**/v1/chat/completions", streamRouteHandler);
+    await page.route("**/api/v1/inference/generate", streamRouteHandler);
+
 
     await page.goto("/app/chat");
     await page.getByTestId("chat-input").fill("hi");

@@ -71,9 +71,14 @@ async function openStream(
     body: JSON.stringify(body),
   });
 
-  // Graceful fallback to OpenAI-compatible gateway if local GGUF endpoint is not configured (e.g. 404 or 503)
-  if ((res.status === 404 || res.status === 503) && endpoint === "/api/v1/inference/generate") {
+  // Graceful fallback to OpenAI-compatible gateway if local GGUF endpoint is not configured (e.g. 404, 503, or HTML SPA catch-all)
+  const isHtml = res.headers.get("content-type")?.includes("text/html");
+  if (
+    (res.status === 404 || res.status === 503 || isHtml) &&
+    endpoint === "/api/v1/inference/generate"
+  ) {
     const fallbackUrl = `${getApiBase()}/v1/chat/completions`;
+
     res = await fetch(fallbackUrl, {
       method: "POST",
       headers,

@@ -52,13 +52,13 @@ export async function mockLeoBackend(page: import("@playwright/test").Page) {
     }
   });
 
-  await page.route("**/v1/chat/completions", async (route: Route) => {
+  const handleChatStream = async (route: Route) => {
     const req = route.request();
     const body = req.postDataJSON?.() ?? {};
-    if (body?.stream) {
+    if (body?.stream !== false) {
       const sse = [
-        `data: ${JSON.stringify({ choices: [{ delta: { content: "Hello " } }] })}`,
-        `data: ${JSON.stringify({ choices: [{ delta: { content: "from LEO." } }], x_leo_metadata: { resolved_by: "cache", latency_ms: 8, compute_avoided: true } })}`,
+        `data: ${JSON.stringify({ token: "Hello ", choices: [{ delta: { content: "Hello " } }] })}`,
+        `data: ${JSON.stringify({ token: "from LEO.", choices: [{ delta: { content: "from LEO." } }], x_leo_metadata: { resolved_by: "cache", latency_ms: 8, compute_avoided: true } })}`,
         `data: [DONE]`,
         "",
       ].join("\n\n");
@@ -74,12 +74,34 @@ export async function mockLeoBackend(page: import("@playwright/test").Page) {
         contentType: "application/json",
         body: JSON.stringify({
           choices: [{ message: { role: "assistant", content: "Hello from LEO." } }],
+          text: "Hello from LEO.",
           x_leo_metadata: { resolved_by: "cache", latency_ms: 8, compute_avoided: true },
         }),
       });
     }
+  };
+
+  await page.route("**/v1/chat/completions", handleChatStream);
+  await page.route("**/api/v1/inference/generate", handleChatStream);
+  await page.route("**/api/v1/inference/stream", handleChatStream);
+  await page.route("**/api/v1/inference/model-info", async (route: Route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        format: "GGUF",
+        quantization: "Q4_K_M",
+        model_name: "Qwen2.5-0.5B-Instruct-Q4_K_M",
+        is_local_only: true,
+        cloud_compute_used: false,
+        paid_api_required: false,
+        is_model_present_on_disk: true,
+        file_size_mb: 450,
+      }),
+    });
   });
 }
+
 
 /**
  * Mock the paginated chat-history sync endpoint. Serves two pages:

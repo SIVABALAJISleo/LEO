@@ -74,10 +74,25 @@ jobs:
         run: bunx playwright install --with-deps chromium
       - name: Build (node preset for local preview)
         run: NITRO_PRESET=node bun run build
+      - name: Boot Nitro preview server
+        run: |
+          nohup node .output/server/index.mjs > preview.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -sf http://127.0.0.1:3000 > /dev/null; then
+              echo "Preview up on :3000"; break
+            fi
+            sleep 1
+          done
+        env:
+          PORT: 3000
+          HOST: 127.0.0.1
+      - name: Health check
+        run: curl -fsS http://127.0.0.1:3000 > /dev/null
       - name: Run Playwright tests
         run: bunx playwright test
         env:
-          E2E_BASE_URL: ""
+          E2E_BASE_URL: http://127.0.0.1:3000
+
       - name: Upload Playwright report
         if: always()
         uses: actions/upload-artifact@v4
