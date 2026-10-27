@@ -218,6 +218,21 @@ def test_subsystem_d_native_runtime_bridge(bridge):
     assert offload_res.output_norm > 0.0
     assert offload_res.is_mock is False
 
+    # Test Native C++ AVX2 Keystone entropy and bitwise VSA kernels
+    entropy = bridge.evaluate_entropy_native(x)
+    assert 0.0 <= entropy <= 1.0
+
+    v1 = np.array([0xFFFFFFFFFFFFFFFF, 0x0000000000000000], dtype=np.uint64)
+    v2 = np.array([0x0000000000000000, 0x0000000000000000], dtype=np.uint64)
+    vsa_dist = bridge.execute_vsa_bitwise_native(v1, v2)
+    assert vsa_dist == 64
+
+    # Test hardware telemetry
+    telem = bridge.get_hardware_telemetry()
+    assert "target_cpu" in telem
+    assert "target_igpu" in telem
+    assert "native_keystone_compiled" in telem
+
 
 # ── Strict Ledger Anti-Mock Verification ─────────────────────────────────────
 

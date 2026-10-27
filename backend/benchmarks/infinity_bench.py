@@ -85,7 +85,7 @@ def print_infinity_seal(report: Dict[str, Any]):
 def run_benchmark(json_out: str = "reports/infinity_bench_results.json") -> Dict[str, Any]:
     """Run the full Infinity Benchmark Suite."""
     print("Initializing VInfinity Fabric Orchestrator...")
-    from backend.layers.v_infinity_orchestrator import VInfinityOrchestrator
+    from archive_engines.legacy_layers.v_infinity_orchestrator import VInfinityOrchestrator
 
     orchestrator = VInfinityOrchestrator()
 

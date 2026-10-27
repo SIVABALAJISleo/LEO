@@ -12,7 +12,7 @@ Verifies:
 
 import pytest
 import numpy as np
-from backend.layers.v_infinity_orchestrator import (
+from archive_engines.legacy_layers.v_infinity_orchestrator import (
     VInfinityOrchestrator,
     TopologicalHypergraph,
     PredictiveDeltaEngine,

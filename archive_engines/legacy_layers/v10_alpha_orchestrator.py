@@ -8,15 +8,15 @@ from typing import Dict, Any
 
 logger = logging.getLogger(__name__)
 
-from backend.layers.v10_l1_crystal import CrystalIntelligenceEngine
-from backend.layers.v10_l2_graphrag import GraphRAGKnowledgeFabric
-from backend.layers.v10_l3_infinite_memory import InfiniteMemoryArchitecture
-from backend.layers.v10_l4_expert_composition import ExpertCompositionNetwork
-from backend.layers.v10_l5_evolutionary import EvolutionaryDiscoveryEngine
-from backend.layers.v10_l6_symbolic import SymbolicIntelligenceLayer
-from backend.layers.v10_l13_hardware import HardwareAbstractionLayer
-from backend.layers.v10_l14_distributed_mesh import DistributedIntelligenceMesh
-from backend.layers.v10_l15_edge_ai import EdgeAIPlatform
+from archive_engines.legacy_layers.v10_l1_crystal import CrystalIntelligenceEngine
+from archive_engines.legacy_layers.v10_l2_graphrag import GraphRAGKnowledgeFabric
+from archive_engines.legacy_layers.v10_l3_infinite_memory import InfiniteMemoryArchitecture
+from archive_engines.legacy_layers.v10_l4_expert_composition import ExpertCompositionNetwork
+from archive_engines.legacy_layers.v10_l5_evolutionary import EvolutionaryDiscoveryEngine
+from archive_engines.legacy_layers.v10_l6_symbolic import SymbolicIntelligenceLayer
+from archive_engines.legacy_layers.v10_l13_hardware import HardwareAbstractionLayer
+from archive_engines.legacy_layers.v10_l14_distributed_mesh import DistributedIntelligenceMesh
+from archive_engines.legacy_layers.v10_l15_edge_ai import EdgeAIPlatform
 
 class V10AlphaOrchestrator:
     def __init__(self):

@@ -56,6 +56,8 @@ The repository contains a hybrid full-stack system consisting of:
 2. **`chimera/` & `chimera_engine.py`**: Heuristic hybrid execution prototype. Replaced by `hyper_universal/scheduler/scheduler.py`.
 3. **`leo_*.py` root scripts**: Historical research experiments and micro-benchmarks. Retained for historical verification and reproducible benchmarks.
 4. **`archive_engines/`**: Deprecated engines preserved for historical provenance.
+5. **`archive_engines/legacy_layers/`**: Quarantined legacy orchestrators (`v10_alpha`, `v10_beta`, `v10_mvp`, `v16`, `v19`, `v42`, `v43`, `v_infinity`, `ucsip`, and `v10_l1`..`v10_l16`).
+   - The **single canonical active execution path** is `backend/canonical/functional_replacement_engine.py`, `backend/canonical/native_runtime_bridge.py`, and `backend/caoe/caoe_engine.py`.
 
 ---
 

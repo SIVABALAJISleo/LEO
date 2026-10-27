@@ -90,4 +90,11 @@ scratch/
 /experiments/
 /counterexamples/
 !hyper_universal/counterexamples/
+
+# Runtime caches and out-of-core NVMe swap tiles (never commit pre-baked fixtures)
+.hyper_cache/
+*.hd.npy
+leo_nvme_vram_*/
+*.lnk
+Untitled-1.txt
 

@@ -19,7 +19,7 @@ from backend.compression.advanced_compression import AdvancedCompressionLayer
 from backend.surrogate.hybrid_router import HybridSurrogateSymbolicRouter
 from backend.learning.self_improvement import InfinityEvolutionLoop, CurriculumScheduler, get_evolution_loop
 from backend.analytics.telemetry_collector import TelemetryCollector
-from backend.layers.v_infinity_orchestrator import VInfinityOrchestrator
+from archive_engines.legacy_layers.v_infinity_orchestrator import VInfinityOrchestrator
 
 
 # ──────────────────── Component 1: Kernels ────────────────────

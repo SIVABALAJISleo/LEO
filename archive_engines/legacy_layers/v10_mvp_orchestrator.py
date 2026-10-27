@@ -8,10 +8,10 @@ from typing import Dict, Any
 
 logger = logging.getLogger(__name__)
 
-from backend.layers.v10_l1_crystal import CrystalIntelligenceEngine
-from backend.layers.v10_l2_graphrag import GraphRAGKnowledgeFabric
-from backend.layers.v10_l3_infinite_memory import InfiniteMemoryArchitecture
-from backend.layers.v10_l4_expert_composition import ExpertCompositionNetwork
+from archive_engines.legacy_layers.v10_l1_crystal import CrystalIntelligenceEngine
+from archive_engines.legacy_layers.v10_l2_graphrag import GraphRAGKnowledgeFabric
+from archive_engines.legacy_layers.v10_l3_infinite_memory import InfiniteMemoryArchitecture
+from archive_engines.legacy_layers.v10_l4_expert_composition import ExpertCompositionNetwork
 
 class V10MVPOrchestrator:
     def __init__(self):

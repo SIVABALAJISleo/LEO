@@ -73,7 +73,7 @@ def test_knowledge_engine_indexing_and_search():
 
 
 def test_rag_evaluator():
-    from backend.layers.v_infinity_orchestrator import VInfinityOrchestrator
+    from archive_engines.legacy_layers.v_infinity_orchestrator import VInfinityOrchestrator
     from backend.intelligence.rag_evaluator import RAGEvaluator
     
     orchestrator = VInfinityOrchestrator()

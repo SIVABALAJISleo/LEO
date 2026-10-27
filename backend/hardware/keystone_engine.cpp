@@ -388,4 +388,27 @@ extern "C" {
         bool ok = hyper::keystone::KeystoneEngine::freivalds_verify_gemm(A, B, C, M, K, N, epsilon, trials);
         return ok ? 1 : 0;
     }
+
+    KEYSTONE_API float leo_evaluate_entropy_avx2(const float* data, size_t count) {
+        if (!data || count == 0) return 0.0f;
+        size_t total_bytes = count * sizeof(float);
+        size_t sample_size = (total_bytes < 512) ? total_bytes : 512;
+        return hyper::keystone::KeystoneEngine::compute_normalized_entropy_512(
+            reinterpret_cast<const uint8_t*>(data), sample_size
+        );
+    }
+
+    KEYSTONE_API void leo_execute_vsa_xor_popcnt_avx2(
+        const uint64_t* hypervec_A,
+        const uint64_t* hypervec_B,
+        uint32_t* accumulator,
+        size_t bit_count
+    ) {
+        if (!hypervec_A || !hypervec_B || bit_count == 0) return;
+        size_t num_qwords = (bit_count + 63) / 64;
+        uint64_t dist = hyper::keystone::KeystoneEngine::avx2_vsa_hamming_distance(hypervec_A, hypervec_B, num_qwords);
+        if (accumulator) {
+            *accumulator += static_cast<uint32_t>(dist);
+        }
+    }
 }

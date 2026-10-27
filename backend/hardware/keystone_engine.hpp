@@ -17,6 +17,17 @@
 #include <memory>
 #include <immintrin.h>
 
+#if defined(__has_include)
+  #if __has_include(<CL/cl.h>)
+    #include <CL/cl.h>
+    #define KEYSTONE_HAS_OPENCL 1
+  #else
+    #define KEYSTONE_HAS_OPENCL 0
+  #endif
+#else
+  #define KEYSTONE_HAS_OPENCL 0
+#endif
+
 #ifdef _WIN32
   #define KEYSTONE_API __declspec(dllexport)
 #else
@@ -127,6 +138,14 @@ extern "C" {
     KEYSTONE_API int keystone_freivalds_verify(
         const float* A, const float* B, const float* C,
         size_t M, size_t K, size_t N, float epsilon, int trials
+    );
+
+    KEYSTONE_API float leo_evaluate_entropy_avx2(const float* data, size_t count);
+    KEYSTONE_API void leo_execute_vsa_xor_popcnt_avx2(
+        const uint64_t* hypervec_A,
+        const uint64_t* hypervec_B,
+        uint32_t* accumulator,
+        size_t bit_count
     );
 }
 

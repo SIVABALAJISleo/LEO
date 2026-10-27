@@ -111,7 +111,7 @@ class BenchmarkEngine:
 
     async def _run_leo_ai(self, query: str) -> str:
         # Avoid circular imports by importing orchestrator here
-        from backend.layers.v10_beta_orchestrator import global_v10_beta_orchestrator
+        from archive_engines.legacy_layers.v10_beta_orchestrator import global_v10_beta_orchestrator
         try:
             result = global_v10_beta_orchestrator.execute_semantic_workflow(
                 query=query,

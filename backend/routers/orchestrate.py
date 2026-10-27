@@ -3,9 +3,9 @@ from fastapi import APIRouter, Request, Depends
 from pydantic import BaseModel, Field
 from typing import Optional
 
-from backend.layers.v42_ultimate_orchestrator import global_v42_ultimate_orchestrator
-from backend.layers.v43_software_first_orchestrator import get_v43_orchestrator
-from backend.layers.v_infinity_orchestrator import get_vinfinity_orchestrator
+from archive_engines.legacy_layers.v42_ultimate_orchestrator import global_v42_ultimate_orchestrator
+from archive_engines.legacy_layers.v43_software_first_orchestrator import get_v43_orchestrator
+from archive_engines.legacy_layers.v_infinity_orchestrator import get_vinfinity_orchestrator
 
 from backend.security.rbac import PermissionChecker
 
@@ -156,8 +156,7 @@ async def verify_seal_endpoint(signature: str, token: dict = Depends(PermissionC
 # --- LEO V45 "COSMIC SINGULARITY" Endpoints ---
 @router.post("/api/v1/leo/v45/cosmic/benchmark", tags=["LEO V45 Cosmic Singularity"])
 async def run_cosmic_singularity_benchmark(token: dict = Depends(PermissionChecker("orchestrate"))):
-    from backend.layers.v_infinity_orchestrator import get_vinfinity_orchestrator
-    orch = get_vinfinity_orchestrator()
+    orch = _get_vinfinity()
     # Trigger background dreaming for cache warming
     queries = ["What is the value of CPU registers?", "Bypass single-device compute constraints"]
     dreams_count = orch.dream_layer.execute_background_dream(queries)
@@ -184,8 +183,7 @@ async def run_cosmic_singularity_benchmark(token: dict = Depends(PermissionCheck
 
 @router.get("/api/v1/leo/v45/cosmic/seal", tags=["LEO V45 Cosmic Singularity"])
 async def get_cosmic_seal(token: dict = Depends(PermissionChecker("orchestrate"))):
-    from backend.layers.v_infinity_orchestrator import get_vinfinity_orchestrator
-    orch = get_vinfinity_orchestrator()
+    orch = _get_vinfinity()
     return {
         "seal_signature": "LEO_V45_COSMIC_SINGULARITY_SEAL_VERIFIED",
         "lattice": orch.cosmic_lattice.get_lattice_metrics(),
@@ -197,8 +195,7 @@ async def get_cosmic_seal(token: dict = Depends(PermissionChecker("orchestrate")
 # --- LEO v∞ Absolute Intelligence Fabric Endpoints ---
 @router.post("/api/v1/leo/vinfinity/absolute/benchmark", tags=["LEO v∞ Absolute"])
 async def run_absolute_benchmark(token: dict = Depends(PermissionChecker("orchestrate"))):
-    from backend.layers.v_infinity_orchestrator import get_vinfinity_orchestrator
-    orch = get_vinfinity_orchestrator()
+    orch = _get_vinfinity()
     # Evolve background predictions
     orch.predictive_reality.simulate_future_branches("Bypass single-device constraints")
     
@@ -224,8 +221,7 @@ async def run_absolute_benchmark(token: dict = Depends(PermissionChecker("orches
 
 @router.get("/api/v1/leo/vinfinity/absolute/seal", tags=["LEO v∞ Absolute"])
 async def get_absolute_seal(token: dict = Depends(PermissionChecker("orchestrate"))):
-    from backend.layers.v_infinity_orchestrator import get_vinfinity_orchestrator
-    orch = get_vinfinity_orchestrator()
+    orch = _get_vinfinity()
     return {
         "seal_signature": "LEO_VINFINITY_ABSOLUTE_SEAL_VERIFIED",
         "addnet": orch.addnet.get_sparsity_report(),

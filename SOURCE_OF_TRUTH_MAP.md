@@ -1,5 +1,14 @@
 # LEO/HYPER Source of Truth Map
 
+## Canonical Execution Path (Project LEO Release 100%)
+
+The authoritative canonical execution path for Project LEO is composed exclusively of:
+- **`backend/canonical/functional_replacement_engine.py`**: The authoritative 100% Functional Replacement Engine.
+- **`backend/canonical/native_runtime_bridge.py`**: The hardware abstraction and native AVX2 kernel bridge.
+- **`backend/caoe/caoe_engine.py`**: Canonical Algorithmic Optimization Engine.
+
+All superseded versioned orchestrators (`v10_alpha`, `v10_beta`, `v10_mvp`, `v16`, `v19`, `v42`, `v43`, `v_infinity`, `ucsip`, and `v10_l1`..`v10_l16`) have been permanently quarantined to **`archive_engines/legacy_layers/`**. Active `backend/layers/` contains only low-level atomic components (`l0_crystallization.py` through `l19_observability.py`).
+
 ## Executive Architectural Decision
 
 The repository contains historical prototypes across `archive_engines/`, `core_ai/`, `backend/`, `HYPER_v6_BREAKTHROUGH/`, and `hyper_x/`.

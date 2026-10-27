@@ -883,7 +883,7 @@ class VInfinityOrchestrator:
         lut_metrics = self.lut_linear.get_substrate_metrics()
         
         # Spiking sparse activation logic
-        from backend.layers.v_infinity_orchestrator import TernarySparseOptimization
+        from archive_engines.legacy_layers.v_infinity_orchestrator import TernarySparseOptimization
         y_spiked = TernarySparseOptimization.spiking_sparse_activation(lut_out[:10], threshold=0.2)
         t_ternary = (time.perf_counter() - t0) * 1000
         trace.append({

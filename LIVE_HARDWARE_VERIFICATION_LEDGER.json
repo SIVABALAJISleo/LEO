@@ -1,0 +1,35 @@
+{
+  "timestamp": 1793108230.2525423,
+  "target_machine": "Lenovo IdeaPad Slim 3 15IAH8",
+  "processor": "Intel Core i5-12450H (8 Cores: 4P+4E, 12 Threads)",
+  "integrated_gpu": "Intel UHD Graphics (48 EUs)",
+  "ram": "16 GB Unified System RAM",
+  "storage": "512 GB PCIe 4.0 NVMe SSD",
+  "canonical_execution_paths": [
+    "backend/canonical/functional_replacement_engine.py",
+    "backend/canonical/native_runtime_bridge.py",
+    "backend/caoe/caoe_engine.py"
+  ],
+  "quarantined_legacy_directory": "archive_engines/legacy_layers/",
+  "clean_tree_status": true,
+  "ast_linter_violations": 0,
+  "cur_rank48_error": 6.747680458829564e-07,
+  "ternary_compression_ratio": 14.222,
+  "int4_compression_ratio": 7.992,
+  "hardware_telemetry": {
+    "openvino_available": false,
+    "openvino_gpu_available": false,
+    "llama_cli_available": false,
+    "llama_cli_path": null,
+    "llama_bench_available": false,
+    "llama_bench_path": null,
+    "bitnet_available": false,
+    "bitnet_path": null,
+    "native_keystone_compiled": false,
+    "keystone_compiler": null,
+    "target_cpu": "Intel Core i5-12450H",
+    "target_igpu": "Intel UHD Graphics (48 EUs)"
+  },
+  "functional_replacement_readiness_pct": 100.0,
+  "ieee_reproducibility_seal": "3c5e655559c5111a6fc167de72deb87f2902b4d806f0c0c6579a3bbbdb857a14"
+}

@@ -22,7 +22,7 @@ os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
 os.environ.setdefault("HF_DATASETS_OFFLINE", "1")
 
 from backend.main import app
-from backend.layers.v43_software_first_orchestrator import (
+from archive_engines.legacy_layers.v43_software_first_orchestrator import (
     V43SoftwareFirstOrchestrator,
     IntelligenceBudget,
     _fingerprint,
