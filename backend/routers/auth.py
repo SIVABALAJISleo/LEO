@@ -17,9 +17,14 @@ except ImportError:
     jwt = None
 
 try:
+    import bcrypt
+except ImportError:
+    bcrypt = None
+
+try:
     from passlib.context import CryptContext
     pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-except ImportError:
+except Exception:
     pwd_context = None
 
 router = APIRouter(prefix="/api/v1/auth", tags=["Authentication"])
@@ -29,27 +34,52 @@ class AuthRequest(BaseModel):
     password: str
 
 def hash_password(password: str) -> str:
+    # 1. Primary: Direct bcrypt hashing (work factor 12)
+    if bcrypt is not None:
+        try:
+            salt = bcrypt.gensalt(rounds=12)
+            return bcrypt.hashpw(password.encode("utf-8"), salt).decode("utf-8")
+        except Exception:
+            pass
+    # 2. Secondary: Passlib CryptContext
     if pwd_context is not None:
         try:
             return pwd_context.hash(password)
         except Exception:
             pass
-    salt = os.urandom(16).hex()
-    h = hashlib.sha256((salt + password).encode()).hexdigest()
-    return f"sha256${salt}${h}"
+    # 3. Fallback: NIST/OWASP SP 800-63B approved PBKDF2-HMAC-SHA256 (600,000 rounds)
+    salt = os.urandom(16)
+    kdf_hash = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt, 600_000)
+    return f"pbkdf2_sha256$600000${salt.hex()}${kdf_hash.hex()}"
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    if pwd_context is not None:
+    if not plain_password or not hashed_password:
+        return False
+    # 1. Check if bcrypt hash ($2a$, $2b$, $2y$)
+    if bcrypt is not None and any(hashed_password.startswith(prefix) for prefix in ("$2a$", "$2b$", "$2y$")):
         try:
-            return pwd_context.verify(plain_password, hashed_password)
+            return bcrypt.checkpw(plain_password.encode("utf-8"), hashed_password.encode("utf-8"))
         except Exception:
             pass
-    if hashed_password.startswith("sha256$"):
+    # 2. Check via passlib CryptContext
+    if pwd_context is not None:
+        try:
+            if pwd_context.identify(hashed_password):
+                return pwd_context.verify(plain_password, hashed_password)
+        except Exception:
+            pass
+    # 3. Check PBKDF2-HMAC-SHA256 hash
+    if hashed_password.startswith("pbkdf2_sha256$"):
         parts = hashed_password.split("$")
-        if len(parts) == 3:
-            salt, h = parts[1], parts[2]
-            computed = hashlib.sha256((salt + plain_password).encode()).hexdigest()
-            return hmac.compare_digest(computed, h)
+        if len(parts) == 4:
+            try:
+                iters = int(parts[1])
+                salt = bytes.fromhex(parts[2])
+                expected_hash = bytes.fromhex(parts[3])
+                computed_hash = hashlib.pbkdf2_hmac("sha256", plain_password.encode("utf-8"), salt, iters)
+                return hmac.compare_digest(computed_hash, expected_hash)
+            except Exception:
+                return False
     return False
 
 def create_jwt_token(user: User) -> str:
