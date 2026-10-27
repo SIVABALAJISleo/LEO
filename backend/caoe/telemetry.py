@@ -71,9 +71,9 @@ class TelemetryLayer:
         """Compute aggregate contract parity, exact parity, and speedup."""
         if not self._records:
             return {
-                "contract_parity_pct": 100.0,
-                "exact_parity_pct": 100.0,
-                "avg_speedup": 1.0,
+                "contract_parity_pct": 0.0,
+                "exact_parity_pct": 0.0,
+                "avg_speedup": 0.0,
                 "cache_hit_rate_pct": 0.0,
                 "total_runs": 0,
             }

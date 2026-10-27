@@ -1,0 +1,49 @@
+{
+  "timestamp": 1793121872.0080302,
+  "status": "COMPLETED_ZERO_SKIP",
+  "keystone_compilation": {
+    "success": true,
+    "binary_path": "C:\\Users\\sivab\\OneDrive\\Documents\\HYPER\\backend\\hardware\\keystone_engine.dll",
+    "compiler": "gcc",
+    "compiler_path": "C:\\Users\\sivab\\OneDrive\\Documents\\HYPER\\backend\\hardware\\.compiler\\w64devkit\\bin\\g++.exe",
+    "symbols_verified": true,
+    "self_test_passed": true
+  },
+  "hardware_telemetry": {
+    "openvino_available": false,
+    "openvino_gpu_available": false,
+    "llama_cli_available": false,
+    "llama_cli_path": null,
+    "llama_bench_available": false,
+    "llama_bench_path": null,
+    "bitnet_available": false,
+    "bitnet_path": null,
+    "native_keystone_compiled": true,
+    "keystone_compiler": "MinGW GCC (g++)",
+    "target_cpu": "Intel Core i5-12450H",
+    "target_igpu": "Intel UHD Graphics (48 EUs)"
+  },
+  "ternary_gemv_benchmark": {
+    "M": 2048,
+    "K": 2048,
+    "native_cpp_ternary_gemv_ms": 1.7817,
+    "dense_blas_gemv_ms": 0.6648,
+    "measured_speedup_x": 0.37,
+    "relative_error": 0.0,
+    "native_compiled": true,
+    "iterations": 30
+  },
+  "autoregressive_decode_benchmark": {
+    "ttft_ms": 5.19,
+    "baseline_decode_tps": 144.95,
+    "pld_decode_tps": 229.83,
+    "speedup_ratio": 1.59,
+    "exact_token_match": true,
+    "tokens_generated": 64,
+    "native_cpp_runtime": true,
+    "status": "COMPLETED_LIVE"
+  },
+  "external_llama_bench": {
+    "discovered": false
+  }
+}

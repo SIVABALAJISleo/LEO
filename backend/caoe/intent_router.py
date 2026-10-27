@@ -38,34 +38,48 @@ class IntentLayer_v2:
     def classify_query(self, query: str) -> IntentClassification:
         """Classify incoming task query or signature into an operational intent."""
         q = query.lower()
-        if any(k in q for k in ["render", "frame", "pixel", "shader", "scene", "ssim"]):
+        render_keys = ["render", "frame", "pixel", "shader", "scene", "ssim"]
+        infer_keys = ["token", "embedding", "llm", "inference", "prompt", "top_k"]
+        fft_keys = ["fft", "frequency", "fourier", "spectral"]
+        gemm_keys = ["matrix", "gemm", "matmul", "linear", "dot"]
+
+        if any(k in q for k in render_keys):
+            matches = sum(1 for k in render_keys if k in q)
+            conf_val = float(0.85 + 0.10 * (matches / len(render_keys)))
             return IntentClassification(
                 intent_type="RENDERING",
-                confidence=0.95,
+                confidence=conf_val,
                 parameters={"perceptual_metric": "SSIM", "target_ssim": 0.99, "cache_ttl": 5.0},
             )
-        elif any(k in q for k in ["token", "embedding", "llm", "inference", "prompt", "top_k"]):
+        elif any(k in q for k in infer_keys):
+            matches = sum(1 for k in infer_keys if k in q)
+            conf_val = float(0.85 + 0.10 * (matches / len(infer_keys)))
             return IntentClassification(
                 intent_type="INFERENCE",
-                confidence=0.92,
+                confidence=conf_val,
                 parameters={"functional_metric": "TOP_K", "k": 5, "cache_ttl": 60.0},
             )
-        elif any(k in q for k in ["fft", "frequency", "fourier", "spectral"]):
+        elif any(k in q for k in fft_keys):
+            matches = sum(1 for k in fft_keys if k in q)
+            conf_val = float(0.85 + 0.10 * (matches / len(fft_keys)))
             return IntentClassification(
                 intent_type="FFT",
-                confidence=0.98,
+                confidence=conf_val,
                 parameters={"relative_error": 1e-10, "cache_ttl": 0.0},
             )
-        elif any(k in q for k in ["matrix", "gemm", "matmul", "linear", "dot"]):
+        elif any(k in q for k in gemm_keys):
+            matches = sum(1 for k in gemm_keys if k in q)
+            conf_val = float(0.85 + 0.10 * (matches / len(gemm_keys)))
             return IntentClassification(
                 intent_type="GEMM",
-                confidence=0.90,
+                confidence=conf_val,
                 parameters={"relative_error": 5e-3, "cache_ttl": 10.0},
             )
         else:
+            conf_val = float(0.70 + 0.05 * min(1.0, len(q) / 50.0))
             return IntentClassification(
                 intent_type="GENERAL",
-                confidence=0.80,
+                confidence=conf_val,
                 parameters={"relative_error": 1e-4, "cache_ttl": 0.0},
             )
 

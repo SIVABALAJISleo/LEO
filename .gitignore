@@ -97,4 +97,10 @@ scratch/
 leo_nvme_vram_*/
 *.lnk
 Untitled-1.txt
+.compiler/
+*.obj
+*.o
+*.dll
+*.so
+*.dylib
 

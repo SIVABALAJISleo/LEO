@@ -71,11 +71,16 @@ uint64_t KeystoneEngine::avx2_vsa_hamming_distance(const uint64_t* vec_a, const 
         uint64_t q2 = _mm256_extract_epi64(v_xor, 2);
         uint64_t q3 = _mm256_extract_epi64(v_xor, 3);
 
-#if defined(_MSC_VER) || defined(__POPCNT__)
+#if defined(_MSC_VER)
         total_distance += __popcnt64(q0);
         total_distance += __popcnt64(q1);
         total_distance += __popcnt64(q2);
         total_distance += __popcnt64(q3);
+#elif defined(__GNUC__) || defined(__clang__)
+        total_distance += __builtin_popcountll(q0);
+        total_distance += __builtin_popcountll(q1);
+        total_distance += __builtin_popcountll(q2);
+        total_distance += __builtin_popcountll(q3);
 #else
         total_distance += static_cast<uint64_t>(std::popcount(q0) + std::popcount(q1) + std::popcount(q2) + std::popcount(q3));
 #endif
@@ -84,8 +89,10 @@ uint64_t KeystoneEngine::avx2_vsa_hamming_distance(const uint64_t* vec_a, const 
     // Scalar tail loop
     for (; i < num_qwords; ++i) {
         uint64_t diff = vec_a[i] ^ vec_b[i];
-#if defined(_MSC_VER) || defined(__POPCNT__)
+#if defined(_MSC_VER)
         total_distance += __popcnt64(diff);
+#elif defined(__GNUC__) || defined(__clang__)
+        total_distance += __builtin_popcountll(diff);
 #else
         total_distance += static_cast<uint64_t>(std::popcount(diff));
 #endif
@@ -409,6 +416,109 @@ extern "C" {
         uint64_t dist = hyper::keystone::KeystoneEngine::avx2_vsa_hamming_distance(hypervec_A, hypervec_B, num_qwords);
         if (accumulator) {
             *accumulator += static_cast<uint32_t>(dist);
+        }
+    }
+
+    KEYSTONE_API void leo_tmac_ternary_gemv_avx2(
+        const uint8_t* packed_2bit_weights,
+        const float* row_scales,
+        const float* input_vec,
+        float* output_vec,
+        size_t M,
+        size_t K
+    ) {
+        if (!packed_2bit_weights || !row_scales || !input_vec || !output_vec || M == 0 || K == 0) {
+            return;
+        }
+
+        static const float LUT_W[4] = {-1.0f, 0.0f, 1.0f, 0.0f};
+        const size_t bytes_per_row = (K + 3) / 4;
+
+        for (size_t m = 0; m < M; ++m) {
+            const uint8_t* row_bytes = packed_2bit_weights + m * bytes_per_row;
+            float scale = row_scales[m];
+
+            __m256 v_acc0 = _mm256_setzero_ps();
+            __m256 v_acc1 = _mm256_setzero_ps();
+
+            size_t k = 0;
+            size_t b_idx = 0;
+
+            // Process 16 elements (4 bytes) per unrolled AVX2 step
+            for (; k + 16 <= K; k += 16, b_idx += 4) {
+                uint8_t b0 = row_bytes[b_idx];
+                uint8_t b1 = row_bytes[b_idx + 1];
+                uint8_t b2 = row_bytes[b_idx + 2];
+                uint8_t b3 = row_bytes[b_idx + 3];
+
+                alignas(32) float w_block0[8] = {
+                    LUT_W[b0 & 0x03],
+                    LUT_W[(b0 >> 2) & 0x03],
+                    LUT_W[(b0 >> 4) & 0x03],
+                    LUT_W[(b0 >> 6) & 0x03],
+                    LUT_W[b1 & 0x03],
+                    LUT_W[(b1 >> 2) & 0x03],
+                    LUT_W[(b1 >> 4) & 0x03],
+                    LUT_W[(b1 >> 6) & 0x03]
+                };
+
+                alignas(32) float w_block1[8] = {
+                    LUT_W[b2 & 0x03],
+                    LUT_W[(b2 >> 2) & 0x03],
+                    LUT_W[(b2 >> 4) & 0x03],
+                    LUT_W[(b2 >> 6) & 0x03],
+                    LUT_W[b3 & 0x03],
+                    LUT_W[(b3 >> 2) & 0x03],
+                    LUT_W[(b3 >> 4) & 0x03],
+                    LUT_W[(b3 >> 6) & 0x03]
+                };
+
+                __m256 vw0 = _mm256_load_ps(w_block0);
+                __m256 vx0 = _mm256_loadu_ps(input_vec + k);
+                v_acc0 = _mm256_fmadd_ps(vw0, vx0, v_acc0);
+
+                __m256 vw1 = _mm256_load_ps(w_block1);
+                __m256 vx1 = _mm256_loadu_ps(input_vec + k + 8);
+                v_acc1 = _mm256_fmadd_ps(vw1, vx1, v_acc1);
+            }
+
+            // Process remaining 8 elements (2 bytes)
+            for (; k + 8 <= K; k += 8, b_idx += 2) {
+                uint8_t b0 = row_bytes[b_idx];
+                uint8_t b1 = row_bytes[b_idx + 1];
+
+                alignas(32) float w_block[8] = {
+                    LUT_W[b0 & 0x03],
+                    LUT_W[(b0 >> 2) & 0x03],
+                    LUT_W[(b0 >> 4) & 0x03],
+                    LUT_W[(b0 >> 6) & 0x03],
+                    LUT_W[b1 & 0x03],
+                    LUT_W[(b1 >> 2) & 0x03],
+                    LUT_W[(b1 >> 4) & 0x03],
+                    LUT_W[(b1 >> 6) & 0x03]
+                };
+
+                __m256 vw = _mm256_load_ps(w_block);
+                __m256 vx = _mm256_loadu_ps(input_vec + k);
+                v_acc0 = _mm256_fmadd_ps(vw, vx, v_acc0);
+            }
+
+            // Horizontal sum of AVX2 accumulators
+            __m256 v_sum = _mm256_add_ps(v_acc0, v_acc1);
+            alignas(32) float sum_buf[8];
+            _mm256_store_ps(sum_buf, v_sum);
+            float row_accum = sum_buf[0] + sum_buf[1] + sum_buf[2] + sum_buf[3] +
+                              sum_buf[4] + sum_buf[5] + sum_buf[6] + sum_buf[7];
+
+            // Scalar tail loop
+            for (; k < K; ++k) {
+                size_t byte_pos = k / 4;
+                size_t bit_shift = (k % 4) * 2;
+                uint8_t code = (row_bytes[byte_pos] >> bit_shift) & 0x03;
+                row_accum += LUT_W[code] * input_vec[k];
+            }
+
+            output_vec[m] = row_accum * scale;
         }
     }
 }

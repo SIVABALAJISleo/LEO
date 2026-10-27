@@ -80,4 +80,5 @@ class PrecisionReducer:
                 }
 
         # If reduced precision violates contract, remain at FP32
-        return {"precision": 32, "error": 0.0, "speedup": 1.0, "acceptable": True}
+        baseline_speedup = float(ref_ms / max(ref_ms, 1e-6))
+        return {"precision": 32, "error": 0.0, "speedup": round(baseline_speedup, 2), "acceptable": True}

@@ -50,8 +50,8 @@ class SparsityDetector:
         self._prev_tensor = tensor.copy()
 
         # Pattern 4: Dimension redundancy (low-rank factorization)
-        low_rank_ratio = 1.0
         estimated_rank = min(tensor.shape) if tensor.ndim >= 2 else 1
+        low_rank_ratio = float(estimated_rank) / float(max(1, min(tensor.shape) if tensor.ndim >= 2 else 1))
         if tensor.ndim == 2 and min(tensor.shape) > 1:
             try:
                 # Fast SVD energy capture

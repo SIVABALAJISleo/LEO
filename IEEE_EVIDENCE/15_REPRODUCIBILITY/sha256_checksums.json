@@ -3,6 +3,7 @@
   "02_ARCHITECTURE/runtime_architecture.json": "073c977dd0c42f2de98abb5da7265ddd9f1b429632bb4374355093f318dc48d3",
   "03_WORKLOAD_DEFINITIONS/canonical_workload_families.json": "1b3b8c0725e72c616b91a1c2d3c3b1b222ae03c0d78cdd2d932d6e46b9ef5c56",
   "04_CONTRACT_DEFINITIONS/formal_contracts.json": "fa538ffe18cae804f4f7046708b9821fb26870160109acd595f9df52445141bb",
+  "04_TRANSFORMER_EXPERIMENTS/live_native_cpp_inference_benchmark.json": "a19e5c7d5b0498af1ebb4c8afd1149eaec033951be2f1b2e5f14ca0cc6f552fa",
   "05_BASELINE_RESULTS/baseline_measurements.json": "6cea6e43404b073e4ee0206e352f4f9ff8266c64b4a83343edcb6ed358e541cd",
   "06_HYPER_RESULTS/omega_candidate_executions.json": "c2105166a3cc779960e0f916806a5c9d47e9f60aaaaa9e1ea2318cf3f99aaa6d",
   "07_WORK_REDUCTION/operation_reductions.json": "5a53b590837086c7071430c55c343f906b1d5a0995ac7733c3d1f52e2b940f66",
@@ -17,10 +18,10 @@
   "16_FAILURES/rejected_hypotheses.json": "b5449d9d079d1543868ecd880b0fd3df752e1b6a75c9edd547c6d57f1f623d40",
   "17_LIMITATIONS/hard_boundaries.json": "4e4d0276697aa1ae97065d3f06c76badfd1d6a7c6c34cc73964eb93995e7e3d4",
   "18_CLAIMS/audited_claims.json": "6e08e5f3b40a04ad195cf54b62d3e133a5e9928babf7ad133e1b2cc789043322",
-  "20_FINAL_SUMMARY/executive_ieee_audit_verdict.json": "65563231e0093fbdfdf1e3fd978dd71184e509a12f32f86f8fed08b7698f1e9c",
+  "20_FINAL_SUMMARY/executive_ieee_audit_verdict.json": "5824b788b2a14cd3d56a2da7ba73986b384f8bb60b5de5107129d35f9a8c3663",
   "backend/canonical/functional_replacement_engine.py": "b4cc1e08fa87354c745328da763a0a18dda06b4d2d38692686cd52d20e583628",
-  "backend/canonical/native_runtime_bridge.py": "2bc805ebae65333334b457d47adacf203e6ce5a95e382fc9e6a4fae5d3901a1f",
-  "backend/caoe/caoe_engine.py": "c393c93e34f87719511089b7fc005d87482c887caf6ff79574279c6900fa6fdc",
-  "backend/hardware/keystone_engine.cpp": "87dbf3e0f171925eb8a619630bc029ba521bcd2a21c3960b8f66ac6f5a346d73",
-  "backend/hardware/keystone_engine.hpp": "7e830bf921121dd04a8b5f9e4c047d091468d4aea72dae747fd14dca2507b491"
+  "backend/canonical/native_runtime_bridge.py": "6d89b5ef148b1d0aa53d2d0473dfcf87dcb44673231109dc864ae282e8b5bce5",
+  "backend/caoe/caoe_engine.py": "c42f5e08a5133989c14a696af77f602d483bdf731ec18574eeb245a76a760709",
+  "backend/hardware/keystone_engine.cpp": "ab975a4429d4887a62dc1ef1262bbf8f9615a6a60845a84bd02f272ab8e3b722",
+  "backend/hardware/keystone_engine.hpp": "b1e312e658eb3f019a0b27cc5be4b1436bbdb2b404111889492d5e2b50354bd1"
 }

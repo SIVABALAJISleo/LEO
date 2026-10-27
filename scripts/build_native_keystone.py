@@ -19,6 +19,7 @@ import platform
 import shutil
 import subprocess
 import sys
+import time
 from typing import Dict, Any, Optional, Tuple
 
 
@@ -27,6 +28,12 @@ def find_cpp_compiler() -> Tuple[Optional[str], Optional[str]]:
     Detects available C++ compiler.
     Returns (compiler_type, executable_path) where compiler_type is 'msvc', 'gcc', or 'clang'.
     """
+    # 0. Check provisioned local compiler
+    workspace_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    local_gpp = os.path.join(workspace_root, "backend", "hardware", ".compiler", "w64devkit", "bin", "g++.exe")
+    if os.path.exists(local_gpp):
+        return "gcc", local_gpp
+
     # 1. Check system PATH
     for comp, c_type in [("cl.exe", "msvc"), ("cl", "msvc"), ("g++", "gcc"), ("clang++", "clang")]:
         p = shutil.which(comp)
@@ -133,9 +140,12 @@ def build_keystone_library(force: bool = False) -> Dict[str, Any]:
         }
 
     print(f"Executing: {' '.join(cmd)}")
-    t0 = ctypes.util.find_library or None
+    t0 = time.perf_counter()
+    env = os.environ.copy()
+    c_dir = os.path.dirname(os.path.abspath(c_path))
+    env["PATH"] = c_dir + os.pathsep + env.get("PATH", "")
     try:
-        proc = subprocess.run(cmd, cwd=out_dir, capture_output=True, text=True, timeout=60)
+        proc = subprocess.run(cmd, cwd=out_dir, env=env, capture_output=True, text=True, timeout=60)
         if proc.returncode != 0:
             return {
                 "success": False,
@@ -153,18 +163,92 @@ def build_keystone_library(force: bool = False) -> Dict[str, Any]:
             "error": str(e)
         }
 
-    # Verify loading
+    # Verify loading and execute live self-tests
     try:
+        import numpy as np
+
         lib = ctypes.CDLL(out_binary)
         # Check required symbols
         assert hasattr(lib, "leo_evaluate_entropy_avx2"), "Missing symbol: leo_evaluate_entropy_avx2"
         assert hasattr(lib, "leo_execute_vsa_xor_popcnt_avx2"), "Missing symbol: leo_execute_vsa_xor_popcnt_avx2"
+        assert hasattr(lib, "leo_tmac_ternary_gemv_avx2"), "Missing symbol: leo_tmac_ternary_gemv_avx2"
+
+        # Configure ctypes signatures
+        lib.leo_evaluate_entropy_avx2.argtypes = [ctypes.POINTER(ctypes.c_float), ctypes.c_size_t]
+        lib.leo_evaluate_entropy_avx2.restype = ctypes.c_float
+
+        lib.leo_execute_vsa_xor_popcnt_avx2.argtypes = [
+            ctypes.POINTER(ctypes.c_uint64),
+            ctypes.POINTER(ctypes.c_uint64),
+            ctypes.POINTER(ctypes.c_uint32),
+            ctypes.c_size_t,
+        ]
+        lib.leo_execute_vsa_xor_popcnt_avx2.restype = None
+
+        lib.leo_tmac_ternary_gemv_avx2.argtypes = [
+            ctypes.POINTER(ctypes.c_uint8),
+            ctypes.POINTER(ctypes.c_float),
+            ctypes.POINTER(ctypes.c_float),
+            ctypes.POINTER(ctypes.c_float),
+            ctypes.c_size_t,
+            ctypes.c_size_t,
+        ]
+        lib.leo_tmac_ternary_gemv_avx2.restype = None
+
+        # 1. Live Self-Test: VSA XOR Popcount
+        v1 = np.array([0xAAAAAAAAAAAAAAAA, 0x5555555555555555], dtype=np.uint64)
+        v2 = np.array([0x5555555555555555, 0xAAAAAAAAAAAAAAAA], dtype=np.uint64)
+        accum = ctypes.c_uint32(0)
+        lib.leo_execute_vsa_xor_popcnt_avx2(
+            v1.ctypes.data_as(ctypes.POINTER(ctypes.c_uint64)),
+            v2.ctypes.data_as(ctypes.POINTER(ctypes.c_uint64)),
+            ctypes.byref(accum),
+            128
+        )
+        assert accum.value == 128, f"VSA self-test mismatch: expected 128, got {accum.value}"
+
+        # 2. Live Self-Test: Ternary GEMV
+        rng = np.random.default_rng(42)
+        M_test, K_test = 32, 64
+        # Random ternary weights in {-1, 0, 1}
+        W_tern = rng.choice([-1, 0, 1], size=(M_test, K_test)).astype(np.int8)
+        row_scales = rng.uniform(0.5, 2.0, size=M_test).astype(np.float32)
+        x_vec = rng.standard_normal(K_test).astype(np.float32)
+
+        # Pack 4 weights per byte (code = weight + 1 in {0, 1, 2})
+        code_w = (W_tern + 1).astype(np.uint8)
+        b0 = code_w[:, 0::4]
+        b1 = code_w[:, 1::4] << 2
+        b2 = code_w[:, 2::4] << 4
+        b3 = code_w[:, 3::4] << 6
+        packed_bytes = np.ascontiguousarray(b0 | b1 | b2 | b3, dtype=np.uint8)
+
+        out_c = np.zeros(M_test, dtype=np.float32)
+        lib.leo_tmac_ternary_gemv_avx2(
+            packed_bytes.ctypes.data_as(ctypes.POINTER(ctypes.c_uint8)),
+            row_scales.ctypes.data_as(ctypes.POINTER(ctypes.c_float)),
+            x_vec.ctypes.data_as(ctypes.POINTER(ctypes.c_float)),
+            out_c.ctypes.data_as(ctypes.POINTER(ctypes.c_float)),
+            M_test,
+            K_test
+        )
+        out_ref = (W_tern.astype(np.float32) @ x_vec) * row_scales
+        np.testing.assert_allclose(out_c, out_ref, rtol=1e-5, atol=1e-5)
+
+        # 3. Live Self-Test: Shannon Entropy
+        ent = lib.leo_evaluate_entropy_avx2(
+            x_vec.ctypes.data_as(ctypes.POINTER(ctypes.c_float)),
+            K_test
+        )
+        assert 0.0 <= ent <= 1.0
+
         return {
             "success": True,
             "binary_path": out_binary,
             "compiler": c_type,
             "compiler_path": c_path,
-            "symbols_verified": True
+            "symbols_verified": True,
+            "self_test_passed": True
         }
     except Exception as e:
         return {
@@ -172,7 +256,7 @@ def build_keystone_library(force: bool = False) -> Dict[str, Any]:
             "binary_path": out_binary,
             "compiler": c_type,
             "compiler_path": c_path,
-            "error": f"Library compiled but failed to load via ctypes: {e}"
+            "error": f"Library verification failed: {e}"
         }
 
 
@@ -180,4 +264,8 @@ if __name__ == "__main__":
     res = build_keystone_library()
     print("Build result:", res)
     if not res.get("success"):
-        print("Note: Native keystone will use defensive Python/NumPy AVX2 emulation fallback.")
+        print("Note: Native keystone build failed:", res.get("error"))
+        sys.exit(1)
+    else:
+        print("[PASS] Native keystone compiled, loaded, and verified successfully.")
+

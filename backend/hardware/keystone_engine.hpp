@@ -147,6 +147,14 @@ extern "C" {
         uint32_t* accumulator,
         size_t bit_count
     );
+    KEYSTONE_API void leo_tmac_ternary_gemv_avx2(
+        const uint8_t* packed_2bit_weights,
+        const float* row_scales,
+        const float* input_vec,
+        float* output_vec,
+        size_t M,
+        size_t K
+    );
 }
 
 #endif // KEYSTONE_ENGINE_HPP

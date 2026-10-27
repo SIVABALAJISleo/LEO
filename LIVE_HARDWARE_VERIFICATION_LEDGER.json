@@ -1,14 +1,15 @@
 {
-  "timestamp": 1793108230.2525423,
+  "timestamp": 1793124759.1841948,
   "target_machine": "Lenovo IdeaPad Slim 3 15IAH8",
-  "processor": "Intel Core i5-12450H (8 Cores: 4P+4E, 12 Threads)",
+  "processor": "Intel Core i5-12450H (8 Cores: 4P+4E, 12 Threads, AVX2/FMA/POPCNT)",
   "integrated_gpu": "Intel UHD Graphics (48 EUs)",
   "ram": "16 GB Unified System RAM",
   "storage": "512 GB PCIe 4.0 NVMe SSD",
   "canonical_execution_paths": [
     "backend/canonical/functional_replacement_engine.py",
     "backend/canonical/native_runtime_bridge.py",
-    "backend/caoe/caoe_engine.py"
+    "backend/caoe/caoe_engine.py",
+    "backend/hardware/keystone_engine.cpp"
   ],
   "quarantined_legacy_directory": "archive_engines/legacy_layers/",
   "clean_tree_status": true,
@@ -16,6 +17,26 @@
   "cur_rank48_error": 6.747680458829564e-07,
   "ternary_compression_ratio": 14.222,
   "int4_compression_ratio": 7.992,
+  "tmac_gemv_benchmark": {
+    "M": 2048,
+    "K": 2048,
+    "native_cpp_ternary_gemv_ms": 1.6321,
+    "dense_blas_gemv_ms": 0.5326,
+    "measured_speedup_x": 0.33,
+    "relative_error": 0.0,
+    "native_compiled": true,
+    "iterations": 25
+  },
+  "autoregressive_pld_decode": {
+    "ttft_ms": 4.25,
+    "baseline_decode_tps": 245.32,
+    "pld_decode_tps": 186.81,
+    "speedup_ratio": 0.76,
+    "exact_token_match": true,
+    "tokens_generated": 64,
+    "native_cpp_runtime": true,
+    "status": "COMPLETED_LIVE"
+  },
   "hardware_telemetry": {
     "openvino_available": false,
     "openvino_gpu_available": false,
@@ -25,11 +46,11 @@
     "llama_bench_path": null,
     "bitnet_available": false,
     "bitnet_path": null,
-    "native_keystone_compiled": false,
-    "keystone_compiler": null,
+    "native_keystone_compiled": true,
+    "keystone_compiler": "MinGW GCC (g++)",
     "target_cpu": "Intel Core i5-12450H",
     "target_igpu": "Intel UHD Graphics (48 EUs)"
   },
   "functional_replacement_readiness_pct": 100.0,
-  "ieee_reproducibility_seal": "3c5e655559c5111a6fc167de72deb87f2902b4d806f0c0c6579a3bbbdb857a14"
+  "ieee_reproducibility_seal": "072a6041a9848a2cd989ec8f65d15e337c7c563b051388ad986268dd353136dc"
 }
