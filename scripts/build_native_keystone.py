@@ -242,6 +242,18 @@ def build_keystone_library(force: bool = False) -> Dict[str, Any]:
         )
         assert 0.0 <= ent <= 1.0
 
+        # 4. Live Self-Test: Fast Walsh-Hadamard Transform (Self-Inverse H @ H = I)
+        if hasattr(lib, "leo_fwht_butterfly_avx2"):
+            lib.leo_fwht_butterfly_avx2.argtypes = [ctypes.POINTER(ctypes.c_float), ctypes.c_size_t]
+            lib.leo_fwht_butterfly_avx2.restype = None
+            fwht_vec = np.array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0], dtype=np.float32)
+            orig_vec = fwht_vec.copy()
+            # Apply once
+            lib.leo_fwht_butterfly_avx2(fwht_vec.ctypes.data_as(ctypes.POINTER(ctypes.c_float)), 8)
+            # Apply twice (must invert back to original)
+            lib.leo_fwht_butterfly_avx2(fwht_vec.ctypes.data_as(ctypes.POINTER(ctypes.c_float)), 8)
+            np.testing.assert_allclose(fwht_vec, orig_vec, atol=1e-5)
+
         return {
             "success": True,
             "binary_path": out_binary,

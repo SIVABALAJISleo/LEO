@@ -137,6 +137,12 @@ class NativeRuntimeBridge:
                                 ctypes.c_float,
                             ]
                             lib.leo_mezo_perturb_step_avx2.restype = None
+                        if hasattr(lib, "leo_fwht_butterfly_avx2"):
+                            lib.leo_fwht_butterfly_avx2.argtypes = [
+                                ctypes.POINTER(ctypes.c_float),
+                                ctypes.c_size_t,
+                            ]
+                            lib.leo_fwht_butterfly_avx2.restype = None
                         compiler_type = "MinGW GCC (g++)" if cand.endswith(".dll") else "GCC / Clang"
                         return lib, compiler_type
                 except Exception as e:
@@ -459,6 +465,22 @@ class NativeRuntimeBridge:
             ctypes.c_uint64(seed),
             ctypes.c_float(scale),
         )
+        return True
+
+    def fwht_butterfly_native(self, data: np.ndarray) -> bool:
+        """
+        Applies in-place Fast Walsh-Hadamard Transform at AVX2 speed using Keystone C++ library.
+        Returns True if native execution succeeded, False if CPU fallback should be used.
+        """
+        if self._keystone_lib is None or not hasattr(self._keystone_lib, "leo_fwht_butterfly_avx2"):
+            return False
+        if not data.flags["C_CONTIGUOUS"] or data.dtype != np.float32:
+            return False
+        d = data.size
+        if d == 0 or (d & (d - 1)) != 0:
+            return False
+        ptr = data.ctypes.data_as(ctypes.POINTER(ctypes.c_float))
+        self._keystone_lib.leo_fwht_butterfly_avx2(ptr, ctypes.c_size_t(d))
         return True
 
     def benchmark_ternary_gemv_vs_dense(

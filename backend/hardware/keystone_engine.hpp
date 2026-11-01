@@ -161,6 +161,10 @@ extern "C" {
         uint64_t seed,
         float scale
     );
+    KEYSTONE_API void leo_fwht_butterfly_avx2(
+        float* data,
+        size_t d
+    );
 }
 
 #endif // KEYSTONE_ENGINE_HPP

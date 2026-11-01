@@ -14,6 +14,11 @@ from backend.canonical.unseen_subsumption_extensions import (
     benchmark_l3_coalesced_concurrency,
     L3CoalescedConcurrencyResult,
 )
+from backend.canonical.universal_100_contract_closure import (
+    RaggedContinuousBatcher,
+    benchmark_ragged_continuous_batch_and_kv_compression,
+    RaggedBatchKVResult,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +33,23 @@ class BatchProcessor:
         self._queue: List[Dict[str, Any]] = []
         self._loop_started = False
         self.radix_cache = RadixPrefixCache()
+        self.ragged_batcher = RaggedContinuousBatcher()
+
+    def execute_ragged_batch(
+        self,
+        requests: List[np.ndarray],
+        weights: np.ndarray,
+        page_size: int = 16,
+    ) -> RaggedBatchKVResult:
+        """
+        Executes multi-user variable-length requests packed into a 1D ragged tensor,
+        eliminating 100% of padding token FLOPs and compressing paged KV cache.
+        """
+        return benchmark_ragged_continuous_batch_and_kv_compression(
+            requests=requests,
+            weights=weights,
+            page_size=page_size,
+        )
 
     def execute_l3_coalesced_batch(
         self,

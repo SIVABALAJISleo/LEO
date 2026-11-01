@@ -29,6 +29,40 @@ class SplitLoRATrainer:
             self.logger.info(f"RAM constrained ({available_gb:.2f} GB available). Deploying MeZOInPlaceTrainer (8-byte state).")
         return MeZOInPlaceTrainer(weights=weights, base_seed=base_seed)
 
+    def create_subspace_mezo_trainer(
+        self,
+        weights: np.ndarray,
+        rank_r: int = 8,
+        seed: int = 1337,
+    ):
+        """
+        Creates an Oja Subspace-Projected MeZO-GaLore zero-memory local trainer.
+        Tracks top-r active input directions via streaming Oja power iteration,
+        cutting perturbation variance by d_in / r with 0 bytes activation graph memory.
+        """
+        from backend.canonical.universal_100_contract_closure import OjaSubspaceMeZOTrainer
+        return OjaSubspaceMeZOTrainer(weights=weights, rank_r=rank_r, seed=seed)
+
+    def benchmark_subspace_tuning(
+        self,
+        weights: np.ndarray,
+        X_stream: np.ndarray,
+        y_stream: np.ndarray,
+        rank_r: int = 8,
+        steps: int = 60,
+    ):
+        """
+        Benchmarks subspace zeroth-order fine-tuning against isotropic baseline.
+        """
+        from backend.canonical.universal_100_contract_closure import benchmark_subspace_mezo_galore_training
+        return benchmark_subspace_mezo_galore_training(
+            weights=weights,
+            X_stream=X_stream,
+            y_stream=y_stream,
+            rank_r=rank_r,
+            steps=steps,
+        )
+
     def client_forward(self, prompt: str, client_model_state: dict) -> dict:
         """
         Privacy: raw data never leaves client

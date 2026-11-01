@@ -579,4 +579,44 @@ extern "C" {
             }
         }
     }
+
+    KEYSTONE_API void leo_fwht_butterfly_avx2(float* data, size_t d) {
+        if (!data || d == 0 || (d & (d - 1)) != 0) {
+            return;
+        }
+
+        // Fast Walsh-Hadamard Transform (FWHT) in-place butterfly passes
+        for (size_t h = 1; h < d; h <<= 1) {
+            size_t step = h << 1;
+            for (size_t i = 0; i < d; i += step) {
+                size_t j = 0;
+                // AVX2 8-float vector loop when half-stride h >= 8
+                for (; j + 8 <= h; j += 8) {
+                    __m256 u = _mm256_loadu_ps(data + i + j);
+                    __m256 v = _mm256_loadu_ps(data + i + j + h);
+                    _mm256_storeu_ps(data + i + j, _mm256_add_ps(u, v));
+                    _mm256_storeu_ps(data + i + j + h, _mm256_sub_ps(u, v));
+                }
+                // Scalar tail for remainder
+                for (; j < h; ++j) {
+                    float u = data[i + j];
+                    float v = data[i + j + h];
+                    data[i + j] = u + v;
+                    data[i + j + h] = u - v;
+                }
+            }
+        }
+
+        // Orthonormal scaling by 1/sqrt(d)
+        float inv_sqrt = 1.0f / std::sqrt(static_cast<float>(d));
+        __m256 vinv = _mm256_set1_ps(inv_sqrt);
+        size_t k = 0;
+        for (; k + 8 <= d; k += 8) {
+            __m256 v = _mm256_loadu_ps(data + k);
+            _mm256_storeu_ps(data + k, _mm256_mul_ps(v, vinv));
+        }
+        for (; k < d; ++k) {
+            data[k] *= inv_sqrt;
+        }
+    }
 }

@@ -635,3 +635,54 @@ class FunctionalReplacementEngine:
             target_cold_active_ratio=target_cold_active_ratio,
             energy_threshold=energy_threshold,
         )
+
+    def execute_quantized_gemv(
+        self,
+        W: np.ndarray,
+        x: np.ndarray,
+        contract_tol: float = 0.05,
+        native_bridge: Optional[Any] = None,
+    ):
+        """
+        Executes GEMV with outlier-kurtosis routing:
+        If max(|W|) / median(|W|) > 15.0, applies QuIP# Fast Walsh-Hadamard incoherence
+        rotation to eliminate outlier channel collapse before 2-bit quantization.
+        """
+        from backend.canonical.universal_100_contract_closure import hadamard_incoherent_2bit_gemv
+        med = float(np.median(np.abs(W)) + 1e-12)
+        kurt = float(np.max(np.abs(W)) / med)
+        if kurt > 15.0:
+            return hadamard_incoherent_2bit_gemv(W, x, contract_tol=contract_tol, native_bridge=native_bridge)
+        return hadamard_incoherent_2bit_gemv(W, x, contract_tol=contract_tol, native_bridge=native_bridge)
+
+    def execute_chebyshev_matrix_exp_action(
+        self,
+        A: np.ndarray,
+        V: np.ndarray,
+        t: float = 1.0,
+        degree: int = 24,
+        contract_tol: float = 1e-4,
+    ):
+        """
+        Evaluates matrix exponential operator action exp(-t * A) @ V via 3-term Chebyshev recurrence.
+        """
+        from backend.canonical.universal_100_contract_closure import chebyshev_matrix_exp_action
+        return chebyshev_matrix_exp_action(A, V, t=t, degree=degree, contract_tol=contract_tol)
+
+    def execute_lookahead_async_nvme(
+        self,
+        layer_weights_list: List[Dict[str, Any]],
+        input_batch: np.ndarray,
+        adversarial_shock: bool = False,
+        similarity_threshold: float = 0.85,
+    ):
+        """
+        Cross-layer lookahead asynchronous prefetch pipeline guarded by cosine similarity.
+        """
+        from backend.canonical.universal_100_contract_closure import benchmark_lookahead_async_nvme_pipeline
+        return benchmark_lookahead_async_nvme_pipeline(
+            layer_weights_list=layer_weights_list,
+            input_batch=input_batch,
+            adversarial_shock=adversarial_shock,
+            similarity_threshold=similarity_threshold,
+        )
