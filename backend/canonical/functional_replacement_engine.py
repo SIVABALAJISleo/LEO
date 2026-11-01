@@ -686,3 +686,28 @@ class FunctionalReplacementEngine:
             adversarial_shock=adversarial_shock,
             similarity_threshold=similarity_threshold,
         )
+
+    def execute_srht_white_noise(
+        self,
+        A: np.ndarray,
+        r: int,
+        seed: int = 42,
+    ):
+        """
+        Subsampled Randomized Hadamard Transform (SRHT) and analytical Levy-Cramer
+        variance propagation for seeded white noise.
+        """
+        from backend.canonical.silicon_roofline_and_driver_closure import srht_white_noise_subsumption
+        return srht_white_noise_subsumption(A, r=r, seed=seed)
+
+    def execute_heterogeneous_roofline(
+        self,
+        A: np.ndarray,
+        B: np.ndarray,
+    ):
+        """
+        Co-schedules CPU AVX2 and 48-EU Intel UHD iGPU simultaneously for external
+        incompressible white noise workloads via zero-copy USM row partitioning.
+        """
+        from backend.canonical.silicon_roofline_and_driver_closure import heterogeneous_cpu_igpu_roofline_split
+        return heterogeneous_cpu_igpu_roofline_split(A, B)

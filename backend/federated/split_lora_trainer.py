@@ -63,6 +63,31 @@ class SplitLoRATrainer:
             steps=steps,
         )
 
+    def train_layer_oneshot_analytic(
+        self,
+        X_train: np.ndarray,
+        y_train: np.ndarray,
+        X_val: np.ndarray,
+        y_val: np.ndarray,
+        hidden_dim: int = 128,
+        reg_lambda: float = 1e-3,
+        seed: int = 42,
+    ):
+        """
+        1-Pass closed-form analytic learning rule using Sherman-Morrison-Woodbury
+        Cholesky solve. Trains adapter layers from scratch in 1 pass with 0 backprop epochs.
+        """
+        from backend.canonical.silicon_roofline_and_driver_closure import woodbury_analytic_oneshot_trainer
+        return woodbury_analytic_oneshot_trainer(
+            X_train=X_train,
+            y_train=y_train,
+            X_val=X_val,
+            y_val=y_val,
+            hidden_dim=hidden_dim,
+            reg_lambda=reg_lambda,
+            seed=seed,
+        )
+
     def client_forward(self, prompt: str, client_model_state: dict) -> dict:
         """
         Privacy: raw data never leaves client

@@ -45,6 +45,19 @@ from .universal_100_contract_closure import (
     halton_sequence,
     benchmark_qmc_control_variate_subsumption,
 )
+from .silicon_roofline_and_driver_closure import (
+    CudaDriverBenchmarkResult,
+    CudaDriverAbiAndPtxInterceptor,
+    benchmark_cuda_driver_and_ptx_execution,
+    WoodburyAnalyticResult,
+    woodbury_analytic_oneshot_trainer,
+    SrhtWhiteNoiseResult,
+    srht_white_noise_subsumption,
+    benchmark_srht_white_noise_subsumption,
+    HeterogeneousRooflineResult,
+    heterogeneous_cpu_igpu_roofline_split,
+    benchmark_heterogeneous_cpu_igpu_roofline,
+)
 
 __all__ = [
     "FunctionalReplacementEngine",
@@ -81,4 +94,15 @@ __all__ = [
     "QMCControlVariateResult",
     "halton_sequence",
     "benchmark_qmc_control_variate_subsumption",
+    "CudaDriverBenchmarkResult",
+    "CudaDriverAbiAndPtxInterceptor",
+    "benchmark_cuda_driver_and_ptx_execution",
+    "WoodburyAnalyticResult",
+    "woodbury_analytic_oneshot_trainer",
+    "SrhtWhiteNoiseResult",
+    "srht_white_noise_subsumption",
+    "benchmark_srht_white_noise_subsumption",
+    "HeterogeneousRooflineResult",
+    "heterogeneous_cpu_igpu_roofline_split",
+    "benchmark_heterogeneous_cpu_igpu_roofline",
 ]

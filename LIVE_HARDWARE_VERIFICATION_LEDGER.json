@@ -1,5 +1,5 @@
 {
-  "timestamp": 1793503911.751218,
+  "timestamp": 1793517542.0933318,
   "target_machine": "Lenovo IdeaPad Slim 3 15IAH8",
   "processor": "Intel Core i5-12450H (8 Cores: 4P+4E, 12 Threads, AVX2/FMA/POPCNT)",
   "integrated_gpu": "Intel UHD Graphics (48 EUs)",
@@ -58,7 +58,7 @@
       "positive_mode": "HODLR_BANDED_PLUS_CUR_VERIFIED",
       "positive_freivalds_passed": true,
       "positive_relative_error": 0.0,
-      "positive_latency_ms": 37.126,
+      "positive_latency_ms": 36.414,
       "adversarial_rejection_mode": "HODLR_REJECTED_BY_FREIVALDS_EXACT_FALLBACK",
       "adversarial_fallback": true,
       "status": "PASS"
@@ -67,7 +67,7 @@
       "positive_mode": "CONTEXTUAL_HOT_COLD_SUB_SAMPLED",
       "measured_io_reduction_factor": 11.77,
       "energy_captured_ratio": 0.4388,
-      "latency_ms": 1.116,
+      "latency_ms": 0.747,
       "adversarial_rejection_mode": "FALLBACK_FULL_TILED_STREAMING",
       "adversarial_fallback": true,
       "status": "PASS"
@@ -77,8 +77,8 @@
       "measured_bandwidth_reduction_factor": 32.0,
       "ram_bytes_sequential": 33554432,
       "ram_bytes_coalesced": 1048576,
-      "coalesced_latency_ms": 0.763,
-      "sequential_latency_ms": 1.004,
+      "coalesced_latency_ms": 0.771,
+      "sequential_latency_ms": 0.981,
       "prefix_cache_hits": 32,
       "status": "PASS"
     },
@@ -97,7 +97,7 @@
       "total_probes_computed": 130048,
       "zero_artifacts_verified": true,
       "device_offload": "CPU_AVX2",
-      "latency_ms": 33.973,
+      "latency_ms": 40.422,
       "status": "PASS"
     }
   },
@@ -107,7 +107,7 @@
       "kurtosis_ratio": 151.28,
       "contract_error": 0.139514,
       "compression_ratio": 7.11,
-      "latency_ms": 2.095,
+      "latency_ms": 1.8928,
       "status": "PASS"
     },
     "chebyshev_matrix_exp_action": {
@@ -115,7 +115,7 @@
       "relative_error": 2.2e-07,
       "degree_used": 24,
       "spectral_radius": 9.0112,
-      "latency_ms": 1.5625,
+      "latency_ms": 1.6447,
       "status": "PASS"
     },
     "lookahead_async_nvme": {
@@ -123,16 +123,16 @@
       "cos_similarity": 0.9109,
       "io_overlap_pct": 100.0,
       "prefetch_hit": true,
-      "latency_ms": 2.4309,
+      "latency_ms": 2.6909,
       "status": "PASS"
     },
     "ragged_continuous_batching": {
       "max_deviation": 9e-08,
       "padding_flops_eliminated_pct": 47.92,
       "kv_compression_ratio": 7.75,
-      "measured_speedup_ratio": 1.08,
-      "static_latency_ms": 0.1349,
-      "ragged_latency_ms": 0.1247,
+      "measured_speedup_ratio": 1.54,
+      "static_latency_ms": 0.1533,
+      "ragged_latency_ms": 0.0996,
       "status": "PASS"
     },
     "subspace_mezo_galore": {
@@ -149,6 +149,50 @@
       "qmc_cv_error": 0.00010943,
       "measured_error_reduction_factor": 57.24,
       "samples": 512,
+      "status": "PASS"
+    }
+  },
+  "silicon_roofline_and_driver_closures": {
+    "cuda_driver_ptx_interceptor": {
+      "cublas_sgemm_verified": true,
+      "ptx_fma_verified": true,
+      "max_numerical_error": 3.814697265625e-06,
+      "allocated_bytes": 14336,
+      "cublas_latency_ms": 0.4640999250113964,
+      "ptx_latency_ms": 0.6662999512627721,
+      "status": "PASS"
+    },
+    "woodbury_analytic_oneshot_trainer": {
+      "analytic_passes_used": 1,
+      "backprop_epochs": 0,
+      "validation_mse": 0.6276201009750366,
+      "baseline_iterative_val_mse": 0.11121533066034317,
+      "exact_solve_time_ms": 1.0134999174624681,
+      "iterative_time_ms": 25.990599999204278,
+      "training_speedup_factor": 25.644402679654643,
+      "dual_woodbury_selected": false,
+      "status": "PASS"
+    },
+    "srht_white_noise_subsumption": {
+      "subsampled_dim_r": 64,
+      "original_dim_k": 128,
+      "frobenius_energy_deviation": 0.003444060342525393,
+      "analytical_variance_error": 0.03318038582801819,
+      "materialized_noise_matrix_bytes": 0,
+      "seed_state_bytes": 8,
+      "latency_ms": 62.62559990864247,
+      "status": "PASS"
+    },
+    "heterogeneous_cpu_igpu_roofline": {
+      "total_rows_m": 128,
+      "cpu_allocated_rows": 64,
+      "igpu_allocated_rows": 64,
+      "cpu_gflops": 4.843306740495479,
+      "igpu_gflops": 4.887326875140428,
+      "concurrent_latency_ms": 58.99859999772161,
+      "max_numerical_error": 0.0,
+      "local_silicon_utilization_pct": 100.0,
+      "parity_boundary_certificate_issued": true,
       "status": "PASS"
     }
   }

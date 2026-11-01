@@ -165,6 +165,20 @@ extern "C" {
         float* data,
         size_t d
     );
+
+    // C-ABI CUDA Driver & cuBLAS compatibility exports
+    KEYSTONE_API int leo_cuInit(unsigned int flags);
+    KEYSTONE_API int leo_cuMemAlloc_v2(void** dptr, size_t bytesize);
+    KEYSTONE_API int leo_cuMemFree_v2(void* dptr);
+    KEYSTONE_API int leo_cublasSgemm_v2(
+        int transa, int transb,
+        int m, int n, int k,
+        float alpha,
+        const float* A, int lda,
+        const float* B, int ldb,
+        float beta,
+        float* C, int ldc
+    );
 }
 
 #endif // KEYSTONE_ENGINE_HPP

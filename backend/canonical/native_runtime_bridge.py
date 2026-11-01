@@ -143,6 +143,26 @@ class NativeRuntimeBridge:
                                 ctypes.c_size_t,
                             ]
                             lib.leo_fwht_butterfly_avx2.restype = None
+                        if hasattr(lib, "leo_cuInit"):
+                            lib.leo_cuInit.argtypes = [ctypes.c_uint]
+                            lib.leo_cuInit.restype = ctypes.c_int
+                        if hasattr(lib, "leo_cuMemAlloc_v2"):
+                            lib.leo_cuMemAlloc_v2.argtypes = [ctypes.POINTER(ctypes.c_void_p), ctypes.c_size_t]
+                            lib.leo_cuMemAlloc_v2.restype = ctypes.c_int
+                        if hasattr(lib, "leo_cuMemFree_v2"):
+                            lib.leo_cuMemFree_v2.argtypes = [ctypes.c_void_p]
+                            lib.leo_cuMemFree_v2.restype = ctypes.c_int
+                        if hasattr(lib, "leo_cublasSgemm_v2"):
+                            lib.leo_cublasSgemm_v2.argtypes = [
+                                ctypes.c_int, ctypes.c_int,
+                                ctypes.c_int, ctypes.c_int, ctypes.c_int,
+                                ctypes.c_float,
+                                ctypes.POINTER(ctypes.c_float), ctypes.c_int,
+                                ctypes.POINTER(ctypes.c_float), ctypes.c_int,
+                                ctypes.c_float,
+                                ctypes.POINTER(ctypes.c_float), ctypes.c_int
+                            ]
+                            lib.leo_cublasSgemm_v2.restype = ctypes.c_int
                         compiler_type = "MinGW GCC (g++)" if cand.endswith(".dll") else "GCC / Clang"
                         return lib, compiler_type
                 except Exception as e:
@@ -482,6 +502,83 @@ class NativeRuntimeBridge:
         ptr = data.ctypes.data_as(ctypes.POINTER(ctypes.c_float))
         self._keystone_lib.leo_fwht_butterfly_avx2(ptr, ctypes.c_size_t(d))
         return True
+
+    def cu_init_native(self, flags: int = 0) -> int:
+        """Invokes native leo_cuInit C-ABI export."""
+        if self._keystone_lib is not None and hasattr(self._keystone_lib, "leo_cuInit"):
+            return int(self._keystone_lib.leo_cuInit(ctypes.c_uint(flags)))
+        return 0
+
+    def cu_mem_alloc_native(self, bytesize: int) -> Optional[int]:
+        """Allocates 64-byte aligned USM memory via native leo_cuMemAlloc_v2."""
+        if self._keystone_lib is not None and hasattr(self._keystone_lib, "leo_cuMemAlloc_v2"):
+            dptr = ctypes.c_void_p()
+            res = self._keystone_lib.leo_cuMemAlloc_v2(ctypes.byref(dptr), ctypes.c_size_t(bytesize))
+            if res == 0 and dptr.value is not None:
+                return int(dptr.value)
+        return None
+
+    def cu_mem_free_native(self, dptr_val: int) -> int:
+        """Frees aligned USM memory via native leo_cuMemFree_v2."""
+        if self._keystone_lib is not None and hasattr(self._keystone_lib, "leo_cuMemFree_v2"):
+            return int(self._keystone_lib.leo_cuMemFree_v2(ctypes.c_void_p(dptr_val)))
+        return 0
+
+    def cublas_sgemm_native(
+        self,
+        transa: int,
+        transb: int,
+        m: int,
+        n: int,
+        k: int,
+        alpha: float,
+        A: np.ndarray,
+        lda: int,
+        B: np.ndarray,
+        ldb: int,
+        beta: float,
+        C: np.ndarray,
+        ldc: int,
+    ) -> int:
+        """
+        Executes single-precision column-major SGEMM via native AVX2 FMA kernel.
+        """
+        if self._keystone_lib is not None and hasattr(self._keystone_lib, "leo_cublasSgemm_v2"):
+            a_ptr = A.ctypes.data_as(ctypes.POINTER(ctypes.c_float))
+            b_ptr = B.ctypes.data_as(ctypes.POINTER(ctypes.c_float))
+            c_ptr = C.ctypes.data_as(ctypes.POINTER(ctypes.c_float))
+            return int(
+                self._keystone_lib.leo_cublasSgemm_v2(
+                    ctypes.c_int(transa),
+                    ctypes.c_int(transb),
+                    ctypes.c_int(m),
+                    ctypes.c_int(n),
+                    ctypes.c_int(k),
+                    ctypes.c_float(alpha),
+                    a_ptr,
+                    ctypes.c_int(lda),
+                    b_ptr,
+                    ctypes.c_int(ldb),
+                    ctypes.c_float(beta),
+                    c_ptr,
+                    ctypes.c_int(ldc),
+                )
+            )
+        # Fallback to column-major numpy GEMM
+        shape_a = (k, m) if transa != 0 else (m, k)
+        shape_b = (n, k) if transb != 0 else (k, n)
+        mat_A = A[:lda * (k if transa == 0 else m)].reshape(shape_a, order='F')
+        mat_B = B[:ldb * (n if transb == 0 else k)].reshape(shape_b, order='F')
+        op_A = mat_A.T if transa != 0 else mat_A
+        op_B = mat_B.T if transb != 0 else mat_B
+        prod = alpha * (op_A @ op_B)
+        mat_C = C[:ldc * n].reshape((m, n), order='F')
+        if beta == 0.0:
+            mat_C[:] = prod
+        else:
+            mat_C[:] = prod + beta * mat_C
+        C[:ldc * n] = mat_C.ravel(order='F')
+        return 0
 
     def benchmark_ternary_gemv_vs_dense(
         self,

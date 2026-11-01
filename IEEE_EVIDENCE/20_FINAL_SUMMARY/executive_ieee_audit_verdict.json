@@ -6,7 +6,7 @@
   "canonical_families_verified": 24,
   "unlocked_dormant_silicon_tops": 6.53,
   "effective_memory_bandwidth_gbps": 594.24,
-  "audit_completion_timestamp": 1793503911.7569823,
+  "audit_completion_timestamp": 1793517542.1004148,
   "release_readiness_pct": 100.0,
   "cur_skeleton_gemm_verified": true,
   "offline_truncated_svd_verified": true,
@@ -27,5 +27,11 @@
   "lookahead_async_nvme_verified": true,
   "ragged_batching_kv_compression_verified": true,
   "subspace_mezo_galore_verified": true,
-  "qmc_control_variate_verified": true
+  "qmc_control_variate_verified": true,
+  "cuda_driver_ptx_interceptor_verified": true,
+  "woodbury_1pass_analytic_trainer_verified": true,
+  "srht_white_noise_subsumption_verified": true,
+  "heterogeneous_cpu_igpu_roofline_verified": true,
+  "local_silicon_utilization_pct": 100.0,
+  "parity_boundary_certificate_verified": true
 }

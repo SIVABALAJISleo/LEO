@@ -254,6 +254,50 @@ def build_keystone_library(force: bool = False) -> Dict[str, Any]:
             lib.leo_fwht_butterfly_avx2(fwht_vec.ctypes.data_as(ctypes.POINTER(ctypes.c_float)), 8)
             np.testing.assert_allclose(fwht_vec, orig_vec, atol=1e-5)
 
+        # 5. Live Self-Test: C-ABI CUDA Driver & cuBLAS SGEMM
+        if hasattr(lib, "leo_cublasSgemm_v2"):
+            lib.leo_cuInit.argtypes = [ctypes.c_uint]
+            lib.leo_cuInit.restype = ctypes.c_int
+            assert lib.leo_cuInit(0) == 0
+
+            lib.leo_cuMemAlloc_v2.argtypes = [ctypes.POINTER(ctypes.c_void_p), ctypes.c_size_t]
+            lib.leo_cuMemAlloc_v2.restype = ctypes.c_int
+
+            lib.leo_cuMemFree_v2.argtypes = [ctypes.c_void_p]
+            lib.leo_cuMemFree_v2.restype = ctypes.c_int
+
+            dptr = ctypes.c_void_p()
+            alloc_res = lib.leo_cuMemAlloc_v2(ctypes.byref(dptr), 256)
+            assert alloc_res == 0 and dptr.value is not None
+            assert lib.leo_cuMemFree_v2(dptr) == 0
+
+            lib.leo_cublasSgemm_v2.argtypes = [
+                ctypes.c_int, ctypes.c_int,
+                ctypes.c_int, ctypes.c_int, ctypes.c_int,
+                ctypes.c_float,
+                ctypes.POINTER(ctypes.c_float), ctypes.c_int,
+                ctypes.POINTER(ctypes.c_float), ctypes.c_int,
+                ctypes.c_float,
+                ctypes.POINTER(ctypes.c_float), ctypes.c_int
+            ]
+            lib.leo_cublasSgemm_v2.restype = ctypes.c_int
+
+            # Verify 4x4 matrix multiply in column-major
+            m_k, n_k, k_k = 4, 4, 4
+            A_cm = np.arange(16, dtype=np.float32).reshape(4, 4)
+            B_cm = np.eye(4, dtype=np.float32)
+            C_cm = np.zeros((4, 4), dtype=np.float32)
+            res_sgemm = lib.leo_cublasSgemm_v2(
+                0, 0, m_k, n_k, k_k,
+                1.0,
+                A_cm.ctypes.data_as(ctypes.POINTER(ctypes.c_float)), m_k,
+                B_cm.ctypes.data_as(ctypes.POINTER(ctypes.c_float)), k_k,
+                0.0,
+                C_cm.ctypes.data_as(ctypes.POINTER(ctypes.c_float)), m_k
+            )
+            assert res_sgemm == 0
+            np.testing.assert_allclose(C_cm, A_cm @ B_cm, atol=1e-5)
+
         return {
             "success": True,
             "binary_path": out_binary,

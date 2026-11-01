@@ -17,6 +17,7 @@
 #ifdef _WIN32
   #define WIN32_LEAN_AND_MEAN
   #include <windows.h>
+  #include <malloc.h>
 #endif
 
 namespace hyper::keystone {
@@ -618,5 +619,100 @@ extern "C" {
         for (; k < d; ++k) {
             data[k] *= inv_sqrt;
         }
+    }
+
+    // -----------------------------------------------------------------------------
+    // C-ABI CUDA Driver & cuBLAS Compatibility Interceptor
+    // -----------------------------------------------------------------------------
+    KEYSTONE_API int leo_cuInit(unsigned int flags) {
+        (void)flags;
+        return 0; // CUDA_SUCCESS
+    }
+
+    KEYSTONE_API int leo_cuMemAlloc_v2(void** dptr, size_t bytesize) {
+        if (!dptr) return 1; // CUDA_ERROR_INVALID_VALUE
+        if (bytesize == 0) {
+            *dptr = nullptr;
+            return 0;
+        }
+#if defined(_WIN32)
+        *dptr = _aligned_malloc(bytesize, 64);
+#else
+        void* ptr = nullptr;
+        if (posix_memalign(&ptr, 64, bytesize) == 0) {
+            *dptr = ptr;
+        } else {
+            *dptr = std::malloc(bytesize);
+        }
+#endif
+        return (*dptr != nullptr) ? 0 : 2; // 0 = CUDA_SUCCESS, 2 = CUDA_ERROR_OUT_OF_MEMORY
+    }
+
+    KEYSTONE_API int leo_cuMemFree_v2(void* dptr) {
+        if (dptr) {
+#if defined(_WIN32)
+            _aligned_free(dptr);
+#else
+            std::free(dptr);
+#endif
+        }
+        return 0; // CUDA_SUCCESS
+    }
+
+    KEYSTONE_API int leo_cublasSgemm_v2(
+        int transa, int transb,
+        int m, int n, int k,
+        float alpha,
+        const float* A, int lda,
+        const float* B, int ldb,
+        float beta,
+        float* C, int ldc
+    ) {
+        if (!A || !B || !C || m <= 0 || n <= 0 || k <= 0) return 1;
+
+        // Column-major SGEMM with AVX2 FMA vectorization
+        for (int j = 0; j < n; ++j) {
+            for (int i = 0; i < m; ++i) {
+                float acc = 0.0f;
+                int l = 0;
+                __m256 vacc = _mm256_setzero_ps();
+
+                for (; l + 8 <= k; l += 8) {
+                    float a_vals[8];
+                    float b_vals[8];
+                    for (int x = 0; x < 8; ++x) {
+                        int a_idx = (transa == 0) ? (i + (l + x) * lda) : ((l + x) + i * lda);
+                        int b_idx = (transb == 0) ? ((l + x) + j * ldb) : (j + (l + x) * ldb);
+                        a_vals[x] = A[a_idx];
+                        b_vals[x] = B[b_idx];
+                    }
+                    __m256 va = _mm256_loadu_ps(a_vals);
+                    __m256 vb = _mm256_loadu_ps(b_vals);
+                    vacc = _mm256_fmadd_ps(va, vb, vacc);
+                }
+
+                // Horizontal reduction of 8 AVX2 lanes
+                float acc_arr[8];
+                _mm256_storeu_ps(acc_arr, vacc);
+                for (int x = 0; x < 8; ++x) {
+                    acc += acc_arr[x];
+                }
+
+                // Scalar tail loop
+                for (; l < k; ++l) {
+                    int a_idx = (transa == 0) ? (i + l * lda) : (l + i * lda);
+                    int b_idx = (transb == 0) ? (l + j * ldb) : (j + l * ldb);
+                    acc += A[a_idx] * B[b_idx];
+                }
+
+                int c_idx = i + j * ldc;
+                if (beta == 0.0f) {
+                    C[c_idx] = alpha * acc;
+                } else {
+                    C[c_idx] = alpha * acc + beta * C[c_idx];
+                }
+            }
+        }
+        return 0; // CUBLAS_STATUS_SUCCESS
     }
 }

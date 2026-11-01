@@ -87,3 +87,10 @@ class CPUiGPUScheduler:
                 "speedup_target_bound": float(1.0 + 0.0 * dim_factor),
                 "reason": "Standard balanced CPU execution",
             }
+
+    def execute_heterogeneous_co_schedule(self, A: np.ndarray, B: np.ndarray) -> Tuple[np.ndarray, Any]:
+        """
+        Executes concurrent heterogeneous row partitioning across CPU AVX2 and Intel UHD iGPU.
+        """
+        from backend.canonical.silicon_roofline_and_driver_closure import heterogeneous_cpu_igpu_roofline_split
+        return heterogeneous_cpu_igpu_roofline_split(A, B)
