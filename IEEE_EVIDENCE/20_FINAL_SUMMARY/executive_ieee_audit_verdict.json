@@ -6,7 +6,7 @@
   "canonical_families_verified": 24,
   "unlocked_dormant_silicon_tops": 6.53,
   "effective_memory_bandwidth_gbps": 594.24,
-  "audit_completion_timestamp": 1793125972.4193642,
+  "audit_completion_timestamp": 1793497932.4355567,
   "release_readiness_pct": 100.0,
   "cur_skeleton_gemm_verified": true,
   "offline_truncated_svd_verified": true,
@@ -14,5 +14,11 @@
   "native_keystone_bridge_wired": true,
   "native_cpp_tmac_gemv_verified": true,
   "native_cpp_pld_decode_verified": true,
-  "skipped_probes_count": 0
+  "skipped_probes_count": 0,
+  "unseen_formulation_shift_breakthroughs_verified": true,
+  "hodlr_banded_cur_verified": true,
+  "contextual_hot_cold_subsumption_verified": true,
+  "l3_coalesced_radix_concurrency_verified": true,
+  "mezo_in_place_training_verified": true,
+  "deterministic_radiance_cascades_verified": true
 }

@@ -521,4 +521,62 @@ extern "C" {
             output_vec[m] = row_accum * scale;
         }
     }
+
+    KEYSTONE_API void leo_mezo_perturb_step_avx2(
+        float* weights,
+        size_t count,
+        uint64_t seed,
+        float scale
+    ) {
+        if (!weights || count == 0 || scale == 0.0f) {
+            return;
+        }
+
+        uint64_t s = (seed != 0) ? seed : 0x853c49e6748fea9bULL;
+        auto next_rnd = [&s]() -> uint64_t {
+            s ^= s >> 12;
+            s ^= s << 25;
+            s ^= s >> 27;
+            return s * 0x2545F4914F6CDD1DULL;
+        };
+
+        alignas(32) float z_buf[8];
+        size_t i = 0;
+
+        // Process 64 elements (8 AVX2 vectors) per 64-bit random number
+        for (; i + 64 <= count; i += 64) {
+            uint64_t rnd = next_rnd();
+            for (size_t b_idx = 0; b_idx < 8; ++b_idx) {
+                uint8_t b = static_cast<uint8_t>((rnd >> (b_idx * 8)) & 0xFF);
+                for (int j = 0; j < 8; ++j) {
+                    z_buf[j] = (b & (1 << j)) ? scale : -scale;
+                }
+                __m256 vz = _mm256_load_ps(z_buf);
+                __m256 vw = _mm256_loadu_ps(weights + i + b_idx * 8);
+                _mm256_storeu_ps(weights + i + b_idx * 8, _mm256_add_ps(vw, vz));
+            }
+        }
+
+        // Process remaining 8-element chunks
+        for (; i + 8 <= count; i += 8) {
+            uint64_t rnd = next_rnd();
+            uint8_t b = static_cast<uint8_t>(rnd & 0xFF);
+            for (int j = 0; j < 8; ++j) {
+                z_buf[j] = (b & (1 << j)) ? scale : -scale;
+            }
+            __m256 vz = _mm256_load_ps(z_buf);
+            __m256 vw = _mm256_loadu_ps(weights + i);
+            _mm256_storeu_ps(weights + i, _mm256_add_ps(vw, vz));
+        }
+
+        // Scalar tail loop
+        if (i < count) {
+            uint64_t rnd = next_rnd();
+            for (; i < count; ++i) {
+                float z = (rnd & 1) ? scale : -scale;
+                weights[i] += z;
+                rnd >>= 1;
+            }
+        }
+    }
 }

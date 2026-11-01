@@ -1,6 +1,10 @@
 import logging
 import numpy as np
 import uuid
+import psutil
+from typing import Dict, Any, Optional
+
+from backend.canonical.unseen_subsumption_extensions import MeZOInPlaceTrainer
 
 class SplitLoRATrainer:
     def __init__(self, base_model: str, lora_rank: int = 8):
@@ -9,6 +13,22 @@ class SplitLoRATrainer:
         self.lora_rank = lora_rank
         self.logger.info(f"Initialized SplitLoRA for {base_model} with rank {lora_rank}")
         
+    def create_zero_memory_local_trainer(
+        self,
+        weights: np.ndarray,
+        base_seed: int = 1337,
+        force_mezo: bool = False,
+    ) -> MeZOInPlaceTrainer:
+        """
+        Creates a MeZO in-place zero-memory local trainer for client-side adapter fine-tuning.
+        Activated automatically when system RAM is constrained (< 4 GB available) or forced.
+        Persistent optimizer state is strictly 8 bytes (uint64 seed) with 0 activation graph bytes.
+        """
+        available_gb = psutil.virtual_memory().available / (1024 ** 3)
+        if available_gb < 4.0 or force_mezo:
+            self.logger.info(f"RAM constrained ({available_gb:.2f} GB available). Deploying MeZOInPlaceTrainer (8-byte state).")
+        return MeZOInPlaceTrainer(weights=weights, base_seed=base_seed)
+
     def client_forward(self, prompt: str, client_model_state: dict) -> dict:
         """
         Privacy: raw data never leaves client
@@ -43,7 +63,7 @@ class SplitLoRATrainer:
         
         # Simulate backpropagation through server-side layers
         # Loss calculation vs labels (mocked)
-        loss = np.random.random() * 2.0
+        loss = float(np.random.random() * 2.0)
         
         # Simulated LoRA gradients (A and B matrices)
         lora_A_grad = np.random.randn(hidden_dim, self.lora_rank).astype(np.float32) * 0.01

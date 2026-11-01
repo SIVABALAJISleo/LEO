@@ -2,11 +2,19 @@
 backend/layer17_neural_renderer/volume_bypass.py
 ExtremeVolumeBypass Pipeline.
 Orchestrates INT8 iGPU rendering, CPU Super-Resolution, and CPU Frame Interpolation.
+Integrated with Deterministic Radiance Cascades (Sannikov 2023) for analytical SDF transport.
 """
 
 import time
 import logging
+from typing import Optional, Union, Callable
 import numpy as np
+
+from backend.canonical.unseen_subsumption_extensions import (
+    deterministic_radiance_cascade_2d,
+    RadianceCascadeResult,
+)
+
 try:
     from .nerf_cache import HDCNeRFVoxelCache
 except ImportError:
@@ -44,6 +52,26 @@ class ExtremeVolumeBypass:
         # 3. Temporal NeRF Caching (HDC)
         self.nerf_cache = HDCNeRFVoxelCache()
         
+    def render_radiance_cascade(
+        self,
+        scene_or_emissivity: Union[np.ndarray, Callable],
+        width: int = 128,
+        height: int = 128,
+        prev_frame: Optional[np.ndarray] = None,
+        motion_vectors: Optional[np.ndarray] = None,
+    ) -> RadianceCascadeResult:
+        """
+        Renders scene using Deterministic Radiance Cascades (Sannikov 2023)
+        with spatio-temporal reprojection and O(N log N) probe complexity.
+        """
+        return deterministic_radiance_cascade_2d(
+            radiance_field_fn_or_grid=scene_or_emissivity,
+            width=width,
+            height=height,
+            prev_frame=prev_frame,
+            motion_vectors=motion_vectors,
+        )
+
     def super_res(self, low_res_frame: np.ndarray) -> np.ndarray:
         """2. Foveated Neural Rendering: AI Super-Resolution (CPU)"""
         # Simulate 0.2B BitNet INT4 upscaling of center foveal region

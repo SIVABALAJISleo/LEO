@@ -129,6 +129,14 @@ class NativeRuntimeBridge:
                                 ctypes.c_size_t,
                             ]
                             lib.leo_tmac_ternary_gemv_avx2.restype = None
+                        if hasattr(lib, "leo_mezo_perturb_step_avx2"):
+                            lib.leo_mezo_perturb_step_avx2.argtypes = [
+                                ctypes.POINTER(ctypes.c_float),
+                                ctypes.c_size_t,
+                                ctypes.c_uint64,
+                                ctypes.c_float,
+                            ]
+                            lib.leo_mezo_perturb_step_avx2.restype = None
                         compiler_type = "MinGW GCC (g++)" if cand.endswith(".dll") else "GCC / Clang"
                         return lib, compiler_type
                 except Exception as e:
@@ -145,6 +153,18 @@ class NativeRuntimeBridge:
             return True, core, gpu_found
         except Exception:
             return False, None, False
+
+    def is_native_available(self) -> bool:
+        """Returns True if the native Keystone AVX2 library is loaded and callable."""
+        return self._keystone_lib is not None
+
+    def is_openvino_available(self) -> bool:
+        """Returns True if OpenVINO runtime is available on the system."""
+        return bool(self._openvino_available)
+
+    def is_openvino_gpu_available(self) -> bool:
+        """Returns True if Intel UHD Graphics iGPU device is detected via OpenVINO."""
+        return bool(self._openvino_available and self._ov_gpu_available)
 
     # ── llama.cpp Prompt-Lookup Decoding Subprocess Bridge ────────────────────
 
@@ -420,6 +440,26 @@ class NativeRuntimeBridge:
             w_row[3::4] = w3
             out_c[m] = float(np.dot(w_row[:K], in_c[:K])) * scales_c[m]
         return out_c
+
+    def mezo_perturb_step_native(
+        self, weights: np.ndarray, seed: int, scale: float
+    ) -> bool:
+        """
+        Applies in-place Rademacher perturbation at AVX2 speed using Keystone C++ library.
+        Returns True if native execution succeeded, False if CPU fallback should be used.
+        """
+        if self._keystone_lib is None or not hasattr(self._keystone_lib, "leo_mezo_perturb_step_avx2"):
+            return False
+        if not weights.flags["C_CONTIGUOUS"] or weights.dtype != np.float32:
+            return False
+        ptr = weights.ctypes.data_as(ctypes.POINTER(ctypes.c_float))
+        self._keystone_lib.leo_mezo_perturb_step_avx2(
+            ptr,
+            ctypes.c_size_t(weights.size),
+            ctypes.c_uint64(seed),
+            ctypes.c_float(scale),
+        )
+        return True
 
     def benchmark_ternary_gemv_vs_dense(
         self,

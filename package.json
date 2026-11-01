@@ -32,7 +32,10 @@
     "test:e2e:install": "playwright install --with-deps chromium",
     "smoke": "playwright test e2e/smoke.spec.ts",
     "test:e2e:live": "E2E_LIVE=1 playwright test e2e/live.spec.ts",
-    "perf:budget": "node scripts/vitals-check.mjs"
+    "perf:budget": "node scripts/vitals-check.mjs",
+    "postbuild": "node scripts/copy-microfrontends.mjs",
+    "typecheck": "tsc --noEmit",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.8.0",

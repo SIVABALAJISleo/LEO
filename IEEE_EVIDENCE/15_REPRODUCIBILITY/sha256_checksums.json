@@ -18,10 +18,13 @@
   "16_FAILURES/rejected_hypotheses.json": "b5449d9d079d1543868ecd880b0fd3df752e1b6a75c9edd547c6d57f1f623d40",
   "17_LIMITATIONS/hard_boundaries.json": "4e4d0276697aa1ae97065d3f06c76badfd1d6a7c6c34cc73964eb93995e7e3d4",
   "18_CLAIMS/audited_claims.json": "6e08e5f3b40a04ad195cf54b62d3e133a5e9928babf7ad133e1b2cc789043322",
-  "20_FINAL_SUMMARY/executive_ieee_audit_verdict.json": "58bd19abfc0a5b23de2e8dacba7c1293130d71fade3aa48c94ce45d4a31666cd",
-  "backend/canonical/functional_replacement_engine.py": "b4cc1e08fa87354c745328da763a0a18dda06b4d2d38692686cd52d20e583628",
-  "backend/canonical/native_runtime_bridge.py": "6d89b5ef148b1d0aa53d2d0473dfcf87dcb44673231109dc864ae282e8b5bce5",
+  "20_FINAL_SUMMARY/executive_ieee_audit_verdict.json": "78b25638c4ac9b517b6292d429caac823e064a97d992227ce4e7ae479e40ac7e",
+  "backend/canonical/functional_replacement_engine.py": "940d78700a900f929d729bef2437f94b5ece5cfd4a17cb930e9f901fde392a1c",
+  "backend/canonical/native_runtime_bridge.py": "641ce0aa207b7ecad0a37146a7770ca5f3a76525d9f1f57875c04b57d193b4c9",
   "backend/caoe/caoe_engine.py": "c42f5e08a5133989c14a696af77f602d483bdf731ec18574eeb245a76a760709",
-  "backend/hardware/keystone_engine.cpp": "ab975a4429d4887a62dc1ef1262bbf8f9615a6a60845a84bd02f272ab8e3b722",
-  "backend/hardware/keystone_engine.hpp": "b1e312e658eb3f019a0b27cc5be4b1436bbdb2b404111889492d5e2b50354bd1"
+  "backend/hardware/keystone_engine.cpp": "e851cd1475ce00dedc5d1d99274ec046f838eee170bfaf22389ecddc367e790e",
+  "backend/hardware/keystone_engine.hpp": "bb3a0369383e8896c17e8e6719e176670248abf0b950599b690daddf6034d28b",
+  "07_WORK_REDUCTION/unseen_subsumption_benchmarks.json": "cdb636722f795bc89d03715447ad865e272a60b0b60d1ec9f09fe21b6d28014f",
+  "backend/canonical/unseen_subsumption_extensions.py": "dc6cc3b6c1da921d36c9bf0b2744fe611959d4a1a5732b459e6bebde50c13334",
+  "tests/test_unseen_subsumption_suite.py": "3ed6d2c20e6199c907ba50363b19a9e272d3f4f71fd208eb0e6a621d1628562d"
 }

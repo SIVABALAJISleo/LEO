@@ -179,6 +179,29 @@ class FunctionalReplacementEngine:
         )
 
         if corner_error > epsilon_tol:
+            # Secondary algebraic solver: HODLR for matrices with dominant diagonal bands
+            diag_ratio = float(np.linalg.norm(np.diag(A)) / (np.linalg.norm(A) + 1e-12))
+            if diag_ratio > 0.08:
+                from backend.canonical.unseen_subsumption_extensions import hodlr_banded_cur_gemm
+                for b_cand in (16, 32):
+                    hodlr_res = hodlr_banded_cur_gemm(
+                        A, B, half_bandwidth=b_cand, rank_target=c, epsilon_contract=epsilon_tol, num_probes=4, seed=42
+                    )
+                    if hodlr_res.freivalds_passed:
+                        latency_ms = (time.perf_counter() - t0) * 1000.0
+                        return CurSkeletonFactoringResult(
+                            result=hodlr_res.result,
+                            executed_mode="HODLR_BANDED_PLUS_CUR_VERIFIED",
+                            prefilter_passed=False,
+                            freivalds_passed=True,
+                            corner_error=round(corner_error, 6),
+                            freivalds_error=round(hodlr_res.freivalds_error, 6),
+                            latency_ms=round(latency_ms, 4),
+                            c_sampled=c,
+                            rejection_flag=None,
+                            is_mock=False,
+                        )
+
             # Pre-filter failed: rank structure not present or corner violated
             exact_res = A @ B
             latency_ms = (time.perf_counter() - t0) * 1000.0
@@ -586,4 +609,29 @@ class FunctionalReplacementEngine:
             temp_memmap_path=file_c,
             sample_corner_verified=corner_ok,
             is_mock=False,
+        )
+
+    def execute_contextual_ffn(
+        self,
+        W_gate: np.ndarray,
+        W_up: np.ndarray,
+        W_down: np.ndarray,
+        X: np.ndarray,
+        target_hot_ratio: float = 0.15,
+        target_cold_active_ratio: float = 0.10,
+        energy_threshold: float = 0.35,
+    ):
+        """
+        Routes FFN computation through Contextual Hot/Cold Neuron Subsumption engine.
+        Presents RAM-pinned hot neurons and NVMe-backed cold neurons with sketch prediction.
+        """
+        from backend.canonical.unseen_subsumption_extensions import contextual_hot_cold_ffn_step
+        return contextual_hot_cold_ffn_step(
+            W_gate=W_gate,
+            W_up=W_up,
+            W_down=W_down,
+            X=X,
+            target_hot_ratio=target_hot_ratio,
+            target_cold_active_ratio=target_cold_active_ratio,
+            energy_threshold=energy_threshold,
         )

@@ -3,9 +3,10 @@ Canonical Answer System
 One optimized answer per concept. All similar queries reuse it.
 This is the HIGHEST PRIORITY bypass layer — checked before everything else.
 Storing here means zero compute for that concept forever.
+Integrated with RadixPrefixCache for multi-turn prompt and RAG prefix deduplication.
 """
 import logging
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Tuple
 
 logger = logging.getLogger(__name__)
 
@@ -30,17 +31,20 @@ SEED_CANONICALS = {
 
 
 import numpy as np
+from backend.canonical.unseen_subsumption_extensions import RadixPrefixCache
 
 class CanonicalStore:
     """
     Stores exactly ONE optimized answer per `shape_key` (intent#entity).
     All queries that resolve to the same shape reuse this single answer.
+    Also manages a RadixPrefixCache for prefix deduplication.
     """
 
     def __init__(self):
         self._store: Dict[str, str] = dict(SEED_CANONICALS)
         self._hit_count: Dict[str, int] = {k: 0 for k in SEED_CANONICALS}
         self._embeddings: Dict[str, np.ndarray] = {}
+        self.prefix_cache = RadixPrefixCache()
 
     def lookup(self, shape_key: str) -> Optional[str]:
         """Returns the canonical answer for a shape_key, or None."""
@@ -59,6 +63,14 @@ class CanonicalStore:
                 self._hit_count[key] = self._hit_count.get(key, 0) + 1
                 return key
         return None
+
+    def lookup_prefix(self, tokens: Tuple[int, ...]) -> Optional[np.ndarray]:
+        """Lookup cached activation in RadixPrefixCache."""
+        return self.prefix_cache.lookup(tokens)
+
+    def insert_prefix(self, tokens: Tuple[int, ...], activation: np.ndarray) -> None:
+        """Insert activation in RadixPrefixCache."""
+        self.prefix_cache.insert(tokens, activation)
 
     def register(self, shape_key: str, answer: str, overwrite: bool = False, embedding: Optional[np.ndarray] = None):
         return self.store(shape_key, answer, overwrite, embedding)
@@ -79,6 +91,7 @@ class CanonicalStore:
         return {
             "total_concepts": len(self._store),
             "total_hits": total_hits,
+            "prefix_cache_hits": self.prefix_cache.total_hits,
             "top_concepts": list(sorted(self._hit_count.items(), key=lambda x: -x[1]))[:10],
         }
 

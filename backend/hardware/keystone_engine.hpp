@@ -155,6 +155,12 @@ extern "C" {
         size_t M,
         size_t K
     );
+    KEYSTONE_API void leo_mezo_perturb_step_avx2(
+        float* weights,
+        size_t count,
+        uint64_t seed,
+        float scale
+    );
 }
 
 #endif // KEYSTONE_ENGINE_HPP
