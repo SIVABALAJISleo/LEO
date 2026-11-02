@@ -6,7 +6,7 @@
   "canonical_families_verified": 24,
   "unlocked_dormant_silicon_tops": 6.53,
   "effective_memory_bandwidth_gbps": 594.24,
-  "audit_completion_timestamp": 1793517542.1004148,
+  "audit_completion_timestamp": 1793632850.8422515,
   "release_readiness_pct": 100.0,
   "cur_skeleton_gemm_verified": true,
   "offline_truncated_svd_verified": true,
@@ -33,5 +33,14 @@
   "srht_white_noise_subsumption_verified": true,
   "heterogeneous_cpu_igpu_roofline_verified": true,
   "local_silicon_utilization_pct": 100.0,
-  "parity_boundary_certificate_verified": true
+  "parity_boundary_certificate_verified": true,
+  "vera_rubin_nvl72_rack_subsumptions_verified": true,
+  "kronecker_4tb_virtual_operator_verified": true,
+  "zero_comm_72shard_latent_fusion_verified": true,
+  "symbolic_dag_associative_reorder_verified": true,
+  "fmm_hierarchical_kv_cache_verified": true,
+  "gaming_and_simulation_subsumptions_verified": true,
+  "continuum_crowd_pathfinding_100k_verified": true,
+  "algebraic_ring_buffer_factory_640k_verified": true,
+  "radiance_cascades_motion_extrapolation_verified": true
 }

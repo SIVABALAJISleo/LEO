@@ -711,3 +711,108 @@ class FunctionalReplacementEngine:
         """
         from backend.canonical.silicon_roofline_and_driver_closure import heterogeneous_cpu_igpu_roofline_split
         return heterogeneous_cpu_igpu_roofline_split(A, B)
+
+    def execute_kronecker_4tb_operator(
+        self,
+        A1: np.ndarray,
+        A2: np.ndarray,
+        A3: np.ndarray,
+        v: np.ndarray,
+        contract_tol: float = 1e-6,
+    ):
+        """
+        Executes 4-terabyte virtual 3-mode Kronecker operator action in L2 cache.
+        """
+        from backend.canonical.vera_rubin_nvl72_rack_subsumption import kronecker_4tb_virtual_operator_subsumption
+        return kronecker_4tb_virtual_operator_subsumption(A1, A2, A3, v, contract_tol=contract_tol)
+
+    def execute_zero_comm_72shard_fusion(
+        self,
+        U: np.ndarray,
+        V_shards: List[np.ndarray],
+        x_shards: List[np.ndarray],
+        contract_tol: float = 1e-5,
+    ):
+        """
+        Executes zero-communication 72-shard latent subspace fusion.
+        """
+        from backend.canonical.vera_rubin_nvl72_rack_subsumption import zero_comm_72shard_latent_fusion
+        return zero_comm_72shard_latent_fusion(U, V_shards, x_shards, contract_tol=contract_tol)
+
+    def execute_symbolic_dag_reorder(
+        self,
+        A: np.ndarray,
+        B: np.ndarray,
+        C: np.ndarray,
+        v: np.ndarray,
+        contract_tol: float = 1e-6,
+    ):
+        """
+        Executes symbolic operator-DAG associative reordering on white noise.
+        """
+        from backend.canonical.vera_rubin_nvl72_rack_subsumption import symbolic_dag_associative_reorder
+        return symbolic_dag_associative_reorder(A, B, C, v, contract_tol=contract_tol)
+
+    def execute_fmm_hierarchical_kv(
+        self,
+        Q: np.ndarray,
+        K: np.ndarray,
+        V: np.ndarray,
+        near_window: int = 128,
+        cluster_size_b: int = 64,
+        contract_tol: float = 1e-3,
+    ):
+        """
+        Executes 1987 Greengard-Rokhlin fast multipole hierarchical KV cache compression.
+        """
+        from backend.canonical.vera_rubin_nvl72_rack_subsumption import fmm_hierarchical_kv_cache
+        return fmm_hierarchical_kv_cache(
+            Q, K, V, near_window=near_window, cluster_size_b=cluster_size_b, contract_tol=contract_tol
+        )
+
+    def execute_continuum_crowd_pathfinding(
+        self,
+        agents_pos: np.ndarray,
+        vx_grid: np.ndarray,
+        vy_grid: np.ndarray,
+        speed: float = 12.0,
+        dt: float = 0.016,
+    ):
+        """
+        Executes 100k-citizen continuum crowd pathfinding.
+        """
+        from backend.canonical.game_simulation_and_pathtracing_subsumption import continuum_crowd_pathfinding_100k
+        return continuum_crowd_pathfinding_100k(agents_pos, vx_grid, vy_grid, speed=speed, dt=dt)
+
+    def execute_algebraic_factory(
+        self,
+        num_belts: int = 5000,
+        items_per_belt: int = 128,
+        num_ticks: int = 30,
+        dt: float = 0.016667,
+    ):
+        """
+        Executes 640k-item algebraic ring-buffer discrete-event factory simulation.
+        """
+        from backend.canonical.game_simulation_and_pathtracing_subsumption import algebraic_ring_buffer_factory_640k
+        return algebraic_ring_buffer_factory_640k(
+            num_belts=num_belts, items_per_belt=items_per_belt, num_ticks=num_ticks, dt=dt
+        )
+
+    def execute_radiance_cascades_extrapolation(
+        self,
+        base_frame: np.ndarray,
+        motion_vectors: np.ndarray,
+        num_cascades: int = 4,
+        extrapolation_multiplier_val: float = 3.0,
+    ):
+        """
+        Executes screen-space radiance cascades and 3x motion-vector frame extrapolation.
+        """
+        from backend.canonical.game_simulation_and_pathtracing_subsumption import radiance_cascades_motion_extrapolation
+        return radiance_cascades_motion_extrapolation(
+            base_frame,
+            motion_vectors,
+            num_cascades=num_cascades,
+            extrapolation_multiplier_val=extrapolation_multiplier_val,
+        )
