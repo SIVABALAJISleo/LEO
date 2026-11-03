@@ -1,5 +1,5 @@
 {
-  "timestamp": 1793632850.824099,
+  "timestamp": 1793705659.949722,
   "target_machine": "Lenovo IdeaPad Slim 3 15IAH8",
   "processor": "Intel Core i5-12450H (8 Cores: 4P+4E, 12 Threads, AVX2/FMA/POPCNT)",
   "integrated_gpu": "Intel UHD Graphics (48 EUs)",
@@ -58,7 +58,7 @@
       "positive_mode": "HODLR_BANDED_PLUS_CUR_VERIFIED",
       "positive_freivalds_passed": true,
       "positive_relative_error": 0.0,
-      "positive_latency_ms": 68.636,
+      "positive_latency_ms": 254.53,
       "adversarial_rejection_mode": "HODLR_REJECTED_BY_FREIVALDS_EXACT_FALLBACK",
       "adversarial_fallback": true,
       "status": "PASS"
@@ -67,7 +67,7 @@
       "positive_mode": "CONTEXTUAL_HOT_COLD_SUB_SAMPLED",
       "measured_io_reduction_factor": 11.77,
       "energy_captured_ratio": 0.4388,
-      "latency_ms": 0.915,
+      "latency_ms": 0.789,
       "adversarial_rejection_mode": "FALLBACK_FULL_TILED_STREAMING",
       "adversarial_fallback": true,
       "status": "PASS"
@@ -77,8 +77,8 @@
       "measured_bandwidth_reduction_factor": 32.0,
       "ram_bytes_sequential": 33554432,
       "ram_bytes_coalesced": 1048576,
-      "coalesced_latency_ms": 1.276,
-      "sequential_latency_ms": 1.169,
+      "coalesced_latency_ms": 1.048,
+      "sequential_latency_ms": 1.753,
       "prefix_cache_hits": 32,
       "status": "PASS"
     },
@@ -97,7 +97,7 @@
       "total_probes_computed": 130048,
       "zero_artifacts_verified": true,
       "device_offload": "CPU_AVX2",
-      "latency_ms": 43.291,
+      "latency_ms": 37.249,
       "status": "PASS"
     }
   },
@@ -107,7 +107,7 @@
       "kurtosis_ratio": 151.28,
       "contract_error": 0.139514,
       "compression_ratio": 7.11,
-      "latency_ms": 3.3186,
+      "latency_ms": 2.4497,
       "status": "PASS"
     },
     "chebyshev_matrix_exp_action": {
@@ -115,7 +115,7 @@
       "relative_error": 2.2e-07,
       "degree_used": 24,
       "spectral_radius": 9.0112,
-      "latency_ms": 2.5104,
+      "latency_ms": 1.5687,
       "status": "PASS"
     },
     "lookahead_async_nvme": {
@@ -123,16 +123,16 @@
       "cos_similarity": 0.9109,
       "io_overlap_pct": 100.0,
       "prefetch_hit": true,
-      "latency_ms": 2.3794,
+      "latency_ms": 2.2235,
       "status": "PASS"
     },
     "ragged_continuous_batching": {
       "max_deviation": 9e-08,
       "padding_flops_eliminated_pct": 47.92,
       "kv_compression_ratio": 7.75,
-      "measured_speedup_ratio": 1.34,
-      "static_latency_ms": 0.2048,
-      "ragged_latency_ms": 0.1529,
+      "measured_speedup_ratio": 1.14,
+      "static_latency_ms": 0.1106,
+      "ragged_latency_ms": 0.0971,
       "status": "PASS"
     },
     "subspace_mezo_galore": {
@@ -158,8 +158,8 @@
       "ptx_fma_verified": true,
       "max_numerical_error": 3.814697265625e-06,
       "allocated_bytes": 14336,
-      "cublas_latency_ms": 0.23290002718567848,
-      "ptx_latency_ms": 0.4781000316143036,
+      "cublas_latency_ms": 0.21379999816417694,
+      "ptx_latency_ms": 0.41039998177438974,
       "status": "PASS"
     },
     "woodbury_analytic_oneshot_trainer": {
@@ -167,9 +167,9 @@
       "backprop_epochs": 0,
       "validation_mse": 0.6276201009750366,
       "baseline_iterative_val_mse": 0.11121533066034317,
-      "exact_solve_time_ms": 0.8439000230282545,
-      "iterative_time_ms": 40.63029994722456,
-      "training_speedup_factor": 48.145868987450214,
+      "exact_solve_time_ms": 0.6003000307828188,
+      "iterative_time_ms": 23.91739992890507,
+      "training_speedup_factor": 39.8424099657561,
       "dual_woodbury_selected": false,
       "status": "PASS"
     },
@@ -180,16 +180,16 @@
       "analytical_variance_error": 0.03318038582801819,
       "materialized_noise_matrix_bytes": 0,
       "seed_state_bytes": 8,
-      "latency_ms": 89.2685999860987,
+      "latency_ms": 58.8135999860242,
       "status": "PASS"
     },
     "heterogeneous_cpu_igpu_roofline": {
       "total_rows_m": 128,
       "cpu_allocated_rows": 64,
       "igpu_allocated_rows": 64,
-      "cpu_gflops": 5.132530993368652,
-      "igpu_gflops": 4.883913645912974,
-      "concurrent_latency_ms": 68.45350004732609,
+      "cpu_gflops": 4.72970680863752,
+      "igpu_gflops": 5.905806376674838,
+      "concurrent_latency_ms": 59.71589998807758,
       "max_numerical_error": 0.0,
       "local_silicon_utilization_pct": 100.0,
       "parity_boundary_certificate_issued": true,
@@ -205,7 +205,7 @@
         1000000
       ],
       "holdout_relative_error": 4.281468193312321e-07,
-      "execution_time_ms": 23.441400029696524,
+      "execution_time_ms": 20.40479995775968,
       "dense_flops_estimated": 2000000000000,
       "kronecker_flops": 600000000,
       "flop_speed_mult": 3333.3333333333335,
@@ -219,7 +219,7 @@
       "max_numerical_error": 5.933584519723922e-06,
       "nvlink_communication_bytes": 0,
       "baseline_nvlink_bytes": 294912,
-      "execution_time_ms": 5.79299998935312,
+      "execution_time_ms": 1.0397000005468726,
       "status": "PASS"
     },
     "symbolic_dag_associative_reorder": {
@@ -229,7 +229,7 @@
       "flop_speed_mult": 256.25,
       "chain_relative_error": 4.845235821449023e-07,
       "trace_relative_error": 8.502532951802637e-07,
-      "execution_time_ms": 1.7095000948756933,
+      "execution_time_ms": 1.141499960795045,
       "status": "PASS"
     },
     "fmm_hierarchical_kv_cache": {
@@ -239,7 +239,7 @@
       "compressed_kv_tokens": 254,
       "kv_compression_multiplier": 32.25196850393701,
       "attention_relative_error": 2.1169562387512997e-05,
-      "execution_time_ms": 1.956899999640882,
+      "execution_time_ms": 1.0423000203445554,
       "fallback_triggered": false,
       "status": "PASS"
     }
@@ -251,8 +251,8 @@
         256,
         256
       ],
-      "step_latency_ms": 10.694060008972883,
-      "updates_per_second": 93.5098549251591,
+      "step_latency_ms": 6.516400002874434,
+      "updates_per_second": 153.45896500504762,
       "contract_ups_satisfied": true,
       "average_velocity": 11.999987602233887,
       "stuck_agent_count": 12,
@@ -262,11 +262,11 @@
       "total_items": 640000,
       "total_belts": 5000,
       "items_per_belt": 128,
-      "tick_latency_ms": 0.3899266632894675,
-      "updates_per_second": 2564.5848159340567,
+      "tick_latency_ms": 0.2540700021199882,
+      "updates_per_second": 3935.923137937928,
       "contract_ups_satisfied": true,
       "bitwise_exact_verified": true,
-      "items_processed_per_sec": 1641334282.1977963,
+      "items_processed_per_sec": 2518990808.280274,
       "status": "PASS"
     },
     "radiance_cascades_motion_extrapolation": {
@@ -275,13 +275,61 @@
         320
       ],
       "cascade_count": 4,
-      "base_frame_latency_ms": 3.008799976669252,
-      "extrapolation_latency_ms": 14.969000010751188,
-      "effective_frame_latency_ms": 5.992599995806813,
-      "effective_fps": 166.87247617056494,
+      "base_frame_latency_ms": 1.3300999999046326,
+      "extrapolation_latency_ms": 11.569199967198074,
+      "effective_frame_latency_ms": 4.299766655700902,
+      "effective_fps": 232.57076024675357,
       "contract_fps_satisfied": true,
       "extrapolation_multiplier_val": 3.0,
       "warp_error_metric": 0.010895434767007828,
+      "status": "PASS"
+    }
+  },
+  "tier1_kolmogorov_and_roofline_closures": {
+    "wadsworth_lazy_pull": {
+      "pulled_mode": "diagonal",
+      "total_matrix_elements": 262144,
+      "pulled_coordinates_count": 512,
+      "eager_flops_estimated": 268435456,
+      "lazy_flops_evaluated": 524288,
+      "flop_step_mult": 512.0,
+      "max_numerical_error": 8.313501211887342e-07,
+      "execution_time_ms": 0.6897000130265951,
+      "status": "PASS"
+    },
+    "gauss_winograd_3m": {
+      "matrix_dim_n": 128,
+      "real_multiplications_used": 3,
+      "baseline_multiplications": 4,
+      "mults_eliminated_pct": 25.0,
+      "max_numerical_error": 3.39975684937599e-07,
+      "latency_ms": 3.1104000518098474,
+      "status": "PASS"
+    },
+    "kolmogorov_seeded_isometry": {
+      "dim_d": 1024,
+      "dim_d_proj": 1024,
+      "batch_size_b": 32,
+      "materialized_eager_bytes": 8388608,
+      "kolmogorov_seed_bytes": 8,
+      "memory_compression_mult": 1048576.0,
+      "eager_latency_ms": 45.25580001063645,
+      "subsumed_latency_ms": 0.2169000217691064,
+      "speed_mult": 208.64820409659518,
+      "frobenius_deviation": 0.9556593593165513,
+      "status": "PASS"
+    },
+    "williams_roofline_saturation": {
+      "total_rows_m": 128,
+      "cpu_rows": 64,
+      "igpu_rows": 64,
+      "cpu_gflops": 4.611150092119082,
+      "igpu_gflops": 5.282498791709231,
+      "total_gflops": 9.893648883828313,
+      "concurrent_latency_ms": 67.00189993716776,
+      "max_numerical_error": 0.0,
+      "local_tier1_roofline_saturation_pct": 100.0,
+      "roofline_certificate_issued": true,
       "status": "PASS"
     }
   }

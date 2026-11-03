@@ -86,6 +86,21 @@ from .game_simulation_and_pathtracing_subsumption import (
     benchmark_radiance_cascades_motion_extrapolation,
     run_all_game_simulation_and_pathtracing_subsumptions,
 )
+from .tier1_kolmogorov_and_roofline_closure import (
+    WadsworthLazyPullResult,
+    wadsworth_lazy_pull_materialization,
+    benchmark_wadsworth_lazy_pull,
+    GaussWinograd3MResult,
+    gauss_winograd_3m_complex_gemm,
+    benchmark_gauss_winograd_3m,
+    KolmogorovIsometryResult,
+    kolmogorov_seeded_isometry_subsumption,
+    benchmark_kolmogorov_seeded_isometry,
+    Tier1RooflineSaturationResult,
+    williams_roofline_heterogeneous_saturation,
+    benchmark_williams_roofline_saturation,
+    run_all_tier1_kolmogorov_and_roofline_closures,
+)
 
 __all__ = [
     "FunctionalReplacementEngine",
@@ -157,4 +172,17 @@ __all__ = [
     "radiance_cascades_motion_extrapolation",
     "benchmark_radiance_cascades_motion_extrapolation",
     "run_all_game_simulation_and_pathtracing_subsumptions",
+    "WadsworthLazyPullResult",
+    "wadsworth_lazy_pull_materialization",
+    "benchmark_wadsworth_lazy_pull",
+    "GaussWinograd3MResult",
+    "gauss_winograd_3m_complex_gemm",
+    "benchmark_gauss_winograd_3m",
+    "KolmogorovIsometryResult",
+    "kolmogorov_seeded_isometry_subsumption",
+    "benchmark_kolmogorov_seeded_isometry",
+    "Tier1RooflineSaturationResult",
+    "williams_roofline_heterogeneous_saturation",
+    "benchmark_williams_roofline_saturation",
+    "run_all_tier1_kolmogorov_and_roofline_closures",
 ]
