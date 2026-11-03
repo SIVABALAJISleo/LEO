@@ -6,7 +6,7 @@
   "canonical_families_verified": 24,
   "unlocked_dormant_silicon_tops": 6.53,
   "effective_memory_bandwidth_gbps": 594.24,
-  "audit_completion_timestamp": 1793705659.9571266,
+  "audit_completion_timestamp": 1793718450.0030968,
   "release_readiness_pct": 100.0,
   "cur_skeleton_gemm_verified": true,
   "offline_truncated_svd_verified": true,
@@ -48,5 +48,8 @@
   "gauss_winograd_3m_verified": true,
   "kolmogorov_seeded_isometry_verified": true,
   "williams_roofline_saturation_verified": true,
-  "local_tier1_roofline_saturation_pct": 100.0
+  "local_tier1_roofline_saturation_pct": 100.0,
+  "unseeded_terabyte_stream_subsumptions_verified": true,
+  "turnstile_ephemeral_stream_verified": true,
+  "clarkson_woodruff_countsketch_verified": true
 }

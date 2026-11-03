@@ -101,6 +101,15 @@ from .tier1_kolmogorov_and_roofline_closure import (
     benchmark_williams_roofline_saturation,
     run_all_tier1_kolmogorov_and_roofline_closures,
 )
+from .unseeded_terabyte_stream_subsumption import (
+    TurnstileEphemeralResult,
+    turnstile_ephemeral_unseeded_stream,
+    benchmark_turnstile_ephemeral_unseeded_stream,
+    CountSketchStreamResult,
+    clarkson_woodruff_countsketch_stream,
+    benchmark_clarkson_woodruff_countsketch_stream,
+    run_all_unseeded_terabyte_stream_subsumptions,
+)
 
 __all__ = [
     "FunctionalReplacementEngine",
@@ -185,4 +194,11 @@ __all__ = [
     "williams_roofline_heterogeneous_saturation",
     "benchmark_williams_roofline_saturation",
     "run_all_tier1_kolmogorov_and_roofline_closures",
+    "TurnstileEphemeralResult",
+    "turnstile_ephemeral_unseeded_stream",
+    "benchmark_turnstile_ephemeral_unseeded_stream",
+    "CountSketchStreamResult",
+    "clarkson_woodruff_countsketch_stream",
+    "benchmark_clarkson_woodruff_countsketch_stream",
+    "run_all_unseeded_terabyte_stream_subsumptions",
 ]

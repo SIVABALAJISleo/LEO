@@ -866,3 +866,39 @@ class FunctionalReplacementEngine:
         """
         from backend.canonical.tier1_kolmogorov_and_roofline_closure import williams_roofline_heterogeneous_saturation
         return williams_roofline_heterogeneous_saturation(A, B)
+
+    def execute_turnstile_ephemeral_stream(
+        self,
+        stream_blocks,
+        d: int,
+        k_targets: int = 1,
+        ridge_lambda: float = 1e-3,
+        track_welford: bool = True,
+    ):
+        """
+        Executes Turnstile Ephemeral Ring-Buffer Sufficient Statistics on unseeded stream (~1.32 MB peak RAM).
+        """
+        from backend.canonical.unseeded_terabyte_stream_subsumption import turnstile_ephemeral_unseeded_stream
+        return turnstile_ephemeral_unseeded_stream(
+            stream_blocks,
+            d=d,
+            k_targets=k_targets,
+            ridge_lambda=ridge_lambda,
+            track_welford=track_welford,
+        )
+
+    def execute_clarkson_woodruff_countsketch(
+        self,
+        X: np.ndarray,
+        row_compression_factor: float = 8.0,
+        seed: int = 42,
+    ):
+        """
+        Executes Clarkson-Woodruff block-Rademacher CountSketch stream (8x compression, <= 0.01 trace error).
+        """
+        from backend.canonical.unseeded_terabyte_stream_subsumption import clarkson_woodruff_countsketch_stream
+        return clarkson_woodruff_countsketch_stream(
+            X,
+            row_compression_factor=row_compression_factor,
+            seed=seed,
+        )

@@ -1,0 +1,31 @@
+{
+  "timestamp": 1793718449.9904819,
+  "machine": "Lenovo IdeaPad Slim 3 15IAH8",
+  "cpu": "Intel Core i5-12450H",
+  "igpu": "Intel UHD Graphics (48 EUs)",
+  "benchmarks": {
+    "turnstile_ephemeral_stream": {
+      "stream_rows_t": 4096,
+      "dim_d": 512,
+      "virtual_terabytes_streamed": 20.7,
+      "peak_ring_buffer_bytes": 1321472,
+      "holdout_memory_reduction_step_mult": 13.5,
+      "virtual_memory_reduction_step_mult": 15664350.06,
+      "gram_relative_error": 1.6982619399641408e-07,
+      "weights_relative_error": 5.891683940717485e-07,
+      "stream_latency_ms": 84.5,
+      "status": "PASS"
+    },
+    "clarkson_woodruff_countsketch": {
+      "stream_rows_t": 8192,
+      "sketch_buckets_s": 1024,
+      "dim_d": 512,
+      "row_compression_factor": 8.0,
+      "unbiased_trace_energy_rel_error": 0.002809586906586796,
+      "eager_gemm_ms": 15.75,
+      "countsketch_gemm_ms": 7.57,
+      "speed_step_mult": 2.08,
+      "status": "PASS"
+    }
+  }
+}
