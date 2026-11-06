@@ -1,5 +1,5 @@
 {
-  "timestamp": 1793718449.9947495,
+  "timestamp": 1793956691.3095045,
   "target_machine": "Lenovo IdeaPad Slim 3 15IAH8",
   "processor": "Intel Core i5-12450H (8 Cores: 4P+4E, 12 Threads, AVX2/FMA/POPCNT)",
   "integrated_gpu": "Intel UHD Graphics (48 EUs)",
@@ -58,7 +58,7 @@
       "positive_mode": "HODLR_BANDED_PLUS_CUR_VERIFIED",
       "positive_freivalds_passed": true,
       "positive_relative_error": 0.0,
-      "positive_latency_ms": 41.212,
+      "positive_latency_ms": 38.329,
       "adversarial_rejection_mode": "HODLR_REJECTED_BY_FREIVALDS_EXACT_FALLBACK",
       "adversarial_fallback": true,
       "status": "PASS"
@@ -67,7 +67,7 @@
       "positive_mode": "CONTEXTUAL_HOT_COLD_SUB_SAMPLED",
       "measured_io_reduction_factor": 11.77,
       "energy_captured_ratio": 0.4388,
-      "latency_ms": 0.829,
+      "latency_ms": 0.774,
       "adversarial_rejection_mode": "FALLBACK_FULL_TILED_STREAMING",
       "adversarial_fallback": true,
       "status": "PASS"
@@ -77,8 +77,8 @@
       "measured_bandwidth_reduction_factor": 32.0,
       "ram_bytes_sequential": 33554432,
       "ram_bytes_coalesced": 1048576,
-      "coalesced_latency_ms": 0.627,
-      "sequential_latency_ms": 1.069,
+      "coalesced_latency_ms": 0.642,
+      "sequential_latency_ms": 0.922,
       "prefix_cache_hits": 32,
       "status": "PASS"
     },
@@ -97,7 +97,7 @@
       "total_probes_computed": 130048,
       "zero_artifacts_verified": true,
       "device_offload": "CPU_AVX2",
-      "latency_ms": 33.312,
+      "latency_ms": 28.242,
       "status": "PASS"
     }
   },
@@ -107,7 +107,7 @@
       "kurtosis_ratio": 151.28,
       "contract_error": 0.139514,
       "compression_ratio": 7.11,
-      "latency_ms": 1.8766,
+      "latency_ms": 1.1925,
       "status": "PASS"
     },
     "chebyshev_matrix_exp_action": {
@@ -115,7 +115,7 @@
       "relative_error": 2.2e-07,
       "degree_used": 24,
       "spectral_radius": 9.0112,
-      "latency_ms": 1.7743,
+      "latency_ms": 1.4906,
       "status": "PASS"
     },
     "lookahead_async_nvme": {
@@ -123,16 +123,16 @@
       "cos_similarity": 0.9109,
       "io_overlap_pct": 100.0,
       "prefetch_hit": true,
-      "latency_ms": 2.2647,
+      "latency_ms": 2.2804,
       "status": "PASS"
     },
     "ragged_continuous_batching": {
       "max_deviation": 9e-08,
       "padding_flops_eliminated_pct": 47.92,
       "kv_compression_ratio": 7.75,
-      "measured_speedup_ratio": 0.91,
-      "static_latency_ms": 0.1163,
-      "ragged_latency_ms": 0.1278,
+      "measured_speedup_ratio": 0.92,
+      "static_latency_ms": 0.1002,
+      "ragged_latency_ms": 0.1087,
       "status": "PASS"
     },
     "subspace_mezo_galore": {
@@ -158,8 +158,8 @@
       "ptx_fma_verified": true,
       "max_numerical_error": 3.814697265625e-06,
       "allocated_bytes": 14336,
-      "cublas_latency_ms": 0.23660005535930395,
-      "ptx_latency_ms": 0.4187000449746847,
+      "cublas_latency_ms": 0.21129999981894798,
+      "ptx_latency_ms": 0.3652999998848827,
       "status": "PASS"
     },
     "woodbury_analytic_oneshot_trainer": {
@@ -167,9 +167,9 @@
       "backprop_epochs": 0,
       "validation_mse": 0.6276201009750366,
       "baseline_iterative_val_mse": 0.11121533066034317,
-      "exact_solve_time_ms": 0.5695000290870667,
-      "iterative_time_ms": 24.02409992646426,
-      "training_speedup_factor": 42.184545565302145,
+      "exact_solve_time_ms": 0.5263999998987856,
+      "iterative_time_ms": 23.582799999985582,
+      "training_speedup_factor": 44.80015198427052,
       "dual_woodbury_selected": false,
       "status": "PASS"
     },
@@ -180,16 +180,16 @@
       "analytical_variance_error": 0.03318038582801819,
       "materialized_noise_matrix_bytes": 0,
       "seed_state_bytes": 8,
-      "latency_ms": 58.39289992582053,
+      "latency_ms": 37.958899999921414,
       "status": "PASS"
     },
     "heterogeneous_cpu_igpu_roofline": {
       "total_rows_m": 128,
       "cpu_allocated_rows": 64,
       "igpu_allocated_rows": 64,
-      "cpu_gflops": 4.9742700320755135,
-      "igpu_gflops": 9.21825111399593,
-      "concurrent_latency_ms": 54.42140006925911,
+      "cpu_gflops": 9.429640288440087,
+      "igpu_gflops": 12.71771982460703,
+      "concurrent_latency_ms": 35.01189999997223,
       "max_numerical_error": 0.0,
       "local_silicon_utilization_pct": 100.0,
       "parity_boundary_certificate_issued": true,
@@ -205,7 +205,7 @@
         1000000
       ],
       "holdout_relative_error": 4.281468193312321e-07,
-      "execution_time_ms": 17.19109993427992,
+      "execution_time_ms": 21.23740000001817,
       "dense_flops_estimated": 2000000000000,
       "kronecker_flops": 600000000,
       "flop_speed_mult": 3333.3333333333335,
@@ -219,7 +219,7 @@
       "max_numerical_error": 5.933584519723922e-06,
       "nvlink_communication_bytes": 0,
       "baseline_nvlink_bytes": 294912,
-      "execution_time_ms": 0.9187000105157495,
+      "execution_time_ms": 0.9872999999060994,
       "status": "PASS"
     },
     "symbolic_dag_associative_reorder": {
@@ -229,7 +229,7 @@
       "flop_speed_mult": 256.25,
       "chain_relative_error": 4.845235821449023e-07,
       "trace_relative_error": 8.502532951802637e-07,
-      "execution_time_ms": 1.299199997447431,
+      "execution_time_ms": 1.1076000000684871,
       "status": "PASS"
     },
     "fmm_hierarchical_kv_cache": {
@@ -239,7 +239,7 @@
       "compressed_kv_tokens": 254,
       "kv_compression_multiplier": 32.25196850393701,
       "attention_relative_error": 2.1169562387512997e-05,
-      "execution_time_ms": 1.0664999717846513,
+      "execution_time_ms": 1.0695000000850996,
       "fallback_triggered": false,
       "status": "PASS"
     }
@@ -251,8 +251,8 @@
         256,
         256
       ],
-      "step_latency_ms": 6.727020000107586,
-      "updates_per_second": 148.65423322422214,
+      "step_latency_ms": 6.083459999990737,
+      "updates_per_second": 164.38013893434373,
       "contract_ups_satisfied": true,
       "average_velocity": 11.999987602233887,
       "stuck_agent_count": 12,
@@ -262,11 +262,11 @@
       "total_items": 640000,
       "total_belts": 5000,
       "items_per_belt": 128,
-      "tick_latency_ms": 0.26720000120500725,
-      "updates_per_second": 3742.514953182045,
+      "tick_latency_ms": 0.21869000000454739,
+      "updates_per_second": 4572.682792899567,
       "contract_ups_satisfied": true,
       "bitwise_exact_verified": true,
-      "items_processed_per_sec": 2395209570.0365086,
+      "items_processed_per_sec": 2926516987.455723,
       "status": "PASS"
     },
     "radiance_cascades_motion_extrapolation": {
@@ -275,10 +275,10 @@
         320
       ],
       "cascade_count": 4,
-      "base_frame_latency_ms": 1.4679000014439225,
-      "extrapolation_latency_ms": 10.092900018207729,
-      "effective_frame_latency_ms": 3.8536000065505505,
-      "effective_fps": 259.49761218085627,
+      "base_frame_latency_ms": 1.4108000000305765,
+      "extrapolation_latency_ms": 9.712000000035914,
+      "effective_frame_latency_ms": 3.7076000000221634,
+      "effective_fps": 269.71625849444985,
       "contract_fps_satisfied": true,
       "extrapolation_multiplier_val": 3.0,
       "warp_error_metric": 0.010895434767007828,
@@ -294,7 +294,7 @@
       "lazy_flops_evaluated": 524288,
       "flop_step_mult": 512.0,
       "max_numerical_error": 8.313501211887342e-07,
-      "execution_time_ms": 0.5455999635159969,
+      "execution_time_ms": 0.48730000003160967,
       "status": "PASS"
     },
     "gauss_winograd_3m": {
@@ -303,7 +303,7 @@
       "baseline_multiplications": 4,
       "mults_eliminated_pct": 25.0,
       "max_numerical_error": 3.39975684937599e-07,
-      "latency_ms": 0.9845999302342534,
+      "latency_ms": 0.9459999998853164,
       "status": "PASS"
     },
     "kolmogorov_seeded_isometry": {
@@ -313,9 +313,9 @@
       "materialized_eager_bytes": 8388608,
       "kolmogorov_seed_bytes": 8,
       "memory_compression_mult": 1048576.0,
-      "eager_latency_ms": 31.158500001765788,
-      "subsumed_latency_ms": 0.18420000560581684,
-      "speed_mult": 169.1558037649801,
+      "eager_latency_ms": 31.182899999976144,
+      "subsumed_latency_ms": 0.18799999998009298,
+      "speed_mult": 165.86648937913856,
       "frobenius_deviation": 0.9556593593165513,
       "status": "PASS"
     },
@@ -323,10 +323,10 @@
       "total_rows_m": 128,
       "cpu_rows": 64,
       "igpu_rows": 64,
-      "cpu_gflops": 3.599642902998021,
-      "igpu_gflops": 4.108840702461187,
-      "total_gflops": 7.708483605459207,
-      "concurrent_latency_ms": 53.23059996590018,
+      "cpu_gflops": 5.070483556186148,
+      "igpu_gflops": 5.998718536569157,
+      "total_gflops": 11.069202092755305,
+      "concurrent_latency_ms": 34.42440000003444,
       "max_numerical_error": 0.0,
       "local_tier1_roofline_saturation_pct": 100.0,
       "roofline_certificate_issued": true,
@@ -343,7 +343,7 @@
       "virtual_memory_reduction_step_mult": 15664350.06,
       "gram_relative_error": 1.6982619399641408e-07,
       "weights_relative_error": 5.891683940717485e-07,
-      "stream_latency_ms": 84.5,
+      "stream_latency_ms": 80.51,
       "status": "PASS"
     },
     "clarkson_woodruff_countsketch": {
@@ -352,9 +352,9 @@
       "dim_d": 512,
       "row_compression_factor": 8.0,
       "unbiased_trace_energy_rel_error": 0.002809586906586796,
-      "eager_gemm_ms": 15.75,
-      "countsketch_gemm_ms": 7.57,
-      "speed_step_mult": 2.08,
+      "eager_gemm_ms": 18.85,
+      "countsketch_gemm_ms": 7.71,
+      "speed_step_mult": 2.44,
       "status": "PASS"
     }
   }

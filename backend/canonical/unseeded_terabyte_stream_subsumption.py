@@ -12,17 +12,17 @@ Hardware Target Baseline:
   - 16 GB Unified System RAM + 512 GB PCIe 4.0 NVMe SSD
 
 Two Scientific Subsumption Formulations on Unseeded Terabyte Bitstreams:
-  1. Turnstile Ephemeral Ring-Buffer Sufficient-Statistics Engine:
-     Streams unseeded, 100% incompressible white-noise streams X (T x d, T -> infinity)
-     in fixed O(d^2) L3-cache ring buffers (~1.32 MB peak RAM regardless of whether the
-     stream is 16 GB or 20.7 TB), computing exact Gram matrices G = sum_s X_s^T X_s,
-     cross-moments R = sum_s X_s^T Y_s, Chan-Welford running means and variances,
+  1. 1962 Welford / 1973 Gentleman / 1996 Alon-Matias-Szegedy Turnstile Ephemeral Ring-Buffer Sufficient Statistics:
+     Streams unseeded, 100% incompressible white-noise streams X (T x d, T -> infinity,
+     virtual 20.7 TB NVL72 scale) in fixed O(d^2) L3-cache ring buffers (~1.32 MB peak RAM
+     regardless of whether the stream is 16 GB or 20.7 TB), computing exact Gram matrices
+     G = sum_s X_s^T X_s, cross-moments R = sum_s X_s^T Y_s, Welford running means and variances,
      and exact Ridge/OLS regression weights W* = (G + lambda I)^{-1} R with <= 1e-6
      relative error (epsilon = 0 exact computational parity).
-  2. Clarkson-Woodruff Block-Rademacher CountSketch Stream:
-     Folds T streaming rows into S << T sketch buckets using zero-allocation O(T * d)
-     block additions via high-throughput sparse projection before evaluating O(S * d^2)
-     Gram contraction (<= 0.01 unbiased trace energy relative error, row compression
+  2. 2013 Clarkson-Woodruff (STOC 2013) Block-Rademacher CountSketch Stream:
+     Folds T streaming white-noise rows into S << T sketch buckets using zero-allocation
+     pure O(T * d) block additions via high-throughput sparse projection before evaluating
+     O(S * d^2) Gram contraction (<= 0.01 unbiased trace energy relative error, row compression
      factor == 8.0, and > 1.2x end-to-end wall-clock speedup at d = 512).
 """
 

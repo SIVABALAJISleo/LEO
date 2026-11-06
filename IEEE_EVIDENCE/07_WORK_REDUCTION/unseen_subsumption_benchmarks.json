@@ -1,5 +1,5 @@
 {
-  "timestamp": 1793718449.965896,
+  "timestamp": 1793956691.2656536,
   "machine": "Lenovo IdeaPad Slim 3 15IAH8",
   "cpu": "Intel Core i5-12450H",
   "igpu": "Intel UHD Graphics (48 EUs)",
@@ -8,7 +8,7 @@
       "positive_mode": "HODLR_BANDED_PLUS_CUR_VERIFIED",
       "positive_freivalds_passed": true,
       "positive_relative_error": 0.0,
-      "positive_latency_ms": 41.212,
+      "positive_latency_ms": 38.329,
       "adversarial_rejection_mode": "HODLR_REJECTED_BY_FREIVALDS_EXACT_FALLBACK",
       "adversarial_fallback": true,
       "status": "PASS"
@@ -17,7 +17,7 @@
       "positive_mode": "CONTEXTUAL_HOT_COLD_SUB_SAMPLED",
       "measured_io_reduction_factor": 11.77,
       "energy_captured_ratio": 0.4388,
-      "latency_ms": 0.829,
+      "latency_ms": 0.774,
       "adversarial_rejection_mode": "FALLBACK_FULL_TILED_STREAMING",
       "adversarial_fallback": true,
       "status": "PASS"
@@ -27,8 +27,8 @@
       "measured_bandwidth_reduction_factor": 32.0,
       "ram_bytes_sequential": 33554432,
       "ram_bytes_coalesced": 1048576,
-      "coalesced_latency_ms": 0.627,
-      "sequential_latency_ms": 1.069,
+      "coalesced_latency_ms": 0.642,
+      "sequential_latency_ms": 0.922,
       "prefix_cache_hits": 32,
       "status": "PASS"
     },
@@ -47,7 +47,7 @@
       "total_probes_computed": 130048,
       "zero_artifacts_verified": true,
       "device_offload": "CPU_AVX2",
-      "latency_ms": 33.312,
+      "latency_ms": 28.242,
       "status": "PASS"
     }
   }

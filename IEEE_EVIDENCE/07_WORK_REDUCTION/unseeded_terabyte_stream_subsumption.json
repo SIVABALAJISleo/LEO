@@ -1,5 +1,5 @@
 {
-  "timestamp": 1793718449.9904819,
+  "timestamp": 1793956691.2908814,
   "machine": "Lenovo IdeaPad Slim 3 15IAH8",
   "cpu": "Intel Core i5-12450H",
   "igpu": "Intel UHD Graphics (48 EUs)",
@@ -13,7 +13,7 @@
       "virtual_memory_reduction_step_mult": 15664350.06,
       "gram_relative_error": 1.6982619399641408e-07,
       "weights_relative_error": 5.891683940717485e-07,
-      "stream_latency_ms": 84.5,
+      "stream_latency_ms": 80.51,
       "status": "PASS"
     },
     "clarkson_woodruff_countsketch": {
@@ -22,9 +22,9 @@
       "dim_d": 512,
       "row_compression_factor": 8.0,
       "unbiased_trace_energy_rel_error": 0.002809586906586796,
-      "eager_gemm_ms": 15.75,
-      "countsketch_gemm_ms": 7.57,
-      "speed_step_mult": 2.08,
+      "eager_gemm_ms": 18.85,
+      "countsketch_gemm_ms": 7.71,
+      "speed_step_mult": 2.44,
       "status": "PASS"
     }
   }
