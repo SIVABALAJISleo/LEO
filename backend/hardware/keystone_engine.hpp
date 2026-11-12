@@ -179,6 +179,15 @@ extern "C" {
         float beta,
         float* C, int ldc
     );
+
+    // AVX-VNNI Intel Alder Lake INT8 GEMV
+    KEYSTONE_API void leo_avx_vnni_int8_gemv(
+        const uint8_t* A_u8,
+        const int8_t* B_s8,
+        int32_t* C_i32,
+        int M,
+        int K
+    );
 }
 
 #endif // KEYSTONE_ENGINE_HPP

@@ -110,6 +110,12 @@ from .unseeded_terabyte_stream_subsumption import (
     benchmark_clarkson_woodruff_countsketch_stream,
     run_all_unseeded_terabyte_stream_subsumptions,
 )
+from .intel_alderlake_unlocker import (
+    unlock_windows11_alderlake_throttles,
+    allocate_zero_copy_page_aligned_buffer,
+    execute_avx_vnni_gemv,
+    benchmark_intel_alderlake_acceleration,
+)
 
 __all__ = [
     "FunctionalReplacementEngine",
@@ -201,4 +207,8 @@ __all__ = [
     "clarkson_woodruff_countsketch_stream",
     "benchmark_clarkson_woodruff_countsketch_stream",
     "run_all_unseeded_terabyte_stream_subsumptions",
+    "unlock_windows11_alderlake_throttles",
+    "allocate_zero_copy_page_aligned_buffer",
+    "execute_avx_vnni_gemv",
+    "benchmark_intel_alderlake_acceleration",
 ]

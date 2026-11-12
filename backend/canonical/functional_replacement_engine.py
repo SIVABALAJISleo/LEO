@@ -902,3 +902,31 @@ class FunctionalReplacementEngine:
             row_compression_factor=row_compression_factor,
             seed=seed,
         )
+
+    def unlock_intel_alderlake_throttles(self):
+        """
+        Disables Windows 11 EcoQoS throttles, enables High Priority, and locks 1.0 ms timer.
+        """
+        from backend.canonical.intel_alderlake_unlocker import unlock_windows11_alderlake_throttles
+        return unlock_windows11_alderlake_throttles()
+
+    def allocate_usm_buffer(self, shape: Tuple[int, ...], dtype: np.dtype = np.float32):
+        """
+        Allocates a 4096-byte page-aligned Zero-Copy USM host buffer for Intel UHD.
+        """
+        from backend.canonical.intel_alderlake_unlocker import allocate_zero_copy_page_aligned_buffer
+        return allocate_zero_copy_page_aligned_buffer(shape, dtype=dtype)
+
+    def execute_avx_vnni_int8_gemv(self, A_u8: np.ndarray, B_s8: np.ndarray):
+        """
+        Executes Alder Lake AVX-VNNI hardware INT8 GEMV directly on CPU P-cores.
+        """
+        from backend.canonical.intel_alderlake_unlocker import execute_avx_vnni_gemv
+        return execute_avx_vnni_gemv(A_u8, B_s8)
+
+    def benchmark_alderlake_acceleration(self):
+        """
+        Benchmarks Intel Alder Lake & Intel UHD hardware acceleration and verification.
+        """
+        from backend.canonical.intel_alderlake_unlocker import benchmark_intel_alderlake_acceleration
+        return benchmark_intel_alderlake_acceleration()

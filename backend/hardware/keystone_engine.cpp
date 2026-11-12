@@ -14,6 +14,10 @@
 #include <cstring>
 #include <cstdlib>
 
+#if defined(_OPENMP)
+  #include <omp.h>
+#endif
+
 #ifdef _WIN32
   #define WIN32_LEAN_AND_MEAN
   #include <windows.h>
@@ -714,5 +718,38 @@ extern "C" {
             }
         }
         return 0; // CUBLAS_STATUS_SUCCESS
+    }
+
+    KEYSTONE_API void leo_avx_vnni_int8_gemv(
+        const uint8_t* A_u8,   // Unsigned INT8 activations (K multiple of 32 or arbitrary)
+        const int8_t* B_s8,    // Signed INT8 weights (M x K)
+        int32_t* C_i32,        // Output accumulators (M)
+        int M,
+        int K
+    ) {
+        if (!A_u8 || !B_s8 || !C_i32 || M <= 0 || K <= 0) return;
+
+        #pragma omp parallel for schedule(static)
+        for (int m = 0; m < M; ++m) {
+            __m256i acc = _mm256_setzero_si256();
+            const int8_t* b_row = B_s8 + static_cast<size_t>(m) * K;
+            int k = 0;
+            for (; k + 32 <= K; k += 32) {
+                __m256i va = _mm256_loadu_si256(reinterpret_cast<const __m256i*>(A_u8 + k));
+                __m256i vb = _mm256_loadu_si256(reinterpret_cast<const __m256i*>(b_row + k));
+                // AVX-VNNI hardware instruction: 32 INT8 MACs in a single CPU cycle
+                acc = _mm256_dpbusd_epi32(acc, va, vb);
+            }
+            __m128i low = _mm256_castsi256_si128(acc);
+            __m128i high = _mm256_extracti128_si256(acc, 1);
+            __m128i sum128 = _mm_add_epi32(low, high);
+            sum128 = _mm_hadd_epi32(sum128, sum128);
+            sum128 = _mm_hadd_epi32(sum128, sum128);
+            int32_t row_sum = _mm_cvtsi128_si32(sum128);
+            for (; k < K; ++k) {
+                row_sum += static_cast<int32_t>(A_u8[k]) * static_cast<int32_t>(b_row[k]);
+            }
+            C_i32[m] = row_sum;
+        }
     }
 }

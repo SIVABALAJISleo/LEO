@@ -122,8 +122,10 @@ def build_keystone_library(force: bool = False) -> Dict[str, Any]:
             c_path,
             "-O3",
             "-mavx2",
+            "-mavxvnni",
             "-mfma",
             "-mpopcnt",
+            "-fopenmp",
             "-shared",
             "-fPIC",
             src_file,
@@ -144,23 +146,21 @@ def build_keystone_library(force: bool = False) -> Dict[str, Any]:
     env = os.environ.copy()
     c_dir = os.path.dirname(os.path.abspath(c_path))
     env["PATH"] = c_dir + os.pathsep + env.get("PATH", "")
+    compilation_error = None
     try:
         proc = subprocess.run(cmd, cwd=out_dir, env=env, capture_output=True, text=True, timeout=60)
         if proc.returncode != 0:
-            return {
-                "success": False,
-                "binary_path": None,
-                "compiler": c_type,
-                "compiler_path": c_path,
-                "error": f"Compilation failed: {proc.stderr}\n{proc.stdout}"
-            }
+            compilation_error = f"Compilation failed: {proc.stderr}\n{proc.stdout}"
     except Exception as e:
+        compilation_error = str(e)
+
+    if compilation_error is not None:
         return {
             "success": False,
             "binary_path": None,
             "compiler": c_type,
             "compiler_path": c_path,
-            "error": str(e)
+            "error": compilation_error
         }
 
     # Verify loading and execute live self-tests
@@ -298,6 +298,32 @@ def build_keystone_library(force: bool = False) -> Dict[str, Any]:
             assert res_sgemm == 0
             np.testing.assert_allclose(C_cm, A_cm @ B_cm, atol=1e-5)
 
+        # 6. Live Self-Test: AVX-VNNI INT8 GEMV
+        if hasattr(lib, "leo_avx_vnni_int8_gemv"):
+            lib.leo_avx_vnni_int8_gemv.argtypes = [
+                ctypes.POINTER(ctypes.c_uint8),
+                ctypes.POINTER(ctypes.c_int8),
+                ctypes.POINTER(ctypes.c_int32),
+                ctypes.c_int,
+                ctypes.c_int,
+            ]
+            lib.leo_avx_vnni_int8_gemv.restype = None
+
+            M_vnni, K_vnni = 8, 64
+            A_u8 = np.random.randint(0, 256, size=K_vnni, dtype=np.uint8)
+            B_s8 = np.random.randint(-128, 127, size=(M_vnni, K_vnni), dtype=np.int8)
+            C_i32 = np.zeros(M_vnni, dtype=np.int32)
+
+            lib.leo_avx_vnni_int8_gemv(
+                A_u8.ctypes.data_as(ctypes.POINTER(ctypes.c_uint8)),
+                B_s8.ctypes.data_as(ctypes.POINTER(ctypes.c_int8)),
+                C_i32.ctypes.data_as(ctypes.POINTER(ctypes.c_int32)),
+                M_vnni,
+                K_vnni,
+            )
+            ref_i32 = (B_s8.astype(np.int32) @ A_u8.astype(np.int32))
+            np.testing.assert_array_equal(C_i32, ref_i32)
+
         return {
             "success": True,
             "binary_path": out_binary,
@@ -307,13 +333,15 @@ def build_keystone_library(force: bool = False) -> Dict[str, Any]:
             "self_test_passed": True
         }
     except Exception as e:
-        return {
-            "success": False,
-            "binary_path": out_binary,
-            "compiler": c_type,
-            "compiler_path": c_path,
-            "error": f"Library verification failed: {e}"
-        }
+        verification_error = str(e)
+
+    return {
+        "success": False,
+        "binary_path": out_binary,
+        "compiler": c_type,
+        "compiler_path": c_path,
+        "error": f"Library verification failed: {verification_error}"
+    }
 
 
 if __name__ == "__main__":

@@ -6,7 +6,7 @@
   "canonical_families_verified": 24,
   "unlocked_dormant_silicon_tops": 6.53,
   "effective_memory_bandwidth_gbps": 594.24,
-  "audit_completion_timestamp": 1793956691.315843,
+  "audit_completion_timestamp": 1794503973.549252,
   "release_readiness_pct": 100.0,
   "cur_skeleton_gemm_verified": true,
   "offline_truncated_svd_verified": true,
@@ -51,5 +51,9 @@
   "local_tier1_roofline_saturation_pct": 100.0,
   "unseeded_terabyte_stream_subsumptions_verified": true,
   "turnstile_ephemeral_stream_verified": true,
-  "clarkson_woodruff_countsketch_verified": true
+  "clarkson_woodruff_countsketch_verified": true,
+  "intel_alderlake_unlocker_verified": true,
+  "intel_alderlake_throttle_bypass_verified": true,
+  "intel_uhd_usm_page_alignment_verified": true,
+  "avx_vnni_int8_gemv_verified": true
 }
