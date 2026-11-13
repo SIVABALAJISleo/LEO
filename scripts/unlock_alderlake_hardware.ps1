@@ -56,3 +56,4 @@ Write-Host "`n[4/4] Running Single-Command Reproducibility Harness..." -Foregrou
 Write-Host "`n================================================================================" -ForegroundColor Cyan
 Write-Host " [PASS] Intel Alder Lake Hardware Unlock & Equivalence Engine Fully Verified!" -ForegroundColor Green
 Write-Host "================================================================================" -ForegroundColor Cyan
+

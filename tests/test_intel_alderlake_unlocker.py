@@ -144,3 +144,4 @@ def test_benchmark_intel_alderlake_acceleration():
     assert report["cosine_similarity"] >= 0.999
     assert report["throughput_gops"] > 0.0
     assert report["latency_ms"] > 0.0
+
