@@ -116,6 +116,13 @@ from .intel_alderlake_unlocker import (
     execute_avx_vnni_gemv,
     benchmark_intel_alderlake_acceleration,
 )
+from .gpu_unlock_equivalence_engine import (
+    GpuUnlockDiagnosticResult,
+    GpuUnlockEquivalenceResult,
+    probe_gpu_hardware_topology,
+    LocalSiliconCudaEmulator,
+    execute_gpu_unlock_equivalence_pipeline,
+)
 
 __all__ = [
     "FunctionalReplacementEngine",
@@ -211,4 +218,9 @@ __all__ = [
     "allocate_zero_copy_page_aligned_buffer",
     "execute_avx_vnni_gemv",
     "benchmark_intel_alderlake_acceleration",
+    "GpuUnlockDiagnosticResult",
+    "GpuUnlockEquivalenceResult",
+    "probe_gpu_hardware_topology",
+    "LocalSiliconCudaEmulator",
+    "execute_gpu_unlock_equivalence_pipeline",
 ]

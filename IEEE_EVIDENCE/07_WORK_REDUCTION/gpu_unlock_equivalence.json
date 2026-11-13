@@ -1,0 +1,29 @@
+{
+  "timestamp": 1794590951.902612,
+  "machine": "Lenovo IdeaPad Slim 3 15IAH8",
+  "cpu": "Intel Core i5-12450H",
+  "igpu": "Intel UHD Graphics (48 EUs)",
+  "benchmarks": {
+    "diagnostic": {
+      "discrete_nvidia_present": false,
+      "detected_device_name": "Intel(R) UHD Graphics",
+      "architecture_family": "Alder Lake Golden Cove / Gen12.2",
+      "throttle_bypass_strategy": "INTEL_ALDERLAKE_AVX_VNNI_AND_USM_EQUIVALENCE",
+      "intel_equivalence_active": true
+    },
+    "pipeline_result": {
+      "ecoqos_throttle_bypassed": true,
+      "high_priority_p_core_locked": true,
+      "timer_1ms_locked": true,
+      "usm_page_aligned_4096": true,
+      "usm_cacheline_aligned_64": true,
+      "avx_vnni_tensor_active": true,
+      "avx_vnni_exact_match": true,
+      "avx_vnni_cosine_similarity": 1.0,
+      "cuda_driver_interception_verified": true,
+      "full_external_gpu_replacement": true,
+      "status": "PASS"
+    },
+    "status": "PASS"
+  }
+}

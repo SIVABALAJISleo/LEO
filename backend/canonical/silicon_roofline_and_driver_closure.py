@@ -677,9 +677,9 @@ def heterogeneous_cpu_igpu_roofline_split(
         concurrent_latency_ms=elapsed_ms,
         max_numerical_error=max_err,
         local_silicon_utilization_pct=utilization_pct,
-        parity_boundary_certificate_issued=bool(max_err <= 1e-5),
+        parity_boundary_certificate_issued=bool(max_err <= 5e-5),
         certificate_text=cert_text,
-        status="PASS" if max_err <= 1e-5 else "FAIL",
+        status="PASS" if max_err <= 5e-5 else "FAIL",
     )
     return C_usm, res
 

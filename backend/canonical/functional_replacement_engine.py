@@ -930,3 +930,17 @@ class FunctionalReplacementEngine:
         """
         from backend.canonical.intel_alderlake_unlocker import benchmark_intel_alderlake_acceleration
         return benchmark_intel_alderlake_acceleration()
+
+    def probe_gpu_topology(self):
+        """
+        Scans host PCI bus to inspect physical GPU topology and map NV unlock recipes.
+        """
+        from backend.canonical.gpu_unlock_equivalence_engine import probe_gpu_hardware_topology
+        return probe_gpu_hardware_topology()
+
+    def execute_gpu_unlock_equivalence(self):
+        """
+        Executes complete GPU-unlock reverse engineering & laptop silicon equivalence pipeline.
+        """
+        from backend.canonical.gpu_unlock_equivalence_engine import execute_gpu_unlock_equivalence_pipeline
+        return execute_gpu_unlock_equivalence_pipeline()
