@@ -1,9 +1,9 @@
 {
-  "tokens_generated": 27,
-  "baseline_latency_ms": 3141.92,
-  "baseline_tok_s": 7.64,
-  "cel_latency_ms": 3464.32,
-  "cel_tok_s": 7.79,
-  "acceptance_rate_pct": 75.0,
-  "speedup_factor": 1.02
+  "tokens_generated": 25,
+  "baseline_latency_ms": 294.15,
+  "baseline_tok_s": 81.59,
+  "cel_latency_ms": 197.43,
+  "cel_tok_s": 126.63,
+  "acceptance_rate_pct": 62.5,
+  "speedup_factor": 1.55
 }

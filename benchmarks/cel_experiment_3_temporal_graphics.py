@@ -51,9 +51,16 @@ def run_experiment_3():
     # BASELINE: 100-SPP BRUTE FORCE RECOMPUTE
     # -------------------------------------------------------------
     t0 = time.perf_counter()
-    # Simulate heavy 100 SPP compute cost (100 passes per pixel)
-    simulated_100spp = np.copy(frame_N1_clean)
-    time.sleep(0.040) # ~40ms baseline render
+    # Real 100-pass Monte Carlo renderer loop over HxW pixels
+    accum = np.zeros((H, W), dtype=np.float32)
+    for pass_idx in range(100):
+        jitter_x = (pass_idx % 10 - 4.5) / (10.0 * W)
+        jitter_y = (pass_idx // 10 - 4.5) / (10.0 * H)
+        pass_scene = 0.5 * ((x_coords + jitter_x) + (y_coords + jitter_y))
+        quad_mask = (x_coords >= 64.0 / W) & (x_coords < 124.0 / W) & (y_coords >= 64.0 / H) & (y_coords < 124.0 / H)
+        pass_sample = np.where(quad_mask, 0.9, pass_scene)
+        accum += pass_sample.astype(np.float32)
+    simulated_100spp = np.clip(accum / 100.0, 0.0, 1.0)
     t1 = time.perf_counter()
     baseline_render_ms = (t1 - t0) * 1000.0
 

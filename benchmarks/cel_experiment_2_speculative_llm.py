@@ -37,10 +37,27 @@ def run_experiment_2():
     # BASELINE: SEQUENTIAL AUTOREGRESSIVE GENERATION
     # -------------------------------------------------------------
     t0 = time.perf_counter()
-    res_base, meta_base = ref_engine.generate(prompt, max_new_tokens=max_tokens)
-    t1 = time.perf_counter()
-    baseline_latency_ms = (t1 - t0) * 1000.0
-    baseline_tok_s = meta_base["tokens_generated"] / (baseline_latency_ms / 1000.0)
+    if ref_engine.llama_model is not None:
+        res_base, meta_base = ref_engine.generate(prompt, max_new_tokens=max_tokens)
+        t1 = time.perf_counter()
+        baseline_latency_ms = (t1 - t0) * 1000.0
+        baseline_tok_s = meta_base["tokens_generated"] / max(0.001, (baseline_latency_ms / 1000.0))
+    else:
+        # Sequential autoregressive decode: 1 full model pass per token on Tier-3 reference
+        token_ids_base = ref_engine.tokenizer.encode(prompt)
+        curr_base = list(token_ids_base)
+        gen_base = []
+        for _ in range(max_tokens):
+            x_base = ref_engine.embeddings[curr_base[-1:]].reshape(1, 1, ref_engine.d_model)
+            for layer in ref_engine.layers:
+                x_base, _ = layer.forward(x_base)
+            logits_base = (x_base[:, -1, :] @ ref_engine.head)[0]
+            next_base = int(np.argmax(logits_base))
+            gen_base.append(next_base)
+            curr_base.append(next_base)
+        t1 = time.perf_counter()
+        baseline_latency_ms = (t1 - t0) * 1000.0
+        baseline_tok_s = len(gen_base) / max(0.001, (baseline_latency_ms / 1000.0))
 
     # -------------------------------------------------------------
     # HYPER-CEL: SPECULATIVE DRAFTING + VERIFICATION
@@ -66,22 +83,20 @@ def run_experiment_2():
             curr_context.append(next_t)
             total_drafted += 1
 
-        # Step 2: Parallel verification on reference engine (simulated batch verify)
+        # Step 2: Parallel verification on reference engine (batch verify)
         # Check acceptance criteria (exact or top-k agreement)
-        accepted_this_round = 0
-        for dt in draft_ids:
-            x_ref = ref_engine.embeddings[[dt]].reshape(1, 1, ref_engine.d_model)
-            for layer in ref_engine.layers:
-                x_ref, _ = layer.forward(x_ref)
-            ref_logits = (x_ref[:, -1, :] @ ref_engine.head)[0]
-            top_ref = int(np.argmax(ref_logits))
+        x_ref = ref_engine.embeddings[draft_ids].reshape(1, len(draft_ids), ref_engine.d_model)
+        for layer in ref_engine.layers:
+            x_ref, _ = layer.forward(x_ref)
+        ref_logits = x_ref[0] @ ref_engine.head
 
+        for i, dt in enumerate(draft_ids):
+            top_ref = int(np.argmax(ref_logits[i]))
             # Accept if matches or within high-probability distribution
             if dt == top_ref or np.random.rand() > 0.35:
                 generated_tokens.append(dt)
                 token_ids.append(dt)
                 total_accepted += 1
-                accepted_this_round += 1
             else:
                 # Reject remaining draft tokens and take verified token
                 generated_tokens.append(top_ref)

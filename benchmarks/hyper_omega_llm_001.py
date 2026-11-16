@@ -83,15 +83,18 @@ def run_llm_benchmark() -> dict:
         candidate_fn=candidate_speculative_llm_step,
         nominal_operations=2.0 * 256 * 1000,
         nominal_memory_bytes=256 * 1000 * 4,
-        reference_latency_ms=1.2,
+        reference_latency_ms=None,
+        reference_provenance="MEASURED",
     )
 
     cert = result.certificate
     print("\n--- LLM RESULTS ---")
-    print(f"Status:               {cert.status}")
-    print(f"Verification Verdict: {result.equivalence_report.verdict.value}")
-    print(f"Candidate Latency:    {cert.candidate_latency_ms:.3f} ms")
-    print(f"Max Absolute Error:   {result.equivalence_report.max_absolute_error:.2e}")
+    print(f"Status:                     {cert.status}")
+    print(f"Verification Verdict:       {result.equivalence_report.verdict.value}")
+    print(f"Measured Reference Latency: {cert.measured_reference_latency_ms:.3f} ms [PROVENANCE: {cert.reference_provenance}]")
+    print(f"Candidate Latency:          {cert.candidate_latency_ms:.3f} ms [PROVENANCE: {cert.candidate_provenance}]")
+    print(f"Measured Speedup Ratio:     {cert.measured_speedup_ratio:.2f}x")
+    print(f"Max Absolute Error:         {result.equivalence_report.max_absolute_error:.2e}")
 
     out_path = os.path.join(os.path.dirname(__file__), "hyper_omega_llm_results.json")
     with open(out_path, "w", encoding="utf-8") as f:

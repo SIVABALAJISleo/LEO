@@ -100,17 +100,20 @@ def run_graphics_benchmark() -> dict:
         candidate_fn=candidate_pipeline.execute,
         nominal_operations=5e7,
         nominal_memory_bytes=256 * 256 * 3 * 4 * 2,
-        reference_latency_ms=16.6,
+        reference_latency_ms=None,
+        reference_provenance="MEASURED",
     )
 
     cert = result.certificate
     print("\n--- GRAPHICS RESULTS ---")
-    print(f"Status:               {cert.status}")
-    print(f"Verification Verdict: {result.equivalence_report.verdict.value}")
-    print(f"PSNR (dB):            {result.equivalence_report.psnr_db or 0.0:.2f} dB")
-    print(f"SSIM:                 {result.equivalence_report.ssim or 0.0:.4f}")
-    print(f"Candidate Latency:    {cert.candidate_latency_ms:.3f} ms")
-    print(f"Work Elimination:     {cert.verified_work_elimination * 100:.1f}%")
+    print(f"Status:                     {cert.status}")
+    print(f"Verification Verdict:       {result.equivalence_report.verdict.value}")
+    print(f"PSNR (dB):                  {result.equivalence_report.psnr_db or 0.0:.2f} dB")
+    print(f"SSIM:                       {result.equivalence_report.ssim or 0.0:.4f}")
+    print(f"Measured Reference Latency: {cert.measured_reference_latency_ms:.3f} ms [PROVENANCE: {cert.reference_provenance}]")
+    print(f"Candidate Latency:          {cert.candidate_latency_ms:.3f} ms [PROVENANCE: {cert.candidate_provenance}]")
+    print(f"Measured Speedup Ratio:     {cert.measured_speedup_ratio:.2f}x")
+    print(f"Work Elimination:           {cert.verified_work_elimination * 100:.1f}%")
 
     out_path = os.path.join(os.path.dirname(__file__), "hyper_omega_graphics_results.json")
     with open(out_path, "w", encoding="utf-8") as f:

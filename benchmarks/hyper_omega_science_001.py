@@ -85,16 +85,19 @@ def run_science_benchmark() -> dict:
         candidate_fn=candidate_sparse_multigrid,
         nominal_operations=20 * (5 * N * N),
         nominal_memory_bytes=N * N * 4 * 2,
-        reference_latency_ms=12.0,
+        reference_latency_ms=None,
+        reference_provenance="MEASURED",
     )
 
     cert = result.certificate
     print("\n--- SCIENCE RESULTS ---")
-    print(f"Status:               {cert.status}")
-    print(f"Verification Verdict: {result.equivalence_report.verdict.value}")
-    print(f"Candidate Latency:    {cert.candidate_latency_ms:.3f} ms")
-    print(f"Max Absolute Error:   {result.equivalence_report.max_absolute_error:.2e}")
-    print(f"Relative Error:       {result.equivalence_report.relative_error:.2e}")
+    print(f"Status:                     {cert.status}")
+    print(f"Verification Verdict:       {result.equivalence_report.verdict.value}")
+    print(f"Measured Reference Latency: {cert.measured_reference_latency_ms:.3f} ms [PROVENANCE: {cert.reference_provenance}]")
+    print(f"Candidate Latency:          {cert.candidate_latency_ms:.3f} ms [PROVENANCE: {cert.candidate_provenance}]")
+    print(f"Measured Speedup Ratio:     {cert.measured_speedup_ratio:.2f}x")
+    print(f"Max Absolute Error:         {result.equivalence_report.max_absolute_error:.2e}")
+    print(f"Relative Error:             {result.equivalence_report.relative_error:.2e}")
 
     out_path = os.path.join(os.path.dirname(__file__), "hyper_omega_science_results.json")
     with open(out_path, "w", encoding="utf-8") as f:
