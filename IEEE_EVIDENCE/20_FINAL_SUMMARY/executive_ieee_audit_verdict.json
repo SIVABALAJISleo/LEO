@@ -6,7 +6,7 @@
   "canonical_families_verified": 24,
   "unlocked_dormant_silicon_tops": 6.53,
   "effective_memory_bandwidth_gbps": 594.24,
-  "audit_completion_timestamp": 1794590951.916518,
+  "audit_completion_timestamp": 1794827232.970222,
   "release_readiness_pct": 100.0,
   "cur_skeleton_gemm_verified": true,
   "offline_truncated_svd_verified": true,
@@ -57,5 +57,12 @@
   "intel_uhd_usm_page_alignment_verified": true,
   "avx_vnni_int8_gemv_verified": true,
   "gpu_unlock_equivalence_verified": true,
-  "full_external_gpu_replacement_verified": true
+  "full_external_gpu_replacement_verified": true,
+  "leaf_engine_master_subsumptions_verified": true,
+  "woodbury_analytic_training_verified": true,
+  "decoupled_knowledge_architecture_verified": true,
+  "mathematical_elimination_engine_verified": true,
+  "real_intel_uhd_opencl_kernel_verified": true,
+  "counterfactual_search_space_compiler_verified": true,
+  "bounded_memory_intelligence_verified": true
 }

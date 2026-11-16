@@ -93,6 +93,7 @@ scratch/
 
 # Runtime caches and out-of-core NVMe swap tiles (never commit pre-baked fixtures)
 .hyper_cache/
+data/knowledge_store/
 *.hd.npy
 leo_nvme_vram_*/
 *.lnk

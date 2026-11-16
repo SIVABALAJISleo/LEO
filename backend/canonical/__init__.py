@@ -123,6 +123,50 @@ from .gpu_unlock_equivalence_engine import (
     LocalSiliconCudaEmulator,
     execute_gpu_unlock_equivalence_pipeline,
 )
+from .woodbury_analytic_training_subsumption import (
+    AnalyticLearningResult,
+    WoodburyAnalyticTrainer,
+    OnlineRecursiveLeastSquares,
+    compare_analytic_vs_iterative,
+)
+from .decoupled_knowledge_engine import (
+    KnowledgeProvenance,
+    RetrievalMetrics,
+    LRUKnowledgeCache,
+    MemoryMappedKnowledgeStore,
+    DecoupledKnowledgeEngine,
+    CompactFrozenReasoner,
+)
+from .mathematical_elimination_engine import (
+    TransformationDeclaration,
+    BaseMathematicalTransformation,
+    AlgebraicDistributiveTransformation,
+    CommonSubexpressionEliminationTransformation,
+    LowRankDecompositionTransformation,
+    ShermanMorrisonIncrementalTransformation,
+    SparseThresholdingTransformation,
+    KroneckerAssociativeTransformation,
+    MathematicalEliminationEngine,
+)
+from .intel_gpu_opencl_engine import (
+    IntelGpuDeviceInfo,
+    KernelExecutionResult,
+    OpenClCAbiWrapper,
+    IntelGpuOpenClEngine,
+)
+from .counterfactual_compiler_engine import (
+    ExecutionPathway,
+    ExecutionPlanCandidate,
+    CounterfactualAuditReport,
+    SearchSpaceCompiler,
+    CounterfactualEvaluationEngine,
+)
+from .memory_intelligence_engine import (
+    MemoryProfileResult,
+    IntermediateResultMemoizer,
+    CacheAwareTiledGemm,
+    MemoryIntelligenceEngine,
+)
 
 __all__ = [
     "FunctionalReplacementEngine",
@@ -223,4 +267,36 @@ __all__ = [
     "probe_gpu_hardware_topology",
     "LocalSiliconCudaEmulator",
     "execute_gpu_unlock_equivalence_pipeline",
+    "AnalyticLearningResult",
+    "WoodburyAnalyticTrainer",
+    "OnlineRecursiveLeastSquares",
+    "compare_analytic_vs_iterative",
+    "KnowledgeProvenance",
+    "RetrievalMetrics",
+    "LRUKnowledgeCache",
+    "MemoryMappedKnowledgeStore",
+    "DecoupledKnowledgeEngine",
+    "CompactFrozenReasoner",
+    "TransformationDeclaration",
+    "BaseMathematicalTransformation",
+    "AlgebraicDistributiveTransformation",
+    "CommonSubexpressionEliminationTransformation",
+    "LowRankDecompositionTransformation",
+    "ShermanMorrisonIncrementalTransformation",
+    "SparseThresholdingTransformation",
+    "KroneckerAssociativeTransformation",
+    "MathematicalEliminationEngine",
+    "IntelGpuDeviceInfo",
+    "KernelExecutionResult",
+    "OpenClCAbiWrapper",
+    "IntelGpuOpenClEngine",
+    "ExecutionPathway",
+    "ExecutionPlanCandidate",
+    "CounterfactualAuditReport",
+    "SearchSpaceCompiler",
+    "CounterfactualEvaluationEngine",
+    "MemoryProfileResult",
+    "IntermediateResultMemoizer",
+    "CacheAwareTiledGemm",
+    "MemoryIntelligenceEngine",
 ]

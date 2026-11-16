@@ -944,3 +944,57 @@ class FunctionalReplacementEngine:
         """
         from backend.canonical.gpu_unlock_equivalence_engine import execute_gpu_unlock_equivalence_pipeline
         return execute_gpu_unlock_equivalence_pipeline()
+
+    def solve_woodbury_analytic_training(self, Z: np.ndarray, Y: np.ndarray, lambda_reg: float = 1e-2):
+        """
+        Solves regularized least-squares analytic training objective via Woodbury/Cholesky.
+        """
+        from backend.canonical.woodbury_analytic_training_subsumption import WoodburyAnalyticTrainer
+        trainer = WoodburyAnalyticTrainer(lambda_reg=lambda_reg)
+        return trainer.solve_batch_ridge(Z, Y)
+
+    def execute_decoupled_knowledge_query(self, query: str, top_k: int = 3, storage_dir: str = "data/knowledge_store"):
+        """
+        Queries decoupled out-of-core memory-mapped knowledge store.
+        """
+        from backend.canonical.decoupled_knowledge_engine import DecoupledKnowledgeEngine
+        engine = DecoupledKnowledgeEngine(storage_dir=storage_dir)
+        results, metrics = engine.retrieve(query, top_k=top_k)
+        engine.store.close()
+        return results, metrics
+
+    def run_mathematical_elimination_audits(self):
+        """
+        Audits all 6 contract-carrying mathematical elimination transformations.
+        """
+        from backend.canonical.mathematical_elimination_engine import MathematicalEliminationEngine
+        engine = MathematicalEliminationEngine()
+        return engine.run_all_contract_verifications()
+
+    def execute_intel_gpu_opencl_kernel(self, alpha: float, x: np.ndarray, y: np.ndarray):
+        """
+        Dispatches live OpenCL compute kernel directly to local Intel UHD 48-EU iGPU.
+        """
+        from backend.canonical.intel_gpu_opencl_engine import IntelGpuOpenClEngine
+        engine = IntelGpuOpenClEngine()
+        result = engine.execute_vector_saxpy(alpha, x, y)
+        engine.close()
+        return result
+
+    def audit_search_space_counterfactuals(self, A: np.ndarray, B: np.ndarray, error_tolerance: float = 1e-3):
+        """
+        Evaluates 10 candidate execution pathways via the Counterfactual Engine.
+        """
+        from backend.canonical.counterfactual_compiler_engine import CounterfactualEvaluationEngine
+        engine = CounterfactualEvaluationEngine()
+        report = engine.audit_and_select_plan(A, B, error_tolerance=error_tolerance)
+        engine.close()
+        return report
+
+    def profile_bounded_memory_stream(self, total_samples: int = 50000, feature_dim: int = 32, chunk_size: int = 2000):
+        """
+        Profiles constant-RAM bounded memory streaming Gram evaluation.
+        """
+        from backend.canonical.memory_intelligence_engine import MemoryIntelligenceEngine
+        engine = MemoryIntelligenceEngine()
+        return engine.profile_bounded_streaming_gram(total_samples, feature_dim, chunk_size=chunk_size)
