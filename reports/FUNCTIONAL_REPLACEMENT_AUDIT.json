@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-16T11:05:47Z",
+  "timestamp": "2026-11-16T11:46:25Z",
   "hardware_profile": {
     "cpu": "Intel64 Family 6 Model 186 Stepping 2, GenuineIntel",
     "logical_threads": 12,
@@ -20,24 +20,24 @@
       "rank_r": 63,
       "breakeven_rank": 128,
       "energy_captured_pct": 99.9903,
-      "setup_load_ms": 51.6891,
-      "inference_latency_ms": 0.0958,
+      "setup_load_ms": 53.8676,
+      "inference_latency_ms": 0.0981,
       "contract_error": 0.0084314518832228,
       "status": "PASS"
     },
     "subsystem_c_compression_tiling": {
       "ternary_2bit_ratio": 14.222,
       "int4_ratio": 7.992,
-      "out_of_core_streaming_mb_s": 321.2,
-      "effective_gflops": 28.741,
+      "out_of_core_streaming_mb_s": 270.54,
+      "effective_gflops": 24.208,
       "status": "PASS"
     },
     "subsystem_d_native_bridge": {
       "llama_cli_detected": false,
       "igpu_device": "Intel Core i5-12450H",
       "igpu_backend": "CPU_AVX2",
-      "batch_prefill_latency_ms": 0.0524,
-      "fft_latency_ms": 0.3443,
+      "batch_prefill_latency_ms": 0.054,
+      "fft_latency_ms": 0.4718,
       "zero_copy_shared_memory": true,
       "status": "PASS"
     }
@@ -47,7 +47,7 @@
       "positive_mode": "HODLR_BANDED_PLUS_CUR_VERIFIED",
       "positive_freivalds_passed": true,
       "positive_relative_error": 0.0,
-      "positive_latency_ms": 39.017,
+      "positive_latency_ms": 48.088,
       "adversarial_rejection_mode": "HODLR_REJECTED_BY_FREIVALDS_EXACT_FALLBACK",
       "adversarial_fallback": true,
       "status": "PASS"
@@ -56,7 +56,7 @@
       "positive_mode": "CONTEXTUAL_HOT_COLD_SUB_SAMPLED",
       "measured_io_reduction_factor": 11.77,
       "energy_captured_ratio": 0.4388,
-      "latency_ms": 0.679,
+      "latency_ms": 0.627,
       "adversarial_rejection_mode": "FALLBACK_FULL_TILED_STREAMING",
       "adversarial_fallback": true,
       "status": "PASS"
@@ -66,8 +66,8 @@
       "measured_bandwidth_reduction_factor": 32.0,
       "ram_bytes_sequential": 33554432,
       "ram_bytes_coalesced": 1048576,
-      "coalesced_latency_ms": 0.467,
-      "sequential_latency_ms": 1.031,
+      "coalesced_latency_ms": 1.318,
+      "sequential_latency_ms": 1.114,
       "prefix_cache_hits": 32,
       "status": "PASS"
     },
@@ -86,7 +86,7 @@
       "total_probes_computed": 130048,
       "zero_artifacts_verified": true,
       "device_offload": "CPU_AVX2",
-      "latency_ms": 25.724,
+      "latency_ms": 37.036,
       "status": "PASS"
     }
   },
@@ -96,7 +96,7 @@
       "kurtosis_ratio": 151.28,
       "contract_error": 0.139514,
       "compression_ratio": 7.11,
-      "latency_ms": 1.9162,
+      "latency_ms": 2.1102,
       "status": "PASS"
     },
     "chebyshev_matrix_exp_action": {
@@ -104,7 +104,7 @@
       "relative_error": 2.2e-07,
       "degree_used": 24,
       "spectral_radius": 9.0112,
-      "latency_ms": 1.5531,
+      "latency_ms": 1.6174,
       "status": "PASS"
     },
     "lookahead_async_nvme": {
@@ -112,16 +112,16 @@
       "cos_similarity": 0.9109,
       "io_overlap_pct": 100.0,
       "prefetch_hit": true,
-      "latency_ms": 2.0902,
+      "latency_ms": 2.0488,
       "status": "PASS"
     },
     "ragged_continuous_batching": {
       "max_deviation": 9e-08,
       "padding_flops_eliminated_pct": 47.92,
       "kv_compression_ratio": 7.75,
-      "measured_speedup_ratio": 0.78,
-      "static_latency_ms": 0.1183,
-      "ragged_latency_ms": 0.1517,
+      "measured_speedup_ratio": 0.99,
+      "static_latency_ms": 0.0917,
+      "ragged_latency_ms": 0.0926,
       "status": "PASS"
     },
     "subspace_mezo_galore": {
@@ -147,8 +147,8 @@
       "ptx_fma_verified": true,
       "max_numerical_error": 3.814697265625e-06,
       "allocated_bytes": 14336,
-      "cublas_latency_ms": 0.2125999890267849,
-      "ptx_latency_ms": 0.3245999978389591,
+      "cublas_latency_ms": 0.2587999915704131,
+      "ptx_latency_ms": 0.5264999927021563,
       "status": "PASS"
     },
     "woodbury_analytic_oneshot_trainer": {
@@ -156,9 +156,9 @@
       "backprop_epochs": 0,
       "validation_mse": 0.6276201009750366,
       "baseline_iterative_val_mse": 0.11121533066034317,
-      "exact_solve_time_ms": 0.5416000203695148,
-      "iterative_time_ms": 17.703000019537285,
-      "training_speedup_factor": 32.686483297137144,
+      "exact_solve_time_ms": 0.6872000230941921,
+      "iterative_time_ms": 29.789799998980016,
+      "training_speedup_factor": 43.34953288396038,
       "dual_woodbury_selected": false,
       "status": "PASS"
     },
@@ -169,16 +169,16 @@
       "analytical_variance_error": 0.03318038582801819,
       "materialized_noise_matrix_bytes": 0,
       "seed_state_bytes": 8,
-      "latency_ms": 31.153199990512803,
+      "latency_ms": 35.572499997215346,
       "status": "PASS"
     },
     "heterogeneous_cpu_igpu_roofline": {
       "total_rows_m": 128,
       "cpu_allocated_rows": 64,
       "igpu_allocated_rows": 64,
-      "cpu_gflops": 4.382763016099007,
-      "igpu_gflops": 5.02914145151954,
-      "concurrent_latency_ms": 30.452500010142103,
+      "cpu_gflops": 5.807676321405568,
+      "igpu_gflops": 8.10650111548864,
+      "concurrent_latency_ms": 34.73459999077022,
       "max_numerical_error": 0.0,
       "local_silicon_utilization_pct": 100.0,
       "parity_boundary_certificate_issued": true,
@@ -194,7 +194,7 @@
         1000000
       ],
       "holdout_relative_error": 4.281468193312321e-07,
-      "execution_time_ms": 22.31000000028871,
+      "execution_time_ms": 18.169399991165847,
       "dense_flops_estimated": 2000000000000,
       "kronecker_flops": 600000000,
       "flop_speed_mult": 3333.3333333333335,
@@ -208,7 +208,7 @@
       "max_numerical_error": 5.933584519723922e-06,
       "nvlink_communication_bytes": 0,
       "baseline_nvlink_bytes": 294912,
-      "execution_time_ms": 0.9695999906398356,
+      "execution_time_ms": 0.8637999999336898,
       "status": "PASS"
     },
     "symbolic_dag_associative_reorder": {
@@ -218,7 +218,7 @@
       "flop_speed_mult": 256.25,
       "chain_relative_error": 4.845235821449023e-07,
       "trace_relative_error": 8.502532951802637e-07,
-      "execution_time_ms": 1.2289999867789447,
+      "execution_time_ms": 0.9947000071406364,
       "status": "PASS"
     },
     "fmm_hierarchical_kv_cache": {
@@ -228,7 +228,7 @@
       "compressed_kv_tokens": 254,
       "kv_compression_multiplier": 32.25196850393701,
       "attention_relative_error": 2.1169562387512997e-05,
-      "execution_time_ms": 0.9543999913148582,
+      "execution_time_ms": 0.9226000111084431,
       "fallback_triggered": false,
       "status": "PASS"
     }
@@ -240,8 +240,8 @@
         256,
         256
       ],
-      "step_latency_ms": 7.960419997107238,
-      "updates_per_second": 125.62151247841109,
+      "step_latency_ms": 6.145819998346269,
+      "updates_per_second": 162.71221745333938,
       "contract_ups_satisfied": true,
       "average_velocity": 11.999987602233887,
       "stuck_agent_count": 12,
@@ -251,11 +251,11 @@
       "total_items": 640000,
       "total_belts": 5000,
       "items_per_belt": 128,
-      "tick_latency_ms": 0.2650633337907493,
-      "updates_per_second": 3772.6832515787964,
+      "tick_latency_ms": 0.27953666673662764,
+      "updates_per_second": 3577.34823010598,
       "contract_ups_satisfied": true,
       "bitwise_exact_verified": true,
-      "items_processed_per_sec": 2414517281.01043,
+      "items_processed_per_sec": 2289502867.267827,
       "status": "PASS"
     },
     "radiance_cascades_motion_extrapolation": {
@@ -264,10 +264,10 @@
         320
       ],
       "cascade_count": 4,
-      "base_frame_latency_ms": 2.2782000014558434,
-      "extrapolation_latency_ms": 12.204400001792237,
-      "effective_frame_latency_ms": 4.827533334416027,
-      "effective_fps": 207.14512582873073,
+      "base_frame_latency_ms": 2.273499994771555,
+      "extrapolation_latency_ms": 9.4970999925863,
+      "effective_frame_latency_ms": 3.923533329119285,
+      "effective_fps": 254.87230924694856,
       "contract_fps_satisfied": true,
       "extrapolation_multiplier_val": 3.0,
       "warp_error_metric": 0.010895434767007828,
@@ -283,7 +283,7 @@
       "lazy_flops_evaluated": 524288,
       "flop_step_mult": 512.0,
       "max_numerical_error": 8.313501211887342e-07,
-      "execution_time_ms": 0.5286000086925924,
+      "execution_time_ms": 0.5277000018395483,
       "status": "PASS"
     },
     "gauss_winograd_3m": {
@@ -292,7 +292,7 @@
       "baseline_multiplications": 4,
       "mults_eliminated_pct": 25.0,
       "max_numerical_error": 3.39975684937599e-07,
-      "latency_ms": 0.683599995682016,
+      "latency_ms": 0.6359999824780971,
       "status": "PASS"
     },
     "kolmogorov_seeded_isometry": {
@@ -302,9 +302,9 @@
       "materialized_eager_bytes": 8388608,
       "kolmogorov_seed_bytes": 8,
       "memory_compression_mult": 1048576.0,
-      "eager_latency_ms": 27.40550000453368,
-      "subsumed_latency_ms": 0.1142999972216785,
-      "speed_mult": 239.76815984852766,
+      "eager_latency_ms": 27.396999998018146,
+      "subsumed_latency_ms": 0.13080000644549727,
+      "speed_mult": 209.45717620766428,
       "frobenius_deviation": 0.9556593593165513,
       "status": "PASS"
     },
@@ -312,10 +312,10 @@
       "total_rows_m": 128,
       "cpu_rows": 64,
       "igpu_rows": 64,
-      "cpu_gflops": 6.114145907596434,
-      "igpu_gflops": 5.2665795382334535,
-      "total_gflops": 11.380725445829889,
-      "concurrent_latency_ms": 27.25549999740906,
+      "cpu_gflops": 6.078701314390362,
+      "igpu_gflops": 5.867801018872536,
+      "total_gflops": 11.946502333262899,
+      "concurrent_latency_ms": 45.720099995378405,
       "max_numerical_error": 0.0,
       "local_tier1_roofline_saturation_pct": 100.0,
       "roofline_certificate_issued": true,
@@ -332,7 +332,7 @@
       "virtual_memory_reduction_step_mult": 15664350.06,
       "gram_relative_error": 1.6982619399641408e-07,
       "weights_relative_error": 5.891683940717485e-07,
-      "stream_latency_ms": 82.48,
+      "stream_latency_ms": 70.46,
       "status": "PASS"
     },
     "clarkson_woodruff_countsketch": {
@@ -341,9 +341,9 @@
       "dim_d": 512,
       "row_compression_factor": 8.0,
       "unbiased_trace_energy_rel_error": 0.002809586906586796,
-      "eager_gemm_ms": 26.7,
-      "countsketch_gemm_ms": 7.44,
-      "speed_step_mult": 3.59,
+      "eager_gemm_ms": 26.01,
+      "countsketch_gemm_ms": 10.65,
+      "speed_step_mult": 2.44,
       "status": "PASS"
     }
   },
@@ -355,7 +355,7 @@
       "timer_1ms_unlocked": true
     },
     "usm_buffer_meta": {
-      "virtual_address_hex": "0x26ad42e9000",
+      "virtual_address_hex": "0x1cbf33fc000",
       "page_aligned_4096": true,
       "cacheline_aligned_64": true,
       "allocated_bytes": 4194304
@@ -369,11 +369,11 @@
       },
       "page_aligned_4096": true,
       "cacheline_aligned_64": true,
-      "virtual_address_hex": "0x26ad46f8000",
+      "virtual_address_hex": "0x1cbf380b000",
       "exact_integer_match": true,
       "cosine_similarity": 0.9999999999999999,
-      "latency_ms": 0.1404850001563318,
-      "throughput_gops": 1.8659928085438728,
+      "latency_ms": 0.2662900005816482,
+      "throughput_gops": 0.9844305059424228,
       "native_kernel_active": true,
       "passed": true
     },
@@ -407,12 +407,12 @@
       "status": "OPTIMAL",
       "gradient_norm": 1.3752402567613372e-12,
       "objective_value": 0.7474234247425247,
-      "analytic_speedup_vs_iterative": 25.04270578221675,
+      "analytic_speedup_vs_iterative": 25.90384542472273,
       "rls_weight_relative_error": 7.97190139722806e-16
     },
     "decoupled_knowledge": {
       "retrieval_mode": "INVERTED_INDEX",
-      "latency_ms": 0.11680001625791192,
+      "latency_ms": 0.14700001338496804,
       "provenance_sha256": "2a180ecebe20bf3d556990254bc67e7fc1f0522994161676af1db913b8b9f3a8"
     },
     "mathematical_elimination": {
@@ -424,42 +424,42 @@
           "measured_error": 3.911005661993291e-16,
           "theoretical_bound": 1e-12,
           "passed_contract": true,
-          "speedup_ratio": 3.002906152837412
+          "speedup_ratio": 2.8279776412141087
         },
         {
           "name": "CommonSubexpressionGramElimination",
           "measured_error": 2.877598963220839e-16,
           "theoretical_bound": 1e-12,
           "passed_contract": true,
-          "speedup_ratio": 2.600003783502184
+          "speedup_ratio": 1.7737850069067784
         },
         {
           "name": "LowRankTruncatedSvdFactoring",
           "measured_error": 0.007042445143231735,
           "theoretical_bound": 0.05,
           "passed_contract": true,
-          "speedup_ratio": 0.0029872129670102843
+          "speedup_ratio": 0.003771631485491888
         },
         {
           "name": "ShermanMorrisonRank1Update",
           "measured_error": 1.2974528258188543e-15,
           "theoretical_bound": 1e-10,
           "passed_contract": true,
-          "speedup_ratio": 1.0522134602405675
+          "speedup_ratio": 1.0094338227901998
         },
         {
           "name": "AdaptiveMagnitudeSparsification",
           "measured_error": 0.03924750538114782,
           "theoretical_bound": 0.1,
           "passed_contract": true,
-          "speedup_ratio": 0.011154684357818986
+          "speedup_ratio": 0.015342462979030611
         },
         {
           "name": "KroneckerMatrixVectorContraction",
           "measured_error": 2.611015546254127e-16,
           "theoretical_bound": 1e-12,
           "passed_contract": true,
-          "speedup_ratio": 9.48951650981797
+          "speedup_ratio": 8.648649817904367
         }
       ]
     },
@@ -469,24 +469,24 @@
       "driver_version": "OpenCL 3.0 NEO",
       "compute_units": 48,
       "kernel_verified": true,
-      "kernel_latency_ms": 1.7241000023204833,
+      "kernel_latency_ms": 1.8535000272095203,
       "max_numerical_error": 1.9073486328125e-06
     },
     "counterfactual_compiler": {
       "candidates_evaluated": 10,
       "candidates_rejected": 3,
-      "selected_pathway": "VSA_HYPERVECTOR",
+      "selected_pathway": "MMAP_STREAMING",
       "verdict": "CONTRACT_SATISFIED_OPTIMAL_PATHWAY_SELECTED"
     },
     "memory_intelligence": {
       "status": "VERIFIED_CONSTANT_RAM",
       "logical_bytes": 1920000,
       "actual_streamed_bytes": 1920000,
-      "peak_tracemalloc_bytes": 328520,
-      "logical_to_peak_ram_ratio": 5.844393035431633
+      "peak_tracemalloc_bytes": 328934,
+      "logical_to_peak_ram_ratio": 5.837037217192507
     },
     "status": "PASS"
   },
-  "total_execution_seconds": 86.27,
+  "total_execution_seconds": 76.57,
   "overall_verdict": "100%_FUNCTIONAL_REPLACEMENT_AND_ALL_STREAM_SUBSUMPTIONS_VERIFIED"
 }

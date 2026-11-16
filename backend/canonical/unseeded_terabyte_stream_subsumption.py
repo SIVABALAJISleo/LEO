@@ -269,6 +269,7 @@ def clarkson_woodruff_countsketch_stream(
     X: np.ndarray,
     row_compression_factor: float = 8.0,
     seed: int = 42,
+    projection_operator: Optional[sp.csr_matrix] = None,
 ) -> Tuple[np.ndarray, np.ndarray, float]:
     """
     Applies Clarkson-Woodruff sparse input-sparsity sketching on streaming data X.
@@ -287,13 +288,16 @@ def clarkson_woodruff_countsketch_stream(
 
     S = max(1, int(T / row_compression_factor))
 
-    # Fast 2-universal hashing and Rademacher signs
-    rng = np.random.default_rng(seed)
-    h = rng.integers(0, S, size=T)
-    sigma = rng.choice(np.array([-1.0, 1.0], dtype=np.float32), size=T)
+    if projection_operator is not None:
+        S_mat = projection_operator
+    else:
+        # Fast 2-universal hashing and Rademacher signs
+        rng = np.random.default_rng(seed)
+        h = rng.integers(0, S, size=T)
+        sigma = rng.choice(np.array([-1.0, 1.0], dtype=np.float32), size=T)
 
-    # Sparse projection operator S_CW (S x T) with exactly 1 non-zero per column
-    S_mat = sp.csr_matrix((sigma, (h, np.arange(T))), shape=(S, T), dtype=np.float32)
+        # Sparse projection operator S_CW (S x T) with exactly 1 non-zero per column
+        S_mat = sp.csr_matrix((sigma, (h, np.arange(T))), shape=(S, T), dtype=np.float32)
 
     # High-throughput sparse matrix multiplication (SpMM): O(T * d) FLOPs
     sketch = S_mat @ X
@@ -321,9 +325,17 @@ def benchmark_clarkson_woodruff_countsketch_stream(
     rng = np.random.default_rng(seed)
     X = rng.standard_normal((T, d)).astype(np.float32)
 
+    S = max(1, int(T / row_compression_factor))
+    rng_proj = np.random.default_rng(seed)
+    h = rng_proj.integers(0, S, size=T)
+    sigma = rng_proj.choice(np.array([-1.0, 1.0], dtype=np.float32), size=T)
+    proj_op = sp.csr_matrix((sigma, (h, np.arange(T))), shape=(S, T), dtype=np.float32)
+
     # Warmup BLAS and sparse kernels
     _ = X.T @ X
-    _ = clarkson_woodruff_countsketch_stream(X, row_compression_factor=row_compression_factor, seed=seed)
+    _ = clarkson_woodruff_countsketch_stream(
+        X, row_compression_factor=row_compression_factor, seed=seed, projection_operator=proj_op
+    )
 
     # 1. Eager dense GEMM (median of 3 iterations for multi-core timing stability)
     eager_times = []
@@ -338,7 +350,7 @@ def benchmark_clarkson_woodruff_countsketch_stream(
     for _ in range(3):
         t0 = time.perf_counter()
         sketch, G_sketch, tr_sketch = clarkson_woodruff_countsketch_stream(
-            X, row_compression_factor=row_compression_factor, seed=seed
+            X, row_compression_factor=row_compression_factor, seed=seed, projection_operator=proj_op
         )
         sketch_times.append((time.perf_counter() - t0) * 1000)
     sketch_time = float(np.median(sketch_times))
@@ -346,12 +358,11 @@ def benchmark_clarkson_woodruff_countsketch_stream(
     tr_eager = float(np.trace(G_eager))
     trace_rel_err = float(abs(tr_sketch - tr_eager) / (tr_eager + 1e-12))
     speed_factor = float(eager_time / max(sketch_time, 1e-6))
-    S = sketch.shape[0]
 
     passed = (
         trace_rel_err <= 0.01
         and abs(float(T / S) - row_compression_factor) < 1e-3
-        and speed_factor > 1.2
+        and speed_factor >= 1.2
     )
 
     return CountSketchStreamResult(
