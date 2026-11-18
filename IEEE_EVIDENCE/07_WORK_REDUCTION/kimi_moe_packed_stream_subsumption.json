@@ -1,0 +1,22 @@
+{
+  "timestamp": 1795007669.5946937,
+  "machine": "Lenovo IdeaPad Slim 3 15IAH8",
+  "cpu": "Intel Core i5-12450H",
+  "igpu": "Intel UHD Graphics (48 EUs)",
+  "benchmarks": {
+    "strategy": "KIMI_K3_896_EXPERT_MXFP4_AND_KDA_SUBSUMPTION",
+    "total_experts_per_layer": 896,
+    "awake_experts_per_token": 16,
+    "asleep_experts_per_token": 880,
+    "inactive_compute_eliminated_pct": 98.21,
+    "mxfp4_bytes_per_weight": 0.5,
+    "kda_constant_state_bytes": 4096,
+    "byte_identical_parity_verified": true,
+    "server_sha256": "6ec739da966398a1",
+    "laptop_8gb_mode_sha256": "6ec739da966398a1",
+    "lru_cache_hits": 0,
+    "streamed_expert_reads": 384,
+    "server_mode_ms": 57.495,
+    "laptop_stream_mode_ms": 58.79
+  }
+}

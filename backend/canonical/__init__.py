@@ -173,6 +173,11 @@ from .hyper_omega_exact_operator_subsumption import (
     HyperOmegaSubsumptionEngine,
     run_hyper_omega_verification_suite,
 )
+from .kimi_moe_packed_stream_subsumption import (
+    MXFP4PackedExpertBank,
+    KimiDeltaAttentionCore,
+    benchmark_kimi_k3_subsumption_strategy,
+)
 
 __all__ = [
     "FunctionalReplacementEngine",
@@ -309,4 +314,7 @@ __all__ = [
     "ZeroCopyUSMAllocator",
     "HyperOmegaSubsumptionEngine",
     "run_hyper_omega_verification_suite",
+    "MXFP4PackedExpertBank",
+    "KimiDeltaAttentionCore",
+    "benchmark_kimi_k3_subsumption_strategy",
 ]
