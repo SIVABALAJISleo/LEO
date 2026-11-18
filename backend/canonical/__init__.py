@@ -178,6 +178,12 @@ from .kimi_moe_packed_stream_subsumption import (
     KimiDeltaAttentionCore,
     benchmark_kimi_k3_subsumption_strategy,
 )
+from .zero_io_spectral_expert_igpu_engine import (
+    fwht_1d_batch,
+    CompressedSpectralExpert,
+    ZeroIOSpectralMoEEngine,
+    run_zero_io_breakthrough_benchmark,
+)
 
 __all__ = [
     "FunctionalReplacementEngine",
@@ -317,4 +323,8 @@ __all__ = [
     "MXFP4PackedExpertBank",
     "KimiDeltaAttentionCore",
     "benchmark_kimi_k3_subsumption_strategy",
+    "fwht_1d_batch",
+    "CompressedSpectralExpert",
+    "ZeroIOSpectralMoEEngine",
+    "run_zero_io_breakthrough_benchmark",
 ]
