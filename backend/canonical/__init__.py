@@ -167,6 +167,12 @@ from .memory_intelligence_engine import (
     CacheAwareTiledGemm,
     MemoryIntelligenceEngine,
 )
+from .hyper_omega_exact_operator_subsumption import (
+    ParityAuditRecord,
+    ZeroCopyUSMAllocator,
+    HyperOmegaSubsumptionEngine,
+    run_hyper_omega_verification_suite,
+)
 
 __all__ = [
     "FunctionalReplacementEngine",
@@ -299,4 +305,8 @@ __all__ = [
     "IntermediateResultMemoizer",
     "CacheAwareTiledGemm",
     "MemoryIntelligenceEngine",
+    "ParityAuditRecord",
+    "ZeroCopyUSMAllocator",
+    "HyperOmegaSubsumptionEngine",
+    "run_hyper_omega_verification_suite",
 ]

@@ -32,7 +32,11 @@ CL_DEVICE_TYPE_GPU = 4
 CL_MEM_READ_WRITE = 1
 CL_MEM_WRITE_ONLY = 2
 CL_MEM_READ_ONLY = 4
+CL_MEM_USE_HOST_PTR = 8
+CL_MEM_ALLOC_HOST_PTR = 16
 CL_MEM_COPY_HOST_PTR = 32
+
+from .hyper_omega_exact_operator_subsumption import ZeroCopyUSMAllocator
 
 cl_uint = ctypes.c_uint
 cl_int = ctypes.c_int
@@ -247,6 +251,10 @@ class IntelGpuOpenClEngine:
     def is_hardware_gpu_available(self) -> bool:
         return self._ctx is not None and self._queue is not None
 
+    def allocate_usm_buffer(self, shape: Tuple[int, ...], dtype=np.float32) -> np.ndarray:
+        """Allocates a 64-byte cache-line and 4096-byte page-aligned zero-copy USM buffer."""
+        return ZeroCopyUSMAllocator.empty_aligned(shape, dtype=dtype)
+
     def execute_vector_saxpy(
         self,
         alpha: float,
@@ -301,11 +309,14 @@ class IntelGpuOpenClEngine:
         cl.clBuildProgram(prog, 1, dev_arr, None, None, None)
         kernel = cl.clCreateKernel(prog, b"vec_saxpy", ctypes.byref(err_ret))
 
-        # Create buffers
-        buf_x = cl_mem(cl.clCreateBuffer(ctx, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, size_t(x.nbytes), x.ctypes.data_as(ctypes.c_void_p), ctypes.byref(err_ret)))
-        buf_y = cl_mem(cl.clCreateBuffer(ctx, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, size_t(y.nbytes), y.ctypes.data_as(ctypes.c_void_p), ctypes.byref(err_ret)))
-        z_out = np.zeros(N, dtype=np.float32)
-        buf_z = cl_mem(cl.clCreateBuffer(ctx, CL_MEM_WRITE_ONLY, size_t(z_out.nbytes), None, ctypes.byref(err_ret)))
+        # Create zero-copy Unified Shared Memory (USM) buffers if aligned, else fallback to copy
+        flags_x = CL_MEM_READ_ONLY | (CL_MEM_USE_HOST_PTR if ZeroCopyUSMAllocator.is_cache_aligned(x) else CL_MEM_COPY_HOST_PTR)
+        flags_y = CL_MEM_READ_ONLY | (CL_MEM_USE_HOST_PTR if ZeroCopyUSMAllocator.is_cache_aligned(y) else CL_MEM_COPY_HOST_PTR)
+        buf_x = cl_mem(cl.clCreateBuffer(ctx, flags_x, size_t(x.nbytes), x.ctypes.data_as(ctypes.c_void_p), ctypes.byref(err_ret)))
+        buf_y = cl_mem(cl.clCreateBuffer(ctx, flags_y, size_t(y.nbytes), y.ctypes.data_as(ctypes.c_void_p), ctypes.byref(err_ret)))
+        z_out = ZeroCopyUSMAllocator.zeros_aligned((N,), dtype=np.float32)
+        flags_z = CL_MEM_WRITE_ONLY | CL_MEM_USE_HOST_PTR
+        buf_z = cl_mem(cl.clCreateBuffer(ctx, flags_z, size_t(z_out.nbytes), z_out.ctypes.data_as(ctypes.c_void_p), ctypes.byref(err_ret)))
 
         # Set arguments
         val_alpha = ctypes.c_float(alpha)
@@ -412,10 +423,13 @@ class IntelGpuOpenClEngine:
         kernel = cl.clCreateKernel(prog, b"mat_vec_gemv", ctypes.byref(err_ret))
 
         A_c = np.ascontiguousarray(A, dtype=np.float32)
-        buf_A = cl_mem(cl.clCreateBuffer(ctx, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, size_t(A_c.nbytes), A_c.ctypes.data_as(ctypes.c_void_p), ctypes.byref(err_ret)))
-        buf_x = cl_mem(cl.clCreateBuffer(ctx, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, size_t(x.nbytes), x.ctypes.data_as(ctypes.c_void_p), ctypes.byref(err_ret)))
-        y_out = np.zeros(M, dtype=np.float32)
-        buf_y = cl_mem(cl.clCreateBuffer(ctx, CL_MEM_WRITE_ONLY, size_t(y_out.nbytes), None, ctypes.byref(err_ret)))
+        flags_A = CL_MEM_READ_ONLY | (CL_MEM_USE_HOST_PTR if ZeroCopyUSMAllocator.is_cache_aligned(A_c) else CL_MEM_COPY_HOST_PTR)
+        flags_x = CL_MEM_READ_ONLY | (CL_MEM_USE_HOST_PTR if ZeroCopyUSMAllocator.is_cache_aligned(x) else CL_MEM_COPY_HOST_PTR)
+        buf_A = cl_mem(cl.clCreateBuffer(ctx, flags_A, size_t(A_c.nbytes), A_c.ctypes.data_as(ctypes.c_void_p), ctypes.byref(err_ret)))
+        buf_x = cl_mem(cl.clCreateBuffer(ctx, flags_x, size_t(x.nbytes), x.ctypes.data_as(ctypes.c_void_p), ctypes.byref(err_ret)))
+        y_out = ZeroCopyUSMAllocator.zeros_aligned((M,), dtype=np.float32)
+        flags_y = CL_MEM_WRITE_ONLY | CL_MEM_USE_HOST_PTR
+        buf_y = cl_mem(cl.clCreateBuffer(ctx, flags_y, size_t(y_out.nbytes), y_out.ctypes.data_as(ctypes.c_void_p), ctypes.byref(err_ret)))
 
         cl.clSetKernelArg(kernel, 0, size_t(ctypes.sizeof(cl_mem)), ctypes.byref(buf_A))
         cl.clSetKernelArg(kernel, 1, size_t(ctypes.sizeof(cl_mem)), ctypes.byref(buf_x))
