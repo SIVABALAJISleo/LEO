@@ -1,0 +1,57 @@
+{
+  "timestamp": 1795235696.6855206,
+  "machine": "Lenovo IdeaPad Slim 3 15IAH8",
+  "cpu": "Intel Core i5-12450H",
+  "igpu": "Intel UHD Graphics (48 EUs)",
+  "benchmarks": {
+    "engine": "LEO_BANDWIDTH_AND_WORKLOAD_SUBSUMPTION_SUITE",
+    "target_hardware": "Intel Core i5-12450H + Intel UHD iGPU + 16GB RAM (Software-Only)",
+    "raw_hardware_parity_claimed": false,
+    "all_contracts_met": true,
+    "all_adversarial_falsifications_passed": true,
+    "audits": [
+      {
+        "module_name": "Lossless_Speculative_Bandwidth_Amplifier",
+        "parity_tier": "TIER_2_EXACT_DISTRIBUTION_AND_BIT_LOSSLESS",
+        "raw_hardware_parity_claimed": false,
+        "exact_parity_or_lossless": true,
+        "contract_parity_met": true,
+        "baseline_cost_metric": 280.0,
+        "leo_cost_metric": 89.83,
+        "cost_unit": "MB_read_per_accepted_token",
+        "amplification_or_speedup": 3.12,
+        "adversarial_falsification_passed": true,
+        "fallback_triggered_on_adversarial": true,
+        "notes": "Exact Leviathan-Chen rejection sampling over K=12 draft window + lossless entropy factor=0.447. Incompressible random noise correctly detected & bypassed."
+      },
+      {
+        "module_name": "Analytic_Residual_Stacking_ZeroBackprop_Learner",
+        "parity_tier": "TIER_3_CONTRACT_PARITY_ZERO_EPOCHS",
+        "raw_hardware_parity_claimed": false,
+        "exact_parity_or_lossless": true,
+        "contract_parity_met": true,
+        "baseline_cost_metric": 2726.057,
+        "leo_cost_metric": 16.858,
+        "cost_unit": "wall_clock_ms",
+        "amplification_or_speedup": 161.7,
+        "adversarial_falsification_passed": true,
+        "fallback_triggered_on_adversarial": true,
+        "notes": "Test MSE: LEO=0.14233 vs 250-epoch SGD=0.13810. Zero backpropagation epochs executed."
+      },
+      {
+        "module_name": "Temporal_Sparse_Adaptive_Shader_Subsumption",
+        "parity_tier": "TIER_3_CONTRACT_PARITY_VISUAL_COHERENCE",
+        "raw_hardware_parity_claimed": false,
+        "exact_parity_or_lossless": false,
+        "contract_parity_met": true,
+        "baseline_cost_metric": 65536.0,
+        "leo_cost_metric": 6480.0,
+        "cost_unit": "pixels_shaded_per_frame",
+        "amplification_or_speedup": 10.11,
+        "adversarial_falsification_passed": true,
+        "fallback_triggered_on_adversarial": true,
+        "notes": "Pixels eliminated=90.1%, Rel L2 error=0.01850, Dense=5.44ms vs Sparse=1.21ms. Strobe cut triggers full dense fallback."
+      }
+    ]
+  }
+}

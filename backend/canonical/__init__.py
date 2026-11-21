@@ -184,6 +184,13 @@ from .zero_io_spectral_expert_igpu_engine import (
     ZeroIOSpectralMoEEngine,
     run_zero_io_breakthrough_benchmark,
 )
+from .bandwidth_and_workload_subsumption import (
+    SubsumptionAudit,
+    LosslessSpeculativeBandwidthAmplifier,
+    AnalyticLayerwiseGrowthLearner,
+    TemporalSparseShaderSubsumption,
+    run_all_subsumption_audits,
+)
 
 __all__ = [
     "FunctionalReplacementEngine",
@@ -327,4 +334,9 @@ __all__ = [
     "CompressedSpectralExpert",
     "ZeroIOSpectralMoEEngine",
     "run_zero_io_breakthrough_benchmark",
+    "SubsumptionAudit",
+    "LosslessSpeculativeBandwidthAmplifier",
+    "AnalyticLayerwiseGrowthLearner",
+    "TemporalSparseShaderSubsumption",
+    "run_all_subsumption_audits",
 ]
