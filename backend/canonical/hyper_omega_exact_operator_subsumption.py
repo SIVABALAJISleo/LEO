@@ -330,7 +330,7 @@ class HyperOmegaSubsumptionEngine:
         feature_dim = 1 + head_dim + (head_dim * head_dim)
         dense_ops = 2.0 * (seq_len ** 2) * head_dim
         leo_ops = 2.0 * seq_len * feature_dim * head_dim
-        ops_saved_pct = max(0.0, (1.0 - (leo_ops / dense_flops if 'dense_flops' in locals() else leo_ops / dense_ops)) * 100.0)
+        ops_saved_pct = max(0.0, (1.0 - (leo_ops / max(1.0, dense_ops))) * 100.0)
 
         return ParityAuditRecord(
             workload_name=f"Multipole_Kernel_Attention_L{seq_len}_d{head_dim}",
