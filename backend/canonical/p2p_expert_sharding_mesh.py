@@ -39,7 +39,7 @@ class ConsistentHashExpertRing:
 
         # Deterministic assignment
         for exp_id in range(num_experts):
-            h = int(hashlib.md5(f"expert:{exp_id}".encode()).hexdigest(), 16)
+            h = int(hashlib.sha256(f"expert:{exp_id}".encode()).hexdigest(), 16)
             node = self.node_ids[h % len(self.node_ids)]
             self.expert_to_node[exp_id] = node
             self.node_to_experts[node].append(exp_id)

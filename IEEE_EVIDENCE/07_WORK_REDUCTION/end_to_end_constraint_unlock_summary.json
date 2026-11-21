@@ -7,7 +7,7 @@
     "storage": "512 GB PCIe 4.0 NVMe SSD",
     "os": "win32"
   },
-  "total_audit_duration_seconds": 0.506,
+  "total_audit_duration_seconds": 0.271,
   "routing_matrix_verification": {
     "workload_a_reformulation": {
       "workload_type": "knowledge_dense_moe",
@@ -67,7 +67,7 @@
   },
   "subsystem_2_radix_serving": {
     "status": "PASS",
-    "multi_user_speedup_x": 3.98,
+    "multi_user_speedup_x": 4.29,
     "prefix_hit_rate_pct": 82.5,
     "max_absolute_error_vs_naive": 0.0,
     "adversarial_clean_fallback_verified": true
@@ -76,13 +76,13 @@
     "status": "PASS",
     "peer_nodes_count": 4,
     "activation_routing_compression_ratio_x": 310.7,
-    "max_diff_normal_vs_single_node": 2.9802322387695312e-08,
+    "max_diff_normal_vs_single_node": 1.4901161193847656e-08,
     "fault_injection_seamless_failover_verified": true
   },
   "global_parity_tiers": {
     "TIER_1_RAW_HARDWARE_PARITY": false,
     "TIER_2_EXACT_COMPUTATIONAL_PARITY": true,
     "TIER_3_CONTRACT_PARITY": true,
-    "TIER_4_CONSUMER_ROOFLINE_EFFICIENCY": 93.2
+    "TIER_4_CONSUMER_ROOFLINE_EFFICIENCY": 95.27
   }
 }
