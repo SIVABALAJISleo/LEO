@@ -202,6 +202,26 @@ from .software_transistor_replacement_engine import (
     SoftwareDefinedTransistorReplacementEngine,
     run_all_transistor_replacement_audits,
 )
+from .ssd_native_unmodified_expert_engine import (
+    ExpertPackBuilder,
+    SSDNativeUnmodifiedExpertEngine,
+    benchmark_ssd_native_unmodified_expert_engine,
+)
+from .radix_prefix_serving_engine import (
+    RadixServingNode,
+    RadixPrefixServingEngine,
+    benchmark_radix_prefix_serving_engine,
+)
+from .p2p_expert_sharding_mesh import (
+    ConsistentHashExpertRing,
+    P2PExpertWorkerNode,
+    P2PExpertShardingMesh,
+    benchmark_p2p_expert_sharding_mesh,
+)
+from .end_to_end_constraint_unlock_runner import (
+    EndToEndConstraintUnlockRouter,
+    run_full_end_to_end_constraint_unlock_audit,
+)
 
 __all__ = [
     "FunctionalReplacementEngine",
@@ -359,4 +379,16 @@ __all__ = [
     "AlgorithmicSubsumptionFrontEnd",
     "SoftwareDefinedTransistorReplacementEngine",
     "run_all_transistor_replacement_audits",
+    "ExpertPackBuilder",
+    "SSDNativeUnmodifiedExpertEngine",
+    "benchmark_ssd_native_unmodified_expert_engine",
+    "RadixServingNode",
+    "RadixPrefixServingEngine",
+    "benchmark_radix_prefix_serving_engine",
+    "ConsistentHashExpertRing",
+    "P2PExpertWorkerNode",
+    "P2PExpertShardingMesh",
+    "benchmark_p2p_expert_sharding_mesh",
+    "EndToEndConstraintUnlockRouter",
+    "run_full_end_to_end_constraint_unlock_audit",
 ]

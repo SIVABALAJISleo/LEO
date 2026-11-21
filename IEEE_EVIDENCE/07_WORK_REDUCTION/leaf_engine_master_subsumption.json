@@ -1,5 +1,5 @@
 {
-  "timestamp": 1795242723.2301066,
+  "timestamp": 1795246570.978741,
   "machine": "Lenovo IdeaPad Slim 3 15IAH8",
   "cpu": "Intel Core i5-12450H",
   "igpu": "Intel UHD Graphics (48 EUs)",
@@ -8,12 +8,12 @@
       "status": "OPTIMAL",
       "gradient_norm": 1.3752402567613372e-12,
       "objective_value": 0.7474234247425247,
-      "analytic_speedup_vs_iterative": 16.139128488037855,
+      "analytic_speedup_vs_iterative": 19.771933087207472,
       "rls_weight_relative_error": 7.97190139722806e-16
     },
     "decoupled_knowledge": {
       "retrieval_mode": "INVERTED_INDEX",
-      "latency_ms": 0.10189996100962162,
+      "latency_ms": 0.12770004104822874,
       "provenance_sha256": "2a180ecebe20bf3d556990254bc67e7fc1f0522994161676af1db913b8b9f3a8"
     },
     "mathematical_elimination": {
@@ -25,42 +25,42 @@
           "measured_error": 3.911005661993291e-16,
           "theoretical_bound": 1e-12,
           "passed_contract": true,
-          "speedup_ratio": 3.0547884911636096
+          "speedup_ratio": 3.066789894981927
         },
         {
           "name": "CommonSubexpressionGramElimination",
           "measured_error": 2.877598963220839e-16,
           "theoretical_bound": 1e-12,
           "passed_contract": true,
-          "speedup_ratio": 2.5599977234392624
+          "speedup_ratio": 2.7435083342782627
         },
         {
           "name": "LowRankTruncatedSvdFactoring",
           "measured_error": 0.007042445143231735,
           "theoretical_bound": 0.05,
           "passed_contract": true,
-          "speedup_ratio": 0.00432519472443548
+          "speedup_ratio": 0.006567715269260215
         },
         {
           "name": "ShermanMorrisonRank1Update",
           "measured_error": 1.2974528258188543e-15,
           "theoretical_bound": 1e-10,
           "passed_contract": true,
-          "speedup_ratio": 1.1265343408737636
+          "speedup_ratio": 0.9257969643221877
         },
         {
           "name": "AdaptiveMagnitudeSparsification",
           "measured_error": 0.03924750538114782,
           "theoretical_bound": 0.1,
           "passed_contract": true,
-          "speedup_ratio": 0.012175919344785732
+          "speedup_ratio": 0.014424957753381751
         },
         {
           "name": "KroneckerMatrixVectorContraction",
           "measured_error": 2.611015546254127e-16,
           "theoretical_bound": 1e-12,
           "passed_contract": true,
-          "speedup_ratio": 4.103789238527216
+          "speedup_ratio": 7.950735310329621
         }
       ]
     },
@@ -70,13 +70,13 @@
       "driver_version": "OpenCL 3.0 NEO",
       "compute_units": 48,
       "kernel_verified": true,
-      "kernel_latency_ms": 1.714700018055737,
+      "kernel_latency_ms": 2.8978000627830625,
       "max_numerical_error": 1.9073486328125e-06
     },
     "counterfactual_compiler": {
       "candidates_evaluated": 10,
       "candidates_rejected": 3,
-      "selected_pathway": "VSA_HYPERVECTOR",
+      "selected_pathway": "MMAP_STREAMING",
       "verdict": "CONTRACT_SATISFIED_OPTIMAL_PATHWAY_SELECTED"
     },
     "memory_intelligence": {

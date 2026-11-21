@@ -104,3 +104,14 @@ class HiveMindOrchestrator:
             "vaccines_generated": 15420,
             "energy_saved_vs_gpu": "98.7%"
         }
+
+    def get_p2p_expert_mesh(self, num_experts: int = 896):
+        """Connects Swarm nodes into the Canonical P2P Expert-Sharding Mesh."""
+        from backend.canonical.p2p_expert_sharding_mesh import P2PExpertShardingMesh
+        workers = [
+            {"node_id": nid, "host": "127.0.0.1", "port": 9000 + i}
+            for i, nid in enumerate(self.active_nodes.keys())
+        ]
+        if not workers:
+            workers = [{"node_id": f"hive_{i}", "host": "127.0.0.1", "port": 9100 + i} for i in range(4)]
+        return P2PExpertShardingMesh(node_configs=workers, num_experts=num_experts)

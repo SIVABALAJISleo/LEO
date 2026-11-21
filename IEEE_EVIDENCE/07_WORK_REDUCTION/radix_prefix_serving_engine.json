@@ -1,0 +1,19 @@
+{
+  "subsystem": "RADIX_PREFIX_SERVING_ENGINE",
+  "num_users": 8,
+  "shared_prefix_length": 64,
+  "user_suffix_length": 16,
+  "prefix_hit_rate_pct": 82.5,
+  "naive_serving_time_ms": 61.666,
+  "radix_serving_time_ms": 15.508,
+  "multi_user_speedup_x": 3.98,
+  "max_absolute_error_vs_naive": 0.0,
+  "adversarial_unique_prefix_hit_pct": 0.0,
+  "adversarial_clean_fallback_verified": true,
+  "parity_tiers": {
+    "TIER_1_RAW_HARDWARE_PARITY": false,
+    "TIER_2_EXACT_COMPUTATIONAL_PARITY": true,
+    "TIER_3_CONTRACT_PARITY": true,
+    "TIER_4_CONSUMER_ROOFLINE_EFFICIENCY": 79.6
+  }
+}

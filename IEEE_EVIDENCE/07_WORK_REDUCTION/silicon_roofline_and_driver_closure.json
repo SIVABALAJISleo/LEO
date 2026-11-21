@@ -1,5 +1,5 @@
 {
-  "timestamp": 1795242723.1967156,
+  "timestamp": 1795246570.958975,
   "machine": "Lenovo IdeaPad Slim 3 15IAH8",
   "cpu": "Intel Core i5-12450H",
   "igpu": "Intel UHD Graphics (48 EUs)",
@@ -9,8 +9,8 @@
       "ptx_fma_verified": true,
       "max_numerical_error": 3.814697265625e-06,
       "allocated_bytes": 14336,
-      "cublas_latency_ms": 0.1781000755727291,
-      "ptx_latency_ms": 0.29369990807026625,
+      "cublas_latency_ms": 0.21840003319084644,
+      "ptx_latency_ms": 0.3353999927639961,
       "status": "PASS"
     },
     "woodbury_analytic_oneshot_trainer": {
@@ -18,9 +18,9 @@
       "backprop_epochs": 0,
       "validation_mse": 0.6276201009750366,
       "baseline_iterative_val_mse": 0.11121533066034317,
-      "exact_solve_time_ms": 0.4805000498890877,
-      "iterative_time_ms": 16.555799986235797,
-      "training_speedup_factor": 34.45535539498346,
+      "exact_solve_time_ms": 0.5232000257819891,
+      "iterative_time_ms": 18.29769997857511,
+      "training_speedup_factor": 34.9726664314033,
       "dual_woodbury_selected": false,
       "status": "PASS"
     },
@@ -31,17 +31,17 @@
       "analytical_variance_error": 0.03318038582801819,
       "materialized_noise_matrix_bytes": 0,
       "seed_state_bytes": 8,
-      "latency_ms": 46.80639994330704,
+      "latency_ms": 69.95699997060001,
       "status": "PASS"
     },
     "heterogeneous_cpu_igpu_roofline": {
       "total_rows_m": 128,
-      "cpu_allocated_rows": 64,
-      "igpu_allocated_rows": 64,
-      "cpu_gflops": 5.111265164630505,
-      "igpu_gflops": 7.684690855011505,
-      "concurrent_latency_ms": 40.92059994582087,
-      "max_numerical_error": 0.0,
+      "cpu_allocated_rows": 44,
+      "igpu_allocated_rows": 84,
+      "cpu_gflops": 2.179312080104822,
+      "igpu_gflops": 4.159365351660393,
+      "concurrent_latency_ms": 79.62999993469566,
+      "max_numerical_error": 1.71661376953125e-05,
       "local_silicon_utilization_pct": 100.0,
       "parity_boundary_certificate_issued": true,
       "status": "PASS"

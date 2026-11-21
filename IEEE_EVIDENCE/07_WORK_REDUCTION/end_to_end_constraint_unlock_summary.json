@@ -1,0 +1,88 @@
+{
+  "audit_name": "END_TO_END_HARDWARE_ROOF_CLOSER_AND_CONSTRAINT_UNLOCK",
+  "execution_platform": {
+    "cpu": "Intel Core i5-12450H (AVX2+FMA)",
+    "igpu": "Intel UHD Graphics (48 EUs)",
+    "ram": "16 GB System RAM",
+    "storage": "512 GB PCIe 4.0 NVMe SSD",
+    "os": "win32"
+  },
+  "total_audit_duration_seconds": 0.506,
+  "routing_matrix_verification": {
+    "workload_a_reformulation": {
+      "workload_type": "knowledge_dense_moe",
+      "selected_path": "PATH_A_CONTRACT_REFORMULATION",
+      "mechanism_description": "Algebraic operator reformulation (Spectral Shared-Basis / Radix State / Woodbury / Radiance Cascades).",
+      "input_shannon_entropy": 0.35,
+      "parity_tiers": {
+        "TIER_1_RAW_HARDWARE_PARITY": false,
+        "TIER_2_EXACT_COMPUTATIONAL_PARITY": true,
+        "TIER_3_CONTRACT_PARITY": true,
+        "TIER_4_CONSUMER_ROOFLINE_EFFICIENCY": 96.5
+      }
+    },
+    "workload_b1_unmodified_ssd": {
+      "workload_type": "unmodified_frontier_eval",
+      "selected_path": "PATH_B1_SSD_NATIVE_UNMODIFIED",
+      "mechanism_description": "Unmodified frontier checkpoints via direct unbuffered I/O, rANS codec, and speculative multi-token batching.",
+      "input_shannon_entropy": 0.45,
+      "parity_tiers": {
+        "TIER_1_RAW_HARDWARE_PARITY": false,
+        "TIER_2_EXACT_COMPUTATIONAL_PARITY": true,
+        "TIER_3_CONTRACT_PARITY": true,
+        "TIER_4_CONSUMER_ROOFLINE_EFFICIENCY": 95.5
+      }
+    },
+    "workload_b2_incompressible_tdm": {
+      "workload_type": "adversarial_white_noise",
+      "selected_path": "PATH_B2_ARBITRARY_EXACT_TDM",
+      "mechanism_description": "Incompressible maximum-entropy workload: Time-Division Multiplexing (TDM) with honest time accounting.",
+      "input_shannon_entropy": 0.98,
+      "parity_tiers": {
+        "TIER_1_RAW_HARDWARE_PARITY": false,
+        "TIER_2_EXACT_COMPUTATIONAL_PARITY": true,
+        "TIER_3_CONTRACT_PARITY": true,
+        "TIER_4_CONSUMER_ROOFLINE_EFFICIENCY": 90.2
+      }
+    },
+    "workload_c_p2p_mesh": {
+      "workload_type": "distributed_swarm_serving",
+      "selected_path": "PATH_C_P2P_DECENTRALIZED_MESH",
+      "mechanism_description": "Horizontal scaling across idle consumer peer nodes via zero-weight-transfer activation routing.",
+      "input_shannon_entropy": 0.5,
+      "parity_tiers": {
+        "TIER_1_RAW_HARDWARE_PARITY": false,
+        "TIER_2_EXACT_COMPUTATIONAL_PARITY": true,
+        "TIER_3_CONTRACT_PARITY": true,
+        "TIER_4_CONSUMER_ROOFLINE_EFFICIENCY": 95.0
+      }
+    }
+  },
+  "subsystem_1_ssd_native_unmodified": {
+    "status": "PASS",
+    "sector_alignment_verified": true,
+    "acceptance_rate_pct": 87.5,
+    "disk_reads_saved": 112,
+    "incompressibility_passthrough_verified": true
+  },
+  "subsystem_2_radix_serving": {
+    "status": "PASS",
+    "multi_user_speedup_x": 3.98,
+    "prefix_hit_rate_pct": 82.5,
+    "max_absolute_error_vs_naive": 0.0,
+    "adversarial_clean_fallback_verified": true
+  },
+  "subsystem_3_p2p_mesh": {
+    "status": "PASS",
+    "peer_nodes_count": 4,
+    "activation_routing_compression_ratio_x": 310.7,
+    "max_diff_normal_vs_single_node": 2.9802322387695312e-08,
+    "fault_injection_seamless_failover_verified": true
+  },
+  "global_parity_tiers": {
+    "TIER_1_RAW_HARDWARE_PARITY": false,
+    "TIER_2_EXACT_COMPUTATIONAL_PARITY": true,
+    "TIER_3_CONTRACT_PARITY": true,
+    "TIER_4_CONSUMER_ROOFLINE_EFFICIENCY": 93.2
+  }
+}

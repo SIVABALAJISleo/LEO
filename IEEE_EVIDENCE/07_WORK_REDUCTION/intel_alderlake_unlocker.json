@@ -1,5 +1,5 @@
 {
-  "timestamp": 1795242723.2245204,
+  "timestamp": 1795246570.9738975,
   "machine": "Lenovo IdeaPad Slim 3 15IAH8",
   "cpu": "Intel Core i5-12450H",
   "igpu": "Intel UHD Graphics (48 EUs)",
@@ -11,7 +11,7 @@
       "timer_1ms_unlocked": true
     },
     "usm_buffer_meta": {
-      "virtual_address_hex": "0x1fa5fc91000",
+      "virtual_address_hex": "0x2026939c000",
       "page_aligned_4096": true,
       "cacheline_aligned_64": true,
       "allocated_bytes": 4194304
@@ -25,11 +25,11 @@
       },
       "page_aligned_4096": true,
       "cacheline_aligned_64": true,
-      "virtual_address_hex": "0x1fa600a3000",
+      "virtual_address_hex": "0x202697a7000",
       "exact_integer_match": true,
       "cosine_similarity": 0.9999999999999999,
-      "latency_ms": 0.16047999961301684,
-      "throughput_gops": 1.6334995054345514,
+      "latency_ms": 0.21935499971732497,
+      "throughput_gops": 1.1950673581081612,
       "native_kernel_active": true,
       "passed": true
     },

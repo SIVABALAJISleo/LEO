@@ -114,3 +114,12 @@ class DistributedComputeMesh:
     def get_mesh_status(self) -> List[Dict[str, Any]]:
         """Returns detailed monitoring data for all discovered intranet nodes."""
         return [peer.to_dict() for peer in self.peers.values()]
+
+    def get_expert_sharding_mesh(self, num_experts: int = 896):
+        """Returns the canonical P2PExpertShardingMesh backed by active intranet peers."""
+        from backend.canonical.p2p_expert_sharding_mesh import P2PExpertShardingMesh
+        active_cfgs = [
+            {"node_id": p.node_id, "host": p.ip, "port": 8800 + i}
+            for i, p in enumerate(self.peers.values())
+        ]
+        return P2PExpertShardingMesh(node_configs=active_cfgs, num_experts=num_experts)

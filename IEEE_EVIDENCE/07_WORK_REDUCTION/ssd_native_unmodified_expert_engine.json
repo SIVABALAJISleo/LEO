@@ -1,0 +1,25 @@
+{
+  "subsystem": "SSD_NATIVE_UNMODIFIED_EXPERT_ENGINE",
+  "sector_alignment_verified": true,
+  "total_experts_in_pack": 32,
+  "speculative_k_window": 8,
+  "elapsed_ms": 22.668,
+  "execution_metrics": {
+    "window_k_tokens": 8,
+    "unique_experts_read": 16,
+    "ram_cache_hit_rate": 0.0,
+    "accepted_speculative_tokens": 7,
+    "acceptance_rate_pct": 87.5,
+    "disk_reads_saved": 112,
+    "total_bytes_read_nvme": 131072,
+    "distribution_parity": "100%_LEVIATHAN_CHEN_EXACT"
+  },
+  "adversarial_incompressibility_guard_codec": 0,
+  "adversarial_incompressibility_passthrough_verified": true,
+  "parity_tiers": {
+    "TIER_1_RAW_HARDWARE_PARITY": false,
+    "TIER_2_EXACT_COMPUTATIONAL_PARITY": true,
+    "TIER_3_CONTRACT_PARITY": true,
+    "TIER_4_CONSUMER_ROOFLINE_EFFICIENCY": 100.0
+  }
+}
