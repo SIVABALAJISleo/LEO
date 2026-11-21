@@ -191,6 +191,17 @@ from .bandwidth_and_workload_subsumption import (
     TemporalSparseShaderSubsumption,
     run_all_subsumption_audits,
 )
+from .software_transistor_replacement_engine import (
+    TransistorReplacementAudit,
+    SpaceTimeInformationProfiler,
+    TimeDivisionMultiplexingScheduler,
+    BitSlicedVirtualLogicGateEngine,
+    MultiplyFreeLUTEngine,
+    ISAAndMicrocodeEmulationLayer,
+    AlgorithmicSubsumptionFrontEnd,
+    SoftwareDefinedTransistorReplacementEngine,
+    run_all_transistor_replacement_audits,
+)
 
 __all__ = [
     "FunctionalReplacementEngine",
@@ -339,4 +350,13 @@ __all__ = [
     "AnalyticLayerwiseGrowthLearner",
     "TemporalSparseShaderSubsumption",
     "run_all_subsumption_audits",
+    "TransistorReplacementAudit",
+    "SpaceTimeInformationProfiler",
+    "TimeDivisionMultiplexingScheduler",
+    "BitSlicedVirtualLogicGateEngine",
+    "MultiplyFreeLUTEngine",
+    "ISAAndMicrocodeEmulationLayer",
+    "AlgorithmicSubsumptionFrontEnd",
+    "SoftwareDefinedTransistorReplacementEngine",
+    "run_all_transistor_replacement_audits",
 ]

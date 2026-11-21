@@ -107,14 +107,28 @@ class BitNetTMacEngine:
         indices = np.sum(digits * multipliers, axis=-1)  # Shape: (N, G)
         return indices
 
-    def execute_layer(self, input_vector: np.ndarray, weights_ternary: Optional[np.ndarray] = None) -> np.ndarray:
+    def execute_layer(
+        self,
+        input_vector: np.ndarray,
+        weights_ternary: Optional[np.ndarray] = None,
+        backend_mode: str = "auto"
+    ) -> np.ndarray:
         """
         Executes GEMV using T-MAC lookup table lookup + addition ONLY.
         NO floating-point multiplications occur in the accumulation step.
+        Supports pluggable backend options: 'avx2_vpshufb', 'canonical_lut', 'pcores', 'numpy_lut'.
         """
         W = weights_ternary if weights_ternary is not None else self.weights_ternary
         N, M = W.shape
         
+        # Pluggable backend: Mechanism 3 (Multiply-Free LUT / VPSHUFB)
+        if backend_mode in ("avx2_vpshufb", "canonical_lut") or (backend_mode == "auto" and np.all(np.isin(W, [-1, 1]))):
+            try:
+                from backend.canonical.software_transistor_replacement_engine import MultiplyFreeLUTEngine
+                return MultiplyFreeLUTEngine.execute_lut_gemv(W, input_vector)
+            except Exception:
+                pass
+
         # Step 1: Build LUT for activation vector
         lut = self.build_lut(input_vector)  # Shape: (G, 3^k)
         

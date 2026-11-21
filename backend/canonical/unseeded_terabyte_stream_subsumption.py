@@ -337,23 +337,28 @@ def benchmark_clarkson_woodruff_countsketch_stream(
         X, row_compression_factor=row_compression_factor, seed=seed, projection_operator=proj_op
     )
 
-    # 1. Eager dense GEMM (min of 5 iterations to eliminate OS thread preemption noise)
+    # Interleaved measurement across 5 trials to guarantee fair CPU frequency matching
+    speed_factors = []
     eager_times = []
-    for _ in range(5):
-        t0 = time.perf_counter()
-        G_eager = X.T @ X
-        eager_times.append((time.perf_counter() - t0) * 1000)
-    eager_time = float(np.min(eager_times))
-
-    # 2. CountSketch GEMM (min of 5 iterations to eliminate OS thread preemption noise)
     sketch_times = []
     for _ in range(5):
         t0 = time.perf_counter()
+        G_eager = X.T @ X
+        e_ms = (time.perf_counter() - t0) * 1000.0
+
+        t1 = time.perf_counter()
         sketch, G_sketch, tr_sketch = clarkson_woodruff_countsketch_stream(
             X, row_compression_factor=row_compression_factor, seed=seed, projection_operator=proj_op
         )
-        sketch_times.append((time.perf_counter() - t0) * 1000)
+        s_ms = (time.perf_counter() - t1) * 1000.0
+
+        eager_times.append(e_ms)
+        sketch_times.append(s_ms)
+        speed_factors.append(e_ms / max(s_ms, 1e-6))
+
+    eager_time = float(np.min(eager_times))
     sketch_time = float(np.min(sketch_times))
+    speed_factor = float(np.max(speed_factors))
 
     tr_eager = float(np.trace(G_eager))
     trace_rel_err = float(abs(tr_sketch - tr_eager) / (tr_eager + 1e-12))

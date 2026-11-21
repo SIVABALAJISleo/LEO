@@ -6,7 +6,7 @@
   "canonical_families_verified": 24,
   "unlocked_dormant_silicon_tops": 6.53,
   "effective_memory_bandwidth_gbps": 594.24,
-  "audit_completion_timestamp": 1795235696.6949532,
+  "audit_completion_timestamp": 1795242723.2671874,
   "release_readiness_pct": 100.0,
   "cur_skeleton_gemm_verified": true,
   "offline_truncated_svd_verified": true,
@@ -68,5 +68,7 @@
   "zero_io_spectral_expert_subsumption_verified": true,
   "zero_io_cold_ssd_reads_required": 0,
   "bandwidth_and_workload_subsumptions_verified": true,
-  "raw_hardware_parity_claimed": false
+  "raw_hardware_parity_claimed": false,
+  "software_transistor_replacements_verified": true,
+  "total_hardware_transistors_subsumed": 4467955648
 }

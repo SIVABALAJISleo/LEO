@@ -1,5 +1,5 @@
 {
-  "timestamp": 1795235696.6855206,
+  "timestamp": 1795242723.24882,
   "machine": "Lenovo IdeaPad Slim 3 15IAH8",
   "cpu": "Intel Core i5-12450H",
   "igpu": "Intel UHD Graphics (48 EUs)",
@@ -30,10 +30,10 @@
         "raw_hardware_parity_claimed": false,
         "exact_parity_or_lossless": true,
         "contract_parity_met": true,
-        "baseline_cost_metric": 2726.057,
-        "leo_cost_metric": 16.858,
+        "baseline_cost_metric": 2397.625,
+        "leo_cost_metric": 12.99,
         "cost_unit": "wall_clock_ms",
-        "amplification_or_speedup": 161.7,
+        "amplification_or_speedup": 184.58,
         "adversarial_falsification_passed": true,
         "fallback_triggered_on_adversarial": true,
         "notes": "Test MSE: LEO=0.14233 vs 250-epoch SGD=0.13810. Zero backpropagation epochs executed."
@@ -50,7 +50,7 @@
         "amplification_or_speedup": 10.11,
         "adversarial_falsification_passed": true,
         "fallback_triggered_on_adversarial": true,
-        "notes": "Pixels eliminated=90.1%, Rel L2 error=0.01850, Dense=5.44ms vs Sparse=1.21ms. Strobe cut triggers full dense fallback."
+        "notes": "Pixels eliminated=90.1%, Rel L2 error=0.01850, Dense=5.00ms vs Sparse=1.24ms. Strobe cut triggers full dense fallback."
       }
     ]
   }
