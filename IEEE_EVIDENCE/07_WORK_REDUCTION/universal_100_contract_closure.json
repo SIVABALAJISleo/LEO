@@ -1,5 +1,5 @@
 {
-  "timestamp": 1795319104.9668798,
+  "timestamp": 1795322118.5565977,
   "machine": "Lenovo IdeaPad Slim 3 15IAH8",
   "cpu": "Intel Core i5-12450H",
   "igpu": "Intel UHD Graphics (48 EUs)",
@@ -9,7 +9,7 @@
       "kurtosis_ratio": 151.28,
       "contract_error": 0.139514,
       "compression_ratio": 7.11,
-      "latency_ms": 1.1831,
+      "latency_ms": 2.3029,
       "status": "PASS"
     },
     "chebyshev_matrix_exp_action": {
@@ -17,7 +17,7 @@
       "relative_error": 2.2e-07,
       "degree_used": 24,
       "spectral_radius": 9.0112,
-      "latency_ms": 1.5452,
+      "latency_ms": 1.6598,
       "status": "PASS"
     },
     "lookahead_async_nvme": {
@@ -25,16 +25,16 @@
       "cos_similarity": 0.9109,
       "io_overlap_pct": 100.0,
       "prefetch_hit": true,
-      "latency_ms": 1.9859,
+      "latency_ms": 2.2091,
       "status": "PASS"
     },
     "ragged_continuous_batching": {
       "max_deviation": 9e-08,
       "padding_flops_eliminated_pct": 47.92,
       "kv_compression_ratio": 7.75,
-      "measured_speedup_ratio": 0.85,
-      "static_latency_ms": 0.0901,
-      "ragged_latency_ms": 0.1063,
+      "measured_speedup_ratio": 1.09,
+      "static_latency_ms": 0.1151,
+      "ragged_latency_ms": 0.1054,
       "status": "PASS"
     },
     "subspace_mezo_galore": {

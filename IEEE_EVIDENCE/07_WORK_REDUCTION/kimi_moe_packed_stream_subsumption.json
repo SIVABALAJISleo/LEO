@@ -1,5 +1,5 @@
 {
-  "timestamp": 1795319105.028714,
+  "timestamp": 1795322118.57486,
   "machine": "Lenovo IdeaPad Slim 3 15IAH8",
   "cpu": "Intel Core i5-12450H",
   "igpu": "Intel UHD Graphics (48 EUs)",
@@ -16,7 +16,7 @@
     "laptop_8gb_mode_sha256": "6ec739da966398a1",
     "lru_cache_hits": 0,
     "streamed_expert_reads": 384,
-    "server_mode_ms": 50.568,
-    "laptop_stream_mode_ms": 44.988
+    "server_mode_ms": 62.765,
+    "laptop_stream_mode_ms": 56.825
   }
 }

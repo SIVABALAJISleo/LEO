@@ -212,11 +212,12 @@ from .radix_prefix_serving_engine import (
     RadixPrefixServingEngine,
     benchmark_radix_prefix_serving_engine,
 )
-from .p2p_expert_sharding_mesh import (
-    ConsistentHashExpertRing,
-    P2PExpertWorkerNode,
-    P2PExpertShardingMesh,
-    benchmark_p2p_expert_sharding_mesh,
+from .diffusion_fp64_pathtrace_subsumption import (
+    WorkloadSubsumptionReport,
+    ExactFP64ScientificHPCSubsumption,
+    MultigridTaylorDiffusionSubsumption,
+    ReSTIRAtrousPathTraceSubsumption,
+    run_diffusion_fp64_pathtrace_suite,
 )
 from .end_to_end_constraint_unlock_runner import (
     EndToEndConstraintUnlockRouter,
@@ -392,10 +393,11 @@ __all__ = [
     "RadixServingNode",
     "RadixPrefixServingEngine",
     "benchmark_radix_prefix_serving_engine",
-    "ConsistentHashExpertRing",
-    "P2PExpertWorkerNode",
-    "P2PExpertShardingMesh",
-    "benchmark_p2p_expert_sharding_mesh",
+    "WorkloadSubsumptionReport",
+    "ExactFP64ScientificHPCSubsumption",
+    "MultigridTaylorDiffusionSubsumption",
+    "ReSTIRAtrousPathTraceSubsumption",
+    "run_diffusion_fp64_pathtrace_suite",
     "EndToEndConstraintUnlockRouter",
     "run_full_end_to_end_constraint_unlock_audit",
     "FrontierAudit",

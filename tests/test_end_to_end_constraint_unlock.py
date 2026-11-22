@@ -26,15 +26,10 @@ from backend.canonical.radix_prefix_serving_engine import (
     RadixPrefixServingEngine,
     benchmark_radix_prefix_serving_engine,
 )
-from backend.canonical.p2p_expert_sharding_mesh import (
-    ConsistentHashExpertRing,
-    P2PExpertWorkerNode,
-    P2PExpertShardingMesh,
-    benchmark_p2p_expert_sharding_mesh,
-)
 from backend.canonical.end_to_end_constraint_unlock_runner import (
     EndToEndConstraintUnlockRouter,
     run_full_end_to_end_constraint_unlock_audit,
+    benchmark_single_device_boundary_guard,
 )
 
 
@@ -132,32 +127,23 @@ def test_5_radix_prefix_adversarial_unique_prompts_clean_fallback():
     assert res["adversarial_unique_prefix_hit_pct"] == 0.0
 
 
-def test_6_p2p_consistent_hash_ring_and_activation_routing():
-    """Verify consistent-hash sharding across peer nodes and tiny activation transmission."""
-    ring = ConsistentHashExpertRing(["node_0", "node_1", "node_2", "node_3"], num_experts=64)
-    # Check all experts mapped
-    for e in range(64):
-        node = ring.get_node_for_expert(e)
-        assert node in ["node_0", "node_1", "node_2", "node_3"]
-
-    # Check balanced sharding
-    for n in ["node_0", "node_1", "node_2", "node_3"]:
-        assert len(ring.node_to_experts[n]) > 0
+def test_6_single_device_boundary_guard_zero_distributed():
+    """Verify zero distributed networking, zero socket overhead, and pure single device."""
+    res = benchmark_single_device_boundary_guard()
+    assert res["status"] == "PASS"
+    assert res["single_device_only"] is True
+    assert res["zero_distributed_computing"] is True
+    assert res["peer_nodes_count"] == 0
+    assert res["network_activation_metrics"]["network_bytes_sent"] == 0
 
 
-def test_7_p2p_mesh_execution_and_fault_injection_failover():
-    """Verify P2P multi-node socket execution matches single-node and survives killed worker."""
-    res = benchmark_p2p_expert_sharding_mesh()
+def test_7_single_device_boundary_guard_parity_tiers():
+    """Verify exact parity and consumer roofline efficiency without external nodes."""
+    res = benchmark_single_device_boundary_guard()
     assert res["max_diff_normal_vs_single_node"] <= 1e-5
-    assert res["network_activation_metrics"]["network_bytes_sent"] > 0
-    assert res["network_activation_metrics"]["activation_routing_compression_ratio_x"] > 10.0
-
-    # Fault injection check
-    fault_res = res["fault_injection_test"]
-    assert fault_res["seamless_failover_verified"] is True
-    assert fault_res["fallback_invocations"] > 0
-    assert fault_res["max_diff_after_fault"] <= 1e-5
+    assert res["parity_tiers"]["TIER_1_RAW_HARDWARE_PARITY"] is False
     assert res["parity_tiers"]["TIER_2_EXACT_COMPUTATIONAL_PARITY"] is True
+    assert res["parity_tiers"]["TIER_3_CONTRACT_PARITY"] is True
 
 
 def test_8_end_to_end_router_4_pillars_classification():

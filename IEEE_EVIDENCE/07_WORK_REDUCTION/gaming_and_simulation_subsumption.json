@@ -1,5 +1,5 @@
 {
-  "timestamp": 1795319104.986409,
+  "timestamp": 1795322118.5624332,
   "machine": "Lenovo IdeaPad Slim 3 15IAH8",
   "cpu": "Intel Core i5-12450H",
   "igpu": "Intel UHD Graphics (48 EUs)",
@@ -10,8 +10,8 @@
         256,
         256
       ],
-      "step_latency_ms": 4.3493000557646155,
-      "updates_per_second": 229.92205347492356,
+      "step_latency_ms": 6.263299961574376,
+      "updates_per_second": 159.66024398241257,
       "contract_ups_satisfied": true,
       "average_velocity": 11.999988555908203,
       "stuck_agent_count": 9,
@@ -21,11 +21,11 @@
       "total_items": 640000,
       "total_belts": 5000,
       "items_per_belt": 128,
-      "tick_latency_ms": 0.18575000188623866,
-      "updates_per_second": 5383.58002608497,
+      "tick_latency_ms": 0.30836666701361537,
+      "updates_per_second": 3242.8926566043106,
       "contract_ups_satisfied": true,
       "bitwise_exact_verified": true,
-      "items_processed_per_sec": 3445491216.6943808,
+      "items_processed_per_sec": 2075451300.2267587,
       "status": "PASS"
     },
     "radiance_cascades_motion_extrapolation": {
@@ -34,10 +34,10 @@
         320
       ],
       "cascade_count": 4,
-      "base_frame_latency_ms": 1.2666999828070402,
-      "extrapolation_latency_ms": 7.967500016093254,
-      "effective_frame_latency_ms": 3.078066666300098,
-      "effective_fps": 324.87925324958,
+      "base_frame_latency_ms": 2.0472999894991517,
+      "extrapolation_latency_ms": 17.760399961844087,
+      "effective_frame_latency_ms": 6.602566650447746,
+      "effective_fps": 151.45625223369552,
       "contract_fps_satisfied": true,
       "extrapolation_multiplier_val": 3.0,
       "warp_error_metric": 0.010895434767007828,
