@@ -222,6 +222,13 @@ from .end_to_end_constraint_unlock_runner import (
     EndToEndConstraintUnlockRouter,
     run_full_end_to_end_constraint_unlock_audit,
 )
+from .single_device_omega_frontier_engine import (
+    FrontierAudit,
+    NeuronGranularitySubExpertSkipper,
+    BranchAndBoundEarlyExitRouter,
+    EGraphAlgebraicKernelLifter,
+    run_single_device_frontier_suite,
+)
 
 __all__ = [
     "FunctionalReplacementEngine",
@@ -391,4 +398,9 @@ __all__ = [
     "benchmark_p2p_expert_sharding_mesh",
     "EndToEndConstraintUnlockRouter",
     "run_full_end_to_end_constraint_unlock_audit",
+    "FrontierAudit",
+    "NeuronGranularitySubExpertSkipper",
+    "BranchAndBoundEarlyExitRouter",
+    "EGraphAlgebraicKernelLifter",
+    "run_single_device_frontier_suite",
 ]

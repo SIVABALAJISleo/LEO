@@ -3,7 +3,7 @@
   "peer_nodes_count": 4,
   "sharded_experts_total": 64,
   "awake_experts_per_token": 8,
-  "elapsed_ms": 6.854,
+  "elapsed_ms": 5.542,
   "network_activation_metrics": {
     "num_active_experts": 8,
     "network_bytes_sent": 2531,
@@ -14,12 +14,12 @@
     "fallback_experts_executed": 0,
     "p2p_completion_status": "100%_CONVERGED"
   },
-  "max_diff_normal_vs_single_node": 1.4901161193847656e-08,
+  "max_diff_normal_vs_single_node": 2.2351741790771484e-08,
   "fault_injection_test": {
     "killed_node_id": "node_0",
     "fallback_invocations": 1,
     "fallback_experts_executed": 2,
-    "max_diff_after_fault": 1.4901161193847656e-08,
+    "max_diff_after_fault": 2.2351741790771484e-08,
     "seamless_failover_verified": true
   },
   "parity_tiers": {

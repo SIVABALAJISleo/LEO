@@ -6,7 +6,7 @@
   "canonical_families_verified": 24,
   "unlocked_dormant_silicon_tops": 6.53,
   "effective_memory_bandwidth_gbps": 594.24,
-  "audit_completion_timestamp": 1795246571.010573,
+  "audit_completion_timestamp": 1795319105.0647452,
   "release_readiness_pct": 100.0,
   "cur_skeleton_gemm_verified": true,
   "offline_truncated_svd_verified": true,
@@ -78,5 +78,10 @@
   "p2p_expert_sharding_mesh_verified": true,
   "zero_weight_transfer_activation_routing_verified": true,
   "p2p_fault_injection_seamless_failover_verified": true,
-  "end_to_end_constraint_unlock_summary_verified": true
+  "end_to_end_constraint_unlock_summary_verified": true,
+  "end_to_end_constraint_unlock_verified": true,
+  "single_device_omega_frontier_verified": true,
+  "neuron_granularity_subexpert_skipping_verified": true,
+  "land_doig_branch_and_bound_early_exit_verified": true,
+  "egraph_algebraic_kernel_lifter_verified": true
 }
