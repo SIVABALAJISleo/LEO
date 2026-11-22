@@ -1,0 +1,1 @@
+"""PaperOrchestra autorater prompt templates."""

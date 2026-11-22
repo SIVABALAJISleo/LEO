@@ -1,0 +1,1 @@
+"""PaperOrchestra agent prompt definitions."""
