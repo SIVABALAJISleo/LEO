@@ -248,6 +248,15 @@ from .fwht_wavelet_igpu_subsumption import (
     LiveIntelUHDOpenCLProbe,
     run_fwht_wavelet_igpu_suite,
 )
+from .universal_contract_bypass_engine import (
+    PathwayBypassAudit,
+    LogitSpaceHyperplaneAttention,
+    ZerothOrderDualGradientSubsumer,
+    RemezMinimaxTranscendentalSubsumer,
+    HierarchicalRadianceCascadeSubsumer,
+    ZeroCopyHeterogeneousPipelineRouter,
+    run_universal_contract_bypass_suite,
+)
 
 __all__ = [
     "FunctionalReplacementEngine",
@@ -436,4 +445,11 @@ __all__ = [
     "LowRankSubspaceMemoryOptimizer",
     "LiveIntelUHDOpenCLProbe",
     "run_fwht_wavelet_igpu_suite",
+    "PathwayBypassAudit",
+    "LogitSpaceHyperplaneAttention",
+    "ZerothOrderDualGradientSubsumer",
+    "RemezMinimaxTranscendentalSubsumer",
+    "HierarchicalRadianceCascadeSubsumer",
+    "ZeroCopyHeterogeneousPipelineRouter",
+    "run_universal_contract_bypass_suite",
 ]
