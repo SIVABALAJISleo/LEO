@@ -239,6 +239,16 @@ from .omega_residual_frontier_inventions import (
     run_omega_residual_frontier_suite,
 )
 
+from .fwht_wavelet_igpu_subsumption import (
+    DeepInventionAudit,
+    fwht_normalized,
+    FWHTDenseWeightConcentration,
+    SparseWaveletMediaSubsumption,
+    LowRankSubspaceMemoryOptimizer,
+    LiveIntelUHDOpenCLProbe,
+    run_fwht_wavelet_igpu_suite,
+)
+
 __all__ = [
     "FunctionalReplacementEngine",
     "CurSkeletonFactoringResult",
@@ -419,4 +429,11 @@ __all__ = [
     "OpticalFlowKeyframeVideoSubsumption",
     "OptimalONMultigridNonPeriodicFP64Solver",
     "run_omega_residual_frontier_suite",
+    "DeepInventionAudit",
+    "fwht_normalized",
+    "FWHTDenseWeightConcentration",
+    "SparseWaveletMediaSubsumption",
+    "LowRankSubspaceMemoryOptimizer",
+    "LiveIntelUHDOpenCLProbe",
+    "run_fwht_wavelet_igpu_suite",
 ]
