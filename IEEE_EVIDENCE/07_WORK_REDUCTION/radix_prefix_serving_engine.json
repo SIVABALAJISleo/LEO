@@ -4,9 +4,9 @@
   "shared_prefix_length": 64,
   "user_suffix_length": 16,
   "prefix_hit_rate_pct": 82.5,
-  "naive_serving_time_ms": 36.849,
-  "radix_serving_time_ms": 12.577,
-  "multi_user_speedup_x": 2.93,
+  "naive_serving_time_ms": 32.59,
+  "radix_serving_time_ms": 9.869,
+  "multi_user_speedup_x": 3.3,
   "max_absolute_error_vs_naive": 0.0,
   "adversarial_unique_prefix_hit_pct": 0.0,
   "adversarial_clean_fallback_verified": true,
@@ -14,6 +14,6 @@
     "TIER_1_RAW_HARDWARE_PARITY": false,
     "TIER_2_EXACT_COMPUTATIONAL_PARITY": true,
     "TIER_3_CONTRACT_PARITY": true,
-    "TIER_4_CONSUMER_ROOFLINE_EFFICIENCY": 58.6
+    "TIER_4_CONSUMER_ROOFLINE_EFFICIENCY": 66.0
   }
 }

@@ -230,6 +230,14 @@ from .single_device_omega_frontier_engine import (
     EGraphAlgebraicKernelLifter,
     run_single_device_frontier_suite,
 )
+from .omega_residual_frontier_inventions import (
+    InventionAudit,
+    PreReadCauchySchwarzDenseSkipper,
+    UnrelatedUserSuperpositionServer,
+    OpticalFlowKeyframeVideoSubsumption,
+    OptimalONMultigridNonPeriodicFP64Solver,
+    run_omega_residual_frontier_suite,
+)
 
 __all__ = [
     "FunctionalReplacementEngine",
@@ -405,4 +413,10 @@ __all__ = [
     "BranchAndBoundEarlyExitRouter",
     "EGraphAlgebraicKernelLifter",
     "run_single_device_frontier_suite",
+    "InventionAudit",
+    "PreReadCauchySchwarzDenseSkipper",
+    "UnrelatedUserSuperpositionServer",
+    "OpticalFlowKeyframeVideoSubsumption",
+    "OptimalONMultigridNonPeriodicFP64Solver",
+    "run_omega_residual_frontier_suite",
 ]

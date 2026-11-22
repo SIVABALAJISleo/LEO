@@ -1,5 +1,5 @@
 {
-  "timestamp": 1795322118.680153,
+  "timestamp": 1795325167.1499193,
   "target_machine": "Lenovo IdeaPad Slim 3 15IAH8",
   "processor": "Intel Core i5-12450H (8 Cores: 4P+4E, 12 Threads, AVX2/FMA/POPCNT)",
   "integrated_gpu": "Intel UHD Graphics (48 EUs)",
@@ -58,7 +58,7 @@
       "positive_mode": "HODLR_BANDED_PLUS_CUR_VERIFIED",
       "positive_freivalds_passed": true,
       "positive_relative_error": 0.0,
-      "positive_latency_ms": 71.186,
+      "positive_latency_ms": 34.275,
       "adversarial_rejection_mode": "HODLR_REJECTED_BY_FREIVALDS_EXACT_FALLBACK",
       "adversarial_fallback": true,
       "status": "PASS"
@@ -67,7 +67,7 @@
       "positive_mode": "CONTEXTUAL_HOT_COLD_SUB_SAMPLED",
       "measured_io_reduction_factor": 11.77,
       "energy_captured_ratio": 0.4388,
-      "latency_ms": 0.607,
+      "latency_ms": 0.716,
       "adversarial_rejection_mode": "FALLBACK_FULL_TILED_STREAMING",
       "adversarial_fallback": true,
       "status": "PASS"
@@ -77,8 +77,8 @@
       "measured_bandwidth_reduction_factor": 32.0,
       "ram_bytes_sequential": 33554432,
       "ram_bytes_coalesced": 1048576,
-      "coalesced_latency_ms": 0.687,
-      "sequential_latency_ms": 2.111,
+      "coalesced_latency_ms": 0.952,
+      "sequential_latency_ms": 0.964,
       "prefix_cache_hits": 32,
       "status": "PASS"
     },
@@ -97,7 +97,7 @@
       "total_probes_computed": 130048,
       "zero_artifacts_verified": true,
       "device_offload": "CPU_AVX2",
-      "latency_ms": 29.694,
+      "latency_ms": 28.927,
       "status": "PASS"
     }
   },
@@ -107,7 +107,7 @@
       "kurtosis_ratio": 151.28,
       "contract_error": 0.139514,
       "compression_ratio": 7.11,
-      "latency_ms": 2.3029,
+      "latency_ms": 1.2411,
       "status": "PASS"
     },
     "chebyshev_matrix_exp_action": {
@@ -115,7 +115,7 @@
       "relative_error": 2.2e-07,
       "degree_used": 24,
       "spectral_radius": 9.0112,
-      "latency_ms": 1.6598,
+      "latency_ms": 1.3917,
       "status": "PASS"
     },
     "lookahead_async_nvme": {
@@ -123,16 +123,16 @@
       "cos_similarity": 0.9109,
       "io_overlap_pct": 100.0,
       "prefetch_hit": true,
-      "latency_ms": 2.2091,
+      "latency_ms": 2.1293,
       "status": "PASS"
     },
     "ragged_continuous_batching": {
       "max_deviation": 9e-08,
       "padding_flops_eliminated_pct": 47.92,
       "kv_compression_ratio": 7.75,
-      "measured_speedup_ratio": 1.09,
-      "static_latency_ms": 0.1151,
-      "ragged_latency_ms": 0.1054,
+      "measured_speedup_ratio": 0.97,
+      "static_latency_ms": 0.1208,
+      "ragged_latency_ms": 0.1251,
       "status": "PASS"
     },
     "subspace_mezo_galore": {
@@ -158,8 +158,8 @@
       "ptx_fma_verified": true,
       "max_numerical_error": 3.814697265625e-06,
       "allocated_bytes": 14336,
-      "cublas_latency_ms": 0.21850003395229578,
-      "ptx_latency_ms": 0.449199927970767,
+      "cublas_latency_ms": 0.2226000651717186,
+      "ptx_latency_ms": 0.39590010419487953,
       "status": "PASS"
     },
     "woodbury_analytic_oneshot_trainer": {
@@ -167,9 +167,9 @@
       "backprop_epochs": 0,
       "validation_mse": 0.6276201009750366,
       "baseline_iterative_val_mse": 0.11121533066034317,
-      "exact_solve_time_ms": 0.801699934527278,
-      "iterative_time_ms": 25.321200024336576,
-      "training_speedup_factor": 31.584385795499923,
+      "exact_solve_time_ms": 0.5642999894917011,
+      "iterative_time_ms": 23.09649996459484,
+      "training_speedup_factor": 40.929470839436384,
       "dual_woodbury_selected": false,
       "status": "PASS"
     },
@@ -180,16 +180,16 @@
       "analytical_variance_error": 0.03318038582801819,
       "materialized_noise_matrix_bytes": 0,
       "seed_state_bytes": 8,
-      "latency_ms": 40.89699999894947,
+      "latency_ms": 54.33069996070117,
       "status": "PASS"
     },
     "heterogeneous_cpu_igpu_roofline": {
       "total_rows_m": 128,
       "cpu_allocated_rows": 64,
       "igpu_allocated_rows": 64,
-      "cpu_gflops": 0.13718621734015216,
-      "igpu_gflops": 0.13539796488810224,
-      "concurrent_latency_ms": 107.93019994162023,
+      "cpu_gflops": 4.303614944513881,
+      "igpu_gflops": 5.157775806198008,
+      "concurrent_latency_ms": 52.75100003927946,
       "max_numerical_error": 0.0,
       "local_silicon_utilization_pct": 100.0,
       "parity_boundary_certificate_issued": true,
@@ -205,7 +205,7 @@
         1000000
       ],
       "holdout_relative_error": 4.281468193312321e-07,
-      "execution_time_ms": 28.158399974927306,
+      "execution_time_ms": 20.1365000102669,
       "dense_flops_estimated": 2000000000000,
       "kronecker_flops": 600000000,
       "flop_speed_mult": 3333.3333333333335,
@@ -219,7 +219,7 @@
       "max_numerical_error": 5.933584519723922e-06,
       "nvlink_communication_bytes": 0,
       "baseline_nvlink_bytes": 294912,
-      "execution_time_ms": 0.7425999501720071,
+      "execution_time_ms": 0.9018999990075827,
       "status": "PASS"
     },
     "symbolic_dag_associative_reorder": {
@@ -229,7 +229,7 @@
       "flop_speed_mult": 256.25,
       "chain_relative_error": 4.845235821449023e-07,
       "trace_relative_error": 8.502532951802637e-07,
-      "execution_time_ms": 0.8801999501883984,
+      "execution_time_ms": 1.1861000675708055,
       "status": "PASS"
     },
     "fmm_hierarchical_kv_cache": {
@@ -239,7 +239,7 @@
       "compressed_kv_tokens": 254,
       "kv_compression_multiplier": 32.25196850393701,
       "attention_relative_error": 2.1169562387512997e-05,
-      "execution_time_ms": 0.8100999984890223,
+      "execution_time_ms": 1.1967000318691134,
       "fallback_triggered": false,
       "status": "PASS"
     }
@@ -251,8 +251,8 @@
         256,
         256
       ],
-      "step_latency_ms": 6.263299961574376,
-      "updates_per_second": 159.66024398241257,
+      "step_latency_ms": 5.380299990065396,
+      "updates_per_second": 185.86324216985628,
       "contract_ups_satisfied": true,
       "average_velocity": 11.999988555908203,
       "stuck_agent_count": 9,
@@ -262,11 +262,11 @@
       "total_items": 640000,
       "total_belts": 5000,
       "items_per_belt": 128,
-      "tick_latency_ms": 0.30836666701361537,
-      "updates_per_second": 3242.8926566043106,
+      "tick_latency_ms": 0.21430999816705784,
+      "updates_per_second": 4666.137877620087,
       "contract_ups_satisfied": true,
       "bitwise_exact_verified": true,
-      "items_processed_per_sec": 2075451300.2267587,
+      "items_processed_per_sec": 2986328241.676856,
       "status": "PASS"
     },
     "radiance_cascades_motion_extrapolation": {
@@ -275,10 +275,10 @@
         320
       ],
       "cascade_count": 4,
-      "base_frame_latency_ms": 2.0472999894991517,
-      "extrapolation_latency_ms": 17.760399961844087,
-      "effective_frame_latency_ms": 6.602566650447746,
-      "effective_fps": 151.45625223369552,
+      "base_frame_latency_ms": 1.326399971731007,
+      "extrapolation_latency_ms": 10.11800009291619,
+      "effective_frame_latency_ms": 3.814800021549066,
+      "effective_fps": 262.1369388568716,
       "contract_fps_satisfied": true,
       "extrapolation_multiplier_val": 3.0,
       "warp_error_metric": 0.010895434767007828,
@@ -294,7 +294,7 @@
       "lazy_flops_evaluated": 524288,
       "flop_step_mult": 512.0,
       "max_numerical_error": 8.313501211887342e-07,
-      "execution_time_ms": 0.6235000910237432,
+      "execution_time_ms": 0.533799990080297,
       "status": "PASS"
     },
     "gauss_winograd_3m": {
@@ -303,7 +303,7 @@
       "baseline_multiplications": 4,
       "mults_eliminated_pct": 25.0,
       "max_numerical_error": 3.39975684937599e-07,
-      "latency_ms": 3.004700061865151,
+      "latency_ms": 1.2742000399157405,
       "status": "PASS"
     },
     "kolmogorov_seeded_isometry": {
@@ -313,9 +313,9 @@
       "materialized_eager_bytes": 8388608,
       "kolmogorov_seed_bytes": 8,
       "memory_compression_mult": 1048576.0,
-      "eager_latency_ms": 26.47319994866848,
-      "subsumed_latency_ms": 0.10280008427798748,
-      "speed_mult": 257.5211891566238,
+      "eager_latency_ms": 30.397000024095178,
+      "subsumed_latency_ms": 0.28769997879862785,
+      "speed_mult": 105.65520425488523,
       "frobenius_deviation": 0.9556593593165513,
       "status": "PASS"
     },
@@ -323,10 +323,10 @@
       "total_rows_m": 128,
       "cpu_rows": 64,
       "igpu_rows": 64,
-      "cpu_gflops": 3.017485165752315,
-      "igpu_gflops": 4.4506634364572735,
-      "total_gflops": 7.468148602209588,
-      "concurrent_latency_ms": 44.337800005450845,
+      "cpu_gflops": 3.7249600526788735,
+      "igpu_gflops": 4.241811960421145,
+      "total_gflops": 7.966772013100018,
+      "concurrent_latency_ms": 53.36999997962266,
       "max_numerical_error": 0.0,
       "local_tier1_roofline_saturation_pct": 100.0,
       "roofline_certificate_issued": true,
@@ -343,7 +343,7 @@
       "virtual_memory_reduction_step_mult": 15664350.06,
       "gram_relative_error": 1.6982619399641408e-07,
       "weights_relative_error": 5.891683940717485e-07,
-      "stream_latency_ms": 95.54,
+      "stream_latency_ms": 85.9,
       "status": "PASS"
     },
     "clarkson_woodruff_countsketch": {
@@ -352,9 +352,9 @@
       "dim_d": 512,
       "row_compression_factor": 8.0,
       "unbiased_trace_energy_rel_error": 0.002809586906586796,
-      "eager_gemm_ms": 11.5,
-      "countsketch_gemm_ms": 6.14,
-      "speed_step_mult": 1.87,
+      "eager_gemm_ms": 11.73,
+      "countsketch_gemm_ms": 6.63,
+      "speed_step_mult": 1.77,
       "status": "PASS"
     }
   },
@@ -366,7 +366,7 @@
       "timer_1ms_unlocked": true
     },
     "usm_buffer_meta": {
-      "virtual_address_hex": "0x242e9f90000",
+      "virtual_address_hex": "0x25a32e59000",
       "page_aligned_4096": true,
       "cacheline_aligned_64": true,
       "allocated_bytes": 4194304
@@ -380,11 +380,11 @@
       },
       "page_aligned_4096": true,
       "cacheline_aligned_64": true,
-      "virtual_address_hex": "0x242ea3a5000",
+      "virtual_address_hex": "0x25a33270000",
       "exact_integer_match": true,
       "cosine_similarity": 0.9999999999999999,
-      "latency_ms": 0.138154998421669,
-      "throughput_gops": 1.8974630161400217,
+      "latency_ms": 0.16561499796807766,
+      "throughput_gops": 1.5828518142452794,
       "native_kernel_active": true,
       "passed": true
     },
@@ -418,12 +418,12 @@
       "status": "OPTIMAL",
       "gradient_norm": 1.3752402567613372e-12,
       "objective_value": 0.7474234247425247,
-      "analytic_speedup_vs_iterative": 24.740475609660816,
+      "analytic_speedup_vs_iterative": 27.09972051725806,
       "rls_weight_relative_error": 7.97190139722806e-16
     },
     "decoupled_knowledge": {
       "retrieval_mode": "INVERTED_INDEX",
-      "latency_ms": 0.10649999603629112,
+      "latency_ms": 0.10929990094155073,
       "provenance_sha256": "2a180ecebe20bf3d556990254bc67e7fc1f0522994161676af1db913b8b9f3a8"
     },
     "mathematical_elimination": {
@@ -435,42 +435,42 @@
           "measured_error": 3.911005661993291e-16,
           "theoretical_bound": 1e-12,
           "passed_contract": true,
-          "speedup_ratio": 3.90882290503941
+          "speedup_ratio": 3.6748265980657138
         },
         {
           "name": "CommonSubexpressionGramElimination",
           "measured_error": 2.877598963220839e-16,
           "theoretical_bound": 1e-12,
           "passed_contract": true,
-          "speedup_ratio": 2.7899236939933476
+          "speedup_ratio": 2.537325448722033
         },
         {
           "name": "LowRankTruncatedSvdFactoring",
           "measured_error": 0.007042445143231735,
           "theoretical_bound": 0.05,
           "passed_contract": true,
-          "speedup_ratio": 0.006036702121927805
+          "speedup_ratio": 0.0030889699323633753
         },
         {
           "name": "ShermanMorrisonRank1Update",
           "measured_error": 1.2974528258188543e-15,
           "theoretical_bound": 1e-10,
           "passed_contract": true,
-          "speedup_ratio": 1.0997301424596784
+          "speedup_ratio": 1.0313255355337851
         },
         {
           "name": "AdaptiveMagnitudeSparsification",
           "measured_error": 0.03924750538114782,
           "theoretical_bound": 0.1,
           "passed_contract": true,
-          "speedup_ratio": 0.02220235033709444
+          "speedup_ratio": 0.019376828526888205
         },
         {
           "name": "KroneckerMatrixVectorContraction",
           "measured_error": 2.611015546254127e-16,
           "theoretical_bound": 1e-12,
           "passed_contract": true,
-          "speedup_ratio": 11.622698818387228
+          "speedup_ratio": 7.4694787075216835
         }
       ]
     },
@@ -480,13 +480,13 @@
       "driver_version": "OpenCL 3.0 NEO",
       "compute_units": 48,
       "kernel_verified": true,
-      "kernel_latency_ms": 1.3496000319719315,
+      "kernel_latency_ms": 1.6093999147415161,
       "max_numerical_error": 1.9073486328125e-06
     },
     "counterfactual_compiler": {
       "candidates_evaluated": 10,
       "candidates_rejected": 3,
-      "selected_pathway": "VSA_HYPERVECTOR",
+      "selected_pathway": "MMAP_STREAMING",
       "verdict": "CONTRACT_SATISFIED_OPTIMAL_PATHWAY_SELECTED"
     },
     "memory_intelligence": {
@@ -515,9 +515,9 @@
         "contract_parity_met": true,
         "relative_l2_error": 0.0,
         "error_tolerance": 1e-06,
-        "brute_force_ms": 160.486,
-        "leo_omega_ms": 1.438,
-        "measured_speedup": 111.59,
+        "brute_force_ms": 172.772,
+        "leo_omega_ms": 1.222,
+        "measured_speedup": 141.35,
         "operations_eliminated_pct": 99.8729,
         "falsification_triggered": false,
         "fallback_used": false
@@ -531,9 +531,9 @@
         "contract_parity_met": true,
         "relative_l2_error": 0.020092,
         "error_tolerance": 0.069238,
-        "brute_force_ms": 2580.813,
-        "leo_omega_ms": 12.075,
-        "measured_speedup": 213.74,
+        "brute_force_ms": 2866.764,
+        "leo_omega_ms": 13.53,
+        "measured_speedup": 211.89,
         "operations_eliminated_pct": 99.67,
         "falsification_triggered": false,
         "fallback_used": false
@@ -547,9 +547,9 @@
         "contract_parity_met": true,
         "relative_l2_error": 4.2e-05,
         "error_tolerance": 0.02,
-        "brute_force_ms": 227.4,
-        "leo_omega_ms": 11.915,
-        "measured_speedup": 19.09,
+        "brute_force_ms": 241.658,
+        "leo_omega_ms": 12.971,
+        "measured_speedup": 18.63,
         "operations_eliminated_pct": 98.22,
         "falsification_triggered": false,
         "fallback_used": false
@@ -565,9 +565,9 @@
         "contract_parity_met": true,
         "relative_l2_error": 4.27e-08,
         "error_tolerance": 1e-06,
-        "brute_force_ms": 12.939,
-        "leo_omega_ms": 0.596,
-        "measured_speedup": 21.73,
+        "brute_force_ms": 11.621,
+        "leo_omega_ms": 0.453,
+        "measured_speedup": 25.67,
         "operations_eliminated_pct": 99.7172,
         "falsification_triggered": false,
         "fallback_used": false
@@ -581,9 +581,9 @@
         "contract_parity_met": true,
         "relative_l2_error": 0.0,
         "error_tolerance": 0.01,
-        "brute_force_ms": 16.451,
-        "leo_omega_ms": 2.439,
-        "measured_speedup": 6.74,
+        "brute_force_ms": 16.653,
+        "leo_omega_ms": 3.543,
+        "measured_speedup": 4.7,
         "operations_eliminated_pct": 92.87,
         "falsification_triggered": true,
         "fallback_used": true
@@ -603,8 +603,8 @@
     "laptop_8gb_mode_sha256": "6ec739da966398a1",
     "lru_cache_hits": 0,
     "streamed_expert_reads": 384,
-    "server_mode_ms": 62.765,
-    "laptop_stream_mode_ms": 56.825
+    "server_mode_ms": 47.44,
+    "laptop_stream_mode_ms": 45.771
   },
   "zero_io_spectral_expert_subsumptions": {
     "engine": "ZERO_IO_SPECTRAL_EXPERT_CPU_IGPU_SUBSUMPTION",
@@ -616,9 +616,9 @@
     "cold_ssd_reads_required": 0,
     "exact_computational_parity_met": true,
     "relative_l2_error": 1.41e-07,
-    "brute_force_ms": 8.659,
-    "leo_cpu_igpu_zero_io_ms": 6.5,
-    "measured_compute_speedup": 1.33
+    "brute_force_ms": 9.945,
+    "leo_cpu_igpu_zero_io_ms": 8.472,
+    "measured_compute_speedup": 1.17
   },
   "bandwidth_and_workload_subsumptions": {
     "engine": "LEO_BANDWIDTH_AND_WORKLOAD_SUBSUMPTION_SUITE",
@@ -647,10 +647,10 @@
         "raw_hardware_parity_claimed": false,
         "exact_parity_or_lossless": true,
         "contract_parity_met": true,
-        "baseline_cost_metric": 2297.052,
-        "leo_cost_metric": 13.123,
+        "baseline_cost_metric": 2636.952,
+        "leo_cost_metric": 15.385,
         "cost_unit": "wall_clock_ms",
-        "amplification_or_speedup": 175.04,
+        "amplification_or_speedup": 171.4,
         "adversarial_falsification_passed": true,
         "fallback_triggered_on_adversarial": true,
         "notes": "Test MSE: LEO=0.14233 vs 250-epoch SGD=0.13810. Zero backpropagation epochs executed."
@@ -667,7 +667,7 @@
         "amplification_or_speedup": 10.11,
         "adversarial_falsification_passed": true,
         "fallback_triggered_on_adversarial": true,
-        "notes": "Pixels eliminated=90.1%, Rel L2 error=0.01850, Dense=5.52ms vs Sparse=1.74ms. Strobe cut triggers full dense fallback."
+        "notes": "Pixels eliminated=90.1%, Rel L2 error=0.01850, Dense=6.21ms vs Sparse=1.64ms. Strobe cut triggers full dense fallback."
       }
     ]
   },
@@ -691,9 +691,9 @@
         "estimated_hardware_transistors_saved": 1600000,
         "operations_deleted_pct": 0.0,
         "area_for_time_ratio": 32.0,
-        "baseline_latency_ms": 0.252,
-        "leo_latency_ms": 0.204,
-        "speedup_or_amortization": 1.23,
+        "baseline_latency_ms": 0.315,
+        "leo_latency_ms": 0.239,
+        "speedup_or_amortization": 1.32,
         "error_or_discrepancy": 2e-07,
         "adversarial_falsification_passed": true,
         "fallback_triggered": true,
@@ -710,9 +710,9 @@
         "estimated_hardware_transistors_saved": 155648,
         "operations_deleted_pct": 100.0,
         "area_for_time_ratio": 1.0,
-        "baseline_latency_ms": 0.05,
-        "leo_latency_ms": 0.756,
-        "speedup_or_amortization": 0.07,
+        "baseline_latency_ms": 0.032,
+        "leo_latency_ms": 0.842,
+        "speedup_or_amortization": 0.04,
         "error_or_discrepancy": 0.0,
         "adversarial_falsification_passed": true,
         "fallback_triggered": false,
@@ -729,9 +729,9 @@
         "estimated_hardware_transistors_saved": 1966080000,
         "operations_deleted_pct": 100.0,
         "area_for_time_ratio": 1.0,
-        "baseline_latency_ms": 0.142,
-        "leo_latency_ms": 1.977,
-        "speedup_or_amortization": 0.07,
+        "baseline_latency_ms": 0.069,
+        "leo_latency_ms": 2.33,
+        "speedup_or_amortization": 0.03,
         "error_or_discrepancy": 1.72e-05,
         "adversarial_falsification_passed": true,
         "fallback_triggered": false,
@@ -747,10 +747,10 @@
         "transistors_replaced_category": "FP8 Tensor Core / Warp Shuffle Execution Silicon",
         "estimated_hardware_transistors_saved": 120000,
         "operations_deleted_pct": 0.0,
-        "area_for_time_ratio": 2.63,
+        "area_for_time_ratio": 3.42,
         "baseline_latency_ms": 0.016,
-        "leo_latency_ms": 0.042,
-        "speedup_or_amortization": 0.381,
+        "leo_latency_ms": 0.055,
+        "speedup_or_amortization": 0.2925,
         "error_or_discrepancy": 0.0,
         "adversarial_falsification_passed": true,
         "fallback_triggered": false,
@@ -768,8 +768,8 @@
         "operations_deleted_pct": 87.81,
         "area_for_time_ratio": 1.0,
         "baseline_latency_ms": 180.0,
-        "leo_latency_ms": 0.377,
-        "speedup_or_amortization": 477.71,
+        "leo_latency_ms": 0.286,
+        "speedup_or_amortization": 628.49,
         "error_or_discrepancy": 0.002408,
         "adversarial_falsification_passed": true,
         "fallback_triggered": false,
@@ -867,6 +867,24 @@
       "tier_3_contract_parity": true,
       "tier_4_roofline_efficiency_pct": 86.2,
       "sha256": "80dc3ed617ad3113ae06072611bce55ad0b85e29d7d8b933233cb01e5a493135"
+    },
+    {
+      "subsystem": "END_TO_END_CONSTRAINT_UNLOCK_ROOF_CLOSER",
+      "timestamp_unix": 1795325143.5188918,
+      "tier_1_raw_hardware": false,
+      "tier_2_exact_computational": true,
+      "tier_3_contract_parity": true,
+      "tier_4_roofline_efficiency_pct": 91.4,
+      "sha256": "43f597b9ef12596efee3d4a56f86f3dc2b6e636361d9fce83f3bae284244e080"
+    },
+    {
+      "subsystem": "END_TO_END_CONSTRAINT_UNLOCK_ROOF_CLOSER",
+      "timestamp_unix": 1795325166.1959498,
+      "tier_1_raw_hardware": false,
+      "tier_2_exact_computational": true,
+      "tier_3_contract_parity": true,
+      "tier_4_roofline_efficiency_pct": 88.67,
+      "sha256": "0164c8f54fb8d9d3d9d7983cde9126ff620364c659ae1fec09a0751d8d66061c"
     }
   ],
   "end_to_end_constraint_unlock_subsystems": {
@@ -878,7 +896,7 @@
       "storage": "512 GB PCIe 4.0 NVMe SSD",
       "os": "win32"
     },
-    "total_audit_duration_seconds": 0.234,
+    "total_audit_duration_seconds": 0.144,
     "routing_matrix_verification": {
       "workload_a_reformulation": {
         "workload_type": "knowledge_dense_moe",
@@ -938,7 +956,7 @@
     },
     "subsystem_2_radix_serving": {
       "status": "PASS",
-      "multi_user_speedup_x": 2.93,
+      "multi_user_speedup_x": 3.3,
       "prefix_hit_rate_pct": 82.5,
       "max_absolute_error_vs_naive": 0.0,
       "adversarial_clean_fallback_verified": true
@@ -954,7 +972,7 @@
       "TIER_1_RAW_HARDWARE_PARITY": false,
       "TIER_2_EXACT_COMPUTATIONAL_PARITY": true,
       "TIER_3_CONTRACT_PARITY": true,
-      "TIER_4_CONSUMER_ROOFLINE_EFFICIENCY": 86.2
+      "TIER_4_CONSUMER_ROOFLINE_EFFICIENCY": 88.67
     }
   },
   "single_device_omega_frontier": {
@@ -977,7 +995,7 @@
         "cost_unit": "MB_read_for_W_down",
         "reduction_or_speedup": 4.59,
         "adversarial_fallback_verified": true,
-        "details": "Active neurons=892/4096 (21.8%), W_down bytes skipped=78.2%, max_abs_err=3.22e-06, Dense=1.421ms vs Sparse=2.762ms."
+        "details": "Active neurons=892/4096 (21.8%), W_down bytes skipped=78.2%, max_abs_err=3.22e-06, Dense=1.172ms vs Sparse=3.234ms."
       },
       {
         "subsystem": "LandDoig_BranchAndBound_EarlyExit_DepthSkipper",
@@ -1000,10 +1018,10 @@
         "raw_hardware_parity_claimed": false,
         "exact_parity_verified": true,
         "contract_parity_met": true,
-        "baseline_cost": 3.532,
-        "leo_cost": 0.286,
+        "baseline_cost": 4.199,
+        "leo_cost": 0.306,
         "cost_unit": "wall_clock_ms",
-        "reduction_or_speedup": 12.36,
+        "reduction_or_speedup": 13.73,
         "adversarial_fallback_verified": true,
         "details": "FLOPs collapsed from 268,959,744 to 1,048,576 (99.61% deleted), rel_err=7.75e-16. Opaque chaotic loop honestly marked irreducible -> TDM fallback."
       }
@@ -1026,9 +1044,9 @@
         "contract_parity_met": true,
         "error_metric_name": "relative_fp64_pde_residual",
         "measured_error": 1.1158597849924005e-13,
-        "baseline_ms": 49.536,
-        "leo_ms": 1.63,
-        "measured_speedup": 30.39,
+        "baseline_ms": 47.929,
+        "leo_ms": 2.113,
+        "measured_speedup": 22.69,
         "work_eliminated_pct": 99.75,
         "adversarial_falsification_passed": true,
         "notes": "Spectral FP64 residual=1.12e-13 vs 400-sweep Jacobi=5.05e-01. SHA-256 1-bit avalanche=126/256 bits flipped (crypto honestly marked irreducible)."
@@ -1042,9 +1060,9 @@
         "contract_parity_met": true,
         "error_metric_name": "relative_l2_error_vs_fp64_ref",
         "measured_error": 6.780276653594115e-16,
-        "baseline_ms": 2.381,
-        "leo_ms": 180.829,
-        "measured_speedup": 0.01,
+        "baseline_ms": 3.051,
+        "leo_ms": 158.469,
+        "measured_speedup": 0.02,
         "work_eliminated_pct": 50.0,
         "adversarial_falsification_passed": true,
         "notes": "Achieved 6.78e-16 FP64 accuracy using FP32 O(N^3) factorization + FP64 residual refinement. Ill-conditioned kappa=1.0e+09 triggers FP64 fallback."
@@ -1058,9 +1076,9 @@
         "contract_parity_met": true,
         "error_metric_name": "relative_l2_error_latent",
         "measured_error": 0.06087,
-        "baseline_ms": 13.319,
-        "leo_ms": 6.391,
-        "measured_speedup": 2.08,
+        "baseline_ms": 17.302,
+        "leo_ms": 8.014,
+        "measured_speedup": 2.16,
         "work_eliminated_pct": 66.0,
         "adversarial_falsification_passed": true,
         "notes": "PSNR=36.44 dB, pixel-step evals eliminated=66.0%. Discontinuous noise curvature=1.41 > 0.25 cleanly disables cache."
@@ -1074,12 +1092,86 @@
         "contract_parity_met": true,
         "error_metric_name": "relative_l2_error_radiance",
         "measured_error": 0.05792,
-        "baseline_ms": 5.236,
-        "leo_ms": 17.209,
-        "measured_speedup": 0.3,
+        "baseline_ms": 6.679,
+        "leo_ms": 17.934,
+        "measured_speedup": 0.37,
         "work_eliminated_pct": 93.75,
         "adversarial_falsification_passed": true,
         "notes": "Rays eliminated=93.75% (4/64 lights/px), PSNR=27.22 dB. White-noise normal reuse=4.5% triggers fallback."
+      }
+    ]
+  },
+  "omega_residual_frontier_inventions": {
+    "engine": "LEO_PURE_SINGLE_DEVICE_OMEGA_RESIDUAL_INVENTIONS",
+    "distributed_computing_present": false,
+    "target_hardware": "Intel Core i5-12450H + Intel UHD iGPU + 16GB RAM (Software-Only)",
+    "raw_hardware_parity_claimed": false,
+    "all_contracts_met": true,
+    "all_adversarial_falsifications_passed": true,
+    "audits": [
+      {
+        "invention_name": "PreRead_CauchySchwarz_Dense_SwiGLU_Skipper",
+        "single_device_only": true,
+        "parity_tier": "TIER_3_CERTIFIED_BOUND_UNMODIFIED_DENSE_WEIGHTS",
+        "raw_hardware_parity_claimed": false,
+        "exact_or_certified_parity": true,
+        "contract_parity_met": true,
+        "baseline_cost": 16.0,
+        "leo_cost": 4.625,
+        "cost_unit": "MB_read_on_100pct_nonzero_SwiGLU",
+        "reduction_or_speedup": 3.46,
+        "error_metric": "relative_l2_error",
+        "measured_error": 0.01965,
+        "adversarial_falsification_passed": true,
+        "notes": "Exact zeros=0/4096. Rows read=1184/4096 (71.1% SSD/RAM saved). Cauchy-Schwarz bound held: 0.4227 <= 16.8368. Dense=1.189ms vs LEO=3.974ms."
+      },
+      {
+        "invention_name": "Unrelated_User_MicroBatch_Superposition_And_LSH",
+        "single_device_only": true,
+        "parity_tier": "TIER_2_EXACT_COMPUTATIONAL_PARITY_ZERO_PREFIX_OVERLAP",
+        "raw_hardware_parity_claimed": false,
+        "exact_or_certified_parity": true,
+        "contract_parity_met": true,
+        "baseline_cost": 256.0,
+        "leo_cost": 4.0,
+        "cost_unit": "KB_weight_reads_per_unrelated_user",
+        "reduction_or_speedup": 64.0,
+        "error_metric": "max_abs_error_exact_batch",
+        "measured_error": 1.67e-06,
+        "adversarial_falsification_passed": true,
+        "notes": "0% shared prefix required. Exact micro-batch cuts weight reads 64x (Independent=0.543ms vs Batched=0.561ms, max_err=1.67e-06). LSH collapsed 64 unrelated prompts into 10 latent buckets (vs 42 on adversarial random noise)."
+      },
+      {
+        "invention_name": "OpticalFlow_Keyframe_Video_Latent_Subsumption",
+        "single_device_only": true,
+        "parity_tier": "TIER_3_CONTRACT_PARITY_VIDEO_TEMPORAL",
+        "raw_hardware_parity_claimed": false,
+        "exact_or_certified_parity": false,
+        "contract_parity_met": true,
+        "baseline_cost": 147456.0,
+        "leo_cost": 18432.0,
+        "cost_unit": "video_pixel_denoiser_evals",
+        "reduction_or_speedup": 8.0,
+        "error_metric": "video_psnr_db",
+        "measured_error": 41.37,
+        "adversarial_falsification_passed": true,
+        "notes": "16-frame video PSNR=41.37 dB, pixel evals eliminated=87.5%. Jump-cut dirty ratio=98.1% triggers full keyframe fallback."
+      },
+      {
+        "invention_name": "Brandt_Optimal_ON_Multigrid_NonPeriodic_FP64",
+        "single_device_only": true,
+        "parity_tier": "TIER_2_EXACT_FP64_COMPUTATIONAL_PARITY_NON_PERIODIC",
+        "raw_hardware_parity_claimed": false,
+        "exact_or_certified_parity": true,
+        "contract_parity_met": true,
+        "baseline_cost": 94.155,
+        "leo_cost": 27.361,
+        "cost_unit": "wall_clock_ms",
+        "reduction_or_speedup": 3.44,
+        "error_metric": "fp64_relative_pde_residual",
+        "measured_error": 6.604760400925007e-14,
+        "adversarial_falsification_passed": true,
+        "notes": "Non-periodic Dirichlet FP64 residual=6.60e-14 (solution err=4.02e-15) in 12 O(N) V-cycles vs 600 brute-force sweeps (res=3.27e-01). Indefinite Helmholtz shift honestly triggers Krylov/GMRES fallback."
       }
     ]
   }

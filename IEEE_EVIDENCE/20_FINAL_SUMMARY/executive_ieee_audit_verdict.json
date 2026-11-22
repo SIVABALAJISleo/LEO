@@ -6,7 +6,7 @@
   "canonical_families_verified": 24,
   "unlocked_dormant_silicon_tops": 6.53,
   "effective_memory_bandwidth_gbps": 594.24,
-  "audit_completion_timestamp": 1795322118.6964035,
+  "audit_completion_timestamp": 1795325167.1605182,
   "release_readiness_pct": 100.0,
   "cur_skeleton_gemm_verified": true,
   "offline_truncated_svd_verified": true,
@@ -88,5 +88,10 @@
   "exact_15digit_fp64_spectral_pde_verified": true,
   "multigrid_taylor_diffusion_video_verified": true,
   "restir_atrous_wavelet_pathtracing_verified": true,
-  "crypto_sha256_avalanche_irreducibility_verified": true
+  "crypto_sha256_avalanche_irreducibility_verified": true,
+  "omega_residual_frontier_inventions_verified": true,
+  "cauchy_schwarz_dense_swiglu_skipping_verified": true,
+  "unrelated_user_microbatch_superposition_verified": true,
+  "keyframe_optical_flow_video_advection_verified": true,
+  "brandt_optimal_on_multigrid_nonperiodic_fp64_verified": true
 }
