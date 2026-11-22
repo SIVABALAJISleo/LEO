@@ -96,7 +96,10 @@ def test_3_speculative_multi_token_batching_and_leviathan_chen():
     assert res["sector_alignment_verified"] is True
     assert res["execution_metrics"]["distribution_parity"] == "100%_LEVIATHAN_CHEN_EXACT"
     assert res["execution_metrics"]["accepted_speculative_tokens"] > 0
-    assert res["parity_tiers"]["TIER_2_EXACT_COMPUTATIONAL_PARITY"] is True
+    assert res["pack_encoding_label"] == "LOSSLESS_OVER_INT4_PACK"
+    assert res["fidelity_contract"] == "APPROXIMATE_CONTRACT_PARITY"
+    assert res["parity_tiers"]["TIER_2_EXACT_COMPUTATIONAL_PARITY"] is False  # INT4 is approximate vs FP32
+    assert res["parity_tiers"]["TIER_3_CONTRACT_PARITY"] is True
 
 
 def test_4_radix_prefix_multi_user_serving_zero_numerical_error():
@@ -177,6 +180,6 @@ def test_9_master_end_to_end_constraint_unlock_audit():
 
     tiers = audit["global_parity_tiers"]
     assert tiers["TIER_1_RAW_HARDWARE_PARITY"] is False
-    assert tiers["TIER_2_EXACT_COMPUTATIONAL_PARITY"] is True
+    assert tiers["TIER_2_EXACT_COMPUTATIONAL_PARITY"] is False  # Approximate contract parity over INT4 pack
     assert tiers["TIER_3_CONTRACT_PARITY"] is True
     assert tiers["TIER_4_CONSUMER_ROOFLINE_EFFICIENCY"] > 50.0

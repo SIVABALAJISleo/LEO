@@ -1,9 +1,11 @@
 {
   "subsystem": "SSD_NATIVE_UNMODIFIED_EXPERT_ENGINE",
+  "pack_encoding_label": "LOSSLESS_OVER_INT4_PACK",
+  "fidelity_contract": "APPROXIMATE_CONTRACT_PARITY",
   "sector_alignment_verified": true,
   "total_experts_in_pack": 32,
   "speculative_k_window": 8,
-  "elapsed_ms": 13.843,
+  "elapsed_ms": 14.615,
   "execution_metrics": {
     "window_k_tokens": 8,
     "unique_experts_read": 16,
@@ -18,7 +20,7 @@
   "adversarial_incompressibility_passthrough_verified": true,
   "parity_tiers": {
     "TIER_1_RAW_HARDWARE_PARITY": false,
-    "TIER_2_EXACT_COMPUTATIONAL_PARITY": true,
+    "TIER_2_EXACT_COMPUTATIONAL_PARITY": false,
     "TIER_3_CONTRACT_PARITY": true,
     "TIER_4_CONSUMER_ROOFLINE_EFFICIENCY": 100.0
   }

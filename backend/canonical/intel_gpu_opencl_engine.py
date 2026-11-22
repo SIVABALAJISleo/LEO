@@ -48,6 +48,7 @@ cl_command_queue = ctypes.c_void_p
 cl_program = ctypes.c_void_p
 cl_kernel = ctypes.c_void_p
 cl_mem = ctypes.c_void_p
+cl_event = ctypes.c_void_p
 size_t = ctypes.c_size_t
 
 
@@ -140,6 +141,11 @@ class OpenClCAbiWrapper:
 
         cl.clFinish.argtypes = [cl_command_queue]
         cl.clFinish.restype = cl_int
+
+        cl.clGetEventProfilingInfo.argtypes = [cl_event, cl_uint, size_t, ctypes.c_void_p, ctypes.POINTER(size_t)]
+        cl.clGetEventProfilingInfo.restype = cl_int
+        cl.clReleaseEvent.argtypes = [cl_event]
+        cl.clReleaseEvent.restype = cl_int
 
         cl.clReleaseMemObject.argtypes = [cl_mem]
         cl.clReleaseMemObject.restype = cl_int
@@ -234,7 +240,8 @@ class IntelGpuOpenClEngine:
         dev_arr = (cl_device_id * 1)(target_dev)
         self._ctx = cl.clCreateContext(None, 1, dev_arr, None, None, ctypes.byref(err_ctx))
         if err_ctx.value == 0:
-            self._queue = cl.clCreateCommandQueue(self._ctx, target_dev, 0, ctypes.byref(err_ctx))
+            CL_QUEUE_PROFILING_ENABLE = 2
+            self._queue = cl.clCreateCommandQueue(self._ctx, target_dev, CL_QUEUE_PROFILING_ENABLE, ctypes.byref(err_ctx))
 
     def _set_fallback_info(self, reason: str) -> None:
         self.device_info = IntelGpuDeviceInfo(
@@ -327,13 +334,20 @@ class IntelGpuOpenClEngine:
         val_N = cl_int(N)
         cl.clSetKernelArg(kernel, 4, size_t(ctypes.sizeof(cl_int)), ctypes.byref(val_N))
 
-        # Enqueue kernel
+        # Enqueue kernel with event profiling
         global_work = (size_t * 1)(N)
-        t0_kernel = time.perf_counter()
-        cl.clEnqueueNDRangeKernel(queue, kernel, 1, None, global_work, None, 0, None, None)
+        kernel_event = cl_event()
+        cl.clEnqueueNDRangeKernel(queue, kernel, 1, None, global_work, None, 0, None, ctypes.byref(kernel_event))
         cl.clFinish(queue)
-        t1_kernel = time.perf_counter()
-        kernel_lat_ms = (t1_kernel - t0_kernel) * 1000.0
+
+        # Profile actual GPU hardware execution nanoseconds via clGetEventProfilingInfo
+        t_start_gpu = cl_ulong()
+        t_end_gpu = cl_ulong()
+        cl.clGetEventProfilingInfo(kernel_event, 0x1282, size_t(8), ctypes.byref(t_start_gpu), None)  # CL_PROFILING_COMMAND_START
+        cl.clGetEventProfilingInfo(kernel_event, 0x1283, size_t(8), ctypes.byref(t_end_gpu), None)    # CL_PROFILING_COMMAND_END
+        gpu_nanoseconds = int(t_end_gpu.value - t_start_gpu.value)
+        kernel_lat_ms = float(gpu_nanoseconds / 1e6)
+        cl.clReleaseEvent(kernel_event)
 
         # Read back
         cl.clEnqueueReadBuffer(queue, buf_z, 1, 0, size_t(z_out.nbytes), z_out.ctypes.data_as(ctypes.c_void_p), 0, None, None)
@@ -362,7 +376,7 @@ class IntelGpuOpenClEngine:
             verified=verified,
             bytes_transferred=x.nbytes + y.nbytes + z_out.nbytes,
             execution_backend="INTEL_OPENCL_IGPU",
-            metadata={"driver_version": self.device_info.driver_version, "compute_units": self.device_info.compute_units}
+            metadata={"gpu_nanoseconds": gpu_nanoseconds, "driver_version": self.device_info.driver_version}
         )
 
     def execute_matrix_vector_gemv(
@@ -440,11 +454,18 @@ class IntelGpuOpenClEngine:
         cl.clSetKernelArg(kernel, 4, size_t(ctypes.sizeof(cl_int)), ctypes.byref(val_K))
 
         global_work = (size_t * 1)(M)
-        t0_kernel = time.perf_counter()
-        cl.clEnqueueNDRangeKernel(queue, kernel, 1, None, global_work, None, 0, None, None)
+        kernel_event = cl_event()
+        cl.clEnqueueNDRangeKernel(queue, kernel, 1, None, global_work, None, 0, None, ctypes.byref(kernel_event))
         cl.clFinish(queue)
-        t1_kernel = time.perf_counter()
-        kernel_lat_ms = (t1_kernel - t0_kernel) * 1000.0
+
+        # Profile actual GPU hardware execution nanoseconds via clGetEventProfilingInfo
+        t_start_gpu = cl_ulong()
+        t_end_gpu = cl_ulong()
+        cl.clGetEventProfilingInfo(kernel_event, 0x1282, size_t(8), ctypes.byref(t_start_gpu), None)
+        cl.clGetEventProfilingInfo(kernel_event, 0x1283, size_t(8), ctypes.byref(t_end_gpu), None)
+        gpu_nanoseconds = int(t_end_gpu.value - t_start_gpu.value)
+        kernel_lat_ms = float(gpu_nanoseconds / 1e6)
+        cl.clReleaseEvent(kernel_event)
 
         cl.clEnqueueReadBuffer(queue, buf_y, 1, 0, size_t(y_out.nbytes), y_out.ctypes.data_as(ctypes.c_void_p), 0, None, None)
         t_end = time.perf_counter()
@@ -471,7 +492,7 @@ class IntelGpuOpenClEngine:
             verified=verified,
             bytes_transferred=A_c.nbytes + x.nbytes + y_out.nbytes,
             execution_backend="INTEL_OPENCL_IGPU",
-            metadata={"M": M, "K": K, "driver_version": self.device_info.driver_version}
+            metadata={"M": M, "K": K, "gpu_nanoseconds": gpu_nanoseconds, "driver_version": self.device_info.driver_version}
         )
 
     def close(self) -> None:

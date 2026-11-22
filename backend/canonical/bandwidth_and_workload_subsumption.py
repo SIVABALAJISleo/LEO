@@ -254,11 +254,14 @@ class AnalyticLayerwiseGrowthLearner:
         contract_met = bool(leo_mse <= sgd_mse * 1.15 or leo_mse <= 0.18)
         speedup_val = float(sgd_ms / max(1e-6, leo_ms))
 
+        # Strict exact-parity check: only True if numerical difference <= 1e-6
+        exact_lossless = bool(abs(leo_mse - sgd_mse) <= 1e-6)
+
         return SubsumptionAudit(
             module_name="Analytic_Residual_Stacking_ZeroBackprop_Learner",
-            parity_tier="TIER_3_CONTRACT_PARITY_ZERO_EPOCHS",
+            parity_tier="TIER_3_APPROXIMATE_CONTRACT_PARITY",
             raw_hardware_parity_claimed=bool(False),
-            exact_parity_or_lossless=bool(True),
+            exact_parity_or_lossless=bool(exact_lossless),
             contract_parity_met=bool(contract_met),
             baseline_cost_metric=float(round(sgd_ms, 3)),
             leo_cost_metric=float(round(leo_ms, 3)),
@@ -268,7 +271,7 @@ class AnalyticLayerwiseGrowthLearner:
             fallback_triggered_on_adversarial=bool(noise_correctly_rejected),
             notes=(
                 f"Test MSE: LEO={leo_mse:.5f} vs {sgd_epochs}-epoch SGD={sgd_mse:.5f}. "
-                f"Zero backpropagation epochs executed."
+                f"Zero backpropagation epochs executed. Contract parity met without exact bitwise parity."
             ),
         )
 

@@ -1,5 +1,5 @@
 {
-  "timestamp": 1795325167.0575616,
+  "timestamp": 1795329593.6153455,
   "machine": "Lenovo IdeaPad Slim 3 15IAH8",
   "cpu": "Intel Core i5-12450H",
   "igpu": "Intel UHD Graphics (48 EUs)",
@@ -9,8 +9,8 @@
       "ptx_fma_verified": true,
       "max_numerical_error": 3.814697265625e-06,
       "allocated_bytes": 14336,
-      "cublas_latency_ms": 0.2226000651717186,
-      "ptx_latency_ms": 0.39590010419487953,
+      "cublas_latency_ms": 0.21870003547519445,
+      "ptx_latency_ms": 0.4450998967513442,
       "status": "PASS"
     },
     "woodbury_analytic_oneshot_trainer": {
@@ -18,9 +18,9 @@
       "backprop_epochs": 0,
       "validation_mse": 0.6276201009750366,
       "baseline_iterative_val_mse": 0.11121533066034317,
-      "exact_solve_time_ms": 0.5642999894917011,
-      "iterative_time_ms": 23.09649996459484,
-      "training_speedup_factor": 40.929470839436384,
+      "exact_solve_time_ms": 0.6420999998226762,
+      "iterative_time_ms": 27.999599929898977,
+      "training_speedup_factor": 43.60629175771906,
       "dual_woodbury_selected": false,
       "status": "PASS"
     },
@@ -31,16 +31,16 @@
       "analytical_variance_error": 0.03318038582801819,
       "materialized_noise_matrix_bytes": 0,
       "seed_state_bytes": 8,
-      "latency_ms": 54.33069996070117,
+      "latency_ms": 47.86509997211397,
       "status": "PASS"
     },
     "heterogeneous_cpu_igpu_roofline": {
       "total_rows_m": 128,
       "cpu_allocated_rows": 64,
       "igpu_allocated_rows": 64,
-      "cpu_gflops": 4.303614944513881,
-      "igpu_gflops": 5.157775806198008,
-      "concurrent_latency_ms": 52.75100003927946,
+      "cpu_gflops": 7.431440357134394,
+      "igpu_gflops": 8.782045180405749,
+      "concurrent_latency_ms": 38.40210009366274,
       "max_numerical_error": 0.0,
       "local_silicon_utilization_pct": 100.0,
       "parity_boundary_certificate_issued": true,

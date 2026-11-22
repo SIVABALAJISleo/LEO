@@ -7,7 +7,7 @@
     "storage": "512 GB PCIe 4.0 NVMe SSD",
     "os": "win32"
   },
-  "total_audit_duration_seconds": 0.144,
+  "total_audit_duration_seconds": 0.211,
   "routing_matrix_verification": {
     "workload_a_reformulation": {
       "workload_type": "knowledge_dense_moe",
@@ -67,22 +67,33 @@
   },
   "subsystem_2_radix_serving": {
     "status": "PASS",
-    "multi_user_speedup_x": 3.3,
-    "prefix_hit_rate_pct": 82.5,
+    "multi_user_speedup_x": 2.75,
+    "prefix_hit_rate_pct": 70.0,
     "max_absolute_error_vs_naive": 0.0,
     "adversarial_clean_fallback_verified": true
+  },
+  "subsystem_3_single_device_frontier": {
+    "status": "PASS",
+    "peer_nodes_count": 0,
+    "single_device_only": true,
+    "zero_distributed_computing": true,
+    "activation_routing_compression_ratio_x": 1.0,
+    "max_diff_normal_vs_single_node": 0.0,
+    "fault_injection_seamless_failover_verified": true
   },
   "subsystem_3_p2p_mesh": {
     "status": "PASS",
     "peer_nodes_count": 0,
+    "single_device_only": true,
+    "zero_distributed_computing": true,
     "activation_routing_compression_ratio_x": 1.0,
     "max_diff_normal_vs_single_node": 0.0,
     "fault_injection_seamless_failover_verified": true
   },
   "global_parity_tiers": {
     "TIER_1_RAW_HARDWARE_PARITY": false,
-    "TIER_2_EXACT_COMPUTATIONAL_PARITY": true,
+    "TIER_2_EXACT_COMPUTATIONAL_PARITY": false,
     "TIER_3_CONTRACT_PARITY": true,
-    "TIER_4_CONSUMER_ROOFLINE_EFFICIENCY": 88.67
+    "TIER_4_CONSUMER_ROOFLINE_EFFICIENCY": 85.0
   }
 }

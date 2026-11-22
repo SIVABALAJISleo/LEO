@@ -1,5 +1,5 @@
 {
-  "timestamp": 1795325167.1499193,
+  "timestamp": 1795329593.752191,
   "target_machine": "Lenovo IdeaPad Slim 3 15IAH8",
   "processor": "Intel Core i5-12450H (8 Cores: 4P+4E, 12 Threads, AVX2/FMA/POPCNT)",
   "integrated_gpu": "Intel UHD Graphics (48 EUs)",
@@ -58,7 +58,7 @@
       "positive_mode": "HODLR_BANDED_PLUS_CUR_VERIFIED",
       "positive_freivalds_passed": true,
       "positive_relative_error": 0.0,
-      "positive_latency_ms": 34.275,
+      "positive_latency_ms": 38.418,
       "adversarial_rejection_mode": "HODLR_REJECTED_BY_FREIVALDS_EXACT_FALLBACK",
       "adversarial_fallback": true,
       "status": "PASS"
@@ -67,7 +67,7 @@
       "positive_mode": "CONTEXTUAL_HOT_COLD_SUB_SAMPLED",
       "measured_io_reduction_factor": 11.77,
       "energy_captured_ratio": 0.4388,
-      "latency_ms": 0.716,
+      "latency_ms": 0.637,
       "adversarial_rejection_mode": "FALLBACK_FULL_TILED_STREAMING",
       "adversarial_fallback": true,
       "status": "PASS"
@@ -77,8 +77,8 @@
       "measured_bandwidth_reduction_factor": 32.0,
       "ram_bytes_sequential": 33554432,
       "ram_bytes_coalesced": 1048576,
-      "coalesced_latency_ms": 0.952,
-      "sequential_latency_ms": 0.964,
+      "coalesced_latency_ms": 0.607,
+      "sequential_latency_ms": 0.981,
       "prefix_cache_hits": 32,
       "status": "PASS"
     },
@@ -97,7 +97,7 @@
       "total_probes_computed": 130048,
       "zero_artifacts_verified": true,
       "device_offload": "CPU_AVX2",
-      "latency_ms": 28.927,
+      "latency_ms": 32.112,
       "status": "PASS"
     }
   },
@@ -107,7 +107,7 @@
       "kurtosis_ratio": 151.28,
       "contract_error": 0.139514,
       "compression_ratio": 7.11,
-      "latency_ms": 1.2411,
+      "latency_ms": 1.6543,
       "status": "PASS"
     },
     "chebyshev_matrix_exp_action": {
@@ -115,7 +115,7 @@
       "relative_error": 2.2e-07,
       "degree_used": 24,
       "spectral_radius": 9.0112,
-      "latency_ms": 1.3917,
+      "latency_ms": 1.6386,
       "status": "PASS"
     },
     "lookahead_async_nvme": {
@@ -123,16 +123,16 @@
       "cos_similarity": 0.9109,
       "io_overlap_pct": 100.0,
       "prefetch_hit": true,
-      "latency_ms": 2.1293,
+      "latency_ms": 18.7915,
       "status": "PASS"
     },
     "ragged_continuous_batching": {
       "max_deviation": 9e-08,
       "padding_flops_eliminated_pct": 47.92,
       "kv_compression_ratio": 7.75,
-      "measured_speedup_ratio": 0.97,
-      "static_latency_ms": 0.1208,
-      "ragged_latency_ms": 0.1251,
+      "measured_speedup_ratio": 1.26,
+      "static_latency_ms": 0.1354,
+      "ragged_latency_ms": 0.1072,
       "status": "PASS"
     },
     "subspace_mezo_galore": {
@@ -158,8 +158,8 @@
       "ptx_fma_verified": true,
       "max_numerical_error": 3.814697265625e-06,
       "allocated_bytes": 14336,
-      "cublas_latency_ms": 0.2226000651717186,
-      "ptx_latency_ms": 0.39590010419487953,
+      "cublas_latency_ms": 0.21870003547519445,
+      "ptx_latency_ms": 0.4450998967513442,
       "status": "PASS"
     },
     "woodbury_analytic_oneshot_trainer": {
@@ -167,9 +167,9 @@
       "backprop_epochs": 0,
       "validation_mse": 0.6276201009750366,
       "baseline_iterative_val_mse": 0.11121533066034317,
-      "exact_solve_time_ms": 0.5642999894917011,
-      "iterative_time_ms": 23.09649996459484,
-      "training_speedup_factor": 40.929470839436384,
+      "exact_solve_time_ms": 0.6420999998226762,
+      "iterative_time_ms": 27.999599929898977,
+      "training_speedup_factor": 43.60629175771906,
       "dual_woodbury_selected": false,
       "status": "PASS"
     },
@@ -180,16 +180,16 @@
       "analytical_variance_error": 0.03318038582801819,
       "materialized_noise_matrix_bytes": 0,
       "seed_state_bytes": 8,
-      "latency_ms": 54.33069996070117,
+      "latency_ms": 47.86509997211397,
       "status": "PASS"
     },
     "heterogeneous_cpu_igpu_roofline": {
       "total_rows_m": 128,
       "cpu_allocated_rows": 64,
       "igpu_allocated_rows": 64,
-      "cpu_gflops": 4.303614944513881,
-      "igpu_gflops": 5.157775806198008,
-      "concurrent_latency_ms": 52.75100003927946,
+      "cpu_gflops": 7.431440357134394,
+      "igpu_gflops": 8.782045180405749,
+      "concurrent_latency_ms": 38.40210009366274,
       "max_numerical_error": 0.0,
       "local_silicon_utilization_pct": 100.0,
       "parity_boundary_certificate_issued": true,
@@ -205,7 +205,7 @@
         1000000
       ],
       "holdout_relative_error": 4.281468193312321e-07,
-      "execution_time_ms": 20.1365000102669,
+      "execution_time_ms": 25.047000031918287,
       "dense_flops_estimated": 2000000000000,
       "kronecker_flops": 600000000,
       "flop_speed_mult": 3333.3333333333335,
@@ -219,7 +219,7 @@
       "max_numerical_error": 5.933584519723922e-06,
       "nvlink_communication_bytes": 0,
       "baseline_nvlink_bytes": 294912,
-      "execution_time_ms": 0.9018999990075827,
+      "execution_time_ms": 0.7406999357044697,
       "status": "PASS"
     },
     "symbolic_dag_associative_reorder": {
@@ -229,7 +229,7 @@
       "flop_speed_mult": 256.25,
       "chain_relative_error": 4.845235821449023e-07,
       "trace_relative_error": 8.502532951802637e-07,
-      "execution_time_ms": 1.1861000675708055,
+      "execution_time_ms": 1.0479999473318458,
       "status": "PASS"
     },
     "fmm_hierarchical_kv_cache": {
@@ -239,7 +239,7 @@
       "compressed_kv_tokens": 254,
       "kv_compression_multiplier": 32.25196850393701,
       "attention_relative_error": 2.1169562387512997e-05,
-      "execution_time_ms": 1.1967000318691134,
+      "execution_time_ms": 0.7770999800413847,
       "fallback_triggered": false,
       "status": "PASS"
     }
@@ -251,8 +251,8 @@
         256,
         256
       ],
-      "step_latency_ms": 5.380299990065396,
-      "updates_per_second": 185.86324216985628,
+      "step_latency_ms": 5.1278999308124185,
+      "updates_per_second": 195.01160582156075,
       "contract_ups_satisfied": true,
       "average_velocity": 11.999988555908203,
       "stuck_agent_count": 9,
@@ -262,11 +262,11 @@
       "total_items": 640000,
       "total_belts": 5000,
       "items_per_belt": 128,
-      "tick_latency_ms": 0.21430999816705784,
-      "updates_per_second": 4666.137877620087,
+      "tick_latency_ms": 0.3074533344867329,
+      "updates_per_second": 3252.5261164248377,
       "contract_ups_satisfied": true,
       "bitwise_exact_verified": true,
-      "items_processed_per_sec": 2986328241.676856,
+      "items_processed_per_sec": 2081616714.5118961,
       "status": "PASS"
     },
     "radiance_cascades_motion_extrapolation": {
@@ -275,10 +275,10 @@
         320
       ],
       "cascade_count": 4,
-      "base_frame_latency_ms": 1.326399971731007,
-      "extrapolation_latency_ms": 10.11800009291619,
-      "effective_frame_latency_ms": 3.814800021549066,
-      "effective_fps": 262.1369388568716,
+      "base_frame_latency_ms": 2.0822000224143267,
+      "extrapolation_latency_ms": 15.155999921262264,
+      "effective_frame_latency_ms": 5.746066647892197,
+      "effective_fps": 174.03209208630142,
       "contract_fps_satisfied": true,
       "extrapolation_multiplier_val": 3.0,
       "warp_error_metric": 0.010895434767007828,
@@ -294,7 +294,7 @@
       "lazy_flops_evaluated": 524288,
       "flop_step_mult": 512.0,
       "max_numerical_error": 8.313501211887342e-07,
-      "execution_time_ms": 0.533799990080297,
+      "execution_time_ms": 0.6450999062508345,
       "status": "PASS"
     },
     "gauss_winograd_3m": {
@@ -303,7 +303,7 @@
       "baseline_multiplications": 4,
       "mults_eliminated_pct": 25.0,
       "max_numerical_error": 3.39975684937599e-07,
-      "latency_ms": 1.2742000399157405,
+      "latency_ms": 2.8833000687882304,
       "status": "PASS"
     },
     "kolmogorov_seeded_isometry": {
@@ -313,9 +313,9 @@
       "materialized_eager_bytes": 8388608,
       "kolmogorov_seed_bytes": 8,
       "memory_compression_mult": 1048576.0,
-      "eager_latency_ms": 30.397000024095178,
-      "subsumed_latency_ms": 0.28769997879862785,
-      "speed_mult": 105.65520425488523,
+      "eager_latency_ms": 27.40359993185848,
+      "subsumed_latency_ms": 0.19219995010644197,
+      "speed_mult": 142.57860065354924,
       "frobenius_deviation": 0.9556593593165513,
       "status": "PASS"
     },
@@ -323,10 +323,10 @@
       "total_rows_m": 128,
       "cpu_rows": 64,
       "igpu_rows": 64,
-      "cpu_gflops": 3.7249600526788735,
-      "igpu_gflops": 4.241811960421145,
-      "total_gflops": 7.966772013100018,
-      "concurrent_latency_ms": 53.36999997962266,
+      "cpu_gflops": 3.104132521415522,
+      "igpu_gflops": 5.1250037722544635,
+      "total_gflops": 8.229136293669985,
+      "concurrent_latency_ms": 40.96180002670735,
       "max_numerical_error": 0.0,
       "local_tier1_roofline_saturation_pct": 100.0,
       "roofline_certificate_issued": true,
@@ -343,7 +343,7 @@
       "virtual_memory_reduction_step_mult": 15664350.06,
       "gram_relative_error": 1.6982619399641408e-07,
       "weights_relative_error": 5.891683940717485e-07,
-      "stream_latency_ms": 85.9,
+      "stream_latency_ms": 127.89,
       "status": "PASS"
     },
     "clarkson_woodruff_countsketch": {
@@ -352,9 +352,9 @@
       "dim_d": 512,
       "row_compression_factor": 8.0,
       "unbiased_trace_energy_rel_error": 0.002809586906586796,
-      "eager_gemm_ms": 11.73,
-      "countsketch_gemm_ms": 6.63,
-      "speed_step_mult": 1.77,
+      "eager_gemm_ms": 10.01,
+      "countsketch_gemm_ms": 5.54,
+      "speed_step_mult": 1.81,
       "status": "PASS"
     }
   },
@@ -366,7 +366,7 @@
       "timer_1ms_unlocked": true
     },
     "usm_buffer_meta": {
-      "virtual_address_hex": "0x25a32e59000",
+      "virtual_address_hex": "0x2abe40a3000",
       "page_aligned_4096": true,
       "cacheline_aligned_64": true,
       "allocated_bytes": 4194304
@@ -380,11 +380,11 @@
       },
       "page_aligned_4096": true,
       "cacheline_aligned_64": true,
-      "virtual_address_hex": "0x25a33270000",
+      "virtual_address_hex": "0x2abe44be000",
       "exact_integer_match": true,
       "cosine_similarity": 0.9999999999999999,
-      "latency_ms": 0.16561499796807766,
-      "throughput_gops": 1.5828518142452794,
+      "latency_ms": 0.13286999892443419,
+      "throughput_gops": 1.9729359684053773,
       "native_kernel_active": true,
       "passed": true
     },
@@ -418,12 +418,12 @@
       "status": "OPTIMAL",
       "gradient_norm": 1.3752402567613372e-12,
       "objective_value": 0.7474234247425247,
-      "analytic_speedup_vs_iterative": 27.09972051725806,
+      "analytic_speedup_vs_iterative": 24.88771394245692,
       "rls_weight_relative_error": 7.97190139722806e-16
     },
     "decoupled_knowledge": {
       "retrieval_mode": "INVERTED_INDEX",
-      "latency_ms": 0.10929990094155073,
+      "latency_ms": 0.13120006769895554,
       "provenance_sha256": "2a180ecebe20bf3d556990254bc67e7fc1f0522994161676af1db913b8b9f3a8"
     },
     "mathematical_elimination": {
@@ -435,42 +435,42 @@
           "measured_error": 3.911005661993291e-16,
           "theoretical_bound": 1e-12,
           "passed_contract": true,
-          "speedup_ratio": 3.6748265980657138
+          "speedup_ratio": 3.6135826185279973
         },
         {
           "name": "CommonSubexpressionGramElimination",
           "measured_error": 2.877598963220839e-16,
           "theoretical_bound": 1e-12,
           "passed_contract": true,
-          "speedup_ratio": 2.537325448722033
+          "speedup_ratio": 2.7120066310279958
         },
         {
           "name": "LowRankTruncatedSvdFactoring",
           "measured_error": 0.007042445143231735,
           "theoretical_bound": 0.05,
           "passed_contract": true,
-          "speedup_ratio": 0.0030889699323633753
+          "speedup_ratio": 0.004626789563802601
         },
         {
           "name": "ShermanMorrisonRank1Update",
           "measured_error": 1.2974528258188543e-15,
           "theoretical_bound": 1e-10,
           "passed_contract": true,
-          "speedup_ratio": 1.0313255355337851
+          "speedup_ratio": 0.9413923443915103
         },
         {
           "name": "AdaptiveMagnitudeSparsification",
           "measured_error": 0.03924750538114782,
           "theoretical_bound": 0.1,
           "passed_contract": true,
-          "speedup_ratio": 0.019376828526888205
+          "speedup_ratio": 0.018745120430788974
         },
         {
           "name": "KroneckerMatrixVectorContraction",
           "measured_error": 2.611015546254127e-16,
           "theoretical_bound": 1e-12,
           "passed_contract": true,
-          "speedup_ratio": 7.4694787075216835
+          "speedup_ratio": 8.342203296873867
         }
       ]
     },
@@ -480,21 +480,21 @@
       "driver_version": "OpenCL 3.0 NEO",
       "compute_units": 48,
       "kernel_verified": true,
-      "kernel_latency_ms": 1.6093999147415161,
+      "kernel_latency_ms": 0.013125,
       "max_numerical_error": 1.9073486328125e-06
     },
     "counterfactual_compiler": {
       "candidates_evaluated": 10,
       "candidates_rejected": 3,
-      "selected_pathway": "MMAP_STREAMING",
+      "selected_pathway": "VSA_HYPERVECTOR",
       "verdict": "CONTRACT_SATISFIED_OPTIMAL_PATHWAY_SELECTED"
     },
     "memory_intelligence": {
       "status": "VERIFIED_CONSTANT_RAM",
       "logical_bytes": 1920000,
       "actual_streamed_bytes": 1920000,
-      "peak_tracemalloc_bytes": 328934,
-      "logical_to_peak_ram_ratio": 5.837037217192507
+      "peak_tracemalloc_bytes": 328520,
+      "logical_to_peak_ram_ratio": 5.844393035431633
     },
     "status": "PASS"
   },
@@ -515,9 +515,9 @@
         "contract_parity_met": true,
         "relative_l2_error": 0.0,
         "error_tolerance": 1e-06,
-        "brute_force_ms": 172.772,
-        "leo_omega_ms": 1.222,
-        "measured_speedup": 141.35,
+        "brute_force_ms": 157.764,
+        "leo_omega_ms": 1.038,
+        "measured_speedup": 151.96,
         "operations_eliminated_pct": 99.8729,
         "falsification_triggered": false,
         "fallback_used": false
@@ -531,9 +531,9 @@
         "contract_parity_met": true,
         "relative_l2_error": 0.020092,
         "error_tolerance": 0.069238,
-        "brute_force_ms": 2866.764,
-        "leo_omega_ms": 13.53,
-        "measured_speedup": 211.89,
+        "brute_force_ms": 2806.214,
+        "leo_omega_ms": 12.399,
+        "measured_speedup": 226.33,
         "operations_eliminated_pct": 99.67,
         "falsification_triggered": false,
         "fallback_used": false
@@ -547,9 +547,9 @@
         "contract_parity_met": true,
         "relative_l2_error": 4.2e-05,
         "error_tolerance": 0.02,
-        "brute_force_ms": 241.658,
-        "leo_omega_ms": 12.971,
-        "measured_speedup": 18.63,
+        "brute_force_ms": 245.749,
+        "leo_omega_ms": 10.121,
+        "measured_speedup": 24.28,
         "operations_eliminated_pct": 98.22,
         "falsification_triggered": false,
         "fallback_used": false
@@ -565,9 +565,9 @@
         "contract_parity_met": true,
         "relative_l2_error": 4.27e-08,
         "error_tolerance": 1e-06,
-        "brute_force_ms": 11.621,
-        "leo_omega_ms": 0.453,
-        "measured_speedup": 25.67,
+        "brute_force_ms": 9.874,
+        "leo_omega_ms": 0.44,
+        "measured_speedup": 22.43,
         "operations_eliminated_pct": 99.7172,
         "falsification_triggered": false,
         "fallback_used": false
@@ -581,9 +581,9 @@
         "contract_parity_met": true,
         "relative_l2_error": 0.0,
         "error_tolerance": 0.01,
-        "brute_force_ms": 16.653,
-        "leo_omega_ms": 3.543,
-        "measured_speedup": 4.7,
+        "brute_force_ms": 14.685,
+        "leo_omega_ms": 3.149,
+        "measured_speedup": 4.66,
         "operations_eliminated_pct": 92.87,
         "falsification_triggered": true,
         "fallback_used": true
@@ -603,8 +603,8 @@
     "laptop_8gb_mode_sha256": "6ec739da966398a1",
     "lru_cache_hits": 0,
     "streamed_expert_reads": 384,
-    "server_mode_ms": 47.44,
-    "laptop_stream_mode_ms": 45.771
+    "server_mode_ms": 36.856,
+    "laptop_stream_mode_ms": 54.705
   },
   "zero_io_spectral_expert_subsumptions": {
     "engine": "ZERO_IO_SPECTRAL_EXPERT_CPU_IGPU_SUBSUMPTION",
@@ -616,9 +616,9 @@
     "cold_ssd_reads_required": 0,
     "exact_computational_parity_met": true,
     "relative_l2_error": 1.41e-07,
-    "brute_force_ms": 9.945,
-    "leo_cpu_igpu_zero_io_ms": 8.472,
-    "measured_compute_speedup": 1.17
+    "brute_force_ms": 8.005,
+    "leo_cpu_igpu_zero_io_ms": 6.624,
+    "measured_compute_speedup": 1.21
   },
   "bandwidth_and_workload_subsumptions": {
     "engine": "LEO_BANDWIDTH_AND_WORKLOAD_SUBSUMPTION_SUITE",
@@ -643,17 +643,17 @@
       },
       {
         "module_name": "Analytic_Residual_Stacking_ZeroBackprop_Learner",
-        "parity_tier": "TIER_3_CONTRACT_PARITY_ZERO_EPOCHS",
+        "parity_tier": "TIER_3_APPROXIMATE_CONTRACT_PARITY",
         "raw_hardware_parity_claimed": false,
-        "exact_parity_or_lossless": true,
+        "exact_parity_or_lossless": false,
         "contract_parity_met": true,
-        "baseline_cost_metric": 2636.952,
-        "leo_cost_metric": 15.385,
+        "baseline_cost_metric": 2526.166,
+        "leo_cost_metric": 16.58,
         "cost_unit": "wall_clock_ms",
-        "amplification_or_speedup": 171.4,
+        "amplification_or_speedup": 152.36,
         "adversarial_falsification_passed": true,
         "fallback_triggered_on_adversarial": true,
-        "notes": "Test MSE: LEO=0.14233 vs 250-epoch SGD=0.13810. Zero backpropagation epochs executed."
+        "notes": "Test MSE: LEO=0.14233 vs 250-epoch SGD=0.13810. Zero backpropagation epochs executed. Contract parity met without exact bitwise parity."
       },
       {
         "module_name": "Temporal_Sparse_Adaptive_Shader_Subsumption",
@@ -667,7 +667,7 @@
         "amplification_or_speedup": 10.11,
         "adversarial_falsification_passed": true,
         "fallback_triggered_on_adversarial": true,
-        "notes": "Pixels eliminated=90.1%, Rel L2 error=0.01850, Dense=6.21ms vs Sparse=1.64ms. Strobe cut triggers full dense fallback."
+        "notes": "Pixels eliminated=90.1%, Rel L2 error=0.01850, Dense=7.08ms vs Sparse=1.33ms. Strobe cut triggers full dense fallback."
       }
     ]
   },
@@ -691,9 +691,9 @@
         "estimated_hardware_transistors_saved": 1600000,
         "operations_deleted_pct": 0.0,
         "area_for_time_ratio": 32.0,
-        "baseline_latency_ms": 0.315,
-        "leo_latency_ms": 0.239,
-        "speedup_or_amortization": 1.32,
+        "baseline_latency_ms": 0.583,
+        "leo_latency_ms": 0.21,
+        "speedup_or_amortization": 2.77,
         "error_or_discrepancy": 2e-07,
         "adversarial_falsification_passed": true,
         "fallback_triggered": true,
@@ -710,9 +710,9 @@
         "estimated_hardware_transistors_saved": 155648,
         "operations_deleted_pct": 100.0,
         "area_for_time_ratio": 1.0,
-        "baseline_latency_ms": 0.032,
-        "leo_latency_ms": 0.842,
-        "speedup_or_amortization": 0.04,
+        "baseline_latency_ms": 0.033,
+        "leo_latency_ms": 1.099,
+        "speedup_or_amortization": 0.03,
         "error_or_discrepancy": 0.0,
         "adversarial_falsification_passed": true,
         "fallback_triggered": false,
@@ -730,7 +730,7 @@
         "operations_deleted_pct": 100.0,
         "area_for_time_ratio": 1.0,
         "baseline_latency_ms": 0.069,
-        "leo_latency_ms": 2.33,
+        "leo_latency_ms": 2.336,
         "speedup_or_amortization": 0.03,
         "error_or_discrepancy": 1.72e-05,
         "adversarial_falsification_passed": true,
@@ -747,10 +747,10 @@
         "transistors_replaced_category": "FP8 Tensor Core / Warp Shuffle Execution Silicon",
         "estimated_hardware_transistors_saved": 120000,
         "operations_deleted_pct": 0.0,
-        "area_for_time_ratio": 3.42,
+        "area_for_time_ratio": 3.09,
         "baseline_latency_ms": 0.016,
-        "leo_latency_ms": 0.055,
-        "speedup_or_amortization": 0.2925,
+        "leo_latency_ms": 0.049,
+        "speedup_or_amortization": 0.3239,
         "error_or_discrepancy": 0.0,
         "adversarial_falsification_passed": true,
         "fallback_triggered": false,
@@ -768,8 +768,8 @@
         "operations_deleted_pct": 87.81,
         "area_for_time_ratio": 1.0,
         "baseline_latency_ms": 180.0,
-        "leo_latency_ms": 0.286,
-        "speedup_or_amortization": 628.49,
+        "leo_latency_ms": 0.283,
+        "speedup_or_amortization": 636.94,
         "error_or_discrepancy": 0.002408,
         "adversarial_falsification_passed": true,
         "fallback_triggered": false,
@@ -885,6 +885,69 @@
       "tier_3_contract_parity": true,
       "tier_4_roofline_efficiency_pct": 88.67,
       "sha256": "0164c8f54fb8d9d3d9d7983cde9126ff620364c659ae1fec09a0751d8d66061c"
+    },
+    {
+      "subsystem": "END_TO_END_CONSTRAINT_UNLOCK_ROOF_CLOSER",
+      "timestamp_unix": 1795329044.3389738,
+      "tier_1_raw_hardware": false,
+      "tier_2_exact_computational": false,
+      "tier_3_contract_parity": true,
+      "tier_4_roofline_efficiency_pct": 81.2,
+      "sha256": "43f691ee752f039c183d60d12790a62bdaa49d49269c58f27ccbf6ba53a0163a"
+    },
+    {
+      "subsystem": "END_TO_END_CONSTRAINT_UNLOCK_ROOF_CLOSER",
+      "timestamp_unix": 1795329099.6267438,
+      "tier_1_raw_hardware": false,
+      "tier_2_exact_computational": false,
+      "tier_3_contract_parity": true,
+      "tier_4_roofline_efficiency_pct": 79.73,
+      "sha256": "f954d88aaa76c38e00ef2d902a6642842853b77cb1cb23b0daf2ac13dddfd3d9"
+    },
+    {
+      "subsystem": "END_TO_END_CONSTRAINT_UNLOCK_ROOF_CLOSER",
+      "timestamp_unix": 1795329276.978149,
+      "tier_1_raw_hardware": false,
+      "tier_2_exact_computational": false,
+      "tier_3_contract_parity": true,
+      "tier_4_roofline_efficiency_pct": 82.93,
+      "sha256": "20e654762d71aa0c76404dcb2ff069679caa57e11b4413d20218e6d6347e7b5a"
+    },
+    {
+      "subsystem": "END_TO_END_CONSTRAINT_UNLOCK_ROOF_CLOSER",
+      "timestamp_unix": 1795329300.874149,
+      "tier_1_raw_hardware": false,
+      "tier_2_exact_computational": false,
+      "tier_3_contract_parity": true,
+      "tier_4_roofline_efficiency_pct": 82.67,
+      "sha256": "637550dcb47c5f2e31c50339fd6505a323b5447351b2ef63644b7e5ce69b3337"
+    },
+    {
+      "subsystem": "END_TO_END_CONSTRAINT_UNLOCK_ROOF_CLOSER",
+      "timestamp_unix": 1795329399.4175434,
+      "tier_1_raw_hardware": false,
+      "tier_2_exact_computational": false,
+      "tier_3_contract_parity": true,
+      "tier_4_roofline_efficiency_pct": 84.93,
+      "sha256": "268c1ef7cf89dab7729cab21eeb606afc3bb5044898c4acee010e0e9e93b6b0a"
+    },
+    {
+      "subsystem": "END_TO_END_CONSTRAINT_UNLOCK_ROOF_CLOSER",
+      "timestamp_unix": 1795329569.330263,
+      "tier_1_raw_hardware": false,
+      "tier_2_exact_computational": false,
+      "tier_3_contract_parity": true,
+      "tier_4_roofline_efficiency_pct": 88.0,
+      "sha256": "ebf40558e5ab58e2c25f77e9bb232fdfa809d371d5a63664226704674c0b17c4"
+    },
+    {
+      "subsystem": "END_TO_END_CONSTRAINT_UNLOCK_ROOF_CLOSER",
+      "timestamp_unix": 1795329592.6177866,
+      "tier_1_raw_hardware": false,
+      "tier_2_exact_computational": false,
+      "tier_3_contract_parity": true,
+      "tier_4_roofline_efficiency_pct": 85.0,
+      "sha256": "7e4629545da4a788c8d15891e48ef6fa7eee3cfaea0bb125acc7afa6027b0146"
     }
   ],
   "end_to_end_constraint_unlock_subsystems": {
@@ -896,7 +959,7 @@
       "storage": "512 GB PCIe 4.0 NVMe SSD",
       "os": "win32"
     },
-    "total_audit_duration_seconds": 0.144,
+    "total_audit_duration_seconds": 0.211,
     "routing_matrix_verification": {
       "workload_a_reformulation": {
         "workload_type": "knowledge_dense_moe",
@@ -956,23 +1019,34 @@
     },
     "subsystem_2_radix_serving": {
       "status": "PASS",
-      "multi_user_speedup_x": 3.3,
-      "prefix_hit_rate_pct": 82.5,
+      "multi_user_speedup_x": 2.75,
+      "prefix_hit_rate_pct": 70.0,
       "max_absolute_error_vs_naive": 0.0,
       "adversarial_clean_fallback_verified": true
+    },
+    "subsystem_3_single_device_frontier": {
+      "status": "PASS",
+      "peer_nodes_count": 0,
+      "single_device_only": true,
+      "zero_distributed_computing": true,
+      "activation_routing_compression_ratio_x": 1.0,
+      "max_diff_normal_vs_single_node": 0.0,
+      "fault_injection_seamless_failover_verified": true
     },
     "subsystem_3_p2p_mesh": {
       "status": "PASS",
       "peer_nodes_count": 0,
+      "single_device_only": true,
+      "zero_distributed_computing": true,
       "activation_routing_compression_ratio_x": 1.0,
       "max_diff_normal_vs_single_node": 0.0,
       "fault_injection_seamless_failover_verified": true
     },
     "global_parity_tiers": {
       "TIER_1_RAW_HARDWARE_PARITY": false,
-      "TIER_2_EXACT_COMPUTATIONAL_PARITY": true,
+      "TIER_2_EXACT_COMPUTATIONAL_PARITY": false,
       "TIER_3_CONTRACT_PARITY": true,
-      "TIER_4_CONSUMER_ROOFLINE_EFFICIENCY": 88.67
+      "TIER_4_CONSUMER_ROOFLINE_EFFICIENCY": 85.0
     }
   },
   "single_device_omega_frontier": {
@@ -995,7 +1069,7 @@
         "cost_unit": "MB_read_for_W_down",
         "reduction_or_speedup": 4.59,
         "adversarial_fallback_verified": true,
-        "details": "Active neurons=892/4096 (21.8%), W_down bytes skipped=78.2%, max_abs_err=3.22e-06, Dense=1.172ms vs Sparse=3.234ms."
+        "details": "Active neurons=892/4096 (21.8%), W_down bytes skipped=78.2%, max_abs_err=3.22e-06, Dense=1.221ms vs Sparse=3.454ms."
       },
       {
         "subsystem": "LandDoig_BranchAndBound_EarlyExit_DepthSkipper",
@@ -1018,10 +1092,10 @@
         "raw_hardware_parity_claimed": false,
         "exact_parity_verified": true,
         "contract_parity_met": true,
-        "baseline_cost": 4.199,
-        "leo_cost": 0.306,
+        "baseline_cost": 4.221,
+        "leo_cost": 0.249,
         "cost_unit": "wall_clock_ms",
-        "reduction_or_speedup": 13.73,
+        "reduction_or_speedup": 16.96,
         "adversarial_fallback_verified": true,
         "details": "FLOPs collapsed from 268,959,744 to 1,048,576 (99.61% deleted), rel_err=7.75e-16. Opaque chaotic loop honestly marked irreducible -> TDM fallback."
       }
@@ -1044,9 +1118,9 @@
         "contract_parity_met": true,
         "error_metric_name": "relative_fp64_pde_residual",
         "measured_error": 1.1158597849924005e-13,
-        "baseline_ms": 47.929,
-        "leo_ms": 2.113,
-        "measured_speedup": 22.69,
+        "baseline_ms": 50.039,
+        "leo_ms": 2.855,
+        "measured_speedup": 17.52,
         "work_eliminated_pct": 99.75,
         "adversarial_falsification_passed": true,
         "notes": "Spectral FP64 residual=1.12e-13 vs 400-sweep Jacobi=5.05e-01. SHA-256 1-bit avalanche=126/256 bits flipped (crypto honestly marked irreducible)."
@@ -1060,8 +1134,8 @@
         "contract_parity_met": true,
         "error_metric_name": "relative_l2_error_vs_fp64_ref",
         "measured_error": 6.780276653594115e-16,
-        "baseline_ms": 3.051,
-        "leo_ms": 158.469,
+        "baseline_ms": 3.495,
+        "leo_ms": 219.069,
         "measured_speedup": 0.02,
         "work_eliminated_pct": 50.0,
         "adversarial_falsification_passed": true,
@@ -1076,9 +1150,9 @@
         "contract_parity_met": true,
         "error_metric_name": "relative_l2_error_latent",
         "measured_error": 0.06087,
-        "baseline_ms": 17.302,
-        "leo_ms": 8.014,
-        "measured_speedup": 2.16,
+        "baseline_ms": 17.201,
+        "leo_ms": 7.606,
+        "measured_speedup": 2.26,
         "work_eliminated_pct": 66.0,
         "adversarial_falsification_passed": true,
         "notes": "PSNR=36.44 dB, pixel-step evals eliminated=66.0%. Discontinuous noise curvature=1.41 > 0.25 cleanly disables cache."
@@ -1092,8 +1166,8 @@
         "contract_parity_met": true,
         "error_metric_name": "relative_l2_error_radiance",
         "measured_error": 0.05792,
-        "baseline_ms": 6.679,
-        "leo_ms": 17.934,
+        "baseline_ms": 5.676,
+        "leo_ms": 15.488,
         "measured_speedup": 0.37,
         "work_eliminated_pct": 93.75,
         "adversarial_falsification_passed": true,
@@ -1123,7 +1197,7 @@
         "error_metric": "relative_l2_error",
         "measured_error": 0.01965,
         "adversarial_falsification_passed": true,
-        "notes": "Exact zeros=0/4096. Rows read=1184/4096 (71.1% SSD/RAM saved). Cauchy-Schwarz bound held: 0.4227 <= 16.8368. Dense=1.189ms vs LEO=3.974ms."
+        "notes": "Exact zeros=0/4096. Rows read=1184/4096 (71.1% SSD/RAM saved). Cauchy-Schwarz bound held: 0.4227 <= 16.8368. Dense=1.344ms vs LEO=4.293ms."
       },
       {
         "invention_name": "Unrelated_User_MicroBatch_Superposition_And_LSH",
@@ -1139,7 +1213,7 @@
         "error_metric": "max_abs_error_exact_batch",
         "measured_error": 1.67e-06,
         "adversarial_falsification_passed": true,
-        "notes": "0% shared prefix required. Exact micro-batch cuts weight reads 64x (Independent=0.543ms vs Batched=0.561ms, max_err=1.67e-06). LSH collapsed 64 unrelated prompts into 10 latent buckets (vs 42 on adversarial random noise)."
+        "notes": "0% shared prefix required. Exact micro-batch cuts weight reads 64x (Independent=0.397ms vs Batched=0.696ms, max_err=1.67e-06). LSH collapsed 64 unrelated prompts into 10 latent buckets (vs 42 on adversarial random noise)."
       },
       {
         "invention_name": "OpticalFlow_Keyframe_Video_Latent_Subsumption",
@@ -1155,7 +1229,7 @@
         "error_metric": "video_psnr_db",
         "measured_error": 41.37,
         "adversarial_falsification_passed": true,
-        "notes": "16-frame video PSNR=41.37 dB, pixel evals eliminated=87.5%. Jump-cut dirty ratio=98.1% triggers full keyframe fallback."
+        "notes": "16-frame video PSNR=41.37 dB, pixel evals eliminated=87.5%. Dense=12.75ms vs LEO=3.99ms. Jump-cut dirty ratio=98.1% triggers full keyframe fallback."
       },
       {
         "invention_name": "Brandt_Optimal_ON_Multigrid_NonPeriodic_FP64",
@@ -1164,10 +1238,10 @@
         "raw_hardware_parity_claimed": false,
         "exact_or_certified_parity": true,
         "contract_parity_met": true,
-        "baseline_cost": 94.155,
-        "leo_cost": 27.361,
+        "baseline_cost": 124.067,
+        "leo_cost": 24.47,
         "cost_unit": "wall_clock_ms",
-        "reduction_or_speedup": 3.44,
+        "reduction_or_speedup": 5.07,
         "error_metric": "fp64_relative_pde_residual",
         "measured_error": 6.604760400925007e-14,
         "adversarial_falsification_passed": true,

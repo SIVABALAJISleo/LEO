@@ -97,7 +97,8 @@ def test_4_analytic_layerwise_growth_zero_backprop_learning():
         sgd_epochs=150,
     )
 
-    assert audit.exact_parity_or_lossless is True
+    assert audit.exact_parity_or_lossless is False
+    assert audit.parity_tier == "TIER_3_APPROXIMATE_CONTRACT_PARITY"
     assert audit.contract_parity_met is True
     assert audit.raw_hardware_parity_claimed is False
     assert audit.amplification_or_speedup > 2.0  # strictly faster than iterative multi-epoch SGD

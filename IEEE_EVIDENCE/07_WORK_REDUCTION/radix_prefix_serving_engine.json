@@ -3,10 +3,17 @@
   "num_users": 8,
   "shared_prefix_length": 64,
   "user_suffix_length": 16,
-  "prefix_hit_rate_pct": 82.5,
-  "naive_serving_time_ms": 32.59,
-  "radix_serving_time_ms": 9.869,
-  "multi_user_speedup_x": 3.3,
+  "prefix_hit_rate_pct": 70.0,
+  "cold_start_measured_separately": true,
+  "cold_start_radix_time_ms": 5.341,
+  "cold_start_naive_time_ms": 4.618,
+  "cold_start_speedup_x": 0.86,
+  "warm_start_radix_time_ms": 8.111,
+  "warm_start_naive_time_ms": 32.38,
+  "warm_start_speedup_x": 3.99,
+  "naive_serving_time_ms": 36.998,
+  "radix_serving_time_ms": 13.452,
+  "multi_user_speedup_x": 2.75,
   "max_absolute_error_vs_naive": 0.0,
   "adversarial_unique_prefix_hit_pct": 0.0,
   "adversarial_clean_fallback_verified": true,
@@ -14,6 +21,6 @@
     "TIER_1_RAW_HARDWARE_PARITY": false,
     "TIER_2_EXACT_COMPUTATIONAL_PARITY": true,
     "TIER_3_CONTRACT_PARITY": true,
-    "TIER_4_CONSUMER_ROOFLINE_EFFICIENCY": 66.0
+    "TIER_4_CONSUMER_ROOFLINE_EFFICIENCY": 55.0
   }
 }

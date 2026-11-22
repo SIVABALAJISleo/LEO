@@ -535,13 +535,15 @@ def benchmark_ssd_native_unmodified_expert_engine(
     except Exception:
         pass
 
-    tier1_raw = bool(len(manifest) > 999999)
-    tier2_exact = bool(metrics.get("distribution_parity") == "100%_LEVIATHAN_CHEN_EXACT")
+    tier1_raw = bool(False)  # Never raw hardware parity on consumer laptop
+    tier2_exact = bool(False)  # INT4 quantization is approximate relative to original FP32 weights
     tier3_contract = bool(metrics.get("accepted_speculative_tokens", 0) > 0)
     tier4_eff = round(min(100.0, float(metrics["disk_reads_saved"] + 1) * 12.5), 2)
 
     result = {
         "subsystem": "SSD_NATIVE_UNMODIFIED_EXPERT_ENGINE",
+        "pack_encoding_label": "LOSSLESS_OVER_INT4_PACK",
+        "fidelity_contract": "APPROXIMATE_CONTRACT_PARITY",
         "sector_alignment_verified": bool(len(manifest) > 0),
         "total_experts_in_pack": len(manifest),
         "speculative_k_window": k_window,

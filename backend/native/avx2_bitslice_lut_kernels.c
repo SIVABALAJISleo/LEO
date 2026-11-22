@@ -70,6 +70,49 @@ LEO_EXPORT void leo_bitslice_ripple_carry_adder(
     int32_t bit_width,
     int32_t num_lanes_u64
 ) {
+#if LEO_HAS_AVX2
+    int32_t lane = 0;
+    for (; lane + 3 < num_lanes_u64; lane += 4) {
+        __m256i carry = _mm256_setzero_si256();
+        for (int32_t b = 0; b < bit_width; ++b) {
+            int32_t idx = b * num_lanes_u64 + lane;
+            __m256i a = _mm256_loadu_si256((const __m256i*)(a_bits + idx));
+            __m256i b_val = _mm256_loadu_si256((const __m256i*)(b_bits + idx));
+
+            /* Virtual logic gates via AVX2 256-bit SIMD */
+            __m256i a_xor_b = _mm256_xor_si256(a, b_val);
+            __m256i sum = _mm256_xor_si256(a_xor_b, carry);
+            __m256i carry_next = _mm256_or_si256(
+                _mm256_and_si256(a, b_val),
+                _mm256_and_si256(carry, a_xor_b)
+            );
+
+            _mm256_storeu_si256((__m256i*)(sum_bits + idx), sum);
+            carry = carry_next;
+        }
+        if (carry_out != NULL) {
+            _mm256_storeu_si256((__m256i*)(carry_out + lane), carry);
+        }
+    }
+    for (; lane < num_lanes_u64; ++lane) {
+        uint64_t carry = 0ULL;
+        for (int32_t b = 0; b < bit_width; ++b) {
+            int32_t idx = b * num_lanes_u64 + lane;
+            uint64_t a = a_bits[idx];
+            uint64_t b_val = b_bits[idx];
+
+            uint64_t a_xor_b = a ^ b_val;
+            uint64_t sum = a_xor_b ^ carry;
+            uint64_t carry_next = (a & b_val) | (carry & a_xor_b);
+
+            sum_bits[idx] = sum;
+            carry = carry_next;
+        }
+        if (carry_out != NULL) {
+            carry_out[lane] = carry;
+        }
+    }
+#else
     for (int32_t lane = 0; lane < num_lanes_u64; ++lane) {
         uint64_t carry = 0ULL;
         for (int32_t b = 0; b < bit_width; ++b) {
@@ -89,6 +132,7 @@ LEO_EXPORT void leo_bitslice_ripple_carry_adder(
             carry_out[lane] = carry;
         }
     }
+#endif
 }
 
 /**
@@ -110,6 +154,46 @@ LEO_EXPORT void leo_bitslice_xnor_gemm(
         const uint64_t *w_row = &w_bits[r * cols_u64];
         int32_t popcount_sum = 0;
 
+#if LEO_HAS_AVX2
+        int32_t c = 0;
+        for (; c + 3 < cols_u64; c += 4) {
+            __m256i w_vec = _mm256_loadu_si256((const __m256i*)(w_row + c));
+            __m256i x_vec = _mm256_loadu_si256((const __m256i*)(x_bits + c));
+            /* 256-bit SIMD XOR instruction (vpxor) */
+            __m256i xor_vec = _mm256_xor_si256(w_vec, x_vec);
+
+            uint64_t v[4];
+            _mm256_storeu_si256((__m256i*)v, xor_vec);
+            for (int i = 0; i < 4; ++i) {
+                uint64_t xnor_val = ~v[i];
+#if defined(__GNUC__) || defined(__clang__)
+                popcount_sum += __builtin_popcountll(xnor_val);
+#elif defined(_MSC_VER) && (defined(_M_X64) || defined(_M_IX86))
+                popcount_sum += (int32_t)__popcnt64(xnor_val);
+#else
+                uint64_t val = xnor_val;
+                val = val - ((val >> 1) & 0x5555555555555555ULL);
+                val = (val & 0x3333333333333333ULL) + ((val >> 2) & 0x3333333333333333ULL);
+                val = (val + (val >> 4)) & 0x0F0F0F0F0F0F0F0FULL;
+                popcount_sum += (int32_t)((val * 0x0101010101010101ULL) >> 56);
+#endif
+            }
+        }
+        for (; c < cols_u64; ++c) {
+            uint64_t xnor_val = ~(w_row[c] ^ x_bits[c]);
+#if defined(__GNUC__) || defined(__clang__)
+            popcount_sum += __builtin_popcountll(xnor_val);
+#elif defined(_MSC_VER) && (defined(_M_X64) || defined(_M_IX86))
+            popcount_sum += (int32_t)__popcnt64(xnor_val);
+#else
+            uint64_t val = xnor_val;
+            val = val - ((val >> 1) & 0x5555555555555555ULL);
+            val = (val & 0x3333333333333333ULL) + ((val >> 2) & 0x3333333333333333ULL);
+            val = (val + (val >> 4)) & 0x0F0F0F0F0F0F0F0FULL;
+            popcount_sum += (int32_t)((val * 0x0101010101010101ULL) >> 56);
+#endif
+        }
+#else
         for (int32_t c = 0; c < cols_u64; ++c) {
             uint64_t xnor_val = ~(w_row[c] ^ x_bits[c]);
 #if defined(__GNUC__) || defined(__clang__)
@@ -118,13 +202,14 @@ LEO_EXPORT void leo_bitslice_xnor_gemm(
             popcount_sum += (int32_t)__popcnt64(xnor_val);
 #else
             /* Portable popcount */
-            uint64_t v = xnor_val;
-            v = v - ((v >> 1) & 0x5555555555555555ULL);
-            v = (v & 0x3333333333333333ULL) + ((v >> 2) & 0x3333333333333333ULL);
-            v = (v + (v >> 4)) & 0x0F0F0F0F0F0F0F0FULL;
-            popcount_sum += (int32_t)((v * 0x0101010101010101ULL) >> 56);
+            uint64_t v_val = xnor_val;
+            v_val = v_val - ((v_val >> 1) & 0x5555555555555555ULL);
+            v_val = (v_val & 0x3333333333333333ULL) + ((v_val >> 2) & 0x3333333333333333ULL);
+            v_val = (v_val + (v_val >> 4)) & 0x0F0F0F0F0F0F0F0FULL;
+            popcount_sum += (int32_t)((v_val * 0x0101010101010101ULL) >> 56);
 #endif
         }
+#endif
         out_y[r] = (2 * popcount_sum) - total_bits;
     }
 }
@@ -158,17 +243,44 @@ LEO_EXPORT void leo_lut_gemv_1bit(
 
 #if LEO_HAS_AVX2
         int32_t g = 0;
-        /* Process 16 groups (8 packed bytes) at a time where aligned */
+        __m256i acc_16 = _mm256_setzero_si256();
+        acc_16 = _mm256_xor_si256(acc_16, acc_16); /* Clear with vpxor */
+
+        /* Process 2 groups at a time using 256-bit VPSHUFB byte shuffles */
         for (; g + 1 < num_groups; g += 2) {
             uint8_t packed = idx_row[g / 2];
             uint8_t idx_low = packed & 0x0F;
             uint8_t idx_high = (packed >> 4) & 0x0F;
 
-            int8_t val0 = lut_table_16b[g * 16 + idx_low];
-            int8_t val1 = lut_table_16b[(g + 1) * 16 + idx_high];
+            /* Load 16 bytes for group g and 16 bytes for group g+1 into 256-bit register */
+            __m128i lut0 = _mm_loadu_si128((const __m128i*)(lut_table_16b + g * 16));
+            __m128i lut1 = _mm_loadu_si128((const __m128i*)(lut_table_16b + (g + 1) * 16));
+            __m256i lut_pair = _mm256_set_m128i(lut1, lut0);
 
-            sum += (int32_t)val0 + (int32_t)val1;
+            /* Set index vector with 0x80 (disables unindexed positions) */
+            __m256i idx_vec = _mm256_set1_epi8((char)0x80);
+            idx_vec = _mm256_insert_epi8(idx_vec, (char)idx_low, 0);
+            idx_vec = _mm256_insert_epi8(idx_vec, (char)idx_high, 16);
+
+            /* Real 256-bit VPSHUFB instruction */
+            __m256i val_vec = _mm256_shuffle_epi8(lut_pair, idx_vec);
+
+            int8_t val0 = (int8_t)_mm256_extract_epi8(val_vec, 0);
+            int8_t val1 = (int8_t)_mm256_extract_epi8(val_vec, 16);
+
+            /* Accumulate 16-bit partials with vpaddw (_mm256_add_epi16) */
+            __m128i pair_8 = _mm_set_epi8(0,0,0,0,0,0,0,0,0,0,0,0,0,0, val1, val0);
+            __m256i vals_16 = _mm256_cvtepi8_epi16(pair_8);
+            acc_16 = _mm256_add_epi16(acc_16, vals_16);
         }
+
+        /* Horizontal sum of 16-bit lane sums */
+        int16_t acc_arr[16];
+        _mm256_storeu_si256((__m256i*)acc_arr, acc_16);
+        for (int i = 0; i < 16; ++i) {
+            sum += (int32_t)acc_arr[i];
+        }
+
         if (g < num_groups) {
             uint8_t packed = idx_row[g / 2];
             uint8_t idx_low = packed & 0x0F;

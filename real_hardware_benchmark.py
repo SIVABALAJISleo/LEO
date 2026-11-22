@@ -152,11 +152,10 @@ hyper_error = float(np.max(np.abs(hyper_outputs[0] - C_ref)))
 results["3. HYPER_Engine (12-Thread)"] = {"time_ms": hyper_med_time * 1000, "gflops": hyper_gflops, "checksum": hyper_checksum, "max_err": hyper_error}
 
 # ----------------------------------------------------------------------
-# PATH D: Reference Physical Dedicated GPUs (NVIDIA RTX 3060 / RTX 4090 / A100)
+# PATH D: Dedicated GPU Probe (Strict Hardware Honesty Check)
 # ----------------------------------------------------------------------
-# Real physical hardware cuBLAS reference data for N=2048 FP32 GEMM:
-results["4. Ref_RTX_3060_dGPU (Ref)"] = {"time_ms": 1.35, "gflops": 12720.0, "checksum": golden_checksum, "max_err": 0.0}
-results["5. Ref_RTX_4090_dGPU (Ref)"] = {"time_ms": 0.21, "gflops": 81800.0, "checksum": golden_checksum, "max_err": 0.0}
+# No dedicated NVIDIA/AMD GPU exists on this host (Intel Core i5-12450H + Intel UHD).
+# Benchmarking is strictly confined to live measured baselines on this physical silicon.
 
 # ----------------------------------------------------------------------
 # Comprehensive Summary Table

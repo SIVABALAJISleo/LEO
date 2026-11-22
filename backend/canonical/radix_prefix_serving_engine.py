@@ -253,28 +253,37 @@ def benchmark_radix_prefix_serving_engine(
         users_tokens.append(full_toks)
         users_x.append(full_x)
 
-    # Prime cache with user 0
-    engine.insert_and_execute(users_tokens[0], users_x[0])
+    # 1. Cold-Start Measurement (User 0 on empty Radix tree)
+    t0_cold = time.perf_counter()
+    out_cold, hits_cold, _ = engine.insert_and_execute(users_tokens[0], users_x[0])
+    cold_start_radix_ms = (time.perf_counter() - t0_cold) * 1000.0
 
-    # Run remaining users with Radix engine vs Naive baseline
-    t0_radix = time.perf_counter()
-    radix_outputs = []
-    total_hit_tokens = 0
-    total_tokens = 0
+    t0_naive_cold = time.perf_counter()
+    out_naive_cold = engine.execute_naive_no_cache(users_x[0])
+    cold_start_naive_ms = (time.perf_counter() - t0_naive_cold) * 1000.0
 
-    for u in range(num_users):
+    # 2. Warm-Start Measurement (Users 1..num_users-1 on warm Radix tree)
+    t0_warm = time.perf_counter()
+    radix_outputs = [out_cold]
+    total_hit_tokens = hits_cold
+    total_tokens = len(users_tokens[0])
+
+    for u in range(1, num_users):
         out_u, hits, _ = engine.insert_and_execute(users_tokens[u], users_x[u])
         radix_outputs.append(out_u)
         total_hit_tokens += hits
         total_tokens += len(users_tokens[u])
-    radix_time_ms = (time.perf_counter() - t0_radix) * 1000.0
+    warm_start_radix_ms = (time.perf_counter() - t0_warm) * 1000.0
 
-    t0_naive = time.perf_counter()
-    naive_outputs = []
-    for u in range(num_users):
+    t0_naive_warm = time.perf_counter()
+    naive_outputs = [out_naive_cold]
+    for u in range(1, num_users):
         out_naive = engine.execute_naive_no_cache(users_x[u])
         naive_outputs.append(out_naive)
-    naive_time_ms = (time.perf_counter() - t0_naive) * 1000.0
+    warm_start_naive_ms = (time.perf_counter() - t0_naive_warm) * 1000.0
+
+    total_radix_ms = cold_start_radix_ms + warm_start_radix_ms
+    total_naive_ms = cold_start_naive_ms + warm_start_naive_ms
 
     # Numerical equivalence check
     max_abs_diff = 0.0
@@ -282,7 +291,9 @@ def benchmark_radix_prefix_serving_engine(
         diff = float(np.max(np.abs(radix_outputs[u][shared_prefix_len:] - naive_outputs[u][shared_prefix_len:])))
         max_abs_diff = max(max_abs_diff, diff)
 
-    speedup_ratio = round(float(naive_time_ms / max(0.001, radix_time_ms)), 2)
+    speedup_ratio = round(float(total_naive_ms / max(0.001, total_radix_ms)), 2)
+    warm_speedup = round(float(warm_start_naive_ms / max(0.001, warm_start_radix_ms)), 2)
+    cold_speedup = round(float(cold_start_naive_ms / max(0.001, cold_start_radix_ms)), 2)
     prefix_hit_pct = round(float(total_hit_tokens / max(1, total_tokens)) * 100.0, 2)
 
     # 2. Adversarial Guard: 100%-Unique Random Prompts
@@ -309,8 +320,15 @@ def benchmark_radix_prefix_serving_engine(
         "shared_prefix_length": shared_prefix_len,
         "user_suffix_length": user_suffix_len,
         "prefix_hit_rate_pct": prefix_hit_pct,
-        "naive_serving_time_ms": round(naive_time_ms, 3),
-        "radix_serving_time_ms": round(radix_time_ms, 3),
+        "cold_start_measured_separately": True,
+        "cold_start_radix_time_ms": round(cold_start_radix_ms, 3),
+        "cold_start_naive_time_ms": round(cold_start_naive_ms, 3),
+        "cold_start_speedup_x": cold_speedup,
+        "warm_start_radix_time_ms": round(warm_start_radix_ms, 3),
+        "warm_start_naive_time_ms": round(warm_start_naive_ms, 3),
+        "warm_start_speedup_x": warm_speedup,
+        "naive_serving_time_ms": round(total_naive_ms, 3),
+        "radix_serving_time_ms": round(total_radix_ms, 3),
         "multi_user_speedup_x": speedup_ratio,
         "max_absolute_error_vs_naive": max_abs_diff,
         "adversarial_unique_prefix_hit_pct": adv_hit_pct,

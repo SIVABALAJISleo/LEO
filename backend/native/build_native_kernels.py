@@ -79,8 +79,13 @@ def compile_shared_library(src_file: Path, out_file: Path) -> bool:
     else:
         return False
 
+    env = os.environ.copy()
+    compiler_bin = str(Path(compiler).parent)
+    if compiler_bin not in env.get("PATH", ""):
+        env["PATH"] = compiler_bin + os.pathsep + env.get("PATH", "")
+
     try:
-        res = subprocess.run(cmd, capture_output=True, text=True, check=False)
+        res = subprocess.run(cmd, capture_output=True, text=True, check=False, env=env)
         if res.returncode == 0:
             print(f"[OK] Compiled {src_file.name} -> {out_file.name}")
             return True
@@ -113,4 +118,5 @@ def build_all_native_kernels():
 
 
 if __name__ == "__main__":
-    build_all_native_kernels()
+    ok = build_all_native_kernels()
+    sys.exit(0 if ok else 1)
