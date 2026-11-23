@@ -56,11 +56,12 @@ def compile_shared_library(src_file: Path, out_file: Path) -> bool:
 
     out_file.parent.mkdir(parents=True, exist_ok=True)
 
+    use_avx2 = "avx2" in src_file.name.lower()
     if c_type in ("gcc", "clang"):
         cmd = [
             compiler,
             "-O3",
-            "-mavx2",
+            *(["-mavx2"] if use_avx2 else []),
             "-shared",
             "-fPIC",
             str(src_file),
@@ -72,7 +73,7 @@ def compile_shared_library(src_file: Path, out_file: Path) -> bool:
         cmd = [
             compiler,
             "/O2",
-            "/arch:AVX2",
+            *(["/arch:AVX2"] if use_avx2 else []),
             "/LD",
             str(src_file),
             f"/Fe:{out_file}",
