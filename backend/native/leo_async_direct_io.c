@@ -13,6 +13,12 @@
  * ==============================================================================
  */
 
+#if !defined(_WIN32) && !defined(_WIN64)
+    #ifndef _GNU_SOURCE
+        #define _GNU_SOURCE 1
+    #endif
+#endif
+
 #include <stdint.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -29,11 +35,14 @@
     #include <windows.h>
     #define LEO_PLATFORM_WINDOWS 1
 #else
-    #define _GNU_SOURCE
     #include <unistd.h>
     #include <fcntl.h>
     #include <sys/time.h>
     #define LEO_PLATFORM_WINDOWS 0
+
+    #ifndef O_DIRECT
+        #define O_DIRECT 040000
+    #endif
 #endif
 
 /* -------------------------------------------------------------------------- */

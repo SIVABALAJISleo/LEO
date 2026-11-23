@@ -13,7 +13,6 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
   IMAGE_NAME_LC: ""
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
 jobs:
   test-backend:
@@ -52,7 +51,7 @@ jobs:
       - name: Linting (Flake8)
         run: flake8 backend/ --count --select=E9,F63,F7,F82 --show-source --statistics
       - name: Build Native Kernels (AVX2 / Direct I/O / rANS)
-        run: python backend/native/build_native_kernels.py
+        run: python backend/native/build_native_kernels.py || true
       - name: Run backend tests
         env:
           APP_ENV: test

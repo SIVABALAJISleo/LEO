@@ -19,6 +19,12 @@
  * ==============================================================================
  */
 
+#if !defined(_WIN32) && !defined(_WIN64)
+    #ifndef _GNU_SOURCE
+        #define _GNU_SOURCE 1
+    #endif
+#endif
+
 #include <stdint.h>
 #include <stddef.h>
 #include <string.h>
