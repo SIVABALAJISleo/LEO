@@ -5,7 +5,7 @@
   "sector_alignment_verified": true,
   "total_experts_in_pack": 32,
   "speculative_k_window": 8,
-  "elapsed_ms": 14.615,
+  "elapsed_ms": 10.921,
   "execution_metrics": {
     "window_k_tokens": 8,
     "unique_experts_read": 16,

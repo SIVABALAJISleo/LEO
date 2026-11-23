@@ -2,9 +2,9 @@
   "total_generations": 2,
   "best_fitness": 0.54,
   "best_params": {
-    "confidence_floor": 0.6064,
+    "confidence_floor": 0.6301,
     "max_spec_tokens": 8,
-    "sparsity_threshold": 0.3162,
+    "sparsity_threshold": 0.3202,
     "allocated_experts_budget": 2,
     "dreamer_branches": 9,
     "dreamer_depth": 6
@@ -13,34 +13,48 @@
     {
       "generation": 1,
       "fitness": 0.54,
-      "weaknesses": ["low_avoidance", "high_latency", "low_throughput", "low_density"],
+      "weaknesses": [
+        "low_avoidance",
+        "high_latency",
+        "low_throughput",
+        "low_density"
+      ],
       "mutations": {
-        "confidence_floor": 0.6064,
+        "confidence_floor": 0.6301,
         "max_spec_tokens": 8,
-        "sparsity_threshold": 0.3162,
+        "sparsity_threshold": 0.3202,
         "allocated_experts_budget": 2,
         "dreamer_branches": 9,
         "dreamer_depth": 6
       },
       "curriculum_level": "basic",
-      "active_classes": ["cacheable"],
-      "timestamp": 1792243139.140671
+      "active_classes": [
+        "cacheable"
+      ],
+      "timestamp": 1795407632.531895
     },
     {
       "generation": 2,
       "fitness": 0.54,
-      "weaknesses": ["low_avoidance", "high_latency", "low_throughput", "low_density"],
+      "weaknesses": [
+        "low_avoidance",
+        "high_latency",
+        "low_throughput",
+        "low_density"
+      ],
       "mutations": {
-        "confidence_floor": 0.5721,
+        "confidence_floor": 0.5952,
         "max_spec_tokens": 8,
-        "sparsity_threshold": 0.3781,
+        "sparsity_threshold": 0.368,
         "allocated_experts_budget": 2,
         "dreamer_branches": 10,
         "dreamer_depth": 7
       },
       "curriculum_level": "basic",
-      "active_classes": ["cacheable"],
-      "timestamp": 1792243139.1715658
+      "active_classes": [
+        "cacheable"
+      ],
+      "timestamp": 1795407632.545768
     }
   ]
 }

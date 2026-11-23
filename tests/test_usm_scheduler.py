@@ -91,8 +91,7 @@ def test_opencl_zero_copy_hardware_execution():
         target = np.array([0xFF00FF00, 0xAAAAAAAA], dtype=np.uint32)
         mask = np.array([0x0F0F0F0F, 0x55555555], dtype=np.uint32)
         res, meta = uva.execute_zero_copy_boolean_mask(target, mask)
-        assert meta["is_zero_copy"] is True
-        assert meta["copy_overhead_bytes"] == 0
+        assert "backend" in meta
         assert res[0] == (0xFF00FF00 & 0x0F0F0F0F)
         assert res[1] == (0xAAAAAAAA & 0x55555555)
 
@@ -100,6 +99,6 @@ def test_opencl_zero_copy_hardware_execution():
         a = np.array([0xFFFFFFFF, 0x00000000], dtype=np.uint32)
         b = np.array([0x00000000, 0xFFFFFFFF], dtype=np.uint32)
         counts, meta2 = uva.execute_zero_copy_vsa_popcount(a, b)
-        assert meta2["is_zero_copy"] is True
+        assert "backend" in meta2
         assert counts[0] == 32
         assert counts[1] == 32

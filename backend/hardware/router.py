@@ -20,6 +20,7 @@ logger = logging.getLogger(__name__)
 # ── Backend scoring constants (relative tokens/sec multipliers vs CPU baseline) ──
 _BACKEND_SCORE: Dict[str, float] = {
     "ternary_lookup": 4.5,  # Optimized element-wise table lookup
+    "moe_spec":  4.2,   # Sparse MoE speculative decoding
     "npu":       4.0,   # NPU: lowest power, fast for small models
     "vulkan":    3.0,   # iGPU Vulkan (Intel Iris/Arc, AMD Radeon)
     "directml":  2.8,   # DirectML (Windows iGPU/NPU)

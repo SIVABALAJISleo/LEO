@@ -30,7 +30,7 @@ jobs:
           python-version: "3.11"
           cache: "pip"
       - name: Install dependencies
-        run: pip install --upgrade pip && pip install -r requirements.txt pytest pytest-asyncio bandit flake8
+        run: pip install --upgrade pip && pip install -r requirements.txt pytest pytest-asyncio pytest-env bandit flake8
       - name: Security Scan (Bandit)
         # bandit.toml in the repo root documents all skip rules with justification.
         run: bandit -r backend/ -ll -c bandit.toml

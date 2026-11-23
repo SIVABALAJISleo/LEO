@@ -20,10 +20,10 @@ def test_scheduler_initialization():
 
 def test_scheduler_select_backend_for_gemm():
     scheduler = UniversalScheduler()
-    # For large dense GEMM, should select CPU_AVX2 (or OPENCL_IGPU if available)
+    # For large dense GEMM, should select CPU_AVX2 (or OPENCL_IGPU / INTEL_UHD_IGPU_OPENCL if available)
     plan = scheduler.schedule_workload("dense_gemm_512x512")
     assert plan.workload_id == "dense_gemm_512x512"
-    assert plan.selected_backend in ["CPU_AVX2", "OPENCL_IGPU"]
+    assert plan.selected_backend in ["CPU_AVX2", "OPENCL_IGPU", "INTEL_UHD_IGPU_OPENCL"]
     assert plan.fallback_backend == "CPU_AVX2"
 
 

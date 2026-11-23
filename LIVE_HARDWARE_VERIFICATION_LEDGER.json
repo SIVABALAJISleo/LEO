@@ -948,6 +948,15 @@
       "tier_3_contract_parity": true,
       "tier_4_roofline_efficiency_pct": 85.0,
       "sha256": "7e4629545da4a788c8d15891e48ef6fa7eee3cfaea0bb125acc7afa6027b0146"
+    },
+    {
+      "subsystem": "END_TO_END_CONSTRAINT_UNLOCK_ROOF_CLOSER",
+      "timestamp_unix": 1795407541.9481845,
+      "tier_1_raw_hardware": false,
+      "tier_2_exact_computational": false,
+      "tier_3_contract_parity": true,
+      "tier_4_roofline_efficiency_pct": 78.87,
+      "sha256": "520ed6a8856c56f7d9b21169bb4aaf06e62bb1657e8d9194f430cda754ac6502"
     }
   ],
   "end_to_end_constraint_unlock_subsystems": {
