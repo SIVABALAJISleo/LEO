@@ -257,6 +257,13 @@ from .universal_contract_bypass_engine import (
     ZeroCopyHeterogeneousPipelineRouter,
     run_universal_contract_bypass_suite,
 )
+from .cortical_event_predictive_engine import (
+    CorticalAudit,
+    EventDrivenCorticalDeltaEngine,
+    DendriticL1ResidentEngine,
+    LocalPredictiveCodingALMLearner,
+    run_cortical_subsumption_suite,
+)
 
 __all__ = [
     "FunctionalReplacementEngine",
@@ -452,4 +459,9 @@ __all__ = [
     "HierarchicalRadianceCascadeSubsumer",
     "ZeroCopyHeterogeneousPipelineRouter",
     "run_universal_contract_bypass_suite",
+    "CorticalAudit",
+    "EventDrivenCorticalDeltaEngine",
+    "DendriticL1ResidentEngine",
+    "LocalPredictiveCodingALMLearner",
+    "run_cortical_subsumption_suite",
 ]
