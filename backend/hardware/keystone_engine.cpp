@@ -737,8 +737,19 @@ extern "C" {
             for (; k + 32 <= K; k += 32) {
                 __m256i va = _mm256_loadu_si256(reinterpret_cast<const __m256i*>(A_u8 + k));
                 __m256i vb = _mm256_loadu_si256(reinterpret_cast<const __m256i*>(b_row + k));
-                // AVX-VNNI hardware instruction: 32 INT8 MACs in a single CPU cycle
-                acc = _mm256_dpbusd_epi32(acc, va, vb);
+                
+                // Portable AVX2 32-byte u8 * s8 -> s32 dot-product (zero AVX-VNNI hardware dependency)
+                // Low 16 bytes: va (u8 -> u16), vb (s8 -> s16)
+                __m256i va_lo = _mm256_cvtepu8_epi16(_mm256_castsi256_si128(va));
+                __m256i vb_lo = _mm256_cvtepi8_epi16(_mm256_castsi256_si128(vb));
+                __m256i prod_lo = _mm256_madd_epi16(va_lo, vb_lo);
+                acc = _mm256_add_epi32(acc, prod_lo);
+
+                // High 16 bytes: va (u8 -> u16), vb (s8 -> s16)
+                __m256i va_hi = _mm256_cvtepu8_epi16(_mm256_extracti128_si256(va, 1));
+                __m256i vb_hi = _mm256_cvtepi8_epi16(_mm256_extracti128_si256(vb, 1));
+                __m256i prod_hi = _mm256_madd_epi16(va_hi, vb_hi);
+                acc = _mm256_add_epi32(acc, prod_hi);
             }
             __m128i low = _mm256_castsi256_si128(acc);
             __m128i high = _mm256_extracti128_si256(acc, 1);

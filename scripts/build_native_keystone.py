@@ -122,7 +122,6 @@ def build_keystone_library(force: bool = False) -> Dict[str, Any]:
             c_path,
             "-O3",
             "-mavx2",
-            "-mavxvnni",
             "-mfma",
             "-mpopcnt",
             "-fopenmp",

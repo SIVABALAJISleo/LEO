@@ -66,8 +66,8 @@ def test_massive_pathway_search_engine_execution():
     contract = ComputationalContract(
         workload_id="ML_MLP_INFERENCE",
         description="MLP Inference Test",
-        input_domain={"x": {"shape": [1, 64], "dtype": "FP32"}},
-        output_domain={"out": {"shape": [1, 10], "dtype": "FP32"}},
+        input_domain={"A": {"shape": [64, 128], "dtype": "FP32"}, "B": {"shape": [128, 64], "dtype": "FP32"}},
+        output_domain={"out": {"shape": [64, 64], "dtype": "FP32"}},
         exactness_category=ExactnessCategory.NUMERICALLY_EQUIVALENT,
         tolerance_epsilon=1e-3,
     )

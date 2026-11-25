@@ -14,7 +14,7 @@
       "Numerical tolerance exceeded on ill-conditioned inputs"
     ],
     "proof_template": "Dual-path independent verification against textbook reference",
-    "verified_discoveries_count": 13
+    "verified_discoveries_count": 14
   },
   "CANONICAL_BASELINE": {
     "transformation_name": "CANONICAL_BASELINE",
@@ -40,7 +40,7 @@
       "Numerical tolerance exceeded on ill-conditioned inputs"
     ],
     "proof_template": "Dual-path independent verification against textbook reference",
-    "verified_discoveries_count": 131
+    "verified_discoveries_count": 141
   },
   "FAST_FOURIER_CONVOLUTION": {
     "transformation_name": "FAST_FOURIER_CONVOLUTION",
@@ -51,13 +51,13 @@
       "CONV2D_STANDARD"
     ],
     "measured_benefit": {
-      "average_speedup": 1.34
+      "average_speedup": 1.29
     },
     "failure_modes": [
       "Numerical tolerance exceeded on ill-conditioned inputs"
     ],
     "proof_template": "Dual-path independent verification against textbook reference",
-    "verified_discoveries_count": 6
+    "verified_discoveries_count": 7
   },
   "HOMOTOPIC_HOARE_PRUNING": {
     "transformation_name": "HOMOTOPIC_HOARE_PRUNING",
@@ -73,13 +73,13 @@
       "CONV2D_STANDARD"
     ],
     "measured_benefit": {
-      "average_speedup": 13.63
+      "average_speedup": 18.55
     },
     "failure_modes": [
       "Numerical tolerance exceeded on ill-conditioned inputs"
     ],
     "proof_template": "Dual-path independent verification against textbook reference",
-    "verified_discoveries_count": 41
+    "verified_discoveries_count": 44
   },
   "SEMANTIC_L3_MEMOIZATION": {
     "transformation_name": "SEMANTIC_L3_MEMOIZATION",
@@ -110,13 +110,13 @@
       "ADVERSARIAL_HILBERT_STRESS"
     ],
     "measured_benefit": {
-      "average_speedup": 1.3
+      "average_speedup": 1.18
     },
     "failure_modes": [
       "Numerical tolerance exceeded on ill-conditioned inputs"
     ],
     "proof_template": "Dual-path independent verification against textbook reference",
-    "verified_discoveries_count": 16
+    "verified_discoveries_count": 17
   },
   "WINOGRAD_MINIMAL_FILTERING_F23": {
     "transformation_name": "WINOGRAD_MINIMAL_FILTERING_F23",

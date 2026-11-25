@@ -4,7 +4,7 @@
   "certificates_count": 8,
   "reports": [
     {
-      "pathway_id": "pw-f06b6221",
+      "pathway_id": "pw-d8a46868",
       "capability": "AI_ML / DAG-MATRIX_MULTIPLICATION_GEMM",
       "workload": "Dense_Matrix_Multiplication",
       "original_algorithm": "Canonical Dense_Matrix_Multiplication standard execution",
@@ -13,17 +13,17 @@
       "mathematical_basis": "Algebraic strength reduction + L1/L2 cache locality + Freivalds probe",
       "contract": "CTR-GEMM-001",
       "equivalence_class": "NUMERICALLY_EQUIVALENT",
-      "certificate": "cert-3b471a68",
+      "certificate": "cert-859016b3",
       "reference_result": "Verified valid output (shape: scalar)",
       "candidate_result": "Verified valid output (shape: scalar)",
       "exactness": "EXACT",
       "numerical_error": 0.0,
       "quality": 1.0,
       "latency": {
-        "reference_ms": 0.0684,
-        "candidate_ms": 0.0423
+        "reference_ms": 0.0769,
+        "candidate_ms": 0.0381
       },
-      "throughput": 23640.661938534282,
+      "throughput": 26246.719160104985,
       "memory": {
         "peak_ram_mb": 16.0,
         "bandwidth_gb_s": 4.5
@@ -44,7 +44,7 @@
       "status": "VERIFIED"
     },
     {
-      "pathway_id": "pw-e69b3690",
+      "pathway_id": "pw-7a47104e",
       "capability": "SCIENTIFIC / DAG-LINEAR_ALGEBRA_AND_PDE",
       "workload": "PDE_2D_Heat_Stencil",
       "original_algorithm": "Canonical PDE_2D_Heat_Stencil standard execution",
@@ -53,17 +53,17 @@
       "mathematical_basis": "Algebraic strength reduction + L1/L2 cache locality + Freivalds probe",
       "contract": "CTR-PDE-001",
       "equivalence_class": "EXACT",
-      "certificate": "cert-c67a7496",
+      "certificate": "cert-70f02a0a",
       "reference_result": "Verified valid output (shape: (64, 64))",
       "candidate_result": "Verified valid output (shape: (64, 64))",
       "exactness": "EXACT",
       "numerical_error": 0.0,
       "quality": 1.0,
       "latency": {
-        "reference_ms": 0.1274,
-        "candidate_ms": 0.4968
+        "reference_ms": 0.0821,
+        "candidate_ms": 0.7149
       },
-      "throughput": 2012.8824476650564,
+      "throughput": 1398.7970345502868,
       "memory": {
         "peak_ram_mb": 16.0,
         "bandwidth_gb_s": 4.5
@@ -84,7 +84,7 @@
       "status": "VERIFIED"
     },
     {
-      "pathway_id": "pw-03a0a216",
+      "pathway_id": "pw-536d0c6b",
       "capability": "AI_ML / DAG-QUANTIZATION_AND_EMBEDDINGS",
       "workload": "Neural_Linear_Layer_Inference",
       "original_algorithm": "Canonical Neural_Linear_Layer_Inference standard execution",
@@ -93,17 +93,17 @@
       "mathematical_basis": "Algebraic strength reduction + L1/L2 cache locality + Freivalds probe",
       "contract": "CTR-ML-001",
       "equivalence_class": "NUMERICALLY_EQUIVALENT",
-      "certificate": "cert-5def6bae",
+      "certificate": "cert-7d6d23f5",
       "reference_result": "Verified valid output (shape: scalar)",
       "candidate_result": "Verified valid output (shape: scalar)",
       "exactness": "NUMERICALLY_EQUIVALENT",
       "numerical_error": 0.49117469787597656,
       "quality": 0.99711378533319,
       "latency": {
-        "reference_ms": 0.074,
-        "candidate_ms": 0.0829
+        "reference_ms": 0.0498,
+        "candidate_ms": 0.0557
       },
-      "throughput": 12062.726176115802,
+      "throughput": 17953.321364452422,
       "memory": {
         "peak_ram_mb": 16.0,
         "bandwidth_gb_s": 4.5
@@ -124,7 +124,7 @@
       "status": "VERIFIED"
     },
     {
-      "pathway_id": "pw-57bb3b56",
+      "pathway_id": "pw-75a63aa3",
       "capability": "IMAGE / DAG-IMAGE_FILTERING_AND_TRANSFORMS",
       "workload": "Image_Separable_Convolution",
       "original_algorithm": "Canonical Image_Separable_Convolution standard execution",
@@ -133,17 +133,17 @@
       "mathematical_basis": "Algebraic strength reduction + L1/L2 cache locality + Freivalds probe",
       "contract": "CTR-IMG-001",
       "equivalence_class": "NUMERICALLY_EQUIVALENT",
-      "certificate": "cert-c30db1ed",
+      "certificate": "cert-1a8183ce",
       "reference_result": "Verified valid output (shape: (64, 64))",
       "candidate_result": "Verified valid output (shape: (64, 64))",
       "exactness": "NUMERICALLY_EQUIVALENT",
       "numerical_error": 2.384185791015625e-07,
       "quality": 0.999999990737528,
       "latency": {
-        "reference_ms": 36.8009,
-        "candidate_ms": 1.1692
+        "reference_ms": 35.8998,
+        "candidate_ms": 1.8077
       },
-      "throughput": 855.2856654122477,
+      "throughput": 553.1891353653814,
       "memory": {
         "peak_ram_mb": 16.0,
         "bandwidth_gb_s": 4.5
@@ -164,7 +164,7 @@
       "status": "VERIFIED"
     },
     {
-      "pathway_id": "pw-352c7b72",
+      "pathway_id": "pw-54383ce1",
       "capability": "VIDEO / DAG-VIDEO_FRAME_PROCESSING_AND_MOTION",
       "workload": "Video_Dirty_Region_Processing",
       "original_algorithm": "Canonical Video_Dirty_Region_Processing standard execution",
@@ -173,17 +173,17 @@
       "mathematical_basis": "Algebraic strength reduction + L1/L2 cache locality + Freivalds probe",
       "contract": "CTR-VID-001",
       "equivalence_class": "EXACT",
-      "certificate": "cert-4cfdc9dc",
+      "certificate": "cert-02cc8a02",
       "reference_result": "Verified valid output (shape: scalar)",
       "candidate_result": "Verified valid output (shape: scalar)",
       "exactness": "EXACT",
       "numerical_error": 0.0,
       "quality": 1.0,
       "latency": {
-        "reference_ms": 0.0223,
-        "candidate_ms": 0.2679
+        "reference_ms": 0.0174,
+        "candidate_ms": 0.2248
       },
-      "throughput": 3732.736095558044,
+      "throughput": 4448.398576512455,
       "memory": {
         "peak_ram_mb": 16.0,
         "bandwidth_gb_s": 4.5
@@ -204,7 +204,7 @@
       "status": "VERIFIED"
     },
     {
-      "pathway_id": "pw-a32b1a37",
+      "pathway_id": "pw-8205c817",
       "capability": "COMPRESSION / DAG-LOSSLESS_AND_ENTROPY_COMPRESSION",
       "workload": "Run_Length_Data_Compression",
       "original_algorithm": "Canonical Run_Length_Data_Compression standard execution",
@@ -213,17 +213,17 @@
       "mathematical_basis": "Algebraic strength reduction + L1/L2 cache locality + Freivalds probe",
       "contract": "CTR-CMP-001",
       "equivalence_class": "EXACT",
-      "certificate": "cert-4b98f38d",
+      "certificate": "cert-4fef8285",
       "reference_result": "Verified valid output (shape: (2000,))",
       "candidate_result": "Verified valid output (shape: (2000,))",
       "exactness": "EXACT",
       "numerical_error": 0.0,
       "quality": 1.0,
       "latency": {
-        "reference_ms": 0.3469,
-        "candidate_ms": 0.187
+        "reference_ms": 0.4078,
+        "candidate_ms": 0.2042
       },
-      "throughput": 5347.593582887701,
+      "throughput": 4897.159647404505,
       "memory": {
         "peak_ram_mb": 16.0,
         "bandwidth_gb_s": 4.5
@@ -244,7 +244,7 @@
       "status": "VERIFIED"
     },
     {
-      "pathway_id": "pw-4f664a5c",
+      "pathway_id": "pw-aa97b671",
       "capability": "SCIENTIFIC / DAG-NBODY_AND_MONTE_CARLO",
       "workload": "N_Body_Gravitational_Interaction",
       "original_algorithm": "Canonical N_Body_Gravitational_Interaction standard execution",
@@ -253,17 +253,17 @@
       "mathematical_basis": "Algebraic strength reduction + L1/L2 cache locality + Freivalds probe",
       "contract": "CTR-NB-001",
       "equivalence_class": "NUMERICALLY_EQUIVALENT",
-      "certificate": "cert-74566b6b",
+      "certificate": "cert-ce6de7c8",
       "reference_result": "Verified valid output (shape: scalar)",
       "candidate_result": "Verified valid output (shape: scalar)",
       "exactness": "NUMERICALLY_EQUIVALENT",
       "numerical_error": 2.86102294921875e-06,
       "quality": 0.9999999798192769,
       "latency": {
-        "reference_ms": 1.7912,
-        "candidate_ms": 0.6623
+        "reference_ms": 2.5867,
+        "candidate_ms": 1.0298
       },
-      "throughput": 1509.8897780462025,
+      "throughput": 971.0623422023693,
       "memory": {
         "peak_ram_mb": 16.0,
         "bandwidth_gb_s": 4.5
@@ -284,7 +284,7 @@
       "status": "VERIFIED"
     },
     {
-      "pathway_id": "pw-822924eb",
+      "pathway_id": "pw-e9318f07",
       "capability": "GRAPHICS / DAG-RASTERIZATION_AND_FRAGMENT_SHADING",
       "workload": "Software_Triangle_Rasterization",
       "original_algorithm": "Canonical Software_Triangle_Rasterization standard execution",
@@ -293,17 +293,17 @@
       "mathematical_basis": "Algebraic strength reduction + L1/L2 cache locality + Freivalds probe",
       "contract": "CTR-GFX-001",
       "equivalence_class": "EXACT",
-      "certificate": "cert-bb730361",
+      "certificate": "cert-7817f932",
       "reference_result": "Verified valid output (shape: scalar)",
       "candidate_result": "Verified valid output (shape: scalar)",
       "exactness": "EXACT",
       "numerical_error": 0.0,
       "quality": 1.0,
       "latency": {
-        "reference_ms": 7.5601,
-        "candidate_ms": 3.3232
+        "reference_ms": 4.1652,
+        "candidate_ms": 1.7157
       },
-      "throughput": 300.91478093403947,
+      "throughput": 582.8524800373026,
       "memory": {
         "peak_ram_mb": 16.0,
         "bandwidth_gb_s": 4.5
@@ -324,5 +324,5 @@
       "status": "VERIFIED"
     }
   ],
-  "timestamp": 1795407563.0594473
+  "timestamp": 1795604623.513767
 }

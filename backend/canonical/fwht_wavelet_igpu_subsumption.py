@@ -397,9 +397,13 @@ class LiveIntelUHDOpenCLProbe:
         ref_cpu = np.maximum(np.float32(0.0), alpha * a_host + b_host)
         cpu_ms = (time.perf_counter_ns() - t0_cpu) / 1e6
 
+        cl = None
         try:
             import pyopencl as cl  # type: ignore
         except ImportError:
+            pass
+
+        if cl is None:
             return {
                 "igpu_dispatched": False,
                 "device_name": "NONE_PYOPENCL_NOT_INSTALLED",

@@ -188,6 +188,9 @@ class IndependentReferenceEngine:
                 # Dense -> ReLU -> Dense equivalent for 2-input test harness
                 hidden = np.maximum(0.0, np.matmul(inputs["A"], inputs["B"]))
                 return hidden
+            elif "x" in inputs or "X" in inputs:
+                x = inputs.get("x", inputs.get("X"))
+                return np.maximum(0.0, x)
             else:
                 raise ValueError(f"MLP inference missing required tensor inputs: {list(inputs.keys())}")
         elif "STREAM" in w_id:

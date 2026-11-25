@@ -175,6 +175,39 @@
       "bottleneck_description": "Dynamic range underflow",
       "learned_constraint": "Require FP32 accumulator for large dynamic ranges",
       "timestamp": 1795407563.502148
+    },
+    {
+      "failure_id": "FAIL_624023",
+      "workload_name": "test_workload",
+      "pathway_id": "PTH_TEST_FAIL",
+      "category": "CORRECTNESS_FAILURE",
+      "failed_transformation": "NAIVE_FP16_TRUNCATION",
+      "counterexample_summary": "Inf on large exponents",
+      "bottleneck_description": "Dynamic range underflow",
+      "learned_constraint": "Require FP32 accumulator for large dynamic ranges",
+      "timestamp": 1795604624.0234377
+    },
+    {
+      "failure_id": "FAIL_314678",
+      "workload_name": "test_workload",
+      "pathway_id": "PTH_TEST_FAIL",
+      "category": "CORRECTNESS_FAILURE",
+      "failed_transformation": "NAIVE_FP16_TRUNCATION",
+      "counterexample_summary": "Inf on large exponents",
+      "bottleneck_description": "Dynamic range underflow",
+      "learned_constraint": "Require FP32 accumulator for large dynamic ranges",
+      "timestamp": 1795606314.6787376
+    },
+    {
+      "failure_id": "FAIL_649633",
+      "workload_name": "test_workload",
+      "pathway_id": "PTH_TEST_FAIL",
+      "category": "CORRECTNESS_FAILURE",
+      "failed_transformation": "NAIVE_FP16_TRUNCATION",
+      "counterexample_summary": "Inf on large exponents",
+      "bottleneck_description": "Dynamic range underflow",
+      "learned_constraint": "Require FP32 accumulator for large dynamic ranges",
+      "timestamp": 1795606649.6332564
     }
   ],
   "learned_constraints": [
