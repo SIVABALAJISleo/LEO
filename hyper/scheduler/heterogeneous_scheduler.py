@@ -117,7 +117,11 @@ class HeterogeneousScheduler:
         matmul = ov_ops.matmul(param_a, param_b, False, False)
         result = ov_ops.result(matmul)
         model = ov.Model([result], [param_a, param_b], f"matmul_{cache_key}")
-        compiled = self.ov_core.compile_model(model, device)
+        config = {}
+        if device == "CPU":
+            # Force full FP32 inference precision to prevent auto-downconversion to BF16 on Xeon runners
+            config["INFERENCE_PRECISION_HINT"] = "f32"
+        compiled = self.ov_core.compile_model(model, device, config)
         self._compiled_cache[cache_key] = compiled
         return compiled
 
