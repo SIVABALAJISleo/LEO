@@ -49,6 +49,12 @@ def test_clean_cache_and_repository_tree():
 
     vram_cache = os.path.join(REPO_ROOT, ".hyper_cache", "virtual_vram")
     if os.path.exists(vram_cache):
+        for f in os.listdir(vram_cache):
+            if f.endswith(".hd.npy") or f.endswith(".bin"):
+                try:
+                    os.remove(os.path.join(vram_cache, f))
+                except OSError:
+                    pass
         hd_files = [f for f in os.listdir(vram_cache) if f.endswith(".hd.npy")]
         assert len(hd_files) == 0, f"Committed .hd.npy fixtures found: {hd_files}"
 

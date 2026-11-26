@@ -1,6 +1,7 @@
 import numpy as np
 import os
 import json
+import tempfile
 
 class HyperdimensionalCompressor:
     def __init__(self, dim=10000):
@@ -27,7 +28,9 @@ class HyperdimensionalCompressor:
         return (hd_vec.astype(np.float32) - 0.5) * 2.0
 
 class InfiniteMemoryArchitecture:
-    def __init__(self, disk_path=".hyper_cache/virtual_vram", cache_size_gb=2):
+    def __init__(self, disk_path=None, cache_size_gb=2):
+        if disk_path is None:
+            disk_path = os.path.join(tempfile.gettempdir(), "hyper_virtual_vram")
         self.disk_path = disk_path
         self.cache_size_gb = cache_size_gb
         self.compressor = HyperdimensionalCompressor()

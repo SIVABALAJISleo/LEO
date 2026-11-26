@@ -23,7 +23,7 @@ class LEO_100_Percent_Engine:
         self.layer1_hd = HyperdimensionalResonanceEngine(dim=10000)
         self.layer2_anomaly = AnomalyDrivenProcessor(threshold=0.01)
         self.layer2_wisdom = WisdomFusionEngine()
-        self.layer3_memory = InfiniteMemoryArchitecture(disk_path=".hyper_cache/virtual_vram", cache_size_gb=2)
+        self.layer3_memory = InfiniteMemoryArchitecture(cache_size_gb=2)
         self.layer4_parallel = IntelligentParallelismEngine()
         self.layer5_router = UniversalComputeRouter()
         self.layer6_quality = QualityOverQuantityEngine()
