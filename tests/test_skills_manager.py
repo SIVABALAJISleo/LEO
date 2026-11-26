@@ -9,7 +9,7 @@ import tempfile
 import shutil
 from pathlib import Path
 
-from hyper_mvc_dar.skills_manager import SkillsManager, skills_manager
+from hyper_mvc_dar.skills_manager import SkillsManager, skills_manager, AAS_CATALOG_FILE, FOUNDATIONAL_SKILLS
 
 
 @pytest.fixture
@@ -125,7 +125,10 @@ def test_whitelist_index_validation(temp_skills_dir):
     """
     mgr = SkillsManager(active_dir=temp_skills_dir)
     allowed_ids = mgr._get_allowed_skill_ids()
-    assert len(allowed_ids) > 2000
+    if AAS_CATALOG_FILE.exists():
+        assert len(allowed_ids) > 2000
+    else:
+        assert len(allowed_ids) >= len(FOUNDATIONAL_SKILLS)
 
     # Test that an unknown skill name not in catalog is rejected
     unknown_skill = "completely-unknown-fake-skill-12345"

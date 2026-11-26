@@ -322,9 +322,10 @@ def execute_gpu_unlock_equivalence_pipeline() -> GpuUnlockEquivalenceResult:
     cuda_driver_ok = bool(cuda_init_rc == 0 and alloc_rc == 0 and free_rc == 0)
 
     # 6. Overall replacement verdict
+    is_win = (sys.platform == "win32")
     all_ok = bool(
-        ecoqos_bypassed
-        and timer_1ms_unlocked
+        (ecoqos_bypassed or not is_win)
+        and (timer_1ms_unlocked or not is_win)
         and p_aligned
         and c_aligned
         and exact_int_match

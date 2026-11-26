@@ -19,6 +19,11 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 
 def test_paper_orchestra_imports():
     """Verify PaperOrchestra package and core agent classes import cleanly."""
+    try:
+        from google import genai
+    except ImportError:
+        pytest.skip("google-genai SDK not installed in test environment")
+
     import paper_orchestra
     assert hasattr(paper_orchestra, "__version__")
     assert paper_orchestra.__version__ == "1.0.0"

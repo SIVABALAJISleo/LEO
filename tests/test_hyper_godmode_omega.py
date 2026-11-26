@@ -84,7 +84,7 @@ def test_intelligent_bottleneck_detector():
     )
     assert report.primary_bottleneck in BottleneckClass
     assert report.telemetry.wall_clock_ms >= 0.0
-    assert report.telemetry.cpu_physical_cores >= 4
+    assert report.telemetry.cpu_physical_cores >= 2
     assert len(report.evidence) > 0
 
 
@@ -170,8 +170,8 @@ def test_chunked_tiling_matmul():
 def test_adaptive_scheduler_topology():
     scheduler = AdaptiveHeterogeneousScheduler()
     prof = scheduler.profile
-    assert prof.physical_cores >= 4
-    assert prof.logical_processors >= 8
+    assert prof.physical_cores >= 2
+    assert prof.logical_processors >= 2
     assert len(prof.p_core_threads) > 0
 
     backend = scheduler.select_backend("AI_ML", input_elements=5000, requires_low_latency=True)

@@ -32,11 +32,13 @@ except (ImportError, ValueError):
         IdentityMapper = BitLattice = CompressedDAG = UnificationEngine = Mock
 
 
+import tempfile
+
 logger = logging.getLogger(__name__)
 
 # System Constants
 TABLE_SIZE = 65536
-VERSIONED_MMAP_PREFIX = ".hyper_cache/v1_segment_"
+VERSIONED_MMAP_PREFIX = os.path.join(tempfile.gettempdir(), "hyper_mmap_v1_segment_")
 
 class NZREngine:
     """

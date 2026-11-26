@@ -60,11 +60,11 @@ async def verify_firebase_token(request: Request, auth_creds: Optional[HTTPAutho
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    is_dev = app_env in ("development", "test") or is_testing
+    is_dev = (app_env in ("development", "test")) and (os.getenv("LEO_ALLOW_DEV_AUTH_BYPASS") == "1" or is_testing)
     is_audit_token = token_str == "AUDIT_MODE_TOKEN"
     is_test_token = token_str.startswith("token-")
     
-    # 1. Dev Mode Bypass Check (strictly restricted to APP_ENV == "development" or testing env)
+    # 1. Dev Mode Bypass Check (strictly restricted to APP_ENV in development/test, never in production)
     is_dev_bypass_allowed = os.getenv("LEO_ALLOW_DEV_AUTH_BYPASS") == "1" or is_testing
     if is_dev and is_dev_bypass_allowed and (is_audit_token or is_test_token or not FIREBASE_AVAILABLE or os.getenv("LEO_OFFLINE") == "1"):
         uid = token_str.replace("token-", "") if is_test_token else "dev_user"

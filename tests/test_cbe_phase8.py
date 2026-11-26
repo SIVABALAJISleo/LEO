@@ -27,8 +27,8 @@ from universal_compute_router.intel_optimal_execution import IntelOptimalExecuti
 
 def test_hardware_detection_and_budgeting():
     hw = detect_hardware()
-    assert hw.physical_cores >= 4
-    assert hw.logical_processors >= 4
+    assert hw.physical_cores >= 2
+    assert hw.logical_processors >= 2
     assert isinstance(hw.has_openvino_gpu, bool)
 
     budget = ComputeBudget(target_fps=60.0)

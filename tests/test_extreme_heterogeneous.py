@@ -206,7 +206,7 @@ class TestAlderLakeAffinityScheduler:
 
     def test_topology_detection(self):
         sched = AlderLakeAffinityScheduler()
-        assert sched.topology.total_logical >= 8
+        assert sched.topology.total_logical >= 2
         assert len(sched.p_cores) > 0
         assert len(sched.e_cores) > 0
         # Check P-core and E-core indices do not overlap

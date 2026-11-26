@@ -16,8 +16,15 @@ import re
 import json
 from typing import Dict, Any
 
-from google import genai
-from google.genai import types  # type: ignore
+try:
+    from google import genai
+    from google.genai import types  # type: ignore
+except ImportError:
+    genai = None  # type: ignore
+    class _MockTypes:
+        class GenerateContentConfig:
+            pass
+    types = _MockTypes()  # type: ignore
 import time
 import os
 import mimetypes

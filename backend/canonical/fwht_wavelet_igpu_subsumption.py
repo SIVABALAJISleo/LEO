@@ -414,14 +414,17 @@ class LiveIntelUHDOpenCLProbe:
             }
 
         gpu_dev = None
-        for plat in cl.get_platforms():
-            devs = plat.get_devices(device_type=cl.device_type.GPU)
-            for d in devs:
-                if "intel" in d.vendor.lower() or "uhd" in d.name.lower() or gpu_dev is None:
-                    gpu_dev = d
+        try:
+            for plat in cl.get_platforms():
+                devs = plat.get_devices(device_type=cl.device_type.GPU)
+                for d in devs:
+                    if "intel" in d.vendor.lower() or "uhd" in d.name.lower() or gpu_dev is None:
+                        gpu_dev = d
+                        break
+                if gpu_dev is not None:
                     break
-            if gpu_dev is not None:
-                break
+        except Exception:
+            gpu_dev = None
 
         if gpu_dev is None:
             return {

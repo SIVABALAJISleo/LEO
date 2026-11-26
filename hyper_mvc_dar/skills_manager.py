@@ -87,6 +87,31 @@ class SkillsManager:
                         skills_list = list(data)
             except Exception as e:
                 print(f"[SkillsManager] Error loading catalog: {e}")
+        elif DEFAULT_ACTIVE_DIR.exists():
+            # Fallback for clean environments where large catalog archive is not cloned:
+            # Load foundational skills directly from .agents/skills
+            for d in sorted(os.listdir(DEFAULT_ACTIVE_DIR)):
+                if not SAFE_NAME_PATTERN.match(d):
+                    continue
+                skill_md = DEFAULT_ACTIVE_DIR / d / "SKILL.md"
+                if skill_md.is_file():
+                    desc = ""
+                    try:
+                        with open(skill_md, "r", encoding="utf-8") as f:
+                            for line in f:
+                                if line.startswith("description:"):
+                                    desc = line.split("description:", 1)[1].strip().strip('"\'')
+                                    break
+                    except Exception:
+                        pass
+                    skills_list.append({
+                        "id": d,
+                        "name": d.replace("-", " ").title(),
+                        "category": "core",
+                        "description": desc or f"Foundational skill for {d}",
+                        "tags": [d, "development", "architecture", "quality", "debugging"],
+                        "source": "local"
+                    })
 
         # Seamlessly integrate Strix Autonomous Security skills into the catalog
         if STRIX_SKILLS_DIR.exists():
@@ -146,6 +171,19 @@ class SkillsManager:
                     "description": "Autonomous AI penetration testing, OWASP Top 10 auditing, API security, and vulnerability remediation playbooks.",
                     "skills": strix_ids
                 }
+
+        # Add default bundles if bundles file is absent
+        if not bundles:
+            bundles["core-dev"] = {
+                "name": "Core Development & Architecture",
+                "description": "Essential architecture, debugging, testing, and performance optimization skills.",
+                "skills": ["systematic-debugging", "test-driven-development", "software-architecture", "senior-architect", "fastapi-pro", "react-best-practices", "python-performance-optimization"]
+            }
+            bundles["security-core"] = {
+                "name": "Application & API Security",
+                "description": "OWASP Top 10, penetration testing, and security scanning playbooks.",
+                "skills": ["owasp-top-10-testing", "api-security-testing", "find-security-vulnerabilities-in-code", "fix-security-vulnerabilities-with-strix"]
+            }
 
         self._bundles_cache = bundles
         return self._bundles_cache
@@ -265,6 +303,16 @@ class SkillsManager:
         if self.active_dir.exists():
             for d in self.active_dir.iterdir():
                 if d.is_dir() and SAFE_NAME_PATTERN.match(d.name) and os.path.basename(d.name) == d.name:
+                    dst_name_map[d.name] = d.name
+                    allowed_ids.add(d.name)
+                    allowed_leaves.add(d.name)
+
+        # 3b. Index DEFAULT_ACTIVE_DIR as valid source for installations if AAS_SKILLS_DIR is absent
+        if DEFAULT_ACTIVE_DIR.exists():
+            for d in DEFAULT_ACTIVE_DIR.iterdir():
+                if d.is_dir() and (d / "SKILL.md").is_file() and SAFE_NAME_PATTERN.match(d.name):
+                    if d.name not in src_map:
+                        src_map[d.name] = d.resolve()
                     dst_name_map[d.name] = d.name
                     allowed_ids.add(d.name)
                     allowed_leaves.add(d.name)
