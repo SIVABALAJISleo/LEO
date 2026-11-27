@@ -97,7 +97,7 @@ def run_provision_and_bench() -> Dict[str, Any]:
         "external_llama_bench": ext_bench_res.__dict__ if ext_bench_res else {"discovered": False},
     }
 
-    out_file = os.path.join(REPO_ROOT, "IEEE_EVIDENCE", "04_TRANSFORMER_EXPERIMENTS", "live_native_cpp_inference_benchmark.json")
+    out_file = os.path.join(REPO_ROOT, "IEEE_EVIDENCE", "04_CONTRACT_DEFINITIONS", "live_native_cpp_inference_benchmark.json")
     os.makedirs(os.path.dirname(out_file), exist_ok=True)
     with open(out_file, "w", encoding="utf-8") as fp:
         json.dump(final_payload, fp, indent=2)

@@ -93,5 +93,11 @@
   "cauchy_schwarz_dense_swiglu_skipping_verified": true,
   "unrelated_user_microbatch_superposition_verified": true,
   "keyframe_optical_flow_video_advection_verified": true,
-  "brandt_optimal_on_multigrid_nonperiodic_fp64_verified": true
+  "brandt_optimal_on_multigrid_nonperiodic_fp64_verified": true,
+  "exact_omega_6_stage_pathway_verified": true,
+  "exact_out_of_core_vram_streaming_verified": true,
+  "cir_ptx_lifter_exact_parity_verified": true,
+  "deterministic_tdm_fallback_verified": true,
+  "p2_exact_computational_parity_verified": true,
+  "p3_contract_parity_verified": true
 }

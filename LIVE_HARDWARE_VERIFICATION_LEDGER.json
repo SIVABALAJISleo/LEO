@@ -975,6 +975,42 @@
       "tier_3_contract_parity": true,
       "tier_4_roofline_efficiency_pct": 82.53,
       "sha256": "17279926b29cd52db4cb2497eacb6075277d7fa83de1d1fb0a8d3be3eb8e2fc0"
+    },
+    {
+      "subsystem": "END_TO_END_CONSTRAINT_UNLOCK_ROOF_CLOSER",
+      "timestamp_unix": 1795753028.7860525,
+      "tier_1_raw_hardware": false,
+      "tier_2_exact_computational": false,
+      "tier_3_contract_parity": true,
+      "tier_4_roofline_efficiency_pct": 79.2,
+      "sha256": "e271e14242efe581b6e80adf3ec7193021b06fdc42b3a803b37379446c5fa25d"
+    },
+    {
+      "subsystem": "END_TO_END_CONSTRAINT_UNLOCK_ROOF_CLOSER",
+      "timestamp_unix": 1795753243.5390635,
+      "tier_1_raw_hardware": false,
+      "tier_2_exact_computational": false,
+      "tier_3_contract_parity": true,
+      "tier_4_roofline_efficiency_pct": 80.6,
+      "sha256": "9d053a723434bfe3fd2acbfff6ad2850fb30993aa708887e998bccc2702f120c"
+    },
+    {
+      "subsystem": "END_TO_END_CONSTRAINT_UNLOCK_ROOF_CLOSER",
+      "timestamp_unix": 1795753288.3495157,
+      "tier_1_raw_hardware": false,
+      "tier_2_exact_computational": false,
+      "tier_3_contract_parity": true,
+      "tier_4_roofline_efficiency_pct": 84.53,
+      "sha256": "260d9128d10461110c1207f6bf4b188df777774f1d99ea39118095411b7bff4a"
+    },
+    {
+      "subsystem": "END_TO_END_CONSTRAINT_UNLOCK_ROOF_CLOSER",
+      "timestamp_unix": 1795755871.1381493,
+      "tier_1_raw_hardware": false,
+      "tier_2_exact_computational": false,
+      "tier_3_contract_parity": true,
+      "tier_4_roofline_efficiency_pct": 80.87,
+      "sha256": "3cc394a1fd6e49b0389a0f5e1eabe917e50b0287c5b0be89170a390f3b462b7b"
     }
   ],
   "end_to_end_constraint_unlock_subsystems": {

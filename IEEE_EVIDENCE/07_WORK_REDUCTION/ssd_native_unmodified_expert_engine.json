@@ -1,11 +1,12 @@
 {
   "subsystem": "SSD_NATIVE_UNMODIFIED_EXPERT_ENGINE",
+  "exact_mode": false,
   "pack_encoding_label": "LOSSLESS_OVER_INT4_PACK",
   "fidelity_contract": "APPROXIMATE_CONTRACT_PARITY",
   "sector_alignment_verified": true,
   "total_experts_in_pack": 32,
   "speculative_k_window": 8,
-  "elapsed_ms": 10.109,
+  "elapsed_ms": 16.135,
   "execution_metrics": {
     "window_k_tokens": 8,
     "unique_experts_read": 16,

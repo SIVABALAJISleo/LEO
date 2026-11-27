@@ -264,6 +264,18 @@ from .cortical_event_predictive_engine import (
     LocalPredictiveCodingALMLearner,
     run_cortical_subsumption_suite,
 )
+from .exact_omega_router import (
+    ExactOmegaReceipt,
+    CIROp,
+    HardExactnessGate,
+    UniversalCanonicalIRLifter,
+    ZeroLossEscapeCascade,
+    OutOfCoreVirtualVRAM,
+    ExactSiliconExecutor,
+    ExactOracleVerifier,
+    ExactOmegaRouter,
+    run_exact_omega_verification_suite,
+)
 
 __all__ = [
     "FunctionalReplacementEngine",
@@ -464,4 +476,14 @@ __all__ = [
     "DendriticL1ResidentEngine",
     "LocalPredictiveCodingALMLearner",
     "run_cortical_subsumption_suite",
+    "ExactOmegaReceipt",
+    "CIROp",
+    "HardExactnessGate",
+    "UniversalCanonicalIRLifter",
+    "ZeroLossEscapeCascade",
+    "OutOfCoreVirtualVRAM",
+    "ExactSiliconExecutor",
+    "ExactOracleVerifier",
+    "ExactOmegaRouter",
+    "run_exact_omega_verification_suite",
 ]

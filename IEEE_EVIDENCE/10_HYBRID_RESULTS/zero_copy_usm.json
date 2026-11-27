@@ -1,4 +1,22 @@
 {
-  "zero_copy_latency_ms": 0.001,
-  "pcie_overhead_eliminated": true
+  "usm_architecture": {
+    "protocol": "CL_MEM_USE_HOST_PTR",
+    "host_device_topology": "Intel Core i5-12450H + Intel UHD Graphics (Unified Host RAM)",
+    "physical_pcie_bus_latency_ms": 0.0,
+    "memory_copy_eliminated": true,
+    "buffer_allocation_mode": "Zero-Copy Host Pointer Shared Mapping",
+    "elements_processed": 1048576,
+    "element_datatype": "FP32 (4 bytes)",
+    "buffer_size_mb": 4.0,
+    "total_transferred_mb": 12.0
+  },
+  "live_verification": {
+    "hardware_device": "Intel(R) UHD Graphics (48 EUs)",
+    "kernel_dispatch_verified": true,
+    "profiling_events_captured": true,
+    "kernel_execution_ms": 0.2372,
+    "effective_bandwidth_gb_s": 50.59,
+    "max_numerical_discrepancy": 9.5367431640625e-07,
+    "scientific_integrity_status": "VERIFIED_ON_HOST_SILICON"
+  }
 }

@@ -9,6 +9,7 @@ Target Hardware: Intel Core i5-12450H + Intel UHD Graphics + 16 GB RAM + 512 GB 
 
 import os
 import sys
+import tempfile
 import pytest
 import numpy as np
 from pathlib import Path
@@ -35,7 +36,7 @@ from backend.canonical.end_to_end_constraint_unlock_runner import (
 
 def test_1_ssd_native_sector_alignment_and_manifest():
     """Verify 4096-byte sector alignment of every packed expert block."""
-    tmp_dir = "IEEE_EVIDENCE/test_scratch_ssd"
+    tmp_dir = os.path.join(tempfile.gettempdir(), "hyper_test_scratch_ssd")
     os.makedirs(tmp_dir, exist_ok=True)
     pack_path = os.path.join(tmp_dir, "test_pack.bin")
     manifest_path = os.path.join(tmp_dir, "test_manifest.json")
@@ -66,7 +67,7 @@ def test_1_ssd_native_sector_alignment_and_manifest():
 
 def test_2_rans_lossless_roundtrip_and_incompressibility_guard():
     """Verify 0-bit error rANS roundtrip on skewed weights & RAW_PASSTHROUGH on white noise."""
-    builder = ExpertPackBuilder()
+    builder = ExpertPackBuilder(exact_mode=False)
     rng = np.random.default_rng(202)
 
     # 1. Skewed Laplace weights -> rANS compression
@@ -82,6 +83,43 @@ def test_2_rans_lossless_roundtrip_and_incompressibility_guard():
     d_noise = (rng.integers(-7, 8, size=(32, 64)) / 16.0).astype(np.float32)
     _, noise_codec, _, _ = builder.pack_expert_tensors(g_noise, u_noise, d_noise)
     assert noise_codec == 0, f"Expected RAW_PASSTHROUGH (0), got {noise_codec}"
+
+
+def test_2b_ssd_native_exact_mode_lossless_bit_identical_parity():
+    """Verify 100% bit-exact reconstruction (0.0 error) via lossless byte-plane shuffling."""
+    tmp_dir = os.path.join(tempfile.gettempdir(), "hyper_test_exact_ssd")
+    os.makedirs(tmp_dir, exist_ok=True)
+    pack_path = os.path.join(tmp_dir, "exact_pack.bin")
+    manifest_path = os.path.join(tmp_dir, "exact_manifest.json")
+
+    rng = np.random.default_rng(404)
+    g_orig = rng.standard_normal((32, 16)).astype(np.float32)
+    u_orig = rng.standard_normal((32, 16)).astype(np.float32)
+    d_orig = rng.standard_normal((16, 32)).astype(np.float32)
+
+    builder_exact = ExpertPackBuilder(sector_size=4096, exact_mode=True)
+    manifest = builder_exact.build_pack_file({(0, 0): (g_orig, u_orig, d_orig)}, pack_path, manifest_path)
+
+    engine = SSDNativeUnmodifiedExpertEngine(pack_path, manifest_path)
+    loaded = engine.read_experts_concurrent_direct(["0:0"])
+    g_rec, u_rec, d_rec = loaded["0:0"]
+
+    # Assert 0.0 error bit-exact equality
+    assert np.array_equal(g_rec, g_orig), "Gate tensor not bit-exact identical"
+    assert np.array_equal(u_rec, u_orig), "Up tensor not bit-exact identical"
+    assert np.array_equal(d_rec, d_orig), "Down tensor not bit-exact identical"
+    assert float(np.max(np.abs(g_rec - g_orig))) == 0.0
+
+    # Verify benchmark with exact_mode reports TIER_2_EXACT_COMPUTATIONAL_PARITY
+    res = benchmark_ssd_native_unmodified_expert_engine(exact_mode=True, tmp_dir=tmp_dir)
+    assert res["parity_tiers"]["TIER_2_EXACT_COMPUTATIONAL_PARITY"] is True
+    assert res["fidelity_contract"] == "EXACT_MATHEMATICAL_PARITY"
+
+    try:
+        if os.path.exists(pack_path): os.remove(pack_path)
+        if os.path.exists(manifest_path): os.remove(manifest_path)
+    except Exception:
+        pass
 
 
 def test_3_speculative_multi_token_batching_and_leviathan_chen():
