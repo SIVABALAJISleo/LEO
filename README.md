@@ -1,1530 +1,991 @@
-# LEO / HYPER-Ω
+🚀 LEO / HYPER-Ω
 
-## External-GPU-Equivalent Computational Pathway Engine
+Contract-Constrained Computational Optimization & Computational Escape Engine
 
-### Necessary-Work & Computational-Escape Architecture
+Change the path. Preserve the result.
 
-> **"Change the path. Preserve the result."**  
-> Rather than attempting to physically emulate an external GPU, HYPER-Ω mathematically reformulates computation to discover alternative software execution pathways that satisfy declared application contracts under fixed local hardware constraints.
+""Python" (https://img.shields.io/badge/Python-3.x-blue?logo=python)" (https://www.python.org/)
+""TypeScript" (https://img.shields.io/badge/TypeScript-Engineering-blue?logo=typescript)" (https://www.typescriptlang.org/)
+""C++" (https://img.shields.io/badge/C%2B%2B-Systems_Programming-blue?logo=cplusplus)" (https://isocpp.org/)
+""Research" (https://img.shields.io/badge/Status-Active_Research-orange)"
+""Hardware" (https://img.shields.io/badge/Execution-CPU_%2B_Integrated_GPU-green)"
+""License" (https://img.shields.io/badge/Project-Open_Research-lightgrey)"
 
-**Target Hardware**: Intel Core i5-12450H CPU (8 cores / 12 threads: 4P+4E), Intel UHD Graphics (Official Spec: 48 EUs), 16 GB Unified System RAM (Software Only).  
-**Strict Constraints**: No discrete GPU, no cloud compute, no fake timing, no precomputed benchmark lookups, no unverified claims.
+LEO / HYPER-Ω is an independent computational research and engineering project exploring whether expensive computational workloads can be reformulated, reduced, reused, or selectively eliminated while preserving the correctness and quality requirements of the applications that depend on them.
 
----
+Instead of attempting to reproduce the physical architecture of an expensive external GPU, HYPER investigates a different approach:
 
-### Four Independent Parity Tracks
+Can we obtain the required computational result without performing all the original computation?
 
-1. **Track 1: Raw Hardware Parity** — `NO_HARDWARE_PARITY`. Software cannot physically fabricate CUDA cores or GDDR7 bandwidth.
-2. **Track 2: Same-Computation Parity** — Evaluates whether candidate executes identical mathematical graphs and kernels.
-3. **Track 3: Reduced-Computation / Exact Parity** — Discovers verified computational wormholes reducing FLOPs and DRAM traffic.
-4. **Track 4: Application / Contract Parity** — Delivers 100% contract compliance for latency, quality (PSNR $\ge 40$ dB, SSIM $\ge 0.99$), and correctness.
+The project explores algorithmic reformulation, exact computation reuse, incremental processing, residual computation, sparsity, low-rank methods, adaptive precision, prediction, verification-driven execution, and heterogeneous CPU+iGPU scheduling.
 
----
-
-### Canonical Experiments & Live Measured Results
-
-All experiments execute live on physical hardware and issue cryptographically sealed SHA-256 work certificates:
-
-| Workload ID                    | Domain                                       | Equivalence Mode       | Candidate Latency | Error / Quality                                | Status            |
-| :----------------------------- | :------------------------------------------- | :--------------------- | :---------------- | :--------------------------------------------- | :---------------- |
-| **`HYPER_OMEGA_001`**          | Dense Linear Algebra ($512 \times 512$ FP32) | NUMERICALLY_EQUIVALENT | **2.31 ms**       | $0.00\text{e}+00$ max abs error                | **VERIFIED PASS** |
-| **`HYPER_OMEGA_GRAPHICS_001`** | Real-Time Dynamic Scene Reprojection         | PERCEPTUAL_EQUIVALENT  | **58.12 ms**      | **69.14 dB PSNR, 1.0000 SSIM**                 | **VERIFIED PASS** |
-| **`HYPER_OMEGA_LLM_001`**      | Speculative Autoregressive Logit Step        | NUMERICALLY_EQUIVALENT | **9.06 ms**       | $0.00\text{e}+00$ max abs error                | **VERIFIED PASS** |
-| **`HYPER_OMEGA_SCIENCE_001`**  | Toroidal Heat Diffusion PDE Stencil          | NUMERICALLY_EQUIVALENT | **2.11 ms**       | $0.00\text{e}+00$ error ($5.68\times$ speedup) | **VERIFIED PASS** |
-
-**Universal Reproduction**:
-
-```powershell
-python scripts/reproduce_experiment.py HYPER_OMEGA_001
-```
+The long-term objective is to identify workload classes where substantially less computation can satisfy the same application contract.
 
 ---
 
-### Contract-Driven Falsifiable Parity Engine (`leo.parity`)
+📌 Table of Contents
 
-HYPER includes a contract-driven, falsifiable parity engine enforcing strict, pre-registered performance and quality contracts.
-
-- **Frozen Contract Hash**: `df6b2f6d4e56b984aa8e1219fe59a029925abda9d2110b983ec29d074259e6d1` ([contracts.yaml](file:///c:/Users/sivab/OneDrive/Documents/HYPER/contracts.yaml))
-- **Falsification & Failure Boundaries**: [FALSIFICATION_REPORT.md](file:///c:/Users/sivab/OneDrive/Documents/HYPER/FALSIFICATION_REPORT.md)
-- **Physical Silicon Limits & Scope**: [OUT_OF_SCOPE.md](file:///c:/Users/sivab/OneDrive/Documents/HYPER/OUT_OF_SCOPE.md)
-
-#### Live Measured Results on Target Machine (Intel Core i5-12450H + Intel UHD, 16 GB RAM):
-
-| Workload Contract              | Latency Cap           | Live p50 (Warm) | Live p50 (Cold) | Result Label             | Quality Score             | Workload RAM | Contract Status   |
-| :----------------------------- | :-------------------- | :-------------- | :-------------- | :----------------------- | :------------------------ | :----------- | :---------------- |
-| **`quantized_llm_inference`**  | $\le 120.0\text{ ms}$ | **13.20 ms**    | **13.06 ms**    | `PREDICTIVE`             | $1.000$ (Token Agreement) | 0.50 MB      | **PASSED (100%)** |
-| **`rag_retrieval`**            | $\le 6.0\text{ ms}$   | **0.036 ms**    | **0.269 ms**    | `CACHED` (Cold: `EXACT`) | $1.000$ (Top-10 Recall)   | 0.10 MB      | **PASSED (100%)** |
-| **`text_embeddings`**          | $\le 15.0\text{ ms}$  | **12.91 ms**    | **12.91 ms**    | `REDUCED_WORK`           | $1.000$ (Rel Err $0.00$)  | 1.25 MB      | **PASSED (100%)** |
-| **`temporal_reuse_rendering`** | $\le 8.0\text{ ms}$   | **4.88 ms**     | **4.92 ms**     | `REDUCED_WORK`           | $100.0\text{ dB}$ (PSNR)  | 0.25 MB      | **PASSED (100%)** |
-
-- **Contract Parity on Declared Workload Set**: **100.0% (4/4 Contracts Passed)**
-- **Raw Physical Hardware Parity**: **0.0%** (_Permanently acknowledged: software cannot synthesize physical CUDA/Tensor cores or 1 TB/s memory bandwidth_).
-
-#### CLI Commands & Verification:
-
-```powershell
-# Run warm benchmark suite (30 reps) and issue cryptographic JSON certificates
-python -m leo.parity run --reps 30
-
-# Run zero-repetition cold suite (flushed caches, randomized inputs)
-python -m leo.parity cold
-
-# Run adversarial falsification harness (high-entropy, full-rank noise, scene cuts, memory pressure)
-python -m leo.parity falsify
-
-# Run sustained thermal soak test (monitors CPU clock stability & memory leaks)
-python -m leo.parity soak --duration-minutes 0.5
-```
+1. Project Overview
+2. The Problem
+3. Core Philosophy
+4. Project Objectives
+5. Hardware Environment and Constraints
+6. Four Parity Dimensions
+7. Computational Escape Architecture
+8. Core Optimization Strategies
+9. Heterogeneous CPU+iGPU Execution
+10. Correctness and Verification
+11. NVIDIA Hardware Comparison
+12. Benchmarking Philosophy
+13. Current Limitations
+14. HYPER-CCO Research Direction
+15. Repository Structure
+16. Research Methodology
+17. Future Development
+18. Research Principles
+19. Developer Information
 
 ---
 
-### Authoritative Architecture & Scientific Documentation
+1. Project Overview
 
-- **Falsification Report (Adversarial Boundaries & Failures)**: [FALSIFICATION_REPORT.md](file:///c:/Users/sivab/OneDrive/Documents/HYPER/FALSIFICATION_REPORT.md)
-- **Out of Scope (Limits of Software & Physical Silicon Boundaries)**: [OUT_OF_SCOPE.md](file:///c:/Users/sivab/OneDrive/Documents/HYPER/OUT_OF_SCOPE.md)
-- **Master Implementation Report**: [HYPER_OMEGA_IMPLEMENTATION_REPORT.md](file:///c:/Users/sivab/OneDrive/Documents/HYPER/HYPER_OMEGA_IMPLEMENTATION_REPORT.md)
-- **Repository Forensic Audit**: [docs/HYPER_OMEGA_REPOSITORY_AUDIT.md](file:///c:/Users/sivab/OneDrive/Documents/HYPER/docs/HYPER_OMEGA_REPOSITORY_AUDIT.md)
-- **Claim vs Evidence Matrix**: [docs/CLAIM_EVIDENCE_MATRIX.md](file:///c:/Users/sivab/OneDrive/Documents/HYPER/docs/CLAIM_EVIDENCE_MATRIX.md)
-- **System Architecture**: [docs/HYPER_OMEGA_ARCHITECTURE.md](file:///c:/Users/sivab/OneDrive/Documents/HYPER/docs/HYPER_OMEGA_ARCHITECTURE.md)
-- **Live Experimental Results**: [docs/HYPER_OMEGA_RESULTS.md](file:///c:/Users/sivab/OneDrive/Documents/HYPER/docs/HYPER_OMEGA_RESULTS.md)
-- **Necessary-Work Model**: [docs/NECESSARY_WORK_MODEL.md](file:///c:/Users/sivab/OneDrive/Documents/HYPER/docs/NECESSARY_WORK_MODEL.md)
-- **Computational Escape**: [docs/COMPUTATIONAL_ESCAPE.md](file:///c:/Users/sivab/OneDrive/Documents/HYPER/docs/COMPUTATIONAL_ESCAPE.md)
-- **Verification Model**: [docs/VERIFICATION_MODEL.md](file:///c:/Users/sivab/OneDrive/Documents/HYPER/docs/VERIFICATION_MODEL.md)
-- **Benchmark Integrity**: [docs/BENCHMARK_INTEGRITY.md](file:///c:/Users/sivab/OneDrive/Documents/HYPER/docs/BENCHMARK_INTEGRITY.md)
-- **Failure Taxonomy**: [docs/FAILURE_TAXONOMY.md](file:///c:/Users/sivab/OneDrive/Documents/HYPER/docs/FAILURE_TAXONOMY.md)
-- **Research Roadmap**: [docs/RESEARCH_ROADMAP.md](file:///c:/Users/sivab/OneDrive/Documents/HYPER/docs/RESEARCH_ROADMAP.md)
-- **Experimentation Guide**: [docs/EXPERIMENT_GUIDE.md](file:///c:/Users/sivab/OneDrive/Documents/HYPER/docs/EXPERIMENT_GUIDE.md)
+Project Name: LEO / HYPER-Ω
 
----
+Project Category: Computational Optimization, AI Systems Research, Algorithm Engineering, Heterogeneous Computing.
 
-**Stage:** Active research / engineering / experimental implementation
+Development: Independently designed, developed, modified, and experimentally investigated by Sivabalaji S.
 
-**Primary objective:** Software-only application/contract parity on selected workload classes
+Primary Objective: Investigate software-only alternatives to expensive computational execution pathways.
 
-**Hardware target:**
+HYPER is designed around the idea that the computational requirements of an application and the computational operations traditionally used to produce its results are not necessarily identical.
 
-- Intel Core i5-12450H
-- 8 cores / 12 threads
-- Intel integrated UHD graphics
-- 16 GB RAM
-- 512 GB SSD
-- Windows 11
+A conventional performance optimization generally asks:
 
-**Hardware constraint:**
+«How can the same computation execute faster?»
 
-- No dedicated GPU
-- No external accelerator
-- No FPGA
-- No ASIC
-- No paid cloud GPU
-- No hardware modification
+HYPER investigates a more fundamental question:
+
+«Which parts of the computation are actually necessary to satisfy the application's requirements?»
+
+This changes the optimization target from simply increasing execution speed to minimizing the amount of work that must be performed.
+
+The project combines multiple research directions into a contract-constrained computational optimization architecture.
 
 ---
 
-# Core Principle
+2. The Problem
 
-Traditional optimization asks:
+Modern GPU systems provide substantial computational capabilities through:
 
-```text
-How can the same workload run faster?
-```
+- Parallel processing architectures.
+- Dedicated graphics memory.
+- High memory bandwidth.
+- Tensor acceleration.
+- Specialized execution units.
+- Hardware-accelerated graphics and ray tracing.
 
-HYPER asks a more aggressive question:
+However, not every application necessarily requires every computational operation performed by its original execution pipeline.
 
-```text
-Does the application actually require the entire workload?
-```
+Some workloads contain opportunities for:
 
-The intended execution path is:
+- Redundant computation elimination.
+- Repeated result reuse.
+- Incremental updates.
+- Sparse processing.
+- Algebraic simplification.
+- Reduced memory movement.
+- Temporal and structural reuse.
+- Selective computation.
 
-```text
-INPUT
-  ↓
-APPLICATION CONTRACT
-  ↓
-WORKLOAD ANALYSIS
-  ↓
-DEPENDENCY ANALYSIS
-  ↓
-REDUNDANCY DETECTION
-  ↓
-EXACT REUSE
-  ↓
-INCREMENTAL / DELTA COMPUTATION
-  ↓
-EXACT ALGEBRAIC REFORMULATION
-  ↓
-SPARSITY
-  ↓
-LOW-RANK / FACTORIZATION
-  ↓
-COMPRESSION
-  ↓
-PRECISION OPTIMIZATION
-  ↓
-PREDICTION / SPECULATION
-  ↓
-RESIDUAL COMPUTATION
-  ↓
-TEMPORAL / STRUCTURAL REUSE
-  ↓
-CPU + INTEL UHD SCHEDULING
-  ↓
-VERIFICATION
-  ↓
-ACCEPT
-  OR
-FALLBACK
-  ↓
-PROOF-CARRYING RESULT
-  ↓
-MEASURED TELEMETRY
-```
+Traditional hardware scaling attempts to perform more operations per second.
 
-The objective is:
+HYPER investigates whether the number of operations can be reduced before execution.
 
-> **Minimum computation satisfying the required application contract.**
+The central research question
+
+Can a computational workload be transformed into a cheaper execution pathway without violating the required application contract?
+
+This is the foundation of LEO / HYPER-Ω.
 
 ---
 
-# What HYPER Is
+3. Core Philosophy
 
-HYPER is a collection and orchestration layer for computational elimination techniques.
+Change the path. Preserve the result.
 
-Major research areas include:
+The central philosophy is that application performance does not always require reproducing the original computational pathway.
 
-- exact memoization and cache reuse
-- dependency-aware reuse
-- incremental computation
-- residual computation
-- common-subexpression elimination
-- algebraic reformulation
-- low-rank approximation
-- sparse computation
-- compressed representations
-- mixed/adaptive precision
-- prediction
-- speculative execution
-- temporal reuse
-- reconstruction
-- heterogeneous CPU+iGPU execution
-- communication avoidance
-- kernel fusion
-- memory movement reduction
-- application-aware verification
-- adversarial benchmark validation
+Consider two approaches:
 
-The repository contains multiple generations and experimental implementations of these concepts, including the `hyper100` and `HYPER_v6_BREAKTHROUGH` workstreams.
+Traditional approach
 
----
+Input
+  ↓
+Original computational workload
+  ↓
+Execute all required operations
+  ↓
+Application output
 
-# What HYPER Is Not
+HYPER approach
 
-HYPER does **not** create:
+Input
+  ↓
+Understand application requirements
+  ↓
+Analyze computational dependencies
+  ↓
+Identify unnecessary operations
+  ↓
+Discover alternative execution pathways
+  ↓
+Reuse / Reduce / Reformulate
+  ↓
+Verify the resulting computation
+  ↓
+Execute the remaining necessary work
+  ↓
+Application output
 
-- CUDA cores
-- Tensor Cores
-- RT Cores
-- dedicated VRAM
-- NVIDIA memory bandwidth
-- NVIDIA hardware instructions
-- datacenter-class hardware throughput
+The objective is not to skip important work blindly.
 
-HYPER does not claim to physically transform an i5-12450H into an RTX 5090, H100, or equivalent hardware.
-
-The research target is fundamentally different:
-
-```text
-NVIDIA advantage
-       ↓
-Why does the application need that computation?
-       ↓
-Can the required result be obtained with substantially less computation?
-       ↓
-Can the reduced computation satisfy the contract?
-```
+It is to determine which work can be eliminated safely and which work remains necessary.
 
 ---
 
-# Four Different Meanings of "Parity"
+4. Project Objectives
 
-One of the most important rules in the project is that parity must not be treated as a single number.
+The major objectives of LEO / HYPER-Ω include:
 
-## 1. Raw Hardware Parity
+1. Develop a software-based computational optimization architecture.
+2. Investigate computational elimination and alternative execution pathways.
+3. Reduce redundant calculations through exact reuse.
+4. Explore incremental and residual computation.
+5. Investigate mathematically valid algorithmic reformulations.
+6. Explore sparse and low-rank computational techniques.
+7. Reduce unnecessary memory movement.
+8. Investigate adaptive precision where application contracts permit it.
+9. Explore prediction and speculative execution with verification.
+10. Utilize available CPU and integrated GPU resources where beneficial.
+11. Build correctness-oriented verification mechanisms.
+12. Establish reproducible and honest benchmarking procedures.
+13. Identify workloads where reduced computation can compete with conventional hardware execution.
 
-Physical compute capability.
+---
+
+5. Hardware Environment and Constraints
+
+HYPER is developed around a constrained, ordinary computing environment.
+
+Primary development hardware
+
+Component| Specification
+Laptop| Lenovo IdeaPad Slim 3 15IAH8
+Processor| Intel Core i5-12450H
+CPU Configuration| 8 cores / 12 threads
+Performance Cores| 4 P-cores
+Efficiency Cores| 4 E-cores
+Integrated Graphics| Intel UHD Graphics
+Graphics Execution Units| 48 EUs
+RAM| 16 GB
+Storage| 512 GB SSD
+Operating System| Windows 11 Home
+
+Strict development constraints
+
+The primary research environment follows these constraints:
+
+- No dedicated external GPU.
+- No discrete NVIDIA GPU.
+- No external accelerator hardware.
+- No FPGA or ASIC.
+- No hardware modification.
+- No paid cloud GPU computation.
+- No distributed external computing resources.
+- No artificial benchmark timing.
+- No precomputed benchmark results presented as live execution.
+- No unverified performance claims.
+
+The purpose is to investigate how far software-level computational optimization can go using the available local hardware.
+
+Important: These constraints define the primary experimental environment, not a claim that the architecture is universally limited to this particular processor.
+
+---
+
+6. Four Independent Parity Dimensions
+
+One of the most important principles of HYPER is that hardware parity and application parity must not be confused.
+
+The project distinguishes four separate dimensions.
+
+6.1 Raw Hardware Parity
+
+Physical hardware equivalence.
 
 Examples:
 
-- FLOPS
-- memory bandwidth
-- dedicated accelerator resources
-- specialized GPU hardware
+- CUDA core count.
+- Tensor Core availability.
+- Dedicated VRAM.
+- Physical memory bandwidth.
+- Hardware-specific instructions.
+- Specialized GPU execution resources.
 
-HYPER does **not** claim software can reproduce this hardware.
+HYPER does not claim to create or physically reproduce these capabilities through software.
 
-## 2. Exact Computational Parity
+6.2 Exact Computational Parity
 
-The same mathematical workload is executed and produces the equivalent result.
+The same mathematical computation must be performed and produce equivalent results under the declared numerical and execution requirements.
 
-This is the strongest computational comparison.
+This is a stricter comparison than merely producing a visually similar output.
 
-## 3. Contract Parity
+6.3 Contract Parity
 
-The application receives an output satisfying the explicitly defined correctness and quality requirements.
+An alternative computational pathway is acceptable when its output satisfies the explicitly declared application requirements.
 
-This may permit a lower-cost formulation where the application contract allows it.
+Depending on the contract, this may permit mathematically valid reformulations or bounded approximations.
 
-## 4. Application Performance Parity
+Every relaxation must be explicitly identified.
 
-The required output is delivered with the required:
+6.4 Application Performance Parity
 
-- correctness
-- quality
-- latency
-- throughput
+The practical objective is to deliver the required application output with acceptable:
 
-This is the most important practical target for HYPER.
+- Correctness.
+- Quality.
+- Latency.
+- Throughput.
+- Memory consumption.
+- Resource utilization.
 
----
+This is the primary long-term research target.
 
-# Correctness Classes
-
-Every optimization must be classified.
-
-```text
-EXACT
-EXACT_REFORMULATION
-NUMERICALLY_EQUIVALENT
-BOUNDED_APPROXIMATION
-PERCEPTUAL_APPROXIMATION
-PREDICTIVE
-SPECULATIVE
-CACHED
-REUSED
-REDUCED_WORK
-SIMULATED
-UNVERIFIED
-```
-
-These categories are not interchangeable.
-
-For example:
-
-```text
-Exact cache
-≠
-approximation
-
-Prediction
-≠
-exact computation
-
-Reduced workload
-≠
-same workload
-
-Perceptual similarity
-≠
-mathematical equivalence
-```
-
-HYPER's benchmark and reporting infrastructure is being redesigned around this distinction.
+A result satisfying an application contract does not automatically establish identical computation or physical hardware equivalence.
 
 ---
 
-# Current Architecture
+7. Computational Escape Architecture
 
-The long-term architecture is organized around a contract-constrained execution optimizer.
+HYPER organizes its research around a computational escape pipeline.
 
-```text
-                 ┌──────────────────────────┐
-                 │ Application Input/Request │
-                 └─────────────┬────────────┘
-                               │
-                               ▼
-                 ┌──────────────────────────┐
-                 │ Contract / Requirements │
-                 └─────────────┬────────────┘
-                               │
-                               ▼
-                 ┌──────────────────────────┐
-                 │ Workload Classification │
-                 └─────────────┬────────────┘
-                               │
-                               ▼
-                 ┌──────────────────────────┐
-                 │ Dependency Graph         │
-                 └─────────────┬────────────┘
-                               │
-                               ▼
-                 ┌──────────────────────────┐
-                 │ Work-Elimination Search  │
-                 └─────────────┬────────────┘
-                               │
-          ┌────────────────────┼────────────────────┐
-          │                    │                    │
-          ▼                    ▼                    ▼
-      Exact Reuse        Reformulation       Approximation
-          │                    │                    │
-          └────────────────────┼────────────────────┘
-                               │
-                               ▼
-                 ┌──────────────────────────┐
-                 │ Candidate Execution      │
-                 └─────────────┬────────────┘
-                               │
-                               ▼
-                 ┌──────────────────────────┐
-                 │ CPU / UHD / Hybrid       │
-                 └─────────────┬────────────┘
-                               │
-                               ▼
-                 ┌──────────────────────────┐
-                 │ Verification             │
-                 └───────┬───────────┬──────┘
-                         │           │
-                      PASS          FAIL
-                         │           │
-                         ▼           ▼
-                    Return      Stronger Strategy
-                         │           │
-                         │           ▼
-                         │       Exact Fallback
-                         │
-                         ▼
-                 Execution Certificate
-```
+INPUT
+  |
+  v
+APPLICATION CONTRACT
+  |
+  v
+WORKLOAD ANALYSIS
+  |
+  v
+DEPENDENCY ANALYSIS
+  |
+  v
+REDUNDANCY DETECTION
+  |
+  v
+EXACT REUSE
+  |
+  v
+INCREMENTAL / DELTA COMPUTATION
+  |
+  v
+ALGEBRAIC REFORMULATION
+  |
+  v
+SPARSITY / LOW-RANK METHODS
+  |
+  v
+COMPRESSION
+  |
+  v
+PRECISION OPTIMIZATION
+  |
+  v
+PREDICTION / SPECULATION
+  |
+  v
+RESIDUAL COMPUTATION
+  |
+  v
+TEMPORAL / STRUCTURAL REUSE
+  |
+  v
+CPU + INTEL UHD SCHEDULING
+  |
+  v
+VERIFICATION
+  |
+  +------> ACCEPT
+  |
+  +------> EXACT FALLBACK
+  |
+  v
+RESULT + EXECUTION TELEMETRY
 
----
+The pipeline is not a mandatory fixed sequence.
 
-# Contract-Constrained Compute Optimizer
-
-The central optimization problem is conceptually:
-
-$$
-\min_{a\in A} C(a)
-$$
-
-subject to:
-
-$$
-Error(a) \le \epsilon
-$$
-
-$$
-Quality(a) \ge Q_{min}
-$$
-
-$$
-Latency(a) \le L_{max}
-$$
-
-$$
-Throughput(a) \ge T_{min}
-$$
-
-where `a` is a candidate execution strategy.
-
-The cost function may incorporate:
-
-- latency
-- energy
-- memory
-- verification cost
-- fallback risk
-- CPU utilization
-- iGPU utilization
-
-The implementation must use measurements where available rather than treating theoretical peak specifications as measured performance.
+The runtime should select strategies according to workload characteristics, correctness requirements, and measured execution costs.
 
 ---
 
-# Major Existing Capabilities
+8. Core Optimization Strategies
 
-## Exact Reuse / Caching
+8.1 Exact Computation Reuse
 
-HYPER contains cache/reuse infrastructure intended to avoid recomputing identical work.
+Repeated workloads may contain identical computations.
 
-The current engineering direction strengthens this by requiring exact cache identities to incorporate the complete relevant input and execution state rather than relying on sampled tensor contents.
+Instead of recalculating an already verified result, HYPER investigates exact reuse.
 
-An exact-cache certificate should include:
+An exact cache identity should consider relevant execution information such as:
 
-```text
-input hash
-shape
-dtype
-layout
-model/version
-algorithm version
-contract
-result identity
-```
+- Input identity.
+- Input shape.
+- Data type.
+- Memory layout.
+- Model version.
+- Algorithm version.
+- Application contract.
+- Execution configuration.
 
-Exact cache hits are reported as:
+A cache hit must be reported as avoided computation, not falsely represented as newly executed computational throughput.
 
-```text
-executed computation = 0
-lookup latency = measured value
-```
+8.2 Incremental / Delta Computation
 
-rather than artificially converting cache hits into compute throughput.
+Some applications repeatedly process data that changes only partially.
 
----
-
-# Incremental / Delta Computation
-
-Repeated workloads frequently contain only small changes.
-
-HYPER investigates:
-
-$$
-Y_t = F(X_t)
-$$
-
-with:
-
-$$
-\Delta X_t = X_t-X_{t-1}
-$$
-
-and searches for cheaper update formulations:
-
-$$
-Y_t = Y_{t-1}+\Delta Y_t
-$$
-
-where mathematically valid.
-
-Potential targets include:
-
-- matrices
-- images
-- video
-- simulations
-- repeated ML operations
-- dynamic application state
-
----
-
-# Residual Computation
-
-One of the principal next-generation HYPER strategies is:
-
-```text
-previous result
-      +
-prediction
-      ↓
-residual
-      ↓
-compute only residual information
-      ↓
-reconstruct
-      ↓
-verify
-```
+Rather than recomputing the complete result, incremental computation investigates whether the previous result can be updated using only the changes.
 
 Conceptually:
 
-$$
-Output = Prediction + ResidualCorrection
-$$
+Previous State
+      +
+New Changes
+      |
+      v
+Identify Affected Dependencies
+      |
+      v
+Compute Required Updates
+      |
+      v
+Construct Updated Result
+      |
+      v
+Verify
 
-The goal is to avoid recomputing information that can already be inferred from previous state.
+Potential application areas include:
 
-This is particularly relevant to workloads with temporal or spatial coherence.
+- Dynamic simulations.
+- Image processing.
+- Video processing.
+- Repeated machine learning workloads.
+- Data processing.
+- Interactive applications.
 
----
+8.3 Residual Computation
 
-# Algebraic Reformulation
+Residual computation investigates whether an existing result or inexpensive prediction can provide most of the required information.
 
-HYPER investigates exact or conditional mathematical transformations that reduce complexity.
+Previous Result
+      |
+      v
+Prediction
+      |
+      v
+Residual Detection
+      |
+      v
+Compute Missing Information
+      |
+      v
+Reconstruction
+      |
+      v
+Verification
 
-Examples include:
+The objective is to calculate only the remaining information when the workload permits it.
 
-- Woodbury identity
-- Sherman-Morrison
-- block matrix methods
-- factorization
-- separable transforms
-- FFT-based formulations
-- Winograd-style transforms
-- structured matrix methods
-- incremental linear algebra
-- divide-and-conquer formulations
+8.4 Algebraic Reformulation
 
-Each transformation must document:
+Some computational problems can be expressed through different mathematical formulations.
 
-```text
-original computation
-alternative computation
-mathematical assumptions
-complexity
-numerical stability
-correctness classification
-verification strategy
-```
+HYPER investigates alternative formulations that may reduce:
 
----
+- Arithmetic operations.
+- Memory access.
+- Intermediate representations.
+- Computational complexity.
+- Data movement.
 
-# Sparsity
+A reformulation is only accepted when its correctness conditions are established.
 
-HYPER analyzes whether workloads contain:
+8.5 Sparse Computation
 
-- exact zeros
-- near-zero values
-- block sparsity
-- temporal sparsity
-- spatial sparsity
-- structured sparsity
-- activation sparsity
+Sparse methods exploit workloads containing many zero or irrelevant elements.
 
-Approximate zeros are not treated as exact zeros unless the contract and error analysis justify the transformation.
+Potential benefits include reduced arithmetic and memory consumption.
 
----
+However, sparsity must be measured against the actual workload because indexing and irregular memory access can introduce additional overhead.
 
-# Low-Rank Computation
+8.6 Low-Rank Methods
 
-HYPER investigates:
+Low-rank techniques investigate whether a matrix or other structured representation can be approximated or represented using fewer independent components.
 
-- SVD
-- truncated SVD
-- randomized SVD
-- QR
-- CUR
-- Nyström
-- tensor decompositions
-- tensor-train representations
-- structured matrix factorization
+The acceptable error depends on the application contract.
 
-The key question is not:
+An approximate low-rank result must never be reported as mathematically exact without proof.
 
-```text
-Can this matrix be compressed?
-```
+8.7 Compression and Representation Reduction
 
-but:
+HYPER investigates reducing the amount of information that must be stored, transferred, or processed.
 
-```text
-Can it be compressed enough to reduce computation while still satisfying the application contract?
-```
+The goal is to reduce memory pressure and data movement without silently changing the required result.
 
----
+8.8 Adaptive Precision
 
-# Precision Optimization
+Potential execution formats include:
 
-Potential execution modes include:
+- FP32.
+- FP16.
+- BF16 where supported.
+- INT8.
+- INT4.
+- Binary and ternary representations where appropriate.
 
-- FP32
-- FP16
-- BF16 where supported
-- INT8
-- INT4
-- ternary/binary techniques where appropriate
+Precision reduction must be accompanied by suitable numerical validation.
 
-Precision reduction must always be classified correctly.
+Lower precision is not automatically an exact optimization.
 
-Changing precision is not automatically an exact optimization.
+8.9 Prediction and Speculative Execution
 
-HYPER therefore tracks:
+Prediction may allow a system to avoid some expensive operations when future information can be estimated reliably.
 
-```text
-input precision
-internal precision
-output precision
-absolute error
-relative error
-quality
-latency
-memory traffic
-```
+The intended process is:
 
----
+Prediction
+    |
+    v
+Confidence Evaluation
+    |
+    v
+Verification
+    |
+    +----> ACCEPT
+    |
+    +----> EXACT FALLBACK
 
-# Prediction and Speculative Execution
+Prediction alone is not proof of correctness.
 
-HYPER explores:
+8.10 Temporal and Structural Reuse
 
-```text
-cheap prediction
-      ↓
-confidence estimation
-      ↓
-selective verification
-      ↓
-accept
-or
-      ↓
-exact fallback
-```
+Applications such as graphics, video processing, and simulations may contain repeated spatial or temporal structures.
 
-This can potentially reduce expensive work for workloads where the next state can be accurately inferred.
-
-Prediction is never automatically classified as exact.
+HYPER investigates whether previous states, structural similarities, and change information can reduce unnecessary recomputation.
 
 ---
 
-# Temporal Reconstruction
+9. Heterogeneous CPU + Intel UHD Execution
 
-For appropriate visual and temporal workloads:
+HYPER explores coordinated execution using the available CPU and integrated GPU.
 
-```text
-previous frame
-+
-motion/change information
-+
-current low-cost information
-      ↓
-prediction
-      ↓
-residual detection
-      ↓
-selective exact computation
-      ↓
-reconstruction
-      ↓
-quality verification
-```
+The objective is to assign work according to the actual characteristics of each workload.
 
-This is a key research direction for reducing expensive per-frame computation.
-
-The concept is consistent with the broader family of temporal reconstruction techniques used in modern graphics systems, but HYPER's objective is to develop a hardware-independent computation-elimination framework around the same underlying principle.
-
----
-
-# CPU + Intel UHD Heterogeneous Execution
-
-HYPER is designed to use both available compute resources where beneficial.
-
-## CPU
-
-Best suited to:
-
-- dependency analysis
-- graph traversal
-- control-heavy operations
-- sparse bookkeeping
-- compression
-- decompression
-- verification
-- irregular workloads
-- exact fallback
-- SIMD workloads
-
-## Intel UHD
-
-Potentially suited to:
-
-- regular dense kernels
-- tiled arithmetic
-- image-space operations
-- parallel reconstruction
-- regular reductions
-- suitable compute workloads
-
-The runtime must not assume the iGPU is always faster.
-
-The system should empirically measure:
-
-```text
 CPU execution
-UHD execution
-transfer overhead
-synchronization overhead
-hybrid execution
-```
 
-and make decisions accordingly.
+Potential responsibilities include:
 
----
+- Dependency analysis.
+- Graph processing.
+- Control-heavy operations.
+- Sparse bookkeeping.
+- Compression and decompression.
+- Verification.
+- Irregular computations.
+- Exact fallback.
+- SIMD processing.
 
-# Empirical Scheduling
+Intel UHD execution
 
-Older experimental scheduling logic used theoretical hardware assumptions.
+Potential responsibilities include:
 
-The newer direction is to make the scheduler empirical.
+- Suitable parallel arithmetic.
+- Regular dense kernels.
+- Image-space operations.
+- Parallel reductions.
+- Reconstruction workloads.
+- Other compatible GPU compute operations.
 
-For each workload/kernel the system should learn:
+Scheduling principle
 
-```text
-input size
-arithmetic intensity
-memory footprint
-CPU time
-UHD time
-transfer time
-synchronization time
-verification time
-```
+The integrated GPU is not assumed to be faster than the CPU for every workload.
 
-and use those observations to improve future scheduling decisions.
+The system should measure:
 
----
+1. CPU execution time.
+2. Integrated GPU execution time.
+3. Data-transfer overhead.
+4. Synchronization overhead.
+5. Hybrid execution time.
+6. Memory consumption.
 
-# Memory and Data-Movement Optimization
-
-HYPER treats memory traffic as an important source of overhead.
-
-Research areas include:
-
-- buffer reuse
-- memory pooling
-- lazy materialization
-- tiled layouts
-- cache locality
-- zero-copy where supported
-- reduced serialization
-- reduced CPU↔GPU movement
-- communication avoidance
-- kernel fusion
-- intermediate elimination
-
-The objective is:
-
-> Move less data, not merely calculate faster.
+The final execution pathway should be selected using measured costs.
 
 ---
 
-# Execution Certificates
+10. Correctness and Verification
 
-The planned execution model requires every optimization result to produce a machine-readable execution certificate.
+Correctness is a central requirement of the HYPER research architecture.
 
-Conceptual structure:
+Different optimization techniques can produce different kinds of results.
 
-```json
-{
-  "workload_id": "...",
-  "input_hash": "...",
-  "model_hash": "...",
-  "code_hash": "...",
-  "contract_hash": "...",
+HYPER distinguishes the following execution classifications:
 
-  "strategy": "...",
-  "exactness_class": "...",
+Classification| Meaning
+EXACT| Identical required computation or result under the defined contract
+EXACT_REFORMULATION| Different mathematical pathway with established equivalence
+NUMERICALLY_EQUIVALENT| Equivalent within declared numerical tolerances
+BOUNDED_APPROXIMATION| Output satisfies a defined error bound
+PERCEPTUAL_APPROXIMATION| Output satisfies a defined perceptual quality requirement
+PREDICTIVE| Output generated using prediction
+SPECULATIVE| Execution using an unconfirmed assumption
+CACHED| Previously computed result reused
+REUSED| Existing computational information reused
+REDUCED_WORK| Less computation performed under a defined contract
+SIMULATED| Behavior simulated rather than executed as the original workload
+UNVERIFIED| Correctness has not yet been sufficiently established
 
-  "original_work": 0,
-  "executed_work": 0,
-  "eliminated_work": 0,
+These classifications must not be treated as interchangeable.
 
-  "latency_ms": 0,
-  "throughput": 0,
+For example:
 
-  "error_abs": 0,
-  "error_rel": 0,
+- Prediction is not exact computation.
+- Visual similarity is not mathematical equivalence.
+- A cache hit is not fresh computation.
+- Reduced workload is not necessarily the same workload.
+- A successful test is not a universal mathematical proof.
 
-  "device": "CPU/UHD/Hybrid",
+Verification-driven execution
 
-  "cache_hit": false,
-  "fallback": false,
+Candidate Optimization
+        |
+        v
+Correctness Conditions
+        |
+        v
+Verification
+        |
+        +------> PASS
+        |          |
+        |          v
+        |       ACCEPT
+        |
+        +------> FAIL
+                   |
+                   v
+              EXACT FALLBACK
 
-  "verification": {
-    "status": "PASS",
-    "method": "..."
-  },
-
-  "measurement": {
-    "measured": true,
-    "estimated": false
-  }
-}
-```
-
-The certificate itself should be integrity-protected with a cryptographic digest.
-
----
-
-# Verification Policy
-
-Verification levels should be explicitly differentiated:
-
-```text
-LEVEL 0 — no verification
-LEVEL 1 — sample verification
-LEVEL 2 — block verification
-LEVEL 3 — full numerical verification
-LEVEL 4 — mathematical equivalence
-LEVEL 5 — application-level independent validation
-```
-
-A sample check must never be described as a mathematical proof.
-
-An estimate must never be described as a measurement.
+An optimization that cannot satisfy its declared correctness conditions should not be accepted as a valid replacement.
 
 ---
 
-# Benchmark Integrity
+11. NVIDIA Hardware Comparison
 
-HYPER follows a strict benchmark philosophy.
+HYPER investigates alternative computational pathways rather than physical GPU reproduction.
 
-## Every serious benchmark should distinguish:
+Modern NVIDIA hardware provides capabilities such as:
 
-### Cold
+- CUDA execution.
+- Tensor Cores.
+- RT Cores.
+- Dedicated graphics memory.
+- High-bandwidth memory systems.
+- Specialized parallel processing.
 
-No reusable state.
+HYPER does not claim to manufacture these capabilities through software.
 
-### Warm
+Its research question is different:
 
-Normal repeated execution.
+Conventional Execution
+        |
+        v
+Large Computational Workload
+        |
+        v
+Powerful Hardware Executes the Work
 
-### Persistent
+Compared with:
 
-Long-running execution.
+HYPER
+  |
+  v
+Analyze the Required Result
+  |
+  v
+Find Unnecessary Computation
+  |
+  v
+Discover a Cheaper Pathway
+  |
+  v
+Verify Correctness
+  |
+  v
+Execute Remaining Necessary Work
 
-### Adversarial
+The research hypothesis is that certain application workloads may achieve competitive practical outcomes without reproducing the original hardware's physical computational resources.
 
-Inputs designed to defeat the optimization.
-
-### Random
-
-Unstructured randomized inputs.
-
-### Structured
-
-Inputs with exploitable redundancy.
-
-### Application
-
-Real application workloads.
-
----
-
-# Benchmark Contamination Defense
-
-Benchmarks should test:
-
-```text
-clean cache
-warm cache
-randomized input
-perturbed input
-adversarial input
-```
-
-The system must detect:
-
-- hidden precomputation
-- lookup-table cheating
-- fixed benchmark answers
-- benchmark-specific shortcuts
-- workload substitution
-- cache contamination
+This must be established independently for each workload class.
 
 ---
 
-# Self-Falsification
+12. Benchmarking Philosophy
 
-A HYPER optimization is considered scientifically credible only if it survives attempts to break it.
+HYPER treats benchmark integrity as a fundamental engineering requirement.
 
-Adversarial workload families include:
+A benchmark should distinguish:
 
-```text
-cache adversaries
-dense random matrices
-full-rank matrices
-low-coherence data
-distribution-shifted prediction data
-high-motion visual inputs
-ill-conditioned numerical problems
-large memory working sets
-branch-heavy workloads
-rapid scene changes
-```
+- Cold execution.
+- Warm execution.
+- Exact cache hits.
+- Reused computation.
+- Incremental execution.
+- Reduced-work execution.
+- Approximate execution.
+- Speculative execution.
+- Exact fallback.
 
-A strategy that works only on structured data must be described as such.
+Required measurements
 
----
+Metric| Purpose
+Latency| Time required to produce the result
+Throughput| Number of completed workloads
+CPU utilization| CPU resource consumption
+iGPU utilization| Integrated GPU activity
+Memory usage| RAM consumption
+Data movement| Transfer and communication cost
+Numerical error| Difference from reference output
+Quality| Application-specific result quality
+Verification overhead| Cost of establishing correctness
+Fallback frequency| Frequency of rejected optimizations
 
-# Current Evidence
+Benchmark rules
 
-The repository contains application-level benchmark material comparing HYPER against RTX 3060-class references.
+1. Never fabricate execution timings.
+2. Never substitute stored results for actual benchmark execution.
+3. Use identical input workloads for fair comparisons.
+4. Report cold and warm execution separately.
+5. Account for cache hits honestly.
+6. Include preprocessing and transfer overhead.
+7. Include verification cost where relevant.
+8. Record failed optimization attempts.
+9. Repeat experiments.
+10. Publish the conditions under which a result was obtained.
 
-These numbers are **repository-reported**, not independent measurements from the target Lenovo system.
-
-Reported examples include:
-
-| Workload                |       HYPER | RTX 3060 reference | Relative HYPER throughput |
-| ----------------------- | ----------: | -----------------: | ------------------------: |
-| Blender viewport        |     ~38 FPS |           ~110 FPS |                    ~34.5% |
-| Blender 1080p rendering | ~62 s/frame |       ~4.2 s/frame |                     ~6.8% |
-| Unreal Engine 5         |     ~22 FPS |            ~80 FPS |               ~27.5–27.8% |
-| Unity 1M particles      |     ~35 FPS |           ~140 FPS |                       25% |
-
-These results demonstrate that the current system has **not** established universal application replacement.
-
-They are valuable because they identify where the remaining research problem actually exists.
-
----
-
-# Important Interpretation of Current Results
-
-The current evidence does **not** mean the project has failed.
-
-It means the broad claim:
-
-```text
-HYPER universally replaces much stronger GPUs
-```
-
-is not yet demonstrated.
-
-The meaningful research question is narrower and stronger:
-
-```text
-For which workload classes can HYPER eliminate enough computation
-that the original hardware advantage becomes unnecessary?
-```
-
-That is the direction of the current architecture.
+A performance improvement is meaningful only when the complete execution cost and correctness requirements are considered.
 
 ---
 
-# NVIDIA Comparison Philosophy
+13. Current Limitations
 
-HYPER comparisons should distinguish actual hardware capabilities from application-level requirements.
+LEO / HYPER-Ω is an active research and engineering project. It is not a universally validated replacement for external GPUs.
 
-Modern NVIDIA systems provide specialized resources including:
+Important limitations include:
 
-- massive parallel compute
-- high memory bandwidth
-- Tensor acceleration
-- ray-tracing hardware
-- dedicated memory subsystems
-- specialized execution pipelines
+13.1 Universal GPU Replacement Is Not Demonstrated
 
-HYPER does not attempt to reproduce those resources.
+The project does not establish universal performance equivalence with NVIDIA GPUs or other dedicated accelerators.
 
-Instead it attacks the workload before those resources become necessary.
+13.2 Workload Dependency
 
-The strategy is:
+Caching, sparsity, low-rank transformations, and temporal reuse are highly workload-dependent.
 
-```text
-GPU does more work very fast
-            VS
-HYPER proves that much of that work is unnecessary
-```
+Some workloads may provide little or no opportunity for computational elimination.
 
----
+13.3 Verification Complexity
 
-# Computational Complexity Goal
+Prediction and speculative computation require stronger correctness guarantees than ordinary output sampling.
 
-The highest-value optimization is not:
+13.4 Optimization Overhead
 
-```text
-same O(N³) workload
-→ 20% faster
-```
+An optimization can reduce arithmetic operations but increase memory access, synchronization, or verification costs.
 
-The highest-value optimization is:
+13.5 Hardware Limitations
 
-```text
-O(N³)
-→ O(N²)
-```
+An integrated GPU does not possess the physical memory bandwidth or specialized hardware resources of a high-end discrete GPU.
 
-or:
+13.6 Experimental Maturity
 
-```text
-O(N²)
-→ O(N log N)
-```
+The repository contains multiple generations of research and experimental implementations.
 
-or:
+Not every module should be considered production-ready or independently validated.
 
-```text
-full computation
-→ small residual computation
-```
-
-where correctness and contract requirements remain satisfied.
-
-Complexity reduction is therefore a primary research objective.
+These limitations are explicitly acknowledged as part of the research process.
 
 ---
 
-# Application-Specific Research
+14. HYPER-CCO: Contract-Constrained Computation Optimizer
 
-Current application-oriented research includes:
+One of the major research directions within HYPER is HYPER-CCO.
 
-## Blender
-
-Investigate:
-
-- temporal reuse
-- adaptive sampling
-- image-space reconstruction
-- visibility reuse
-- selective recomputation
-- CPU preprocessing
-- UHD reconstruction
-
-## Unreal Engine
-
-Investigate:
-
-- visibility reuse
-- adaptive resolution
-- temporal information
-- selective rendering
-- post-processing reduction
-- residual computation
-
-## Unity
-
-Investigate:
-
-- sparse state updates
-- particle locality
-- temporal coherence
-- selective particle update
-- CPU/UHD partitioning
-
-These are research targets, not claims that the complete engines are already replaced.
-
----
-
-# Work-Elimination Accounting
-
-For a workload:
-
-$$
-WorkReduction =
-1-
-\frac{ExecutedWork}{OriginalWork}
-$$
-
-The system should track:
-
-```text
-original work
-reused work
-cached work
-mathematically eliminated work
-sparsified work
-predicted work
-verified work
-fallback work
-executed work
-```
-
-The accounting must prevent double counting.
-
----
-
-# Performance Metrics
-
-Depending on workload, HYPER records:
-
-- latency
-- throughput
-- FPS
-- FLOPs where meaningful
-- executed operations
-- eliminated operations
-- memory usage
-- CPU utilization
-- iGPU utilization
-- transfer time
-- synchronization time
-- thermal behavior
-- power/energy where measurable
-- correctness
-- numerical error
-- perceptual quality
-- fallback rate
-- cache hit rate
-
-Unmeasured values must remain explicitly marked as unmeasured.
-
----
-
-# Scientific Honesty Policy
-
-HYPER does not accept:
-
-```text
-estimated FPS → measured FPS
-theoretical FLOPS → measured FLOPS
-estimated energy → measured energy
-cache hit → compute throughput
-prediction → exact computation
-smaller workload → same workload
-perceptual similarity → mathematical equivalence
-```
-
-Every result must state whether it is:
-
-```text
-MEASURED
-DERIVED
-PROVEN
-ESTIMATED
-HYPOTHESIS
-UNVERIFIED
-```
-
----
-
-# Current Major Limitations
-
-The current project still has important limitations.
-
-## 1. Universal GPU replacement is not demonstrated
-
-Some real application workloads still show substantial performance gaps.
-
-## 2. Some historical benchmark logic was heuristic
-
-Older experimental components contain modeled or estimated quantities that must not be confused with physical measurements.
-
-## 3. Prediction verification needs stronger guarantees
-
-Sampling can be useful for screening but is insufficient as a universal mathematical proof.
-
-## 4. Optimization effects cannot simply be multiplied
-
-Combined optimizations must be benchmarked as compositions.
-
-## 5. Hardware telemetry is platform-dependent
-
-Not every CPU/iGPU/thermal/power metric is available through every Windows runtime.
-
-## 6. Some optimizations are workload-dependent
-
-Caching, sparsity, low-rank structure and temporal reuse can fail on adversarial or unstructured inputs.
-
-These limitations are part of the research program rather than being hidden.
-
----
-
-# Breakthrough Architecture: HYPER-CCO
-
-The next-generation architecture is referred to internally as:
-
-# HYPER-CCO
-
-**Contract-Constrained Computation Optimizer**
+CCO = Contract-Constrained Computation Optimizer.
 
 Its central objective is:
 
-$$
-\boxed{
-\text{Find the cheapest verifiable computation satisfying the application contract}
-}
-$$
+«Find the cheapest verifiable execution strategy that satisfies the declared application contract.»
 
-The intended strategy hierarchy is:
+The optimizer investigates different execution pathways according to:
 
-```text
+- Computational cost.
+- Memory requirements.
+- Latency.
+- Verification overhead.
+- Fallback risk.
+- CPU availability.
+- Integrated GPU availability.
+- Numerical accuracy.
+- Application quality requirements.
+
+Conceptual optimization hierarchy
+
 EXACT CACHE
-      ↓
+    |
+    v
 EXACT REUSE
-      ↓
+    |
+    v
 COMMON-SUBEXPRESSION REUSE
-      ↓
+    |
+    v
 INCREMENTAL COMPUTATION
-      ↓
+    |
+    v
 EXACT REFORMULATION
-      ↓
+    |
+    v
 SPARSITY
-      ↓
-LOW-RANK
-      ↓
+    |
+    v
+LOW-RANK METHODS
+    |
+    v
 COMPRESSION
-      ↓
+    |
+    v
 PRECISION OPTIMIZATION
-      ↓
+    |
+    v
 PREDICTION
-      ↓
+    |
+    v
 RESIDUAL COMPUTATION
-      ↓
+    |
+    v
 TEMPORAL RECONSTRUCTION
-      ↓
-CPU + UHD
-      ↓
+    |
+    v
+CPU + UHD EXECUTION
+    |
+    v
 EXACT FALLBACK
-```
 
-The actual order may be changed by measured cost.
-
----
-
-# Research Direction
-
-The central research question is:
-
-> **How much of a computation can be removed while preserving the exact or application-level contract that actually matters?**
-
-This leads to several major research directions:
-
-```text
-representation reduction
-dependency elimination
-information reuse
-algorithmic reformulation
-complexity reduction
-residual computation
-temporal reconstruction
-adaptive precision
-learned prediction
-CPU+iGPU cooperation
-communication avoidance
-verification-driven execution
-```
+This is a conceptual hierarchy. The actual strategy must be selected according to measured cost and the requirements of the workload.
 
 ---
 
-# Research Method
+15. Repository Structure
 
-HYPER follows:
-
-```text
-HYPOTHESIS
-   ↓
-IMPLEMENTATION
-   ↓
-BASELINE
-   ↓
-OPTIMIZED EXECUTION
-   ↓
-VERIFICATION
-   ↓
-ADVERSARIAL TEST
-   ↓
-MEASUREMENT
-   ↓
-REPRODUCTION
-   ↓
-CONCLUSION
-```
-
-A failed optimization is not deleted merely because it failed.
-
-Its failure is recorded as research evidence.
-
----
-
-# Project Roadmap
-
-## Phase 1 — Correctness Foundation
-
-- exact cache semantics
-- contract schema
-- verification interface
-- execution certificates
-- benchmark provenance
-
-## Phase 2 — Work Elimination
-
-- dependency graph
-- reuse
-- common-subexpression elimination
-- incremental computation
-- residual computation
-
-## Phase 3 — Mathematical Reduction
-
-- reformulation
-- low-rank
-- sparse execution
-- structured computation
-- complexity reduction
-
-## Phase 4 — Approximate Execution
-
-- adaptive precision
-- prediction
-- speculative execution
-- reconstruction
-- application-level quality contracts
-
-## Phase 5 — Heterogeneous Runtime
-
-- CPU calibration
-- Intel UHD calibration
-- hybrid scheduling
-- transfer minimization
-- kernel fusion
-
-## Phase 6 — Application Integration
-
-- numerical workloads
-- image/video workloads
-- rendering workloads
-- simulation workloads
-- ML workloads
-
-## Phase 7 — Scientific Validation
-
-- blind holdouts
-- adversarial workloads
-- contamination tests
-- long-duration benchmarks
-- regression testing
-- reproducibility
-
----
-
-# Success Criteria
-
-A HYPER result is considered successful when:
-
-```text
-required output is produced
-AND
-contract is satisfied
-AND
-quality requirement is satisfied
-AND
-latency requirement is satisfied
-AND
-throughput requirement is satisfied
-AND
-verification passes
-AND
-measurement is reproducible
-```
-
-Only then may an application-level parity result approach:
-
-```text
-100%
-```
-
----
-
-# 100% Objective
-
-The project's ultimate target remains:
-
-# 100% APPLICATION / CONTRACT PARITY
-
-where legitimately achievable.
-
-This does **not** mean:
-
-```text
-100% raw hardware parity
-```
-
-and it does **not** mean:
-
-```text
-100% exact hardware replacement for every possible workload
-```
-
-It means:
-
-> The application receives the required result, at the required quality, latency and throughput, without violating the declared contract, using only the available CPU + Intel UHD software stack.
-
-When that is impossible for a workload, HYPER must identify the exact barrier instead of fabricating a score.
-
----
-
-# Philosophy
-
-```text
-Do not make weak hardware imitate powerful hardware.
-
-Ask what computation the powerful hardware is performing
-that the application does not actually need.
-
-Eliminate that computation.
-
-Verify the result.
-
-Execute only the irreducible remainder.
-```
-
----
-
-# Repository Structure
-
-The repository contains multiple generations of research and engineering work.
+The repository contains multiple research generations, experimental implementations, verification systems, and supporting documentation.
 
 Important areas include:
 
-```text
-hyper100/
-HYPER_v6_BREAKTHROUGH/
-benchmarks/
-tests/
-application integrations/
-research experiments/
-documentation/
-```
+Directory / File| Purpose
+"hyper/"| Core HYPER implementation
+"hyper100/"| HYPER100 research workstream
+"hyper_v2/"| HYPER 2.0 experiments
+"hyper_v3/"| HYPER 3.0 experiments
+"hyper_omega/"| HYPER-Ω implementation
+"hyper_runtime/"| Runtime optimization work
+"hyper_sdk/"| Execution and integration components
+"hyper_x/"| Research and verification workstream
+"core/"| Core computational components
+"core_ai/"| AI-related computational components
+"execution/"| Execution infrastructure
+"experiments/"| Experimental research
+"proofs/"| Verification and proof-related work
+"tests/"| Automated tests
+"benchmarks/"| Benchmarking infrastructure
+"scripts/"| Research and engineering utilities
+"docs/"| Technical documentation
 
-Because the project is actively evolving, individual experimental modules may represent different maturity levels.
+The repository contains additional modules and documentation beyond those listed.
 
-Always check the module's documentation and benchmark status before treating it as production-ready.
-
----
-
-# Contributing
-
-Useful contributions should prioritize:
-
-- measurable improvements
-- correctness
-- reproducibility
-- algorithmic complexity reduction
-- memory reduction
-- data-movement reduction
-- CPU+iGPU utilization
-- verification
-- adversarial testing
-- benchmark quality
-
-Avoid contributions that merely inflate benchmark numbers without preserving the workload contract.
+Because different generations may have different implementation maturity, inspect their documentation and tests before using them.
 
 ---
 
-# Research Standard
+16. Research Methodology
+
+HYPER follows an evidence-driven research workflow.
+
+HYPOTHESIS
+    |
+    v
+PROBLEM DEFINITION
+    |
+    v
+IMPLEMENTATION
+    |
+    v
+BASELINE MEASUREMENT
+    |
+    v
+OPTIMIZED EXECUTION
+    |
+    v
+CORRECTNESS VERIFICATION
+    |
+    v
+ADVERSARIAL TESTING
+    |
+    v
+PERFORMANCE MEASUREMENT
+    |
+    v
+REPRODUCTION
+    |
+    v
+RESEARCH CONCLUSION
 
 Every significant optimization should answer five questions:
 
-```text
-1. What work was performed before?
-
-2. What work is performed now?
-
-3. Why is the reduced computation valid?
-
+1. What computation was performed originally?
+2. What computation is performed after optimization?
+3. Why is the alternative pathway valid?
 4. What evidence verifies the result?
+5. Under what conditions does the optimization fail?
 
-5. What workload causes the optimization to fail?
-```
+A failed optimization is not necessarily wasted work.
 
-If these cannot be answered, the optimization is not yet fully validated.
+Understanding why a transformation fails can reveal important properties of the original computational problem.
 
 ---
 
-# Final Project Statement
+17. Future Development
 
-LEO / HYPER is an attempt to explore a different frontier of performance engineering:
+The project is intended to evolve through continued research and engineering.
 
-> **Performance does not always come from doing the same computation faster. Sometimes the biggest optimization is discovering that most of the computation was never necessary.**
+Potential future directions include:
 
-The project therefore focuses on:
+- Stronger computational equivalence verification.
+- Autonomous algorithm discovery.
+- Improved dependency analysis.
+- More effective residual computation.
+- Advanced incremental processing.
+- Better CPU+iGPU scheduling.
+- Workload-aware optimization selection.
+- Improved memory movement reduction.
+- Stronger numerical verification.
+- Reproducible application-level benchmarking.
+- Expanded graphics and simulation experiments.
+- More comprehensive adversarial testing.
+- Improved research documentation and reproducibility.
 
-```text
-COMPUTATION ELIMINATION
-+
-ALGORITHMIC REFORMULATION
-+
-REPRESENTATION REDUCTION
-+
-REUSE
-+
-PREDICTION
-+
-VERIFICATION
-+
-CPU/UHD HETEROGENEOUS COMPUTING
-```
+These are development directions, not claims that every capability is already complete.
 
-The final objective is not to claim that inexpensive hardware becomes physically equivalent to expensive hardware.
+---
 
-The objective is to discover workload classes where **the expensive computation itself becomes unnecessary while the application contract remains satisfied**.
+18. Research Principles
 
-That is the central research problem of HYPER.
+The project follows several non-negotiable principles.
+
+Correctness before speed.
+
+An incorrect result is not an optimization.
+
+Evidence before claims.
+
+A theoretical improvement is not an experimentally demonstrated improvement.
+
+Complete cost before comparison.
+
+Preprocessing, transfers, synchronization, verification, and fallback costs matter.
+
+Honest parity classification.
+
+Physical hardware parity, exact computation, contract parity, and application performance are different things.
+
+Failure is research evidence.
+
+Unsuccessful experiments should be documented rather than hidden.
+
+No artificial benchmarks.
+
+Measured results must come from actual execution under documented conditions.
+
+---
+
+19. Developer Information
+
+Developed by Sivabalaji S.
+
+Artificial Intelligence and Data Science Undergraduate
+Independent Software Engineering and Computational Research
+
+Primary Interests:
+
+- Artificial Intelligence.
+- Machine Learning.
+- Computational Optimization.
+- Algorithm Engineering.
+- Systems Programming.
+- Heterogeneous Computing.
+- Software Architecture.
+- Performance Engineering.
+
+Connect
+
+- GitHub: https://github.com/SIVABALAJISleo
+- LinkedIn: https://www.linkedin.com/in/sivabalaji-s-830339325/
+- Email: sivabalajihyper2006@gmail.com
+
+Project Repository
+
+https://github.com/SIVABALAJISleo/LEO
+
+---
+
+20. Final Research Statement
+
+LEO / HYPER-Ω explores a different direction in computational performance engineering.
+
+Conventional hardware development focuses on building increasingly powerful systems capable of performing more operations in less time.
+
+HYPER investigates whether the application can obtain its required result through a fundamentally cheaper computational pathway.
+
+The central idea is simple:
+
+Do not automatically perform every operation simply because the original execution pipeline performs it.
+
+Understand the required result.
+
+Analyze the computation.
+
+Discover what can be eliminated.
+
+Find an alternative pathway.
+
+Verify its correctness.
+
+Execute only the work that remains necessary.
+
+That is the research direction behind LEO / HYPER-Ω.
+
+---
+
+<p align="center">CHANGE THE PATH. PRESERVE THE RESULT.
+
+LEO / HYPER-Ω — Exploring the Science of Necessary Computation.
+
+Independently researched and developed by Sivabalaji S.
+
+</p>
