@@ -1,0 +1,66 @@
+{
+  "project": "LEO-ZeroBit (Standalone Open-Source Single-Device Engine)",
+  "host": "Windows 11 | Intel64 Family 6 Model 186 Stepping 2, GenuineIntel",
+  "layer_shape": [
+    4096,
+    4096
+  ],
+  "fp32_weight_mb": 64.0,
+  "zerobit_packed_mb": 4.0,
+  "baseline_dense_fp32_median_ms": 2.139,
+  "build_info": {
+    "compiler": "gcc+avx2+omp",
+    "binary": "C:\\Users\\sivab\\OneDrive\\Documents\\HYPER\\zerobit\\leo_zerobit_kernel.dll",
+    "vpshufb_verified_in_disassembly": true
+  },
+  "avx2_intrinsics_active": true,
+  "simulated_gpu_timings_present": false,
+  "modes": {
+    "mode_1_adversarial_dense": {
+      "mode": "M1_ADVERSARIAL_100PCT_DENSE_TERNARY",
+      "active_groups": "1024/1024",
+      "weight_mb_read": 4.0,
+      "memory_traffic_reduction_vs_fp32": 16.0,
+      "leo_cpu_avx2_median_ms": 0.342,
+      "speedup_vs_dense_fp32_cpu": 6.25,
+      "max_abs_integer_error": 0,
+      "sha256_exact_match": true,
+      "passed": true
+    },
+    "mode_2_sparse_activation": {
+      "mode": "M2_85PCT_SPARSE_ACTIVATION_TERNARY",
+      "active_groups": "153/1024",
+      "weight_mb_read": 0.598,
+      "memory_traffic_reduction_vs_fp32": 107.1,
+      "leo_cpu_avx2_median_ms": 0.207,
+      "speedup_vs_dense_fp32_cpu": 10.36,
+      "max_abs_integer_error": 0,
+      "sha256_exact_match": true,
+      "passed": true
+    },
+    "mode_3_delta_membrane": {
+      "mode": "M3_95PCT_DELTA_PERSISTENT_MEMBRANE",
+      "active_groups": "51/1024",
+      "weight_mb_read": 0.199,
+      "memory_traffic_reduction_vs_fp32": 321.3,
+      "leo_cpu_avx2_median_ms": 0.19,
+      "speedup_vs_dense_fp32_cpu": 11.28,
+      "max_abs_integer_error": 0,
+      "sha256_exact_match": true,
+      "passed": true
+    },
+    "mode_4_live_igpu_and_hybrid_split": {
+      "igpu_dispatched": true,
+      "device_name": "Intel(R) UHD Graphics",
+      "compute_units": 48,
+      "igpu_full_median_ms": 0.98,
+      "igpu_max_int_error": 0,
+      "hybrid_split_tiles": "CPU=5/8, iGPU=3/8",
+      "hybrid_simultaneous_median_ms": 3.975,
+      "hybrid_max_int_error": 0,
+      "hybrid_sha256_exact_match": true,
+      "verified_exact": true
+    }
+  },
+  "all_cpu_modes_bit_exact": true
+}
